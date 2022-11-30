@@ -133,7 +133,7 @@ export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, paylo
     );
 };
 
-let applicationState: Writeable<ISuperdesk['state']> = {
+export let applicationState: Writeable<ISuperdesk['state']> = {
     articleInEditMode: undefined,
 };
 
