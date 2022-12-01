@@ -7,6 +7,7 @@ import {IExtensionActivationResult} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {getSuggestionsWidget} from './article-widgets/suggestions';
 import {getVersionsAndItemHistoryWidget} from './article-widgets/versions-and-item-history';
+import {getMacrosWidget} from './macros/macros';
 import {getPackagesWidget} from './packages';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
@@ -15,6 +16,7 @@ export function registerAuthoringReactWidgets() {
     const sidebarWidgets: IExtensionActivationResult['contributions']['authoringSideWidgets'] = [
         getFindAndReplaceWidget(),
         getVersionsAndItemHistoryWidget(),
+        getMacrosWidget(),
         getPackagesWidget(),
     ];
 

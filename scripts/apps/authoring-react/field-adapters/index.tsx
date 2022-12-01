@@ -101,7 +101,7 @@ export function retrieveStoredValueEditor3Generic(
     authoringStorage: IAuthoringStorage<IArticle>,
 ) {
     const rawContentState: RawDraftContentState = (() => {
-        const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+        const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState']?.[0] ?? null;
         const fieldsAdapter = getFieldsAdapter(authoringStorage);
 
         if (fromFieldsMeta != null) {
