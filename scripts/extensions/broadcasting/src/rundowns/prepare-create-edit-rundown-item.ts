@@ -1,13 +1,13 @@
 import {isEqual} from 'lodash';
-import {rundownItemContentProfile} from './rundown-items/content-profile';
+import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
     IPatchResponseExtraFields,
 } from 'superdesk-api';
-import {IRundown, IRundownItem} from '../../interfaces';
-import {superdesk} from '../../superdesk';
-import {IWithAuthoringReactKey} from './template-edit';
+import {IRundown, IRundownItem} from '../interfaces';
+import {superdesk} from '../superdesk';
+import {IWithAuthoringReactKey} from '../rundown-templates/template-edit';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
 
 const {tryLocking, fixPatchResponse, fixPatchRequest} = superdesk.helpers;
@@ -57,6 +57,10 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
 
         cancel() {
             // noop
+        }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
         }
     }
 
@@ -141,6 +145,10 @@ function getRundownItemCreationAuthoringStorage(
 
         cancel() {
             // noop
+        }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
         }
     }
 

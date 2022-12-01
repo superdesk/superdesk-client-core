@@ -1,17 +1,17 @@
 import * as React from 'react';
 import {TableList, Label} from 'superdesk-ui-framework/react';
-import {IRundownItem, IRundownItemBase} from '../../../interfaces';
+import {IRundownItem, IRundownItemBase} from '../../interfaces';
 import {DurationLabel} from './duration-label';
 import {Map} from 'immutable';
 import {PlannedDurationLabel} from './planned-duration-label';
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 import {IVocabularyItem} from 'superdesk-api';
 import {
     SHOW_PART_VOCABULARY_ID,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     STATUS_VOCABULARY_ID,
-} from '../../../constants';
+} from '../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;
@@ -69,10 +69,10 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
             const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
-            const subitems = item.subitems == null
+            const subitemVocabularies = item.subitems == null
                 ? null
                 : item.subitems
-                    .map((qcode) => subitemTypes.get(qcode))
+                    .map(({qcode}) => subitemTypes.get(qcode))
                     .filter((x) => x != null);
 
             return ({
@@ -113,10 +113,10 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 end: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
-                            subitems != null && (
+                            subitemVocabularies != null && (
                                 <Spacer h gap="4" justifyContent="start" noGrow>
                                     {
-                                        subitems.map(({name, color}, i) => (
+                                        subitemVocabularies.map(({name, color}, i) => (
                                             <Label
                                                 key={i}
                                                 text={name}
@@ -175,6 +175,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     array={array}
                     itemsDropdown={this.props.itemsDropdown}
                     onDrag={this.props.onDrag}
+                    append={true}
                 />
             );
         }

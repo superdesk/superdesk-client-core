@@ -7,19 +7,19 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
+import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
 import {
     CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
-    RUNDOWN_SUBITEM_TYPES,
     SHOW_PART_VOCABULARY_ID,
     STATUS_VOCABULARY_ID,
-} from '../../../constants';
-import {superdesk} from '../../../superdesk';
+} from '../constants';
+import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
 
-const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
+export const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
     'uppercase',
     'lowercase',
     'h1',
@@ -33,6 +33,7 @@ const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
     'quote',
     'link',
     'embed',
+    'media',
     'underline',
     'italic',
     'bold',
@@ -154,19 +155,6 @@ const showPartField: IAuthoringFieldV2 = {
     fieldConfig: showPartConfig,
 };
 
-const subitemsConfig: IDropdownConfigVocabulary = {
-    source: 'vocabulary',
-    vocabularyId: RUNDOWN_SUBITEM_TYPES,
-    multiple: true,
-};
-
-const subItemsField: IAuthoringFieldV2 = {
-    id: 'subitems',
-    name: gettext('Subitems'),
-    fieldType: 'dropdown',
-    fieldConfig: subitemsConfig,
-};
-
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
@@ -189,6 +177,13 @@ const statusField: IAuthoringFieldV2 = {
     fieldConfig: statusConfig,
 };
 
+const subitemsField: IAuthoringFieldV2 = {
+    id: 'subitems',
+    name: gettext('Subitems'),
+    fieldType: SUBITEMS_FIELD_TYPE,
+    fieldConfig: {},
+};
+
 export const rundownItemContentProfile: IContentProfileV2 = {
     id: 'temp-profile',
     name: 'Temporary profile',
@@ -197,15 +192,15 @@ export const rundownItemContentProfile: IContentProfileV2 = {
         [itemTypeField.id, itemTypeField],
         [showPartField.id, showPartField],
         [cameraField.id, cameraField],
-        [subItemsField.id, subItemsField],
         [statusField.id, statusField],
         [durationField.id, durationField],
         [plannedDurationField.id, plannedDurationField],
     ]),
     content: OrderedMap([
         [titleField.id, titleField],
-        [subitemAttachments.id, subitemAttachments],
         [contentField.id, contentField],
         [additionalNotesField.id, additionalNotesField],
+        [subitemsField.id, subitemsField],
+        [subitemAttachments.id, subitemAttachments],
     ]),
 };

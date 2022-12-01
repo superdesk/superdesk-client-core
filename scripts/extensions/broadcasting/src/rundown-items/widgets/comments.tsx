@@ -1,7 +1,7 @@
 
 import {IComment, IRestApiResponse} from 'superdesk-api';
-import {IRundownItem} from '../../../../interfaces';
-import {superdesk} from '../../../../superdesk';
+import {IRundownItem} from '../../interfaces';
+import {superdesk} from '../../superdesk';
 
 const {httpRequestJsonLocal} = superdesk;
 

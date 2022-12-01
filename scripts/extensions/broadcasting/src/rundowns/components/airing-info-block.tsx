@@ -3,9 +3,9 @@ import * as React from 'react';
 import {DurationInput, TimePicker, DatePickerISO} from 'superdesk-ui-framework/react';
 
 import * as Form from 'superdesk-ui-framework/react/components/Form';
-import {IRundown, IRundownTemplateBase} from '../../../interfaces';
+import {IRundown, IRundownTemplateBase} from '../../interfaces';
 
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 
 const {gettext} = superdesk.localization;
 

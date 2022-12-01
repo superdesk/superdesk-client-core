@@ -8,7 +8,7 @@ import {
     IRundownItem,
     IRundownItemBase,
     IRundownTemplateBase,
-} from '../../interfaces';
+} from '../interfaces';
 import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -30,17 +30,17 @@ interface IState {
     exportOptions: Array<IRundownExportOption>;
 }
 
-import {superdesk} from '../../superdesk';
+import {superdesk} from '../superdesk';
 
 import {ManageRundownItems} from './manage-rundown-items';
 import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
-import {stringNotEmpty} from '../../form-validation';
+import {stringNotEmpty} from '../form-validation';
 import {isEqual, noop} from 'lodash';
-import {rundownItemStorageAdapter} from './rundown-template-item-storage-adapter';
-import {LANGUAGE} from '../../constants';
+import {rundownItemStorageAdapter} from '../rundown-templates/rundown-template-item-storage-adapter';
+import {LANGUAGE} from '../constants';
 import {IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {AiringInfoBlock} from './components/airing-info-block';
-import {commentsWidget} from './rundown-items/widgets/comments';
+import {commentsWidget} from '../rundown-items/widgets/comments';
 import {
     IRundownItemActionNext,
     prepareForCreation,

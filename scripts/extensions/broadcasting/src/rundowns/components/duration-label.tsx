@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IconLabel, getDurationString} from 'superdesk-ui-framework/react';
 
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 
 const {gettext} = superdesk.localization;
 
