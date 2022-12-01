@@ -45,6 +45,8 @@ import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
+import {TemplateModal} from './toolbar/template-modal';
+import {showModal} from '@superdesk/common';
 
 export function getFieldsData<T>(
     item: T,
@@ -1004,6 +1006,19 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 ).then((actions) => {
                                     const coreActions: Array<IAuthoringAction> = [];
 
+                                    coreActions.push({
+                                        label: gettext('Save as template'),
+                                        onTrigger: () => (
+                                            showModal(({closeModal}) => {
+                                                return (
+                                                    <TemplateModal
+                                                        closeModal={closeModal}
+                                                        item={state.itemWithChanges as unknown as IArticle}
+                                                    />
+                                                );
+                                            })
+                                        ),
+                                    });
                                     if (appConfig.features.useTansaProofing !== true) {
                                         if (state.spellcheckerEnabled) {
                                             const nextValue = false;
