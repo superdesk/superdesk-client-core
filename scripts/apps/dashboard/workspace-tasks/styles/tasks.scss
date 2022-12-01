@@ -353,7 +353,6 @@ TASK PAGE
                     }
                     width: 50%;
                     float: left;
-                    @include border-box();
                     padding: 0 15px;
                 }
             }
@@ -387,7 +386,7 @@ TASK PAGE
     a, button {
         background: #fff;
         border-color: #d7d7d7 !important;
-        color: #333 !important;
+        color: var(--color-text) !important;
         &:hover {
             border-color: #505050 !important;
             @include box-shadow(0px 1px 3px 0px rgba(0,0,0,0.3));

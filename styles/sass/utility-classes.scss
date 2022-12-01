@@ -223,7 +223,7 @@ ul.list-view.list-without-items {
 
     &:hover, &:active {
         [class^="icon-"], [class*=" icon-"] {
-            color: $sd-blue;
+            color: var(--sd-color-interactive);
         }
     }
 }

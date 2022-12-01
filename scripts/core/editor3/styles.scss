@@ -816,7 +816,7 @@ $editor-styleButton-size: 			3rem;
 		&.nav-tabs__tab--active {
 			button.nav-tabs__link {
 				cursor: default !important;
-				color: #333 !important;
+				color: var(--color-text) !important;
 			}
 		}
 	}

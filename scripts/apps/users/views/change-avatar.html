@@ -34,10 +34,10 @@
             </div>
         </div>
 
-        <div class="camera" ng-if="active.id == 'photo' && !preview.url">
+        {# <div class="camera" ng-if="active.id == 'photo' && !preview.url">
             <label translate>Click to capture using camera. Be sure that you allow camera accessibility.</label>
             <video autoplay sd-video-capture="preview.url" data-file="preview.img"></video>
-        </div>
+        </div> #}
 
         <div class="web" ng-if="active.id == 'globe' && (!preview.cords || progress.width)">
             <div class="sd-input">

@@ -78,6 +78,7 @@
     overflow: hidden;
     i {
         @include opacity(60);
+        color: var(--color-icon-default);
     }
     &:hover {
         cursor: pointer;

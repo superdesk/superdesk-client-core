@@ -5,14 +5,17 @@ $superdesk-green:       rgba(30,176,108,1);
 
 // Grays
 // -------------------------
-$black:                 #000;
-$grayDarker:            #222;
-$grayDark:              #333;
-$gray:                  #666;
-$grayText:              #686868;
-$grayLight:             #999;
-$grayLighter:           #F5F5F5;
-$white:                 #fff;
+
+$black:                 hsl(214, 13%, 0%);
+$grayDarker:            hsl(214, 13%, 13%);
+$grayDark:              hsl(214, 13%, 20%);
+$grayMedium:            hsl(214, 13%, 27%);
+$gray:                  hsl(214, 13%, 40%);
+$grayNeutral:           hsl(214, 13%, 48%);
+$grayText:              hsl(214, 13%, 45%);
+$grayLight:             hsl(214, 13%, 60%);
+$grayLighter:           hsl(214, 13%, 96%);
+$white:                 hsl(214, 13%, 100%);
 
 // Accent colors
 // -------------------------

@@ -339,6 +339,7 @@ $search-widget-preview-width: 440px;
             -webkit-transition: all 0.2s ease;
             -o-transition: all 0.2s ease;
             transition: all 0.2s ease;
+            color: var(--color-icon-default);
         }
         &.closed {
             i {

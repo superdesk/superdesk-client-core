@@ -24,7 +24,7 @@
 // Webkit-style focus
 // ------------------
 @mixin tab-focus() {
-    outline: thin dotted #333;
+    outline: thin dotted var(--color-text-light);
     outline-offset: -2px;
 }
 

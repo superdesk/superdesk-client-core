@@ -63,7 +63,7 @@
         @include box-shadow(inset 0 0 0 #000 !important);
         @include box-shadow(none !important);
         text-decoration: none;
-        color: #333;
+        color: var(--color-text);
         line-height: 15px;
         font-size: 12px;
         .caret {
@@ -199,7 +199,7 @@
     flex-grow: 0;
     .search-handler {
         min-width: 48px;
-        height: $nav-height;
+        //height: $nav-height;
         padding: 10px 10px 10px 14px;
         background: none;
         display: flex;
@@ -237,6 +237,7 @@
             }
             i {
                 padding: 7px 3px 4px 6px;
+                color: var(--color-icon-default);
             }
         }
         &--left-border {
@@ -635,23 +636,24 @@
     color: var(--color-text);
     input {
         width: 100%;
-        transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
         padding-right: 3.2rem;
         padding-left: 1.2rem;
         min-height: 3.2rem;
         border: none;
-        border-radius: 2px;
-        background-color: rgba(0, 0, 0, 0.05) !important;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        border-bottom: 1px solid var(--color-input-border);
+        border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
+        background-color: var(--color-input-bg);
         font-size: 1.3rem;
-        color: inherit;
+        color: var(--color-text);
         &:hover {
-            border-bottom-color: rgba(0, 0, 0, 0.3);
-            background-color: rgba(0, 0, 0, 0.1)  !important;
+            border-color: var(--color-input-border-hover);
+            background-color: var(--color-input-bg--hover);
         }
         &:focus {
-            box-shadow: 0 1px 0 0 $sd-blue;
-            border-color: $sd-blue;
+            box-shadow: 0 1px 0 0 var(--sd-colour-interactive);
+            border-color: var(--sd-colour-interactive);
+            background-color: var(--sd-colour-interactive--alpha-20);
         }
         &.ng-invalid {
             color: #d10000;
@@ -661,46 +663,46 @@
     }
     .icn-btn {
         position: absolute;
-        right: 2px; top: 2px;
+        right: 2px; top: 0;
     }
 }
 
-.datepicker-input--dark, .timepicker-input--dark {
-    input {
-        transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        font-size: 1.3rem;
-        line-height: 1.8rem;
-        color: inherit;
-        min-height: 32px;
-        padding-left: $sd-base-increment * 1.5 !important;
-        &:hover {
-            border-bottom-color: rgba(255, 255, 255, 0.4);
-            background-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        &:focus {
-            box-shadow: 0 1px 0 0 $sd-blue;
-            border-color: $sd-blue;
-        }
-    }
-    .icn-btn {
-        background: transparent;
-        top: 50%;
-        margin-top: -14px;
-    }
-    .name {
-        background-color: #4f4f4f;
-        height: 24px;
-        font-size: 12px;
-        color: $white;
-    }
+// .datepicker-input--dark, .timepicker-input--dark {
+//     input {
+//         transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
+//         background-color: rgba(255, 255, 255, 0.05) !important;
+//         border: none;
+//         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+//         font-size: 1.3rem;
+//         line-height: 1.8rem;
+//         color: inherit;
+//         min-height: 32px;
+//         padding-left: $sd-base-increment * 1.5 !important;
+//         &:hover {
+//             border-bottom-color: rgba(255, 255, 255, 0.4);
+//             background-color: rgba(255, 255, 255, 0.1) !important;
+//         }
+//         &:focus {
+//             box-shadow: 0 1px 0 0 $sd-blue;
+//             border-color: $sd-blue;
+//         }
+//     }
+//     .icn-btn {
+//         background: transparent;
+//         top: 50%;
+//         margin-top: -14px;
+//     }
+//     .name {
+//         background-color: #4f4f4f;
+//         height: 24px;
+//         font-size: 12px;
+//         color: $white;
+//     }
 
-    ul > li {
-        width: 90%;
-    }
-}
+//     ul > li {
+//         width: 90%;
+//     }
+// }
 
 .datepicker-wrapper {
     position: absolute;
@@ -1979,6 +1981,7 @@
     min-height: 2.8rem;
 }
 
+
 .line-input--boxed {
     .input-term {
         input[type="text"] {
@@ -1987,21 +1990,21 @@
             -moz-appearance: none;
             appearance: none;
             border: 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid var(--color-input-border);
             font-size: 1.4rem;
-            border-radius: 2px;
-            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
+            background-color: var(--color-input-bg);
             padding: 0 1rem;
             height: 3.2rem;
             transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
             &:hover {
-                border-color: rgba(0, 0, 0, 0.3) !important;
-                background-color: rgba(0, 0, 0, 0.1) !important;
+                border-color: var(--color-input-border-hover) !important;
+                background-color: var(--color-input-bg--hover) !important;
             }
             &:focus {
-                background-color: rgba(0, 0, 0, 0.05) !important;
-                box-shadow: 0 1px 0 0 #5ea9c8 !important;
-                border-color: #5ea9c8 !important;
+                box-shadow: 0 1px 0 0 var(--sd-colour-interactive) !important;
+                border-color: var(--sd-colour-interactive) !important;
+                background-color: var(--sd-colour-interactive--alpha-20) !important;
             }
         }
     }

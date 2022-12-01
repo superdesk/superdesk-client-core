@@ -917,7 +917,8 @@ $authoring-toolbar-spacing: 10px;
         border-radius: 0 0 3px 3px;
         .input-term {
             padding: 8px;
-            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--sd-colour-line--light);
+            //box-shadow: 0 1px 0 var(--sd-colour-line--light);
             input {
                 box-shadow: none!important;
                 background-color: transparent;
@@ -927,6 +928,7 @@ $authoring-toolbar-spacing: 10px;
         }
         .input-term__icon {
             display: block;
+            color: var(--color-icon-default);
         }
 
         .main-list {

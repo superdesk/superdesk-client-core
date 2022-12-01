@@ -179,7 +179,7 @@ $sfbox_minWidth : 176px;
 $sfbox_mediaMaxWidth : 172px;
 
 @mixin media-box-generic {
-    height:auto;
+    height: auto;
     width: auto;
     min-height: $sfbox_minHeight;
     min-width: $sfbox_minWidth;
@@ -187,18 +187,20 @@ $sfbox_mediaMaxWidth : 172px;
     border: 1px solid rgba(0,0,0,0.3);
     border-width: 0px 0px 3px 0px;
     margin: 1px 12px 10px 1px;
+    border-radius: var(--b-radius--medium);
 
-    @include border-radius(2px);
-    padding:$sfbox_sidepadding;
+
+    padding: $sfbox_sidepadding;
     position:relative;
-    float:left;
-    display:block;
-    cursor:pointer;
-    background-color:#fff;
-    @include box-shadow(0 1px 4px 0 rgba(0,0,0,0.2));
+    float: left;
+    display: block;
+    cursor: pointer;
+    background-color: var(--sd-item__main-Bg);
+    color: var(--color-text);
+    box-shadow: 0 1px 4px 0 hsla(0, 0%, 0%, 0.2);
 
     &.archived {
-        @include box-shadow-both(0 1px 4px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.03));
+        box-shadow: 0 1px 4px 0 hsla(0, 0%, 0%, 0.2), 0 0 0 1px hsla(0, 0%, 0%, 0.03);
         background-color: var(--sd-item__main-Bg--alternate);
         &::after {
             content: "";
@@ -221,7 +223,10 @@ $sfbox_mediaMaxWidth : 172px;
     }
     .error-box {
         position: absolute;
-        left: 0; right: 0; top:0;bottom: 0;
+        left: 0; 
+        right: 0;
+        top:0;
+        bottom: 0;
         background: rgba(255,255,255,0.9);
         z-index: 1;
         .message {
@@ -485,16 +490,15 @@ $sfbox_mediaMaxWidth : 172px;
             }
 
             .item-info {
-                padding: 6px 6px 6px 6px;
                 .container {
                     @include text-semibold();
-                    color: #444;
+                    color: var(--color-text-light);
                     margin-right: 10px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     &.link {
-                        color: $sd-blue-text;
+                        color: var(--sd-colour-interactive);
                         @include text-normal();
                         text-overflow: ellipsis;
                     }
@@ -502,7 +506,7 @@ $sfbox_mediaMaxWidth : 172px;
             }
 
             .contact-footer {
-                border-top: .1rem solid #e8e8e8;
+                border-top: 1px solid #e8e8e8;
                 margin-top: 25px;
                 margin-left: -5px;
                 margin-right: -5px;
@@ -537,11 +541,6 @@ $sfbox_mediaMaxWidth : 172px;
             .notes {
                 display: flex;
                 background: none;
-            }
-
-            .contact-name {
-                @extend .keyword;
-                font-size: 1.1em;
             }
 
             .item-notes {
@@ -870,9 +869,6 @@ $rightfield-width:60px;
                 white-space: nowrap;
                 margin: 0 5px 0 5px;
             }
-            .contact-name {
-                @extend .keyword;
-            }
 
             .item-info {
                 .social-info {
@@ -897,7 +893,7 @@ $rightfield-width:60px;
 
 
         .item-info {
-            padding: 10px 10px 10px 10px;
+            //padding: 10px 10px 10px 10px;
             .line {
                 height: 18px;
                 line-height: 18px;

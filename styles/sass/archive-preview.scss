@@ -529,16 +529,16 @@
                 line-height: 21px;
                 margin-bottom:7px;
                 font-size: 14px;
-                color: #333;
+                color: var(--color-text);
                 @include border-radius(2px);
                 i {
                     font-style: normal;
-                    color: #676565;
+                    color: var(--color-text-light);
                     @include text-light();
                 }
                 &:hover, &.selected {
-                    background: #b3daf2;
-                    border-color: #4aa8eb;
+                    background: var(--sd-colour-interactive--alpha-20);
+                    border-color: var(--sd-colour-interactive--alpha-50);
                     cursor: pointer;
                 }
             }
@@ -1083,7 +1083,7 @@ $lightbox-composite-condensed : 100px;
             margin: 0 30px 30px 0;
             @include border-radius(3px);
             overflow: hidden;
-            background: #333;
+            background: hsl(214, 13%, 20%);
 
         }
     }
