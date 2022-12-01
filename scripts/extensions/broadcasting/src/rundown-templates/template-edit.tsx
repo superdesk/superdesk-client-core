@@ -114,7 +114,7 @@ const readOnlyFields = allFields.filter((field) => field.fieldConfig.readOnly ==
 function dropReadOnlyFields(item: IRundownItemBase): IRundownItemBase {
     const shallowCopy = {...item};
 
-    readOnlyFields.forEach((field) => {
+    readOnlyFields.toArray().forEach((field) => {
         delete (shallowCopy as {[key: string]: any})[field.id];
     });
 
@@ -156,17 +156,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
             this.props.onRundownItemActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
                     if (!this.props.readOnly) {
-                        const itemWithDuration: Partial<IRundownItemBase> = {
-                            ...val.data,
-                            duration: val.data.planned_duration,
-                        };
-
                         const currentItems = this.getRundownItems();
 
                         this.props.onChange({
                             items: arrayInsertAtIndex(
                                 currentItems,
-                                dropReadOnlyFields(itemWithDuration as unknown as IRundownItemBase),
+                                dropReadOnlyFields(val.data as unknown as IRundownItemBase),
                                 insertAtIndex ?? currentItems.length,
                             ),
                         });

@@ -172,8 +172,12 @@ function getRundownItemCreationAuthoringStorage(
                 rundown: rundownId, // read-only, but needs to be sent when creating an item
             };
 
+            if (itemToSave.duration == null) {
+                itemToSave.duration = itemToSave.planned_duration;
+            }
+
             // same logic is applied when creating a rundown item inside the template
-            readOnlyFields.forEach((field) => {
+            readOnlyFields.toArray().forEach((field) => {
                 /**
                  * Remove read-only fields to avoid getting an error from the server.
                  * Since it's read-only it would contain an empty value anyway.
