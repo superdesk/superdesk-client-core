@@ -1,5 +1,5 @@
 import * as Setup from '../../reducers/tests/suggestion_setup';
-import {prepareHtmlForPatching, patchHTMLonTopOfEditorState} from '../patch-editor-3-html';
+import {getTansaHtml, setTansaHtml} from '../tansa';
 
 describe('editor3.helpers.tansa', () => {
     it('should generate the tansa custom html', () => {
@@ -13,7 +13,7 @@ describe('editor3.helpers.tansa', () => {
 
         const editorState = Setup.getInitialEditorState(rawContent);
 
-        expect(prepareHtmlForPatching(editorState)).toEqual(
+        expect(getTansaHtml(editorState)).toEqual(
             '<p id="text-4vu4i">paragraph1 foo&amp;amp;bar</p>\n<p id="text-9d99u">paragraph2</p>');
     });
 
@@ -28,7 +28,7 @@ describe('editor3.helpers.tansa', () => {
 
         let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = patchHTMLonTopOfEditorState(editorState,
+        editorState = setTansaHtml(editorState,
             '<p id="text-4vu4i">para-graph-1 foo&amp;bar</p>\n<p id="text-9d99u">para-graph-2</p>\n');
 
         const content = editorState.getCurrentContent();
@@ -50,9 +50,7 @@ describe('editor3.helpers.tansa', () => {
 
         let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = patchHTMLonTopOfEditorState(
-            editorState,
-            '<p id="text-4vu4i">pargrap1</p>\n<p id="text-9d99u">pargrap2</p>\n');
+        editorState = setTansaHtml(editorState, '<p id="text-4vu4i">pargrap1</p>\n<p id="text-9d99u">pargrap2</p>\n');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -94,7 +92,7 @@ describe('editor3.helpers.tansa', () => {
             '<p id="headline-4vu4i">headline</p>\n' +
             '<p id="text-9d99u">paragraph2</p>';
 
-        expect(prepareHtmlForPatching(editorState)).toEqual(tansaHtml);
+        expect(getTansaHtml(editorState)).toEqual(tansaHtml);
     });
 
     it('should update the description of media', () => {
@@ -128,7 +126,7 @@ describe('editor3.helpers.tansa', () => {
             + '<p id="headline-4vu4i">paragraph3</p>\n'
             + '<p id="text-9d99u">paragraph4</p>\n';
 
-        editorState = patchHTMLonTopOfEditorState(editorState, tansaHtml);
+        editorState = setTansaHtml(editorState, tansaHtml);
 
         const content = editorState.getCurrentContent();
         const block = content.getFirstBlock();

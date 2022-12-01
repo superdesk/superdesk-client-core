@@ -6,7 +6,7 @@ import {
     SelectionState,
     ContentBlock,
 } from 'draft-js';
-import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
+import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getDecorators, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
@@ -473,7 +473,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
  */
 const setHtmlFromTansa = (state, {html, simpleReplace}) => {
     const {editorState} = state;
-    const newEditorState = patchHTMLonTopOfEditorState(editorState, html, simpleReplace);
+    const newEditorState = setTansaHtml(editorState, html, simpleReplace);
 
     return onChange(state, newEditorState);
 };

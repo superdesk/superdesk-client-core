@@ -24,8 +24,6 @@ interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-export const EDITOR_3_FIELD_TYPE = 'editor3';
-
 export function editor3ToOperationalFormat(
     value: IEditor3ValueStorage,
     language: string,
@@ -53,7 +51,7 @@ export function editor3ToOperationalFormat(
 export function getEditor3Field()
 : ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
-        id: EDITOR_3_FIELD_TYPE,
+        id: 'editor3',
         label: gettext('Editor3 (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

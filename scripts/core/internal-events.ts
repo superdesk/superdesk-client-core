@@ -8,7 +8,6 @@ interface IInternalEvents {
     };
     saveArticleInEditMode: void;
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
-    replaceAuthoringDataWithChanges: Partial<unknown>;
 
     /**
      * Unsaved changes will be lost.

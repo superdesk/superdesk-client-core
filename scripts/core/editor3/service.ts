@@ -1,7 +1,7 @@
 import * as action from './actions';
 import {forEachMatch} from './helpers/find-replace';
 import {clearHighlights} from './helpers/find-replace';
-import {prepareHtmlForPatching} from './helpers/patch-editor-3-html';
+import {getTansaHtml} from './helpers/tansa';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 import {IArticle} from 'superdesk-api';
 
@@ -226,7 +226,7 @@ export class EditorService {
         const state = store.getState();
         const {editorState} = state;
 
-        return prepareHtmlForPatching(editorState);
+        return getTansaHtml(editorState);
     }
 
     /**

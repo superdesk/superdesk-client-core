@@ -18,9 +18,6 @@ import {
     replaceAll,
     setSpellcheckerStatus,
     changeLimitConfig,
-    multiReplace,
-    patchHTMLonEditorState,
-    setEditorStateFromItem,
 } from 'core/editor3/actions';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -176,35 +173,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('find_and_replace__find_distinct', (event) => {
-                const {editorId, matches, caseSensitive} = event.detail;
-
-                if (editorId !== this.props.editorId) {
-                    return;
-                }
-
-                const diff = matches.reduce((acc, key) => {
-                    acc[key] = '';
-
-                    return acc;
-                }, {});
-
-                this.props.value.store.dispatch(
-                    setHighlightCriteria({diff, caseSensitive}),
-                );
-            }),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('find_and_replace__request_for_current_selection_index', (event) => {
-                dispatchEditorEvent(
-                    'find_and_replace__receive_current_selection_index',
-                    {editorId: this.props.editorId, selectionIndex: this.props.value.store.getState().searchTerm.index},
-                );
-            }),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
             addEditorEventListener('find_and_replace__find_prev', (event) => {
                 const {editorId} = event.detail;
 
@@ -241,42 +209,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 } else {
                     this.props.value.store.dispatch(replace(replaceWith));
                 }
-            }),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('find_and_replace__multi_replace', (event) => {
-                const {editorId, replaceWith} = event.detail;
-
-                if (editorId !== this.props.editorId) {
-                    return;
-                }
-
-                this.props.value.store.dispatch(multiReplace(replaceWith));
-            }),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('authoring__patch_html', (event) => {
-                const {editorId, editorState, html} = event.detail;
-
-                if (editorId !== this.props.editorId) {
-                    return;
-                }
-
-                this.props.value.store.dispatch(patchHTMLonEditorState({editorState, html, simpleReplace: false}));
-            }),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('authoring__update_editor_state', (event) => {
-                const {editorId, article} = event.detail;
-
-                if (editorId !== this.props.editorId) {
-                    return;
-                }
-
-                this.props.value.store.dispatch(setEditorStateFromItem(article, editorId));
             }),
         );
 

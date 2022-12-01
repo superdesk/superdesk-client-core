@@ -1,10 +1,9 @@
 // eslint complains about imported types not being used
 // eslint-disable-next-line no-unused-vars
 import {Modifier, EditorState} from 'draft-js';
-import {clearHighlights, forEachMatch} from '../helpers/find-replace';
+import {clearHighlights, quietPush, forEachMatch} from '../helpers/find-replace';
 import {onChange} from './editor3';
 import {escapeRegExp} from 'core/utils';
-import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
 
 interface IDiff { [s: string]: string; }
 
@@ -16,12 +15,8 @@ const findReplace = (state = {}, action) => {
         return findPrev(state);
     case 'HIGHLIGHTS_REPLACE':
         return replaceHighlight(state, action.payload);
-    case 'HIGHLIGHTS_REPLACE_MULTIPLE':
-        return replaceMultipleHighlights(state, action.payload);
     case 'HIGHLIGHTS_REPLACE_ALL':
         return replaceHighlight(state, action.payload, true);
-    case 'PATCH_HTML_ON_EDITOR_STATE':
-        return patchHtmloNEditorState(state, action.payload);
     case 'HIGHLIGHTS_RENDER':
         return render(state);
     case 'HIGHLIGHTS_CRITERIA':
@@ -31,18 +26,11 @@ const findReplace = (state = {}, action) => {
     }
 };
 
-function patchHtmloNEditorState(state, payload) {
-    return {
-        ...state,
-        editorState: patchHTMLonTopOfEditorState(state.editorState, payload.html, payload.simpleReplace),
-    };
-}
-
 /**
  * @name replaceHighlight
  * @param {Object} state
  * @param {string} txt The text to replace the highlight with
- * @param {boolean=} all If set to true, it replaces all occurrences, otherwise it replaces
+ * @param {boolean=} all If set to true, it replaces all occurences, otherwise it replaces
  * only the current one.
  * @description Replaces highlights with the given text.
  */
@@ -97,21 +85,10 @@ const replaceHighlight = (state, txt, all = false) => {
     };
 };
 
-const replaceMultipleHighlights = (state, diff: {[key: string]: string}) => {
-    let newState = state;
-
-    for (const [key, value] of Object.entries(diff)) {
-        newState = setCriteria(newState, {diff: {[key]: value}, caseSensitive: true});
-        newState = replaceHighlight(newState, value, true);
-    }
-
-    return newState;
-};
-
 /**
  * @name findNext
  * @param {Object} state
- * @description Increases the highlighted occurrence index.
+ * @description Increases the highlighted ocurrence index.
  */
 const findNext = (state) => {
     const matches = getMatches(state);
@@ -132,7 +109,7 @@ const findNext = (state) => {
 /**
  * @name findPrev
  * @param {Object} state
- * @description Decreases the highlighted occurrence index.
+ * @description Decreases the highlighted ocurrence index.
  */
 const findPrev = (state) => {
     const matches = getMatches(state);
@@ -167,7 +144,6 @@ const setCriteria = (state, payload: IPayloadSetHighlightsCriteria) => {
     // If a new pattern is entered, the FindReplaceDirective calls selectNext, so the
     // index needs to become -1. See apps/authoring/editor/find-replace.js.
     // Otherwise, if only the sensitivity is changed, we reset to 0.
-
     const pattern = diff == null ? '' : Object.keys(diff || {})[0] || '';
     const index = pattern !== state.searchTerm.pattern ? -1 : 0;
 
@@ -217,7 +193,7 @@ export default findReplace;
 /**
  * @name getMatches
  * @param {Object} state
- * @description Returns the matching occurrences of the search criteria inside the current editor content.
+ * @description Returns the matching occurences of the search criteria inside the current editor content.
  */
 const getMatches = (state) => {
     const content = state.editorState.getCurrentContent();

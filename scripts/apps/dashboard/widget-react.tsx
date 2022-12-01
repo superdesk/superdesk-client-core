@@ -32,7 +32,6 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 authoringStorage={null}
                 fieldsAdapter={null}
                 storageAdapter={null}
-                getLatestArticle={() => ({} as IArticle)}
             />
         );
     }
