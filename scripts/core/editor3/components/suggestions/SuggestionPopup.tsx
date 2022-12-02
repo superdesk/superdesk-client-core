@@ -128,24 +128,34 @@ class Suggestion extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={[]}>
-                            <div className='sd-display--flex sd-gap--small'>
+                            <div className="sd-display--flex sd-gap--small">
                                 <UserAvatar user={author} />
                                 <div>
                                     <p className="editor-popup__author-name">{author.display_name}</p>
-                                    <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                                    <time className="editor-popup__time" title={relativeDateString}>
+                                        {absoluteDateString}
+                                    </time>
                                 </div>
                             </div>
                         </EditorHighlightsHeader>
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className='editor-popup__content-block'>
+                        <div className="editor-popup__content-block">
                             {content}
                         </div>
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className="button-group button-group--end button-group--comfort sd-flex--justify-end sd-padding--2">
+                        <div
+                            className={[
+                                'button-group',
+                                'button-group--end',
+                                'button-group--comfort',
+                                'sd-flex--justify-end',
+                                'sd-padding--2',
+                            ].join(' ')}
+                        >
                             <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
                                 {gettext('Accept')}
                             </button>

@@ -56,11 +56,13 @@ class Annotation extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={availableActions}>
-                            <div  className="sd-display--flex sd-gap--small">
+                            <div className="sd-display--flex sd-gap--small">
                                 <UserAvatarFromUserId userId={authorId} />
                                 <div>
                                     <p className="editor-popup__author-name">{author}</p>
-                                    <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                                    <time className="editor-popup__time" title={relativeDateString}>
+                                        {absoluteDateString}
+                                    </time>
                                 </div>
                             </div>
                         </EditorHighlightsHeader>
@@ -75,7 +77,7 @@ class Annotation extends React.Component<any, any> {
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className='editor-popup__content-block'>
+                        <div className="editor-popup__content-block">
                             <div dangerouslySetInnerHTML={{__html: html}} />
                         </div>
                     </FluidRow>

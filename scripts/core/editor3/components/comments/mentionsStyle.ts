@@ -31,7 +31,7 @@ export default ({
             highlighter: {
                 padding: '6px',
                 overflowY: 'hidden',
-                minHeight: '3.2rem'
+                minHeight: '3.2rem',
             },
 
             input: {
@@ -39,7 +39,7 @@ export default ({
                 overflowY: 'scroll',
                 outline: 0,
                 border: 0,
-                minHeight: '3.2rem'
+                minHeight: '3.2rem',
             },
         },
 
