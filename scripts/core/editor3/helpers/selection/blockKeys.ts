@@ -1,5 +1,5 @@
 export const getBlockKeys = (contentState, start, end) => [
-    ...contentState
+    contentState
         .getBlockMap()
         .keySeq()
         .skipUntil((k) => k === start)
