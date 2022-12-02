@@ -27,7 +27,8 @@ import {AppliedFilters} from './rundowns/components/applied-filters';
 
 import {superdesk} from './superdesk';
 import {ManageShows} from './shows/manage-shows';
-import {IRundownItemActionNext} from './rundowns/prepare-create-edit-rundown-item';
+import {IRundownItemActionNext, prepareForPreview} from './rundowns/prepare-create-edit-rundown-item';
+import {events, IBroadcastingEvents} from './events';
 
 const {gettext} = superdesk.localization;
 const {isLockedInCurrentSession} = superdesk.utilities;
@@ -60,6 +61,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         this.setFilter = this.setFilter.bind(this);
         this.prepareRundownEditing = this.prepareRundownEditing.bind(this);
         this.prepareNextRundownItemAction = this.prepareNextRundownItemAction.bind(this);
+        this.openRundownItemEventHandler = this.openRundownItemEventHandler.bind(this);
     }
 
     private setFilter(filters: Partial<IState['filters']>) {
@@ -89,6 +91,29 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         } else {
             return Promise.resolve(actionNext);
         }
+    }
+
+    private openRundownItemEventHandler(event: CustomEvent<IBroadcastingEvents['openRundownItem']>): void {
+        const {rundownId, rundownItemId} = event.detail;
+
+        Promise.all([
+            this.prepareRundownEditing(rundownId),
+            this.prepareNextRundownItemAction(prepareForPreview(this.state.rundownItemAction, rundownItemId)),
+        ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
+            this.setState({
+                rundownAction: rundownViewEditNext,
+                rundownItemAction: rundownItemActionNext,
+            });
+        });
+    }
+
+    componentDidMount(): void {
+        events.addListener('openRundownItem', this.openRundownItemEventHandler);
+        events.dispatchEvent('broadcastingPageDidLoad', true);
+    }
+
+    componentWillUnmount(): void {
+        events.removeListener('openRundownItem', this.openRundownItemEventHandler);
     }
 
     render() {
