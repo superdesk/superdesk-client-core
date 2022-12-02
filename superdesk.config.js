@@ -8,12 +8,6 @@
 module.exports = function(grunt) {
     return {
         defaultRoute: '/workspace',
-        apps: [
-            'superdesk-planning',
-        ],
-        importApps: [
-            'superdesk-planning',
-        ],
         features: {
             swimlane: {defaultNumberOfColumns: 4},
             editor3: true,
@@ -24,7 +18,6 @@ module.exports = function(grunt) {
             validatePointOfInterestForImages: true,
             hideRoutedDesks: false,
             showCharacterLimit: 40,
-            planning: true,
         },
         auth: {google: false},
         ingest: {
@@ -38,9 +31,5 @@ module.exports = function(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
-        workspace: {
-            planning: true,
-            assignments: true
-        }
     };
 };
