@@ -131,7 +131,6 @@ describe('highlights', () => {
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
-            monitoring.closeMarkedForDeskPopup();
 
             // again trigger keyoard shortcut for multimark
             ctrlShiftKey('^');
