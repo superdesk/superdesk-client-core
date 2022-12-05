@@ -95,7 +95,6 @@ describe('templates', () => {
         // cannot save empty template
         templates.openTemplatesSettings();
         templates.add();
-        templates.save();
         expect(templates.getSaveButton().isEnabled()).toBe(false);
     });
 });

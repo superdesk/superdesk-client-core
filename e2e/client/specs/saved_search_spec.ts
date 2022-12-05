@@ -4,7 +4,7 @@ import {element, browser, by} from 'protractor';
 
 import {globalSearch} from './helpers/search';
 import {nav, waitForSuperdesk, login} from './helpers/utils';
-import {LoginModal} from './helpers/pages';
+import {LoginModal, logout} from './helpers/pages';
 import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('saved_search', () => {
@@ -55,12 +55,8 @@ describe('saved_search', () => {
         var savedSearch = element.all(by.repeater('search in userSavedSearches')).get(0);
 
         expect(savedSearch.element(by.css('.search-name')).getText()).toBe('A Global Search [Global]');
-        element(by.css('button.current-user')).click();
 
-        // wait for sidebar animation to finish
-        browser.wait(() => element(by.buttonText('SIGN OUT')).isDisplayed(), 200);
-
-        element(by.buttonText('SIGN OUT')).click();
+        logout();
 
         var modal = new LoginModal();
 

@@ -5,6 +5,7 @@ import {monitoring} from './helpers/monitoring';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {LoginModal, logout} from './helpers/pages';
+import {click} from './helpers/utils';
 
 describe('notifications', () => {
     beforeEach(() => {
@@ -17,21 +18,24 @@ describe('notifications', () => {
         authoring.showComments();
         authoring.writeTextToComment('@admin1 hello');
 
-        var comments = element.all(by.repeater('comment in comments'));
+        const comments = element.all(by.repeater('comment in comments'));
+        const unreadCount = element(by.id('unread-count'));
 
         browser.wait(() => comments.count(), 2000);
 
         expect(comments.count()).toBe(1);
-        expect(element(by.id('unread-count')).getText()).toBe('3');
+        expect(unreadCount.getText()).toBe('3');
 
         logout();
         var modal = new LoginModal();
 
         modal.login('admin1', 'admin');
 
-        expect(element(by.id('unread-count')).getText()).toBe('4');
-        element(by.css('button.current-user')).click();
-        expect(element(by.id('unread-count')).getText()).toBe('');
+        expect(unreadCount.getText()).toBe('4');
+
+        click(element(by.id('unread-count')));
+
+        expect(unreadCount.getText()).toBe('');
     });
 
     xit('create a new desk mention', () => {

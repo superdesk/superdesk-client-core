@@ -6,7 +6,7 @@ import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {nav} from './helpers/utils';
+import {nav, waitFor} from './helpers/utils';
 import {userPreferences} from './helpers/user_prefs';
 import {post} from './helpers/fixtures';
 
@@ -158,15 +158,12 @@ describe('users', () => {
                 .then((elem) => {
                     elem.click();
                 });
-            var pageNavTitle = $('.page-nav-title');
 
-            browser.wait(() => pageNavTitle.getText().then((text) => {
-                if (text.indexOf('Users Profile') === 0) {
-                    return true;
-                }
-            }), 2000);
-            expect(pageNavTitle.getText())
-                .toBe('Users Profile: first name last name');
+            const pageNavTitle = $('.page-nav-title');
+
+            waitFor(pageNavTitle, 2000);
+            expect(pageNavTitle.getText().then((text) => text.replace('\n', ' ')))
+                .toBe('FL first name last name');
         });
     });
 
@@ -183,7 +180,7 @@ describe('users', () => {
         });
 
         it('can enable/disable buttons based on form status', () => {
-            var generalTab = element(by.buttonText('General info'));
+            var generalTab = element(by.buttonText('General'));
             var authorsTab = element(by.buttonText('Author info'));
 
             var buttonSave = element(by.id('save-edit-btn'));

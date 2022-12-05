@@ -33,7 +33,7 @@ class FilterConditions {
             by.repeater('filterCondition in filterConditions | filter: query track by filterCondition._id'),
         );
         this.valueField = element(by.model('filterCondition.value'));
-        this.addPredefinedValueButton = element(by.className('dropdown__toggle'));
+        this.addPredefinedValueButton = element(by.name('editForm')).element(by.className('dropdown__toggle'));
 
         /**
          * Gets the content filters matching the given name
