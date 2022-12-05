@@ -1,6 +1,9 @@
 import ng from 'core/services/ng';
 
-beforeEach(window.module(($provide) => $provide.constant('lodash', window._)));
+beforeEach(window.module(($provide) => {
+    $provide.constant('lodash', window._);
+}));
+
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
@@ -10,6 +13,10 @@ beforeEach(window.module('superdesk.core.services.storage'));
  */
 angular.module('superdesk.mocks', [])
     .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
+    .run(['$httpBackend', ($httpBackend) => {
+        // mock call to /api which is used in a few service factories
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }])
     .run(['$injector', ng.register])
     .constant('config', {
         server: {url: ''},

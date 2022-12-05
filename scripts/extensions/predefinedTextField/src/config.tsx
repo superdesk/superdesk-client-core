@@ -146,7 +146,7 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
                 />
 
                 <Checkbox
-                    label={{side: 'right', text: gettext('Allow switching to free text input')}}
+                    label={{side: 'end', text: gettext('Allow switching to free text input')}}
                     checked={this.props.config?.allowSwitchingToFreeText ?? false}
                     onChange={(allowSwitchingToFreeText) => {
                         this.props.onChange({
