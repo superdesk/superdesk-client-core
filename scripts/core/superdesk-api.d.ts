@@ -2155,7 +2155,6 @@ declare module 'superdesk-api' {
     export interface IPreviewComponentProps {
         item: IArticle;
         value: any;
-        field: IVocabulary;
     }
 
     // IConfig must be a plain object
