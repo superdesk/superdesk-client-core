@@ -188,6 +188,7 @@ function get(id: IArticle['_id']): Promise<IArticle> {
 
 function isEditable(_article: IArticle): boolean {
     const itemState: ITEM_STATE = _article.state;
+    const authoring = ng.get('authoring');
 
     switch (itemState) {
     case ITEM_STATE.DRAFT:
@@ -197,7 +198,7 @@ function isEditable(_article: IArticle): boolean {
     case ITEM_STATE.ROUTED:
     case ITEM_STATE.FETCHED:
     case ITEM_STATE.UNPUBLISHED:
-        return isLockedInCurrentSession(_article) || isLocked(_article) === false;
+        return authoring.itemActions(_article).edit === true;
     case ITEM_STATE.INGESTED:
     case ITEM_STATE.SPIKED:
     case ITEM_STATE.SCHEDULED:
@@ -215,7 +216,7 @@ function isEditable(_article: IArticle): boolean {
 interface IArticleApi {
     get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
-    isEditable(state: IArticle): boolean;
+    isEditable(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
     isLockedInOtherSession(article: IArticle): boolean;
     isLockedByCurrentUser(article: IArticle): boolean;

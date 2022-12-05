@@ -15,6 +15,7 @@ import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import React from 'react';
 import {MultiEditModal} from 'apps/authoring-react/multi-edit-modal';
+import {Modal, Text} from 'superdesk-ui-framework/react';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -24,8 +25,6 @@ export function getBulkActions(
     scopeApply: () => void,
 ): Array<IArticleActionBulkExtended> {
     const actions: Array<IArticleActionBulkExtended> = [];
-
-    const authoring = ng.get('authoring');
     const desks = ng.get('desks');
     const privileges = ng.get('privileges');
 
@@ -120,7 +119,8 @@ export function getBulkActions(
             });
         }
 
-        if (allAreEditable && articles.every((article) => authoring.itemActions(article).edit === true)) {
+        if (allAreEditable) {
+            debugger;
             actions.push({
                 label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
@@ -148,6 +148,33 @@ export function getBulkActions(
                         multiActions.multiedit();
                         scopeApply?.();
                     }
+                },
+                canAutocloseMultiActionBar: false,
+            });
+        } else {
+            const modalHeadline = gettext('You can\'t multi-edit, because these articles are either locked or can\'t be edited');
+
+            actions.push({
+                label: gettext('Multi-edit'),
+                icon: 'icon-multiedit',
+                onTrigger: () => {
+                    showModal(({closeModal}) => (
+                        <Modal
+                            zIndex={1050}
+                            size="medium"
+                            visible
+                            onHide={closeModal}
+                            headerTemplate={modalHeadline}
+                        >
+                            {
+                                getSelectedItems().filter((article) => {
+                                    return !isEditable(article);
+                                }).map((item) => (
+                                    <div key={item._id}>{item.slugline || item.headline}</div>
+                                ))
+                            }
+                        </Modal>
+                    ));
                 },
                 canAutocloseMultiActionBar: false,
             });
