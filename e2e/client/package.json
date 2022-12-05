@@ -11,7 +11,7 @@
     "http-server": "0.12.1",
     "jasmine-reporters": "2.3.0",
     "protractor": "7.0.0",
-    "typescript": "3.9.7",
+    "typescript": "4.9.3",
     "webdriver-manager": "^12.1.8"
   },
   "scripts": {

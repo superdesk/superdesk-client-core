@@ -162,7 +162,7 @@ describe('users', () => {
             const pageNavTitle = $('.page-nav-title');
 
             waitFor(pageNavTitle, 2000);
-            expect(pageNavTitle.getText().then((text) => text.replace('\n', ' ')))
+            expect(pageNavTitle.getText().then((text: string) => text.replaceAll('\n', ' ')))
                 .toBe('FL first name last name');
         });
     });
