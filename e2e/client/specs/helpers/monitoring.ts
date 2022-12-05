@@ -20,6 +20,7 @@ class Monitoring {
     createItemAction: (action: any) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
+    getGroups: () => any;
     getItem: (group: any, item: any) => any;
     getGroupItems: (group: any) => any;
     actionOnDeskSingleView: () => void;
@@ -179,11 +180,16 @@ class Monitoring {
         this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
 
         this.getGroup = function(group: number) {
+            return this.getGroups().get(group);
+        };
+
+        this.getGroups = function() {
             const groups = element.all(by.repeater('group in aggregate.groups'));
 
             browser.sleep(3000); // due to debouncing, loading does not start immediately
             browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 2000);
-            return groups.get(group);
+
+            return groups;
         };
 
         /**
