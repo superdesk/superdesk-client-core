@@ -15,7 +15,7 @@ import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import React from 'react';
 import {MultiEditModal} from 'apps/authoring-react/multi-edit-modal';
-import {Modal, Text} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework/react';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -120,7 +120,6 @@ export function getBulkActions(
         }
 
         if (allAreEditable) {
-            debugger;
             actions.push({
                 label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
@@ -152,7 +151,7 @@ export function getBulkActions(
                 canAutocloseMultiActionBar: false,
             });
         } else {
-            const modalHeadline = gettext('You can\'t multi-edit, because these articles are either locked or can\'t be edited');
+            const modalHeadline = gettext('You can\'t multi-edit, because these articles can\'t be edited');
 
             actions.push({
                 label: gettext('Multi-edit'),

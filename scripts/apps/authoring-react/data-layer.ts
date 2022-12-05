@@ -65,8 +65,6 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
 
                     return result;
                 })
-                .filter((t) => t.editorItem != null)
-                .map((t) => ({...t, editorItem: {...t.editorItem, section: 'content'}}))
                 .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
