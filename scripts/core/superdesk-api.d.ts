@@ -1018,7 +1018,7 @@ declare module 'superdesk-api' {
             }
         };
         version: any;
-        template: any;
+        template: ITemplate['_id'];
         original_creator: string;
         unique_id: any;
         operation: any;

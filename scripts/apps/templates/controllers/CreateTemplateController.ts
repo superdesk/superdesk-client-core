@@ -1,5 +1,6 @@
 import notifySaveError from '../helpers';
 import {sdApi} from 'api';
+import {willCreateNew} from 'apps/authoring-react/toolbar/template-helpers';
 
 CreateTemplateController.$inject = [
     'item',
@@ -39,10 +40,12 @@ export function CreateTemplateController(
     function activate() {
         if (item.template) {
             api.find('content_templates', item.template).then((template) => {
-                self.name = template.template_name;
-                self.desk = !_.isNil(template.template_desks) ? template.template_desks[0] : null;
-                self.is_public = template.is_public !== false;
-                self.template = template;
+                const data = sdApi.templates.prepareData(template);
+
+                self.name = data.template.template_name;
+                self.desk = data.desk;
+                self.is_public = data.template.is_public;
+                self.template = data.template;
             });
         }
 
@@ -51,15 +54,17 @@ export function CreateTemplateController(
         });
     }
 
+    self.willCreateNew = () => willCreateNew(self.template, self.name, self.is_public);
+
     function save() {
-        return sdApi.templates.save(item, self.name, self.desk)
+        return sdApi.templates.save(item, self.name, self.is_public ? self.desk : null)
             .then((data) => {
                 self._issues = null;
                 return data;
             })
             .catch((error) => {
-                notifySaveError(error, notify);
-                self._issues = error.data._issues;
+                notifySaveError({data: error}, notify);
+                self._issues = error._issues;
                 return $q.reject(self._issues);
             });
     }

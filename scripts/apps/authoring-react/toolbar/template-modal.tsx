@@ -3,34 +3,59 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, ITemplate} from 'superdesk-api';
-import {Alert, Button, Checkbox, Dropdown, Heading, Input, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {Alert, Button, Checkbox, Input, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {canEdit} from './template-helpers';
 
 interface IProps {
     item: IArticle;
     closeModal: () => void;
 }
 
-interface IState {
-    templateName: string | null;
-    deskTemplate: boolean;
-    response: ITemplate | string | null;
-    selectedDeskId: string | null;
+interface IStateLoading {
+    initialized: false;
 }
+
+interface IStateLoaded {
+    initialized: true;
+    templateName: string | null;
+    isDeskTemplate: boolean;
+    responseError: string | null;
+    deskId: string | null;
+    template: ITemplate | null;
+}
+
+type IState = IStateLoaded | IStateLoading;
 
 export class TemplateModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            templateName: this.props.item.slugline,
-            deskTemplate: true,
-            response: null,
-            selectedDeskId: sdApi.desks.getAllDesks().map((x) => x._id).toArray()[0],
+            initialized: false,
         };
+    }
+
+    componentDidMount(): void {
+        sdApi.templates.getById(this.props.item.template).then((res) => {
+            this.setState({
+                initialized: true,
+                template: res,
+                templateName: res.template_name,
+                isDeskTemplate: true,
+                responseError: null,
+                deskId: res.template_desks[0],
+            });
+        });
     }
 
     render(): JSX.Element {
         const availableDesks = sdApi.desks.getAllDesks().map((x) => x).toArray();
+
+        if (!this.state.initialized) {
+            return null;
+        }
+
+        const state = this.state;
 
         return (
             <Modal
@@ -42,44 +67,82 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="16">
                     <Input
-                        onChange={(value) => this.setState({
-                            templateName: value,
-                        })}
-                        value={this.state.templateName}
                         type="text"
                         label={gettext('Template name')}
+                        value={state.templateName}
+                        onChange={(value) => this.setState({
+                            ...state,
+                            templateName: value,
+                        })}
                     />
                     {
-                        typeof this.state.response === 'string' && (
+                        state.responseError != null && (
                             <Alert
                                 margin="none"
                                 size="small"
                                 type="alert"
                             >
-                                {this.state.response}
+                                {state.responseError}
                             </Alert>
                         )
                     }
-                    <Checkbox
-                        label={{text: gettext('Desk template')}}
-                        checked={this.state.deskTemplate}
-                        onChange={() => this.setState({deskTemplate: !this.state.deskTemplate})}
-                    />
                     {
-                        this.state.deskTemplate && (
-                            <Select
-                                onChange={(value) => {
-                                    this.setState({selectedDeskId: value});
-                                }}
-                                label={gettext('Desks')}
-                                value={this.state.selectedDeskId}
-                            >
+                        state.templateName !== state.template.template_name
+                            || state.template == null
+                            || canEdit(state.template, state.deskId != null) !== true
+                            ? (
+                                <Alert
+                                    margin="none"
+                                    size="small"
+                                    type="warning"
+                                    style="hollow"
+                                >
+                                    {gettext('A new template will be created')}
+                                </Alert>
+                            )
+                            : (
+                                <Alert
+                                    margin="none"
+                                    size="small"
+                                    type="warning"
+                                    style="hollow"
+                                >
+                                    {gettext('Template will be updated')}
+                                </Alert>
+                            )
+                    }
+                    {
+                        availableDesks != null && state.template.is_public &&
+                        (
+                            <>
+                                <Checkbox
+                                    label={{text: gettext('Desk template')}}
+                                    checked={state.isDeskTemplate}
+                                    onChange={() => this.setState({
+                                        ...state,
+                                        deskId: state.isDeskTemplate ? null : state.deskId,
+                                        isDeskTemplate: !state.isDeskTemplate,
+                                    })}
+                                />
                                 {
-                                    availableDesks.map(({_id, name}) => (
-                                        <Option key={_id} value={_id}>{name}</Option>
-                                    ))
+                                    state.isDeskTemplate && (
+                                        <Select
+                                            label={gettext('Desks')}
+                                            value={state.deskId}
+                                            onChange={(value) => {
+                                                this.setState({...state, deskId: value});
+                                            }}
+                                        >
+                                            <Option />
+                                            {
+                                                availableDesks.map(({_id, name}) => (
+                                                    <Option key={_id} value={_id}>{name}</Option>
+                                                ))
+                                            }
+                                        </Select>
+                                    )
                                 }
-                            </Select>
+                            </>
                         )
                     }
                     <Spacer h gap="8" justifyContent="end" noGrow>
@@ -93,14 +156,15 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                             onClick={() => {
                                 sdApi.templates.save(
                                     this.props.item,
-                                    this.state.templateName,
-                                    this.state.selectedDeskId,
+                                    state.templateName,
+                                    state.deskId,
                                 )
-                                    .then((response) => {
-                                        this.setState({response: response});
+                                    .then(() => {
                                         this.props.closeModal();
                                     })
-                                    .catch((error) => this.setState({response: error.data._issues.is_public}));
+                                    .catch((error) => {
+                                        this.setState({...state, responseError: error._issues.is_public});
+                                    });
                             }}
                         />
                     </Spacer>

@@ -1006,19 +1006,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 ).then((actions) => {
                                     const coreActions: Array<IAuthoringAction> = [];
 
-                                    coreActions.push({
-                                        label: gettext('Save as template'),
-                                        onTrigger: () => (
-                                            showModal(({closeModal}) => {
-                                                return (
-                                                    <TemplateModal
-                                                        closeModal={closeModal}
-                                                        item={state.itemWithChanges as unknown as IArticle}
-                                                    />
-                                                );
-                                            })
-                                        ),
-                                    });
                                     if (appConfig.features.useTansaProofing !== true) {
                                         if (state.spellcheckerEnabled) {
                                             const nextValue = false;
