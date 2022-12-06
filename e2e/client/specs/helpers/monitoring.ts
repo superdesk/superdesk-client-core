@@ -238,7 +238,7 @@ class Monitoring {
         this.getDeskSingleViewTitle = function() {
             return element.all(by.css('[ng-if="monitoring.singleGroup.singleViewType === \'desk\'"]')).get(0)
                 .getText()
-                .then((text) => text.replaceAll('\n', ' '));
+                .then((text) => text.replace(/\n/g, ' '));
         };
 
         this.actionOnStageSingleView = function() {
