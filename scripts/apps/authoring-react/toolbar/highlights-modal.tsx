@@ -1,5 +1,4 @@
 import {sdApi} from 'api';
-import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import React from 'react';
@@ -17,8 +16,8 @@ interface IStateLoading {
 
 interface IStateLoaded {
     initialized: true;
-    availableHighlights: Array<IHighlight>;
-    markedHighlights: Array<string>
+    availableHighlights: Array<IHighlight> | null;
+    markedHighlights: Array<string> | null;
 }
 
 type IState = IStateLoaded | IStateLoading;
@@ -36,58 +35,35 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
         Promise.all([
             sdApi.highlights.fetchHighlights(),
             this.fetchArticleWithHighlights(),
-        ]).then(([res1, res2]: [IHighlightResponse, any]) => {
+        ]).then(([highlightResponse, article]: [IHighlightResponse, IArticle]) => {
             this.setState({
                 initialized: true,
-                availableHighlights: res1._items,
-                markedHighlights: res2._items[0].highlights,
+                availableHighlights: highlightResponse._items,
+                markedHighlights: article.highlights,
             });
         });
     }
 
-    markHighlight(highlighId) {
+    markHighlight(highlighId: string): void {
         sdApi.highlights.markItem(highlighId, this.props.article._id).then((res) => {
-            if (this.state.initialized) {
+            if (this.state.initialized && this.state.markedHighlights != null) {
                 this.setState({
                     ...this.state,
                     markedHighlights: [...this.state.markedHighlights, res.highlights],
+                });
+            } else if (this.state.initialized) {
+                this.setState({
+                    ...this.state,
+                    markedHighlights: res.highlights,
                 });
             }
         });
     }
 
-    fetchArticleWithHighlights() {
-        return httpRequestJsonLocal({
+    fetchArticleWithHighlights(): Promise<IArticle> {
+        return httpRequestJsonLocal<IArticle>({
             method: 'GET',
-            path: '/archive',
-            urlParams: {
-                auto: 0,
-                es_highlight: 0,
-                projections: ['highlights'],
-                source: {
-                    query: {
-                        filtered: {
-                            filter: {
-                                and: [{not: {term: {state: 'spiked'}}},
-                                    {
-                                        not: {
-                                            and: [
-                                                {not: {exists: {field: 'task.desk'}}},
-                                                {exists: {field: 'task.user'}},
-                                                {not: {term: {'task.user': ng.get('session').identity._id}}},
-                                            ],
-                                        },
-                                    }, {
-                                        not: {term: {package_type: 'takes'}}}, {
-                                        term: {'task.stage': '638a083940d7ff2038889bba'},
-                                    },
-                                ],
-                            },
-                        },
-                    },
-                    sort: [{versioncreated: 'desc'}], from: 0, size: 25,
-                },
-            },
+            path: `/archive/${this.props.article._id}`,
         });
     }
 
@@ -113,14 +89,14 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
                     }}
                 >
                     {
-                        state.availableHighlights.map((highlight) => {
+                        state.availableHighlights?.map((highlight) => {
                             return (
                                 <Button
                                     key={highlight._id}
                                     type="primary"
-                                    style={state.markedHighlights.includes(highlight._id) ? 'hollow' : 'filled'}
+                                    style={state.markedHighlights?.includes(highlight._id) ? 'hollow' : 'filled'}
                                     onClick={() => this.markHighlight(highlight._id)}
-                                    disabled={state.markedHighlights.includes(highlight._id)}
+                                    disabled={state.markedHighlights?.includes(highlight._id)}
                                     text={highlight.name}
                                 />
                             );
