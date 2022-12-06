@@ -1,8 +1,10 @@
 import {sdApi} from 'api';
+import ng from 'core/services/ng';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import React from 'react';
-import {IArticle, IHighlight} from 'superdesk-api';
-import {Button, Modal, MultiSelect, SimpleList, SimpleListItem} from 'superdesk-ui-framework/react';
+import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
+import {Button, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -31,17 +33,62 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
     }
 
     componentDidMount(): void {
-        sdApi.highlights.fetchHighlights().then((res) => {
+        Promise.all([
+            sdApi.highlights.fetchHighlights(),
+            this.fetchArticleWithHighlights(),
+        ]).then(([res1, res2]: [IHighlightResponse, any]) => {
             this.setState({
                 initialized: true,
-                availableHighlights: res._items,
-                markedHighlights: this.props.article.highlights,
+                availableHighlights: res1._items,
+                markedHighlights: res2._items[0].highlights,
             });
         });
     }
 
     markHighlight(highlighId) {
-        sdApi.highlights.markItem(highlighId, this.props.article._id);
+        sdApi.highlights.markItem(highlighId, this.props.article._id).then((res) => {
+            if (this.state.initialized) {
+                this.setState({
+                    ...this.state,
+                    markedHighlights: [...this.state.markedHighlights, res.highlights],
+                });
+            }
+        });
+    }
+
+    fetchArticleWithHighlights() {
+        return httpRequestJsonLocal({
+            method: 'GET',
+            path: '/archive',
+            urlParams: {
+                auto: 0,
+                es_highlight: 0,
+                projections: ['highlights'],
+                source: {
+                    query: {
+                        filtered: {
+                            filter: {
+                                and: [{not: {term: {state: 'spiked'}}},
+                                    {
+                                        not: {
+                                            and: [
+                                                {not: {exists: {field: 'task.desk'}}},
+                                                {exists: {field: 'task.user'}},
+                                                {not: {term: {'task.user': ng.get('session').identity._id}}},
+                                            ],
+                                        },
+                                    }, {
+                                        not: {term: {package_type: 'takes'}}}, {
+                                        term: {'task.stage': '638a083940d7ff2038889bba'},
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                    sort: [{versioncreated: 'desc'}], from: 0, size: 25,
+                },
+            },
+        });
     }
 
     render() {
@@ -51,19 +98,13 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
 
         const state = this.state;
 
-        // TODO: Fix
-        // article doesn't have highlights field available even if it actually has chosen highlights in the DB
-        // from where do we get the article with all fields?
-        const markedHighlightsFromAvailable = state.availableHighlights
-            .filter((highlight) => this.props.article.highlights?.includes(highlight._id));
-
         return (
             <Modal
                 onHide={this.props.closeModal}
                 zIndex={1050}
                 size="small"
                 visible
-                headerTemplate={gettext('Available highlights')}
+                headerTemplate={gettext('Highlights')}
             >
                 <div
                     style={{
@@ -76,10 +117,10 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
                             return (
                                 <Button
                                     key={highlight._id}
-                                    style={markedHighlightsFromAvailable.includes(highlight) ? 'hollow' : 'filled'}
-                                    theme="light"
+                                    type="primary"
+                                    style={state.markedHighlights.includes(highlight._id) ? 'hollow' : 'filled'}
                                     onClick={() => this.markHighlight(highlight._id)}
-                                    disabled={markedHighlightsFromAvailable.includes(highlight)}
+                                    disabled={state.markedHighlights.includes(highlight._id)}
                                     text={highlight.name}
                                 />
                             );
