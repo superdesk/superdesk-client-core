@@ -42,10 +42,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 );
             } else {
                 const date = new Date(this.props.value);
-
-                const day = format(date, 'yyyy-MM-dd'); // ISO8601
                 const hour = format(date, 'HH:mm'); // ISO8601
-
                 const steps = this.props.config?.increment_steps ?? [];
 
                 // Get the DatePicker locale using the language of this item
@@ -60,7 +57,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
-                                value={day}
+                                value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {
                                         this.props.setValue(null);
