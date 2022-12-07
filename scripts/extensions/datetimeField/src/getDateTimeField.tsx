@@ -57,7 +57,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
-                                value={this.props.value} // we have to pass the full datetime here so the component knows the timezone
+                                value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {
                                         this.props.setValue(null);
