@@ -1,8 +1,6 @@
-export interface IContentState {
-    getBlockMap: () => { keySeq: () => { skipUntil: (k: any) => { takeUntil: (k: any) => void } } };
-}
+import {ContentState} from 'draft-js';
 
-export const getBlockKeys = (contentState: IContentState, start: string, end: string) =>
+export const getBlockKeys = (contentState: ContentState, start: string, end: string) =>
     [contentState
         .getBlockMap()
         .keySeq()
