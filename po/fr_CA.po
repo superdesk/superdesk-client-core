@@ -13,13 +13,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-06-04 19:45+0000\n"
-"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>, 2020-2021\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_CA\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
@@ -147,6 +147,7 @@ msgid "1 item selected"
 msgid_plural "{{number}} items selected"
 msgstr[0] "1 élément sélectionné"
 msgstr[1] "{{number}} éléments sélectionnés"
+msgstr[2] "{{number}} éléments sélectionnés"
 
 #: ../superdesk-planning/client/actions/multiSelect.js:217
 msgid "1 item was not included in the export."
@@ -525,7 +526,7 @@ msgstr "Ajouter un champ"
 
 #: scripts/apps/content-filters/views/manage-filters.html:116
 msgid "Add Filter Statement"
-msgstr ""
+msgstr "Ajouter une déclaration de filtre"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
@@ -723,11 +724,11 @@ msgstr "Ajouter une description de la tâche"
 
 #: ../superdesk-planning/client/actions/agenda.ts:161
 msgid "Add these  events to the planning list?"
-msgstr "Ajouter ces événements à la liste de planification?"
+msgstr "Ajouter ces événements à la liste de couvertures?"
 
 #: ../superdesk-planning/client/actions/agenda.ts:160
 msgid "Add this event to the planning list?"
-msgstr "Ajouter cet événement à la liste de planification?"
+msgstr "Ajouter cet événement à la liste de couvertures?"
 
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
@@ -944,7 +945,7 @@ msgstr "Tous les événements"
 #: ../superdesk-planning/client/components/Main/EventsPlanningFiltersSubnavDropdown.jsx:19
 #: ../superdesk-planning/client/components/Main/EventsPlanningFiltersSubnavDropdown.jsx:38
 msgid "All Events & Planning"
-msgstr "Tous les événements et la planfication"
+msgstr "Tous les événements et couvertures"
 
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:20
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:60
@@ -1210,7 +1211,7 @@ msgstr "Archivé"
 
 #: scripts/apps/content-filters/views/manage-filters.html:54
 msgid "Archived Block"
-msgstr ""
+msgstr "Bloc archivé"
 
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archived Management"
@@ -1480,7 +1481,7 @@ msgstr "Asie/Iekaterinbourg "
 #: scripts/apps/publish/views/http-push-config.html:10
 #: scripts/apps/publish/views/http-push-config.html:9
 msgid "Assets URL"
-msgstr ""
+msgstr "URL des actifs"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:76
 msgid "Assign"
@@ -1693,7 +1694,7 @@ msgstr "Informations sur l'auteur"
 
 #: scripts/apps/users/views/settings-roles.html:60
 msgid "Author roles controlled vocabullary is missing."
-msgstr ""
+msgstr "Le vocabulaire contrôlé par les rôles d'auteur est manquant."
 
 #: scripts/apps/authoring/authoring/index.ts:178
 #: scripts/apps/authoring/compare-versions/index.ts:27
@@ -1821,7 +1822,7 @@ msgstr "Bloquer l'API"
 
 #: scripts/apps/products/views/products-config-modal.html:68
 msgid "Blocking"
-msgstr ""
+msgstr "Blocage"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:54
 msgid "Blue"
@@ -1841,7 +1842,7 @@ msgstr "Corps HTML"
 
 #: scripts/apps/workspace/content/constants.ts:76
 msgid "Body footer"
-msgstr ""
+msgstr "Corps pied de page"
 
 #: scripts/apps/authoring/views/theme-select.html:107
 #: scripts/apps/authoring/views/theme-select.html:56
@@ -1910,7 +1911,7 @@ msgstr "C & C"
 
 #: scripts/apps/publish/views/email-config.html:20
 msgid "CID"
-msgstr ""
+msgstr "CID"
 
 #: ../superdesk-planning/client/validators/planning.js:129
 msgid "COVERAGE SCHEDULED DATE cannot be in the past"
@@ -2116,7 +2117,7 @@ msgstr "Annuler l'événement"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:147
 #: ../superdesk-planning/client/constants/planning.js:40
 msgid "Cancel Planning"
-msgstr "Annuler la planification"
+msgstr "Annuler la couverture"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.jsx:61
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:158
@@ -2263,6 +2264,7 @@ msgid "Character {{chars}} not allowed in the {{field}}."
 msgid_plural "Characters {{chars}} not allowed in the {{field}}."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:55
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:55
@@ -3490,7 +3492,7 @@ msgstr "Pupitre par défaut"
 
 #: scripts/apps/users/views/user-preferences.html:176
 msgid "Default Events & Planning Filter"
-msgstr "Filtre d'événements et de planification par défaut"
+msgstr "Filtre d'événements et de couvertures par défaut"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.jsx:71
 msgid "Default Template"
@@ -3902,8 +3904,9 @@ msgstr "Voulez-vous le lier à cette affectation ?"
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:71
 msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish the articles?"
-msgstr[0] "Voulez-vous publier l'article?"
-msgstr[1] "Voulez-vous publier les articles?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:135
 msgid "Do you want to reload the page now?"
@@ -4958,7 +4961,7 @@ msgstr "Événements"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:32
 msgid "Events & Planning"
-msgstr "Événements et planification"
+msgstr "Événements et couvertures"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:36
 msgid "Events only"
@@ -5622,7 +5625,7 @@ msgstr "Filtrer la recherche"
 
 #: scripts/apps/content-filters/views/manage-filters.html:66
 msgid "Filter Statement"
-msgstr ""
+msgstr "Filtrer déclaration"
 
 #: scripts/apps/content-filters/views/manage-filters.html:133
 msgid "Filter Test"
@@ -5780,7 +5783,7 @@ msgstr "Formateurs"
 
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.tsx:826
 msgid "Forward Planning"
-msgstr "Planification anticipée"
+msgstr "Couverture anticipée"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.jsx:112
 msgid "Fri"
@@ -6703,6 +6706,7 @@ msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
 msgstr[0] "L'élément n'a pas été ajouté. Un seul élément peut se trouver dans ce champ. "
 msgstr[1] "L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se trouver dans ce champ. "
+msgstr[2] "L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se trouver dans ce champ. "
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
@@ -7224,7 +7228,7 @@ msgstr "Gestion des agendas"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:32
 msgid "Manage Event & Planning Filters"
-msgstr "Gestion des filtres d'événement et de planification"
+msgstr "Gestion des filtres d'événements et de couvertures"
 
 #: ../superdesk-planning/client/components/Events/ManageEventTemplatesModal.tsx:86
 msgid "Manage Event Templates"
@@ -7232,7 +7236,7 @@ msgstr "Gestion des gabarits d'événement"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:132
 msgid "Manage Events & Planning Filters"
-msgstr "Gestion des filtres d'événements et de planification"
+msgstr "Gestion des filtres d'événements et de couvertures"
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Global Saved Searches"
@@ -8084,7 +8088,7 @@ msgstr "Nombre d'événements"
 
 #: scripts/apps/publish/views/subscribers.html:112
 msgid "Non-media"
-msgstr ""
+msgstr "Non-média"
 
 #: ../superdesk-planning/client/components/UI/Form/ColouredValueInput/ColouredValuePopup.tsx:149
 #: ../superdesk-planning/client/components/UI/Form/ColouredValueInput/index.tsx:134
@@ -8322,6 +8326,7 @@ msgid "Only 1 image is allowed in this field"
 msgid_plural "Only {{number}} images are allowed in this field"
 msgstr[0] "Seulement une photo est permise dans ce champ"
 msgstr[1] "Seulement {{number}} photos sont permises dans ce champ"
+msgstr[2] "Seulement {{number}} photos sont permises dans ce champ"
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:14
 msgid "Only Posted"
@@ -8612,7 +8617,7 @@ msgstr "ESPACE SÉCURISÉ"
 
 #: ../superdesk-planning/client/validators/planning.js:24
 msgid "PLANNING DATE cannot be in the past"
-msgstr "La DATE DE PLANIFICATION ne peut pas être dans le passé"
+msgstr "La DATE DE COUVERTURE ne peut pas être dans le passé"
 
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:103
@@ -8871,20 +8876,20 @@ msgstr "Planification"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:48
 msgid "Planning Cancelled"
-msgstr "Planification annulée"
+msgstr "Couverture annulée"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.jsx:46
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.jsx:44
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.tsx:684
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:195
 msgid "Planning Date"
-msgstr "Date de planification"
+msgstr "Date de couverture"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:145
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:77
 #: ../superdesk-planning/client/index.js:74
 msgid "Planning Details"
-msgstr "Détails de la planification"
+msgstr "Détails de la couverture"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:18
 #: ../superdesk-planning/client/utils/index.ts:651
@@ -8903,7 +8908,7 @@ msgstr "Couvertures"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Planning Management"
-msgstr "Gestion de la planification"
+msgstr "Gestion de la couverture"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:156
 msgid "Planning Module (Items created per user)"
@@ -8921,19 +8926,19 @@ msgstr "Utilisation de la planification"
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:56
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:56
 msgid "Planning cancelled"
-msgstr "Planification annulée"
+msgstr "Couverture annulée"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:140
 msgid "Planning cancelled:"
-msgstr "Planification annulée: "
+msgstr "Couverture annulée: "
 
 #: ../superdesk-planning/client/validators/planning.js:21
 msgid "Planning date is in the past"
-msgstr "La date de planification est dans le passé"
+msgstr "La date de couverture est dans le passé"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:206
 msgid "Planning duplicated"
-msgstr "Planification dupliquée"
+msgstr "Couverture dupliquée"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:304
 #: ../superdesk-planning/client/actions/planning/ui.js:314
@@ -8951,7 +8956,7 @@ msgstr "Couverture supprimée en tant qu'article à la une"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:40
 msgid "Planning only"
-msgstr "Planification seulement"
+msgstr "Couverture seulement"
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:352
 msgid "Please change the default templates first."
@@ -9772,7 +9777,7 @@ msgstr "Couvertures associées"
 
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:55
 msgid "Related Plannings"
-msgstr "Planifications associées"
+msgstr "Couvertures associées"
 
 #: scripts/apps/vocabularies/views/settings.html:22
 msgid "Related content"
@@ -11551,7 +11556,7 @@ msgstr "Place l'/les élément(s) dans la corbeille"
 
 #: ../superdesk-planning/client/constants/planning.js:25
 msgid "Spike planning"
-msgstr "Placer la planification dans la corbeille"
+msgstr "Placer la couverture dans la corbeille"
 
 #: ../superdesk-planning/client/components/Tooltips.jsx:5
 msgid "Spike planning item"
@@ -12120,11 +12125,11 @@ msgstr "L'affectation que vous visualisiez a été supprimée."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.js:39
 msgid "The Event and Planning filter you were viewing is deleted!"
-msgstr "Le filtre d'événement et de planification que vous visualisiez est supprimé!"
+msgstr "Le filtre d'événements et de couvertures que vous visualisiez est supprimé!"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.js:16
 msgid "The Event and Planning filter you were viewing is modified!"
-msgstr "Le filtre d'événement et de planification que vous visualisiez est modifié!"
+msgstr "Le filtre d'événements et de couvertures que vous visualisiez est modifié!"
 
 #: ../superdesk-planning/client/actions/events/notifications.js:110
 msgid "The Event was spiked"
@@ -12136,15 +12141,15 @@ msgstr "L'événement a été sorti de la corbeille"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:213
 msgid "The Events and Planning view filter is deleted."
-msgstr "Le filtre de visualisation d'événements et de planification est supprimé."
+msgstr "Le filtre de visualisation d'événements et de couvertures est supprimé."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:186
 msgid "The Events and Planning view filter is {{action}}."
-msgstr "Le filtre de visualisation d'événements et de planification est {{action}}."
+msgstr "Le filtre de visualisation d'événements et de couvertures est {{action}}."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:195
 msgid "The Events and Planning view filter with this name already exists"
-msgstr "Un filtre de visualisation d'événements et de planification avec ce nom existe déjà"
+msgstr "Un filtre de visualisation d'événements et de couvertures avec ce nom existe déjà"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:32
 msgid "The Planning Item(s) has been spiked."
@@ -12231,6 +12236,7 @@ msgid "The file was not uploaded"
 msgid_plural "Some files were not uploaded"
 msgstr[0] "Le fichier n'a pas été téléversé"
 msgstr[1] "Certains fichiers n'ont pas été téléversés"
+msgstr[2] "Certains fichiers n'ont pas été téléversés"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:108
 msgid "The following Events are in use and will not be spiked:"
@@ -12529,7 +12535,7 @@ msgstr "Une erreur s'est produite lors de l'enregistrement du compte d'utilisate
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:218
 msgid "There was an error, could not delete Events and Planning view filter."
-msgstr "Une erreur est survenue, il n'a pas été possible de supprimer le filtre d'événements et de planification. "
+msgstr "Une erreur est survenue, il n'a pas été possible de supprimer le filtre d'événements et de couvertures. "
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:84
 msgid "There was an error. Content filter cannot be deleted."
@@ -12968,8 +12974,9 @@ msgstr "Trop long"
 #: scripts/apps/authoring/attachments/actions.ts:30
 msgid "Too many files selected. Only 1 file is allowed."
 msgid_plural "Too many files selected. Only {{$count}} files are allowed."
-msgstr[0] "Trop de fichiers sélectionnés. Il n'est permis d'en sélectionner qu'un seul."
-msgstr[1] "Trop de fichiers sélectionnés. Il n'est permis d'en sélectionner que {{$count}}."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/validators/profile.js:32
 #: ../superdesk-planning/client/validators/profile.js:33
@@ -13198,7 +13205,7 @@ msgstr "Délier"
 
 #: ../superdesk-planning/index.ts:107
 msgid "Unlink as Coverage"
-msgstr ""
+msgstr "Délier en tant que couverture"
 
 #: scripts/apps/archive/index.tsx:314
 msgid "Unlink update"
@@ -13311,7 +13318,7 @@ msgstr "Sortir l'événement de la corbeille"
 
 #: ../superdesk-planning/client/constants/planning.js:30
 msgid "Unspike planning"
-msgstr "Sortir la planification de la corbeille"
+msgstr "Sortir la couverture de la corbeille"
 
 #: ../superdesk-planning/client/components/Tooltips.jsx:6
 msgid "Unspike planning item"
@@ -13848,6 +13855,7 @@ msgid "WORD"
 msgid_plural "WORDS"
 msgstr[0] "MOTS"
 msgstr[1] "MOTS"
+msgstr[2] "MOTS"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:658
 #: scripts/core/auth/auth.ts:211
@@ -14253,7 +14261,7 @@ msgstr "auteur"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "authoring"
-msgstr ""
+msgstr "création"
 
 #: scripts/core/editor2/editor.ts:1048
 msgid "bold"
@@ -14320,7 +14328,7 @@ msgstr "a commenté dans"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "compact"
-msgstr ""
+msgstr "compact"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.ts:127
@@ -14477,15 +14485,15 @@ msgstr "p. ex. @superdeskman"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:559
 msgid "e.g. Rhodes, CBD"
-msgstr ""
+msgstr "par exemple. Rhodes, CDB"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:489
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
-msgstr ""
+msgstr "par exemple. cityofsydney à partir de https://www.facebook.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:513
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
-msgstr ""
+msgstr "par exemple. cityofsydney à partir de https://www.instagram.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:447
 msgid "e.g. http://www.website.com"
@@ -14599,7 +14607,7 @@ msgstr "prénom"
 
 #: ../superdesk-planning/client/utils/tests/index_test.js:207
 msgid "foo"
-msgstr ""
+msgstr "foo"
 
 #: ../superdesk-planning/client/utils/events.ts:973
 msgid "for"
@@ -14676,7 +14684,7 @@ msgstr "type d'en-tête 2"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
-msgstr ""
+msgstr "élevé"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "highlights"
@@ -14810,6 +14818,7 @@ msgid "line"
 msgid_plural "lines"
 msgstr[0] "ligne"
 msgstr[1] "lignes"
+msgstr[2] "lignes"
 
 #: scripts/core/editor2/editor.ts:1083
 msgid "link"
@@ -14825,7 +14834,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/constants/planning.js:103
 msgid "live_video"
-msgstr ""
+msgstr "live_video"
 
 #: scripts/apps/contacts/views/search-results.html:4
 #: scripts/apps/content-api/views/search-results.html:4
@@ -15352,6 +15361,7 @@ msgid "translation"
 msgid_plural "translations"
 msgstr[0] "traduction"
 msgstr[1] "traductions"
+msgstr[2] "traductions"
 
 #: scripts/apps/authoring/views/authoring-header.html:84
 msgid "translations"
@@ -15559,6 +15569,7 @@ msgid "{{ multi.count}} Item selected"
 msgid_plural "{{ multi.count}} Items selected"
 msgstr[0] "{{multi.count}} Articles sélectionnés"
 msgstr[1] "{{multi.count}} Éléments sélectionnés"
+msgstr[2] "{{multi.count}} Éléments sélectionnés"
 
 #: ../superdesk-planning/client/validators/assignments.jsx:7
 #: ../superdesk-planning/client/validators/profile.js:40
@@ -15599,6 +15610,7 @@ msgid "{{ wordsCount}} word"
 msgid_plural "{{ $count}} words"
 msgstr[0] "{{$count}} mots"
 msgstr[1] "{{$count}} mots"
+msgstr[2] "{{$count}} mots"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:42
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
@@ -15691,6 +15703,7 @@ msgid "{{multiSelectCount}} Item selected"
 msgid_plural "{{multiSelectCount}} Items selected"
 msgstr[0] "{{multiSelectCount}} Articles sélectionnés"
 msgstr[1] "{{multiSelectCount}} Éléments sélectionnés"
+msgstr[2] "{{multiSelectCount}} Éléments sélectionnés"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
@@ -15736,6 +15749,7 @@ msgid "{{x}} hour"
 msgid_plural "{{x}} hours"
 msgstr[0] "{{x}} heure"
 msgstr[1] "{{x}} heures"
+msgstr[2] "{{x}} heures"
 
 #: scripts/apps/search/components/fields/linesCount.tsx:14
 msgid "{{x}} lines"
