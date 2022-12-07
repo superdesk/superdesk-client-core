@@ -38,6 +38,8 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
+import {showModal} from '@superdesk/common';
+import ExportModal from './toolbar/export-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -140,6 +142,30 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
+        const getExportModal = (
+            item: IArticle,
+            handleUnsavedChanges: () => Promise<IArticle>,
+            hasUnsavedChanges: boolean,
+        ): IAuthoringAction => ({
+            label: gettext('Export'),
+            onTrigger: () => {
+                const openModal = (article: IArticle) => showModal(({closeModal}) => {
+                    return (
+                        <ExportModal
+                            closeModal={closeModal}
+                            article={article}
+                        />
+                    );
+                });
+
+                if (hasUnsavedChanges) {
+                    handleUnsavedChanges().then((article) => openModal(article));
+                } else {
+                    openModal(item);
+                }
+            },
+        });
+
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
@@ -173,7 +199,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                 onEditingEnd={(article) => {
                                     dispatchCustomEvent('articleEditEnd', article);
                                 }}
-                                getActions={({item, contentProfile, fieldsData}) => {
+                                getActions={({
+                                    item,
+                                    contentProfile,
+                                    fieldsData,
+                                    getLatestItem,
+                                    handleUnsavedChanges,
+                                    hasUnsavedChanges,
+                                }) => {
                                     return Promise.all([
                                         getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
                                         getArticleActionsFromExtensions(item),
@@ -181,6 +214,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                         return [
+                                            getExportModal(getLatestItem(), handleUnsavedChanges, hasUnsavedChanges()),
                                             ...authoringActionsFromExtensions,
                                             ...articleActionsFromExtensions,
                                         ];
