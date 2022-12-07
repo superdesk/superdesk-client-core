@@ -38,6 +38,8 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
+import {showModal} from '@superdesk/common';
+import TranslateModal from './toolbar/translate-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -140,6 +142,18 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
+        const getTranslateAction = (item: IArticle): IAuthoringAction => ({
+            label: gettext('Translate'),
+            onTrigger: () => {
+                showModal(({closeModal}) => (
+                    <TranslateModal
+                        closeModal={closeModal}
+                        article={item}
+                    />
+                ));
+            },
+        });
+
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
@@ -173,7 +187,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                 onEditingEnd={(article) => {
                                     dispatchCustomEvent('articleEditEnd', article);
                                 }}
-                                getActions={({item, contentProfile, fieldsData}) => {
+                                getActions={({item, contentProfile, fieldsData, getLatestItem}) => {
                                     return Promise.all([
                                         getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
                                         getArticleActionsFromExtensions(item),
@@ -181,6 +195,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                         return [
+                                            getTranslateAction(getLatestItem()),
                                             ...authoringActionsFromExtensions,
                                             ...articleActionsFromExtensions,
                                         ];
