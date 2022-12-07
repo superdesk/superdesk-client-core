@@ -63,7 +63,8 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
                     format_type: this.state.selectedFormatter,
                 },
             }).then((response: any) => {
-                return window.open(response.url);
+                window.open(response.url);
+                this.props.closeModal();
             });
         }
     }
