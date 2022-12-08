@@ -10322,7 +10322,7 @@ msgstr "SCHEMALAGDA UPPDATERINGAR"
 
 #: scripts/core/menu/notifications/views/notifications.html:12
 msgid "SIGN OUT"
-msgstr "LOGGA UT"
+msgstr "SIGNATUR"
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "SLUGLINE is too long"
