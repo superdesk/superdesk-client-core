@@ -2141,7 +2141,7 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        field_id: string;
+        fieldId: string;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
