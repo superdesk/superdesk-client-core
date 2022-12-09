@@ -7,13 +7,14 @@
 # Huberus Thomasius <hubertus@thomasius.net>, 2021
 # Ingo Lauter <ingo.lauter@consultingcollective.de>, 2018
 # Ingo Lauter <ingo.lauter@sourcefabric.org>, 2016-2017
+# Lasse Lommel, 2021
 # Sec Ret, 2019
 # Sven Schimmel <sven.schimmel@fflugau.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-04-18 16:37+0000\n"
-"Last-Translator: Karel Petrak <karel.petrak@sourcefabric.org>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Lasse Lommel, 2021\n"
 "Language-Team: German (Germany) (http://www.transifex.com/sourcefabric/superdesk/language/de_DE/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -382,7 +383,7 @@ msgstr "Bitte fügen Sie ATTACHED FILE {{ index }} hinzu!"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:131
 msgid "ATTACHMENTS"
-msgstr ""
+msgstr "Anhänge"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:103
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:84

@@ -38,7 +38,11 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                 _.each(values, (value) => {
                     var v = _.find(allValues, (val) => val[valueField].toString() === value);
 
-                    $scope.filterCondition.values.push(v);
+                    if (v !== undefined) {
+                        $scope.filterCondition.values.push(v);
+                    } else {
+                        notify.warning(gettext('WARNING unknown filter condition value: {{ value }}', {value: value}));
+                    }
                 });
             }
         };
@@ -149,7 +153,9 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                     var v = _.find($scope.valueLookup[filterCondition.field],
                         (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
 
-                    labels.push(v.name);
+                    if (v !== undefined) {
+                        labels.push(v.name);
+                    }
                 }
             });
 
