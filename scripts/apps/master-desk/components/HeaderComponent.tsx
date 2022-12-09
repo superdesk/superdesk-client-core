@@ -172,13 +172,13 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 </button>
                             </div>
                             <ButtonGroup align="inline">
-                                <Dropdown items={this.deskDropdownItems}>
+                                {/* <Dropdown items={this.deskDropdownItems}>
                                     <NavButton
                                         type="default"
                                         text={this.props.selectedDesk.name}
                                         onClick={() => false}
                                     />
-                                </Dropdown>
+                                </Dropdown> */}
                             </ButtonGroup>
                         </React.Fragment>
                     ) : null}
