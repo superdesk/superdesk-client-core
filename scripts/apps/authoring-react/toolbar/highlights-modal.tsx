@@ -1,9 +1,12 @@
 import {sdApi} from 'api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
+import {isEqual} from 'lodash';
 import React from 'react';
 import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -18,6 +21,7 @@ interface IStateLoaded {
     initialized: true;
     availableHighlights: Array<IHighlight> | null;
     markedHighlights: Array<string> | null;
+    isSaving: boolean;
 }
 
 type IState = IStateLoaded | IStateLoading;
@@ -29,6 +33,8 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
         this.state = {
             initialized: false,
         };
+
+        this.markHighlights = this.markHighlights.bind(this);
     }
 
     componentDidMount(): void {
@@ -44,20 +50,14 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
         });
     }
 
-    markHighlight(highlighId: string): void {
-        sdApi.highlights.markItem(highlighId, this.props.article._id).then((res) => {
-            if (this.state.initialized && this.state.markedHighlights != null) {
-                this.setState({
-                    ...this.state,
-                    markedHighlights: [...this.state.markedHighlights, res.highlights],
-                });
-            } else if (this.state.initialized) {
-                this.setState({
-                    ...this.state,
-                    markedHighlights: res.highlights,
-                });
-            }
-        });
+    markHighlights(): void {
+        if (this.state.initialized) {
+            this.setState({...this.state, isSaving: true});
+            sdApi.highlights.markItem(this.state.markedHighlights, this.props.article._id).then(() => {
+                this.props.closeModal();
+                dispatchInternalEvent('dangerouslyForceReloadAuthoring', undefined);
+            });
+        }
     }
 
     fetchArticleWithHighlights(): Promise<IArticle> {
@@ -82,27 +82,32 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
                 visible
                 headerTemplate={gettext('Highlights')}
             >
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
-                >
-                    {
-                        state.availableHighlights?.map((highlight) => {
-                            return (
-                                <Button
-                                    key={highlight._id}
-                                    type="primary"
-                                    style={state.markedHighlights?.includes(highlight._id) ? 'hollow' : 'filled'}
-                                    onClick={() => this.markHighlight(highlight._id)}
-                                    disabled={state.markedHighlights?.includes(highlight._id)}
-                                    text={highlight.name}
-                                />
-                            );
-                        })
-                    }
-                </div>
+                <Spacer v gap="16">
+                    <MultiSelect
+                        onChange={(value: any) => {
+                            this.setState({
+                                ...state,
+                                markedHighlights: value.value.map(({_id}) => _id),
+                            });
+                        }}
+                        optionLabel="name"
+                        options={state.availableHighlights}
+                        value={state.availableHighlights.filter(({_id}) => state.markedHighlights.includes(_id))}
+                    />
+                    <Spacer h gap="16" justifyContent="end" noWrap>
+                        <Button
+                            onClick={this.props.closeModal}
+                            text={gettext('Cancel')}
+                        />
+                        <Button
+                            disabled={isEqual(this.props.article.highlights, state.markedHighlights)}
+                            onClick={this.markHighlights}
+                            text={gettext('Save')}
+                            type="primary"
+                            isLoading={this.state.isSaving}
+                        />
+                    </Spacer>
+                </Spacer>
             </Modal>
         );
     }

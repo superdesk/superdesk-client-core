@@ -1,10 +1,10 @@
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IHighlightResponse} from 'superdesk-api';
 
-function markItem(highlightId: string, itemId: string): Promise<any> {
+function markItem(highlightIds: Array<string>, itemId: string): Promise<any> {
     return httpRequestJsonLocal({
         payload: {
-            highlights: highlightId,
+            highlights: highlightIds,
             marked_item: itemId,
         },
         method: 'POST',
@@ -20,7 +20,7 @@ function fetchHighlights(): Promise<IHighlightResponse> {
 }
 
 interface IHighlightsApi {
-    markItem(highlighId: string, itemId: string): Promise<any>;
+    markItem(highlighIds: Array<string>, itemId: string): Promise<any>;
     fetchHighlights(): Promise<IHighlightResponse>;
 }
 

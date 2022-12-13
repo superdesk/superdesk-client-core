@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {Map} from 'immutable';
-import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -38,8 +38,10 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {showModal} from '@superdesk/common';
 import HighlightsModal from './toolbar/highlights-modal';
+import {showModal} from '@superdesk/common';
+import {showPopup} from 'core/ui/components/popupNew';
+import {HighlightsCardContent} from './toolbar/highlights-management';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -118,10 +120,12 @@ function getPublishToolbarWidget(
  * The main component will not know about angular.
  */
 export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
+    highlightsPopupOpen: boolean;
     constructor(props: IProps) {
         super(props);
 
         this.state = {};
+        this.highlightsPopupOpen = false;
     }
 
     render() {
@@ -155,7 +159,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                         );
                     })
                 ),
-            }
+            };
         };
 
         return (
@@ -213,6 +217,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                     discardChangesAndClose,
                                     keepChangesAndClose,
                                     stealLock,
+                                    getLatestItem,
                                 }) => {
                                     const itemState: ITEM_STATE = item.state;
 
@@ -264,6 +269,40 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         availableOffline: true,
                                     };
 
+                                    const getManageHighlights = (article: IArticle): ITopBarWidget<IArticle> => ({
+                                        group: 'start',
+                                        priority: 0.3,
+                                        component: () => (
+                                            <IconButton
+                                                onClick={(event) => {
+                                                    if (!this.highlightsPopupOpen) {
+                                                        showPopup(
+                                                            event.target as HTMLElement,
+                                                            'right-start',
+                                                            ({closePopup}) => (
+                                                                <HighlightsCardContent
+                                                                    closePopup={closePopup}
+                                                                    article={article}
+                                                                />
+                                                            ),
+                                                            1050,
+                                                            false,
+                                                            () => {
+                                                                this.highlightsPopupOpen = false;
+                                                            },
+                                                        );
+
+                                                        this.highlightsPopupOpen = true;
+                                                    }
+                                                }}
+                                                id="select-highlights"
+                                                icon={article.highlights.length > 1 ? 'multi-star' : 'star'}
+                                                ariaValue={gettext('Highlights')}
+                                            />
+                                        ),
+                                        availableOffline: true,
+                                    });
+
                                     switch (itemState) {
                                     case ITEM_STATE.DRAFT:
                                         return {
@@ -280,6 +319,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                             minimizeButton,
                                             closeButton,
                                         ];
+                                        const latestArticle = getLatestItem();
+
+                                        if (latestArticle.highlights?.length > 0) {
+                                            actions.push(getManageHighlights(latestArticle));
+                                        }
 
                                         actions.push({
                                             group: 'start',
