@@ -33,6 +33,8 @@ export function DashboardController(
     workspaces.getActive();
     pageTitle.setUrl(gettext('Dashboard'));
 
+    $scope.emptyState = require('node_modules/superdesk-ui-framework/dist/empty-state--large-dashboard.svg');
+
     function setupWorkspace(workspace) {
         self.current = null;
         if (workspace) {
