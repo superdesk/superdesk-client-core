@@ -574,7 +574,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                     }
 
                                                     return {
-                                                        readOnly: rundownItemAction.type !== 'edit',
+                                                        readOnly:
+                                                            rundownItemAction.type !== 'edit'
+                                                            && rundownItemAction.type !== 'create',
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
                                                         actions,
                                                     };
