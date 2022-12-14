@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
+import emptyState from 'superdesk-ui-framework/dist/empty-state--large-dashboard.svg';
+
 DashboardController.$inject = [
     '$scope',
     'desks',
@@ -29,11 +31,11 @@ export function DashboardController(
 
     $scope.edited = null;
     $scope.workspaces = workspaces;
+    $scope.emptyState = emptyState;
+
     $scope.$watch('workspaces.active', setupWorkspace);
     workspaces.getActive();
     pageTitle.setUrl(gettext('Dashboard'));
-
-    $scope.emptyState = require('node_modules/superdesk-ui-framework/dist/empty-state--large-dashboard.svg');
 
     function setupWorkspace(workspace) {
         self.current = null;

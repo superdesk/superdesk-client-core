@@ -6,6 +6,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {extensions} from 'appConfig';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {logger} from 'core/services/logger';
+import emptyState from 'superdesk-ui-framework/dist/empty-state--small-2.svg';
 
 UserNotificationsService.$inject = [
     '$rootScope',
@@ -292,7 +293,7 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
                 link: function(scope, elem, attrs, ctrl) {
-                    scope.emptyState = require('node_modules/superdesk-ui-framework/dist/empty-state--small-2.svg');
+                    scope.emptyState = emptyState;
 
                     // merged from all extensions
                     const notificationsKeyed: IExtensionActivationResult['contributions']['notifications'] = {};
