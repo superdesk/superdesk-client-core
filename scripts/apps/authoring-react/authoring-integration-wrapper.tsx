@@ -40,8 +40,8 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import HighlightsModal from './toolbar/highlights-modal';
 import {showModal} from '@superdesk/common';
-import {showPopup} from 'core/ui/components/popupNew';
 import {HighlightsCardContent} from './toolbar/highlights-management';
+import {ShowPopoverHoc} from 'core/helpers/show-popup-hoc';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -273,32 +273,33 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         group: 'start',
                                         priority: 0.3,
                                         component: () => (
-                                            <IconButton
-                                                onClick={(event) => {
-                                                    if (!this.highlightsPopupOpen) {
-                                                        showPopup(
-                                                            event.target as HTMLElement,
-                                                            'right-start',
-                                                            ({closePopup}) => (
-                                                                <HighlightsCardContent
-                                                                    closePopup={closePopup}
-                                                                    article={article}
-                                                                />
-                                                            ),
-                                                            1050,
-                                                            false,
-                                                            () => {
-                                                                this.highlightsPopupOpen = false;
-                                                            },
-                                                        );
-
-                                                        this.highlightsPopupOpen = true;
-                                                    }
-                                                }}
-                                                id="select-highlights"
-                                                icon={article.highlights.length > 1 ? 'multi-star' : 'star'}
-                                                ariaValue={gettext('Highlights')}
-                                            />
+                                            <ShowPopoverHoc
+                                                Component={({closePopup}) => (
+                                                    <HighlightsCardContent
+                                                        closePopup={closePopup}
+                                                        article={article}
+                                                    />
+                                                )}
+                                                placement="right-end"
+                                                zIndex={1050}
+                                            >
+                                                {
+                                                    (togglePopup) => (
+                                                        <IconButton
+                                                            onClick={(event) =>
+                                                                togglePopup(event.target as HTMLElement)
+                                                            }
+                                                            id="select-highlights"
+                                                            icon={
+                                                                article.highlights.length > 1
+                                                                    ? 'multi-star'
+                                                                    : 'star'
+                                                            }
+                                                            ariaValue={gettext('Highlights')}
+                                                        />
+                                                    )
+                                                }
+                                            </ShowPopoverHoc>
                                         ),
                                         availableOffline: true,
                                     });
