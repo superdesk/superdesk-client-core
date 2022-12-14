@@ -3,6 +3,13 @@ import * as assert from 'assert';
 import {arraySpinForward, arraySpinBackwards} from './array-spin';
 
 describe('utils.arraySpinForward', () => {
+    it('zero does not spin', () => {
+        assert.deepEqual(
+            arraySpinForward(['a', 'b', 'c', 'd'], 0),
+            ['a', 'b', 'c', 'd'],
+        );
+    });
+
     it('can spin once', () => {
         assert.deepEqual(
             arraySpinForward(['a', 'b', 'c', 'd'], 1),

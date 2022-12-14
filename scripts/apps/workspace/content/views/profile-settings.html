@@ -92,16 +92,17 @@
                 <div class="form__row sd-padding--0">
                     <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
                         <label class="sd-line-input__label" translate>Content Type</label>
+
                         <div class="sd-check-button__group sd-check-button__group--left">
-                            <sd-check
-                                ng-model="new.type"
-                                type="radio"
+                            <button
                                 ng-repeat="type in contentProfileTypes track by type.value"
-                                ng-value="{{type.value}}"
-                                ng-disabled="type.disabled"
-                                label-position="inside">
+                                ng-click="$event.preventDefault(); new.type = type.value"
+                                ng-disabled="type.disabled === true"
+                                ng-class="{'btn--primary': type.value === new.type}"
+                                class="btn btn--icon-only"
+                            >
                                 <i class="{{getContentProfileIconByProfileType(type.value)}}"></i>
-                            </sd-check>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -122,7 +123,7 @@
         </form>
     </div>
     <div class="modal__footer">
-        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
+        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid || new.type == null" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
         <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
     </div>
 </div>

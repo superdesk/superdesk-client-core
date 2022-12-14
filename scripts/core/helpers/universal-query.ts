@@ -16,9 +16,7 @@ export function prepareSuperdeskQuery(
         return {
             method: 'GET',
             path: endpoint,
-            urlParams: {
-                source: toElasticQuery(query),
-            },
+            urlParams: toElasticQuery(query),
         };
     } else {
         // Use pyeve query format

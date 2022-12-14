@@ -8,9 +8,9 @@ import {
     IStage,
     IUser,
     IBaseRestApiResponse,
-    IPatchExtraFields,
+    IPatchResponseExtraFields,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
+import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags, stripLockingFields} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -97,6 +97,16 @@ import {getContentStateFromHtml} from './editor3/html/from-html';
 import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/inline-comments';
 import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/comments';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
+import {
+    isLockedInOtherSession,
+    isLockedInCurrentSession,
+    LockInfoHttp,
+    LockInfo,
+} from 'apps/authoring-react/subcomponents/lock-info-generic';
+import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
+import {showPopup} from './ui/components/popupNew';
+import {Card} from './ui/components/Card';
+import {getTextColor} from './helpers/utils';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -167,12 +177,8 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export function isLockedInCurrentSession(article: IArticle): boolean {
+export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
-}
-
-export function isLockedInOtherSession(article: IArticle): boolean {
-    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
 export const formatDate = (date: Date | string) => (
@@ -202,8 +208,12 @@ export function getRelativeOrAbsoluteDateTime(
         .format(format);
 }
 
+export function fixPatchRequest<T extends {}>(entity: T): T {
+    return stripLockingFields(stripBaseRestApiFields(entity)) as unknown as T;
+}
+
 export function fixPatchResponse<T extends IBaseRestApiResponse>(
-    entity: T & IPatchExtraFields,
+    entity: T & IPatchResponseExtraFields,
 ): T {
     return omit(entity, ['_status']) as unknown as T;
 }
@@ -235,9 +245,12 @@ export function getSuperdeskApiImplementation(
             isNullOrUndefined,
             nameof: nameof,
             stripBaseRestApiFields,
+            fixPatchRequest,
             fixPatchResponse,
             computeEditor3Output,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
+            tryLocking,
+            tryUnlocking,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -362,6 +375,8 @@ export function getSuperdeskApiImplementation(
             Icon,
             IconBig,
             getAuthoringComponent: () => AuthoringReact,
+            getLockInfoHttpComponent: () => LockInfoHttp,
+            getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
             Center,
             Spacer,
@@ -373,6 +388,8 @@ export function getSuperdeskApiImplementation(
             AuthoringWidgetHeading,
             AuthoringWidgetLayout,
             DateTime,
+            Card,
+            showPopup,
         },
         forms: {
             FormFieldType,
@@ -460,6 +477,9 @@ export function getSuperdeskApiImplementation(
             arrayToTree,
             treeToArray,
             prepareSuperdeskQuery,
+            isLockedInOtherSession,
+            isLockedInCurrentSession,
+            getTextColor,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

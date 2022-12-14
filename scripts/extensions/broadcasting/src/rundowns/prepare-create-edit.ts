@@ -1,16 +1,15 @@
 import {isEqual} from 'lodash';
-import {getRundownItemContentProfile} from './rundown-items/content-profile';
+import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
 } from 'superdesk-api';
-import {IRundownItemBase, IRundownItemTemplateInitial} from '../../interfaces';
-import {ICreate, IEdit, IPreview} from './template-edit';
-import {superdesk} from '../../superdesk';
+import {IRundownItemBase, IRundownItemTemplateInitial} from '../interfaces';
+import {ICreate, IEdit, IPreview, IRundownItemAction} from '../rundown-templates/template-edit';
+import {superdesk} from '../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
     item: IRundownItemTemplateInitial,
-    readOnly: boolean,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): IAuthoringStorage<IRundownItemTemplateInitial> {
     class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplateInitial> {
@@ -32,6 +31,10 @@ function getRundownItemTemplateAuthoringStorage(
         cancel() {
             // noop
         }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
+        }
     }
 
     const authoringStorageRundownItem: IAuthoringStorage<IRundownItemTemplateInitial> = {
@@ -40,17 +43,18 @@ function getRundownItemTemplateAuthoringStorage(
             return Promise.resolve({saved: item, autosaved: null});
         },
         isLockedInCurrentSession: () => false,
-        lock: () => {
-            return Promise.resolve(item);
-        },
-        unlock: () => {
-            return Promise.resolve(item);
+
+        /**
+         * Locking is not supported for embedded items that don't have _id's
+         */
+        forceLock: (entity) => {
+            return Promise.resolve(entity);
         },
         saveEntity: (current) => {
             return onSave(current);
         },
         getContentProfile: () => {
-            return Promise.resolve(getRundownItemContentProfile(readOnly));
+            return Promise.resolve(rundownItemContentProfile);
         },
         closeAuthoring: (current, original, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
@@ -75,16 +79,23 @@ function getRundownItemTemplateAuthoringStorage(
 }
 
 export function prepareForCreation(
+    currentAction: IRundownItemAction,
     initialValue: Partial<IRundownItemBase>,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): ICreate {
+    let withDuration = {...initialValue};
+
+    if (withDuration.duration == null) {
+        withDuration.duration = withDuration.planned_duration;
+    }
+
     const item: IRundownItemTemplateInitial = {
         _id: '',
         _created: '',
         _updated: '',
         _etag: '',
         _links: {},
-        data: initialValue,
+        data: withDuration,
     };
 
     return {
@@ -92,13 +103,14 @@ export function prepareForCreation(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            false,
             onSave,
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }
 
 export function prepareForEditing(
+    currentAction: IRundownItemAction,
     id: string | null,
     data: IRundownItemBase,
     onSave: (item: IRundownItemBase) => Promise<IRundownItemBase>,
@@ -117,7 +129,6 @@ export function prepareForEditing(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            false,
             (res) => onSave(
                 res.data as IRundownItemBase, // validated by the authoring component
             ).then((dataSaved) => {
@@ -133,10 +144,12 @@ export function prepareForEditing(
                 return saved;
             }),
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }
 
 export function prepareForPreview(
+    currentAction: IRundownItemAction,
     id: string | null,
     data: IRundownItemBase,
 ): IPreview {
@@ -154,8 +167,8 @@ export function prepareForPreview(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            true,
             (_) => Promise.resolve(_),
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }

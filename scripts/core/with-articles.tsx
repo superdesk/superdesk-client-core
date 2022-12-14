@@ -47,7 +47,7 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
                 urlParams: {
                     aggregations: 0,
                     es_highlight: 1,
-                    source: JSON.stringify(toElasticQuery(query)),
+                    ...toElasticQuery(query),
                 },
             }).then((res) => {
                 this.setState({
