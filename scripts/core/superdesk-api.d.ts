@@ -1441,7 +1441,7 @@ declare module 'superdesk-api' {
      * Universal query format that works with both - Elasticsearch and pyeve endpoints
      */
     export interface ISuperdeskQuery {
-        filter: ILogicalOperator;
+        filter?: ILogicalOperator;
         fullTextSearch?: string;
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
         page: number;

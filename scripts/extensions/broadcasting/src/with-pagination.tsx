@@ -1,13 +1,9 @@
 import * as React from 'react';
 import {IRestApiResponse} from 'superdesk-api';
-
-import {superdesk} from './superdesk';
-
-const {gettext} = superdesk.localization;
+import {Icon} from 'superdesk-ui-framework';
 
 interface IProps<T> {
     pageSize?: number;
-    totalItems?: number;
     getItems(pageNo: number): Promise<IRestApiResponse<T>>;
     children: (items: Array<T>) => JSX.Element;
 }
@@ -30,9 +26,14 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
         };
 
         this.switchPage = this.switchPage.bind(this);
+        this.getPageSize = this.getPageSize.bind(this);
 
         this.element = null;
         this.pageCount = 0;
+    }
+
+    getPageSize() {
+        return this.props.pageSize ?? 20;
     }
 
     switchPage(page: number) {
@@ -63,7 +64,7 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
 
     componentDidMount(): void {
         this.props.getItems(1).then((res) => {
-            this.pageCount = Math.ceil(res._meta.total / (this.props?.pageSize ?? 200));
+            this.pageCount = Math.ceil(res._meta.total / this.getPageSize());
             this.setState({items: res._items});
         });
     }
@@ -73,59 +74,96 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
             return null;
         }
 
-        // TODO: apply design
-        // TODO: figure out scrolling - test if it catches the overflow via CSS
-
         const pagination = (
-            <div>
-                <pre>current page: {JSON.stringify(this.state.currentPage)}</pre>
-                {this.state.currentPage !== 1 && (
-                    <button
-                        disabled={this.state.currentPage < 1}
-                        onClick={() => this.switchPage(this.state.currentPage - 1)}
-                    >
-                        {gettext('Previous')}
-                    </button>
-                )}
-                {this.state.currentPage > 2 && (
-                    <button onClick={() => this.switchPage(this.state.currentPage - 2)}>
-                        {this.state.currentPage - 2}
-                    </button>
-                )
+            <div className='sd-pagination'>
+                <button
+                    className='sd-pagination__item sd-pagination__item--start'
+                    disabled={this.state.currentPage === 1}
+                    onClick={() => this.switchPage(1)}
+                >
+                    <Icon name='backward-thin' />
+                </button>
+                <button
+                    className='sd-pagination__item sd-pagination__item--start'
+                    disabled={this.state.currentPage <= 1}
+                    onClick={() => this.switchPage(this.state.currentPage - 1)}
+                >
+                    <Icon name='chevron-left-thin' />
+                </button>
+                {
+                    (this.state.currentPage === this.pageCount || this.state.currentPage === this.pageCount - 1) && (
+                        <>
+                            <button
+                                className='sd-pagination__item'
+                                onClick={() => this.switchPage(1)}
+                            >
+                                {1}
+                            </button>
+                            <span className='sd-pagination__item sd-pagination__item--more'>...</span>
+                        </>
+                    )
                 }
-                {this.state.currentPage !== 1 && (
-                    <button onClick={() => this.switchPage(this.state.currentPage - 1)}>
-                        {this.state.currentPage - 1}
-                    </button>
-                )
+                {
+                    this.pageCount === this.state.currentPage && this.state.currentPage - 2 > 0 &&
+                    (
+                        <button
+                            className='sd-pagination__item'
+                            onClick={() => this.switchPage(this.state.currentPage - 2)}
+                        >
+                            {this.state.currentPage - 2}
+                        </button>
+                    )
                 }
-                <button style={{backgroundColor: 'orange'}} onClick={() => this.switchPage(this.state.currentPage)}>
+                {
+                    this.state.currentPage > 1 &&
+                    (
+                        <button
+                            className='sd-pagination__item'
+                            onClick={() => this.switchPage(this.state.currentPage - 1)}
+                        >
+                            {this.state.currentPage - 1}
+                        </button>
+                    )
+                }
+                <button
+                    className='sd-pagination__item sd-pagination__item--active'
+                    onClick={() => this.switchPage(this.state.currentPage)}
+                >
                     {this.state.currentPage}
                 </button>
-                {this.state.currentPage < this.pageCount && (
-                    <button onClick={() => this.switchPage(this.state.currentPage + 1)}>
-                        {this.state.currentPage + 1}
-                    </button>
-                )
+                {
+                    this.state.currentPage < this.pageCount && (
+                        <button onClick={() => this.switchPage(this.state.currentPage + 1)}>
+                            {this.state.currentPage + 1}
+                        </button>
+                    )
                 }
-                {this.state.currentPage < this.pageCount - 1 && (
-                    <button onClick={() => this.switchPage(this.state.currentPage + 2)}>
-                        {this.state.currentPage + 2}
-                    </button>
-                )
+                {
+                    this.state.currentPage !== this.pageCount - 1 && this.state.currentPage !== this.pageCount && (
+                        <>
+                            <span className='sd-pagination__item sd-pagination__item--more'>...</span><button
+                                className='sd-pagination__item'
+                                onClick={() => this.switchPage(this.pageCount)}
+                            >
+                                {this.pageCount}
+                            </button>
+                        </>
+                    )
                 }
-                {this.state.currentPage !== this.pageCount && (
-                    <button onClick={() => this.switchPage(this.state.currentPage + 1)}>
-                        {gettext('Next')}
-                    </button>
-                )
-                }
-                <select value={this.state.currentPage} onChange={(e) => this.switchPage(parseInt(e.target.value, 10))}>
-                    {new Array(this.pageCount)
-                        .fill(null)
-                        .map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)
-                    }
-                </select>
+                <button
+                    className='sd-pagination__item sd-pagination__item--forward'
+                    onClick={() => this.switchPage(this.state.currentPage + 1)}
+                    disabled={this.state.currentPage === this.pageCount}
+                >
+                    <Icon name='chevron-right-thin' />
+                </button>
+                <button
+                    className='sd-pagination__item sd-pagination__item--end'
+                    onClick={() => this.switchPage(this.pageCount)}
+                    disabled={this.state.currentPage === this.pageCount}
+                >
+                    <Icon name='forward-thin' />
+                </button>
             </div>
         );
 
