@@ -2,7 +2,7 @@ import {IArticle} from 'superdesk-api';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import ng from 'core/services/ng';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import {canPrintPreview} from '../helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IMultiActions} from './get-multi-actions';
@@ -169,7 +169,7 @@ export function getBulkActions(
                                 getSelectedItems().filter((article) => {
                                     return !isEditable(article);
                                 }).map((item) => (
-                                    <div key={item._id}>{item.slugline || item.headline}</div>
+                                    <div key={item._id}>{getItemLabel(item)}</div>
                                 ))
                             }
                         </Modal>
