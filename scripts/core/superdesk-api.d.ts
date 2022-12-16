@@ -90,6 +90,12 @@ declare module 'superdesk-api' {
          * allows to only do it once after timeout passes, instead of on every character change.
          */
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+
+        /**
+        * Immediately autosaves without a delay if there is anything to autosave.
+        * Is meant to be used before unmounting the component.
+        */
+        flush(): Promise<void>;
     }
 
     /**
@@ -116,6 +122,9 @@ declare module 'superdesk-api' {
 
     export type IFieldsData = import('immutable').Map<string, unknown>;
 
+    /**
+     * Check authoring-react.tsx for comments on individual methods.
+     */
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
@@ -137,7 +146,7 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
-        discardChangesAndClose(): void;
+        initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
     }
@@ -1959,7 +1968,7 @@ declare module 'superdesk-api' {
     export interface IPropsSpacer {
         h?: boolean; // horizontal
         v?: boolean; // vertical
-        gap: '4' | '8' | '16' | '32' | '64';
+        gap: '0' | '4' | '8' | '16' | '32' | '64';
         justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
         alignItems?: 'start' | 'end' | 'center' | 'stretch';
         noGrow?: boolean;
