@@ -300,6 +300,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     return (
                                         <OpenWidgetComponent
                                             article={item}
+                                            getLatestArticle={getLatestItem}
                                             contentProfile={contentProfile}
                                             fieldsData={fieldsData}
                                             authoringStorage={authoringStorage}
