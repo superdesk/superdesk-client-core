@@ -128,6 +128,14 @@ declare module 'superdesk-api' {
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
+
+        /**
+         * Computes the latest entity from fields data. `item` property in
+         * this interface holds a bit of an older version of the item.
+         * It is expensive to compute it on every render, that's why
+         * we are passing a function instead.
+         */
+        getLatestItem(): T;
         toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -480,6 +488,9 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{
             article: IArticle;
 
+
+            getLatestArticle(): IArticle;
+
             // other props below are specific to authoring-react implementation
 
             readOnly: boolean;
@@ -490,7 +501,6 @@ declare module 'superdesk-api' {
             storageAdapter: IStorageAdapter<IArticle>;
 
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
              */
@@ -1800,6 +1810,12 @@ declare module 'superdesk-api' {
         tooltip?: (dateLong: string, dateShort: string) => string;
     }
 
+    export interface IPropsCard {
+        background?: import('react').CSSProperties['background'];
+        padding?: import('react').CSSProperties['padding'];
+        borderRadius?: import('react').CSSProperties['borderRadius'];
+    }
+
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         grow?: boolean;
@@ -2587,6 +2603,15 @@ declare module 'superdesk-api' {
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
             DateTime: React.ComponentType<IPropsDateTime>;
+            Card: React.ComponentType<IPropsCard>;
+            showPopup(
+                referenceElement: HTMLElement,
+                placement: import('@popperjs/core').Placement,
+                Component: React.ComponentType<{closePopup(): void}>,
+                zIndex?: number,
+                closeOnHoverEnd?: boolean,
+                onClose?: () => void,
+            ): {close: () => void};
         };
         authoringGeneric: {
             sideWidgets: {
@@ -2716,6 +2741,10 @@ declare module 'superdesk-api' {
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
             isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
+
+            getTextColor(
+                background: string, // HEX color
+            ): 'black' | 'white';
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

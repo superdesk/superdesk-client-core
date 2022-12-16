@@ -180,8 +180,8 @@ export function setHtmlFromTansa(html, simpleReplace) {
     };
 }
 
-export const setEditorStateFromItem = (item: IArticle, field: string) => {
-    const rawState = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
+export const setEditorStateFromItem = (item: IArticle, fieldId: string) => {
+    const rawState = getFieldMetadata(item, fieldId, fieldsMetaKeys.draftjsState);
     const contentState = convertFromRaw(rawState);
 
     return {

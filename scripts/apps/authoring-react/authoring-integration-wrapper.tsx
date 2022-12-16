@@ -261,6 +261,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             }
                             getSidePanel={({
                                 item,
+                                getLatestItem,
                                 contentProfile,
                                 fieldsData,
                                 handleFieldsDataChange,

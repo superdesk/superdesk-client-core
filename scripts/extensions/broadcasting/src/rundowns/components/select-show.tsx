@@ -1,8 +1,8 @@
 import {IValidationResult} from '@superdesk/common';
 import * as React from 'react';
-import {IShow} from '../../../interfaces';
+import {IShow} from '../../interfaces';
 
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 
 const {SelectFromEndpoint} = superdesk.components;
 

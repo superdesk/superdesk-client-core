@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework/react';
-import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
+import {IRundown, IRundownItem, IRundownItemBase} from '../interfaces';
 
-import {superdesk} from '../../superdesk';
+import {superdesk} from '../superdesk';
 import {Map} from 'immutable';
-import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID} from '../../constants';
+import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID} from '../constants';
 import {IVocabularyItem} from 'superdesk-api';
 import {addSeconds, arrayMove} from '@superdesk/common';
 import {DurationLabel} from './components/duration-label';
