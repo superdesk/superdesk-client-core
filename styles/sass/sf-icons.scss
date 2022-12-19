@@ -22,7 +22,8 @@
             button:hover [class*=" big-icon-"],
             a:hover [class^="big-icon-"], 
             a:hover [class*=" big-icon-"] {
-            color: darken($sd-blue, 15%) !important;
+            color: var(--sd-colour-interactive--active) !important;
+            opacity: 1;
         }
     }
 }
@@ -33,7 +34,7 @@
     line-height: 16px;
     font-family: 'sd_icons';
     font-size: 16px;
-    color: $grayDark;
+    color: $sd-text;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -83,7 +84,7 @@
     height: 24px;
     width: 24px;
     display: inline-block;
-    color: #333333;
+    color: var(--color-icon-default);
     line-height: 24px;
     vertical-align: top;
     position: relative;

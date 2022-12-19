@@ -1257,6 +1257,7 @@ export default angular.module('superdesk.core.ui', [
     'superdesk.config',
     'superdesk.core.datetime',
     'superdesk.core.ui.autoheight',
+    'superdesk.apps.spellcheck',
 ])
     .run(['$rootScope', '$location', ($rootScope, $location) => {
         $rootScope.popup = $location.search().popup || false;

@@ -100,7 +100,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             name: (value: string) => this.onFieldChange('name', value.trim()),
             description: (value: string) => this.onFieldChange('description', value.trim()),
             destination_name: (value: string) => this.onFieldChange('destination_name', value),
-            maximum_asset_size: (value: number) => this.onMaxAssetSizeChange(+value, this.state.storage_unit),
+            maximum_asset_size: (value: number) => this.onMaxAssetSizeChange(value, this.state.storage_unit),
             storage_unit: (value: DATA_UNIT) => this.updateStorageUnit(value),
             state: (value: boolean) => this.onStateChange(value),
             desks: (value: Array<IDesk['_id']>) => this.onDesksChange(value),
@@ -232,7 +232,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             <React.Fragment>
                 <PanelHeader borderB={true}>
                     <PanelHeaderSlidingToolbar>
-                        <ButtonGroup align="right">
+                        <ButtonGroup align="end">
                             <Button
                                 text={gettext('Cancel')}
                                 style="hollow"
@@ -264,8 +264,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             {this.props.original == null ? null : (
                                 <FormGroup>
                                     <FormRow>
-                                        <label>{gettext('Enabled')}</label>
                                         <Switch
+                                            label={{text: gettext('Enabled'), side: 'left'}}
                                             value={updates.state === SET_STATE.USABLE}
                                             onChange={this.onChange.state}
                                         />
@@ -276,7 +276,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 <FormRow>
                                     <Input
                                         label={gettext('Name')}
-                                        value={updates.name}
+                                        type="text"
+                                        value={updates.name ?? ''}
                                         required={true}
                                         onChange={this.onChange.name}
                                         disabled={false}
@@ -287,7 +288,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 <FormRow>
                                     <Input
                                         label={gettext('Description')}
-                                        value={updates.description}
+                                        type="text"
+                                        value={updates.description ?? ''}
                                         onChange={this.onChange.description}
                                         disabled={false}
                                     />
@@ -297,7 +299,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 <FormRow>
                                     <Input
                                         label={gettext('Maximum Asset Size')}
-                                        value={(updates.maximum_asset_size || 0).toString()}
+                                        type="number"
+                                        value={updates.maximum_asset_size || 0}
                                         info={gettext('value of 0 will disable this restriction')}
                                         onChange={this.onChange.maximum_asset_size}
                                         disabled={false}

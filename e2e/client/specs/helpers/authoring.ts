@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor} from 'protractor';
-import {waitHidden, waitFor} from './utils';
+import {waitHidden, waitFor, click} from './utils';
 import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
 
 class Authoring {
@@ -297,7 +297,7 @@ class Authoring {
             this.send_panel.click();
 
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();
@@ -317,7 +317,7 @@ class Authoring {
             let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
 
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();
@@ -334,7 +334,7 @@ class Authoring {
 
         this.selectDeskforSendTo = function(desk) {
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();
@@ -438,8 +438,8 @@ class Authoring {
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));
 
-                modal.isPresent().then((click) => {
-                    if (click) {
+                modal.isPresent().then((isPresent) => {
+                    if (isPresent) {
                         modal.element(by.className('btn--primary')).click();
                     }
                 });
@@ -461,8 +461,8 @@ class Authoring {
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));
 
-                modal.isPresent().then((click) => {
-                    if (click) {
+                modal.isPresent().then((isPresent) => {
+                    if (isPresent) {
                         modal.element(by.className('btn--primary')).click();
                     }
                 });
@@ -502,8 +502,8 @@ class Authoring {
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));
 
-                modal.isPresent().then((click) => {
-                    if (click) {
+                modal.isPresent().then((isPresent) => {
+                    if (isPresent) {
                         modal.element(by.className('btn--primary')).click();
                     }
                 });
@@ -699,10 +699,9 @@ class Authoring {
         };
 
         function openAuthoringDropdown() {
-            var toggle = element(by.id('authoring-extra-dropdown')).element(by.className('icon-dots-vertical'));
+            const toggle = element(by.id('authoring-extra-dropdown')).element(by.id('more-actions'));
 
-            browser.wait(() => toggle.isDisplayed());
-            toggle.click();
+            click(toggle, 'Can\'t open dropdown in authoring.');
         }
 
         this.markForHighlights = function() {

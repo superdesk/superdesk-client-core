@@ -69,15 +69,14 @@
                         min-height: 28px !important;
                         padding: 0;
                         background: none;
-                        color: #333;
+                        color: var(--color-text);
                         @include box-shadow(0, 0, 0, 0, rgba(0,0,0,.25));
                         .text-muted {
-                            color: #999;
+                            color: var(--color-text-lighter);
                         }
                         &:hover, &.active {
-                            color: #333;
+                            color: var(--color-text);
                             @include box-shadow(0, 0, 1px, 0, $sd-blue, true);
-                            background: $sd-hover;
                         }
 
                         &.btn--primary, &.btn--primary.active {

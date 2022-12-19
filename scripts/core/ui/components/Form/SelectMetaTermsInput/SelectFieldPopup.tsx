@@ -6,7 +6,7 @@ import {scrollListItemIfNeeded, onEventCapture} from '../../utils';
 import classNames from 'classnames';
 import './style.scss';
 
-import {Popup} from '../../Popup';
+import {Popup} from '../../Popup/index';
 import {KEYCODES} from '../../constants';
 
 /**

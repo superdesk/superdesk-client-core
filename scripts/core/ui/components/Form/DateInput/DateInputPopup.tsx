@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as momentAlias from 'moment';
-import {Popup, Content, Header, Footer} from '../../Popup';
+import {Popup, Content, Header, Footer} from '../../Popup/index';
 import {Button} from '../../';
 import {DayPicker} from './DayPicker';
 import {MonthPicker} from './MonthPicker';

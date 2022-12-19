@@ -14,12 +14,6 @@ div {
 .profiling-data {
     top: $subnav-height;
     header {
-        .sortbar {
-            margin-left: 10px;
-            .flat-searchbar.monitoring-flat-searchbar {
-                margin-top: -12px !important;
-            }
-        }
         .refresh-box {
             span {
                 font-style: italic;

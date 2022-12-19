@@ -339,7 +339,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                             onSubmit={this.setSearchParamText}
                             initialValue={this.props.searchParams.textSearch}
                         />
-                        <ButtonGroup align="right">
+                        <ButtonGroup align="end">
                             {this.subNavMenuActions.length === 0 ?
                                 null :
                                 (
@@ -387,7 +387,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                         </Tooltip>
                     </ButtonGroup>
                     <AssetTypeFilterButtons />
-                    <ButtonGroup align="right">
+                    <ButtonGroup align="end">
                         <SubNavSpacer noMargin={true} />
                         <ContentBar>
                             <Tooltip

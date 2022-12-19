@@ -57,29 +57,6 @@
 }
 
 
-
-// TABS AND PILLS
-// -------------
-
-//Common styles
-.nav-tabs,
-.nav-pills {
-    @include clearfix();
-}
-.nav-tabs > li,
-.nav-pills > li {
-    float: left;
-}
-.nav-tabs > li > a,
-.nav-tabs > li > button,
-.nav-pills > li > a,
-.nav-pills > li > button {
-    padding-right: 12px;
-    padding-left: 12px;
-    margin-right: 2px;
-    line-height: 14px; // keeps the overall height an even number
-}
-
 // TABS
 // ----
 
@@ -101,27 +78,25 @@
     font-size: 14px;
     height: $nav-height;
     background: none;
-    color: #7c7c7c;
+    color: $sd-text-light;
     border:0;
     border-bottom: 3px solid transparent;
     &:hover {
-        border-bottom-color: #d8d8d8;
+        border-bottom-color: var(--sd-colour-line--strong);
         background: none;
         text-decoration: none;
     }
 }
-.nav-tabs > li > a {
-    @include box-sizing(border-box);
-}
+
 //Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > button,
 .nav-tabs > .active > button:hover {
     background: none;
-    border-bottom-color: $sd-blue;
+    border-bottom-color: var(--sd-colour-interactive);
     cursor: default;
-    color: $grayDark;
+    color: $sd-text;
 }
 
 
@@ -134,14 +109,14 @@
     padding-bottom: 8px;
     margin-top: 2px;
     margin-bottom: 2px;
-    @include border-radius(5px);
+    border-radius: 5px;
 }
 
 // Active state
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
     color: $white;
-    background-color: $linkColor;
+    background-color: var(--sd-colour-interactive);
 }
 
 
@@ -350,16 +325,17 @@
 .subnav__page-title,
 .page-nav-title {
     padding: 10px 20px;
-    color: #444;
+    color: $sd-text;
+    opacity: 0.8;
     font-size: 18px;
     line-height: 28px;
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    @include text-normal();
+    font-weight: 400;
     &--text-light {
-        @include text-light();
+        font-weight: 300;
     }
 
     .sd-checkbox {
@@ -368,6 +344,10 @@
     &:empty {
         display: contents !important;
         padding: 0 !important;
+    }
+    &.page-nav-title--flex {
+        display: flex;
+        align-items: center;
     }
 }
 .subnav__desk-stage {

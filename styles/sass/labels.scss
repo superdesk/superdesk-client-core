@@ -17,42 +17,75 @@
     li {
         float: left;
         .inline-tag {
-            line-height: 26px;
-            @include border-radius(2px);
-            padding: 0px 0px 0px 8px;
-            background: $label-light;
-            color: $grayDark;
-            margin: 0 5px 5px 0;
+            font-size: 1.4rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 0em 1em 0em 1em;
+            background-color: var(--sd-colour__tag-label-Bg--1);
+            color: var(--color-text);
+            margin: 0 4px 4px 0;
             float: left;
+            position: relative;
+            text-align: center;
+            font-weight: 400;
+            transition: background-color .2s ease-out, opacity .1s ease-out;
+            height: 24px;
             &.tag-prime {
-                background: $sd-blue;
-                color: $white;
+                background-color: var(--sd-colour__tag-label-Bg--highlight-2);
             }
             &.tag-darker {
-                background: $label-medium;
+                background-color: var(--sd-colour__tag-label-Bg--2);
             }
             span {
                 font-weight: 500;
-                margin-right: 5px;
+                margin-right: 4px;
                 text-transform: uppercase;
-                @include opacity(50);
+                color: var(--color-text-light);
+                opacity: 0.8;
             }
             button {
-                background: none;
                 border: 0;
-                float: right;
-                height: 26px;
-                margin-left: 5px; 
-                padding-left: 2px;
-                @include border-radius(0 3px 3px 0);
-                i {
-                    @include opacity(30);
-                    margin-top: -4px;
+                border-radius: 9999px;
+                height: 1.8rem;
+                width: 1.8rem;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: inherit;
+                line-height: 1;
+                text-decoration: none;
+                text-align: center;
+                vertical-align: middle;
+                background-color: var(--sd-colour__tag-label-remove-Bg);
+                color: var(--color-text);
+                cursor: pointer;
+                transition: background-color .2s ease-out, color .1s ease-out, opacity .1s ease-out;
+                margin-right: -1rem;
+                margin-left:  0.8rem;
+                [class^="icon-"], [class*=" icon-"] {
+                    color: var(--color-text-light);
+                    font-size: 1.6rem;
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                    margin-left: 1px;
+                    opacity: 0.4;
+                    transition: color .1s ease-out, opacity .1s ease-out;
                 }
                 &:hover {
-                    background: rgba(0, 0, 0, 0.1);
-                    i {
-                        @include opacity(100);
+                    text-decoration: none;
+                    background-color: var(--sd-colour__tag-label-remove-Bg--hover);
+                    [class^="icon-"], [class*=" icon-"] {
+                        opacity: 0.85;
+                    }
+                }
+                  &:active {
+                    background-color: var(--sd-colour__tag-label-remove-Bg--hover);
+                    [class^="icon-"], [class*=" icon-"] {
+                      color: var(--sd-colour-interactive);
+                      opacity: 1;
                     }
                 }
             }
@@ -247,8 +280,9 @@ $priority-label-color-6 : #c0c9a1;
 
 .profile-label {
     @extend .state-label;
-    background-color: $state-color-default;
-    color: $white;
+    background-color: var(--sd-colour-bg-translucent--08);
+    color: $sd-text;
+    border: none !important;
 }
 
 .language-label {

@@ -143,6 +143,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         let dataSet = {
             data: [],
             backgroundColor: [],
+            borderColor: 'transparent',
         };
 
         (this.props.stages?.[desk._id] ?? []).map((item: IStage, i: number) => {

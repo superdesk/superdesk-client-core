@@ -1,8 +1,8 @@
 <div class="sd-overlay-panel sd-overlay-panel--dark-ui" ng-show="isActive && !isSendToNextStage"
      ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish && vm.userActions.publish_pane_two_columns}" >
-    <div class="side-panel side-panel--shadow-right side-panel--dark-ui">
+    <div class="side-panel side-panel--shadow-right" data-theme="dark-ui">
         <div class="side-panel__header">
-            <ul class="nav-tabs nav-tabs--ui-dark nav-tabs--big">
+            <ul class="nav-tabs nav-tabs--big">
                 <li id="panel-send"
                     class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
                     ng-show="canSendItem() && isSendEnabled() && currentUserAction !== vm.userActions.duplicate_to">
@@ -212,102 +212,109 @@
 
         <!-- Footer Send To-->
         <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.send_to">
-            <button class="btn btn--large btn--primary btn--hollow btn--expanded"
-                    ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
-                    ng-click="send(true)"
-                    ng-disabled="disableFetchAndOpenButton()">
-                    <span ng-if="canSendItem()" translate>send and open</span>
-                    <span ng-if="!canSendItem()" translate>fetch and open</span>
-            </button>
+            <div role="group" class="button-group button-group--vertical">
+                <button class="btn btn--large btn--primary btn--hollow btn--expanded"
+                        ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
+                        ng-click="send(true)"
+                        ng-disabled="disableFetchAndOpenButton()">
+                        <span ng-if="canSendItem()" translate>send and open</span>
+                        <span ng-if="!canSendItem()" translate>fetch and open</span>
+                </button>
 
-            <button class="btn btn--large btn--primary btn--expanded"
-                    ng-show="showSendButtonAndDestination()"
-                    ng-click="send()"
-                    ng-disabled="disableSendButton()"
-                    data-test-id="action--send">
-                    <span ng-if="canSendItem()" translate>send</span>
-                    <span ng-if="!canSendItem()" translate>fetch</span>
-            </button>
+                <button class="btn btn--large btn--primary btn--expanded"
+                        ng-show="showSendButtonAndDestination()"
+                        ng-click="send()"
+                        ng-disabled="disableSendButton()"
+                        data-test-id="action--send">
+                        <span ng-if="canSendItem()" translate>send</span>
+                        <span ng-if="!canSendItem()" translate>fetch</span>
+                </button>
 
-            <button class="btn btn--large btn--primary btn--expanded"
-                    ng-if="showSendButtonAndDestination() && isPackage"
-                    ng-click="send(false, true)"
-                    ng-disabled="disableSendButton()"
-                    translate>
-                    send package and items
-            </button>
+                <button class="btn btn--large btn--primary btn--expanded"
+                        ng-if="showSendButtonAndDestination() && isPackage"
+                        ng-click="send(false, true)"
+                        ng-disabled="disableSendButton()"
+                        translate>
+                        send package and items
+                </button>
+            </div>
         </div>
         <!-- Footer Duplicate To-->
         <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.duplicate_to">
-            <button id="duplicate-open-btn"
-                    class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
-                    ng-show="showSendButtonAndDestination() && !canSendItem()"
-                    ng-click="send(true)"
-                    ng-disabled="disableFetchAndOpenButton()"
-                    translate>
-                    duplicate and open
-            </button>
+            <div role="group" class="button-group button-group--vertical">
+                <button id="duplicate-open-btn"
+                        class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
+                        ng-show="showSendButtonAndDestination() && !canSendItem()"
+                        ng-click="send(true)"
+                        ng-disabled="disableFetchAndOpenButton()"
+                        translate>
+                        duplicate and open
+                </button>
 
-            <button id="duplicate-btn"
-                    class="btn btn--large btn--primary btn--expanded"
-                    ng-show="showSendButtonAndDestination()"
-                    ng-click="send()"
-                    ng-disabled="disableSendButton()"
-                    translate>
-                    duplicate
-            </button>
+                <button id="duplicate-btn"
+                        class="btn btn--large btn--primary btn--expanded"
+                        ng-show="showSendButtonAndDestination()"
+                        ng-click="send()"
+                        ng-disabled="disableSendButton()"
+                        translate>
+                        duplicate
+                </button>
+            </div>
         </div>
         <!-- Footer Fetch To-->
         <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.externalsource_to">
-            <button id="externalsource-open-btn"
-                    class="btn btn--large btn--primary btn--hollow btn--expanded"
-                    ng-show="showSendButtonAndDestination() && !canSendItem()"
-                    ng-click="send(true)"
-                    ng-disabled="disableFetchAndOpenButton()"
-                    translate>
-                    fetch and open
-            </button>
+            <div role="group" class="button-group button-group--vertical">
+                <button id="externalsource-open-btn"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded"
+                        ng-show="showSendButtonAndDestination() && !canSendItem()"
+                        ng-click="send(true)"
+                        ng-disabled="disableFetchAndOpenButton()"
+                        translate>
+                        fetch and open
+                </button>
 
-            <button id="externalsource-btn"
-                    class="btn btn--large btn--primary btn--expanded"
-                    ng-show="showSendButtonAndDestination()"
-                    ng-click="send()"
-                    ng-disabled="disableSendButton()"
-                    translate>
-                    fetch
-            </button>
+                <button id="externalsource-btn"
+                        class="btn btn--large btn--primary btn--expanded"
+                        ng-show="showSendButtonAndDestination()"
+                        ng-click="send()"
+                        ng-disabled="disableSendButton()"
+                        translate>
+                        fetch
+                </button>
+            </div>
         </div>
         <!-- Footer Publish-->
         <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.publish">
-            <div class="side-panel__footer-buttons--flex">
-                <button type="button"
-                        class="btn btn--large btn--ui-dark btn--hollow btn--expanded"
-                        ng-show="subscribersWithPreviewConfigured.length > 0"
-                        ng-click="preview()"
-                        translate>
-                        Preview
-                </button>
-
+            <div role="group" class="button-group button-group--vertical">
+                <div class="sd-display--contents">
+                    <button type="button"
+                            class="btn btn--large btn--ui-dark btn--hollow btn--expanded"
+                            ng-show="subscribersWithPreviewConfigured.length > 0"
+                            ng-click="preview()"
+                            translate>
+                            Preview
+                    </button>
+                    <button type="submit"
+                            class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark loading-overlay-for-tree-dot"
+                            ng-show="isSendEnabled() && showSendButtonAndDestination() && _editable"
+                            ng-click="sendAndPublish()"
+                            ng-disabled="!canSendAndPublish() || loading"
+                            data-test-id="publish-from--submit"
+                            ng-class="{active: loading && canSendAndPublish()} "
+                            translate>
+                            publish from
+                    </button>
+                </div>
                 <button type="submit"
-                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark loading-overlay-for-tree-dot"
-                        ng-show="isSendEnabled() && showSendButtonAndDestination() && _editable"
-                        ng-click="sendAndPublish()"
-                        ng-disabled="!canSendAndPublish() || loading"
-                        data-test-id="publish-from--submit"
-                        ng-class="{active: loading && canSendAndPublish()} "
-                        translate>
-                        publish from
+                        class="btn btn--large btn--highlight btn--expanded loading-overlay-for-tree-dot"
+                        ng-show="canSendItem() && canPublishItem() && _editable"
+                        ng-click="publish()"
+                        ng-disabled="canSendAndPublish() || loading"
+                        data-test-id="publish"
+                        ng-class="{active: loading && !canSendAndPublish()}">
+                        {{ getPublishLabel(_action) }}
                 </button>
             </div>
-            <button type="submit"
-                    class="btn btn--large btn--highlight btn--expanded loading-overlay-for-tree-dot"
-                    ng-show="canSendItem() && canPublishItem() && _editable"
-                    ng-click="publish()"
-                    ng-disabled="canSendAndPublish() || loading"
-                    data-test-id="publish"
-                    ng-class="{active: loading && !canSendAndPublish()}">
-                    {{ getPublishLabel(_action) }}
-            </button>
         </div>
     </div>
 </div>

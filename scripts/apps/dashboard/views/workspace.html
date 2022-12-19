@@ -57,7 +57,15 @@
             data-save="dashboard.save()"
             data-configurable="configurable"
             ></div>
-        <div class="empty-dashboard" ng-show="dashboard.widgets.length === 0" translate>Dashboard is empty.</div>
+        <div class="content-state__empty-container content-state__empty-container--absolute" ng-show="dashboard.widgets.length === 0">
+            <div class="content-state__empty-info">
+                <figure class="content-state__image content-state__image--large">
+                    <img src="{{emptyState}}" alt="Empty state illustration">
+                </figure>
+                <h3 class="content-state__heading" translate>Dashboard is empty</h3>
+                <p class="content-state__description sd-padding-x--5" translate>Click on the "+" button in the top right corner to add some widgets.</p>
+            </div>
+        </div>
         <div class="empty-dashboard loading" ng-show="dashboard.widgets == null" translate>Loading...</div>
     </div>
 </div>

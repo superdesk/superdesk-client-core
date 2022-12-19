@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
 import {
     CheckButtonGroup,
-    RadioButton,
+    RadioGroup,
     Switch,
     Dropdown,
     NavButton,
@@ -172,13 +172,13 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 </button>
                             </div>
                             <ButtonGroup align="inline">
-                                <Dropdown items={this.deskDropdownItems}>
+                                {/* <Dropdown items={this.deskDropdownItems}>
                                     <NavButton
                                         type="default"
                                         text={this.props.selectedDesk.name}
                                         onClick={() => false}
                                     />
-                                </Dropdown>
+                                </Dropdown> */}
                             </ButtonGroup>
                         </React.Fragment>
                     ) : null}
@@ -193,9 +193,9 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </button>
                     ) : null}
 
-                    <ButtonGroup align="left" padded={true}>
+                    <ButtonGroup align="start" padded={true}>
                         <CheckButtonGroup>
-                            <RadioButton
+                            <RadioGroup
                                 value={this.props.activeTab}
                                 options={tabs}
                                 onChange={(value: IMasterDeskTab) => this.changeTab(value)}
@@ -205,7 +205,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
                     {this.props.selectedDesk != null &&
                         this.isDeskMember(this.props.selectedDesk) ? (
-                            <ButtonGroup align="right">
+                            <ButtonGroup align="end">
                                 <Button
                                     text={gettext('Go To Desk')}
                                     style="hollow"
@@ -228,6 +228,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 <label>{gettext('Show all')}</label>
                                 <div className="pull-right">
                                     <Switch
+                                        label={{text: gettext('Show all'), hidden: true}}
                                         value={this.state.showAllDesks}
                                         onChange={() => this.toggleShowAll()}
                                     />
@@ -239,6 +240,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                     <label>{item.name}</label>
                                     <div className="pull-right">
                                         <Switch
+                                            label={{text: item.name, hidden: true}}
                                             value={this.isDeskActive(item)}
                                             onChange={() => this.toggleDesk(item)}
                                         />

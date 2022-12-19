@@ -4,6 +4,7 @@ import {element, by, browser, $, $$, promise as wdpromise} from 'protractor';
 import './waitReady';
 export {authoring} from './authoring';
 export {content} from './content';
+import {click} from './utils';
 
 export class LoginModal {
     username: any;
@@ -257,13 +258,8 @@ class IngestSettings {
 }
 
 export function logout() {
-    var signOutBtn = element(by.buttonText('SIGN OUT'));
-
-    element(by.css('button.current-user')).click();
-
-    browser.wait(() => signOutBtn.isDisplayed(), 200);
-
-    signOutBtn.click();
+    click(currentUserButton);
+    click(signOutButton);
     browser.sleep(500);
     browser.refresh();
 }
@@ -271,3 +267,5 @@ export function logout() {
 export const searchProvider = new SearchProvider();
 export const ingestDashboard = new IngestDashboard();
 export const ingestSettings = new IngestSettings();
+export const currentUserButton = element(by.className('current-user__button'));
+export const signOutButton = element(by.buttonText('Sign out'));

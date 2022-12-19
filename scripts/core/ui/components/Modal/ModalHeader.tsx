@@ -21,6 +21,8 @@ export const ModalHeader: React.FC<IPropsModalHeader> = (props) => (
                 ariaValue={gettext('Close')}
                 icon="close-small"
                 onClick={() => props.onClose()}
+                toolTipFlow="left"
+                toolTipAppend={true}
             />
         )}
     </div>

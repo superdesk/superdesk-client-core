@@ -6,7 +6,7 @@
     <ul ng-class="{ 'notification-list--empty' : items[resolvedFilter].length === 0 }">
         <li ng-repeat="commentObj in items[resolvedFilter]">
             <h4 class="label">{{commentObj.fieldName}}</h4>
-            <ul class="notification-list notification-list-fix white sd-margin-all--0 sd-margin-b--2">
+            <ul class="notification-list sd-margin-all--0 sd-margin-b--2">
                 <li ng-repeat="item in commentObj.comments" class="item">
                     <div class="flex-row sibling-spacer-10">
                         <sd-user-avatar data-user="users[item.data.authorId]"></sd-user-avatar>
@@ -43,7 +43,7 @@
             <div class="round-box">
                 <i class="big-icon--comments"></i>
             </div>
-            <h3 translate>No comments have been posted</h3>
+            <p class="sd-text sd-text--strong sd-text-align--center sd-font-size--medium sd-text--serif sd-text-color--light sd-margin-t--2" translate>No comments have been posted</p>
         </li>
     </ul>
 </div>

@@ -3,35 +3,3 @@
 // ----------------------------------------------------------------------------------------
 @import '~mixins.scss';
 @import '~variables.scss';
-
-
-.history-list {
-    .item {
-        padding: 10px 14px;
-        border-bottom: 1px dotted $grayLight;
-        em {
-            color: $gray;
-            font-size: 13px;
-            font-style: normal;
-        }
-        b {
-            color: $sd-blue-text;
-            font-weight: 400;
-        }
-    }
-    .more-description {
-        margin: 10px 10px;
-    }
-    .queued {
-        padding: 5px 15px;
-        a {
-            color: $gray;
-            font-size: 13px;
-            font-style: normal;
-        }
-    }
-    .version {
-        color: $sd-blue-text;
-        font-style: italic;
-    }
-}

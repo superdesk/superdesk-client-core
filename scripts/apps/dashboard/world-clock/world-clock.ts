@@ -116,16 +116,16 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 var width = 105,
                     height = 100,
                     r = Math.min(width, height) * 0.8 * 0.5,
-                    dayBg = '#d8d8d8',
+                    dayBg = '#d4d8de',
                     dayClockhands = '#313131',
                     dayNumbers = '#a0a0a0',
-                    nightBg = '#313131',
+                    nightBg = '#1b1e23',
                     nightClockhands = '#e0e0e0',
                     nightNumbers = '#848484';
 
                 var svg = d3.select(element[0])
                     .append('svg')
-                    .attr('widgth', width)
+                    .attr('width', width)
                     .attr('height', height);
 
                 var clock = svg.append('g')

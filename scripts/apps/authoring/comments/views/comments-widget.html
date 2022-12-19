@@ -1,6 +1,6 @@
 <div ng-controller="CommentsWidgetCtrl" class="sd-wrap-helper">
-    <ul class="widget-content__main boxed-list sd-padding-all--1">
-        <li ng-repeat="comment in comments" class="boxed-list__item" ng-class="{'boxed-list__item--selcted': comment._id === active}">
+    <ul class="widget-content__main boxed-list sd-padding-all--2">
+        <li ng-repeat="comment in comments" class="boxed-list__item boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': comment._id === active}">
             <div class="boxed-list__item-media">
                 <sd-user-avatar data-user="comment.user"></sd-user-avatar>
             </div>
