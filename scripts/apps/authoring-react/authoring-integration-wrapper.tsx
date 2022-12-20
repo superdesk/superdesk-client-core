@@ -113,6 +113,30 @@ function getPublishToolbarWidget(
     return publishWidgetButton;
 }
 
+const getExportModal = (
+    getLatestItem: () => IArticle,
+    handleUnsavedChanges: () => Promise<IArticle>,
+    hasUnsavedChanges: () => boolean,
+): IAuthoringAction => ({
+    label: gettext('Export'),
+    onTrigger: () => {
+        const openModal = (article: IArticle) => showModal(({closeModal}) => {
+            return (
+                <ExportModal
+                    closeModal={closeModal}
+                    article={article}
+                />
+            );
+        });
+
+        if (hasUnsavedChanges()) {
+            handleUnsavedChanges().then((article) => openModal(article));
+        } else {
+            openModal(getLatestItem());
+        }
+    },
+});
+
 /**
  * The purpose of the wrapper is to handle integration with the angular part of the application.
  * The main component will not know about angular.
@@ -141,30 +165,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
             defaultToolbarItems.concat(topbar2WidgetsFromExtensions).map(
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
-
-        const getExportModal = (
-            item: IArticle,
-            handleUnsavedChanges: () => Promise<IArticle>,
-            hasUnsavedChanges: boolean,
-        ): IAuthoringAction => ({
-            label: gettext('Export'),
-            onTrigger: () => {
-                const openModal = (article: IArticle) => showModal(({closeModal}) => {
-                    return (
-                        <ExportModal
-                            closeModal={closeModal}
-                            article={article}
-                        />
-                    );
-                });
-
-                if (hasUnsavedChanges) {
-                    handleUnsavedChanges().then((article) => openModal(article));
-                } else {
-                    openModal(item);
-                }
-            },
-        });
 
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
@@ -214,7 +214,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                         return [
-                                            getExportModal(getLatestItem(), handleUnsavedChanges, hasUnsavedChanges()),
+                                            getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                             ...authoringActionsFromExtensions,
                                             ...articleActionsFromExtensions,
                                         ];

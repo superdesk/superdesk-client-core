@@ -2,7 +2,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IFormatter, IRestApiResponse} from 'superdesk-api';
 import {Modal, Select, Switch, Option, Button} from 'superdesk-ui-framework/react';
 
 interface IProps {
@@ -23,6 +23,16 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
+function fetchFormatters(): Promise<IRestApiResponse<IFormatter>> {
+    return httpRequestJsonLocal<IRestApiResponse<IFormatter>>({
+        method: 'GET',
+        path: '/formatters',
+        urlParams: {
+            criteria: 'can_export',
+        },
+    });
+}
+
 export default class ExportModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -30,10 +40,12 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
         this.state = {
             initialized: false,
         };
+
+        this.exportArticle = this.exportArticle.bind(this);
     }
 
     componentDidMount(): void {
-        this.fetchFormatters().then((result: any) => {
+        fetchFormatters().then((result) => {
             this.setState({
                 ...this.state,
                 initialized: true,
@@ -42,17 +54,7 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
         });
     }
 
-    fetchFormatters() {
-        return httpRequestJsonLocal({
-            method: 'GET',
-            path: '/formatters',
-            urlParams: {
-                criteria: 'can_export',
-            },
-        });
-    }
-
-    exportArticle() {
+    private exportArticle() {
         if (this.state.initialized) {
             return httpRequestJsonLocal({
                 method: 'POST',
@@ -113,6 +115,7 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
                             onClick={() => this.exportArticle()}
                             type="primary"
                             text={gettext('Export')}
+                            disabled={!state.selectedFormatter}
                         />
                         <Button
                             onClick={() => this.props.closeModal()}
