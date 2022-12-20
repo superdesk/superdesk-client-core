@@ -261,7 +261,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 () => Object.values(extensions)
                                     .flatMap(({activationResult}) =>
                                             activationResult?.contributions?.authoringTopbarWidgets ?? [],
-                                    ).map((item): ITopBarWidget<IArticle> => {
+                                    )
+                                    .map((item): ITopBarWidget<IArticle> => {
                                         const Component = item.component;
 
                                         return {
