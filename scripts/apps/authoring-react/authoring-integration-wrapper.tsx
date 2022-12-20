@@ -262,6 +262,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 handleUnsavedChanges,
                                 hasUnsavedChanges,
                             }) => {
+                            getActions={({item, contentProfile, fieldsData}) => {
                                 return Promise.all([
                                     getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
                                     getArticleActionsFromExtensions(item),
