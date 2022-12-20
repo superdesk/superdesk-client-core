@@ -8,8 +8,11 @@ const {gettext} = superdesk.localization;
 
 interface IRundownItemCommentNotification {
     message: string;
-    rundownId: IRundown['_id'];
-    rundownItemId: IRundownItem['_id'];
+
+    data: {
+        rundownId: IRundown['_id'];
+        rundownItemId: IRundownItem['_id'];
+    };
 }
 
 type IExtensionNotifications = Required<Required<IExtensionActivationResult>['contributions']>['notifications'];
@@ -21,7 +24,7 @@ export const notifications: IExtensionNotifications = {
             {
                 label: gettext('Open item'),
                 onClick: () => {
-                    const {rundownId, rundownItemId} = notification;
+                    const {rundownId, rundownItemId} = notification.data;
 
                     function openRundownItem() {
                         events.dispatchEvent('openRundownItem', {
