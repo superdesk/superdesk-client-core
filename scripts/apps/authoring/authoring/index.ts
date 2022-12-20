@@ -119,7 +119,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
-    .component('sdTextWithMentions', reactToAngular1(TextWithMentions, ['data']))
+    .component('sdTextWithMentions', reactToAngular1(TextWithMentions, ['message']))
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)

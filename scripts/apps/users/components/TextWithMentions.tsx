@@ -12,23 +12,27 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
  * @name TextWithMentions
  * @description Displays a text containing mentions.
  */
-export const TextWithMentions: React.StatelessComponent<any> = ({children, ...props}) => {
-    const msg = props.data ? props.data : children;
-    const n = msg.length;
+
+export interface ITextWithMention {
+    message: string;
+    props: any;
+}
+export const TextWithMentions: React.StatelessComponent<any> = ({message, ...props}: ITextWithMention) => {
+    const n = message.length;
 
     const r = []; // array of components to render
     let m; // regexp match
     let lastEnd = 0; // end index of last match
 
     do {
-        m = mentionRegexp.exec(msg);
+        m = mentionRegexp.exec(message);
 
         if (m) {
             const [match, name, type, id] = m;
 
             if (lastEnd < m.index) {
                 // push the previous slice of plain text
-                r.push(msg.slice(lastEnd, m.index));
+                r.push(message.slice(lastEnd, m.index));
             }
             if (type === 'user') {
                 // push a user mention
@@ -44,12 +48,12 @@ export const TextWithMentions: React.StatelessComponent<any> = ({children, ...pr
 
     if (lastEnd < n) {
         // push whatever is left
-        r.push(msg.slice(lastEnd, n));
+        r.push(message.slice(lastEnd, n));
     }
 
     return <div className="text-with-mentions" {...props}>{r}</div>;
 };
 
 TextWithMentions.propTypes = {
-    children: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
 };
