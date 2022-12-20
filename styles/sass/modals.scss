@@ -364,7 +364,7 @@ $sd-leftNavBtn-borderActive: 4px solid rgba(94,169,200,1);
 
         .table-list {
             height: calc(100% - 96px);
-            overflow: auto;
+            overflow: auto !important;
         }
 
         table {
