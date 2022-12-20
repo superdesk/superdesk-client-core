@@ -24,7 +24,7 @@ interface IState {
 /**
  * Current implementation of find-replace only supports one field.
  */
-const editorId = 'body_html';
+export const editorId = 'body_html';
 
 class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
     private scheduleHighlightingOfMatches: () => void;

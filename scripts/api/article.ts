@@ -11,6 +11,8 @@ import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
+import {dataApi} from 'core/helpers/CrudManager';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -173,8 +175,48 @@ function createNewUsingDeskTemplate(): void {
     });
 }
 
+/**
+ * Gets opened items from your workspace.
+ */
+function getWorkQueueItems(): Array<IArticle> {
+    return ng.get('workqueue').items;
+}
+
+function get(id: IArticle['_id']): Promise<IArticle> {
+    return dataApi.findOne<IArticle>('archive', id);
+}
+
+function isEditable(_article: IArticle): boolean {
+    const itemState: ITEM_STATE = _article.state;
+    const authoring = ng.get('authoring');
+
+    switch (itemState) {
+    case ITEM_STATE.DRAFT:
+    case ITEM_STATE.CORRECTION:
+    case ITEM_STATE.SUBMITTED:
+    case ITEM_STATE.IN_PROGRESS:
+    case ITEM_STATE.ROUTED:
+    case ITEM_STATE.FETCHED:
+    case ITEM_STATE.UNPUBLISHED:
+        return authoring.itemActions(_article).edit === true;
+    case ITEM_STATE.INGESTED:
+    case ITEM_STATE.SPIKED:
+    case ITEM_STATE.SCHEDULED:
+    case ITEM_STATE.PUBLISHED:
+    case ITEM_STATE.CORRECTED:
+    case ITEM_STATE.BEING_CORRECTED:
+    case ITEM_STATE.KILLED:
+    case ITEM_STATE.RECALLED:
+        return false;
+    default:
+        assertNever(itemState);
+    }
+}
+
 interface IArticleApi {
+    get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
+    isEditable(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
     isLockedInOtherSession(article: IArticle): boolean;
     isLockedByCurrentUser(article: IArticle): boolean;
@@ -226,10 +268,12 @@ interface IArticleApi {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
 
     createNewUsingDeskTemplate(): void;
+    getWorkQueueItems(): Array<IArticle>;
 }
 
 export const article: IArticleApi = {
     isLocked,
+    isEditable,
     isLockedInCurrentSession,
     isLockedInOtherSession,
     isLockedByCurrentUser,
@@ -252,4 +296,6 @@ export const article: IArticleApi = {
     lock,
     unlock,
     createNewUsingDeskTemplate,
+    getWorkQueueItems,
+    get,
 };

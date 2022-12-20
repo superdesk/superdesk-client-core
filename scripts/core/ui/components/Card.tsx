@@ -1,12 +1,7 @@
-import React, {CSSProperties} from 'react';
+import React from 'react';
+import {IPropsCard} from 'superdesk-api';
 
-interface IProps {
-    background?: CSSProperties['background'];
-    padding?: CSSProperties['padding'];
-    borderRadius?: CSSProperties['borderRadius'];
-}
-
-export class Card extends React.PureComponent<IProps> {
+export class Card extends React.PureComponent<IPropsCard> {
     render() {
         return (
             <div
