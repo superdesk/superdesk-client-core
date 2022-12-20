@@ -125,6 +125,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                         itemTemplate={({entity: rundown, joined}) => (
                             <div style={{margin: 4}}>
                                 <ContentListItem
+                                    locked={rundown._lock}
                                     itemColum={[
                                         {
                                             itemRow: [
@@ -228,7 +229,6 @@ export class RundownsList extends React.PureComponent<IProps> {
                                             fullwidth: true,
                                         },
                                     ]}
-                                    locked={false}
                                     action={(
                                         <Menu
                                             items={[
