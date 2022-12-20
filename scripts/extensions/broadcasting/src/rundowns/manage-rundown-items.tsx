@@ -84,7 +84,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                 }
 
                 <RundownItems
-                    readOnly={readOnly}
+                    rundownReadOnly={readOnly}
                     dragAndDrop
                     addItem
                     items={this.props.items}

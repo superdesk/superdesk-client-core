@@ -21,14 +21,23 @@ const {Spacer} = superdesk.components;
  * Simpler interface - allows to pass fewer props
  */
 interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
-    readOnly: 'yes';
+    /**
+     * It's a rundown that's in edit mode - not rundown items.
+     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     */
+    rundownReadOnly: 'yes';
     items: Array<T>;
     getActions(item: T): JSX.Element;
     preview(item: T): void;
+    edit(item: T): void;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
-    readOnly: boolean;
+    /**
+     * It's a rundown that's in edit mode - not rundown items.
+     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     */
+    rundownReadOnly: boolean;
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
@@ -154,14 +163,12 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     this.props.preview(item);
                 },
                 onDoubleClick: () => {
-                    if (!this.props.readOnly) {
-                        this.props.edit(item);
-                    }
+                    this.props.edit(item);
                 },
             });
         });
 
-        if (this.props.readOnly) {
+        if (this.props.rundownReadOnly) {
             return (
                 <TableList
                     array={array}
