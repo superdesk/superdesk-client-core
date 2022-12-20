@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, ITemplate} from 'superdesk-api';
 import {Alert, Button, Checkbox, Input, Modal, Option, Select} from 'superdesk-ui-framework/react';
-import {canEdit} from './template-helpers';
+import {canEdit, wasRenamed} from './template-helpers';
 
 interface IProps {
     item: IArticle;
@@ -49,7 +49,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const availableDesks = sdApi.desks.getAllDesks().map((x) => x).toArray();
+        const availableDesks = sdApi.desks.getAllDesks().toArray();
 
         if (!this.state.initialized) {
             return null;
@@ -87,7 +87,17 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                         )
                     }
                     {
-                        state.templateName !== state.template.template_name
+                        /**
+                         * If the input template name differs from the fetched template name
+                         * a new template will be created
+                         *
+                         * Or if the initially fetched template from the article is null a new
+                         * template will also be created
+                         *
+                         * Or if the initially fetched template from the article can't be edited
+                         * a new template will be created
+                         */
+                        wasRenamed(state.template, state.templateName)
                             || state.template == null
                             || canEdit(state.template, state.deskId != null) !== true
                             ? (
@@ -154,7 +164,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                             type="primary"
                             text={gettext('Save')}
                             onClick={() => {
-                                sdApi.templates.save(
+                                sdApi.templates.createTemplateFromArticle(
                                     this.props.item,
                                     state.templateName,
                                     state.deskId,

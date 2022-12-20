@@ -57,7 +57,7 @@ export function CreateTemplateController(
     self.willCreateNew = () => willCreateNew(self.template, self.name, self.is_public);
 
     function save() {
-        return sdApi.templates.save(item, self.name, self.is_public ? self.desk : null)
+        return sdApi.templates.createTemplateFromArticle(item, self.name, self.is_public ? self.desk : null)
             .then((data) => {
                 self._issues = null;
                 return data;

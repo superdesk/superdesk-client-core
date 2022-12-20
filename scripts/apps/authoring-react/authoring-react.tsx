@@ -38,15 +38,13 @@ import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actio
 import {sdApi} from 'api';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
-import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_FIELD_PREFERENCES} from 'core/constants';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
-import {TemplateModal} from './toolbar/template-modal';
-import {showModal} from '@superdesk/common';
 
 export function getFieldsData<T>(
     item: T,

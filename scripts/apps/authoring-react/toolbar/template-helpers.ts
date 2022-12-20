@@ -107,7 +107,7 @@ export function canEdit(template: ITemplate, isPublic: boolean): boolean {
     }
 }
 
-const wasRenamed = (
+export const wasRenamed = (
     template: ITemplate,
     templateName: string,
 ) => template != null && templateName !== template.template_name;
