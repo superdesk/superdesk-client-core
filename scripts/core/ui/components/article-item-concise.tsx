@@ -67,19 +67,21 @@ export class ArticleItemConcise extends React.PureComponent<IProps> {
                     {
                         this.props.actionsMenu != null && (
                             <ListItemColumn>
-                                <Menu
-                                    items={this.props.actionsMenu}
-                                >
-                                    {(toggle) => (
-                                        <IconButton
-                                            icon="dots-vertical"
-                                            ariaValue={gettext('Item actions')}
-                                            onClick={(event) => {
-                                                toggle(event);
-                                            }}
-                                        />
-                                    )}
-                                </Menu>
+                                <div>
+                                    <Menu
+                                        items={this.props.actionsMenu}
+                                    >
+                                        {(toggle) => (
+                                            <IconButton
+                                                icon="dots-vertical"
+                                                ariaValue={gettext('Item actions')}
+                                                onClick={(event) => {
+                                                    toggle(event);
+                                                }}
+                                            />
+                                        )}
+                                    </Menu>
+                                </div>
                             </ListItemColumn>
                         )
                     }
