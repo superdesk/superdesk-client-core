@@ -874,7 +874,7 @@ declare module 'superdesk-api' {
 
     export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
-    export interface IFormatter extends IBaseRestApiResponse {
+    export interface IArticleFormatter extends IBaseRestApiResponse {
         name: string;
     }
 

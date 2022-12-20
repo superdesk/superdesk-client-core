@@ -2,7 +2,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
-import {IArticle, IFormatter, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IArticleFormatter, IRestApiResponse} from 'superdesk-api';
 import {Modal, Select, Switch, Option, Button} from 'superdesk-ui-framework/react';
 
 interface IProps {
@@ -23,16 +23,6 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
-function fetchFormatters(): Promise<IRestApiResponse<IFormatter>> {
-    return httpRequestJsonLocal<IRestApiResponse<IFormatter>>({
-        method: 'GET',
-        path: '/formatters',
-        urlParams: {
-            criteria: 'can_export',
-        },
-    });
-}
-
 export default class ExportModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -45,7 +35,13 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount(): void {
-        fetchFormatters().then((result) => {
+        httpRequestJsonLocal<IRestApiResponse<IArticleFormatter>>({
+            method: 'GET',
+            path: '/formatters',
+            urlParams: {
+                criteria: 'can_export',
+            },
+        }).then((result) => {
             this.setState({
                 ...this.state,
                 initialized: true,
@@ -115,7 +111,7 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
                             onClick={() => this.exportArticle()}
                             type="primary"
                             text={gettext('Export')}
-                            disabled={!state.selectedFormatter}
+                            disabled={state.selectedFormatter?.length > 0}
                         />
                         <Button
                             onClick={() => this.props.closeModal()}
