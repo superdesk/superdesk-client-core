@@ -64,26 +64,28 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
             }
 
             return (
-                <Menu items={menuItems}>
-                    {(toggle) => (
-                        <button
-                            onClick={(e) => {
-                                toggle(e);
-                            }}
-                            className="sd-navbtn"
-                            aria-label={gettext('Actions menu')}
-                            ref={(el) => {
-                                if (el != null) {
-                                    setTimeout(() => {
-                                        el.click();
-                                    });
-                                }
-                            }}
-                        >
-                            <i className="icon-dots-vertical" />
-                        </button>
-                    )}
-                </Menu>
+                <div>
+                    <Menu items={menuItems}>
+                        {(toggle) => (
+                            <button
+                                onClick={(e) => {
+                                    toggle(e);
+                                }}
+                                className="sd-navbtn"
+                                aria-label={gettext('Actions menu')}
+                                ref={(el) => {
+                                    if (el != null) {
+                                        setTimeout(() => {
+                                            el.click();
+                                        });
+                                    }
+                                }}
+                            >
+                                <i className="icon-dots-vertical" />
+                            </button>
+                        )}
+                    </Menu>
+                </div>
             );
         }
     }

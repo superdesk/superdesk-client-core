@@ -13,21 +13,21 @@ import {
     Modal,
 } from 'superdesk-ui-framework/react';
 
-import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
+import {ManageRundownTemplates} from './rundown-templates/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';
 
 import {classnames, showModal} from '@superdesk/common';
 
-import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
-import {RundownsList} from './shows/rundowns/rundowns-list';
-import {IRundownAction, RundownViewEdit} from './shows/rundowns/rundown-view-edit';
+import {CreateRundownFromTemplate} from './rundowns/create-rundown-from-template';
+import {RundownsList} from './rundowns/rundowns-list';
+import {IRundownAction, RundownViewEdit} from './rundowns/rundown-view-edit';
 import {IRundown, IRundownFilters} from './interfaces';
-import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
-import {AppliedFilters} from './shows/rundowns/components/applied-filters';
+import {FilteringInputs} from './rundowns/components/filtering-inputs';
+import {AppliedFilters} from './rundowns/components/applied-filters';
 
 import {superdesk} from './superdesk';
 import {ManageShows} from './shows/manage-shows';
-import {IRundownItemActionNext} from './shows/rundowns/prepare-create-edit-rundown-item';
+import {IRundownItemActionNext} from './rundowns/prepare-create-edit-rundown-item';
 
 const {gettext} = superdesk.localization;
 const {isLockedInCurrentSession} = superdesk.utilities;

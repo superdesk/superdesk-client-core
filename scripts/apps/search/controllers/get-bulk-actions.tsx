@@ -2,7 +2,7 @@ import {IArticle} from 'superdesk-api';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import ng from 'core/services/ng';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import {canPrintPreview} from '../helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IMultiActions} from './get-multi-actions';
@@ -11,8 +11,11 @@ import {isOpenItemType} from '../directives/MultiActionBar';
 import {showModal} from '@superdesk/common';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {dataApi} from 'core/helpers/CrudManager';
-import {appConfig} from 'appConfig';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import React from 'react';
+import {MultiEditModal} from 'apps/authoring-react/multi-edit-modal';
+import {Modal} from 'superdesk-ui-framework/react';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -22,15 +25,14 @@ export function getBulkActions(
     scopeApply: () => void,
 ): Array<IArticleActionBulkExtended> {
     const actions: Array<IArticleActionBulkExtended> = [];
-
-    const authoring = ng.get('authoring');
     const desks = ng.get('desks');
     const privileges = ng.get('privileges');
 
-    const {isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
+    const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished, isEditable} = sdApi.article;
 
     const noneLocked = articles.every((article) => !isLocked(article));
     const nonePublished = articles.every((article) => !isPublished(article));
+    const allAreEditable = articles.every((article) => isEditable(article));
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
         actions.push({
@@ -117,13 +119,61 @@ export function getBulkActions(
             });
         }
 
-        if (noneLocked && articles.every((article) => authoring.itemActions(article).edit === true)) {
+        if (allAreEditable) {
             actions.push({
-                label: gettext('Multiedit'),
+                label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
                 onTrigger: () => {
-                    multiActions.multiedit();
-                    scopeApply?.();
+                    if (authoringReactViewEnabled) {
+                        Promise.all(getSelectedItems().map((article) => {
+                            if (isLockedInCurrentSession(article)) {
+                                /**
+                                 * using article doesn't work because it is missing properties
+                                 * (at least slugline)
+                                 */
+                                return sdApi.article.get(article._id);
+                            } else {
+                                return sdApi.article.lock(article._id);
+                            }
+                        })).then((articlesLocked) => {
+                            showModal(({closeModal}) => (
+                                <MultiEditModal
+                                    initiallySelectedArticles={articlesLocked}
+                                    onClose={closeModal}
+                                />
+                            ));
+                        });
+                    } else {
+                        multiActions.multiedit();
+                        scopeApply?.();
+                    }
+                },
+                canAutocloseMultiActionBar: false,
+            });
+        } else {
+            const modalHeadline = gettext('You can\'t multi-edit, because these articles can\'t be edited');
+
+            actions.push({
+                label: gettext('Multi-edit'),
+                icon: 'icon-multiedit',
+                onTrigger: () => {
+                    showModal(({closeModal}) => (
+                        <Modal
+                            zIndex={1050}
+                            size="medium"
+                            visible
+                            onHide={closeModal}
+                            headerTemplate={modalHeadline}
+                        >
+                            {
+                                getSelectedItems().filter((article) => {
+                                    return !isEditable(article);
+                                }).map((item) => (
+                                    <div key={item._id}>{getItemLabel(item)}</div>
+                                ))
+                            }
+                        </Modal>
+                    ));
                 },
                 canAutocloseMultiActionBar: false,
             });

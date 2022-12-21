@@ -24,7 +24,6 @@ import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {keyBy, merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
-import ng from 'core/services/ng';
 import {sdApi} from 'api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {store} from 'core/data';

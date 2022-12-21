@@ -215,7 +215,7 @@ const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex
     return {newContent, matchIndex};
 };
 
-// create reg exp from pattern if neede
+// create reg exp from pattern if needed
 const getRegExp = ({pattern, caseSensitive}) =>
     typeof pattern === 'string' ? new RegExp(escapeRegExp(pattern), 'g' + (caseSensitive ? '' : 'i')) : pattern;
 
