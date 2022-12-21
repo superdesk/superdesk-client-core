@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 // mentionRegexp matches mentions in the comment body. It captures $1(name), $2(type), $3(id)
 // the format is: @[name](type:id)
@@ -16,7 +15,7 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
 export interface IProps {
     message: string;
 }
-export const TextWithMentions: React.StatelessComponent<any> = ({message, ...props}: IProps) => {
+export const TextWithMentions: React.StatelessComponent<any> = ({message}: IProps) => {
     const n = message.length;
 
     const r = []; // array of components to render
@@ -50,5 +49,5 @@ export const TextWithMentions: React.StatelessComponent<any> = ({message, ...pro
         r.push(message.slice(lastEnd, n));
     }
 
-    return <div className="text-with-mentions" {...props}>{r}</div>;
+    return <div className="text-with-mentions">{r}</div>;
 };
