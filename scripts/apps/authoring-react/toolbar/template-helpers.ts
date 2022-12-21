@@ -55,7 +55,7 @@ export function prepareData(template: ITemplate) {
     };
 }
 
-export function cleanData(data: Partial<ITemplate | IArticle>): Partial<ITemplate | IArticle> {
+export function cleanData<T>(data: Partial<T>): Partial<T> {
     [
         '_type',
         '_status',

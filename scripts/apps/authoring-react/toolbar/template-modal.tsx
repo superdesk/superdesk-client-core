@@ -88,14 +88,12 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                     }
                     {
                         /**
-                         * If the input template name differs from the fetched template name
-                         * a new template will be created
+                         * A new template will be created:
+                         * - if the input template name differs from the initially fetched template name
+                         * - if the initially fetched template from the article is null
+                         * - if the initially fetched template from the article can't be edited
                          *
-                         * Or if the initially fetched template from the article is null a new
-                         * template will also be created
-                         *
-                         * Or if the initially fetched template from the article can't be edited
-                         * a new template will be created
+                         * Else the existing template will be updated
                          */
                         wasRenamed(state.template, state.templateName)
                             || state.template == null
