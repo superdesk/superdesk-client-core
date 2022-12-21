@@ -33,9 +33,8 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {showModal} from '@superdesk/common';
-import TranslateModal from './toolbar/translate-modal';
 import {IProps} from './authoring-angular-integration';
+import {showModal} from '@superdesk/common';
 import ExportModal from './toolbar/export-modal';
 
 function getAuthoringActionsFromExtensions(
@@ -182,7 +181,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     public isSidebarCollapsed() {
         return this.state.isSidebarCollapsed;
     }
-
+  
     public prepareForUnmounting() {
         if (this.authoringReactRef == null) {
             return Promise.resolve();
