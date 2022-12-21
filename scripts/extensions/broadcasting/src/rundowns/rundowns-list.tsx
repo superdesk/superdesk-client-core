@@ -88,7 +88,7 @@ export class RundownsList extends React.PureComponent<IProps> {
         );
     }
 
-    fetchData(pageNo: number, pageSize?: number) {
+    fetchData(pageNo: number, signal: AbortSignal, pageSize?: number) {
         const query = prepareSuperdeskQuery('/rundowns', {
             fullTextSearch: this.props.searchString.trim().length < 1
                 ? undefined
@@ -99,14 +99,14 @@ export class RundownsList extends React.PureComponent<IProps> {
             max_results: pageSize ?? 20,
         });
 
-        return httpRequestJsonLocal<IRestApiResponse<IRundown>>(query);
+        return httpRequestJsonLocal<IRestApiResponse<IRundown>>({...query, abortSignal: signal});
     }
 
     render() {
         return (
             <WithPagination
                 pageSize={20}
-                getItems={(pageNo) => this.fetchData(pageNo)}
+                getItems={(pageNo, signal) => this.fetchData(pageNo, signal)}
             >
                 {
                     (items) => <div>{JSON.stringify(items)}</div>
