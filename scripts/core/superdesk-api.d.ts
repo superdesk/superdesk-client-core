@@ -96,12 +96,6 @@ declare module 'superdesk-api' {
         * Is meant to be used before unmounting the component.
         */
         flush(): Promise<void>;
-
-        /**
-        * Immediately autosaves without a delay if there is anything to autosave.
-        * Is meant to be used before unmounting the component.
-        */
-        flush(): Promise<void>;
     }
 
     /**
