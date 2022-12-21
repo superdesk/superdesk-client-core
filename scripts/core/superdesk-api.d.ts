@@ -96,6 +96,12 @@ declare module 'superdesk-api' {
         * Is meant to be used before unmounting the component.
         */
         flush(): Promise<void>;
+
+        /**
+        * Immediately autosaves without a delay if there is anything to autosave.
+        * Is meant to be used before unmounting the component.
+        */
+        flush(): Promise<void>;
     }
 
     /**
@@ -879,6 +885,10 @@ declare module 'superdesk-api' {
         language: string;
         source: boolean;
         destination: boolean;
+    }
+
+    export interface IArticleFormatter extends IBaseRestApiResponse {
+        name: string;
     }
 
     export interface IArticle extends IBaseRestApiResponse {

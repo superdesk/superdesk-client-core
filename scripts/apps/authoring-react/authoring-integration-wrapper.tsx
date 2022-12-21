@@ -36,6 +36,7 @@ import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@superdesk/common';
 import TranslateModal from './toolbar/translate-modal';
 import {IProps} from './authoring-angular-integration';
+import ExportModal from './toolbar/export-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -104,6 +105,30 @@ function getPublishToolbarWidget(
 
     return publishWidgetButton;
 }
+
+const getExportModal = (
+    getLatestItem: () => IArticle,
+    handleUnsavedChanges: () => Promise<IArticle>,
+    hasUnsavedChanges: () => boolean,
+): IAuthoringAction => ({
+    label: gettext('Export'),
+    onTrigger: () => {
+        const openModal = (article: IArticle) => showModal(({closeModal}) => {
+            return (
+                <ExportModal
+                    closeModal={closeModal}
+                    article={article}
+                />
+            );
+        });
+
+        if (hasUnsavedChanges()) {
+            handleUnsavedChanges().then((article) => openModal(article));
+        } else {
+            openModal(getLatestItem());
+        }
+    },
+});
 
 interface IPropsWrapper extends IProps {
     onClose?(): void;
@@ -247,6 +272,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 contentProfile,
                                 fieldsData,
                                 getLatestItem,
+                                handleUnsavedChanges,
+                                hasUnsavedChanges,
                             }) => {
                                 return Promise.all([
                                     getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
@@ -255,6 +282,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
+                                        getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                         getTranslateAction(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
