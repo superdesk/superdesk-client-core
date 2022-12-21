@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 // mentionRegexp matches mentions in the comment body. It captures $1(name), $2(type), $3(id)
 // the format is: @[name](type:id)
@@ -12,23 +11,27 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
  * @name TextWithMentions
  * @description Displays a text containing mentions.
  */
-export const TextWithMentions: React.StatelessComponent<any> = ({children, ...props}) => {
-    const msg = children;
-    const n = msg.length;
+
+export interface IProps {
+    message: string;
+}
+
+export const TextWithMentions: React.FunctionComponent<IProps> = ({message}) => {
+    const n = message.length;
 
     const r = []; // array of components to render
     let m; // regexp match
     let lastEnd = 0; // end index of last match
 
     do {
-        m = mentionRegexp.exec(msg);
+        m = mentionRegexp.exec(message);
 
         if (m) {
             const [match, name, type, id] = m;
 
             if (lastEnd < m.index) {
                 // push the previous slice of plain text
-                r.push(msg.slice(lastEnd, m.index));
+                r.push(message.slice(lastEnd, m.index));
             }
             if (type === 'user') {
                 // push a user mention
@@ -44,12 +47,8 @@ export const TextWithMentions: React.StatelessComponent<any> = ({children, ...pr
 
     if (lastEnd < n) {
         // push whatever is left
-        r.push(msg.slice(lastEnd, n));
+        r.push(message.slice(lastEnd, n));
     }
 
-    return <div className="text-with-mentions" {...props}>{r}</div>;
-};
-
-TextWithMentions.propTypes = {
-    children: PropTypes.string.isRequired,
+    return <div className="text-with-mentions">{r}</div>;
 };

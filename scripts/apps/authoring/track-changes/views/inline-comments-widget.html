@@ -11,7 +11,8 @@
                     <div class="flex-row sibling-spacer-10">
                         <sd-user-avatar data-user="users[item.data.authorId]"></sd-user-avatar>
                         <div>
-                            <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
+                            <b>{{users[item.data.authorId].display_name}}:</b>
+                            <sd-text-with-mentions message="item.data.msg"></sd-text-with-mentions>
                             <span class="date" sd-absdate datetime="item.data.date"></span>
                         </div>
                     </div>
@@ -21,7 +22,8 @@
                             <div class="flex-row sibling-spacer-10">
                                 <sd-user-avatar data-user="users[reply.authorId]"></sd-user-avatar>
                                 <div>
-                                    <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
+                                    <b>{{users[reply.authorId].display_name}}:</b>
+                                    <sd-text-with-mentions message="reply.msg"></sd-text-with-mentions>
                                     <span class="date" sd-absdate datetime="reply.date"></span>
                                 </div>
                             </div>

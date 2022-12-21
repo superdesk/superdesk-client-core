@@ -33,6 +33,7 @@ import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {FullPreview} from '../preview/fullPreview';
 import {sdApi} from 'api';
+import {TextWithMentions} from 'apps/users/components';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -118,6 +119,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
+    .component('sdTextWithMentions', reactToAngular1(TextWithMentions, ['message']))
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
