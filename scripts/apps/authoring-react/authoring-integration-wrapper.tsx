@@ -123,6 +123,18 @@ interface IState {
     isSidebarCollapsed: boolean;
 }
 
+const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
 
@@ -198,18 +210,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
-        const getTranslateAction = (item: IArticle): IAuthoringAction => ({
-            label: gettext('Translate'),
-            onTrigger: () => {
-                showModal(({closeModal}) => (
-                    <TranslateModal
-                        closeModal={closeModal}
-                        article={item}
-                    />
-                ));
-            },
-        });
-
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
@@ -242,7 +242,12 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             onEditingEnd={(article) => {
                                 dispatchCustomEvent('articleEditEnd', article);
                             }}
-                            getActions={({item, contentProfile, fieldsData, getLatestItem}) => {
+                            getActions={({
+                                item,
+                                contentProfile,
+                                fieldsData,
+                                getLatestItem,
+                            }) => {
                                 return Promise.all([
                                     getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
                                     getArticleActionsFromExtensions(item),
@@ -250,7 +255,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
-                                        getTranslateAction(getLatestItem()),
+                                        getTranslateAction(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
                                     ];

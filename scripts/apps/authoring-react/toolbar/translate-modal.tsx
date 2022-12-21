@@ -17,7 +17,7 @@ interface IStateLoading {
 
 interface IStateLoaded {
     initialized: true;
-    availableLangs: Array<ITranslation> | null;
+    availableLanguages: Array<ITranslation> | null;
     selectedLanguage: string | null;
 }
 
@@ -37,7 +37,7 @@ export default class TranslateModal extends React.PureComponent<IProps, IState> 
             this.setState({
                 ...this.state,
                 initialized: true,
-                availableLangs: result._items,
+                availableLanguages: result._items,
             });
         });
     }
@@ -88,7 +88,7 @@ export default class TranslateModal extends React.PureComponent<IProps, IState> 
                     >
                         <Option />
                         {
-                            state.availableLangs.map((lang) => {
+                            state.availableLanguages.map((lang) => {
                                 return (
                                     <Option key={lang._id} value={lang.language}>
                                         {gettext(lang.label)}
@@ -107,7 +107,7 @@ export default class TranslateModal extends React.PureComponent<IProps, IState> 
                             onClick={() => this.translate()}
                             text={gettext('Translate')}
                             type="primary"
-                            disabled={!state.selectedLanguage && true}
+                            disabled={state.selectedLanguage?.length > 0}
                         />
                     </Spacer>
                 </Spacer>
