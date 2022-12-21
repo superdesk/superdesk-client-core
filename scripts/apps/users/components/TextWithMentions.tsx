@@ -15,7 +15,8 @@ const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
 export interface IProps {
     message: string;
 }
-export const TextWithMentions: React.StatelessComponent<any> = ({message}: IProps) => {
+
+export const TextWithMentions: React.FunctionComponent<IProps> = ({message}) => {
     const n = message.length;
 
     const r = []; // array of components to render
