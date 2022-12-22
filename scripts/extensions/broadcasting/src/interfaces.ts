@@ -53,6 +53,7 @@ export interface IRundownItemBase {
     status?: string;
     planned_duration: number;
     title: string;
+    technical_title: string;
     content?: string;
     additional_notes?: string;
     fields_meta?: {

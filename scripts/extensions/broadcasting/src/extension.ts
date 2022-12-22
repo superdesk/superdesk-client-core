@@ -44,4 +44,6 @@ const extension: IExtension = {
     },
 };
 
+export {setCustomizations} from './customization';
+
 export default extension;

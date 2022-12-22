@@ -13,6 +13,7 @@ import {
     STATUS_VOCABULARY_ID,
 } from '../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
+import {customizations} from '../../customization';
 const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
@@ -116,7 +117,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 ),
                 center: (
                     <span>
-                        {item.title}
+                        {customizations.getRundownItemDisplayName?.(item) ?? item.title}
                     </span>
                 ),
                 end: (
