@@ -4,7 +4,7 @@ import ng from 'core/services/ng';
 export const getLabelForFieldId = (fieldId, vocabularies) => {
     const labelMap = GET_LABEL_MAP();
     const field = vocabularies.find((obj) => obj._id === fieldId);
-    const categories =  vocabularies.find((v) => v._id === 'categories')
+    const categories = vocabularies.find((v) => v._id === 'categories');
 
     if (fieldId === 'anpa_category' && categories) {
         return categories.display_name;
