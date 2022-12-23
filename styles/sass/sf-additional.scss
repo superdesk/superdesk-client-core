@@ -2362,3 +2362,13 @@ sd-multi-image-edit {
         gap: var(--gap--small);
     }
 }
+
+.modal.modal--tabs .modal__body-footer .button-group{
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    span{
+        display: flex;
+        gap: 8px;
+    }
+}

@@ -121,12 +121,12 @@
                 </div>
             </div>
             <div class="modal__body-footer">
-                <div class="modal_footer_btn">
-                    <div class="cancelBtn" ng-if="rule">
-                        <button class="btn" ng-click="cancelRule(rule)" translate>Cancel</button>
-                        <button class="btn btn--primary" ng-click="save()" ng-disabled="!rule.name" translate>Save</button>
-                    </div>
-                    <button class="btn btn--primary" ng-click="done()" ng-disabled="rule" translate>Done</button>
+                <div class="button-group button-group--end button-group--comfort" role="group">
+                    <span ng-if="rule">
+                        <button class="btn" tabindex="0" ng-click="cancelRule(rule)" translate>Cancel</button>
+                        <button class="btn btn--primary" tabindex="1" ng-click="save()" ng-disabled="!rule.name" translate>Save</button>
+                    </span>
+                    <button class="btn btn--primary" tabindex="2" ng-click="done()" ng-disabled="rule" translate>Done</button>
                 </div>
             </div>
         </form>
