@@ -512,6 +512,16 @@ $desk-width: 270px;
     }
 }
 
+.modal_footer_btn{
+    display: flex;
+    justify-content: flex-end;
+}   
+.cancelBtn{
+    display: flex;
+    gap: 4px;
+    margin-right: 8px;
+}
+
 .members-list {
     padding-top: 1rem;
 } 
