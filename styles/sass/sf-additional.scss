@@ -2362,3 +2362,7 @@ sd-multi-image-edit {
         gap: var(--gap--small);
     }
 }
+
+.modal.modal--tabs .modal__body-footer {
+    display: flex;
+}
