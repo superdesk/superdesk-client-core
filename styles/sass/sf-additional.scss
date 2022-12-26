@@ -2363,12 +2363,6 @@ sd-multi-image-edit {
     }
 }
 
-.modal.modal--tabs .modal__body-footer .button-group{
+.modal.modal--tabs .modal__body-footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    span{
-        display: flex;
-        gap: 8px;
-    }
 }
