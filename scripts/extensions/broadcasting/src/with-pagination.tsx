@@ -13,6 +13,61 @@ interface IState<T> {
     items: Array<T> | null;
 }
 
+function getPagination(currentPage: number, totalPages: number): Array<number | 'dots'> {
+    let basePages: ReturnType<typeof getPagination> = [
+        currentPage - 2,
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        currentPage + 2,
+    ].filter((page) => page >= 1 && page <= totalPages);
+
+    if (!basePages.includes(1)) { // include first and maybe dots
+        const firstInCurrentList = basePages[0];
+
+        if (firstInCurrentList !== 1) {
+            basePages = [
+                'dots',
+                ...basePages,
+            ];
+        }
+
+        basePages = [
+            1,
+            ...basePages,
+        ];
+    }
+
+    if (!basePages.includes(totalPages)) { // include last and maybe dots
+        const lastInCurrentList = basePages[basePages.length - 1];
+
+        if (lastInCurrentList !== totalPages - 1) { // add dots if we're skipping some numbers
+            basePages = basePages.concat('dots');
+        }
+
+        basePages = [
+            ...basePages,
+            totalPages,
+        ];
+    }
+
+    return basePages;
+}
+
+function getScrollParent(element: HTMLElement | null): HTMLElement | null {
+    if (element == null) {
+        return null;
+    }
+
+    let pEl: HTMLElement | null = element;
+
+    while (pEl !== null && window.getComputedStyle(pEl).overflowY !== ('auto' || 'scroll')) {
+        pEl = element.parentElement ?? null;
+    }
+
+    return pEl;
+}
+
 export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>> {
     private pageCount: number;
     private abortController: AbortController;
@@ -49,7 +104,7 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
         this.props.getItems(page, this.abortController.signal).then((res) => {
             this.inProgress = false;
             this.setState({items: res._items, currentPage: page}, () => {
-                const scrollableEl = this.getScrollParent(this.ref);
+                const scrollableEl = getScrollParent(this.ref);
                 const diff = scrollableEl != null && this.ref?.scrollHeight != null
                     ? scrollableEl.offsetHeight - this.ref?.scrollHeight
                     : null;
@@ -59,20 +114,6 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
                 }
             });
         });
-    }
-
-    getScrollParent(element: HTMLElement | null): HTMLElement | null {
-        if (element == null) {
-            return null;
-        }
-
-        let pEl: HTMLElement | null = element;
-
-        while (pEl !== null && window.getComputedStyle(pEl).overflowY !== ('auto' || 'scroll')) {
-            pEl = element.parentElement ?? null;
-        }
-
-        return pEl;
     }
 
     componentDidMount(): void {
@@ -87,88 +128,24 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
             return null;
         }
 
-        const pButton = (n: number) => (
-            <button
-                className='sd-pagination__item'
-                onClick={() => this.switchPage(n)}
-            >
-                {n}
-            </button>
-        );
-        const span = <span className='sd-pagination__item sd-pagination__item--more'>...</span>;
+        const pageElements = getPagination(this.state.currentPage, this.pageCount).map((el) => {
+            if (el === 'dots') {
+                return (
+                    <span className='sd-pagination__item sd-pagination__item--more'>...</span>
+                );
+            } else {
+                return (
+                    <button
+                        className='sd-pagination__item'
+                        onClick={() => this.switchPage(el)}
+                    >
+                        {el}
+                    </button>
+                );
+            }
+        });
 
-        const pageArray = [
-            this.state.currentPage - 1,
-            this.state.currentPage,
-            this.state.currentPage + 1,
-        ]
-            .filter((x) => x >= 1 && x <= this.pageCount)
-            .map((pN) => {
-                if (pN === this.pageCount - 1 && this.state.currentPage + 1 !== this.pageCount) {
-                    return;
-                }
-
-                if (this.state.currentPage === this.pageCount && pN === this.pageCount) {
-                    return (
-                        <>
-                            {pButton(1)}
-                            {span}
-                            {pButton(pN - 2)}
-                            {pButton(pN - 1)}
-                            {pButton(pN)}
-                        </>
-                    );
-                }
-
-                if (this.state.currentPage === this.pageCount - 1 && pN + 2 === this.pageCount) {
-                    return (
-                        <>
-                            {pButton(1)}
-                            {span}
-                            {pButton(pN)}
-                        </>
-                    );
-                }
-
-                if (
-                    this.state.currentPage + 2 === this.pageCount && pN + 1 === this.state.currentPage
-                ) {
-                    return (
-                        <>
-                            {pButton(1)}
-                            {span}
-                            {pButton(pN + 1)}
-                        </>
-                    );
-                }
-
-                if (this.state.currentPage + 2 === this.pageCount) {
-                    return (
-                        <>
-                            {pButton(pN + 1)}
-                            {pButton(pN + 2)}
-                        </>
-                    );
-                }
-
-                if (
-                    this.state.currentPage !== this.pageCount
-                    && pN - this.state.currentPage === 1
-                    && this.pageCount !== pN
-                ) {
-                    return (
-                        <>
-                            {pButton(pN)}
-                            {span}
-                            {pButton(this.pageCount)}
-                        </>
-                    );
-                }
-
-                return pButton(pN);
-            });
-
-        pageArray.unshift(
+        pageElements.unshift(
             <>
                 <button
                     className='sd-pagination__item sd-pagination__item--start'
@@ -187,7 +164,7 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
             </>,
         );
 
-        pageArray.push(
+        pageElements.push(
             <>
                 <button
                     className='sd-pagination__item sd-pagination__item--forward'
@@ -204,99 +181,6 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
                     <Icon name='forward-thin' />
                 </button>
             </>,
-        );
-
-        const pagination = (
-            <div className='sd-pagination' ref={(el) => this.ref = el}>
-                <button
-                    className='sd-pagination__item sd-pagination__item--start'
-                    disabled={this.state.currentPage === 1}
-                    onClick={() => this.switchPage(1)}
-                >
-                    <Icon name='backward-thin' />
-                </button>
-                <button
-                    className='sd-pagination__item sd-pagination__item--start'
-                    disabled={this.state.currentPage <= 1}
-                    onClick={() => this.switchPage(this.state.currentPage - 1)}
-                >
-                    <Icon name='chevron-left-thin' />
-                </button>
-                {
-                    (this.state.currentPage === this.pageCount || this.state.currentPage === this.pageCount - 1) && (
-                        <>
-                            <button
-                                className='sd-pagination__item'
-                                onClick={() => this.switchPage(1)}
-                            >
-                                {1}
-                            </button>
-                            <span className='sd-pagination__item sd-pagination__item--more'>...</span>
-                        </>
-                    )
-                }
-                {
-                    this.pageCount === this.state.currentPage && this.state.currentPage - 2 > 0 &&
-                    (
-                        <button
-                            className='sd-pagination__item'
-                            onClick={() => this.switchPage(this.state.currentPage - 2)}
-                        >
-                            {this.state.currentPage - 2}
-                        </button>
-                    )
-                }
-                {
-                    this.state.currentPage > 1 &&
-                    (
-                        <button
-                            className='sd-pagination__item'
-                            onClick={() => this.switchPage(this.state.currentPage - 1)}
-                        >
-                            {this.state.currentPage - 1}
-                        </button>
-                    )
-                }
-                <button
-                    className='sd-pagination__item sd-pagination__item--active'
-                    onClick={() => this.switchPage(this.state.currentPage)}
-                >
-                    {this.state.currentPage}
-                </button>
-                {
-                    this.state.currentPage < this.pageCount && (
-                        <button onClick={() => this.switchPage(this.state.currentPage + 1)}>
-                            {this.state.currentPage + 1}
-                        </button>
-                    )
-                }
-                {
-                    this.state.currentPage !== this.pageCount - 1 && this.state.currentPage !== this.pageCount && (
-                        <>
-                            <span className='sd-pagination__item sd-pagination__item--more'>...</span><button
-                                className='sd-pagination__item'
-                                onClick={() => this.switchPage(this.pageCount)}
-                            >
-                                {this.pageCount}
-                            </button>
-                        </>
-                    )
-                }
-                <button
-                    className='sd-pagination__item sd-pagination__item--forward'
-                    onClick={() => this.switchPage(this.state.currentPage + 1)}
-                    disabled={this.state.currentPage === this.pageCount}
-                >
-                    <Icon name='chevron-right-thin' />
-                </button>
-                <button
-                    className='sd-pagination__item sd-pagination__item--end'
-                    onClick={() => this.switchPage(this.pageCount)}
-                    disabled={this.state.currentPage === this.pageCount}
-                >
-                    <Icon name='forward-thin' />
-                </button>
-            </div>
         );
 
         return (
@@ -306,9 +190,9 @@ export class WithPagination<T> extends React.PureComponent<IProps<T>, IState<T>>
                     this.ref = element;
                 }}
             >
-                {pagination}
+                {pageElements}
                 {this.props.children(this.state.items)}
-                {pagination}
+                {pageElements}
             </div>
         );
     }
