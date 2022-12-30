@@ -29,7 +29,9 @@ function PackagesCtrl($scope, superdesk, api, search) {
         if (packageItem._type === 'published') {
             superdesk.intent('view', 'item', packageItem);
         } else {
-            superdesk.intent('edit', 'item', packageItem);
+            superdesk.intent('edit', 'item', packageItem).then(null, () => {
+                superdesk.intent('view', 'item', packageItem);
+            });
         }
     };
 
