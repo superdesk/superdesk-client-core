@@ -134,6 +134,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                     ariaValue={gettext('Actions')}
                                     icon="dots-vertical"
                                     onClick={noop}
+                                    size="small"
                                 />
                             </Dropdown>
                         );
