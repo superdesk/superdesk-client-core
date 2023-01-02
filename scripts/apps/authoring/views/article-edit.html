@@ -24,7 +24,7 @@
 
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
