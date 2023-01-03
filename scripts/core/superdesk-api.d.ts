@@ -118,7 +118,6 @@ declare module 'superdesk-api' {
 
     export interface IExposedFromAuthoring<T> {
         item: T;
-        sideWidget: string | null; // side widget name
         toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -173,6 +172,13 @@ declare module 'superdesk-api' {
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
+
+        sideWidget: null | {
+            name: string;
+            pinned: boolean;
+        };
+
+        onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;

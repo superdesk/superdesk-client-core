@@ -97,6 +97,13 @@ interface IPropsReadOnly {
 
 type IProps = IPropsEditable | IPropsReadOnly;
 
+interface IState {
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
+}
+
 export type IRundownItemAction = ICreate | IEdit | IPreview | null;
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
@@ -121,7 +128,7 @@ function dropReadOnlyFields(item: IRundownItemBase): IRundownItemBase {
     return shallowCopy;
 }
 
-export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
+export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
     private templateFieldsInitial: Partial<IRundownTemplateBase>;
 
     constructor(props: IProps) {
@@ -135,6 +142,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         this.handleCancelling = this.handleCancelling.bind(this);
 
         this.templateFieldsInitial = {};
+
+        this.state = {
+            sideWidget: null,
+        };
     }
 
     private getRundownItems() {
@@ -512,6 +523,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                 authoringStorage={rundownItemAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
+                                                sideWidget={this.state.sideWidget}
+                                                onSideWidgetChange={(sideWidget) => {
+                                                    this.setState({sideWidget});
+                                                }}
                                                 getInlineToolbarActions={({
                                                     hasUnsavedChanges,
                                                     save,

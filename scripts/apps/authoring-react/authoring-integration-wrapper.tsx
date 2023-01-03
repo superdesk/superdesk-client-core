@@ -63,6 +63,13 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
+interface IState {
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
+}
+
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
@@ -115,16 +122,16 @@ function getPublishToolbarWidget(
  * The purpose of the wrapper is to handle integration with the angular part of the application.
  * The main component will not know about angular.
  */
-export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
+export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            sideWidget: null,
+        };
     }
 
     render() {
-        const {state} = this;
-
         function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
             return Object.values(extensions)
                 .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
@@ -363,6 +370,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                         assertNever(itemState);
                                     }
                                 }}
+                                sideWidget={this.state.sideWidget}
+                                onSideWidgetChange={(sideWidget) => {
+                                    this.setState({sideWidget});
+                                }}
                                 getAuthoringTopBarWidgets={
                                     () => Object.values(extensions)
                                         .flatMap(({activationResult}) =>
@@ -389,8 +400,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                     storageAdapter,
                                     authoringStorage,
                                     handleUnsavedChanges,
-                                    sideWidget,
                                 }, readOnly) => {
+                                    const sideWidgetName = this.state.sideWidget?.name ?? null;
+
                                     const OpenWidgetComponent = (() => {
                                         if (panelState.active === true) {
                                             return () => (
@@ -405,9 +417,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                                     markupV2
                                                 />
                                             );
-                                        } else if (sideWidget != null) {
+                                        } else if (sideWidgetName != null) {
                                             return getWidgetsFromExtensions(item).find(
-                                                ({label}) => sideWidget === label,
+                                                ({label}) => sideWidgetName === label,
                                             ).component;
                                         } else {
                                             return null;

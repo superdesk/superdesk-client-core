@@ -28,6 +28,10 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     exportOptions: Array<IRundownExportOption>;
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
 }
 
 import {superdesk} from '../superdesk';
@@ -140,6 +144,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             exportOptions: [],
+            sideWidget: null,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -668,6 +673,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         />
                                                     );
                                                 }}
+                                                sideWidget={this.state.sideWidget}
+                                                onSideWidgetChange={(sideWidget) => {
+                                                    this.setState({sideWidget});
+                                                }}
                                                 getSidePanel={({
                                                     item,
                                                     contentProfile,
@@ -677,18 +686,20 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     storageAdapter,
                                                     authoringStorage,
                                                     handleUnsavedChanges,
-                                                    sideWidget,
                                                 }) => {
-                                                    if (
-                                                        sideWidget == null
+                                                    const sideWidgetName = this.state.sideWidget?.name ?? null;
 
-                                                        // TODO: allow widgets in creation mode?
+                                                    if (
+                                                        sideWidgetName == null
+
+                                                        // Widgets are not allowed in creation mode.
+                                                        // Some require item ID.
                                                         || item._id == null
                                                     ) {
                                                         return null;
                                                     }
 
-                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidget);
+                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidgetName);
 
                                                     if (widget == null) {
                                                         return null;
