@@ -11,7 +11,6 @@ import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
 import {
     CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
-    SHOW_PART_VOCABULARY_ID,
     STATUS_VOCABULARY_ID,
 } from '../constants';
 import {superdesk} from '../superdesk';
@@ -139,22 +138,6 @@ const additionalNotesField: IAuthoringFieldV2 = {
     fieldConfig: editor3TestConfigWithoutFormatting,
 };
 
-const currentShowCode = 'ABC'; // FINISH: remove test data
-
-const showPartConfig: IDropdownConfigVocabulary = {
-    source: 'vocabulary',
-    vocabularyId: SHOW_PART_VOCABULARY_ID,
-    multiple: false,
-    filter: (item) => item['show_reference'] == null || item['show_reference'] === currentShowCode,
-};
-
-const showPartField: IAuthoringFieldV2 = {
-    id: 'show_part',
-    name: gettext('Show part'),
-    fieldType: 'dropdown',
-    fieldConfig: showPartConfig,
-};
-
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
@@ -190,7 +173,6 @@ export const rundownItemContentProfile: IContentProfileV2 = {
     header: OrderedMap([
         [technicalTitle.id, technicalTitle],
         [itemTypeField.id, itemTypeField],
-        [showPartField.id, showPartField],
         [cameraField.id, cameraField],
         [statusField.id, statusField],
         [durationField.id, durationField],

@@ -7,7 +7,6 @@ import {PlannedDurationLabel} from './planned-duration-label';
 import {superdesk} from '../../superdesk';
 import {IVocabularyItem} from 'superdesk-api';
 import {
-    SHOW_PART_VOCABULARY_ID,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     STATUS_VOCABULARY_ID,
@@ -59,10 +58,6 @@ function isRundownItem(x: IRundownItem | Partial<IRundownItemBase>): x is IRundo
 
 export class RundownItems<T extends IRundownItem | IRundownItemBase> extends React.PureComponent<IProps<T>> {
     render() {
-        const showParts = Map<string, IVocabularyItem>(
-            vocabulary.getVocabulary(SHOW_PART_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
-        );
-
         const statuses = Map<string, IVocabularyItem>(
             vocabulary.getVocabulary(STATUS_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
         );
@@ -77,7 +72,6 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
 
         const array: React.ComponentProps<typeof TableList>['array'] = this.props.items.map((item) => {
             const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
-            const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
             const subitemVocabularies = item.subitems == null
                 ? null
@@ -88,32 +82,12 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             return ({
                 locked: isRundownItem(item) ? item._lock : false,
                 hexColor: statusColor,
-                start: (
-                    <Spacer h gap="4" justifyContent="start" noGrow>
-                        {
-                            itemType != null && (
-                                <Label
-                                    text={itemType.name}
-                                    hexColor={itemType.color}
-                                    size="normal"
-                                />
-                            )
-                        }
-
-                        {
-                            showPart != null && (
-                                <Label
-                                    text={showPart.name}
-                                    hexColor={showPart.color}
-                                    size="normal"
-                                />
-                            )
-                        }
-
-                        {
-                        // TODO: show 3 letter show symbol
-                        }
-                    </Spacer>
+                start: itemType == null ? undefined : (
+                    <Label
+                        text={itemType.name}
+                        hexColor={itemType.color}
+                        size="normal"
+                    />
                 ),
                 center: (
                     <span>
