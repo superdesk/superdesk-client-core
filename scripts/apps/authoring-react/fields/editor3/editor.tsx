@@ -253,23 +253,28 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const wordCount = countWords(plainText);
         const readingTime: string = getReadingTimeText(plainText, this.props.language);
         const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
+        const showStatistics = config.showStatistics ?? true;
 
         const miniToolbar = (
             <div>
                 <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-                    <div style={{display: 'flex', gap: '6px'}}>
-                        <span className="char-count-base">
-                            {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
-                        </span>
+                    {
+                        showStatistics && (
+                            <div style={{display: 'flex', gap: '6px'}}>
+                                <span className="char-count-base">
+                                    {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
+                                </span>
 
-                        <CharacterCount2
-                            limit={this.props.config.maxLength}
-                            html={false}
-                            item={this.props.value.contentState.getPlainText()}
-                        />
+                                <CharacterCount2
+                                    limit={this.props.config.maxLength}
+                                    html={false}
+                                    item={this.props.value.contentState.getPlainText()}
+                                />
 
-                        <span className="char-count-base">{readingTime}</span>
-                    </div>
+                                <span className="char-count-base">{readingTime}</span>
+                            </div>
+                        )
+                    }
 
                     {
                         characterLimitConfig != null && (

@@ -24,6 +24,7 @@ const editor3TestConfigWithoutFormatting: IEditor3Config = {
     cleanPastedHtml: false,
     singleLine: true,
     disallowedCharacters: [],
+    showStatistics: false,
 };
 
 const titleField: IAuthoringFieldV2 = {

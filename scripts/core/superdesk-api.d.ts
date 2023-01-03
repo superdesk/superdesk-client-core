@@ -310,6 +310,9 @@ declare module 'superdesk-api' {
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
 
+        // read time, character count, word count; defaults to true
+        showStatistics?: boolean;
+
         /**
          * Value - field ID of editor3 field.
          *

@@ -551,6 +551,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
+            'Editor3-single-line-style': this.props.singleLine === true,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
             'unstyled__block--invisibles': this.props.invisibles,

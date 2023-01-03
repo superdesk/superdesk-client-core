@@ -938,3 +938,26 @@ $editor-styleButton-size: 3rem;
 	box-shadow: 0px 1px 5px #00000066;
 	background-color: #f8f8f8;
 }
+
+.Editor3-single-line-style {
+	background: var(--color-input-bg);
+	color: var(--color-text);
+	border: none;
+	border-bottom: 1px solid var(--color-input-border);
+	border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
+	padding: 0 0.8rem!important;
+	font-size: 14px;
+	line-height: 30px;
+
+	&.read-only {
+		opacity: 0.5;
+	}
+
+	.public-DraftEditor-content {
+		padding: 0;
+
+		[data-block="true"] {
+			border: 0;
+		}
+	}
+}
