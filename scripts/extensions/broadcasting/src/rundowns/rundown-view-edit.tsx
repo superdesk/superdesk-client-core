@@ -28,10 +28,6 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     exportOptions: Array<IRundownExportOption>;
-    sideWidget: null | {
-        name: string;
-        pinned: boolean;
-    };
 }
 
 import {superdesk} from '../superdesk';
@@ -144,7 +140,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             exportOptions: [],
-            sideWidget: null,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -346,6 +341,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }
 
         const {rundownItemAction} = this.props;
+        const sideWidget = rundownItemAction == null ? null : rundownItemAction.sideWidget;
 
         const closeBtn = (
             <Button
@@ -669,13 +665,17 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 onClick: () => {
                                                                     toggleSideWidget(_id);
                                                                 },
+                                                                active: sideWidget?.name === _id,
                                                             }))}
                                                         />
                                                     );
                                                 }}
-                                                sideWidget={this.state.sideWidget}
-                                                onSideWidgetChange={(sideWidget) => {
-                                                    this.setState({sideWidget});
+                                                sideWidget={sideWidget}
+                                                onSideWidgetChange={(sideWidgetNext) => {
+                                                    this.props.onRundownItemActionChange({
+                                                        ...rundownItemAction,
+                                                        sideWidget: sideWidgetNext,
+                                                    });
                                                 }}
                                                 getSidePanel={({
                                                     item,
@@ -687,7 +687,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     authoringStorage,
                                                     handleUnsavedChanges,
                                                 }) => {
-                                                    const sideWidgetName = this.state.sideWidget?.name ?? null;
+                                                    const sideWidgetName = sideWidget?.name ?? null;
 
                                                     if (
                                                         sideWidgetName == null

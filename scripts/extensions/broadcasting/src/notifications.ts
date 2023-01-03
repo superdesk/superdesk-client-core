@@ -30,6 +30,7 @@ export const notifications: IExtensionNotifications = {
                         events.dispatchEvent('openRundownItem', {
                             rundownId: rundownId,
                             rundownItemId: rundownItemId,
+                            sidePanel: 'comments-widget-generic',
                         });
                     }
 

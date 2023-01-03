@@ -14,20 +14,27 @@ const {tryLocking, fixPatchResponse, fixPatchRequest} = superdesk.helpers;
 const {generatePatch} = superdesk.utilities;
 const {httpRequestJsonLocal} = superdesk;
 
-interface ICreate extends IWithAuthoringReactKey {
+interface IRundownItemActionBase extends IWithAuthoringReactKey {
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
+}
+
+interface ICreate extends IRundownItemActionBase {
     type: 'create';
     rundownId: IRundown['_id'];
     initialData: Partial<IRundownItem>;
     authoringStorage: IAuthoringStorage<IRundownItem>;
 }
 
-interface IEdit extends IWithAuthoringReactKey {
+interface IEdit extends IRundownItemActionBase {
     type: 'edit';
     itemId: IRundownItem['_id'];
     authoringStorage: IAuthoringStorage<IRundownItem>;
 }
 
-interface IPreview extends IWithAuthoringReactKey {
+interface IPreview extends IRundownItemActionBase {
     type: 'preview';
     itemId: IRundownItem['_id'];
     authoringStorage: IAuthoringStorage<IRundownItem>;
@@ -219,6 +226,7 @@ export function prepareForCreation(
             onSave,
         ),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: currentAction == null ? null : currentAction.sideWidget,
     };
 }
 
@@ -231,6 +239,7 @@ export function prepareForEditing(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: currentAction == null ? null : currentAction.sideWidget,
     };
 }
 
@@ -243,5 +252,6 @@ export function prepareForPreview(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: currentAction == null ? null : currentAction.sideWidget,
     };
 }

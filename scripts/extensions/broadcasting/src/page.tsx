@@ -94,15 +94,26 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     }
 
     private openRundownItemEventHandler(event: CustomEvent<IBroadcastingEvents['openRundownItem']>): void {
-        const {rundownId, rundownItemId} = event.detail;
+        const {rundownId, rundownItemId, sidePanel} = event.detail;
 
         Promise.all([
             this.prepareRundownEditing(rundownId),
             this.prepareNextRundownItemAction(prepareForPreview(this.state.rundownItemAction, rundownItemId)),
         ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
+            const _rundownItemActionNext =
+                rundownItemActionNext == null || sidePanel == null
+                    ? rundownItemActionNext
+                    : {
+                        ...rundownItemActionNext,
+                        sideWidget: {
+                            name: sidePanel,
+                            pinned: false,
+                        },
+                    };
+
             this.setState({
                 rundownAction: rundownViewEditNext,
-                rundownItemAction: rundownItemActionNext,
+                rundownItemAction: _rundownItemActionNext,
             });
         });
     }
