@@ -150,6 +150,12 @@ export class ItemList extends React.Component<IProps, IState> {
             return;
         }
 
+        if (event.type === "focus" && item === this.getSelectedItem()) {
+            // when returning to same screen and item is already selected
+            // this should be noop
+            return;
+        }
+
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
