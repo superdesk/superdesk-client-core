@@ -131,13 +131,6 @@ const plannedDurationField: IAuthoringFieldV2 = {
     },
 };
 
-const additionalNotesField: IAuthoringFieldV2 = {
-    id: 'additional_notes',
-    name: gettext('Additional notes'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
@@ -181,7 +174,6 @@ export const rundownItemContentProfile: IContentProfileV2 = {
     content: OrderedMap([
         [titleField.id, titleField],
         [contentField.id, contentField],
-        [additionalNotesField.id, additionalNotesField],
         [subitemsField.id, subitemsField],
         [subitemAttachments.id, subitemAttachments],
     ]),

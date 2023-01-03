@@ -54,7 +54,6 @@ export interface IRundownItemBase {
     title: string;
     technical_title: string;
     content?: string;
-    additional_notes?: string;
     fields_meta?: {
         [key: string]: {
             draftjsState?: [RawDraftContentState];
