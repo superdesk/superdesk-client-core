@@ -183,6 +183,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class= "form__row" >
+                        <span sd-switch ng-model="desk.edit.restriction"></span>
+                        <label class="inline-label" >{{'Restrict "Send to"' | translate }}</label>
+                    </div>
                     <fieldset class="form__row">
                         <legend translate>Preferred values for vocabularies</legend>
                         <div sd-prefered-cv-items-config ng-model="desk.edit.preferred_cv_items" />
