@@ -82,23 +82,21 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             return ({
                 locked: isRundownItem(item) ? item._lock : false,
                 hexColor: statusColor,
-                start: itemType == null ? undefined : (
-                    <Label
-                        text={itemType.name}
-                        hexColor={itemType.color}
-                        size="normal"
-                    />
-                ),
-                center: (
-                    <span>
-                        {customizations.getRundownItemDisplayName?.(item) ?? item.title}
-                    </span>
-                ),
-                end: (
+                start: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
+                            itemType != null && (
+                                <Label
+                                    text={itemType.name}
+                                    hexColor={itemType.color}
+                                    size="normal"
+                                />
+                            )
+                        }
+
+                        {
                             subitemVocabularies != null && (
-                                <Spacer h gap="4" justifyContent="start" noGrow>
+                                <Spacer v gap="4" justifyContent="start" noGrow>
                                     {
                                         subitemVocabularies.map(({name, color}, i) => (
                                             <Label
@@ -113,6 +111,15 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                                 </Spacer>
                             )
                         }
+                    </Spacer>
+                ),
+                center: (
+                    <span>
+                        {customizations.getRundownItemDisplayName?.(item) ?? item.title}
+                    </span>
+                ),
+                end: (
+                    <Spacer h gap="4" justifyContent="start" noGrow>
                         {
                             item.planned_duration != null && (
                                 <PlannedDurationLabel
