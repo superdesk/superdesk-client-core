@@ -5,7 +5,6 @@ import {
     IContentProfileV2,
     IDropdownConfigVocabulary,
     IEditor3Config,
-    RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
 import {
@@ -17,41 +16,6 @@ import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
-
-export const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
-    'uppercase',
-    'lowercase',
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'ordered list',
-    'unordered list',
-    'quote',
-    'link',
-    'embed',
-    'media',
-    'underline',
-    'italic',
-    'bold',
-    'annotation',
-    'comments',
-    'pre',
-    'superscript',
-    'subscript',
-    'strikethrough',
-];
-
-const editor3TestConfig: IEditor3Config = {
-    editorFormat: testEditorFormat,
-    minLength: undefined,
-    maxLength: undefined,
-    cleanPastedHtml: false,
-    singleLine: false,
-    disallowedCharacters: [],
-};
 
 const editor3TestConfigWithoutFormatting: IEditor3Config = {
     editorFormat: [],
@@ -86,7 +50,7 @@ const contentField: IAuthoringFieldV2 = {
     id: 'content',
     name: gettext('Content'),
     fieldType: 'editor3',
-    fieldConfig: editor3TestConfig,
+    fieldConfig: editor3TestConfigWithoutFormatting,
 };
 
 const itemTypesConfig: IDropdownConfigVocabulary = {
