@@ -50,6 +50,8 @@ export function editor3ToOperationalFormat(
     return result;
 }
 
+export const EDITOR_3_FIELD_TYPE = 'editor3';
+
 export function getEditor3Field()
 : ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {

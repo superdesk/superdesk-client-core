@@ -358,6 +358,24 @@ declare module 'superdesk-api' {
     export type ILinkedItemsUserPreferences = never;
     export type ILinkedItemsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - packages
+
+    interface IPackageItem {
+        type: IArticle['type'];
+        headline: string;
+        residRef: string;
+        location: string;
+        slugline: string;
+        renditions: {};
+        itemClass: string;
+        guid: string;
+    }
+
+    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export type IPackageItemsValueStorage = IPackageItemsValueOperational;
+    export type IPackageItemsUserPreferences = never;
+    export type IPackageItemsConfig = ICommonFieldConfig;
+
     // AUTHORING-REACT FIELD TYPES - media
 
     export type IMediaValueOperational = Array<IArticle>;

@@ -11,10 +11,12 @@ import {Preview} from './preview';
 import {Difference} from './difference';
 import {Config} from './config';
 
+export const MEDIA_FIELD_ID = 'media';
+
 export function getMediaField()
 : ICustomFieldType<IMediaValueOperational, IMediaValueStorage, IMediaConfig, IMediaUserPreferences> {
     const field: ReturnType<typeof getMediaField> = {
-        id: 'media',
+        id: MEDIA_FIELD_ID,
         label: gettext('Media (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
