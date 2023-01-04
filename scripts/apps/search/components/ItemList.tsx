@@ -149,6 +149,12 @@ export class ItemList extends React.Component<IProps, IState> {
             return;
         }
 
+        if (event.type === 'focus' && item === this.getSelectedItem()) {
+            // when returning to browser tab focus can be triggered by browser
+            // and trigger select on already selected item
+            return;
+        }
+
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
