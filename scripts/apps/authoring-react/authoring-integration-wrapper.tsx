@@ -148,6 +148,18 @@ interface IState {
     isSidebarCollapsed: boolean;
 }
 
+const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
 
@@ -170,7 +182,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     public isSidebarCollapsed() {
         return this.state.isSidebarCollapsed;
     }
-
+  
     public prepareForUnmounting() {
         if (this.authoringReactRef == null) {
             return Promise.resolve();
@@ -286,6 +298,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     return [
                                         saveAsTemplate(item),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
+                                        getTranslateAction(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
                                     ];
