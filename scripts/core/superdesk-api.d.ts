@@ -1059,7 +1059,7 @@ declare module 'superdesk-api' {
             }
         };
         version: any;
-        template: any;
+        template: ITemplate['_id'];
         original_creator: string;
         unique_id: any;
         operation: any;
@@ -3079,14 +3079,14 @@ declare module 'superdesk-api' {
     }
 
     export interface ITemplate extends IBaseRestApiResponse {
-        data: IArticle,
-        is_public: boolean,
+        data: Partial<IArticle>;
+        is_public: boolean;
         next_run?: any;
         schedule?: any;
-        template_desks: Array<IDesk['_id']>,
-        template_name: string,
-        template_type: 'create' | 'kill' | string,
-        user: IUser['_id']
+        template_desks: Array<IDesk['_id']>;
+        template_name: string;
+        template_type: 'create' | 'kill' | string;
+        user: IUser['_id'];
     }
 
 
