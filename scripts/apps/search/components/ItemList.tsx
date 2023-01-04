@@ -151,8 +151,8 @@ export class ItemList extends React.Component<IProps, IState> {
         }
 
         if (event.type === 'focus' && item === this.getSelectedItem()) {
-            // when returning to same screen and item is already selected
-            // this should be noop
+            // when returning to browser tab focus can be triggered by browser
+            // and trigger select on already selected item
             return;
         }
 
