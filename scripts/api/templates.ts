@@ -36,7 +36,6 @@ function updateTemplate(payload, template: ITemplate) {
 
 /**
  * Creates or updates a template. If the article has an existing template it will be updated.
- * If not a new template will be created with the users's form input.
  *
  * @templateName - template name from the form input
  * @selectedDeskId - deskId selected in the form
