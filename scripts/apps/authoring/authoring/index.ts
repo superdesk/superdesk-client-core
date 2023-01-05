@@ -216,8 +216,8 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archive'},
                     {action: 'edit', type: 'item'},
                 ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).edit;
+                additionalCondition: ['authoring', 'item', async function(authoring, item) {
+                    return await authoring.itemActions(item).edit;
                 }],
             })
             .activity('edit.item.popup', {
