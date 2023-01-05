@@ -53,7 +53,7 @@
 
 <!-- Modal -->
 <div sd-modal data-model="provider" class="modal--tabs modal--large">
-    <div class="modal__header modal__header--flex"> 
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="provider._id"><span translate>Edit Source</span> "{{ provider.name}}"</h3>
         <h3 class="modal__heading" translate ng-hide="provider._id" translate>Add New Source</h3>
         <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
@@ -86,7 +86,7 @@
                             <input class="sd-line-input__input" type="text" id="source-name" ng-model="provider.source" required>
                         </div>
                     </div>
-                    
+
                     <div class="form__row form__row--s-padding">
                         <div class="sd-line-input sd-line-input--is-select sd-line-input--required"">
                             <label class="sd-line-input__label" for="provider-feeding-service" translate>Feeding Service</label>
@@ -122,7 +122,7 @@
                         <div class="form__row form__row--flex">
                             <div class="form__row-item form__row-item--no-grow">
                                 <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
-                                    <select id="schedule-minutes" 
+                                    <select id="schedule-minutes"
                                             class="sd-line-input__select sd-line-input__select--mini"
                                             ng-model="provider.update_schedule.minutes"
                                             ng-options="min as min for min in minutes">
@@ -151,7 +151,7 @@
                         <div class="form__row form__row--flex">
                             <div class="form__row-item form__row-item--no-grow">
                                 <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
-                                    <select id="idle-hours" 
+                                    <select id="idle-hours"
                                             class="sd-line-input__select sd-line-input__select--mini"
                                             ng-model="provider.idle_time.hours"
                                             ng-options="hrs as hrs for hrs in hours">
@@ -187,6 +187,9 @@
 
                     <div class="form__row form__row--l-padding">
                         <span sd-switch ng-model="provider.allow_remove_ingested"></span><label>{{:: 'Allow Remove Ingested Items' | translate }}</label>
+                    </div>
+                    <div class="form__row form__row--l-padding">
+                        <span sd-switch ng-model="provider.disable_item_updates"></span><label>{{:: 'Disable Item Updates' | translate }}</label>
                     </div>
 
                     <div class="form__row credentials">

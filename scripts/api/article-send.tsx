@@ -30,7 +30,7 @@ function getPublishedPackageItems(_package: IArticle): Promise<Array<IArticle>> 
         path: '/search',
         urlParams: {
             repo: 'published',
-            source: JSON.stringify(toElasticQuery(query)),
+            ...toElasticQuery(query),
         },
     }).then((res) => res._items);
 }

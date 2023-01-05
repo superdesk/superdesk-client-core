@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IArticle, IAttachment} from 'superdesk-api';
-import {isLockedInCurrentSession, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
+import {isArticleLockedInCurrentSession, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {notify} from 'core/notify/notify';
@@ -56,7 +56,7 @@ export class AttachmentsWidget extends React.PureComponent<IProps> {
 
         const editable = this.props.readOnly !== true && (
             sdApi.article.isLocked(this.props.item) !== true
-            || isLockedInCurrentSession(this.props.item)
+            || isArticleLockedInCurrentSession(this.props.item)
         );
 
         const readOnly = editable !== true;

@@ -20,8 +20,10 @@ import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
+import {gettext} from 'core/utils';
+import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 
-function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -131,6 +133,38 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
     });
 }
 
+function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+    const headlineField: IAuthoringFieldV2 = {
+        id: 'headline',
+        name: gettext('Headline'),
+        fieldType: 'editor3',
+        fieldConfig: {
+            required: true,
+        },
+    };
+    const articlesInPackageField: IAuthoringFieldV2 = {
+        id: 'groups',
+        name: gettext('Package items'),
+        fieldType: PACKAGE_ITEMS_FIELD_ID,
+        fieldConfig: {
+            readOnly: false,
+            allow_toggling: false,
+            required: true,
+        },
+    };
+
+    return Promise.resolve<IContentProfileV2>({
+        id: 'packages-profile',
+        name: gettext('Packages profile'),
+        header: OrderedMap([
+            [headlineField.id, headlineField],
+        ]),
+        content: OrderedMap([
+            [articlesInPackageField.id, articlesInPackageField],
+        ]),
+    });
+}
+
 export function omitFields(
     item: Partial<IArticle>,
     omitId: boolean = false, // useful when patching
@@ -195,19 +229,14 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
         });
     },
     isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
-    lock: (id: IArticle['_id']) => {
-        return sdApi.article.lock(id).then((article) => {
-            const adapter = getArticleAdapter();
+    forceLock(entity) {
+        return sdApi.article.unlock(entity._id)
+            .then(() => sdApi.article.lock(entity._id))
+            .then((article) => {
+                const adapter = getArticleAdapter();
 
-            return adapter.toAuthoringReact(article);
-        });
-    },
-    unlock: (id: IArticle['_id']) => {
-        return sdApi.article.unlock(id).then((article) => {
-            const adapter = getArticleAdapter();
-
-            return adapter.toAuthoringReact(article);
-        });
+                return adapter.toAuthoringReact(article);
+            });
     },
     saveEntity: (current, original) => {
         const adapter = getArticleAdapter();
@@ -253,7 +282,13 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             });
         });
     },
-    getContentProfile,
+    getContentProfile: (item, fieldsAdapter) => {
+        if (item.type === 'composite') {
+            return getPackagesContentProfile(item, fieldsAdapter);
+        } else {
+            return getArticleContentProfile(item, fieldsAdapter);
+        }
+    },
     closeAuthoring: (current, original, cancelAutosave, doClose) => {
         const diff = generatePatch(original, current);
         const hasUnsavedChanges = Object.keys(diff).length > 0;

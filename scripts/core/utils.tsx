@@ -1,7 +1,7 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle, IBaseRestApiResponse} from 'superdesk-api';
+import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {appConfig} from 'appConfig';
 import {isObject, omit} from 'lodash';
@@ -350,7 +350,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
     a.remove();
 }
 
-export function stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse> {
+export function stripBaseRestApiFields<T extends {}>(entity: T): T {
     type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
 
     const keysObject: IKeys = {
@@ -366,5 +366,22 @@ export function stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T
 
     const keysArray = Object.keys(keysObject);
 
-    return omit(entity, keysArray) as Omit<T, keyof IBaseRestApiResponse>;
+    return omit(entity, keysArray) as T;
+}
+
+export function stripLockingFields<T extends {}>(entity: T): T {
+    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
+
+    const keysObject: IKeys = {
+        _lock: 1,
+        _lock_action: 1,
+        _lock_session: 1,
+        _lock_expiry: 1,
+        _lock_time: 1,
+        _lock_user: 1,
+    };
+
+    const keysArray = Object.keys(keysObject);
+
+    return omit(entity, keysArray) as T;
 }

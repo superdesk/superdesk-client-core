@@ -35,7 +35,7 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
 
         const query: ISuperdeskQuery = {
             filter: {$and: [{'_id': {$in: itemsToFetch}}]},
-            page: 0,
+            page: 1,
             max_results: 200,
             sort: [{'versioncreated': 'asc'}],
         };
@@ -47,7 +47,7 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
                 urlParams: {
                     aggregations: 0,
                     es_highlight: 1,
-                    source: JSON.stringify(toElasticQuery(query)),
+                    ...toElasticQuery(query),
                 },
             }).then((res) => {
                 this.setState({

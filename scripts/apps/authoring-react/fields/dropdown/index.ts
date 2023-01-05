@@ -12,6 +12,8 @@ import {Difference} from './difference';
  * remote-source (strings, numbers and plain objects are allowed): unknown | Array<unknown>
  */
 
+export const DROPDOWN_FIELD_ID = 'dropdown';
+
 export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> {
     const field: ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> = {
         id: 'dropdown',

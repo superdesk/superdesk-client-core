@@ -90,6 +90,12 @@ declare module 'superdesk-api' {
          * allows to only do it once after timeout passes, instead of on every character change.
          */
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+
+        /**
+        * Immediately autosaves without a delay if there is anything to autosave.
+        * Is meant to be used before unmounting the component.
+        */
+        flush(): Promise<void>;
     }
 
     /**
@@ -99,8 +105,7 @@ declare module 'superdesk-api' {
      * to enable offline support.
      */
     export interface IAuthoringStorage<T> {
-        lock(itemId: string): Promise<T>;
-        unlock(itemId: string): Promise<T>;
+        forceLock(entity: T): Promise<T>;
         isLockedInCurrentSession(item: T): boolean;
         getEntity(id: string): Promise<{saved: T | null, autosaved: T | null}>;
         saveEntity(current: T, original: T): Promise<T>;
@@ -117,9 +122,20 @@ declare module 'superdesk-api' {
 
     export type IFieldsData = import('immutable').Map<string, unknown>;
 
+    /**
+     * Check authoring-react.tsx for comments on individual methods.
+     */
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
+
+        /**
+         * Computes the latest entity from fields data. `item` property in
+         * this interface holds a bit of an older version of the item.
+         * It is expensive to compute it on every render, that's why
+         * we are passing a function instead.
+         */
+        getLatestItem(): T;
         toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -130,7 +146,7 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
-        discardChangesAndClose(): void;
+        initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
     }
@@ -150,6 +166,13 @@ declare module 'superdesk-api' {
 
     interface IPropsAuthoring<T> {
         itemId: string;
+
+        /**
+         * Used for listening for updates via web sockets.
+         * An empty array may be passed if updates do not apply i.e. when an editing an item embedded inside another DB record
+         */
+        resourceNames: Array<string>;
+
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
@@ -335,6 +358,24 @@ declare module 'superdesk-api' {
     export type ILinkedItemsUserPreferences = never;
     export type ILinkedItemsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - packages
+
+    interface IPackageItem {
+        type: IArticle['type'];
+        headline: string;
+        residRef: string;
+        location: string;
+        slugline: string;
+        renditions: {};
+        itemClass: string;
+        guid: string;
+    }
+
+    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export type IPackageItemsValueStorage = IPackageItemsValueOperational;
+    export type IPackageItemsUserPreferences = never;
+    export type IPackageItemsConfig = ICommonFieldConfig;
+
     // AUTHORING-REACT FIELD TYPES - media
 
     export type IMediaValueOperational = Array<IArticle>;
@@ -465,6 +506,9 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{
             article: IArticle;
 
+
+            getLatestArticle(): IArticle;
+
             // other props below are specific to authoring-react implementation
 
             readOnly: boolean;
@@ -475,7 +519,6 @@ declare module 'superdesk-api' {
             storageAdapter: IStorageAdapter<IArticle>;
 
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
              */
@@ -813,6 +856,53 @@ declare module 'superdesk-api' {
         video_editor_id?: string;
     };
 
+    export interface ILockInfo {
+        _lock: boolean;
+
+        // write-only, used to update `_lock`
+        _lock_action?: 'unlock' | 'lock' | 'force-lock'
+
+        _lock_session?: string;
+        _lock_expiry?: string;
+        _lock_time?: string;
+        _lock_user?: IUser['_id'];
+    }
+
+    export interface IPropsLockInfoHttp<T extends ILockInfo> {
+        entity: T;
+
+        /**
+         * Relative path; will be used for unlocking
+         */
+        endpoint: string;
+    }
+
+
+
+    export interface IPropsLockInfoCanUnlock<T extends ILockInfo> {
+        allowUnlocking: true;
+        entity: T;
+        forceUnlock: () => void;
+    }
+
+    export interface IPropsLockInfoReadOnly<T extends ILockInfo> {
+        allowUnlocking: false;
+        entity: T;
+    }
+
+    export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
+
+    export interface ITranslation extends IBaseRestApiResponse {
+        label: string;
+        language: string;
+        source: boolean;
+        destination: boolean;
+    }
+
+    export interface IArticleFormatter extends IBaseRestApiResponse {
+        name: string;
+    }
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -976,7 +1066,7 @@ declare module 'superdesk-api' {
             }
         };
         version: any;
-        template: any;
+        template: ITemplate['_id'];
         original_creator: string;
         unique_id: any;
         operation: any;
@@ -1519,7 +1609,7 @@ declare module 'superdesk-api' {
         };
     }
 
-    export interface IPatchExtraFields {
+    export interface IPatchResponseExtraFields {
         _status: string;
     }
 
@@ -1749,6 +1839,12 @@ declare module 'superdesk-api' {
         tooltip?: (dateLong: string, dateShort: string) => string;
     }
 
+    export interface IPropsCard {
+        background?: import('react').CSSProperties['background'];
+        padding?: import('react').CSSProperties['padding'];
+        borderRadius?: import('react').CSSProperties['borderRadius'];
+    }
+
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         grow?: boolean;
@@ -1901,7 +1997,7 @@ declare module 'superdesk-api' {
     export interface IPropsSpacer {
         h?: boolean; // horizontal
         v?: boolean; // vertical
-        gap: '4' | '8' | '16' | '32' | '64';
+        gap: '0' | '4' | '8' | '16' | '32' | '64';
         justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
         alignItems?: 'start' | 'end' | 'center' | 'stretch';
         noGrow?: boolean;
@@ -2451,6 +2547,7 @@ declare module 'superdesk-api' {
             assertNever(x: never): never;
             stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
             fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & {_status: string}): T;
+            fixPatchRequest<T extends {}>(entity: T): T;
             filterUndefined<T>(values: Partial<T>): Partial<T>;
             filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
@@ -2458,6 +2555,15 @@ declare module 'superdesk-api' {
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
             isNullOrUndefined<T>(x: null | undefined | T): x is null | undefined;
             nameof<T>(name: keyof T): string;
+            tryLocking<T extends ILockInfo & IBaseRestApiResponse>(
+                endpoint: string,
+                entityId: string,
+                force: boolean = false,
+            ): Promise<{success: boolean; latestEntity: T}>;
+            tryUnlocking<T extends ILockInfo & IBaseRestApiResponse>(
+                endpoint: string,
+                entityId: string,
+            ): Promise<void>;
             computeEditor3Output(
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
@@ -2513,6 +2619,8 @@ declare module 'superdesk-api' {
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
 
+            getLockInfoHttpComponent: <T>() => React.ComponentType<IPropsLockInfoHttp<T>>;
+            getLockInfoComponent: <T>() => React.ComponentType<IPropsLockInfo<T>>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
@@ -2524,6 +2632,15 @@ declare module 'superdesk-api' {
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
             DateTime: React.ComponentType<IPropsDateTime>;
+            Card: React.ComponentType<IPropsCard>;
+            showPopup(
+                referenceElement: HTMLElement,
+                placement: import('@popperjs/core').Placement,
+                Component: React.ComponentType<{closePopup(): void}>,
+                zIndex?: number,
+                closeOnHoverEnd?: boolean,
+                onClose?: () => void,
+            ): {close: () => void};
         };
         authoringGeneric: {
             sideWidgets: {
@@ -2649,6 +2766,14 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+
+            // generic method - works on all enabled endpoints
+            isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
+            isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
+
+            getTextColor(
+                background: string, // HEX color
+            ): 'black' | 'white';
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -2961,14 +3086,14 @@ declare module 'superdesk-api' {
     }
 
     export interface ITemplate extends IBaseRestApiResponse {
-        data: IArticle,
-        is_public: boolean,
+        data: Partial<IArticle>;
+        is_public: boolean;
         next_run?: any;
         schedule?: any;
-        template_desks: Array<IDesk['_id']>,
-        template_name: string,
-        template_type: 'create' | 'kill' | string,
-        user: IUser['_id']
+        template_desks: Array<IDesk['_id']>;
+        template_name: string;
+        template_type: 'create' | 'kill' | string;
+        user: IUser['_id'];
     }
 
 

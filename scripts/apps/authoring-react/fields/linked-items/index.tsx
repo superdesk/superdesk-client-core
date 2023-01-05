@@ -19,9 +19,11 @@ type ILinkedItemsField = ICustomFieldType<
     ILinkedItemsUserPreferences
 >;
 
+export const LINKED_ITEMS_FIELD_TYPE = 'linked-items';
+
 export function getLinkedItemsField(): ILinkedItemsField {
     const field: ILinkedItemsField = {
-        id: 'linked-items',
+        id: LINKED_ITEMS_FIELD_TYPE,
         label: gettext('Linked items (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

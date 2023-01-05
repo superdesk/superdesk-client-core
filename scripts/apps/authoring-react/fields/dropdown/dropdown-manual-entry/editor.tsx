@@ -13,6 +13,7 @@ interface IProps {
     config: IDropdownConfigManualSource;
     value: IDropdownValue;
     language: string;
+    readOnly: boolean;
     getVocabularyItems(vocabulary: IVocabulary['_id']): Array<IVocabularyItem>;
     onChange(value: IDropdownValue): void;
 }

@@ -27,6 +27,12 @@ const nameField: IFormField = {
     field: nameof<IShow>('title'),
     required: true,
 };
+const shortCode: IFormField = {
+    label: gettext('Show code'),
+    type: FormFieldType.plainText,
+    field: nameof<IShow>('shortcode'),
+    required: false,
+};
 const descriptionField: IFormField = {
     label: gettext('Description'),
     type: FormFieldType.plainText,
@@ -48,6 +54,7 @@ const formConfig: IFormGroup = {
     type: 'inline',
     form: [
         nameField,
+        shortCode,
         descriptionField,
         plannedDurationField,
     ],

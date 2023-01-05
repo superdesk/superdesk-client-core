@@ -1,5 +1,6 @@
 import {RawDraftContentState} from 'draft-js';
-import {IBaseRestApiResponse, IUser, IVocabularyItem} from 'superdesk-api';
+import {IBaseRestApiResponse, ILockInfo, IUser} from 'superdesk-api';
+import {ISubitem} from './authoring-fields/subitems';
 
 /**
  * Recurrence Rule
@@ -16,8 +17,9 @@ export interface IRRule {
 
 export interface IShowBase {
     title: string;
+    shortcode?: string;
     description: string;
-    planned_duration: number | null;
+    planned_duration?: number;
 }
 
 export type IShow = IShowBase & IBaseRestApiResponse;
@@ -38,34 +40,31 @@ export interface IRundownTemplateBase {
     items: Array<IRundownItemBase>;
     repeat: boolean;
     schedule?: IRRule | null;
+    autocreate_before_seconds?: number;
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 
 export interface IRundownItemBase {
+    readonly rundown: IRundown['_id'];
     item_type?: string;
     show_part?: string;
-    start_time?: string;
-    end_time?: string;
     duration: number;
+    status?: string;
     planned_duration: number;
     title: string;
     content?: string;
-    live_sound?: string;
-    guests?: string;
     additional_notes?: string;
-    live_captions?: string;
-    last_sentence?: string;
     fields_meta?: {
         [key: string]: {
             draftjsState?: [RawDraftContentState];
             annotations?: Array<any>;
         }
     };
-    subitems?: Array<IVocabularyItem['qcode']>;
+    subitems?: Array<ISubitem>;
 }
 
-export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
+export type IRundownItem = IRundownItemBase & IBaseRestApiResponse & ILockInfo;
 
 /**
  * Extending from "IBaseRestApiResponse" is for compatibility reasons.
@@ -94,9 +93,10 @@ interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 
     title: string;
     items: Array<IRundownItemReference>;
     template: IRundownTemplate['_id'];
+    matching_items: Array<IRundownItem>;
 }
 
-export type IRundown = IRundownBase & IBaseRestApiResponse;
+export type IRundown = IRundownBase & ILockInfo & IBaseRestApiResponse;
 
 export interface IRundownFilters {
     /**

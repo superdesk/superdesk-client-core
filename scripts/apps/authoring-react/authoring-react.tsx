@@ -14,12 +14,10 @@ import {
     IExposedFromAuthoring,
 } from 'superdesk-api';
 import {
-    Button,
     ButtonGroup,
     Loader,
     SubNav,
     IconButton,
-    NavButton,
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
@@ -40,7 +38,7 @@ import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actio
 import {sdApi} from 'api';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
-import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_FIELD_PREFERENCES} from 'core/constants';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
@@ -239,9 +237,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         this.save = this.save.bind(this);
-        this.stealLock = this.stealLock.bind(this);
+        this.forceLock = this.forceLock.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+        this.initiateClosing = this.initiateClosing.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleFieldsDataChange = this.handleFieldsDataChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
@@ -250,6 +248,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.cancelAutosave = this.cancelAutosave.bind(this);
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
+        this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -329,6 +328,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    initiateUnmounting(): Promise<void> {
+        if (!this.state.initialized) {
+            return Promise.resolve();
+        } else {
+            return this.props.authoringStorage.autosave.flush();
+        }
     }
 
     cancelAutosave(): Promise<void> {
@@ -497,6 +504,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addInternalEventListener(
+                'replaceAuthoringDataWithChanges',
+                (event) => {
+                    const {state} = this;
+                    const article = event.detail;
+
+                    if (state.initialized) {
+                        this.setState(this.updateItemWithChanges(state, article));
+                    }
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
                     if (event.detail._id === this.props.itemId) {
@@ -552,20 +573,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 const state = this.state;
 
-                /**
-                 * Only patch these fields to preserve
-                 * unsaved changes.
-                 * FINISH: remove IArticle usage
-                 */
-                const patch: Partial<IArticle> = {
-                    _etag,
-                    lock_session,
-                    lock_time,
-                    lock_user: user,
-                    lock_action: 'edit',
-                };
+                if (state.initialized && (state.itemOriginal._id === data.extra.item)) {
+                    /**
+                     * Only patch these fields to preserve
+                     * unsaved changes.
+                     * FINISH: remove IArticle usage
+                     */
+                    const patch: Partial<IArticle> = {
+                        _etag,
+                        lock_session,
+                        lock_time,
+                        lock_user: user,
+                        lock_action: 'edit',
+                    };
 
-                if (state.initialized) {
                     if (!this.hasUnsavedChanges()) {
                         /**
                          * if object references are the same before patching
@@ -615,7 +636,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
 
                 if (
-                    ARTICLE_RELATED_RESOURCE_NAMES.includes(resource) !== true
+                    this.props.resourceNames.includes(resource) !== true
                     || state.itemOriginal._id !== _id
                 ) {
                     return;
@@ -804,7 +825,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     {}, // clear validation errors
                 );
 
-                this.setState(nextState);
+                if (this._mounted) {
+                    this.setState(nextState);
+                }
 
                 return item;
             });
@@ -815,19 +838,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * Unlocks article from other user that holds the lock
      * and locks for current user.
      */
-    stealLock(state: IStateLoaded<T>) {
+    forceLock(state: IStateLoaded<T>): void {
         const {authoringStorage} = this.props;
-        const _id = state.itemOriginal._id;
 
-        authoringStorage.unlock(_id).then(() => {
-            authoringStorage.lock(_id).then((res) => {
-                this.setState({
-                    ...state,
-                    itemOriginal: res,
-                    itemWithChanges: res,
-                });
-            });
-        });
+        authoringStorage.forceLock(state.itemOriginal);
     }
 
     discardUnsavedChanges(state: IStateLoaded<T>): Promise<void> {
@@ -846,7 +860,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
-    handleClose(state: IStateLoaded<T>) {
+    /**
+     * Closing is initiated, the logic to handle unsaved changes runs
+     * and unless closing is cancelled by user action in the UI this.props.onClose is called.
+     */
+    initiateClosing(state: IStateLoaded<T>) {
         if (this.hasUnsavedChanges() !== true) {
             this.props.onClose();
             return;
@@ -946,6 +964,31 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
+    updateItemWithChanges(state: IStateLoaded<T>, itemPartial: Partial<T>): IStateLoaded<T> {
+        const {profile} = state;
+        const fields = profile.header.merge(profile.content);
+
+        const itemPatched = {
+            ...state.itemWithChanges,
+            ...itemPartial,
+        };
+
+        const fieldsDataNext = getFieldsData(
+            itemPatched,
+            fields,
+            this.props.fieldsAdapter,
+            this.props.authoringStorage,
+            this.props.storageAdapter,
+            this.props.getLanguage(itemPatched),
+        );
+
+        return {
+            ...state,
+            itemWithChanges: itemPatched,
+            fieldsDataWithChanges: fieldsDataNext,
+        };
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -966,14 +1009,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const exposed: IExposedFromAuthoring<T> = {
             item: state.itemWithChanges,
             contentProfile: state.profile,
+            getLatestItem: this.computeLatestEntity,
             fieldsData: state.fieldsDataWithChanges,
             handleFieldsDataChange: this.handleFieldsDataChange,
             hasUnsavedChanges: () => this.hasUnsavedChanges(),
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
             save: () => this.save(state),
-            discardChangesAndClose: () => this.handleClose(state),
+            initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
-            stealLock: () => this.stealLock(state),
+            stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,

@@ -8,6 +8,8 @@ import {appConfig} from 'appConfig';
 import {getSuggestionsWidget} from './article-widgets/suggestions';
 import {getVersionsAndItemHistoryWidget} from './article-widgets/versions-and-item-history';
 import {getTranslationsWidget} from './article-widgets/translations/translations';
+import {getMacrosWidget} from './macros/macros';
+import {getPackagesWidget} from './packages';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
@@ -16,6 +18,8 @@ export function registerAuthoringReactWidgets() {
         getFindAndReplaceWidget(),
         getVersionsAndItemHistoryWidget(),
         getTranslationsWidget(),
+        getMacrosWidget(),
+        getPackagesWidget(),
     ];
 
     // comments order: 3
