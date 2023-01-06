@@ -17,21 +17,7 @@ type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
 
-interface IState {
-    translations: Array<IArticle>;
-    translationsLookup: Dictionary<IArticle['_id'], IArticle>;
-}
-
-class Translations extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {
-            translations: null,
-            translationsLookup: null,
-        };
-    }
-
+class Translations extends React.Component<IProps> {
     render() {
         return (
             <AuthoringWidgetLayout
@@ -45,7 +31,7 @@ class Translations extends React.Component<IProps, IState> {
                     <TranslationsBody
                         item={this.props.article}
                         wrapperTemplate={
-                            ({children}: {children: Array<JSX.Element>}) =>
+                            ({children}) =>
                                 <Spacer v gap="16" justifyContent="start">{children}</Spacer>
                         }
                         translationTemplate={({translation, getTranslatedFromLanguage}) => (

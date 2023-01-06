@@ -4,8 +4,7 @@ import {IArticle} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    TranslationService?: any;
-    wrapperTemplate: React.ComponentType;
+    wrapperTemplate: React.ComponentType<{children: Array<JSX.Element>}>;
     translationTemplate: React.ComponentType<{translation: IArticle, getTranslatedFromLanguage: () => string}>;
 }
 
