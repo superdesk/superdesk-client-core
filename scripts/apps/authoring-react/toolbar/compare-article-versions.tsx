@@ -11,9 +11,10 @@ import {
 import {getFieldsData} from '../authoring-react';
 import {PreviewAuthoringItem} from '../preview-authoring-item';
 import {Map} from 'immutable';
-import {Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {Heading, Label, Modal, Option, Select} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {ViewDifference} from '../compare-articles/view-difference';
+import ng from 'core/services/ng';
 
 interface IStateLoading {
     initialized: false;
@@ -106,27 +107,45 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
             entity1.language,
         );
 
-        const Component = (n: number, n2: number) => {
+        const selectVersion = (n: number, n2: number) => {
             return (
-                <Select
-                    value={state.versionsPicked[n].toString()}
-                    label={gettext('Select version')}
-                    onChange={(newValue) => {
-                        const versionN = Number(newValue);
+                <div style={{width: 100}}>
+                    <Select
+                        value={state.versionsPicked[n].toString()}
+                        label={gettext('Select version')}
+                        onChange={(newValue) => {
+                            const versionN = Number(newValue);
 
-                        this.setState({
-                            ...state,
-                            initialized: true,
-                            versionsPicked: [state.versionsPicked[n2], versionN],
-                        }, () => this.initializeWithVersions(state.versionsPicked[n2], versionN));
-                    }}
-                >
-                    {
-                        this.props.versions.map((version, i) => {
-                            return (<Option value={i.toString()} key={i}>{version._current_version}</Option>);
-                        })
-                    }
-                </Select>
+                            this.setState({
+                                ...state,
+                                initialized: true,
+                                versionsPicked: [state.versionsPicked[n2], versionN],
+                            }, () => this.initializeWithVersions(state.versionsPicked[n2], versionN));
+                        }}
+                    >
+                        {
+                            this.props.versions.map((version, i) => {
+                                return (<Option value={i.toString()} key={i}>{version._current_version}</Option>);
+                            })
+                        }
+                    </Select>
+                </div>
+            );
+        };
+
+        const metaData = (n: number) => {
+            return (
+                <Spacer h gap="4" justifyContent="start" noGrow>
+                    <Heading type="h6">{gettext('Author: ')}</Heading>
+                    <Heading type="h6" weight="strong">
+                        {
+                            ng.get('desks')
+                                .userLookup[this.props.versions[state.versionsPicked[n]].version_creator]
+                                .display_name
+                        }
+                    </Heading>
+                    <Label text={this.props.versions[state.versionsPicked[n]].state} style="hollow" type="warning" />
+                </Spacer>
             );
         };
 
@@ -136,43 +155,49 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                 visible
                 maximized
                 zIndex={1050}
+                headerTemplate={gettext('Compare article versions')}
+                contentPadding="none"
             >
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        gap: '8px',
-                        flexGrow: 1,
-                        minHeight: 0,
-                    }}
-                >
+                <Spacer h gap="8" style={{background: '#E8EAED', padding: 8, height: '100%', alignItems: 'start'}}>
                     <Spacer v gap="16">
-                        {Component(0, 1)}
-                        <PreviewAuthoringItem
-                            fieldsData={fieldsData1}
-                            profile={profile1}
-                            fieldPadding={ITEM_PADDING}
-                        />
+                        <Spacer h gap="8" noGrow justifyContent="start" alignItems="center">
+                            {selectVersion(0, 1)}
+                            {metaData(0)}
+                        </Spacer>
+                        <div style={{background: 'white'}}>
+                            <PreviewAuthoringItem
+                                fieldsData={fieldsData1}
+                                profile={profile1}
+                                fieldPadding={ITEM_PADDING}
+                            />
+                        </div>
                     </Spacer>
                     <Spacer v gap="16">
-                        {Component(1, 0)}
-                        <PreviewAuthoringItem
-                            fieldsData={fieldsData2}
-                            profile={profile2}
-                            fieldPadding={ITEM_PADDING}
-                        />
+                        <Spacer h gap="8" noGrow justifyContent="start" alignItems="center">
+                            {selectVersion(1, 0)}
+                            {metaData(1)}
+                        </Spacer>
+                        <div style={{background: 'white', paddingRight: 8}}>
+                            <PreviewAuthoringItem
+                                fieldsData={fieldsData2}
+                                profile={profile2}
+                                fieldPadding={ITEM_PADDING}
+                            />
+                        </div>
                     </Spacer>
                     <Spacer v gap="16">
                         <div style={{height: 48}} />
-                        <ViewDifference
-                            profile1={profile1}
-                            profile2={profile2}
-                            fieldsData1={fieldsData1}
-                            fieldsData2={fieldsData2}
-                            fieldPadding={ITEM_PADDING}
-                        />
+                        <div style={{background: 'white'}}>
+                            <ViewDifference
+                                profile1={profile1}
+                                profile2={profile2}
+                                fieldsData1={fieldsData1}
+                                fieldsData2={fieldsData2}
+                                fieldPadding={ITEM_PADDING}
+                            />
+                        </div>
                     </Spacer>
-                </div>
+                </Spacer>
             </Modal>
         );
     }
