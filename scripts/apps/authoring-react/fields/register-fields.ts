@@ -13,6 +13,7 @@ import {getLinkedItemsField} from './linked-items';
 import {getAttachmentsField} from './attachments';
 import {getTimeField} from './time';
 import {geDurationField} from './duration';
+import {getArticlesInPackageField} from './package-items';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -42,6 +43,7 @@ export function registerAuthoringReactFields() {
                 getMediaField(),
                 getLinkedItemsField(),
                 getAttachmentsField(),
+                getArticlesInPackageField(),
             ],
         },
     };

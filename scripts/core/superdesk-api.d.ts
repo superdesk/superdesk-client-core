@@ -358,6 +358,24 @@ declare module 'superdesk-api' {
     export type ILinkedItemsUserPreferences = never;
     export type ILinkedItemsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - packages
+
+    interface IPackageItem {
+        type: IArticle['type'];
+        headline: string;
+        residRef: string;
+        location: string;
+        slugline: string;
+        renditions: {};
+        itemClass: string;
+        guid: string;
+    }
+
+    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export type IPackageItemsValueStorage = IPackageItemsValueOperational;
+    export type IPackageItemsUserPreferences = never;
+    export type IPackageItemsConfig = ICommonFieldConfig;
+
     // AUTHORING-REACT FIELD TYPES - media
 
     export type IMediaValueOperational = Array<IArticle>;
@@ -874,6 +892,13 @@ declare module 'superdesk-api' {
 
     export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
+    export interface ITranslation extends IBaseRestApiResponse {
+        label: string;
+        language: string;
+        source: boolean;
+        destination: boolean;
+    }
+
     export interface IArticleFormatter extends IBaseRestApiResponse {
         name: string;
     }
@@ -1041,7 +1066,7 @@ declare module 'superdesk-api' {
             }
         };
         version: any;
-        template: any;
+        template: ITemplate['_id'];
         original_creator: string;
         unique_id: any;
         operation: any;
@@ -3061,14 +3086,14 @@ declare module 'superdesk-api' {
     }
 
     export interface ITemplate extends IBaseRestApiResponse {
-        data: IArticle,
-        is_public: boolean,
+        data: Partial<IArticle>;
+        is_public: boolean;
         next_run?: any;
         schedule?: any;
-        template_desks: Array<IDesk['_id']>,
-        template_name: string,
-        template_type: 'create' | 'kill' | string,
-        user: IUser['_id']
+        template_desks: Array<IDesk['_id']>;
+        template_name: string;
+        template_type: 'create' | 'kill' | string;
+        user: IUser['_id'];
     }
 
 

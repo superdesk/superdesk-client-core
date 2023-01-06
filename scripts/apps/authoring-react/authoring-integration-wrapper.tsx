@@ -37,6 +37,7 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
+import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
 import ExportModal from './toolbar/export-modal';
@@ -190,6 +191,18 @@ interface IState {
     isSidebarCollapsed: boolean;
 }
 
+const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
 
@@ -265,6 +278,20 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
+        const saveAsTemplate = (item: IArticle): IAuthoringAction => ({
+            label: gettext('Save as template'),
+            onTrigger: () => (
+                showModal(({closeModal}) => {
+                    return (
+                        <TemplateModal
+                            closeModal={closeModal}
+                            item={item}
+                        />
+                    );
+                })
+            ),
+        });
+
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
@@ -315,6 +342,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
+                                        saveAsTemplate(item),
                                         getCompareVersionsModal(
                                             getLatestItem,
                                             authoringStorage,
@@ -322,6 +350,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             storageAdapter,
                                         ),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
+                                        getTranslateAction(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
                                     ];
