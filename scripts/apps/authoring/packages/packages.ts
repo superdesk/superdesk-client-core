@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 
 PackagesCtrl.$inject = ['$scope', 'superdesk', 'api', 'search'];
 function PackagesCtrl($scope, superdesk, api, search) {
@@ -27,9 +28,9 @@ function PackagesCtrl($scope, superdesk, api, search) {
 
     $scope.openPackage = function(packageItem) {
         if (packageItem._type === 'published') {
-            superdesk.intent('view', 'item', packageItem);
+            openArticle(packageItem._id, 'view');
         } else {
-            superdesk.intent('edit', 'item', packageItem);
+            openArticle(packageItem._id, 'edit');
         }
     };
 
