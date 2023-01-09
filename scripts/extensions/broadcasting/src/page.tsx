@@ -372,7 +372,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                             : Promise.resolve();
 
                                         doUnlock.finally(() => {
-                                            this.setState({rundownAction: null});
+                                            this.setState({rundownAction: null, rundownItemAction: null});
                                         });
                                     }}
                                     readOnly={rundownAction == null || rundownAction.mode === 'view'}
