@@ -226,7 +226,7 @@ export function prepareForCreation(
             onSave,
         ),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
-        sideWidget: currentAction == null ? null : currentAction.sideWidget,
+        sideWidget: null,
     };
 }
 
@@ -239,7 +239,7 @@ export function prepareForEditing(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
-        sideWidget: currentAction == null ? null : currentAction.sideWidget,
+        sideWidget: null,
     };
 }
 
@@ -252,6 +252,6 @@ export function prepareForPreview(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
-        sideWidget: currentAction == null ? null : currentAction.sideWidget,
+        sideWidget: null,
     };
 }
