@@ -15,6 +15,8 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
+import ImageTaggingComponent from './ImageTaggingComponent/ImageTaggingComponent';
+
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
 export type INewItem = Partial<ITagUi>;
@@ -47,13 +49,14 @@ interface IIMatricsFields {
     };
 }
 
-type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
+type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse;};
 
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
     data: 'not-initialized' | 'loading' | IEditableData;
     newItem: INewItem | null;
     vocabularyLabels: Map<string, string> | null;
+    showImageWidget: boolean;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -163,7 +166,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
         private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
-
+        
         constructor(props: IProps) {
             super(props);
 
@@ -172,6 +175,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 newItem: null,
                 runAutomaticallyPreference: 'loading',
                 vocabularyLabels: null,
+                showImageWidget: true,
             };
 
             this._mounted = false;
@@ -351,7 +355,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         componentDidMount() {
             this._mounted = true;
-
             Promise.all([
                 getAutoTaggingVocabularyLabels(superdesk),
                 preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
@@ -368,7 +371,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this._mounted = false;
         }
         render() {
-            const {runAutomaticallyPreference, vocabularyLabels} = this.state;
+            const {runAutomaticallyPreference, vocabularyLabels, showImageWidget} = this.state;
 
             if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
@@ -454,7 +457,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     <div className="widget-content sd-padding-all--2">
                         <div>
                             <div className="form__row form__row--flex sd-padding-b--1">
-                                <ButtonGroup align="start">
+                                <ButtonGroup align="left">
                                     <Switch
                                         value={runAutomaticallyPreference}
                                         disabled={readOnly}
@@ -706,6 +709,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {allGroupedAndSorted.map((item) => item).toArray()}
+                                            {this.state.showImageWidget &&
+                                                <ImageTaggingComponent superdesk={superdesk} data={toServerFormat(data.changes.analysis, superdesk)} />}
                                         </div>
                                     </React.Fragment>
                                 );
