@@ -30,9 +30,9 @@
         <div class="text" translate>Last Time Updated</div>
         <div class="time">{{item.last_updated | reldate}}</div>
     </div>
-    <div ng-show="item.last_item_update">
+    <div ng-show="item.last_item_arrived">
         <div class="text" translate>Last Item Arrived</div>
-        <div class="time">{{item.last_item_update | reldate}}</div>
+        <div class="time">{{item.last_item_arrived | reldate}}</div>
     </div>
     <div ng-show="isIdle()" class="error">
         <em translate>Channel has gone strangely quiet.</em>
