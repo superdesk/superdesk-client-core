@@ -27,6 +27,7 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
 
 interface IProps {
     item: IArticle;
@@ -154,6 +155,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 publishFromEnabled && (
                                     <ToggleBox title={gettext('From')} initiallyOpen>
                                         <DestinationSelect
+                                            desks={sdApi.desks.getAllDesks()}
                                             value={this.state.selectedDestination}
                                             onChange={(value) => {
                                                 this.setState({

@@ -97,6 +97,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            desks={sdApi.desks.getAllDesks().filter((desk) => desk.send_to_desk_allowed).toOrderedMap()}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({

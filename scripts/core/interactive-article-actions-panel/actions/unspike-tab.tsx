@@ -56,6 +56,7 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            desks={sdApi.desks.getAllDesks()}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({
