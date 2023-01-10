@@ -247,7 +247,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.GET_DEFAULT_EDITOR()));
+            get(appConfig.editor, contentType || constant.GET_DEFAULT_EDITOR()));
 
         return angular.extend({}, editor);
     };
