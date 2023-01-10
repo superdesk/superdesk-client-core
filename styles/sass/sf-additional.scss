@@ -199,8 +199,7 @@
     flex-grow: 0;
     .search-handler {
         min-width: 48px;
-        //height: $nav-height;
-        padding: 10px 10px 10px 14px;
+        padding: 8px 10px 8px 14px;
         background: none;
         display: flex;
         white-space: nowrap;
@@ -568,25 +567,26 @@
         width: 100%;
         transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
         border: none;
-        border-radius: 2px;
-        background-color: rgba(0, 0, 0, 0.05);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-        font-size: 1.3rem;
-        color: inherit;
+        border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
+        background-color: var(--color-input-bg);
+        border-bottom: 1px solid var(--color-input-border);
+        font-size: 1.4rem;
         padding-left: 1rem;
+        color: var(--color-text);
         &:hover {
-            border-bottom-color: rgba(0, 0, 0, 0.3);
-            background-color: rgba(0, 0, 0, 0.1);
+            border-bottom-color: var(--color-input-border-hover);
+            background-color: var(--color-input-bg--hover);
         }
         &:focus {
-            box-shadow: 0 1px 0 0 $sd-blue;
-            border-color: $sd-blue;
+            box-shadow: 0 1px 0 0 var(--sd-colour-interactive);
+            border-color: var(--sd-colour-interactive);
+            background-color: var(--sd-colour-interactive--alpha-20);
         }
     }
 
     .item-list {
         width: 100%;
-        color: $sd-text;
+        color: var(--color-text);
     }
 
     .pills-list {
@@ -607,25 +607,6 @@
         }
     }
 }
-
-[class^="--dark-ui"],
-[class*="--dark-ui"] {
-    [sd-timezone] {
-        .input-term input {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            &:hover {
-                border-bottom-color: rgba(255, 255, 255, 0.4);
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-            &:focus {
-                box-shadow: 0 1px 0 0 $sd-blue;
-                border-color: $sd-blue;
-            }
-        }
-    }
-}
-
 
 // Datepicker - wrapper for angular ui datepicker
 // ---------------------------------------------
@@ -2365,4 +2346,10 @@ sd-multi-image-edit {
 
 .modal.modal--tabs .modal__body-footer {
     display: flex;
+}
+
+.modal--fullscreen {
+    .modal__header {
+        border-radius: 0 !important;
+    }
 }
