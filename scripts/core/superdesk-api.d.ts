@@ -1424,6 +1424,12 @@ declare module 'superdesk-api' {
     }
 
 
+    export interface ISubjectCode {
+        name: string;
+        qcode: string;
+        parent?: string;
+    }
+
     // PAGE
 
     export type IPage = DeepReadonly<{
