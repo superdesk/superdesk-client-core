@@ -29,9 +29,11 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
 
                 var resources = ['ingest'];
 
-                if (scope.item.content_types.includes('event') || scope.item.content_types.includes('planning')) {
-                    resources.push(scope.item.content_types.includes('event') && 'events');
-                    resources.push(scope.item.content_types.includes('planning') && 'planning');
+                if (scope.item.content_types.includes('event')) {
+                    resources.push('events');
+                }
+                if (scope.item.content_types.includes('planning')) {
+                    resources.push('planning');
                 }
                 resources.map((resource) => api.query(resource, criteria).then((result) => {
                     scope.ingested_count += result._meta.total;
