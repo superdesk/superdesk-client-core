@@ -96,7 +96,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
 
                         {
                             subitemVocabularies != null && (
-                                <Spacer v gap="4" justifyContent="start" noGrow>
+                                <Spacer h gap="4" justifyContent="start" noGrow style={{flexWrap: 'wrap'}}>
                                     {
                                         subitemVocabularies.map(({name, color}, i) => (
                                             <Label
