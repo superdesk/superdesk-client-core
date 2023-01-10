@@ -24,8 +24,6 @@ interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-export const EDITOR_3_FIELD_TYPE = 'editor3';
-
 export function editor3ToOperationalFormat(
     value: IEditor3ValueStorage,
     language: string,

@@ -44,6 +44,8 @@ import ExportModal from './toolbar/export-modal';
 import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
+import {ui} from 'core/ui-utils';
+import TranslateModal from './toolbar/translate-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -132,19 +134,23 @@ const getCompareVersionsModal = (
         ]).then(([res, adapter]) => {
             const versions = res._items.map((item) => adapter.toAuthoringReact(item)).reverse();
 
-            showModal(({closeModal}) => {
-                return (
-                    <CompareArticleVersionsModal
-                        closeModal={closeModal}
-                        authoringStorage={authoringStorage}
-                        fieldsAdapter={fieldsAdapter}
-                        storageAdapter={storageAdapter}
-                        versions={versions}
-                        article={article}
-                        getLanguage={() => article.language}
-                    />
-                );
-            });
+            if (versions.length <= 1) {
+                ui.alert(gettext('At least two versions are needed for comparison. This article has only one'));
+            } else {
+                showModal(({closeModal}) => {
+                    return (
+                        <CompareArticleVersionsModal
+                            closeModal={closeModal}
+                            authoringStorage={authoringStorage}
+                            fieldsAdapter={fieldsAdapter}
+                            storageAdapter={storageAdapter}
+                            versions={versions}
+                            article={article}
+                            getLanguage={() => article.language}
+                        />
+                    );
+                });
+            }
         });
     },
 });
