@@ -1063,6 +1063,8 @@ export function SendItem($q,
                     ? gettext('Send correction')
                     : gettext('publish'))
                 : gettext(action);
+
+            scope.filteredDesks = desks?.desks?._items?.filter((item) => item.send_to_desk_not_allowed !== true) ?? [];
         },
     };
 }
