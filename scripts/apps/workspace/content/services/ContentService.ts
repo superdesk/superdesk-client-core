@@ -259,6 +259,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     this.fields = (profile) => {
         const editor = profile.editor || {};
 
+        console.log(this._fields);
         return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
 
@@ -313,6 +314,8 @@ export function ContentService(api, templates, desks, packages: IPackagesService
                     return self._fields;
                 });
         }
+
+        debugger;
 
         return self._fieldsPromise;
     }
@@ -375,6 +378,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
             return this.getType(profileId).then((profile) => {
                 scope.schema = this.schema(profile, item.type);
                 scope.editor = this.editor(profile, item.type);
+                debugger;
                 scope.fields = this.fields(profile);
 
                 return profile;

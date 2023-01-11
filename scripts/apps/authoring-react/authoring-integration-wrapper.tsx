@@ -37,6 +37,7 @@ import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
 import ExportModal from './toolbar/export-modal';
+import TranslateModal from './toolbar/translate-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -182,7 +183,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     public isSidebarCollapsed() {
         return this.state.isSidebarCollapsed;
     }
-  
+
     public prepareForUnmounting() {
         if (this.authoringReactRef == null) {
             return Promise.resolve();

@@ -54,6 +54,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
     ]).then((res) => {
         const [getLabelForFieldId] = res;
 
+        debugger;
         const {editor, fields, schema} = fakeScope;
 
         const fieldsOrdered =
@@ -67,6 +68,8 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
                     return result;
                 })
+                .filter((t) => t.editorItem != null)
+                .map((t) => ({...t, editorItem: {...t.editorItem, section: 'content'}}))
                 .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
@@ -99,9 +102,11 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
                 } else { // custom fields
                     const field = fields.find(({_id}) => _id === fieldId);
 
+                    debugger;
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,
                         name: getLabelForFieldId(fieldId),
+                        // fieldType: fieldId === 'keywords' ? 'keywords' : field.custom_field_type,
                         fieldType: field.custom_field_type,
                         fieldConfig: {
                             ...commonConfigs,

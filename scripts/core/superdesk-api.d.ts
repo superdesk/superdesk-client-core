@@ -229,6 +229,13 @@ declare module 'superdesk-api' {
     };
     export type ITimeUserPreferences = never;
 
+    // AUTHORING-REACT FIELD TYPES - keywords
+
+    export type IKeywordsValueOperational = Array<string>;
+    export type IKeywordsValueStorage = IKeywordsValueOperational;
+    export interface IKeywordsFieldConfig extends ICommonFieldConfig {};
+    export type IKeywordsUserPreferences = never;
+
     // AUTHORING-REACT FIELD TYPES - duration
 
     export type IDurationValueOperational = number; // number of seconds
