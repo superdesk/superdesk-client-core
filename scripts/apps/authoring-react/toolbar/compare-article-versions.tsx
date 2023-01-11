@@ -23,6 +23,8 @@ interface IStateLoading {
 
 interface IStateLoaded {
     initialized: true;
+
+    // Ids of versions are not unique so we use indexes to access a version from this.props.versions
     versionsPicked: [number, number] | null;
     contentProfiles: Map<number, IContentProfileV2>;
 }
@@ -48,33 +50,25 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
         this.state = {
             initialized: false,
         };
-
-        this.initializeWithVersions = this.initializeWithVersions.bind(this);
     }
 
     componentDidMount(): void {
-        this.initializeWithVersions(0, 1);
-    }
+        Promise.all([
+            this.props.authoringStorage.getContentProfile(this.props.versions[0], this.props.fieldsAdapter),
+            this.props.authoringStorage.getContentProfile(this.props.versions[1], this.props.fieldsAdapter),
+        ]).then((res) => {
+            let profilesMap = Map<number, IContentProfileV2>();
 
-    initializeWithVersions(version1: number, version2: number) {
-        if (!this.state.initialized) {
-            Promise.all([
-                this.props.authoringStorage.getContentProfile(this.props.versions[version1], this.props.fieldsAdapter),
-                this.props.authoringStorage.getContentProfile(this.props.versions[version2], this.props.fieldsAdapter),
-            ]).then((res) => {
-                let profilesMap = Map<number, IContentProfileV2>();
+            profilesMap = profilesMap.set(0, res[0]);
+            profilesMap = profilesMap.set(1, res[1]);
 
-                profilesMap = profilesMap.set(version1, res[version1]);
-                profilesMap = profilesMap.set(version2, res[version2]);
-
-                this.setState({
-                    ...this.state,
-                    initialized: true,
-                    contentProfiles: profilesMap,
-                    versionsPicked: [0, 1],
-                });
+            this.setState({
+                ...this.state,
+                initialized: true,
+                contentProfiles: profilesMap,
+                versionsPicked: [0, 1],
             });
-        }
+        });
     }
 
     render(): React.ReactNode {
@@ -85,8 +79,10 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
         }
 
         const {fieldsAdapter, authoringStorage, storageAdapter} = this.props;
-        const entity1 = this.props.versions[state.versionsPicked[0]];
-        const entity2 = this.props.versions[state.versionsPicked[1]];
+        const v0 = state.versionsPicked[0];
+        const v1 = state.versionsPicked[1];
+        const entity1 = this.props.versions[v0];
+        const entity2 = this.props.versions[v1];
         const profile1 = state.contentProfiles.get(0);
         const profile2 = state.contentProfiles.get(1);
         const allFields1 = profile1?.header.merge(profile1.content).toOrderedMap();
@@ -107,9 +103,6 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
             storageAdapter,
             entity1.language,
         );
-
-        const v1 = state.versionsPicked[1];
-        const v2 = state.versionsPicked[0];
 
         return (
             <Modal
@@ -132,25 +125,25 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                     noWrap
                 >
                     <Panel
-                        displayVersion={v1.toString()}
+                        displayVersion={v0.toString()}
                         onChange={(value) => {
                             this.setState({
                                 ...state,
-                                versionsPicked: [v2, value],
-                            }, () => this.initializeWithVersions(v2, value));
+                                versionsPicked: [value, v1],
+                            });
                         }}
-                        currentVersion={this.props.versions[v2]}
+                        currentVersion={this.props.versions[v0]}
                         fieldsData={fieldsData1}
                         profile={profile1}
                         versions={this.props.versions}
                     />
                     <Panel
-                        displayVersion={v2.toString()}
+                        displayVersion={v1.toString()}
                         onChange={(value) => {
                             this.setState({
                                 ...state,
-                                versionsPicked: [v1, value],
-                            }, () => this.initializeWithVersions(v1, value));
+                                versionsPicked: [v0, value],
+                            });
                         }}
                         currentVersion={this.props.versions[v1]}
                         fieldsData={fieldsData2}
@@ -161,10 +154,10 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                         <div style={{height: 52}} />
                         <div style={{background: 'white', height: '100%', width: '100%'}}>
                             <ViewDifference
-                                profile1={profile1}
-                                profile2={profile2}
-                                fieldsData1={fieldsData1}
-                                fieldsData2={fieldsData2}
+                                profile1={profile2}
+                                profile2={profile1}
+                                fieldsData1={fieldsData2}
+                                fieldsData2={fieldsData1}
                                 fieldPadding={ITEM_PADDING}
                             />
                         </div>
