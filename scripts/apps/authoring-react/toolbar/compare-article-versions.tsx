@@ -15,6 +15,7 @@ import {Heading, Label, Modal, Option, Select} from 'superdesk-ui-framework/reac
 import {Spacer} from 'core/ui/components/Spacer';
 import {ViewDifference} from '../compare-articles/view-difference';
 import ng from 'core/services/ng';
+import {Panel} from './article-panel';
 
 interface IStateLoading {
     initialized: false;
@@ -107,59 +108,8 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
             entity1.language,
         );
 
-        const Panel: React.ComponentType<{
-            v1: number,
-            v2: number,
-            fieldData: Map<string, any>,
-            profile: IContentProfileV2,
-        }> = ({v1, v2, fieldData, profile}) => {
-            const ver = this.props.versions[state.versionsPicked[v2]];
-
-            return (
-                <Spacer v gap="16" style={{height: '100%'}} noWrap>
-                    <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
-                        <div style={{width: 100}}>
-                            <Select
-                                value={state.versionsPicked[v1].toString()}
-                                label={gettext('Select version')}
-                                onChange={(value) =>
-                                    this.setState({
-                                        ...state,
-                                        versionsPicked: [state.versionsPicked[v2], Number(value)],
-                                    }, () => this.initializeWithVersions(state.versionsPicked[v2], Number(value)))
-                                }
-                            >
-                                {
-                                    this.props.versions.map((ver, i) => {
-                                        return (<Option value={i.toString()} key={i}>{ver._current_version}</Option>);
-                                    })
-                                }
-                            </Select>
-                        </div>
-                        <Spacer v gap="4" justifyContent="center" noGrow>
-                            <Spacer h gap="4" noGrow justifyContent="start">
-                                <Heading type="h6">{gettext('Author: ')}</Heading>
-                                <Heading type="h6" weight="strong">
-                                    {
-                                        ng.get('desks')
-                                            .userLookup[ver.version_creator]
-                                            .display_name
-                                    }
-                                </Heading>
-                            </Spacer>
-                            <Label text={ver.state} style="hollow" type="warning" />
-                        </Spacer>
-                    </Spacer>
-                    <div style={{flexGrow: 1, background: 'white', width: '100%', height: '100%'}}>
-                        <PreviewAuthoringItem
-                            fieldsData={fieldData}
-                            profile={profile}
-                            fieldPadding={ITEM_PADDING}
-                        />
-                    </div>
-                </Spacer>
-            );
-        };
+        const v1 = state.versionsPicked[1];
+        const v2 = state.versionsPicked[0];
 
         return (
             <Modal
@@ -170,18 +120,42 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                 headerTemplate={gettext('Compare article versions')}
                 contentPadding="none"
             >
-                <Spacer h gap="8" style={{background: '#E8EAED', padding: 8, height: '100%', alignItems: 'start'}} noWrap>
+                <Spacer
+                    h
+                    gap="8"
+                    style={{
+                        background: '#E8EAED',
+                        padding: 8,
+                        height: '100%',
+                        alignItems: 'start',
+                    }}
+                    noWrap
+                >
                     <Panel
-                        v1={1}
-                        v2={0}
-                        fieldData={fieldsData1}
+                        displayVersion={v1.toString()}
+                        onChange={(value) => {
+                            this.setState({
+                                ...state,
+                                versionsPicked: [v2, value],
+                            }, () => this.initializeWithVersions(v2, value));
+                        }}
+                        currentVersion={this.props.versions[v2]}
+                        fieldsData={fieldsData1}
                         profile={profile1}
+                        versions={this.props.versions}
                     />
                     <Panel
-                        v1={0}
-                        v2={1}
-                        fieldData={fieldsData2}
+                        displayVersion={v2.toString()}
+                        onChange={(value) => {
+                            this.setState({
+                                ...state,
+                                versionsPicked: [v1, value],
+                            }, () => this.initializeWithVersions(v1, value));
+                        }}
+                        currentVersion={this.props.versions[v1]}
+                        fieldsData={fieldsData2}
                         profile={profile2}
+                        versions={this.props.versions}
                     />
                     <Spacer v gap="16" style={{height: '100%'}} noWrap>
                         <div style={{height: 52}} />

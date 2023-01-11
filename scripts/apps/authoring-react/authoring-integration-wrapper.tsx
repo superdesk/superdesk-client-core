@@ -135,7 +135,7 @@ const getCompareVersionsModal = (
             const versions = res._items.map((item) => adapter.toAuthoringReact(item)).reverse();
 
             if (versions.length <= 1) {
-                ui.alert(gettext('At least two versions are needed for comparison. This article has only one'));
+                ui.alert(gettext('At least two versions are needed for comparison. This article has only one.'));
             } else {
                 showModal(({closeModal}) => {
                     return (
