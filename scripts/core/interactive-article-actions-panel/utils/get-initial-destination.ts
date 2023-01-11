@@ -7,7 +7,7 @@ import {ISendToDestination} from '../interfaces';
 export function getInitialDestination(
     items: Array<IArticle>,
     canSendToPersonal: boolean,
-    availableDesks: OrderedMap<string, IDesk>,
+    availableDesks: OrderedMap<string, IDesk> = sdApi.desks.getAllDesks(),
 ): ISendToDestination {
     const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 

@@ -18,5 +18,5 @@ export const testDesk: IDesk = {
     default_content_template: 'test-desk-template',
     preferred_cv_items: {},
     preserve_published_content: false,
-    send_to_desk_not_allowed: false,
+    send_to_desk_allowed: false,
 };

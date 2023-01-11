@@ -38,7 +38,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.availableDesks = sdApi.desks.getAllDesks()
-            .filter((desk) => desk.send_to_desk_not_allowed === false)
+            .filter((desk) => desk.send_to_desk_allowed)
             .toOrderedMap();
 
         this.state = {
@@ -102,7 +102,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         const sendPackages = this.props.items.every(({type}) => type === 'composite');
         const dest = this.state.selectedDestination;
 
-        if (dest.type == 'desk' && dest.desk == null) {
+        if (dest.type === 'desk' && dest.desk == null) {
             return (
                 <div
                     style={{
