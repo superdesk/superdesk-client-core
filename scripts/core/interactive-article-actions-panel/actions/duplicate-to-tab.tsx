@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -10,6 +10,7 @@ import {getInitialDestination} from '../utils/get-initial-destination';
 import {canSendToPersonal} from '../utils/can-send-to-personal';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
@@ -22,11 +23,18 @@ interface IState {
 }
 
 export class DuplicateToTab extends React.PureComponent<IProps, IState> {
+    availableDesks: OrderedMap<string, IDesk>;
+
     constructor(props: IProps) {
         super(props);
 
+        this.availableDesks = sdApi.desks.getAllDesks();
         this.state = {
-            selectedDestination: getInitialDestination(props.items, canSendToPersonal(props.items)),
+            selectedDestination: getInitialDestination(
+                props.items,
+                canSendToPersonal(props.items),
+                this.availableDesks,
+            ),
         };
 
         this.duplicateItems = this.duplicateItems.bind(this);
@@ -58,7 +66,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
-                            desks={sdApi.desks.getAllDesks()}
+                            availableDesks={this.availableDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({

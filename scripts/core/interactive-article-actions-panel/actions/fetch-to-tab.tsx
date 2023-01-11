@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -23,13 +23,15 @@ interface IState {
 }
 
 export class FetchToTab extends React.PureComponent<IProps, IState> {
+    availableDesks: OrderedMap<string, IDesk>;
+
     constructor(props: IProps) {
         super(props);
 
-        const selectedDestination = getInitialDestination(props.items, false);
+        this.availableDesks = sdApi.desks.getAllDesks();
 
         this.state = {
-            selectedDestination: selectedDestination,
+            selectedDestination: getInitialDestination(props.items, false, this.availableDesks),
         };
 
         this.fetchItems = this.fetchItems.bind(this);
@@ -57,7 +59,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
-                            desks={sdApi.desks.getAllDesks()}
+                            availableDesks={this.availableDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({
