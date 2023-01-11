@@ -9,12 +9,10 @@ import {
     IStorageAdapter,
 } from 'superdesk-api';
 import {getFieldsData} from '../authoring-react';
-import {PreviewAuthoringItem} from '../preview-authoring-item';
 import {Map} from 'immutable';
-import {Heading, Label, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {ViewDifference} from '../compare-articles/view-difference';
-import ng from 'core/services/ng';
 import {Panel} from './article-panel';
 
 interface IStateLoading {
