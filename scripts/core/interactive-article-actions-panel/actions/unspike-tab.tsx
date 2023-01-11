@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -8,6 +8,7 @@ import {getInitialDestination} from '../utils/get-initial-destination';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
@@ -20,13 +21,15 @@ interface IState {
 }
 
 export class UnspikeTab extends React.PureComponent<IProps, IState> {
+    availableDesks: OrderedMap<string, IDesk>;
+
     constructor(props: IProps) {
         super(props);
 
-        const selectedDestination = getInitialDestination(props.items, false);
+        this.availableDesks = sdApi.desks.getAllDesks();
 
         this.state = {
-            selectedDestination: selectedDestination,
+            selectedDestination: getInitialDestination(props.items, false, this.availableDesks),
         };
 
         this.doUnspike = this.doUnspike.bind(this);
@@ -56,6 +59,7 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            availableDesks={this.availableDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({

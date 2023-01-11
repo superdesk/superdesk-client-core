@@ -1,4 +1,4 @@
-import {IArticle, IStage} from 'superdesk-api';
+import {IArticle, IDesk, IStage, OrderedMap} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -7,8 +7,8 @@ import {ISendToDestination} from '../interfaces';
 export function getInitialDestination(
     items: Array<IArticle>,
     canSendToPersonal: boolean,
+    availableDesks: OrderedMap<string, IDesk>,
 ): ISendToDestination {
-    const allDesks = sdApi.desks.getAllDesks();
     const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 
     if (canSendToPersonal && lastDestination?.type === 'personal-space') {
@@ -17,7 +17,7 @@ export function getInitialDestination(
 
     const currentDeskId = sdApi.desks.getCurrentDeskId();
 
-    const destinationDesk: string = (() => {
+    let destinationDesk: string = (() => {
         if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
             return lastDestination.desk;
         } else if (currentDeskId != null) {
@@ -25,9 +25,13 @@ export function getInitialDestination(
         } else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
-            return allDesks.first()?._id ?? null;
+            return availableDesks.first()?._id ?? null;
         }
     })();
+
+    if (!availableDesks.map((x) => x._id).includes(destinationDesk)) {
+        destinationDesk = availableDesks.first()?._id;
+    }
 
     if (destinationDesk == null) {
         return {
