@@ -12,26 +12,26 @@ import {getFieldsData} from '../authoring-react';
 import {Map} from 'immutable';
 import {Modal} from 'superdesk-ui-framework/react';
 import {ViewDifference} from '../compare-articles/view-difference';
-import {VersionOptions} from './version-options';
+import {VersionHeader} from './version-header';
 import {PreviewAuthoringItem} from '../preview-authoring-item';
 
-const previewItemStyle: React.CSSProperties = {
-    background: 'white',
-    width: '100%',
-    height: '100%',
-    marginRight: 8,
-};
-
-const evenWidthStyle: React.CSSProperties = {
-    width: '33%',
-};
-
-const flexStyle: React.CSSProperties = {
+const rowStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     height: '100%',
+};
+
+const columnStyle: React.CSSProperties = {
+    width: '33%',
+};
+
+const cellStyle: React.CSSProperties = {
+    background: 'white',
+    width: '100%',
+    height: '100%',
+    marginRight: 8,
 };
 
 interface IStateLoading {
@@ -141,55 +141,53 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                     <thead>
                         <tr
                             style={{
-                                ...flexStyle,
+                                ...rowStyle,
                                 marginRight: 8,
                                 paddingBottom: 8,
                             }}
                         >
-                            <th style={evenWidthStyle}>
-                                <VersionOptions
-                                    displayVersion={v1.toString()}
-                                    onChange={(value) => {
+                            <th style={columnStyle}>
+                                <VersionHeader
+                                    version={v1}
+                                    onVersionChange={(value) => {
                                         this.setState({
                                             ...state,
                                             versionsPicked: [v0, value],
                                         });
                                     }}
-                                    currentVersion={this.props.versions[v1]}
                                     versions={this.props.versions}
                                 />
                             </th>
-                            <th style={evenWidthStyle}>
-                                <VersionOptions
-                                    displayVersion={v0.toString()}
-                                    onChange={(value) => {
+                            <th style={columnStyle}>
+                                <VersionHeader
+                                    version={v0}
+                                    onVersionChange={(value) => {
                                         this.setState({
                                             ...state,
                                             versionsPicked: [value, v1],
                                         });
                                     }}
-                                    currentVersion={this.props.versions[v0]}
                                     versions={this.props.versions}
                                 />
                             </th>
-                            <th style={evenWidthStyle} />
+                            <th style={columnStyle} />
                         </tr>
                     </thead>
                     <tbody>
                         <tr
                             style={{
-                                ...flexStyle,
+                                ...rowStyle,
                                 background: '#E8EAED',
                             }}
                         >
-                            <td style={previewItemStyle}>
+                            <td style={cellStyle}>
                                 <PreviewAuthoringItem
                                     fieldsData={fieldsData2}
                                     profile={profile2}
                                     fieldPadding={ITEM_PADDING}
                                 />
                             </td>
-                            <td style={previewItemStyle}>
+                            <td style={cellStyle}>
                                 <PreviewAuthoringItem
                                     fieldsData={fieldsData1}
                                     profile={profile1}
@@ -198,8 +196,7 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                             </td>
                             <td style={{background: 'white', height: '100%', width: '100%'}}>
                                 <ViewDifference
-                                    gap="16"
-                                    noWrap
+                                    gapBetweenFields="16"
                                     profile1={profile2}
                                     profile2={profile1}
                                     fieldsData1={fieldsData2}

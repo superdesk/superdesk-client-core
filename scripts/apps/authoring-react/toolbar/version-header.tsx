@@ -7,27 +7,27 @@ import ng from 'core/services/ng';
 
 interface IProps {
     versions: Array<(IArticle & IBaseRestApiResponse)>;
-    currentVersion: (IArticle & IBaseRestApiResponse);
-    onChange(value: number): void;
-    displayVersion: string;
+    version: number;
+    onVersionChange(value: number): void;
 }
 
-export class VersionOptions extends React.PureComponent<IProps> {
+export class VersionHeader extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         const {
-            currentVersion,
-            onChange,
+            onVersionChange,
             versions,
-            displayVersion,
+            version,
         } = this.props;
+
+        const currentVersion = versions[version];
 
         return (
             <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow style={{width: '100%'}}>
                 <div style={{width: 100}}>
                     <Select
-                        value={displayVersion}
+                        value={version.toString()}
                         label={gettext('Select version')}
-                        onChange={(value) => onChange(Number(value))}
+                        onChange={(value) => onVersionChange(parseInt(value, 10))}
                     >
                         {
                             versions.map((ver, i) => {
