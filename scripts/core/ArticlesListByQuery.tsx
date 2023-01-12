@@ -6,7 +6,6 @@ import {IRestApiResponse, IArticle, ISuperdeskQuery} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import ng from 'core/services/ng';
 import {toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
-import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 import {OrderedMap} from 'immutable';
@@ -17,7 +16,6 @@ interface IProps {
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
-    loader?: boolean;
     padding?: string;
     getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 }
@@ -223,13 +221,11 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {initialize
         const key = JSON.stringify(this.props.query);
 
         return (
-            <SmoothLoader loading={this.props.loader && this.state.initialized !== true}>
-                <ArticlesListByQueryComponent
-                    {...this.props}
-                    setLoading={this.setLoading}
-                    key={key}
-                />
-            </SmoothLoader>
+            <ArticlesListByQueryComponent
+                {...this.props}
+                setLoading={this.setLoading}
+                key={key}
+            />
         );
     }
 }

@@ -398,7 +398,6 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             onItemClick={this.props.onItemClick}
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
-                            loader={false}
                             padding={`${3 / 4 * padding}px ${padding}px`}
                             getMultiSelect={(items) => ({
                                 kind: 'new',
