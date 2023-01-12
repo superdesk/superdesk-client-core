@@ -11,9 +11,28 @@ import {
 import {getFieldsData} from '../authoring-react';
 import {Map} from 'immutable';
 import {Modal} from 'superdesk-ui-framework/react';
-import {Spacer} from 'core/ui/components/Spacer';
 import {ViewDifference} from '../compare-articles/view-difference';
-import {Panel} from './article-panel';
+import {VersionOptions} from './version-options';
+import {PreviewAuthoringItem} from '../preview-authoring-item';
+
+const previewItemStyle: React.CSSProperties = {
+    background: 'white',
+    width: '100%',
+    height: '100%',
+    marginRight: 8,
+};
+
+const evenWidthStyle: React.CSSProperties = {
+    width: '33%',
+};
+
+const flexStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: '100%',
+};
 
 interface IStateLoading {
     initialized: false;
@@ -111,56 +130,86 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                 headerTemplate={gettext('Compare article versions')}
                 contentPadding="none"
             >
-                <Spacer
-                    h
-                    gap="8"
+                <table
                     style={{
-                        background: '#E8EAED',
-                        padding: 8,
+                        width: '100%',
                         height: '100%',
-                        alignItems: 'start',
+                        padding: 8,
+                        background: '#E8EAED',
                     }}
-                    noWrap
                 >
-                    <Panel
-                        displayVersion={v0.toString()}
-                        onChange={(value) => {
-                            this.setState({
-                                ...state,
-                                versionsPicked: [value, v1],
-                            });
-                        }}
-                        currentVersion={this.props.versions[v0]}
-                        fieldsData={fieldsData1}
-                        profile={profile1}
-                        versions={this.props.versions}
-                    />
-                    <Panel
-                        displayVersion={v1.toString()}
-                        onChange={(value) => {
-                            this.setState({
-                                ...state,
-                                versionsPicked: [v0, value],
-                            });
-                        }}
-                        currentVersion={this.props.versions[v1]}
-                        fieldsData={fieldsData2}
-                        profile={profile2}
-                        versions={this.props.versions}
-                    />
-                    <Spacer v gap="16" style={{height: '100%'}} noWrap>
-                        <div style={{height: 52}} />
-                        <div style={{background: 'white', height: '100%', width: '100%'}}>
-                            <ViewDifference
-                                profile1={profile2}
-                                profile2={profile1}
-                                fieldsData1={fieldsData2}
-                                fieldsData2={fieldsData1}
-                                fieldPadding={ITEM_PADDING}
-                            />
-                        </div>
-                    </Spacer>
-                </Spacer>
+                    <thead>
+                        <tr
+                            style={{
+                                ...flexStyle,
+                                marginRight: 8,
+                                paddingBottom: 8,
+                            }}
+                        >
+                            <th style={evenWidthStyle}>
+                                <VersionOptions
+                                    displayVersion={v1.toString()}
+                                    onChange={(value) => {
+                                        this.setState({
+                                            ...state,
+                                            versionsPicked: [v0, value],
+                                        });
+                                    }}
+                                    currentVersion={this.props.versions[v1]}
+                                    versions={this.props.versions}
+                                />
+                            </th>
+                            <th style={evenWidthStyle}>
+                                <VersionOptions
+                                    displayVersion={v0.toString()}
+                                    onChange={(value) => {
+                                        this.setState({
+                                            ...state,
+                                            versionsPicked: [value, v1],
+                                        });
+                                    }}
+                                    currentVersion={this.props.versions[v0]}
+                                    versions={this.props.versions}
+                                />
+                            </th>
+                            <th style={evenWidthStyle} />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            style={{
+                                ...flexStyle,
+                                background: '#E8EAED',
+                            }}
+                        >
+                            <td style={previewItemStyle}>
+                                <PreviewAuthoringItem
+                                    fieldsData={fieldsData2}
+                                    profile={profile2}
+                                    fieldPadding={ITEM_PADDING}
+                                />
+                            </td>
+                            <td style={previewItemStyle}>
+                                <PreviewAuthoringItem
+                                    fieldsData={fieldsData1}
+                                    profile={profile1}
+                                    fieldPadding={ITEM_PADDING}
+                                />
+                            </td>
+                            <td style={{background: 'white', height: '100%', width: '100%'}}>
+                                <ViewDifference
+                                    gap="16"
+                                    noWrap
+                                    profile1={profile2}
+                                    profile2={profile1}
+                                    fieldsData1={fieldsData2}
+                                    fieldsData2={fieldsData1}
+                                    fieldPadding={ITEM_PADDING}
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </Modal>
         );
     }

@@ -12,6 +12,8 @@ interface IProps {
     fieldsData1: Map<string, any>;
     fieldsData2: Map<string, any>;
     fieldPadding: number;
+    gap?: '16';
+    noWrap?: boolean;
 }
 
 export class ViewDifference extends React.PureComponent<IProps> {
@@ -28,7 +30,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
         const allFields2 = profile2.header.merge(profile2.content);
 
         return (
-            <Spacer v gap="8">
+            <Spacer v gap={`${this.props.gap ?? '8'}`} noWrap={this.props.noWrap}>
                 {
                     allFields2.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
@@ -112,7 +114,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
                         }
                     }).toArray()
                 }
-
                 { // show removed fields
                     allFields1.filter((field) => allFields2.has(field.id) !== true).map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
