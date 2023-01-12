@@ -12,6 +12,10 @@ import {
     IExtensionActivationResult,
     ITopBarWidget,
     IExposedFromAuthoring,
+    IAuthoringStorage,
+    IFieldsAdapter,
+    IStorageAdapter,
+    IRestApiResponse,
 } from 'superdesk-api';
 import {AuthoringReact} from './authoring-react';
 import {authoringStorageIArticle} from './data-layer';
@@ -37,6 +41,10 @@ import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
 import ExportModal from './toolbar/export-modal';
+import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {getArticleAdapter} from './article-adapter';
+import {ui} from 'core/ui-utils';
 import TranslateModal from './toolbar/translate-modal';
 
 function getAuthoringActionsFromExtensions(
@@ -106,6 +114,46 @@ function getPublishToolbarWidget(
 
     return publishWidgetButton;
 }
+
+const getCompareVersionsModal = (
+    getLatestItem: () => IArticle,
+    authoringStorage: IAuthoringStorage<IArticle>,
+    fieldsAdapter: IFieldsAdapter<IArticle>,
+    storageAdapter: IStorageAdapter<IArticle>,
+): IAuthoringAction => ({
+    label: gettext('Compare versions'),
+    onTrigger: () => {
+        const article = getLatestItem();
+
+        Promise.all([
+            httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                method: 'GET',
+                path: `/archive/${article._id}?version=all`,
+            }),
+            getArticleAdapter(),
+        ]).then(([res, adapter]) => {
+            const versions = res._items.map((item) => adapter.toAuthoringReact(item)).reverse();
+
+            if (versions.length <= 1) {
+                ui.alert(gettext('At least two versions are needed for comparison. This article has only one.'));
+            } else {
+                showModal(({closeModal}) => {
+                    return (
+                        <CompareArticleVersionsModal
+                            closeModal={closeModal}
+                            authoringStorage={authoringStorage}
+                            fieldsAdapter={fieldsAdapter}
+                            storageAdapter={storageAdapter}
+                            versions={versions}
+                            article={article}
+                            getLanguage={() => article.language}
+                        />
+                    );
+                });
+            }
+        });
+    },
+});
 
 const getExportModal = (
     getLatestItem: () => IArticle,
@@ -289,6 +337,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 getLatestItem,
                                 handleUnsavedChanges,
                                 hasUnsavedChanges,
+                                authoringStorage,
+                                fieldsAdapter,
+                                storageAdapter,
                             }) => {
                                 return Promise.all([
                                     getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
@@ -298,6 +349,12 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                     return [
                                         saveAsTemplate(item),
+                                        getCompareVersionsModal(
+                                            getLatestItem,
+                                            authoringStorage,
+                                            fieldsAdapter,
+                                            storageAdapter,
+                                        ),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                         getTranslateAction(getLatestItem),
                                         ...authoringActionsFromExtensions,
