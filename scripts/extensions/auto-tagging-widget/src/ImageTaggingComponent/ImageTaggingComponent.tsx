@@ -2,14 +2,14 @@ import * as React from "react";
 import { ISuperdesk } from "superdesk-api";
 import { ToggleBoxNext } from "superdesk-ui-framework";
 
-interface Tag {
+interface ITag {
   title: string;
   type: string;
   pubStatus: boolean;
   weight: number;
 }
 
-interface Image {
+interface IImage {
   imageUrl: string;
   thumbnailUrl: string;
   id?: string;
@@ -22,9 +22,7 @@ interface Image {
   archivedTime?: string;
 }
 
-interface ServerResponse {}
-
-interface Props {
+interface IProps {
   superdesk: ISuperdesk;
   data: any;
   style?: React.CSSProperties;
@@ -86,17 +84,17 @@ const cardStyle: React.CSSProperties = {
 
 let isMounted: boolean = false;
 
-const ImageTaggingComponent = (props: Props) => {
+const ImageTaggingComponent = (props: IProps) => {
   const { superdesk, data, style } = props;
   const { httpRequestJsonLocal } = superdesk;
 
   const [showImages] = React.useState<boolean>(true);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [fetchError, setFetchError] = React.useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = React.useState<Image | null>(null);
-  const [images, setImages] = React.useState<Image[]>([]);
+  const [selectedImage, setSelectedImage] = React.useState<IImage | null>(null);
+  const [images, setImages] = React.useState<Array<IImage>>([]);
 
-  const fetchImages = async (item: Tag[], signal: AbortSignal) => {
+  const fetchImages = async (item: Array<ITag>, signal: AbortSignal) => {
     setIsLoading(true);
     httpRequestJsonLocal({
       abortSignal: signal,
@@ -107,12 +105,12 @@ const ImageTaggingComponent = (props: Props) => {
         item,
       },
     })
-      .then((data: any) => {
+      .then((res: any) => {
         if (isMounted) {
           setFetchError(false);
           try {
-            setSelectedImage(data.result[0]);
-            setImages(data.result ?? []);
+            setSelectedImage(res.result[0]);
+            setImages(res.result ?? []);
           } catch {
             setSelectedImage(null);
             setImages([]);
@@ -126,7 +124,7 @@ const ImageTaggingComponent = (props: Props) => {
   };
 
   const formatTags = (concepts: any) => {
-    let res: Tag[] = [];
+    let res: Array<ITag> = [];
     for (const key in concepts) {
       if (key === "subject") {
         concepts[key].forEach((concept: any) => {
@@ -151,13 +149,13 @@ const ImageTaggingComponent = (props: Props) => {
     return res;
   };
 
-  const handleClickImage = (image: Image) => {
+  const handleClickImage = (image: IImage) => {
     setSelectedImage(image);
   };
 
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    image: any
+    image: any,
   ) => {
     try {
       event.dataTransfer.setData(
@@ -189,9 +187,11 @@ const ImageTaggingComponent = (props: Props) => {
           },
           byline: image.byline ?? "",
           _created: image.dateCreated ?? "",
-        })
+        }),
       );
-    } catch {}
+    } catch {
+      return;
+    }
   };
 
   React.useEffect(() => {
@@ -250,7 +250,7 @@ const ImageTaggingComponent = (props: Props) => {
             </div>
             <div style={gridItemRightStyle}>
               <div style={imageContentStyle}>
-                {images.map((image: Image, i: number) => (
+                {images.map((image: IImage, i: number) => (
                   <div key={i} style={cardStyle}>
                     <div style={imageWrapperStyle}>
                       <img

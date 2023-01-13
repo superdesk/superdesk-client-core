@@ -49,7 +49,10 @@ interface IIMatricsFields {
     };
 }
 
-type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse;};
+type IEditableData = {
+    original: IAutoTaggingResponse; 
+    changes: IAutoTaggingResponse;
+};
 
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
@@ -166,7 +169,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
         private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
-        
         constructor(props: IProps) {
             super(props);
 
@@ -709,8 +711,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {allGroupedAndSorted.map((item) => item).toArray()}
-                                            {this.state.showImageWidget &&
-                                                <ImageTaggingComponent superdesk={superdesk} data={toServerFormat(data.changes.analysis, superdesk)} />}
+                                            {this.state.showImageWidget && <ImageTaggingComponent
+                                                superdesk={superdesk}
+                                                data={toServerFormat(data.changes.analysis, superdesk)}
+                                            />}
                                         </div>
                                     </React.Fragment>
                                 );
