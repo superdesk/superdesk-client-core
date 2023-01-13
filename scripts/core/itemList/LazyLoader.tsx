@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
-import {EmptyState} from 'superdesk-ui-framework/react';
+import {EmptyState, ListItemLoader} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     pageSize: number;
@@ -207,7 +207,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                     {(() => {
                         if (loading === true) {
                             return (
-                                <div style={messageStyles} data-test-id="loading">{gettext('Loading...')}</div>
+                                <ListItemLoader />
                             );
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
