@@ -1220,7 +1220,7 @@ declare module 'superdesk-api' {
         sams_settings?: {
             allowed_sets?: Array<string>;
         };
-        send_to_desk_allowed?: boolean;
+        send_to_desk_allowed: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
