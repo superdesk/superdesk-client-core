@@ -29,7 +29,9 @@ export function getInitialDestination(
         }
     })();
 
-    if (!availableDesks.map((x) => x._id).includes(destinationDesk)) {
+    // If destinationDesk isn't found in availableDesks we set the
+    // destinationDesk to the first item from availableDesks
+    if (availableDesks.filter(({_id}) => _id === destinationDesk).count() === 0) {
         destinationDesk = availableDesks.first()?._id;
     }
 

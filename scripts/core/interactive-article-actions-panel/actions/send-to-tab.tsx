@@ -32,7 +32,7 @@ interface IState {
 }
 
 export class SendToTab extends React.PureComponent<IProps, IState> {
-    availableDesks: OrderedMap<string, IDesk>;
+    private availableDesks: OrderedMap<string, IDesk>;
 
     constructor(props: IProps) {
         super(props);

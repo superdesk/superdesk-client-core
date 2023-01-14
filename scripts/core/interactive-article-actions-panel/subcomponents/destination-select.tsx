@@ -14,6 +14,8 @@ interface IProps {
     includePersonalSpace: boolean;
     disallowedStages?: Array<IStage['_id']>;
     hideStages?: boolean;
+
+    // Defaults to all desks
     availableDesks?: OrderedMap<string, IDesk>;
 }
 
