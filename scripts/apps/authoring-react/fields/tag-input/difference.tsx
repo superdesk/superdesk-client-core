@@ -1,8 +1,8 @@
 import React from 'react';
-import {IDifferenceComponentProps, IKeywordsFieldConfig, IKeywordsValueOperational} from 'superdesk-api';
+import {IDifferenceComponentProps, ITagInputFieldConfig, ITagInputValueOperational} from 'superdesk-api';
 import {DifferenceGeneric} from '../difference-generic';
 
-type IProps = IDifferenceComponentProps<IKeywordsValueOperational, IKeywordsFieldConfig>;
+type IProps = IDifferenceComponentProps<ITagInputValueOperational, ITagInputFieldConfig>;
 
 export class Difference extends React.PureComponent<IProps> {
     render() {
@@ -12,7 +12,7 @@ export class Difference extends React.PureComponent<IProps> {
             <DifferenceGeneric
                 items1={value1 == null ? [] : [value1]}
                 items2={value2 == null ? [] : [value2]}
-                getId={(item) => item[0]} // TODO: FIX so we pass the full array of items not just [0]
+                getId={(item) => item.toString()}
                 template={({item}) => <span>{item}</span>}
             />
         );

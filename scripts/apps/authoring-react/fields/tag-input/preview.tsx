@@ -1,7 +1,7 @@
 import React from 'react';
-import {IKeywordsFieldConfig, IKeywordsValueOperational, IPreviewComponentProps} from 'superdesk-api';
+import {ITagInputFieldConfig, ITagInputValueOperational, IPreviewComponentProps} from 'superdesk-api';
 
-type IProps = IPreviewComponentProps<IKeywordsValueOperational, IKeywordsFieldConfig>;
+type IProps = IPreviewComponentProps<ITagInputValueOperational, ITagInputFieldConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {

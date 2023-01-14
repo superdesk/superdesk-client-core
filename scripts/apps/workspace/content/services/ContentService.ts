@@ -315,8 +315,6 @@ export function ContentService(api, templates, desks, packages: IPackagesService
                 });
         }
 
-        debugger;
-
         return self._fieldsPromise;
     }
 
@@ -378,7 +376,6 @@ export function ContentService(api, templates, desks, packages: IPackagesService
             return this.getType(profileId).then((profile) => {
                 scope.schema = this.schema(profile, item.type);
                 scope.editor = this.editor(profile, item.type);
-                debugger;
                 scope.fields = this.fields(profile);
 
                 return profile;

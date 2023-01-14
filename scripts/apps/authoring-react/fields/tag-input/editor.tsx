@@ -2,12 +2,12 @@ import React from 'react';
 import {TagInput} from 'superdesk-ui-framework/react';
 import {
     IEditorComponentProps,
-    IKeywordsFieldConfig,
-    IKeywordsUserPreferences,
-    IKeywordsValueOperational,
+    ITagInputFieldConfig,
+    ITagInputUserPreferences,
+    ITagInputValueOperational,
 } from 'superdesk-api';
 
-type IProps = IEditorComponentProps<IKeywordsValueOperational, IKeywordsFieldConfig, IKeywordsUserPreferences>;
+type IProps = IEditorComponentProps<ITagInputValueOperational, ITagInputFieldConfig, ITagInputUserPreferences>;
 
 export class Editor extends React.PureComponent<IProps> {
     render() {
@@ -17,7 +17,7 @@ export class Editor extends React.PureComponent<IProps> {
             <Container>
                 <TagInput
                     items={this.props.value}
-                    label={'Keywords'}
+                    label={'Tag-input'}
                     freetype
                 />
             </Container>

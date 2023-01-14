@@ -231,10 +231,10 @@ declare module 'superdesk-api' {
 
     // AUTHORING-REACT FIELD TYPES - keywords
 
-    export type IKeywordsValueOperational = Array<string>;
-    export type IKeywordsValueStorage = IKeywordsValueOperational;
-    export interface IKeywordsFieldConfig extends ICommonFieldConfig {};
-    export type IKeywordsUserPreferences = never;
+    export type ITagInputValueOperational = Array<string>;
+    export type ITagInputValueStorage = ITagInputValueOperational;
+    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
 
