@@ -105,7 +105,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
         const showButtons = searchBarExtended && this.state.searchInputValue.trim().length > 0;
         const actionButtons: React.ReactNode = (
             debounced != null && showButtons
-                ? (removeButton)
+                ? removeButton
                 : (
                     showButtons
                         ? (
