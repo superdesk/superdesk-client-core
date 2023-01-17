@@ -1,18 +1,20 @@
 import React from 'react';
-import {DebounceInput} from 'react-debounce-input';
 import {uniqueId} from 'lodash';
-import './style.scss';
 import {gettext} from 'core/utils';
 import {ManualSearch} from './manual';
+import {DebounceInput} from 'react-debounce-input';
+import {IconButton} from 'superdesk-ui-framework/react';
+import './style.scss';
 
 interface IProps {
     onSearch(queryString: string): void;
     extendOnOpen?: boolean;
     allowCollapsed?: boolean;
-    timeout?: number;
     minLength?: number;
     initialValue?: string;
-    debounce?: boolean;
+    debounced?: {
+        timeout: number;
+    };
 }
 
 interface IState {
@@ -87,7 +89,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {timeout, debounce} = this.props;
+        const {debounced} = this.props;
         const {searchBarExtended} = this.state;
         const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
@@ -101,6 +103,27 @@ export default class SearchBar extends React.Component<IProps, IState> {
             </button>
         );
         const showButtons = searchBarExtended && this.state.searchInputValue.trim().length > 0;
+        const actionButtons: React.ReactNode = (
+            debounced?.timeout != null && showButtons
+                ? (removeButton)
+                : (
+                    showButtons
+                        ? (
+                            <>
+                                {removeButton}
+
+                                <IconButton
+                                    style="outline"
+                                    size="small"
+                                    ariaValue={gettext('Search')}
+                                    icon="chevron-right-thin"
+                                    onClick={() => this.props.onSearch(this.state.searchInputValue)}
+                                />
+                            </>
+                        )
+                        : null
+                )
+        );
 
         return (
             <div className={'SearchBar flat-searchbar' + (searchBarExtended ? ' extended' : '')}>
@@ -114,29 +137,29 @@ export default class SearchBar extends React.Component<IProps, IState> {
                         <i className="icon-search" />
                     </label>
                     {
-                        debounce === true
+                        debounced != null
                             ? (
                                 <>
                                     <DebounceInput
                                         minLength={minLength}
-                                        debounceTimeout={timeout}
+                                        debounceTimeout={debounced?.timeout}
                                         value={this.state.searchInputValue}
                                         onChange={this.onSearchChange}
                                         id={_uniqueId}
                                         placeholder={gettext('Search')}
                                         type="text"
                                     />
-                                    {showButtons && removeButton}
+
+                                    {actionButtons}
                                 </>
                             )
                             : (
                                 <ManualSearch
-                                    showButtons={showButtons}
-                                    removeButton={removeButton}
+                                    actionButtons={actionButtons}
                                     onInputChange={(value) => this.setState({
                                         searchInputValue: value,
                                     })}
-                                    search={() => this.props.onSearch(this.state.searchInputValue)}
+                                    onSearch={() => this.props.onSearch(this.state.searchInputValue)}
                                 />
                             )
                     }

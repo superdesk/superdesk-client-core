@@ -276,7 +276,6 @@ export class SelectFieldPopup extends React.Component<any, any> {
                             minLength={1}
                             extendOnOpen={true}
                             ref={(node) => this.dom.search = node}
-                            timeout={100}
                             allowCollapsed={false}
                         />
                     </div>
@@ -347,7 +346,6 @@ export class SelectFieldPopup extends React.Component<any, any> {
                                 minLength={1}
                                 extendOnOpen={true}
                                 ref={(node) => this.dom.search = node}
-                                timeout={100}
                                 allowCollapsed={false}
                             />
                         )}

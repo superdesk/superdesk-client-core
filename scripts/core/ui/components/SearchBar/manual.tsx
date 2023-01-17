@@ -1,12 +1,10 @@
-import {gettext} from 'core/utils';
 import React from 'react';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
 
 interface IProps {
-    search(): void;
+    onSearch(): void;
     onInputChange(value: string): void;
-    removeButton: React.ReactNode;
-    showButtons: boolean;
+    actionButtons: React.ReactNode;
 }
 
 export class ManualSearch extends React.PureComponent<IProps> {
@@ -25,27 +23,15 @@ export class ManualSearch extends React.PureComponent<IProps> {
                 <input
                     onKeyUp={(e) => {
                         if (e.key === 'Enter') {
-                            this.props.search();
+                            this.props.onSearch();
                         }
                     }}
                     onChange={(e) => this.props.onInputChange(e.target.value)}
                     type="text"
                     placeholder={gettext('Search...')}
                 />
-                {
-                    this.props.showButtons && (
-                        <>
-                            {this.props.removeButton}
-                            <IconButton
-                                style="outline"
-                                size="small"
-                                ariaValue={gettext('Search')}
-                                icon="chevron-right-thin"
-                                onClick={this.props.search}
-                            />
-                        </>
-                    )
-                }
+
+                {this.props.actionButtons}
             </div>
         );
     }
