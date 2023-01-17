@@ -24,6 +24,8 @@ import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {merge} from 'lodash';
+import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
+import ng from 'core/services/ng';
 
 let body = angular.element('body');
 
@@ -197,6 +199,7 @@ export function startApp(
                 document.write('Invalid date format specified in config.view.dateFormat');
                 return;
             }
+
             /**
              * @ngdoc module
              * @name superdesk-client
@@ -209,6 +212,12 @@ export function startApp(
                 'superdesk.apps',
                 'superdesk.register_extensions',
             ].concat(appConfig.apps || []), {strictDi: true});
+
+            setTimeout(() => { // required to avoid protractor timing out and failing tests
+                if (ng.get('session').sessionId != null) { // user logged in
+                    maybeDisplayInvalidInstanceConfigurationMessage();
+                }
+            });
 
             window['superdeskIsReady'] = true;
 
