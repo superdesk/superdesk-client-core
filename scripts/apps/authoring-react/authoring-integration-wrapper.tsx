@@ -46,6 +46,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
 import TranslateModal from './toolbar/translate-modal';
+import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -179,6 +180,46 @@ const getExportModal = (
     },
 });
 
+const getSaveAsTemplate = (item: IArticle): IAuthoringAction => ({
+    label: gettext('Save as template'),
+    onTrigger: () => (
+        showModal(({closeModal}) => {
+            return (
+                <TemplateModal
+                    closeModal={closeModal}
+                    item={item}
+                />
+            );
+        })
+    ),
+});
+
+const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
+const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Marked for desks'),
+    onTrigger: () => (
+        showModal(({closeModal}) => {
+            return (
+                <MarkForDesksModal
+                    closeModal={closeModal}
+                    article={getItem()}
+                />
+            );
+        })
+    ),
+});
+
 interface IPropsWrapper extends IProps {
     onClose?(): void;
     getInlineToolbarActions?(options: IExposedFromAuthoring<IArticle>): {
@@ -196,18 +237,6 @@ interface IPropsWrapper extends IProps {
 interface IState {
     isSidebarCollapsed: boolean;
 }
-
-const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
-    label: gettext('Translate'),
-    onTrigger: () => {
-        showModal(({closeModal}) => (
-            <TranslateModal
-                closeModal={closeModal}
-                article={getItem()}
-            />
-        ));
-    },
-});
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
@@ -284,20 +313,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
-        const saveAsTemplate = (item: IArticle): IAuthoringAction => ({
-            label: gettext('Save as template'),
-            onTrigger: () => (
-                showModal(({closeModal}) => {
-                    return (
-                        <TemplateModal
-                            closeModal={closeModal}
-                            item={item}
-                        />
-                    );
-                })
-            ),
-        });
-
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
@@ -348,15 +363,16 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
-                                        saveAsTemplate(item),
+                                        getSaveAsTemplate(item),
                                         getCompareVersionsModal(
                                             getLatestItem,
                                             authoringStorage,
                                             fieldsAdapter,
                                             storageAdapter,
                                         ),
+                                        getMarkedForDesksModal(getLatestItem),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
-                                        getTranslateAction(getLatestItem),
+                                        getTranslateModal(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
                                     ];

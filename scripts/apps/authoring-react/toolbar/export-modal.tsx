@@ -111,7 +111,7 @@ export default class ExportModal extends React.PureComponent<IProps, IState> {
                             onClick={() => this.exportArticle()}
                             type="primary"
                             text={gettext('Export')}
-                            disabled={state.selectedFormatter?.length > 0}
+                            disabled={!state.selectedFormatter}
                         />
                         <Button
                             onClick={() => this.props.closeModal()}
