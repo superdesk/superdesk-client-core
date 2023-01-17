@@ -31,7 +31,7 @@ export function getInitialDestination(
 
     // If destinationDesk isn't found in availableDesks we set the
     // destinationDesk to the first item from availableDesks
-    if (availableDesks.filter(({_id}) => _id === destinationDesk).count() === 0) {
+    if (!availableDesks.has(destinationDesk)) {
         destinationDesk = availableDesks.first()?._id;
     }
 
