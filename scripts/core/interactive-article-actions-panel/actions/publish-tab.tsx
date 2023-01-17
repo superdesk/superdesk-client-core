@@ -27,6 +27,8 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     item: IArticle;

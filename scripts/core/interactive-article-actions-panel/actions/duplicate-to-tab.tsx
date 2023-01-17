@@ -27,10 +27,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            selectedDestination: getInitialDestination(
-                props.items,
-                canSendToPersonal(props.items),
-            ),
+            selectedDestination: getInitialDestination(props.items, canSendToPersonal(props.items)),
         };
 
         this.duplicateItems = this.duplicateItems.bind(this);

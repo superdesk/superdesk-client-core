@@ -8,7 +8,6 @@ import {getInitialDestination} from '../utils/get-initial-destination';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;

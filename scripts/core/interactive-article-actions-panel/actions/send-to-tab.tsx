@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
 import {Button, Text, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -17,7 +17,6 @@ import {
     PublishingDateOptions,
 } from '../subcomponents/publishing-date-options';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
