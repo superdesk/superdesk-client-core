@@ -50,7 +50,7 @@ interface IIMatricsFields {
 }
 
 type IEditableData = {
-    original: IAutoTaggingResponse; 
+    original: IAutoTaggingResponse;
     changes: IAutoTaggingResponse;
 };
 
