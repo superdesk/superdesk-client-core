@@ -7,7 +7,7 @@ import {ISendToDestination} from '../interfaces';
 export function getInitialDestination(
     items: Array<IArticle>,
     canSendToPersonal: boolean,
-    availableDesks: OrderedMap<string, IDesk>,
+    availableDesks: OrderedMap<string, IDesk> = sdApi.desks.getAllDesks(),
 ): ISendToDestination {
     const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 
@@ -29,7 +29,9 @@ export function getInitialDestination(
         }
     })();
 
-    if (!availableDesks.map((x) => x._id).includes(destinationDesk)) {
+    // If destinationDesk isn't found in availableDesks we set the
+    // destinationDesk to the first item from availableDesks
+    if (!availableDesks.has(destinationDesk)) {
         destinationDesk = availableDesks.first()?._id;
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
 import {Button, Text, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -17,7 +17,6 @@ import {
     PublishingDateOptions,
 } from '../subcomponents/publishing-date-options';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
@@ -32,13 +31,13 @@ interface IState {
 }
 
 export class SendToTab extends React.PureComponent<IProps, IState> {
-    availableDesks: OrderedMap<string, IDesk>;
+    private availableDesks: OrderedMap<string, IDesk>;
 
     constructor(props: IProps) {
         super(props);
 
         this.availableDesks = sdApi.desks.getAllDesks()
-            .filter((desk) => desk.send_to_desk_not_allowed === false)
+            .filter((desk) => desk.send_to_desk_not_allowed !== true)
             .toOrderedMap();
 
         this.state = {
@@ -102,7 +101,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         const sendPackages = this.props.items.every(({type}) => type === 'composite');
         const dest = this.state.selectedDestination;
 
-        if (dest.type == 'desk' && dest.desk == null) {
+        if (dest.type === 'desk' && dest.desk == null) {
             return (
                 <div
                     style={{
