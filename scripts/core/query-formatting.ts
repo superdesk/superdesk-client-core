@@ -127,10 +127,7 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
     const query: IQuery = {
         sort: q.sort,
         size: q.max_results,
-
-        // If we are on page 0 then the from field would have negative value
-        // This is why if we are on page 0 we set the from field to 0.
-        from: q.page <= 0 ? 0 : (q.page - 1) * q.max_results,
+        from: (q.page - 1) * q.max_results,
     };
 
     const filtered = {};
