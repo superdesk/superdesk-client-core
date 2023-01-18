@@ -1,16 +1,20 @@
 import React from 'react';
-import {DebounceInput} from 'react-debounce-input';
 import {uniqueId} from 'lodash';
-import './style.scss';
 import {gettext} from 'core/utils';
+import {ManualSearch} from './manual';
+import {DebounceInput} from 'react-debounce-input';
+import {IconButton} from 'superdesk-ui-framework/react';
+import './style.scss';
 
 interface IProps {
     onSearch(queryString: string): void;
     extendOnOpen?: boolean;
     allowCollapsed?: boolean;
-    timeout?: number;
     minLength?: number;
     initialValue?: string;
+    debounced?: {
+        timeout: number;
+    };
 }
 
 interface IState {
@@ -85,14 +89,45 @@ export default class SearchBar extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {timeout} = this.props;
+        const {debounced} = this.props;
         const {searchBarExtended} = this.state;
         const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
+        const removeButton: React.ReactNode = (
+            <button
+                type="button"
+                className="search-close visible"
+                onClick={this.resetSearch}
+            >
+                <i className="icon-remove-sign" />
+            </button>
+        );
+        const showButtons = searchBarExtended && this.state.searchInputValue.trim().length > 0;
+        const actionButtons: React.ReactNode = (
+            debounced != null && showButtons
+                ? removeButton
+                : (
+                    showButtons
+                        ? (
+                            <>
+                                {removeButton}
+
+                                <IconButton
+                                    style="outline"
+                                    size="small"
+                                    ariaValue={gettext('Search')}
+                                    icon="chevron-right-thin"
+                                    onClick={() => this.props.onSearch(this.state.searchInputValue)}
+                                />
+                            </>
+                        )
+                        : null
+                )
+        );
 
         return (
             <div className={'SearchBar flat-searchbar' + (searchBarExtended ? ' extended' : '')}>
-                <div className="search-handler">
+                <div className="search-handler" style={{alignItems: 'center'}}>
                     <label
                         htmlFor={_uniqueId}
                         className="trigger-icon"
@@ -101,24 +136,33 @@ export default class SearchBar extends React.Component<IProps, IState> {
                     >
                         <i className="icon-search" />
                     </label>
-                    <DebounceInput
-                        minLength={minLength}
-                        debounceTimeout={timeout}
-                        value={this.state.searchInputValue}
-                        onChange={this.onSearchChange}
-                        id={_uniqueId}
-                        placeholder={gettext('Search')}
-                        type="text"
-                    />
-                    {searchBarExtended && this.state.searchInputValue.trim().length > 0 && (
-                        <button
-                            type="button"
-                            className="search-close visible"
-                            onClick={this.resetSearch}
-                        >
-                            <i className="icon-remove-sign" />
-                        </button>
-                    )}
+                    {
+                        debounced != null
+                            ? (
+                                <>
+                                    <DebounceInput
+                                        minLength={minLength}
+                                        debounceTimeout={debounced?.timeout}
+                                        value={this.state.searchInputValue}
+                                        onChange={this.onSearchChange}
+                                        id={_uniqueId}
+                                        placeholder={gettext('Search')}
+                                        type="text"
+                                    />
+
+                                    {actionButtons}
+                                </>
+                            )
+                            : (
+                                <ManualSearch
+                                    actionButtons={actionButtons}
+                                    onInputChange={(value) => this.setState({
+                                        searchInputValue: value,
+                                    })}
+                                    onSearch={() => this.props.onSearch(this.state.searchInputValue)}
+                                />
+                            )
+                    }
                 </div>
             </div>
         );
