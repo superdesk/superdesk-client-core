@@ -47,13 +47,11 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
 
     loadItems(from, to): Promise<IRestApiResponse<any>> {
         const pageSize = to - from;
-        const page = Math.floor(from / pageSize);
+        const page = from === 0 ? 1 : Math.ceil(from / pageSize);
 
         const withPagination = {
             ...this.props.query,
-
-            // Page number starts from 1
-            page: page === 0 ? 1 : page,
+            page: page,
             max_results: pageSize,
         };
 
