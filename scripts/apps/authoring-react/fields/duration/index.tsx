@@ -10,10 +10,12 @@ import {Editor} from './editor';
 import {Preview} from './preview';
 import {Difference} from './difference';
 
+export const DURATION_FIELD_ID = 'duration';
+
 export function geDurationField()
 : ICustomFieldType<IDurationValueOperational, IDurationValueStorage, IDurationFieldConfig, IDurationUserPreferences> {
     const field: ReturnType<typeof geDurationField> = {
-        id: 'duration',
+        id: DURATION_FIELD_ID,
         label: gettext('Duration (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

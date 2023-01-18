@@ -1,6 +1,6 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {IArticle, IDesk} from 'superdesk-api';
+import {Button, Text, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
@@ -17,6 +17,7 @@ import {
     PublishingDateOptions,
 } from '../subcomponents/publishing-date-options';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
@@ -31,13 +32,21 @@ interface IState {
 }
 
 export class SendToTab extends React.PureComponent<IProps, IState> {
+    availableDesks: OrderedMap<string, IDesk>;
+
     constructor(props: IProps) {
         super(props);
 
-        const selectedDestination = getInitialDestination(props.items, canSendToPersonal(props.items));
+        this.availableDesks = sdApi.desks.getAllDesks()
+            .filter((desk) => desk.send_to_desk_not_allowed === false)
+            .toOrderedMap();
 
         this.state = {
-            selectedDestination: selectedDestination,
+            selectedDestination: getInitialDestination(
+                props.items,
+                canSendToPersonal(props.items),
+                this.availableDesks,
+            ),
             publishingDateOptions: getInitialPublishingDateOptions(props.items),
         };
 
@@ -91,12 +100,30 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         })();
 
         const sendPackages = this.props.items.every(({type}) => type === 'composite');
+        const dest = this.state.selectedDestination;
+
+        if (dest.type == 'desk' && dest.desk == null) {
+            return (
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Text size="medium" align="center" weight="medium">
+                        {gettext('No destinations are available.')}
+                    </Text>
+                </div>
+            );
+        }
 
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            availableDesks={this.availableDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({

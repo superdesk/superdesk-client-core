@@ -1,6 +1,6 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {IContentProfileV2} from 'superdesk-api';
+import {IContentProfileV2, IPropsSpacer} from 'superdesk-api';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 import {Alert} from 'superdesk-ui-framework/react';
@@ -12,6 +12,7 @@ interface IProps {
     fieldsData1: Map<string, any>;
     fieldsData2: Map<string, any>;
     fieldPadding: number;
+    gapBetweenFields?: IPropsSpacer['gap'];
 }
 
 export class ViewDifference extends React.PureComponent<IProps> {
@@ -28,7 +29,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
         const allFields2 = profile2.header.merge(profile2.content);
 
         return (
-            <Spacer v gap="8">
+            <Spacer v gap={this.props.gapBetweenFields} noWrap>
                 {
                     allFields2.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
@@ -112,7 +113,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
                         }
                     }).toArray()
                 }
-
                 { // show removed fields
                     allFields1.filter((field) => allFields2.has(field.id) !== true).map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);

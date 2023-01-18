@@ -45,6 +45,8 @@ import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService'
 import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {computeEditor3Output} from './utilities/compute-editor3-output';
+import {package_items} from './package_items';
+import {LINKED_ITEMS_FIELD_TYPE} from '../fields/linked-items';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -67,6 +69,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         subject: getSubjectAdapter(),
         urgency: urgency,
         usageterms: usageterms,
+        groups: package_items,
     };
 
     return adapter;
@@ -307,7 +310,7 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
                     const fieldV2: IAuthoringFieldV2 = {
                         id: vocabulary._id,
                         name: vocabulary.display_name,
-                        fieldType: 'linked-items',
+                        fieldType: LINKED_ITEMS_FIELD_TYPE,
                         fieldConfig,
                     };
 

@@ -1,5 +1,5 @@
 import React, {CSSProperties} from 'react';
-import {IArticle, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -27,6 +27,8 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     item: IArticle;
@@ -43,12 +45,15 @@ interface IState {
 }
 
 export class PublishTab extends React.PureComponent<IProps, IState> {
+    availableDesks: OrderedMap<string, IDesk>;
+
     constructor(props: IProps) {
         super(props);
 
+        this.availableDesks = sdApi.desks.getAllDesks();
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
-            selectedDestination: getInitialDestination([this.props.item], false),
+            selectedDestination: getInitialDestination([this.props.item], false, this.availableDesks),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
                 target_subscribers: [],
@@ -154,6 +159,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 publishFromEnabled && (
                                     <ToggleBox title={gettext('From')} initiallyOpen>
                                         <DestinationSelect
+                                            availableDesks={this.availableDesks}
                                             value={this.state.selectedDestination}
                                             onChange={(value) => {
                                                 this.setState({

@@ -92,7 +92,7 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
                         }}
                         optionLabel="name"
                         options={state.availableHighlights}
-                        value={state.availableHighlights.filter(({_id}) => state.markedHighlights.includes(_id))}
+                        value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
                     />
                     <Spacer h gap="16" justifyContent="end" noWrap>
                         <Button

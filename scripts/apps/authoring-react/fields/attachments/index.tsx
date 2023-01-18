@@ -22,9 +22,11 @@ export function getWidgetLabel(): string {
     return gettext('Attachments');
 }
 
+export const ATTACHMENTS_FIELD_ID = 'attachments';
+
 export function getAttachmentsField(): IAttachmentsField {
     const field: IAttachmentsField = {
-        id: 'attachments',
+        id: ATTACHMENTS_FIELD_ID,
         label: gettext('Attachments (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

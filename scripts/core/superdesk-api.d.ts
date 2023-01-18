@@ -90,6 +90,12 @@ declare module 'superdesk-api' {
          * allows to only do it once after timeout passes, instead of on every character change.
          */
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+
+        /**
+        * Immediately autosaves without a delay if there is anything to autosave.
+        * Is meant to be used before unmounting the component.
+        */
+        flush(): Promise<void>;
     }
 
     /**
@@ -116,6 +122,9 @@ declare module 'superdesk-api' {
 
     export type IFieldsData = import('immutable').Map<string, unknown>;
 
+    /**
+     * Check authoring-react.tsx for comments on individual methods.
+     */
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
@@ -137,7 +146,7 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
-        discardChangesAndClose(): void;
+        initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
     }
@@ -348,6 +357,24 @@ declare module 'superdesk-api' {
     export type ILinkedItemsValueStorage = ILinkedItemsValueOperational;
     export type ILinkedItemsUserPreferences = never;
     export type ILinkedItemsConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - packages
+
+    interface IPackageItem {
+        type: IArticle['type'];
+        headline: string;
+        residRef: string;
+        location: string;
+        slugline: string;
+        renditions: {};
+        itemClass: string;
+        guid: string;
+    }
+
+    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export type IPackageItemsValueStorage = IPackageItemsValueOperational;
+    export type IPackageItemsUserPreferences = never;
+    export type IPackageItemsConfig = ICommonFieldConfig;
 
     // AUTHORING-REACT FIELD TYPES - media
 
@@ -873,6 +900,16 @@ declare module 'superdesk-api' {
     }
 
     export type IHighlightResponse = IRestApiResponse<IHighlight>;
+    export interface ITranslation extends IBaseRestApiResponse {
+        label: string;
+        language: string;
+        source: boolean;
+        destination: boolean;
+    }
+
+    export interface IArticleFormatter extends IBaseRestApiResponse {
+        name: string;
+    }
 
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
@@ -1037,7 +1074,7 @@ declare module 'superdesk-api' {
             }
         };
         version: any;
-        template: any;
+        template: ITemplate['_id'];
         original_creator: string;
         unique_id: any;
         operation: any;
@@ -1191,6 +1228,7 @@ declare module 'superdesk-api' {
         sams_settings?: {
             allowed_sets?: Array<string>;
         };
+        send_to_desk_not_allowed: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -1394,6 +1432,12 @@ declare module 'superdesk-api' {
         internal: boolean;
     }
 
+
+    export interface ISubjectCode {
+        name: string;
+        qcode: string;
+        parent?: string;
+    }
 
     // PAGE
 
@@ -1968,7 +2012,7 @@ declare module 'superdesk-api' {
     export interface IPropsSpacer {
         h?: boolean; // horizontal
         v?: boolean; // vertical
-        gap: '4' | '8' | '16' | '32' | '64';
+        gap: '0' | '4' | '8' | '16' | '32' | '64';
         justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
         alignItems?: 'start' | 'end' | 'center' | 'stretch';
         noGrow?: boolean;
@@ -3057,14 +3101,14 @@ declare module 'superdesk-api' {
     }
 
     export interface ITemplate extends IBaseRestApiResponse {
-        data: IArticle,
-        is_public: boolean,
+        data: Partial<IArticle>;
+        is_public: boolean;
         next_run?: any;
         schedule?: any;
-        template_desks: Array<IDesk['_id']>,
-        template_name: string,
-        template_type: 'create' | 'kill' | string,
-        user: IUser['_id']
+        template_desks: Array<IDesk['_id']>;
+        template_name: string;
+        template_type: 'create' | 'kill' | string;
+        user: IUser['_id'];
     }
 
 
