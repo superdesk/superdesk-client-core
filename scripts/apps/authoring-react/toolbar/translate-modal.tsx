@@ -102,7 +102,7 @@ export default class TranslateModal extends React.PureComponent<IProps, IState> 
                             onClick={() => this.translate()}
                             text={gettext('Translate')}
                             type="primary"
-                            disabled={!state.selectedLanguage}
+                            disabled={(state.selectedLanguage?.length ?? 0) < 1}
                         />
                         <Button
                             onClick={() => this.props.closeModal()}
