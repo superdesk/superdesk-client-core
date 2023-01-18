@@ -15,7 +15,7 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-import ImageTaggingComponent from './ImageTaggingComponent/ImageTaggingComponent';
+import {getImageTaggingComponent} from './ImageTaggingComponent/ImageTaggingComponent';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -49,20 +49,18 @@ interface IIMatricsFields {
     };
 }
 
-type IEditableData = {
-    original: IAutoTaggingResponse;
-    changes: IAutoTaggingResponse;
-};
+type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse;};
 
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
     data: 'not-initialized' | 'loading' | IEditableData;
     newItem: INewItem | null;
     vocabularyLabels: Map<string, string> | null;
-    showImageWidget: boolean;
+    showImagesPreference: boolean;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
+const SHOW_IMAGES_PREFERENCE = 'show_images';
 
 function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
     return data.changes.analysis.has(qcode);
@@ -164,11 +162,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     const TagListComponent = getTagsListComponent(superdesk);
     const NewItemComponent = getNewItemComponent(superdesk);
+    const ImageTaggingComponent = getImageTaggingComponent(superdesk);
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
         private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
+
         constructor(props: IProps) {
             super(props);
 
@@ -177,7 +177,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 newItem: null,
                 runAutomaticallyPreference: 'loading',
                 vocabularyLabels: null,
-                showImageWidget: true,
+                showImagesPreference: false,
             };
 
             this._mounted = false;
@@ -360,10 +360,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             Promise.all([
                 getAutoTaggingVocabularyLabels(superdesk),
                 preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
-            ]).then(([vocabularyLabels, runAutomatically = false]) => {
+                preferences.get(SHOW_IMAGES_PREFERENCE),
+            ]).then(([vocabularyLabels, runAutomatically = false, showImages = false]) => {
                 this.setState({
                     vocabularyLabels,
                     runAutomaticallyPreference: runAutomatically,
+                    showImagesPreference: showImages,
                 });
 
                 this.initializeData(runAutomatically);
@@ -373,7 +375,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this._mounted = false;
         }
         render() {
-            const {runAutomaticallyPreference, vocabularyLabels, showImageWidget} = this.state;
+            const {runAutomaticallyPreference, vocabularyLabels, showImagesPreference} = this.state;
 
             if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
@@ -475,6 +477,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             }
                                         }}
                                         label={{text: gettext('Run automatically')}}
+                                    />
+                                    <Switch
+                                        value={showImagesPreference}
+                                        disabled={readOnly}
+                                        onChange={() => {
+                                            const newValue = !showImagesPreference;
+                                            this.setState({showImagesPreference: newValue});
+                                            superdesk.preferences.set(SHOW_IMAGES_PREFERENCE, newValue);
+                                        }}
+                                        label={{text: gettext('Show image suggestions')}}
                                     />
                                 </ButtonGroup>
                             </div>
@@ -711,9 +723,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {allGroupedAndSorted.map((item) => item).toArray()}
-                                            {this.state.showImageWidget && <ImageTaggingComponent
-                                                superdesk={superdesk}
+                                            {this.state.showImagesPreference && <ImageTaggingComponent
                                                 data={toServerFormat(data.changes.analysis, superdesk)}
+                                                article={this.props.article}
                                             />}
                                         </div>
                                     </React.Fragment>
