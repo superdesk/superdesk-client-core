@@ -38,8 +38,6 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import HighlightsModal from './toolbar/highlights-modal';
-import {HighlightsCardContent} from './toolbar/highlights-management';
-import {ShowPopoverHoc} from 'core/helpers/show-popup-hoc';
 import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
@@ -384,7 +382,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ];
                                 });
                             }}
-                            getInlineToolbarActions={(x) => this.props.getInlineToolbarActions(x)}
+                            getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={
                                 () => Object.values(extensions)
                                     .flatMap(({activationResult}) =>
