@@ -894,8 +894,8 @@ declare module 'superdesk-api' {
 
     export interface IHighlight extends IBaseRestApiResponse {
         name: string;
-        autoInsert: string;
-        desks: Array<string>;
+        auto_insert: string;
+        desks: Array<IDesk['_id']>;
         groups: Array<string>;
     }
 

@@ -1,8 +1,8 @@
+import React from 'react';
 import {sdApi} from 'api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import React from 'react';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IArticle, IRestApiResponse, ITranslation} from 'superdesk-api';
 import {Button, Modal, Option, Select} from 'superdesk-ui-framework/react';
 
@@ -23,7 +23,7 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
-export default class TranslateModal extends React.PureComponent<IProps, IState> {
+export class TranslateModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 

@@ -1,15 +1,15 @@
-import {sdApi} from 'api';
+import React from 'react';
+import {IArticle, IHighlight} from 'superdesk-api';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {Button, Heading, IconButton, Text} from 'superdesk-ui-framework/react';
 import {Card} from 'core/ui/components/Card';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import React from 'react';
-import {IArticle, IHighlight} from 'superdesk-api';
-import {Button, Heading, IconButton, Text} from 'superdesk-ui-framework/react';
+import {sdApi} from 'api';
 
 interface IProps {
     article: IArticle;
-    closePopup(): void;
+    close(): void;
 }
 
 interface IStateLoading {
@@ -34,17 +34,6 @@ export class HighlightsCardContent extends React.PureComponent<IProps, IState> {
         this.unmarkHighlight = this.unmarkHighlight.bind(this);
     }
 
-    componentDidMount(): void {
-        sdApi.highlights.fetchHighlights().then((res) => {
-            this.setState({
-                ...this.state,
-                initialized: true,
-                selectedHighlighIds: res._items
-                    .filter((highlight) => this.props.article.highlights.includes(highlight._id)),
-            });
-        });
-    }
-
     unmarkHighlight(highlightId: string): void {
         if (this.state.initialized) {
             const filteredHighlights = this.state.selectedHighlighIds
@@ -55,6 +44,17 @@ export class HighlightsCardContent extends React.PureComponent<IProps, IState> {
                 dispatchInternalEvent('dangerouslyForceReloadAuthoring', undefined);
             });
         }
+    }
+
+    componentDidMount(): void {
+        sdApi.highlights.fetchHighlights().then((res) => {
+            this.setState({
+                ...this.state,
+                initialized: true,
+                selectedHighlighIds: res._items
+                    .filter((highlight) => this.props.article.highlights.includes(highlight._id)),
+            });
+        });
     }
 
     render(): React.ReactNode {
@@ -74,7 +74,7 @@ export class HighlightsCardContent extends React.PureComponent<IProps, IState> {
                             {gettext('Marked for')}
                         </Heading>
                         <IconButton
-                            onClick={this.props.closePopup}
+                            onClick={this.props.close}
                             icon="close-small"
                             ariaValue={gettext('Close')}
                         />

@@ -17,7 +17,7 @@ import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import ng from 'core/services/ng';
-import {ShowPopoverHoc} from 'core/helpers/show-popup-hoc';
+import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 
 export interface IProps {
@@ -93,10 +93,10 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         group: 'start',
         priority: 0.3,
         component: () => (
-            <ShowPopoverHoc
-                Component={({closePopup}) => (
+            <WithPopover
+                component={({closePopup}) => (
                     <HighlightsCardContent
-                        closePopup={closePopup}
+                        close={closePopup}
                         article={item}
                     />
                 )}
@@ -109,7 +109,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                             onClick={(event) =>
                                 togglePopup(event.target as HTMLElement)
                             }
-                            id="select-highlights"
                             icon={
                                 item.highlights.length > 1
                                     ? 'multi-star'
@@ -119,7 +118,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                         />
                     )
                 }
-            </ShowPopoverHoc>
+            </WithPopover>
         ),
         availableOffline: true,
     });

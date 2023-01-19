@@ -102,7 +102,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         const sendPackages = this.props.items.every(({type}) => type === 'composite');
         const dest = this.state.selectedDestination;
 
-        if (dest.type == 'desk' && dest.desk == null) {
+        if (dest.type === 'desk' && dest.desk == null) {
             return (
                 <div
                     style={{

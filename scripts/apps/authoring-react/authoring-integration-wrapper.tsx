@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import {Button, ButtonGroup, IconButton, NavButton} from 'superdesk-ui-framework/react';
+import {ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -37,16 +37,16 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import HighlightsModal from './toolbar/highlights-modal';
-import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
-import ExportModal from './toolbar/export-modal';
+import {ExportModal} from './toolbar/export-modal';
+import {TemplateModal} from './toolbar/template-modal';
+import {TranslateModal} from './toolbar/translate-modal';
+import {HighlightsModal} from './toolbar/highlights-modal';
 import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
-import TranslateModal from './toolbar/translate-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -208,14 +208,14 @@ const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
     };
 };
 
-const getSaveAsTemplate = (item: IArticle): IAuthoringAction => ({
+const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Save as template'),
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
                 <TemplateModal
                     closeModal={closeModal}
-                    item={item}
+                    item={getItem()}
                 />
             );
         })
@@ -241,7 +241,6 @@ interface IState {
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
-    highlightsPopupOpen: boolean;
     private authoringReactRef: AuthoringReact<IArticle> | null;
 
     constructor(props: IPropsWrapper) {
@@ -251,7 +250,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
         };
 
-        this.highlightsPopupOpen = false;
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
         this.toggleSidebar = this.toggleSidebar.bind(this);
@@ -367,7 +365,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
-                                        getSaveAsTemplate(item),
+                                        getSaveAsTemplate(getLatestItem),
                                         getCompareVersionsModal(
                                             getLatestItem,
                                             authoringStorage,

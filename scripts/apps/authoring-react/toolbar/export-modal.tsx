@@ -1,9 +1,9 @@
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {Spacer} from 'core/ui/components/Spacer';
-import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IArticleFormatter, IRestApiResponse} from 'superdesk-api';
 import {Modal, Select, Switch, Option, Button} from 'superdesk-ui-framework/react';
+import {Spacer} from 'core/ui/components/Spacer';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {gettext} from 'core/utils';
 
 interface IProps {
     closeModal(): void;
@@ -23,7 +23,7 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
-export default class ExportModal extends React.PureComponent<IProps, IState> {
+export class ExportModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 

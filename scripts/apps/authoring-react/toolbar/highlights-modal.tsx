@@ -1,12 +1,12 @@
-import {sdApi} from 'api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
+import React from 'react';
+import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
+import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
+import {nameof} from 'core/helpers/typescript-helpers';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {isEqual} from 'lodash';
-import React from 'react';
-import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
-import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
+import {sdApi} from 'api';
 
 interface IProps {
     closeModal(): void;
@@ -26,7 +26,7 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
-export default class HighlightsModal extends React.PureComponent<IProps, IState> {
+export class HighlightsModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -35,19 +35,6 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
         };
 
         this.markHighlights = this.markHighlights.bind(this);
-    }
-
-    componentDidMount(): void {
-        Promise.all([
-            sdApi.highlights.fetchHighlights(),
-            this.fetchArticleWithHighlights(),
-        ]).then(([highlightResponse, article]: [IHighlightResponse, IArticle]) => {
-            this.setState({
-                initialized: true,
-                availableHighlights: highlightResponse._items,
-                markedHighlights: article.highlights,
-            });
-        });
     }
 
     markHighlights(): void {
@@ -60,10 +47,16 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
         }
     }
 
-    fetchArticleWithHighlights(): Promise<IArticle> {
-        return httpRequestJsonLocal<IArticle>({
-            method: 'GET',
-            path: `/archive/${this.props.article._id}`,
+    componentDidMount(): void {
+        Promise.all([
+            sdApi.highlights.fetchHighlights(),
+            sdApi.article.get(this.props.article._id),
+        ]).then(([highlightResponse, article]: [IHighlightResponse, IArticle]) => {
+            this.setState({
+                initialized: true,
+                availableHighlights: highlightResponse._items,
+                markedHighlights: article.highlights,
+            });
         });
     }
 
@@ -84,13 +77,13 @@ export default class HighlightsModal extends React.PureComponent<IProps, IState>
             >
                 <Spacer v gap="16">
                     <MultiSelect
-                        onChange={(value: any) => {
+                        onChange={(value) => {
                             this.setState({
                                 ...state,
-                                markedHighlights: value.value.map(({_id}) => _id),
+                                markedHighlights: value.map(({_id}) => _id),
                             });
                         }}
-                        optionLabel="name"
+                        optionLabel={nameof<IHighlight>('name')}
                         options={state.availableHighlights}
                         value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
                     />

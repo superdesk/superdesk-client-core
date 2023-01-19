@@ -1,17 +1,17 @@
+import React, {ReactNode} from 'react';
 import {Placement} from '@popperjs/core';
 import {showPopup} from 'core/ui/components/popupNew';
-import React, {ReactNode} from 'react';
 
 interface IProps {
     children(toggle: (referenceElement: HTMLElement) => void): ReactNode;
     placement: Placement;
-    Component: React.ComponentType<{closePopup(): void}>;
+    component: React.ComponentType<{closePopup(): void}>;
     zIndex?: number;
     closeOnHoverEnd?: boolean;
     onClose?: () => void;
 }
 
-export class ShowPopoverHoc extends React.PureComponent<IProps> {
+export class WithPopover extends React.PureComponent<IProps> {
     private closePopup?: () => void;
 
     constructor(props: IProps) {
@@ -28,7 +28,7 @@ export class ShowPopoverHoc extends React.PureComponent<IProps> {
             this.closePopup = showPopup(
                 referenceElement,
                 this.props.placement,
-                this.props.Component,
+                this.props.component,
                 this.props.zIndex,
                 this.props.closeOnHoverEnd,
                 this.props.onClose,
