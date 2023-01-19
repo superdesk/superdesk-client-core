@@ -47,10 +47,6 @@ describe('users', () => {
             element(by.css('.modal__dialog .btn--primary')).click();
             browser.sleep(2000); // wait for reload
 
-            // close "missing categories" vocabulary warning
-            // most likely it appears because refreshing the page causes test data to disappear
-            element(by.css('.p-dialog-header-icons')).click();
-
             const header = element(by.css('[ng-hide="currentRoute.topTemplateUrl"]'));
 
             browser.wait(ECE.presenceOf(header), 1000);
