@@ -27,6 +27,7 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                     },
                 };
 
+                scope.ingested_count = 0;
                 var resources = ['ingest'];
 
                 if (scope.item.content_types.includes('event')) {
