@@ -16,7 +16,7 @@ export function maybeDisplayInvalidInstanceConfigurationMessage() {
     const issues: Array<React.ReactNode> = [];
 
     ng.get('vocabularies').getAllActiveVocabularies().then((vocabularies) => {
-        const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') != null;
+        const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') == null;
 
         if (categoriesMissing) {
             issues.push(
