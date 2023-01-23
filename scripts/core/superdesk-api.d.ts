@@ -892,6 +892,14 @@ declare module 'superdesk-api' {
 
     export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
+    export interface IHighlight extends IBaseRestApiResponse {
+        name: string;
+        auto_insert: string;
+        desks: Array<IDesk['_id']>;
+        groups: Array<string>;
+    }
+
+    export type IHighlightResponse = IRestApiResponse<IHighlight>;
     export interface ITranslation extends IBaseRestApiResponse {
         label: string;
         language: string;

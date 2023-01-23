@@ -37,10 +37,12 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {TemplateModal} from './toolbar/template-modal';
 import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
-import ExportModal from './toolbar/export-modal';
+import {ExportModal} from './toolbar/export-modal';
+import {TemplateModal} from './toolbar/template-modal';
+import {TranslateModal} from './toolbar/translate-modal';
+import {HighlightsModal} from './toolbar/highlights-modal';
 import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
@@ -180,19 +182,36 @@ const getExportModal = (
     },
 });
 
-const getSaveAsTemplate = (item: IArticle): IAuthoringAction => ({
+const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
+    return {
+        label: gettext('Highlights'),
+        onTrigger: () => (
+            showModal(({closeModal}) => {
+                return (
+                    <HighlightsModal
+                        article={getItem()}
+                        closeModal={closeModal}
+                    />
+                );
+            })
+        ),
+    };
+};
+
+const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Save as template'),
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
                 <TemplateModal
                     closeModal={closeModal}
-                    item={item}
+                    item={getItem()}
                 />
             );
         })
     ),
 });
+
 
 const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Translate'),
@@ -363,13 +382,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
                                     return [
-                                        getSaveAsTemplate(item),
+                                        getSaveAsTemplate(getLatestItem),
                                         getCompareVersionsModal(
                                             getLatestItem,
                                             authoringStorage,
                                             fieldsAdapter,
                                             storageAdapter,
                                         ),
+                                        getHighlightsAction(getLatestItem),
                                         getMarkedForDesksModal(getLatestItem),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                         getTranslateModal(getLatestItem),
@@ -378,7 +398,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ];
                                 });
                             }}
-                            getInlineToolbarActions={(x) => this.props.getInlineToolbarActions(x)}
+                            getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={
                                 () => Object.values(extensions)
                                     .flatMap(({activationResult}) =>
