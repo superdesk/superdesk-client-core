@@ -262,6 +262,15 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
                 diff.associations = _current.associations;
             }
 
+            if (diff.dateline != null) {
+                diff.dateline = {
+                    ..._current.dateline,
+                    ...diff.dateline,
+                };
+            }
+
+            // for (field in diff)
+
             diff = adapter.fromAuthoringReact(diff);
 
             const queryString = appConfig.features.publishFromPersonal === true

@@ -1,4 +1,5 @@
 import {omit} from 'lodash';
+import {ILocated} from 'superdesk-api';
 
 export interface IGeoName {
     /** name of the place, eg. Prague */
@@ -27,31 +28,6 @@ export interface IGeoName {
     scheme: 'geonames';
 }
 
-interface ILocated {
-    /** dateline format - list of fields which should be used to identify the place */
-    dateline: 'city' | 'city,state' | 'city,country' | 'city,state,country';
-
-    city: string;
-    state: string;
-    country: string;
-
-    city_code: string;
-    state_code: string;
-    country_code: string;
-
-    /** timezone identifier, eg. Europe/Prague  */
-    tz: string;
-
-    /** scheme identifier */
-    scheme: string;
-
-    /** code for place in the scheme */
-    code: string;
-
-    /** geonames place data */
-    place?: IGeoName;
-}
-
 /**
  * Search service for populated places (city, village)
  */
@@ -78,7 +54,7 @@ export interface IPlacesService {
 
 PlacesServiceFactory.$inject = ['api', 'features', 'metadata'];
 export default function PlacesServiceFactory(api, features, metadata) {
-    const geonameToCity = (data: IGeoName): ILocated => ({
+    const geoNameToCity = (data: IGeoName): ILocated => ({
         dateline: 'city',
         country_code: data.country_code,
         tz: data.tz,
@@ -95,7 +71,7 @@ export default function PlacesServiceFactory(api, features, metadata) {
     class PlacesService implements IPlacesService {
         searchDateline(query: string, lang: string) {
             return this._searchGeonames(query, lang, true)
-                .then((geonames) => geonames.map(geonameToCity))
+                .then((geonames) => geonames.map(geoNameToCity))
                 .catch(() => this._searchCities(query));
         }
 
