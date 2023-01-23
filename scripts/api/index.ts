@@ -1,3 +1,4 @@
+import {highlights} from './highlights';
 import {article} from './article';
 import {config} from './config';
 import {desks} from './desks';
@@ -27,4 +28,5 @@ export const sdApi = {
     time,
     user,
     vocabularies,
+    highlights,
 };
