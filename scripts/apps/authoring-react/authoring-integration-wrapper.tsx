@@ -47,6 +47,8 @@ import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
+import TranslateModal from './toolbar/translate-modal';
+import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -180,18 +182,6 @@ const getExportModal = (
     },
 });
 
-const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
-    label: gettext('Translate'),
-    onTrigger: () => {
-        showModal(({closeModal}) => (
-            <TranslateModal
-                closeModal={closeModal}
-                article={getItem()}
-            />
-        ));
-    },
-});
-
 const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
     return {
         label: gettext('Highlights'),
@@ -216,6 +206,33 @@ const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
                 <TemplateModal
                     closeModal={closeModal}
                     item={getItem()}
+                />
+            );
+        })
+    ),
+});
+
+
+const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
+const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Marked for desks'),
+    onTrigger: () => (
+        showModal(({closeModal}) => {
+            return (
+                <MarkForDesksModal
+                    closeModal={closeModal}
+                    article={getItem()}
                 />
             );
         })
@@ -373,8 +390,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             storageAdapter,
                                         ),
                                         getHighlightsAction(getLatestItem),
+                                        getMarkedForDesksModal(getLatestItem),
                                         getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
-                                        getTranslateAction(getLatestItem),
+                                        getTranslateModal(getLatestItem),
                                         ...authoringActionsFromExtensions,
                                         ...articleActionsFromExtensions,
                                     ];

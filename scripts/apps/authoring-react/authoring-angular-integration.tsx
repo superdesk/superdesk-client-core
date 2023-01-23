@@ -3,7 +3,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, IconButton, NavButton} from 'superdesk-ui-framework/react';
+import {Button, IconButton, NavButton, Popover} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -17,6 +17,7 @@ import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import ng from 'core/services/ng';
+import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 
@@ -143,6 +144,39 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
 
         if (item.highlights != null) {
             actions.push(getManageHighlights());
+        }
+
+
+        // eslint-disable-next-line no-case-declarations
+        const manageDesksButton: ITopBarWidget<IArticle> = ({
+            group: 'start',
+            priority: 0.3,
+            // eslint-disable-next-line react/display-name
+            component: () => (
+                <>
+                    <Popover
+                        zIndex={1050}
+                        triggerSelector="#marked-for-desks"
+                        title={gettext('Marked for')}
+                        placement="bottom-end"
+                    >
+                        <MarkedDesks
+                            article={item}
+                        />
+                    </Popover>
+                    <NavButton
+                        onClick={() => null}
+                        id="marked-for-desks"
+                        icon="bell"
+                        iconSize="small"
+                    />
+                </>
+            ),
+            availableOffline: true,
+        });
+
+        if (item.marked_desks?.length > 0) {
+            actions.push(manageDesksButton);
         }
 
         actions.push({
