@@ -49,7 +49,7 @@ interface IIMatricsFields {
     };
 }
 
-type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse;};
+type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
 
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
