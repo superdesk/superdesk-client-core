@@ -527,7 +527,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             brightness: $scope.controls.brightness,
             contrast: $scope.controls.contrast,
             saturation: $scope.controls.saturation,
-            rotate: -$scope.controls.rotate,
+            rotate: (flip === 'none' || flip === 'both') ? -$scope.controls.rotate : $scope.controls.rotate,
             flip: flip,
 
         }}).then((result) => {
