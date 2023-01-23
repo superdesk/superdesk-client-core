@@ -130,7 +130,8 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     componentDidMount() {
         this.fetchInitialData().then(() => {
             // fix height when data first loads to reduce layout flickering
-            this.wrapperEl.style.height = this.wrapperEl.offsetHeight + 'px';
+            let height = this.props.height - this.headerEl.offsetHeight + this.wrapperEl.offsetHeight
+            this.wrapperEl.style.height = height + 'px';
         });
     }
 

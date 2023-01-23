@@ -39,6 +39,8 @@ interface IProps {
 }
 
 export class ContentCreateDropdown extends React.PureComponent<IProps> {
+    private lastPopup;
+
     render() {
         const DropdownButton = this.props.customButton ?? defaultButton;
 
@@ -66,7 +68,12 @@ export class ContentCreateDropdown extends React.PureComponent<IProps> {
             >
                 <DropdownButton
                     onClick={(event) => {
-                        showPopup(
+                        if (this.lastPopup != null) {
+                            this.lastPopup.close();
+                            this.lastPopup = null;
+                            return;
+                        } else {
+                        this.lastPopup = showPopup(
                             event.target as HTMLElement,
                             'bottom-end',
                             ({closePopup}) => (
@@ -77,7 +84,12 @@ export class ContentCreateDropdown extends React.PureComponent<IProps> {
                                 />
                             ),
                             1050,
+                            undefined,
+                            () => {
+                                this.lastPopup = null;
+                            },
                         );
+                    }
                     }}
                 />
             </DropZone3>
