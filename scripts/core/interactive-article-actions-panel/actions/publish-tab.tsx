@@ -45,15 +45,12 @@ interface IState {
 }
 
 export class PublishTab extends React.PureComponent<IProps, IState> {
-    availableDesks: OrderedMap<string, IDesk>;
-
     constructor(props: IProps) {
         super(props);
 
-        this.availableDesks = sdApi.desks.getAllDesks();
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
-            selectedDestination: getInitialDestination([this.props.item], false, this.availableDesks),
+            selectedDestination: getInitialDestination([this.props.item], false),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
                 target_subscribers: [],
@@ -159,7 +156,6 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 publishFromEnabled && (
                                     <ToggleBox title={gettext('From')} initiallyOpen>
                                         <DestinationSelect
-                                            availableDesks={this.availableDesks}
                                             value={this.state.selectedDestination}
                                             onChange={(value) => {
                                                 this.setState({

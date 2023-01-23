@@ -8,7 +8,6 @@ import {getInitialDestination} from '../utils/get-initial-destination';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;
@@ -21,15 +20,11 @@ interface IState {
 }
 
 export class UnspikeTab extends React.PureComponent<IProps, IState> {
-    availableDesks: OrderedMap<string, IDesk>;
-
     constructor(props: IProps) {
         super(props);
 
-        this.availableDesks = sdApi.desks.getAllDesks();
-
         this.state = {
-            selectedDestination: getInitialDestination(props.items, false, this.availableDesks),
+            selectedDestination: getInitialDestination(props.items, false),
         };
 
         this.doUnspike = this.doUnspike.bind(this);
@@ -59,7 +54,6 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
-                            availableDesks={this.availableDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({
