@@ -4,8 +4,8 @@ import {IArticle, IDesk} from 'superdesk-api';
 import {Alert, Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';
-import {markedForDesks} from './helper';
 import {Spacer} from 'core/ui/components/Spacer';
+import {setMarkedDesks} from './helper';
 
 interface IProps {
     article: IArticle;
@@ -14,7 +14,6 @@ interface IProps {
 
 interface IState {
     selectedDesks: Array<string> | null;
-    hasError: boolean;
 }
 
 export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
@@ -23,7 +22,6 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
 
         this.state = {
             selectedDesks: this.props.article.marked_desks?.map((x) => x.desk_id),
-            hasError: false,
         };
     }
 
@@ -41,10 +39,10 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="8">
                     <MultiSelect
-                        onChange={(e: any) => {
+                        onChange={({value}) => {
                             this.setState({
                                 ...this.state,
-                                selectedDesks: e.value.map((desk) => desk._id),
+                                selectedDesks: value.map((desk) => desk._id),
                             });
                         }}
                         optionLabel={nameof<IDesk>('name')}
@@ -52,24 +50,12 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
                         value={selectedDesks}
                         placeholder={gettext('Select desks')}
                     />
-                    {
-                        this.state.hasError ? (
-                            <Alert
-                                type="alert"
-                                size="small"
-                                margin="small"
-                                style="hollow"
-                            >
-                                {gettext('There was an error marking this desk.')}
-                            </Alert>
-                        ) : null
-                    }
+
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button
                             onClick={() => {
-                                markedForDesks(this.state.selectedDesks, this.props.article._id)
-                                    .then(() => this.props.closeModal())
-                                    .catch(() => this.setState({hasError: true}));
+                                setMarkedDesks(this.state.selectedDesks, this.props.article._id)
+                                    .then(() => this.props.closeModal());
                             }}
                             text={gettext('Save')}
                             type="primary"

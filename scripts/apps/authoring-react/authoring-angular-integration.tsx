@@ -17,7 +17,7 @@ import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import ng from 'core/services/ng';
-import {DesksPopoverContent} from './toolbar/mark-for-desks/mark-for-desks-popover';
+import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 
 export interface IProps {
     itemId: IArticle['_id'];
@@ -120,7 +120,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                         title={gettext('Marked for')}
                         placement="bottom-end"
                     >
-                        <DesksPopoverContent
+                        <MarkedDesks
                             article={item}
                         />
                     </Popover>

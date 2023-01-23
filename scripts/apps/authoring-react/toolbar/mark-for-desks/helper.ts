@@ -1,6 +1,6 @@
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
-export function markedForDesks(deskIds: Array<string>, articleId: string) {
+export function setMarkedDesks(deskIds: Array<string>, articleId: string) {
     return httpRequestJsonLocal({
         method: 'POST',
         path: '/marked_for_desks',
