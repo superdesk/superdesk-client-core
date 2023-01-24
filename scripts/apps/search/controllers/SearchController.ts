@@ -1,8 +1,8 @@
-import {intersection} from 'lodash';
+import {intersection, isEmpty} from 'lodash';
 import {appConfig} from 'appConfig';
 
-SearchController.$inject = ['$location', 'searchProviderService'];
-export function SearchController($location, searchProviderService) {
+SearchController.$inject = ['$location', 'searchProviderService', '$rootScope'];
+export function SearchController($location, searchProviderService, $rootScope) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
     const DEFAULT_CONFIG = Object.assign({}, {
@@ -24,6 +24,8 @@ export function SearchController($location, searchProviderService) {
     if ($location.search().repo && !intersection($location.search().repo.split(','), INTERNAL).length) {
         this.repo.search = $location.search().repo;
     }
+
+    $rootScope.$on('repo:reset', resetInternalRepo);
 
     // init search providers
     searchProviderService.getActiveSearchProviders()

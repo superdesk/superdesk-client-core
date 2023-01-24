@@ -1,4 +1,4 @@
-import {create, clone, each} from 'lodash';
+import {create, clone} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
 import {gettext} from 'core/utils';
 import {isEmptyString} from 'core/helpers/utils';
@@ -51,11 +51,8 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
             scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
-                each($location.search(), (_item, key) => {
-                    if (key !== 'repo') {
-                        $location.search(key, null);
-                    }
-                });
+                $location.search('');
+                $rootScope.$broadcast('repo:reset');
                 $rootScope.$broadcast('tag:removed');
             };
 
