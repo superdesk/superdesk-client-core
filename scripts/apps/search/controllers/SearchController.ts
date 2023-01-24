@@ -1,8 +1,8 @@
-import {intersection, isEmpty} from 'lodash';
+import {intersection} from 'lodash';
 import {appConfig} from 'appConfig';
 
-SearchController.$inject = ['$location', 'searchProviderService', '$rootScope'];
-export function SearchController($location, searchProviderService, $rootScope) {
+SearchController.$inject = ['$location', 'searchProviderService'];
+export function SearchController($location, searchProviderService) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
     const DEFAULT_CONFIG = Object.assign({}, {
