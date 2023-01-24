@@ -7,6 +7,7 @@ import {
     ICommonFieldConfig,
     IAuthoringStorage,
     IFieldsAdapter,
+    IEditor3Config,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -120,6 +121,28 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             } else {
                 throw new Error('invalid section');
             }
+        }
+
+        // TODO: write an upgrade script and remove hardcoding
+        // after angular based authoring is removed from the codebase
+        if (item.type === 'picture') {
+            const fieldConfig: IEditor3Config = {
+                editorFormat: [],
+                minLength: fakeScope.schema?.minlength,
+                maxLength: fakeScope.schema?.maxlength,
+                cleanPastedHtml: fakeScope.editor?.cleanPastedHTML,
+                singleLine: true,
+                disallowedCharacters: [],
+            };
+
+            const description_text: IAuthoringFieldV2 = {
+                id: 'description_text',
+                name: gettext('Description'),
+                fieldType: 'editor3',
+                fieldConfig,
+            };
+
+            contentFields = contentFields.set(description_text.id, description_text);
         }
 
         const profile: IContentProfileV2 = {
