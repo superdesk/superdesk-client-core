@@ -510,9 +510,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     * @description Apply image modifications
     */
     $scope.applyImageChanges = () => {
-        let flip = 'none',
-            flipH = Math.abs($scope.controls.fliph / 180 % 2),
-            flipV = Math.abs($scope.controls.flipv / 180 % 2);
+        let flip: 'none' | 'both' | 'horizontal' | 'vertical' = 'none';
+        const flipH = Math.abs($scope.controls.fliph / 180 % 2);
+        const flipV = Math.abs($scope.controls.flipv / 180 % 2);
 
         if (flipH === 1 && flipV === 1) {
             flip = 'both';
@@ -527,8 +527,8 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             brightness: $scope.controls.brightness,
             contrast: $scope.controls.contrast,
             saturation: $scope.controls.saturation,
-            rotate: (flip === 'none' || flip === 'both') ? -$scope.controls.rotate : $scope.controls.rotate,
             flip: flip,
+            rotate: -$scope.controls.rotate,
 
         }}).then((result) => {
             $scope.data.item.renditions = result.renditions;
