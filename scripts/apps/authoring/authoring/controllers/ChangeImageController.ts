@@ -522,15 +522,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             flip = 'vertical';
         }
 
-        $scope.loaderForMediaEdit = true;
-        return api.save('media_editor', {item: $scope.data.item, edit: {
-            brightness: $scope.controls.brightness,
-            contrast: $scope.controls.contrast,
-            saturation: $scope.controls.saturation,
-            flip: flip,
-            rotate: -$scope.controls.rotate,
+        const edit = [
+            ['brightness', $scope.controls.brightness],
+            ['contrast', $scope.controls.contrast],
+            ['saturation', $scope.controls.saturation],
+            ['flip', flip],
+            ['rotate', -$scope.controls.rotate],
+        ];
 
-        }}).then((result) => {
+        $scope.loaderForMediaEdit = true;
+        return api.save('media_editor', {item: $scope.data.item, edit}).then((result) => {
             $scope.data.item.renditions = result.renditions;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
