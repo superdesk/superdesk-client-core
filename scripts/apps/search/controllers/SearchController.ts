@@ -25,8 +25,6 @@ export function SearchController($location, searchProviderService, $rootScope) {
         this.repo.search = $location.search().repo;
     }
 
-    $rootScope.$on('repo:reset', resetInternalRepo);
-
     // init search providers
     searchProviderService.getActiveSearchProviders()
         .then((providers) => {

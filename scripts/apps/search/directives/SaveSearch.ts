@@ -52,7 +52,11 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 scope.editingSearch = false;
                 scope.edit = null;
                 $location.search('');
-                $rootScope.$broadcast('repo:reset');
+                Object.keys(scope.repo).forEach((key) => {
+                    if (key != 'search') {
+                        scope.repo[key] = true;
+                    }
+                });
                 $rootScope.$broadcast('tag:removed');
             };
 
