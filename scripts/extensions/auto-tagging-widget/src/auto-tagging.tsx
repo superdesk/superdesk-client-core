@@ -483,6 +483,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         disabled={readOnly}
                                         onChange={() => {
                                             const newValue = !showImagesPreference;
+
                                             this.setState({showImagesPreference: newValue});
                                             superdesk.preferences.set(SHOW_IMAGES_PREFERENCE, newValue);
                                         }}
@@ -723,10 +724,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {allGroupedAndSorted.map((item) => item).toArray()}
-                                            {this.state.showImagesPreference && <ImageTaggingComponent
-                                                data={toServerFormat(data.changes.analysis, superdesk)}
-                                                article={this.props.article}
-                                            />}
+                                            {this.state.showImagesPreference && (
+                                                <ImageTaggingComponent
+                                                    data={toServerFormat(
+                                                        data.changes.analysis,
+                                                        superdesk,
+                                                    )}
+                                                    article={this.props.article}
+                                                />
+                                            )}
                                         </div>
                                     </React.Fragment>
                                 );
