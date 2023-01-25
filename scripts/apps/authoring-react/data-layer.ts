@@ -23,6 +23,7 @@ import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
+import {DESCRIPTION_TEXT_FIELD_ID} from './field-adapters/description_text';
 
 function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -131,12 +132,12 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
                 minLength: fakeScope.schema?.minlength,
                 maxLength: fakeScope.schema?.maxlength,
                 cleanPastedHtml: fakeScope.editor?.cleanPastedHTML,
-                singleLine: true,
+                singleLine: false,
                 disallowedCharacters: [],
             };
 
             const description_text: IAuthoringFieldV2 = {
-                id: 'description_text',
+                id: DESCRIPTION_TEXT_FIELD_ID,
                 name: gettext('Description'),
                 fieldType: 'editor3',
                 fieldConfig,
