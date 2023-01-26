@@ -126,7 +126,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
         // TODO: write an upgrade script and remove hardcoding
         // after angular based authoring is removed from the codebase
-        if (item.type === 'picture') {
+        if (item.type === 'picture' || item.type === 'audio' || item.type === 'video') {
             const fieldConfig: IEditor3Config = {
                 editorFormat: [],
                 minLength: fakeScope.schema?.minlength,
