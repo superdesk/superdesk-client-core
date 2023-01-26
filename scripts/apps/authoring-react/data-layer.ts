@@ -16,7 +16,7 @@ import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {AutoSaveHttp} from './auto-save-http';
-import {omit} from 'lodash';
+import {isObject, omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
@@ -247,6 +247,12 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
 
             let diff = generatePatch(original, _current);
 
+            Object.keys(diff).forEach((key) => {
+                if (isObject(diff[key])) {
+                    diff[key] = _current[key];
+                }
+            });
+
             // when object has changes, send entire object to avoid server dropping keys
             if (diff.fields_meta != null) {
                 diff.fields_meta = _current.fields_meta;
@@ -261,15 +267,6 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             if (diff.associations != null) {
                 diff.associations = _current.associations;
             }
-
-            if (diff.dateline != null) {
-                diff.dateline = {
-                    ..._current.dateline,
-                    ...diff.dateline,
-                };
-            }
-
-            // for (field in diff)
 
             diff = adapter.fromAuthoringReact(diff);
 
