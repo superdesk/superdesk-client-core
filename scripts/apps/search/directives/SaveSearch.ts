@@ -53,7 +53,7 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 scope.edit = null;
                 $location.search('');
                 Object.keys(scope.repo).forEach((key) => {
-                    if (key != 'search') {
+                    if (key !== 'search') {
                         scope.repo[key] = true;
                     }
                 });
