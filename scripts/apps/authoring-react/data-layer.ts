@@ -23,7 +23,7 @@ import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
-import {DESCRIPTION_TEXT_FIELD_ID} from './field-adapters/description_text';
+import {description_text, DESCRIPTION_TEXT_FIELD_ID} from './field-adapters/description_text';
 
 function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -69,6 +69,8 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
                     return result;
                 })
+                .filter((t) => t.editorItem != null)
+                .map((t) => ({...t, editorItem: {...t.editorItem, section: 'content'}}))
                 .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
@@ -127,23 +129,9 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
         // TODO: write an upgrade script and remove hardcoding
         // after angular based authoring is removed from the codebase
         if (item.type === 'picture' || item.type === 'audio' || item.type === 'video') {
-            const fieldConfig: IEditor3Config = {
-                editorFormat: [],
-                minLength: fakeScope.schema?.minlength,
-                maxLength: fakeScope.schema?.maxlength,
-                cleanPastedHtml: fakeScope.editor?.cleanPastedHTML,
-                singleLine: false,
-                disallowedCharacters: [],
-            };
+            const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema);
 
-            const description_text: IAuthoringFieldV2 = {
-                id: DESCRIPTION_TEXT_FIELD_ID,
-                name: gettext('Description'),
-                fieldType: 'editor3',
-                fieldConfig,
-            };
-
-            contentFields = contentFields.set(description_text.id, description_text);
+            contentFields = contentFields.set(description_field.id, description_field);
         }
 
         const profile: IContentProfileV2 = {
