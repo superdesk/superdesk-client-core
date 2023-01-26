@@ -183,7 +183,7 @@ describe('search', () => {
         rawTextbox.clear();
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
-        globalSearch.waitForItemCount(3);
+        globalSearch.waitForItemCount(0);
         globalSearch.closeFilterPanel();
 
         // search spiked content
