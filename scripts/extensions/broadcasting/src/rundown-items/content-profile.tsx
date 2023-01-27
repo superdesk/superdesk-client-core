@@ -47,11 +47,16 @@ const technicalTitle: IAuthoringFieldV2 = {
     },
 };
 
+const contentFieldConfig: IEditor3Config = {
+    ...editor3TestConfigWithoutFormatting,
+    singleLine: false,
+};
+
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
     name: gettext('Content'),
     fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
+    fieldConfig: contentFieldConfig,
 };
 
 const itemTypesConfig: IDropdownConfigVocabulary = {
