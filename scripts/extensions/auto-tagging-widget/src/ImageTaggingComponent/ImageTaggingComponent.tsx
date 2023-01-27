@@ -74,6 +74,7 @@ const imageContentStyle: React.CSSProperties = {
 const imageStyle: React.CSSProperties = {
     width: '100%',
     height: 'auto',
+    cursor: 'grab',
 };
 
 const imageWrapperStyle: React.CSSProperties = {
