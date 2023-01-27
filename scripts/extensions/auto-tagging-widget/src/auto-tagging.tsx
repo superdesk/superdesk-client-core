@@ -726,10 +726,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             {allGroupedAndSorted.map((item) => item).toArray()}
                                             {this.state.showImagesPreference && (
                                                 <ImageTaggingComponent
-                                                    data={toServerFormat(
-                                                        data.changes.analysis,
-                                                        superdesk,
-                                                    )}
+                                                    data={
+                                                        data.changes.analysis
+                                                    }
                                                     article={this.props.article}
                                                 />
                                             )}

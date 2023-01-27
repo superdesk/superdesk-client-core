@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
+import {ITagUi} from '../types';
+import {OrderedMap} from 'immutable';
+import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
-import {IServerResponse, ITagBase} from '../adapter';
 
 interface ITagInput {
     title: string;
@@ -28,7 +30,7 @@ interface IImageServerResponse {
 }
 
 interface IProps {
-    data: IServerResponse;
+    data: OrderedMap<string, ITagUi>;
     style?: React.CSSProperties;
     article: IArticle;
 }
@@ -39,7 +41,6 @@ interface IState {
     fetchError: boolean;
     selectedImage: IImage | null;
     images: Array<IImage>;
-    prevInput: Array<ITagInput>;
 }
 
 const gridContainerStyle: React.CSSProperties = {
@@ -96,13 +97,56 @@ const cardStyle: React.CSSProperties = {
     borderRadius: '2px',
 };
 
+const handleDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    image: IImage | null,
+    article: IArticle,
+) => {
+    if (!image) {
+        return;
+    }
+    let item: IArticle;
+
+    try {
+        item = {
+            ...article,
+            type: 'picture',
+            description_text: image?.caption ?? '',
+            headline: image?.headline ?? '',
+            source: image?.source ?? '',
+            fetch_endpoint: 'scanpix',
+            renditions: {
+                thumbnail: {
+                    href: image?.thumbnailUrl ?? '',
+                    mimetype: 'image/jpeg',
+                },
+                viewImage: {
+                    href: image?.imageUrl ?? '',
+                    mimetype: 'image/jpeg',
+                },
+                baseImage: {
+                    href: image?.imageUrl ?? '',
+                    mimetype: 'image/jpeg',
+                },
+            },
+            byline: image?.byline ?? '',
+        };
+    } catch {
+        return;
+    }
+    event.dataTransfer.setData(
+        'application/superdesk.item.picture',
+        JSON.stringify(item),
+    );
+};
+
 export function getImageTaggingComponent(
     superdesk: ISuperdesk,
 ): React.ComponentType<IProps> {
     const {httpRequestJsonLocal} = superdesk;
+    const {gettext} = superdesk.localization;
 
     return class ImageTagging extends React.PureComponent<IProps, IState> {
-        private _mounted: boolean;
         private abortController: AbortController;
         private fetchTimeout: ReturnType<typeof setTimeout> | undefined;
         constructor(props: IProps) {
@@ -114,40 +158,28 @@ export function getImageTaggingComponent(
                 fetchError: false,
                 selectedImage: null,
                 images: [],
-                prevInput: [],
             };
-            this._mounted = false;
             this.abortController = new AbortController();
             this.fetchTimeout = undefined;
             this.runFetchImages = this.runFetchImages.bind(this);
             this.formatTags = this.formatTags.bind(this);
             this.handleClickImage = this.handleClickImage.bind(this);
-            this.handleDragStart = this.handleDragStart.bind(this);
         }
 
         componentDidMount() {
-            this._mounted = true;
             if (!this.state.isLoading) {
                 this.runFetchImages();
             }
         }
 
         componentWillUnmount() {
-            this._mounted = false;
             this.abortController.abort();
             clearTimeout(this.fetchTimeout);
         }
 
-        componentDidUpdate() {
+        componentDidUpdate(prevProps: IProps) {
             clearTimeout(this.fetchTimeout);
-            if (
-                this._mounted &&
-                !this.state.isLoading &&
-                !this.isEqualTags(
-                    this.formatTags(this.props.data),
-                    this.state.prevInput,
-                )
-            ) {
+            if (this.props.data !== prevProps.data) {
                 this.fetchTimeout = setTimeout(() => {
                     this.runFetchImages();
                 }, 1000);
@@ -156,7 +188,7 @@ export function getImageTaggingComponent(
 
         runFetchImages() {
             const formattedTags: Array<ITagInput> = this.formatTags(
-                this.props.data,
+                toServerFormat(this.props.data, superdesk),
             );
 
             if (!formattedTags || formattedTags.length < 1) {
@@ -166,7 +198,7 @@ export function getImageTaggingComponent(
                 });
                 return;
             }
-            this.setState({isLoading: true, prevInput: formattedTags}, () => {
+            this.setState({isLoading: true}, () => {
                 httpRequestJsonLocal<IImageServerResponse>({
                     abortSignal: this.abortController.signal,
                     method: 'POST',
@@ -177,33 +209,25 @@ export function getImageTaggingComponent(
                     },
                 })
                     .then((res) => {
-                        if (this._mounted) {
-                            this.setState({fetchError: false});
-                            try {
-                                this.setState({
-                                    selectedImage: res.result[0],
-                                    images: res.result ?? [],
-                                });
-                            } catch {
-                                this.setState({
-                                    selectedImage: null,
-                                    images: [],
-                                });
-                            }
+                        this.setState({fetchError: false});
+                        try {
+                            this.setState({
+                                selectedImage: res.result[0],
+                                images: res.result ?? [],
+                            });
+                        } catch {
+                            this.setState({
+                                selectedImage: null,
+                                images: [],
+                            });
                         }
                     })
                     .catch(() => {
                         this.setState({fetchError: true});
                     })
-                    .finally(
-                        () =>
-                            this._mounted && this.setState({isLoading: false}),
-                    );
+                    .finally(() => this.setState({isLoading: false}));
             });
         }
-
-        isEqualTags = (current: Array<ITagInput>, prev: Array<ITagInput>) =>
-            JSON.stringify(current) === JSON.stringify(prev)
 
         formatTags = (concepts: IServerResponse) => {
             let res: Array<ITagInput> = [];
@@ -242,65 +266,22 @@ export function getImageTaggingComponent(
             this.setState({selectedImage: image});
         }
 
-        handleDragStart = (
-            event: React.DragEvent<HTMLDivElement>,
-            image: IImage | null,
-        ) => {
-            if (!image) {
-                return;
-            }
-            let item: IArticle;
-
-            try {
-                item = {
-                    ...this.props.article,
-                    type: 'picture',
-                    description_text: image?.caption ?? '',
-                    headline: image?.headline ?? '',
-                    source: image?.source ?? '',
-                    fetch_endpoint: 'scanpix',
-                    renditions: {
-                        thumbnail: {
-                            href: image?.thumbnailUrl ?? '',
-                            mimetype: 'image/jpeg',
-                        },
-                        viewImage: {
-                            href: image?.imageUrl ?? '',
-                            mimetype: 'image/jpeg',
-                        },
-                        baseImage: {
-                            href: image?.imageUrl ?? '',
-                            mimetype: 'image/jpeg',
-                        },
-                    },
-                    byline: image?.byline ?? '',
-                };
-            } catch {
-                return;
-            }
-            event.dataTransfer.setData(
-                'application/superdesk.item.picture',
-                JSON.stringify(item),
-            );
-        }
-
         render() {
             const {style} = this.props;
             const {showImages, isLoading, fetchError, selectedImage, images} =
                 this.state;
 
-            if (!this._mounted) {
-                return null;
-            }
             return (
                 <ToggleBoxNext
-                    title={`image suggestions ${
-                        isLoading
-                            ? '(...)'
-                            : fetchError
-                                ? '(error)'
-                                : `(${images.length})`
-                    }`}
+                    title={gettext(
+                        `image suggestions ${
+                            isLoading
+                                ? '(...)'
+                                : fetchError
+                                    ? '(error)'
+                                    : `(${images.length})`
+                        }`,
+                    )}
                     style="circle"
                     isOpen={showImages}
                     key="image-suggestion"
@@ -325,9 +306,10 @@ export function getImageTaggingComponent(
                                                 alt=""
                                                 src={selectedImage?.imageUrl}
                                                 onDragStart={(e) =>
-                                                    this.handleDragStart(
+                                                    handleDragStart(
                                                         e,
                                                         selectedImage,
+                                                        this.props.article,
                                                     )
                                                 }
                                             />
@@ -362,14 +344,13 @@ export function getImageTaggingComponent(
                                                             alt=""
                                                             src={image.imageUrl}
                                                             onClick={() => {
-                                                                this.handleClickImage(
-                                                                    image,
-                                                                );
+                                                                this.handleClickImage(image);
                                                             }}
                                                             onDragStart={(e) =>
-                                                                this.handleDragStart(
+                                                                handleDragStart(
                                                                     e,
                                                                     image,
+                                                                    this.props.article,
                                                                 )
                                                             }
                                                         />
