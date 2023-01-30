@@ -149,7 +149,7 @@ export function getImageTaggingComponent(
 
     return class ImageTagging extends React.PureComponent<IProps, IState> {
         private abortController: AbortController;
-        private fetchTimeout: ReturnType<typeof setTimeout> | undefined;
+        private fetchTimeout: ReturnType<typeof setTimeout>;
         constructor(props: IProps) {
             super(props);
 
@@ -161,7 +161,7 @@ export function getImageTaggingComponent(
                 images: [],
             };
             this.abortController = new AbortController();
-            this.fetchTimeout = undefined;
+            this.fetchTimeout = setTimeout();
             this.runFetchImages = this.runFetchImages.bind(this);
             this.formatTags = this.formatTags.bind(this);
             this.handleClickImage = this.handleClickImage.bind(this);
