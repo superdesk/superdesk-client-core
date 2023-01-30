@@ -126,7 +126,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
         // TODO: write an upgrade script and remove hardcoding
         // after angular based authoring is removed from the codebase
-        if (item.type === 'picture' || item.type === 'audio' || item.type === 'video') {
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
             const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema);
 
             contentFields = contentFields.set(description_field.id, description_field);
