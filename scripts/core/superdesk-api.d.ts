@@ -162,6 +162,9 @@ declare module 'superdesk-api' {
         availableOffline: boolean;
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
+        hotkeys?: {
+            [key: string]: () => void;
+        };
     }
 
     interface IPropsAuthoring<T> {

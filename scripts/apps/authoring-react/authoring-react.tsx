@@ -45,6 +45,7 @@ import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
+import {WithKeybindings} from './with-keybindings';
 
 export function getFieldsData<T>(
     item: T,
@@ -188,6 +189,20 @@ function getInitialState<T extends IBaseRestApiResponse>(
     };
 
     return initialState;
+}
+
+function getHotkeysFromActions<T>(actions: Array<ITopBarWidget<T>>) {
+    return actions
+        .filter((action) => action.hotkeys != null)
+        .map((action) => action.hotkeys)
+        .reduce((acc, obj) => {
+            acc = {
+                ...acc,
+                ...obj,
+            };
+
+            return acc;
+        }, {});
 }
 
 /**
@@ -1121,67 +1136,87 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     )
                 }
 
-                <WithInteractiveArticleActionsPanel location="authoring">
-                    {(panelState, panelActions) => {
-                        return (
-                            <Layout.AuthoringFrame
-                                header={(
-                                    <SubNav>
-                                        <AuthoringToolbar
-                                            entity={state.itemWithChanges}
-                                            coreWidgets={toolbar1Widgets}
-                                            extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
-                                            backgroundColor={authoringOptions.toolbarBgColor}
-                                        />
-                                    </SubNav>
-                                )}
-                                main={(
-                                    <Layout.AuthoringMain
-                                        toolBar={(
-                                            <React.Fragment>
-                                                <div
-                                                    style={{paddingRight: 16,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 8,
-                                                    }}
-                                                >
-                                                    {
-                                                        this.props.topBar2Widgets
-                                                            .map((Component, i) => {
-                                                                return (
-                                                                    <Component
-                                                                        key={i}
-                                                                        item={state.itemWithChanges}
-                                                                    />
-                                                                );
-                                                            })
-                                                    }
-                                                </div>
-
-                                                <ButtonGroup align="end">
-                                                    <IconButton
-                                                        icon="preview-mode"
-                                                        ariaValue={gettext('Print preview')}
-                                                        onClick={() => {
-                                                            previewAuthoringEntity(
-                                                                state.profile,
-                                                                state.fieldsDataWithChanges,
-                                                            );
+                <WithKeybindings
+                    keybindings={getHotkeysFromActions(authoringOptions.actions)}
+                >
+                    <WithInteractiveArticleActionsPanel location="authoring">
+                        {(panelState, panelActions) => {
+                            return (
+                                <Layout.AuthoringFrame
+                                    header={(
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                coreWidgets={toolbar1Widgets}
+                                                extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
+                                                backgroundColor={authoringOptions.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )}
+                                    main={(
+                                        <Layout.AuthoringMain
+                                            toolBar={(
+                                                <React.Fragment>
+                                                    <div
+                                                        style={{paddingRight: 16,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 8,
                                                         }}
+                                                    >
+                                                        {
+                                                            this.props.topBar2Widgets
+                                                                .map((Component, i) => {
+                                                                    return (
+                                                                        <Component
+                                                                            key={i}
+                                                                            item={state.itemWithChanges}
+                                                                        />
+                                                                    );
+                                                                })
+                                                        }
+                                                    </div>
+
+                                                    <ButtonGroup align="end">
+                                                        <IconButton
+                                                            icon="preview-mode"
+                                                            ariaValue={gettext('Print preview')}
+                                                            onClick={() => {
+                                                                previewAuthoringEntity(
+                                                                    state.profile,
+                                                                    state.fieldsDataWithChanges,
+                                                                );
+                                                            }}
+                                                        />
+                                                    </ButtonGroup>
+                                                </React.Fragment>
+                                            )}
+                                            authoringHeader={(
+                                                <div>
+                                                    <AuthoringSection
+                                                        fields={state.profile.header}
+                                                        fieldsData={state.fieldsDataWithChanges}
+                                                        onChange={this.handleFieldChange}
+                                                        language={getLanguage(state.itemWithChanges)}
+                                                        userPreferencesForFields={state.userPreferencesForFields}
+                                                        useHeaderLayout
+                                                        setUserPreferencesForFields={this.setUserPreferences}
+                                                        getVocabularyItems={this.getVocabularyItems}
+                                                        toggledFields={state.toggledFields}
+                                                        toggleField={this.toggleField}
+                                                        readOnly={readOnly}
+                                                        validationErrors={state.validationErrors}
                                                     />
-                                                </ButtonGroup>
-                                            </React.Fragment>
-                                        )}
-                                        authoringHeader={(
+                                                </div>
+                                            )}
+                                        >
                                             <div>
                                                 <AuthoringSection
-                                                    fields={state.profile.header}
+                                                    fields={state.profile.content}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
-                                                    useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
                                                     toggledFields={state.toggledFields}
@@ -1190,34 +1225,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                 />
                                             </div>
-                                        )}
-                                    >
-                                        <div>
-                                            <AuthoringSection
-                                                fields={state.profile.content}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
-                                                language={getLanguage(state.itemWithChanges)}
-                                                userPreferencesForFields={state.userPreferencesForFields}
-                                                setUserPreferencesForFields={this.setUserPreferences}
-                                                getVocabularyItems={this.getVocabularyItems}
-                                                toggledFields={state.toggledFields}
-                                                toggleField={this.toggleField}
-                                                readOnly={readOnly}
-                                                validationErrors={state.validationErrors}
-                                            />
-                                        </div>
-                                    </Layout.AuthoringMain>
-                                )}
-                                sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar?.(exposed)}
-                            />
-                        );
-                    }}
-                </WithInteractiveArticleActionsPanel>
+                                        </Layout.AuthoringMain>
+                                    )}
+                                    sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                                    sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                    sidePanelOpen={pinned && OpenWidgetComponent != null}
+                                    sideBar={this.props.getSidebar?.(exposed)}
+                                />
+                            );
+                        }}
+                    </WithInteractiveArticleActionsPanel>
+                </WithKeybindings>
             </React.Fragment>
         );
     }

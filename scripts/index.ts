@@ -253,4 +253,4 @@ setTimeout(() => {
     if (started !== true) {
         startApp([], {});
     }
-}, 500);
+}, 501);

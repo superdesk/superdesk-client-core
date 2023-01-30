@@ -57,6 +57,11 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
+        hotkeys: {
+            'ctrl+alt+shift+s': () => {
+                console.log('saving');
+            },
+        },
     };
 
     const closeButton: ITopBarWidget<IArticle> = {
@@ -72,6 +77,11 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
+        hotkeys: {
+            'ctrl+q': () => {
+                console.log('closing');
+            },
+        },
     };
 
     const minimizeButton: ITopBarWidget<IArticle> = {
