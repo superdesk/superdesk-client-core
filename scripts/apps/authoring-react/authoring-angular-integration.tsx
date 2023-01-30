@@ -58,8 +58,10 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         ),
         availableOffline: true,
         keyBindings: {
-            'ctrl+alt+shift+s': () => {
-                console.log('saving');
+            'ctrl+shift+s': () => {
+                if (hasUnsavedChanges()) {
+                    save();
+                }
             },
         },
     };
@@ -78,8 +80,8 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         ),
         availableOffline: true,
         keyBindings: {
-            'ctrl+q': () => {
-                console.log('closing');
+            'ctrl+shift+e': () => {
+                initiateClosing();
             },
         },
     };
