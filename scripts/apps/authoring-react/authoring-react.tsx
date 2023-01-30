@@ -45,7 +45,7 @@ import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
-import {WithKeybindings} from './with-keybindings';
+import {WithKeyBindings} from './with-keybindings';
 
 export function getFieldsData<T>(
     item: T,
@@ -191,17 +191,14 @@ function getInitialState<T extends IBaseRestApiResponse>(
     return initialState;
 }
 
-function getHotkeysFromActions<T>(actions: Array<ITopBarWidget<T>>) {
+function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>) {
     return actions
-        .filter((action) => action.hotkeys != null)
-        .map((action) => action.hotkeys)
-        .reduce((acc, obj) => {
-            acc = {
+        .filter((action) => action.keyBindings != null)
+        .reduce((acc, action) => {
+            return {
                 ...acc,
-                ...obj,
+                ...action.keyBindings,
             };
-
-            return acc;
         }, {});
 }
 
@@ -1136,9 +1133,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     )
                 }
 
-                <WithKeybindings
-                    keybindings={getHotkeysFromActions(authoringOptions.actions)}
-                >
+                <WithKeyBindings keyBindings={getKeyBindingsFromActions(authoringOptions.actions)}>
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {(panelState, panelActions) => {
                             return (
@@ -1236,7 +1231,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             );
                         }}
                     </WithInteractiveArticleActionsPanel>
-                </WithKeybindings>
+                </WithKeyBindings>
             </React.Fragment>
         );
     }

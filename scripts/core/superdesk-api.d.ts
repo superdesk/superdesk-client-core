@@ -162,7 +162,7 @@ declare module 'superdesk-api' {
         availableOffline: boolean;
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
-        hotkeys?: {
+        keyBindings?: {
             [key: string]: () => void;
         };
     }

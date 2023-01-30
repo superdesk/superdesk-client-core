@@ -57,7 +57,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
-        hotkeys: {
+        keyBindings: {
             'ctrl+alt+shift+s': () => {
                 console.log('saving');
             },
@@ -77,7 +77,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
-        hotkeys: {
+        keyBindings: {
             'ctrl+q': () => {
                 console.log('closing');
             },

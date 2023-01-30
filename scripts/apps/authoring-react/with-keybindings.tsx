@@ -2,12 +2,12 @@
 import React from 'react';
 
 interface IProps {
-    keybindings: {
+    keyBindings: {
         [key: string]: () => void;
     };
 }
 
-export class WithKeybindings extends React.PureComponent<IProps> {
+export class WithKeyBindings extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
 
@@ -15,22 +15,22 @@ export class WithKeybindings extends React.PureComponent<IProps> {
     }
 
     handleKeyUp(event: KeyboardEvent) {
-        for (const [hotkey, fn] of Object.entries(this.props.keybindings)) {
-            const splitted = hotkey.split('+');
-            const altRequired = splitted.includes('alt');
-            const shiftRequired = splitted.includes('shift');
-            const ctrlRequired = splitted.includes('ctrl');
+        const matchingKeyBinding: string | null = Object.keys(this.props.keyBindings).find((hotkey) => {
+            const split = hotkey.split('+');
+            const altRequired = split.includes('alt');
+            const shiftRequired = split.includes('shift');
+            const ctrlRequired = split.includes('ctrl');
 
-            if (
-                altRequired ? event.altKey : !event.altKey
-                && (shiftRequired ? event.shiftKey : !event.shiftKey)
-                && (ctrlRequired ? event.ctrlKey : !event.ctrlKey)
-                && (splitted[splitted.length - 1] === event.key.toLowerCase())
-            ) {
-                fn();
-                event.stopPropagation();
-                break;
-            }
+            return (altRequired && event.altKey === true)
+                && (shiftRequired && event.shiftKey === true)
+                && (ctrlRequired && event.ctrlKey === true)
+                && (split[split.length - 1] === event.key.toLowerCase());
+        });
+
+        if (matchingKeyBinding != null) {
+            event.stopPropagation();
+
+            this.props.keyBindings[matchingKeyBinding]();
         }
     }
 
