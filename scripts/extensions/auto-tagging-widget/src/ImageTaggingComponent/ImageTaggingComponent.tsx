@@ -161,7 +161,9 @@ export function getImageTaggingComponent(
                 images: [],
             };
             this.abortController = new AbortController();
-            this.fetchTimeout = setTimeout();
+            this.fetchTimeout = setTimeout(() => {
+                return true;
+            });
             this.runFetchImages = this.runFetchImages.bind(this);
             this.formatTags = this.formatTags.bind(this);
             this.handleClickImage = this.handleClickImage.bind(this);
