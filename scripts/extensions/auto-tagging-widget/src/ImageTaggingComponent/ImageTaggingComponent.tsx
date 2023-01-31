@@ -4,6 +4,7 @@ import {ITagUi} from '../types';
 import {OrderedMap} from 'immutable';
 import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
+import {debounce} from 'lodash';
 
 interface ITagInput {
     title: string;
@@ -38,7 +39,6 @@ interface IProps {
 interface IState {
     showImages: boolean;
     isLoading: boolean;
-    fetchError: boolean;
     selectedImage: IImage | null;
     images: Array<IImage>;
 }
@@ -149,21 +149,20 @@ export function getImageTaggingComponent(
 
     return class ImageTagging extends React.PureComponent<IProps, IState> {
         private abortController: AbortController;
-        private fetchTimeout: ReturnType<typeof setTimeout>;
+        private debouncedFetch;
         constructor(props: IProps) {
             super(props);
 
             this.state = {
                 showImages: true,
                 isLoading: false,
-                fetchError: false,
                 selectedImage: null,
                 images: [],
             };
             this.abortController = new AbortController();
-            this.fetchTimeout = setTimeout(() => {
-                return true;
-            });
+            this.debouncedFetch = debounce(() => {
+                this.runFetchImages();
+            }, 1500);
             this.runFetchImages = this.runFetchImages.bind(this);
             this.formatTags = this.formatTags.bind(this);
             this.handleClickImage = this.handleClickImage.bind(this);
@@ -177,15 +176,12 @@ export function getImageTaggingComponent(
 
         componentWillUnmount() {
             this.abortController.abort();
-            clearTimeout(this.fetchTimeout);
+            this.debouncedFetch.cancel();
         }
 
         componentDidUpdate(prevProps: IProps) {
-            clearTimeout(this.fetchTimeout);
             if (this.props.data !== prevProps.data) {
-                this.fetchTimeout = setTimeout(() => {
-                    this.runFetchImages();
-                }, 1000);
+                this.debouncedFetch();
             }
         }
 
@@ -212,7 +208,6 @@ export function getImageTaggingComponent(
                     },
                 })
                     .then((res) => {
-                        this.setState({fetchError: false});
                         try {
                             this.setState({
                                 selectedImage: res.result[0],
@@ -225,8 +220,9 @@ export function getImageTaggingComponent(
                             });
                         }
                     })
-                    .catch(() => {
-                        this.setState({fetchError: true});
+                    .catch((e: Error) => {
+                        superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!\r'
+                        + JSON.stringify(e));
                     })
                     .finally(() => this.setState({isLoading: false}));
             });
@@ -271,20 +267,13 @@ export function getImageTaggingComponent(
 
         render() {
             const {style} = this.props;
-            const {showImages, isLoading, fetchError, selectedImage, images} =
+            const {showImages, isLoading, selectedImage, images} =
                 this.state;
 
             return (
                 <ToggleBoxNext
-                    title={gettext(
-                        `image suggestions ${
-                            isLoading
-                                ? '(...)'
-                                : fetchError
-                                    ? '(error)'
-                                    : `(${images.length})`
-                        }`,
-                    )}
+                    title={isLoading ? gettext('image suggestions (...)')
+                        : gettext('image suggestions ({{n}})', {n: images.length})}
                     style="circle"
                     isOpen={showImages}
                     key="image-suggestion"
