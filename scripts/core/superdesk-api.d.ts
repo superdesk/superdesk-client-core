@@ -433,12 +433,17 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
+    export interface IKeyBindings {
+        [key: string]: () => void;
+    }
+
     export interface IAuthoringAction {
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
         label: string;
         onTrigger(): void;
+        keyBindings?: IKeyBindings;
     }
 
     export interface IArticleActionBulk {

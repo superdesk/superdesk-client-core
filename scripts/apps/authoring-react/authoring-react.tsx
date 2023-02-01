@@ -1089,6 +1089,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         default: true,
                                                     });
                                                 },
+                                                keyBindings: {
+                                                    'ctrl+shift+y': () => {
+
+                                                        console.log('trigered');
+                                                        this.setState({
+                                                            ...state,
+                                                            spellcheckerEnabled: nextValue,
+                                                        });
+
+                                                        dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                                        preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                            type: 'bool',
+                                                            enabled: nextValue,
+                                                            default: true,
+                                                        });
+                                                    },
+                                                },
                                             });
                                         } else {
                                             coreActions.push({
@@ -1109,9 +1127,32 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         default: true,
                                                     });
                                                 },
+                                                keyBindings: {
+                                                    'ctrl+shift+y': () => {
+                                                        console.log('trigered');
+
+                                                        const nextValue = true;
+
+                                                        this.setState({
+                                                            ...state,
+                                                            spellcheckerEnabled: true,
+                                                        });
+
+                                                        dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                                        preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                            type: 'bool',
+                                                            enabled: nextValue,
+                                                            default: true,
+                                                        });
+                                                    },
+                                                },
                                             });
                                         }
                                     }
+
+                                    console.log(coreActions);
+
 
                                     return [...coreActions, ...actions];
                                 });
@@ -1123,7 +1164,43 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         ];
 
+        console.log(toolbar1Widgets);
+
+        // eslint-disable-next-line array-callback-return
+        toolbar1Widgets.filter((e) => {
+            if (e.keyBindings) {
+                console.log(e.keyBindings);
+            }
+        });
+
+
+
         const pinned = state.openWidget?.pinned === true;
+
+        const preview = {
+            jsxButton: () => {
+                return (
+                    <IconButton
+                        icon="preview-mode"
+                        ariaValue={gettext('Print preview')}
+                        onClick={() => {
+                            previewAuthoringEntity(
+                                state.profile,
+                                state.fieldsDataWithChanges,
+                            );
+                        }}
+                    />
+                );
+            },
+            keybindings: {
+                'ctrl+shift+i': () => {
+                    previewAuthoringEntity(
+                        state.profile,
+                        state.fieldsDataWithChanges,
+                    );
+                },
+            },
+        };
 
         return (
             <React.Fragment>
@@ -1133,7 +1210,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     )
                 }
 
-                <WithKeyBindings keyBindings={getKeyBindingsFromActions(authoringOptions.actions)}>
+                <WithKeyBindings
+                    keyBindings={
+                        {
+                            ...preview.keybindings,
+                            ...getKeyBindingsFromActions(authoringOptions.actions)
+                        }
+                    }
+                >
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {(panelState, panelActions) => {
                             return (
@@ -1173,16 +1257,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     </div>
 
                                                     <ButtonGroup align="end">
-                                                        <IconButton
-                                                            icon="preview-mode"
-                                                            ariaValue={gettext('Print preview')}
-                                                            onClick={() => {
-                                                                previewAuthoringEntity(
-                                                                    state.profile,
-                                                                    state.fieldsDataWithChanges,
-                                                                );
-                                                            }}
-                                                        />
+                                                        {preview.jsxButton()}
                                                     </ButtonGroup>
                                                 </React.Fragment>
                                             )}

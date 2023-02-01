@@ -210,6 +210,11 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                     }}
                 />
             ),
+            keyBindings: {
+                'ctrl+shift+u': () => {
+                    stealLock();
+                }
+            },
             availableOffline: false,
         });
 
