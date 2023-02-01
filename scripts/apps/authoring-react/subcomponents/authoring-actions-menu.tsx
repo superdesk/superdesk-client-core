@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 interface IProps {
-    getActions: () => Promise<Array<IAuthoringAction>>;
+    getActions: () => Promise<Array<IAuthoringAction>>; // TODO: convert to sync interface
 }
 
 interface IState {

@@ -181,7 +181,7 @@ declare module 'superdesk-api' {
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
-        getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+        getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
         getAuthoringTopBarWidgets(
             options: IExposedFromAuthoring<T>,
@@ -433,6 +433,9 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
+    /**
+     * TODO: add a comment, specify data shape and behavior
+     */
     export interface IKeyBindings {
         [key: string]: () => void;
     }
@@ -631,7 +634,7 @@ declare module 'superdesk-api' {
                 article: IArticle,
                 contentProfile: IContentProfileV2,
                 fieldsData: import('immutable').Map<string, unknown>,
-            ): Promise<Array<IAuthoringAction>>;
+            ): Array<IAuthoringAction>;
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -645,7 +648,7 @@ declare module 'superdesk-api' {
             };
             entities?: {
                 article?: {
-                    getActions?(article: IArticle): Promise<Array<IAuthoringAction>>;
+                    getActions?(article: IArticle): Array<IAuthoringAction>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;

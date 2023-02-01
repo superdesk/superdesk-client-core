@@ -12,6 +12,7 @@ import {
     IPropsAuthoring,
     ITopBarWidget,
     IExposedFromAuthoring,
+    IKeyBindings,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -1055,6 +1056,99 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
+        const authoringActions: Array<IAuthoringAction> = (() => {
+            const actions = this.props.getActions?.(exposed) ?? [];
+            const coreActions: Array<IAuthoringAction> = [];
+
+            if (appConfig.features.useTansaProofing !== true) {
+                if (state.spellcheckerEnabled) {
+                    const nextValue = false;
+
+                    coreActions.push({
+                        label: gettext('Disable spellchecker'),
+                        onTrigger: () => {
+                            this.setState({
+                                ...state,
+                                spellcheckerEnabled: nextValue,
+                            });
+
+                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                type: 'bool',
+                                enabled: nextValue,
+                                default: true,
+                            });
+                        },
+                        keyBindings: {
+                            'ctrl+shift+y': () => {
+                                this.setState({
+                                    ...state,
+                                    spellcheckerEnabled: nextValue,
+                                });
+
+                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                    type: 'bool',
+                                    enabled: nextValue,
+                                    default: true,
+                                });
+                            },
+                        },
+                    });
+                } else {
+                    coreActions.push({
+                        label: gettext('Enable spellchecker'),
+                        onTrigger: () => {
+                            const nextValue = true;
+
+                            this.setState({
+                                ...state,
+                                spellcheckerEnabled: true,
+                            });
+
+                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                type: 'bool',
+                                enabled: nextValue,
+                                default: true,
+                            });
+                        },
+                        keyBindings: {
+                            'ctrl+shift+y': () => {
+                                const nextValue = true;
+
+                                this.setState({
+                                    ...state,
+                                    spellcheckerEnabled: true,
+                                });
+
+                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                    type: 'bool',
+                                    enabled: nextValue,
+                                    default: true,
+                                });
+                            },
+                        },
+                    });
+                }
+            }
+
+            return [...coreActions, ...actions];
+        })();
+
+        const keyBindingsFromAuthoringActions: IKeyBindings =
+            authoringActions.reduce((acc, action) => {
+                return {
+                    ...acc,
+                    ...(action.keyBindings ?? {}),
+                };
+            }, {});
+
         const toolbar1Widgets: Array<ITopBarWidget<T>> = [
             ...authoringOptions.actions,
             {
@@ -1062,109 +1156,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 priority: 0.4,
                 component: () => {
                     return (
-                        <AuthoringActionsMenu
-                            getActions={() => {
-                                return (
-                                    this.props.getActions?.(exposed) ?? Promise.resolve([])
-                                ).then((actions) => {
-                                    const coreActions: Array<IAuthoringAction> = [];
-
-                                    if (appConfig.features.useTansaProofing !== true) {
-                                        if (state.spellcheckerEnabled) {
-                                            const nextValue = false;
-
-                                            coreActions.push({
-                                                label: gettext('Disable spellchecker'),
-                                                onTrigger: () => {
-                                                    this.setState({
-                                                        ...state,
-                                                        spellcheckerEnabled: nextValue,
-                                                    });
-
-                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                        type: 'bool',
-                                                        enabled: nextValue,
-                                                        default: true,
-                                                    });
-                                                },
-                                                keyBindings: {
-                                                    'ctrl+shift+y': () => {
-                                                        this.setState({
-                                                            ...state,
-                                                            spellcheckerEnabled: nextValue,
-                                                        });
-
-                                                        dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                        preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                            type: 'bool',
-                                                            enabled: nextValue,
-                                                            default: true,
-                                                        });
-                                                    },
-                                                },
-                                            });
-                                        } else {
-                                            coreActions.push({
-                                                label: gettext('Enable spellchecker'),
-                                                onTrigger: () => {
-                                                    const nextValue = true;
-
-                                                    this.setState({
-                                                        ...state,
-                                                        spellcheckerEnabled: true,
-                                                    });
-
-                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                        type: 'bool',
-                                                        enabled: nextValue,
-                                                        default: true,
-                                                    });
-                                                },
-                                                keyBindings: {
-                                                    'ctrl+shift+y': () => {
-                                                        const nextValue = true;
-
-                                                        this.setState({
-                                                            ...state,
-                                                            spellcheckerEnabled: true,
-                                                        });
-
-                                                        dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                        preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                            type: 'bool',
-                                                            enabled: nextValue,
-                                                            default: true,
-                                                        });
-                                                    },
-                                                },
-                                            });
-                                        }
-                                    }
-
-                                    return [...coreActions, ...actions];
-                                });
-                            }}
-                        />
+                        <AuthoringActionsMenu getActions={() => Promise.resolve(authoringActions)} />
                     );
                 },
                 availableOffline: true,
             },
         ];
-
-        console.log(toolbar1Widgets);
-
-        // eslint-disable-next-line array-callback-return
-        toolbar1Widgets.filter((e) => {
-            if (e.keyBindings) {
-                console.log(e.keyBindings);
-            }
-        });
 
         const pinned = state.openWidget?.pinned === true;
 
@@ -1206,6 +1203,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         {
                             ...preview.keybindings,
                             ...getKeyBindingsFromActions(authoringOptions.actions),
+                            ...keyBindingsFromAuthoringActions,
                         }
                     }
                 >

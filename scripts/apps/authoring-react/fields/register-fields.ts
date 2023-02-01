@@ -32,9 +32,9 @@ export function registerAuthoringReactFields() {
                         },
                     };
 
-                    return Promise.resolve([checkSpellingAction]);
+                    return [checkSpellingAction];
                 } else {
-                    return Promise.resolve([]);
+                    return [];
                 }
             },
             customFieldTypes: [
