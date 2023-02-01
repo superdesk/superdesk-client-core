@@ -158,7 +158,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             actions.push(getManageHighlights());
         }
 
-
         // eslint-disable-next-line no-case-declarations
         const manageDesksButton: ITopBarWidget<IArticle> = ({
             group: 'start',
@@ -213,7 +212,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             keyBindings: {
                 'ctrl+shift+u': () => {
                     stealLock();
-                }
+                },
             },
             availableOffline: false,
         });

@@ -47,7 +47,6 @@ import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
-import TranslateModal from './toolbar/translate-modal';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 
 function getAuthoringActionsFromExtensions(
@@ -211,7 +210,6 @@ const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
         })
     ),
 });
-
 
 const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Translate'),

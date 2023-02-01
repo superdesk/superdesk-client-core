@@ -1091,8 +1091,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 },
                                                 keyBindings: {
                                                     'ctrl+shift+y': () => {
-
-                                                        console.log('trigered');
                                                         this.setState({
                                                             ...state,
                                                             spellcheckerEnabled: nextValue,
@@ -1129,8 +1127,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 },
                                                 keyBindings: {
                                                     'ctrl+shift+y': () => {
-                                                        console.log('trigered');
-
                                                         const nextValue = true;
 
                                                         this.setState({
@@ -1151,9 +1147,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         }
                                     }
 
-                                    console.log(coreActions);
-
-
                                     return [...coreActions, ...actions];
                                 });
                             }}
@@ -1172,8 +1165,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 console.log(e.keyBindings);
             }
         });
-
-
 
         const pinned = state.openWidget?.pinned === true;
 
@@ -1214,7 +1205,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     keyBindings={
                         {
                             ...preview.keybindings,
-                            ...getKeyBindingsFromActions(authoringOptions.actions)
+                            ...getKeyBindingsFromActions(authoringOptions.actions),
                         }
                     }
                 >
