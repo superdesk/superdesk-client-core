@@ -3,7 +3,7 @@ import {IArticle, ISuperdesk} from 'superdesk-api';
 import {ITagUi} from '../types';
 import {OrderedMap} from 'immutable';
 import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
-import {ToggleBoxNext} from 'superdesk-ui-framework';
+import {ToggleBox, IconButton, Popover} from 'superdesk-ui-framework/react';
 import {debounce} from 'lodash';
 
 interface ITagInput {
@@ -37,7 +37,6 @@ interface IProps {
 }
 
 interface IState {
-    showImages: boolean;
     isLoading: boolean;
     selectedImage: IImage | null;
     images: Array<IImage>;
@@ -154,7 +153,6 @@ export function getImageTaggingComponent(
             super(props);
 
             this.state = {
-                showImages: true,
                 isLoading: false,
                 selectedImage: null,
                 images: [],
@@ -267,17 +265,32 @@ export function getImageTaggingComponent(
 
         render() {
             const {style} = this.props;
-            const {showImages, isLoading, selectedImage, images} =
-                this.state;
+            const {isLoading, selectedImage, images} = this.state;
 
             return (
-                <ToggleBoxNext
+                <ToggleBox
+                    className="toggle-box--circle"
                     title={isLoading ? gettext('image suggestions (...)')
                         : gettext('image suggestions ({{n}})', {n: images.length})}
-                    style="circle"
-                    isOpen={showImages}
-                    key="image-suggestion"
+                    initiallyOpen={true}
+                    badge={(
+                        <IconButton
+                            id="image-suggestions-info-btn"
+                            icon="info-sign"
+                            size="small"
+                            ariaValue="info"
+                        />
+                    )}
                 >
+                    <Popover
+                        title={gettext('Information')}
+                        placement="bottom-end"
+                        triggerSelector="#image-suggestions-info-btn"
+                        zIndex={999}
+                    >
+                        The image suggestions are based on the tags.
+                        You can drag and drop the images onto the body HTML.
+                    </Popover>
                     <div style={style}>
                         {isLoading ? (
                             <div
@@ -355,7 +368,7 @@ export function getImageTaggingComponent(
                             </div>
                         ) : null}
                     </div>
-                </ToggleBoxNext>
+                </ToggleBox>
             );
         }
     };
