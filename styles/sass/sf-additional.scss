@@ -199,7 +199,6 @@
     flex-grow: 0;
     .search-handler {
         min-width: 48px;
-        //height: $nav-height;
         padding: 8px 10px 8px 14px;
         background: none;
         display: flex;
@@ -218,6 +217,8 @@
             transition: all 0.3s ease;
             &:focus {
                 box-shadow: none;
+                width: auto;
+
             }
             &::placeholder {
                 color: $sd-text-light;
@@ -608,7 +609,6 @@
         }
     }
 }
-
 
 // Datepicker - wrapper for angular ui datepicker
 // ---------------------------------------------

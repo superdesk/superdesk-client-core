@@ -1025,7 +1025,6 @@ textarea {
         padding: 0 1.6rem 0 0.8rem !important;
         line-height: 24px;
         text-align: start;
-
         display: flex;
         align-items: center;
 
@@ -1098,7 +1097,8 @@ textarea {
             padding: 0 1.6rem 0 0.8rem !important;
             height: 3.2rem;
             border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0 !important;
-            font-size: $baseFontSize;
+            font-size: 1.4rem;
+            color: var(--color-text);
             &:hover {
                 border-color: var(--color-input-border-hover);
                 background-color: var(--color-input-bg--hover);
