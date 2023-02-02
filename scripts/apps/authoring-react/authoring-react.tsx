@@ -1141,13 +1141,32 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             return [...coreActions, ...actions];
         })();
 
-        const keyBindingsFromAuthoringActions: IKeyBindings =
-            authoringActions.reduce((acc, action) => {
-                return {
-                    ...acc,
-                    ...(action.keyBindings ?? {}),
+        const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
+            return {
+                ...acc,
+                ...(action.keyBindings ?? {}),
+            };
+        }, {});
+
+        const widgetsCount = this.props.getSidebar(exposed).props.items.length;
+
+        const widgetKeybindings: IKeyBindings = {};
+
+        for (let i = 0; i < widgetsCount; i++) {
+            widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
+                const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
+
+                const nextState: IStateLoaded<T> = {
+                    ...state,
+                    openWidget: {
+                        name: nextWidgetName,
+                        pinned: state.openWidget?.pinned ?? false,
+                    },
                 };
-            }, {});
+
+                this.setState(nextState);
+            };
+        }
 
         const toolbar1Widgets: Array<ITopBarWidget<T>> = [
             ...authoringOptions.actions,
@@ -1204,6 +1223,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             ...preview.keybindings,
                             ...getKeyBindingsFromActions(authoringOptions.actions),
                             ...keyBindingsFromAuthoringActions,
+                            ...widgetKeybindings,
                         }
                     }
                 >

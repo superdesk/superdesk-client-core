@@ -29,7 +29,6 @@ export class WithKeyBindings extends React.PureComponent<IProps> {
 
         if (matchingKeyBinding != null) {
             event.stopPropagation();
-
             this.props.keyBindings[matchingKeyBinding]();
         }
     }

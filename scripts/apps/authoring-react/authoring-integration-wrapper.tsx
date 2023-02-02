@@ -193,6 +193,18 @@ const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
                 );
             })
         ),
+        keyBindings: {
+            'ctrl+shift+h': () => {
+                showModal(({closeModal}) => {
+                    return (
+                        <HighlightsModal
+                            article={getItem()}
+                            closeModal={closeModal}
+                        />
+                    );
+                });
+            },
+        },
     };
 };
 
@@ -470,6 +482,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSidebar={this.state.isSidebarCollapsed ? null : getSidebar}
                             topBar2Widgets={topbar2WidgetsReady}
                             validateBeforeSaving={false}
+                            getSideWidgetNameAtIndex={(article, index) => {
+                                return getWidgetsFromExtensions(article)[index].label;
+                            }}
                         />
                     );
                 }}

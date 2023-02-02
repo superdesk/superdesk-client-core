@@ -198,6 +198,8 @@ declare module 'superdesk-api' {
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+
+        getSideWidgetNameAtIndex?(item: T, index: number): string;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -434,7 +436,7 @@ declare module 'superdesk-api' {
     export type IDisplayPriority = number;
 
     /**
-     * TODO: add a comment, specify data shape and behavior
+     * EXAMPLE: 'ctrl+shift+s': () => save():'
      */
     export interface IKeyBindings {
         [key: string]: () => void;
