@@ -2,6 +2,7 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
+import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -13,6 +14,40 @@ function SuperdeskFlagsService() {
     Object.keys(appConfig.ui).filter((key) => key !== 'authoring').forEach((key) => {
         this.flags[key] = appConfig.ui[key];
     });
+}
+
+function setupFullWidthPage($scope) {
+    const fullWidthConfig: IFullWidthPageCapabilityConfiguration = {enabled: false};
+
+    $scope.fullWidthConfig = fullWidthConfig;
+
+    $scope.fullWidthEnabled = false;
+
+    $scope.setupFullWidthCapability = (config: IFullWidthPageCapabilityConfiguration) => {
+        if (config.enabled && config.allowed) {
+            const originalToggleFn = config.onToggle;
+
+            const nextConfig: IFullWidthPageCapabilityConfiguration = {
+                ...config,
+                onToggle: () => {
+                    $scope.fullWidthEnabled = !$scope.fullWidthEnabled;
+                    originalToggleFn();
+                },
+            };
+
+            $scope.$applyAsync(() => {
+                $scope.fullWidthConfig = nextConfig;
+            });
+        } else {
+            $scope.$applyAsync(() => {
+                $scope.fullWidthConfig = config;
+
+                if (config.enabled !== true) {
+                    $scope.fullWidthEnabled = false;
+                }
+            });
+        }
+    };
 }
 
 /**
@@ -42,6 +77,8 @@ angular.module('superdesk.core.menu', [
     .directive('sdSuperdeskView', ['asset', function(asset) {
         SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
         function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
+            setupFullWidthPage($scope);
+
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;

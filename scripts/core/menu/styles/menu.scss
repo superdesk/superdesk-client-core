@@ -103,17 +103,17 @@
             background: var(--sd-colour-bg--01);
             border:0;
             @include text-normal();
-    
+
             &:hover {
                 text-decoration: none;
                 background: var(--sd-colour-bg--00);
             }
-    
+
             &.main-link {
                 font-size: 15px;
                 color: #aaa;
             }
-    
+
             //main nav toggle button
             &.collapse-nav {
                 width: $nav-height !important;
@@ -604,7 +604,8 @@
       overflow: hidden;
   }
 
-  .authoring-active {
+  .authoring-active,
+  .full-width-toggle-available {
     .active {
         .sd-sidebar-menu__main-icon, .sd-sidebar-menu__helper-icon {
             color: $white;
@@ -624,7 +625,7 @@
             transform: rotate(180deg);
             left: -3rem;
         }
-        &:hover {            
+        &:hover {
             .sd-sidebar-menu__helper-icon {
                 left: 0.5rem;
             }

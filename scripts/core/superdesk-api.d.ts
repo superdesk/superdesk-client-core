@@ -790,10 +790,15 @@ declare module 'superdesk-api' {
 
     // PAGE
 
+    /**
+     * When not enabled, existing monitoring hiding functionality has to work.
+     */
+    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: () => void};
+
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentType;
+        component: React.ComponentType<{setupFullWidthCapability: (config: IFullWidthPageCapabilityConfiguration) => void}>;
         priority?: number;
 
         showTopMenu?: boolean;

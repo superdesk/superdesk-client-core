@@ -80,7 +80,7 @@ core.constant('lodash', _);
 
 const styles = 'display: flex; height: 100%;';
 
-core.component('sdExtensionPage', reactToAngular1(ExtensionPage, [], [], styles));
+core.component('sdExtensionPage', reactToAngular1(ExtensionPage, ['setupFullWidthCapability'], [], styles));
 core.config(['$routeProvider', ($routeProvider) => {
     // set initial default route to personal
     // when user is logged in, it will be overwritten by a default route
