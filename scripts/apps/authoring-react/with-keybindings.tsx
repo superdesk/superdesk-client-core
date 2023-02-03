@@ -1,10 +1,8 @@
-
 import React from 'react';
+import {IKeyBindings} from 'superdesk-api';
 
 interface IProps {
-    keyBindings: {
-        [key: string]: () => void;
-    };
+    keyBindings: IKeyBindings;
 }
 
 export class WithKeyBindings extends React.PureComponent<IProps> {
@@ -22,9 +20,9 @@ export class WithKeyBindings extends React.PureComponent<IProps> {
             const ctrlRequired = split.includes('ctrl');
 
             return (altRequired ? event.altKey : !event.altKey)
-            && (shiftRequired ? event.shiftKey : !event.shiftKey)
-            && (ctrlRequired ? event.ctrlKey : !event.ctrlKey)
-            && (split[split.length - 1] === event.key.toLowerCase());
+                && (shiftRequired ? event.shiftKey : !event.shiftKey)
+                && (ctrlRequired ? event.ctrlKey : !event.ctrlKey)
+                && (split[split.length - 1] === event.key.toLowerCase());
         });
 
         if (matchingKeyBinding != null) {

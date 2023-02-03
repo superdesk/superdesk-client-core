@@ -181,28 +181,25 @@ const getExportModal = (
 });
 
 const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
+    const showHighlightsModal = () => {
+        showModal(({closeModal}) => {
+            return (
+                <HighlightsModal
+                    article={getItem()}
+                    closeModal={closeModal}
+                />
+            );
+        });
+    };
+
     return {
         label: gettext('Highlights'),
         onTrigger: () => (
-            showModal(({closeModal}) => {
-                return (
-                    <HighlightsModal
-                        article={getItem()}
-                        closeModal={closeModal}
-                    />
-                );
-            })
+            showHighlightsModal()
         ),
         keyBindings: {
             'ctrl+shift+h': () => {
-                showModal(({closeModal}) => {
-                    return (
-                        <HighlightsModal
-                            article={getItem()}
-                            closeModal={closeModal}
-                        />
-                    );
-                });
+                showHighlightsModal();
             },
         },
     };

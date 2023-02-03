@@ -1184,29 +1184,41 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const pinned = state.openWidget?.pinned === true;
 
-        const preview = {
-            jsxButton: () => {
-                return (
-                    <IconButton
-                        icon="preview-mode"
-                        ariaValue={gettext('Print preview')}
-                        onClick={() => {
-                            previewAuthoringEntity(
-                                state.profile,
-                                state.fieldsDataWithChanges,
-                            );
-                        }}
-                    />
+        const printPreviewAction = (() => {
+            const execute = () => {
+                previewAuthoringEntity(
+                    state.profile,
+                    state.fieldsDataWithChanges,
                 );
-            },
-            keybindings: {
-                'ctrl+shift+i': () => {
-                    previewAuthoringEntity(
-                        state.profile,
-                        state.fieldsDataWithChanges,
+            };
+
+            const preview = {
+                jsxButton: () => {
+                    return (
+                        <IconButton
+                            icon="preview-mode"
+                            ariaValue={gettext('Print preview')}
+                            onClick={() => {
+                                execute();
+                            }}
+                        />
                     );
                 },
-            },
+                keybindings: {
+                    'ctrl+shift+i': () => {
+                        execute();
+                    },
+                },
+            };
+
+            return preview;
+        })();
+
+        const ObjectOfKeybindings = {
+            ...printPreviewAction.keybindings,
+            ...getKeyBindingsFromActions(authoringOptions.actions),
+            ...keyBindingsFromAuthoringActions,
+            ...widgetKeybindings,
         };
 
         return (
@@ -1218,14 +1230,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
 
                 <WithKeyBindings
-                    keyBindings={
-                        {
-                            ...preview.keybindings,
-                            ...getKeyBindingsFromActions(authoringOptions.actions),
-                            ...keyBindingsFromAuthoringActions,
-                            ...widgetKeybindings,
-                        }
-                    }
+                    keyBindings={ObjectOfKeybindings}
                 >
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {(panelState, panelActions) => {
@@ -1266,7 +1271,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     </div>
 
                                                     <ButtonGroup align="end">
-                                                        {preview.jsxButton()}
+                                                        {printPreviewAction.jsxButton()}
                                                     </ButtonGroup>
                                                 </React.Fragment>
                                             )}

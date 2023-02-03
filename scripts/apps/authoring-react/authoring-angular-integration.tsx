@@ -207,11 +207,14 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                     unlock={() => {
                         stealLock();
                     }}
+                    isLockedInOtherSession={(article) => sdApi.article.isLockedInOtherSession(article)}
                 />
             ),
             keyBindings: {
                 'ctrl+shift+u': () => {
-                    stealLock();
+                    if (sdApi.article.isLockedInOtherSession(item)) {
+                        stealLock();
+                    }
                 },
             },
             availableOffline: false,

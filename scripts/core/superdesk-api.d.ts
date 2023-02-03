@@ -162,9 +162,7 @@ declare module 'superdesk-api' {
         availableOffline: boolean;
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
-        keyBindings?: {
-            [key: string]: () => void;
-        };
+        keyBindings?: IKeyBindings;
     }
 
     interface IPropsAuthoring<T> {
@@ -199,7 +197,7 @@ declare module 'superdesk-api' {
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
-        getSideWidgetNameAtIndex?(item: T, index: number): string;
+        getSideWidgetNameAtIndex(item: T, index: number): string;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -436,7 +434,7 @@ declare module 'superdesk-api' {
     export type IDisplayPriority = number;
 
     /**
-     * EXAMPLE: 'ctrl+shift+s': () => save():'
+     * EXAMPLE: `{'ctrl+shift+s': () => save()}`
      */
     export interface IKeyBindings {
         [key: string]: () => void;
