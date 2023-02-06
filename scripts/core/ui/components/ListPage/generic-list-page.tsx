@@ -375,57 +375,47 @@ export class GenericListPageComponent<T>
         };
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
+            <div className='sd-page__flex-helper'>
                 <SubNav>
                     <div
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
+                        className='sd-display--contents'
                     >
                         {
                             this.props.disallowFiltering ? null : (
-                                <div>
-                                    <Button
-                                        icon="icon-filter-large"
-                                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                                        active={this.state.filtersOpen}
-                                        darker={true}
-                                        data-test-id="toggle-filters"
-                                    />
-                                </div>
+                                <Button
+                                    icon="icon-filter-large"
+                                    onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                    active={this.state.filtersOpen}
+                                    darker={true}
+                                    data-test-id="toggle-filters"
+                                />
                             )
                         }
 
                         {
                             this.props.fieldForSearch == null ? null : (
-                                <div style={{flexGrow: 1}}>
-                                    <SearchBar
-                                        ref={(instance) => {
-                                            this.searchBarRef = instance;
-                                        }}
-                                        value=""
-                                        allowCollapsed={false}
-                                        onSearch={(value) => {
-                                            this.handleFilterFieldChange(
-                                                this.props.fieldForSearch.field,
-                                                value,
-                                                this.filter,
-                                            );
-                                        }}
-                                    />
-                                </div>
+                                <SearchBar
+                                    ref={(instance) => {
+                                        this.searchBarRef = instance;
+                                    }}
+                                    value=""
+                                    allowCollapsed={false}
+                                    onSearch={(value) => {
+                                        this.handleFilterFieldChange(
+                                            this.props.fieldForSearch.field,
+                                            value,
+                                            this.filter,
+                                        );
+                                    }}
+                                />
                             )
                         }
 
-                        <div style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingLeft: 10}}>
+                        <div className='sd-display--flex sd sd-padding-s--2 sd-margin-s--auto sd-gap--small'>
                             {this.props.crudManager._meta.total == null ? null : (
-                                <span style={{display: 'flex', alignItems: 'center'}}>
+                                <span className='sd-display--flex sd-flex--items-center sd-gap--small'>
                                     <span>{gettext('Total:')}</span>
-                                    &nbsp;
-                                    <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
+                                    <span className="badge">{this.props.crudManager._meta.total}</span>
                                 </span>
                             )}
 

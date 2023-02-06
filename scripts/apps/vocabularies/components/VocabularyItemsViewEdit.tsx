@@ -330,15 +330,12 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         return (
             <React.Fragment>
                 <div className="subnav">
-                    <div className={'flat-searchbar' + (this.state.searchExtended ? ' extended' : '')}>
+                    <div className="flat-searchbar extended">
                         <div className="search-handler" role="search">
                             <label
                                 className="trigger-icon"
                                 htmlFor="vocabulary-search"
                                 aria-label={gettext('Toggle search')}
-                                onClick={() => {
-                                    this.setState({searchExtended: !this.state.searchExtended});
-                                }}
                             >
                                 <i className="icon-search" />
                             </label>

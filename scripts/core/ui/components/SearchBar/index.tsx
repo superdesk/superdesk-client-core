@@ -112,13 +112,13 @@ export default class SearchBar extends React.Component<IProps, IState> {
                             <>
                                 {removeButton}
 
-                                <IconButton
-                                    style="outline"
-                                    size="small"
-                                    ariaValue={gettext('Search')}
-                                    icon="chevron-right-thin"
+                                <button
+                                    className="search-start visible"
                                     onClick={() => this.props.onSearch(this.state.searchInputValue)}
-                                />
+                                    aria-label="Start search"
+                                >
+                                    <i className="icon-chevron-right-thin"></i>
+                                </button>
                             </>
                         )
                         : null
@@ -126,12 +126,11 @@ export default class SearchBar extends React.Component<IProps, IState> {
         );
 
         return (
-            <div className={'SearchBar flat-searchbar' + (searchBarExtended ? ' extended' : '')}>
-                <div className="search-handler" style={{alignItems: 'center'}}>
+            <div className="SearchBar flat-searchbar extended">
+                <div className="search-handler">
                     <label
                         htmlFor={_uniqueId}
                         className="trigger-icon"
-                        onClick={this.toggleSearchBar}
                         ref={(node) => this.dom.searchIcon = node}
                     >
                         <i className="icon-search" />

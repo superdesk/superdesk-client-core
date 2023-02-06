@@ -11,14 +11,7 @@ export class ManualSearch extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
             <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                }}
+                className="sd-display--flex sd-flex--grow sd-flex--items-center sd-flex--align-self-stretch"
             >
                 <input
                     onKeyUp={(e) => {
