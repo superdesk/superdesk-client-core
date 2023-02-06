@@ -39,7 +39,7 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="8">
                     <MultiSelect
-                        onChange={({value}) => {
+                        onChange={(value) => {
                             this.setState({
                                 ...this.state,
                                 selectedDesks: value.map((desk) => desk._id),

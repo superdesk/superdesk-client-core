@@ -187,7 +187,7 @@ const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
         onTrigger: () => {
             sdApi.highlights.fetchHighlights().then((res) => {
                 if ((res._items.length ?? 0) === 0) {
-                    ui.alert(gettext('Highlights aren\'t configured on this instance.'));
+                    ui.alert(gettext('No highlights have been created yet.'));
                 } else {
                     showModal(({closeModal}) => (
                         <HighlightsModal

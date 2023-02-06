@@ -2,23 +2,12 @@ import {showModal} from '@superdesk/common';
 import {Modal} from 'superdesk-ui-framework/react';
 import React from 'react';
 
-type modalPosition =
-'center'
-| 'top'
-| 'bottom'
-| 'left'
-| 'right'
-| 'top-left'
-| 'top-right'
-| 'bottom-left'
-| 'bottom-right';
-
 export const ui = {
-    alert: (message: string, position: modalPosition = 'top') => (
+    alert: (message: string) => (
         showModal(({closeModal}) => {
             return (
                 <Modal
-                    position={position}
+                    position="top"
                     visible
                     onHide={closeModal}
                     zIndex={1050}
