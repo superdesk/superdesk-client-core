@@ -47,6 +47,7 @@ import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
 import TranslateModal from './toolbar/translate-modal';
 import {MultiEditModal} from './multi-edit-modal';
+import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -159,14 +160,12 @@ const getCompareVersionsModal = (
 const getMultiEditModal = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Multi-edit'),
     onTrigger: () => {
-        showModal(({closeModal}) => {
-            return (
-                <MultiEditModal
-                    initiallySelectedArticles={[getItem()]}
-                    onClose={closeModal}
-                />
-            );
-        });
+        showModal(({closeModal}) => (
+            <MultiEditToolbarAction
+                onClose={closeModal}
+                selectedArticles={[getItem()]}
+            />
+        ));
     },
 });
 
