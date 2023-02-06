@@ -117,7 +117,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
                                     onClick={() => this.props.onSearch(this.state.searchInputValue)}
                                     aria-label="Start search"
                                 >
-                                    <i className="icon-chevron-right-thin"></i>
+                                    <i className="icon-chevron-right-thin" />
                                 </button>
                             </>
                         )

@@ -375,10 +375,10 @@ export class GenericListPageComponent<T>
         };
 
         return (
-            <div className='sd-page__flex-helper'>
+            <div className="sd-page__flex-helper">
                 <SubNav>
                     <div
-                        className='sd-display--contents'
+                        className="sd-display--contents"
                     >
                         {
                             this.props.disallowFiltering ? null : (
@@ -411,9 +411,9 @@ export class GenericListPageComponent<T>
                             )
                         }
 
-                        <div className='sd-display--flex sd sd-padding-s--2 sd-margin-s--auto sd-gap--small'>
+                        <div className="sd-display--flex sd sd-padding-s--2 sd-margin-s--auto sd-gap--small">
                             {this.props.crudManager._meta.total == null ? null : (
-                                <span className='sd-display--flex sd-flex--items-center sd-gap--small'>
+                                <span className="sd-display--flex sd-flex--items-center sd-gap--small">
                                     <span>{gettext('Total:')}</span>
                                     <span className="badge">{this.props.crudManager._meta.total}</span>
                                 </span>
