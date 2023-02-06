@@ -185,7 +185,6 @@ interface IState {
     items: Array<IVocabularyItemWithId>;
     page: number;
     searchTerm: string;
-    searchExtended: boolean;
     sortDropdownOpen: boolean;
     sort: ISortOption | null;
     errorMessage: string | null;
@@ -220,7 +219,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
             ),
             page: 1,
             searchTerm: '',
-            searchExtended: false,
             sortDropdownOpen: false,
             sort: initialSortOption,
             errorMessage: null,
@@ -354,7 +352,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         </div>
                     </div>
 
-                    <div className="sortbar sd-margin-l--auto">
+                    <div className="sortbar sd-margin-start--auto">
                         {this.state.sort == null ? null : (
                             <Dropdown
                                 isOpen={this.state.sortDropdownOpen}

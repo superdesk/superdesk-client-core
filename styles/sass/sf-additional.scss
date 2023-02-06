@@ -2398,7 +2398,7 @@ sd-multi-image-edit {
 
 // Logical Properties & Values for margins and paddings
 // Margin
-.sd-margin-s {
+.sd-margin-start {
     &--0-5 {
         margin-inline-start: $sd-base-increment / 2;
     }
@@ -2420,8 +2420,11 @@ sd-multi-image-edit {
     &--5 {
         margin-inline-start: $sd-base-increment * 5;
     }
+    &--auto {
+        margin-inline-start: auto;
+    }
 }
-.sd-margin-e {
+.sd-margin-end {
     &--0-5 {
         margin-inline-end: $sd-base-increment / 2;
     }
@@ -2443,10 +2446,13 @@ sd-multi-image-edit {
     &--5 {
         margin-inline-end: $sd-base-increment * 5;
     }
+    &--auto {
+        margin-inline-end: auto;
+    }
 }
 
 // Padding
-.sd-padding-s {
+.sd-padding-start {
     &--0-5 {
         padding-inline-start: $sd-base-increment / 2;
     }
@@ -2469,7 +2475,7 @@ sd-multi-image-edit {
         padding-inline-start: $sd-base-increment * 5;
     }
 }
-.sd-padding-e {
+.sd-padding-end {
     &--0-5 {
         padding-inline-end: $sd-base-increment / 2;
     }

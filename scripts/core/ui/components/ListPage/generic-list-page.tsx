@@ -3,7 +3,7 @@
 import React from 'react';
 import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
-
+import classNames from 'classnames';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
@@ -411,7 +411,14 @@ export class GenericListPageComponent<T>
                             )
                         }
 
-                        <div className="sd-display--flex sd sd-padding-s--2 sd-margin-s--auto sd-gap--small">
+                        <div
+                            className={classNames(
+                                'sd-display--flex',
+                                'sd-padding-s--2',
+                                'sd-margin-start--auto',
+                                'sd-gap--small',
+                            )}
+                        >
                             {this.props.crudManager._meta.total == null ? null : (
                                 <span className="sd-display--flex sd-flex--items-center sd-gap--small">
                                     <span>{gettext('Total:')}</span>

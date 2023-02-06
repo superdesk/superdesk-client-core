@@ -39,7 +39,6 @@ export default class SearchBar extends React.Component<IProps, IState> {
         };
 
         this.dom = {searchIcon: null};
-        this.toggleSearchBar = this.toggleSearchBar.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
         this.resetSearch = this.resetSearch.bind(this);
         this.resetSearchValue = this.resetSearchValue.bind(this);
@@ -52,14 +51,6 @@ export default class SearchBar extends React.Component<IProps, IState> {
             this.dom.searchIcon.click();
             this.dom.searchIcon.focus();
         }
-    }
-
-    toggleSearchBar() {
-        if (this.props.allowCollapsed === false) {
-            return;
-        }
-
-        this.setState({searchBarExtended: !this.state.searchBarExtended});
     }
 
     /** Reset the field value, close the search bar and load events */

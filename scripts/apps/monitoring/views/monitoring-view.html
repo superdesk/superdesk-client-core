@@ -104,7 +104,7 @@
                         </div>
 
                         <div sd-multi-action-bar></div>
-                        <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
+                        <div class="subnav__button-stack--square-buttons sd-margin-start--auto">
                             <div class="refresh-box">
                                 <button ng-if="monitoring.showRefresh && (monitoring.singleGroup || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
@@ -206,7 +206,7 @@
 
                         <div ng-if="type === 'monitoring' && monitoring.viewColumn === true" class="subnav__button-stack subnav__button-stack--padded">
                             <span class="sd-overflow-ellipsis" translate>Columns:</span>
-                            <input class="line-input line-input--inline-mini sd-margin-l--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
+                            <input class="line-input line-input--inline-mini sd-margin-start--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
                         </div>
 
                         <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring'">
