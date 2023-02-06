@@ -47,7 +47,6 @@ import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
-import TranslateModal from './toolbar/translate-modal';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 
 function getAuthoringActionsFromExtensions(
@@ -185,16 +184,20 @@ const getExportModal = (
 const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
     return {
         label: gettext('Highlights'),
-        onTrigger: () => (
-            showModal(({closeModal}) => {
-                return (
-                    <HighlightsModal
-                        article={getItem()}
-                        closeModal={closeModal}
-                    />
-                );
-            })
-        ),
+        onTrigger: () => {
+            sdApi.highlights.fetchHighlights().then((res) => {
+                if ((res._items.length ?? 0) === 0) {
+                    ui.alert(gettext('Highlights aren\'t configured on this instance.'));
+                } else {
+                    showModal(({closeModal}) => (
+                        <HighlightsModal
+                            article={getItem()}
+                            closeModal={closeModal}
+                        />
+                    ));
+                }
+            });
+        },
     };
 };
 
