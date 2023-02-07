@@ -1175,7 +1175,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 priority: 0.4,
                 component: () => {
                     return (
-                        <AuthoringActionsMenu getActions={() => Promise.resolve(authoringActions)} />
+                        <AuthoringActionsMenu getActions={() => authoringActions} />
                     );
                 },
                 availableOffline: true,
