@@ -1214,7 +1214,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             return preview;
         })();
 
-        const ObjectOfKeybindings = {
+        const allKeyBindings: IKeyBindings = {
             ...printPreviewAction.keybindings,
             ...getKeyBindingsFromActions(authoringOptions.actions),
             ...keyBindingsFromAuthoringActions,
@@ -1229,9 +1229,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     )
                 }
 
-                <WithKeyBindings
-                    keyBindings={ObjectOfKeybindings}
-                >
+                <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {(panelState, panelActions) => {
                             return (
