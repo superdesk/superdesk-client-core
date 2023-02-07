@@ -30,7 +30,7 @@ export class Editor extends React.PureComponent<IProps> {
                     }}
                     dateFormat={appConfig.view.dateformat}
                     locale={getLocaleForDatePicker(this.props.language)}
-                    shortcuts={this.props.config?.shortcuts?.map(({label, value, term}) => {
+                    headerButtonBar={this.props.config?.shortcuts?.map(({label, value, term}) => {
                         return {
                             label,
                             days: differenceInCalendarDays(

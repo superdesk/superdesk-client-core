@@ -57,6 +57,13 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+s': () => {
+                if (hasUnsavedChanges()) {
+                    save();
+                }
+            },
+        },
     };
 
     const closeButton: ITopBarWidget<IArticle> = {
@@ -72,6 +79,11 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             />
         ),
         availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => {
+                initiateClosing();
+            },
+        },
     };
 
     const minimizeButton: ITopBarWidget<IArticle> = {
@@ -146,7 +158,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             actions.push(getManageHighlights());
         }
 
-
         // eslint-disable-next-line no-case-declarations
         const manageDesksButton: ITopBarWidget<IArticle> = ({
             group: 'start',
@@ -196,8 +207,16 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                     unlock={() => {
                         stealLock();
                     }}
+                    isLockedInOtherSession={(article) => sdApi.article.isLockedInOtherSession(article)}
                 />
             ),
+            keyBindings: {
+                'ctrl+shift+u': () => {
+                    if (sdApi.article.isLockedInOtherSession(item)) {
+                        stealLock();
+                    }
+                },
+            },
             availableOffline: false,
         });
 
