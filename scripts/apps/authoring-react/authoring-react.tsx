@@ -192,7 +192,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
     return initialState;
 }
 
-function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>) {
+function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>): IKeyBindings {
     return actions
         .filter((action) => action.keyBindings != null)
         .reduce((acc, action) => {
