@@ -141,6 +141,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                     unlock={() => {
                         stealLock();
                     }}
+                    isLockedInOtherSession={(article) => sdApi.article.isLockedInOtherSession(article)}
                 />
             ),
             availableOffline: false,

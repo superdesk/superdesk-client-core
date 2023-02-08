@@ -53,7 +53,7 @@ function getAuthoringActionsFromExtensions(
     item: IArticle,
     contentProfile: IContentProfileV2,
     fieldsData: Map<string, unknown>,
-): Promise<Array<IAuthoringAction>> {
+): Array<IAuthoringAction> {
     const actionGetters
         : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
     = flatMap(
@@ -61,10 +61,9 @@ function getAuthoringActionsFromExtensions(
         (extension) => extension.activationResult.contributions?.getAuthoringActions ?? [],
     );
 
-    return Promise.all(actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)))
-        .then((res) => {
-            return flatMap(res);
-        });
+    return flatMap(
+        actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)),
+    );
 }
 
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
@@ -182,21 +181,28 @@ const getExportModal = (
 });
 
 const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
+    const showHighlightsModal = () => {
+        sdApi.highlights.fetchHighlights().then((res) => {
+            if (res._items.length === 0) {
+                ui.alert(gettext('No highlights have been created yet.'));
+            } else {
+                showModal(({closeModal}) => (
+                    <HighlightsModal
+                        article={getItem()}
+                        closeModal={closeModal}
+                    />
+                ));
+            }
+        });
+    };
+
     return {
         label: gettext('Highlights'),
-        onTrigger: () => {
-            sdApi.highlights.fetchHighlights().then((res) => {
-                if (res._items.length === 0) {
-                    ui.alert(gettext('No highlights have been created yet.'));
-                } else {
-                    showModal(({closeModal}) => (
-                        <HighlightsModal
-                            article={getItem()}
-                            closeModal={closeModal}
-                        />
-                    ));
-                }
-            });
+        onTrigger: () => showHighlightsModal(),
+        keyBindings: {
+            'ctrl+shift+h': () => {
+                showHighlightsModal();
+            },
         },
     };
 };
@@ -214,7 +220,6 @@ const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
         })
     ),
 });
-
 
 const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
     label: gettext('Translate'),
@@ -378,28 +383,28 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 fieldsAdapter,
                                 storageAdapter,
                             }) => {
-                                return Promise.all([
-                                    getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
-                                    getArticleActionsFromExtensions(item),
-                                ]).then((res) => {
-                                    const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
+                                const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
+                                    item,
+                                    contentProfile,
+                                    fieldsData,
+                                );
+                                const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
 
-                                    return [
-                                        getSaveAsTemplate(getLatestItem),
-                                        getCompareVersionsModal(
-                                            getLatestItem,
-                                            authoringStorage,
-                                            fieldsAdapter,
-                                            storageAdapter,
-                                        ),
-                                        getHighlightsAction(getLatestItem),
-                                        getMarkedForDesksModal(getLatestItem),
-                                        getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
-                                        getTranslateModal(getLatestItem),
-                                        ...authoringActionsFromExtensions,
-                                        ...articleActionsFromExtensions,
-                                    ];
-                                });
+                                return [
+                                    getSaveAsTemplate(getLatestItem),
+                                    getCompareVersionsModal(
+                                        getLatestItem,
+                                        authoringStorage,
+                                        fieldsAdapter,
+                                        storageAdapter,
+                                    ),
+                                    getHighlightsAction(getLatestItem),
+                                    getMarkedForDesksModal(getLatestItem),
+                                    getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
+                                    getTranslateModal(getLatestItem),
+                                    ...authoringActionsFromExtensions,
+                                    ...articleActionsFromExtensions,
+                                ];
                             }}
                             getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={
@@ -476,6 +481,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSidebar={this.state.isSidebarCollapsed ? null : getSidebar}
                             topBar2Widgets={topbar2WidgetsReady}
                             validateBeforeSaving={false}
+                            getSideWidgetNameAtIndex={(article, index) => {
+                                return getWidgetsFromExtensions(article)[index].label;
+                            }}
                         />
                     );
                 }}
