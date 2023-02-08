@@ -271,8 +271,11 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
         return (
             <ToggleBox
                 className="toggle-box--circle"
-                title={isLoading ? gettext('image suggestions (...)')
-                    : gettext('image suggestions ({{n}})', {n: images.length})}
+                title={
+                    isLoading
+                        ? gettext('loading image suggestions...')
+                        : gettext('image suggestions ({{n}})', {n: images.length})
+                }
                 initiallyOpen={true}
                 badge={(
                     <IconButton
@@ -289,9 +292,9 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                     triggerSelector="#image-suggestions-info-btn"
                     zIndex={999}
                 >
-                    The image suggestions are based on the tags.
-                    You can drag and drop the images onto the body HTML.
+                    {gettext('Image suggestions are based on generated tags and can be added to article content by dragging.')}
                 </Popover>
+
                 <div style={style}>
                     {isLoading ? (
                         <div
