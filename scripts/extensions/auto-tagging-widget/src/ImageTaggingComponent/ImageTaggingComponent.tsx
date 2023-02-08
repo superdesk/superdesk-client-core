@@ -219,9 +219,8 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                         });
                     }
                 })
-                .catch((e: Error) => {
-                    superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!\r'
-                    + JSON.stringify(e));
+                .catch(() => {
+                    superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!');
                 })
                 .finally(() => this.setState({isLoading: false}));
         });
