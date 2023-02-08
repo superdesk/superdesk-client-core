@@ -291,7 +291,10 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                     triggerSelector="#image-suggestions-info-btn"
                     zIndex={999}
                 >
-                    {gettext('Image suggestions are based on generated tags and can be added to article content by dragging.')}
+                    {gettext(
+                        'Image suggestions are based on generated tags'
+                        + ' and can be added to article content by dragging.',
+                    )}
                 </Popover>
 
                 <div style={style}>
