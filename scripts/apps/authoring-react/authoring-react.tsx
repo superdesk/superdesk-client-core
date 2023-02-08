@@ -47,6 +47,8 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
+import {ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {showModal} from '@superdesk/common/dist/src/ui/show-modal';
 
 export function getFieldsData<T>(
     item: T,
@@ -1192,6 +1194,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 );
             };
 
+            console.log(state.profile,
+                state.fieldsDataWithChanges,);
+
+
             const preview = {
                 jsxButton: () => {
                     return (
@@ -1269,8 +1275,39 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     </div>
 
                                                     <ButtonGroup align="end">
+
+
+
+
+                {/*////////////////////////////////////////// modal //////////////////////////////////////////*/}
+
+
+
+
                                                         {printPreviewAction.jsxButton()}
+
+                                                        <IconButton
+                                                            icon="adjust"
+                                                            ariaValue={gettext('Toggle theme')}
+                                                            onClick={() => {
+                                                                //execute();
+                                                            }}
+                                                        />
+
+                                                        <IconButton
+                                                            icon="switches"
+                                                            ariaValue={gettext('')}
+                                                            onClick={() => {
+                                                                showModal(({closeModal}) => {
+                                                                    return (
+                                                                        <ProofreadingThemeModal onHide={closeModal}/>
+                                                                    );
+                                                                })
+                                                            }}
+                                                        />
+
                                                     </ButtonGroup>
+
                                                 </React.Fragment>
                                             )}
                                             authoringHeader={(
