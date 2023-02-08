@@ -71,6 +71,14 @@ const imageContentStyle: React.CSSProperties = {
     gridRowGap: '4px',
 };
 
+const figCaptionStyle: React.CSSProperties = {
+    padding: '4px',
+    overflow: 'auto',
+    color: '#000',
+    backgroundColor: 'rgba(255,255,255,0.75)',
+    height: '100%',
+};
+
 const imageStyle: React.CSSProperties = {
     width: '100%',
     height: 'auto',
@@ -150,6 +158,7 @@ const {gettext} = superdesk.localization;
 export class ImageTagging extends React.PureComponent<IProps, IState> {
     private abortController: AbortController;
     private debouncedFetch;
+
     constructor(props: IProps) {
         super(props);
 
@@ -168,9 +177,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        if (!this.state.isLoading) {
-            this.runFetchImages();
-        }
+        this.runFetchImages();
     }
 
     componentWillUnmount() {
@@ -189,13 +196,15 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
             toServerFormat(this.props.data, superdesk),
         );
 
-        if (!formattedTags || formattedTags.length < 1) {
+        if ((formattedTags?.length ?? 0) < 1) {
             this.setState({
                 selectedImage: null,
                 images: [],
             });
+
             return;
         }
+
         this.setState({isLoading: true}, () => {
             httpRequestJsonLocal<IImageServerResponse>({
                 abortSignal: this.abortController.signal,
@@ -207,17 +216,10 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                 },
             })
                 .then((res) => {
-                    try {
-                        this.setState({
-                            selectedImage: res.result[0],
-                            images: res.result ?? [],
-                        });
-                    } catch {
-                        this.setState({
-                            selectedImage: null,
-                            images: [],
-                        });
-                    }
+                    this.setState({
+                        selectedImage: res.result[0] ?? null,
+                        images: res.result,
+                    });
                 })
                 .catch(() => {
                     superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!');
@@ -298,73 +300,69 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                 </Popover>
 
                 <div style={style}>
-                    {isLoading ? (
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <div className="spinner-big" />
-                        </div>
-                    ) : images?.length > 0 ? (
-                        <div style={gridContainerStyle}>
-                            <div style={gridItemLeftStyle}>
-                                <figure style={selectedCardStyle}>
-                                    <div style={{maxHeight: '72%'}}>
-                                        <img
-                                            style={imageStyle}
-                                            alt=""
-                                            src={selectedImage?.imageUrl}
-                                            onDragStart={(event) =>
-                                                prepareForDropping(event, selectedImage)
-                                            }
-                                        />
-                                    </div>
-                                    <figcaption
-                                        style={{
-                                            padding: '4px',
-                                            overflow: 'auto',
-                                            color: '#000',
-                                            backgroundColor:
-                                                'rgba(255,255,255,0.75)',
-                                            height: '100%',
-                                        }}
-                                    >
-                                        {selectedImage?.caption}
-                                    </figcaption>
-                                </figure>
-                            </div>
-                            <div style={gridItemRightStyle}>
-                                <div style={imageContentStyle}>
-                                    {images.map(
-                                        (image: IImage, i: number) => (
-                                            <div key={i} style={cardStyle}>
-                                                <div
-                                                    style={
-                                                        imageWrapperStyle
-                                                    }
-                                                >
-                                                    <img
-                                                        style={imageStyle}
-                                                        key={i}
-                                                        alt=""
-                                                        src={image.imageUrl}
-                                                        onClick={() => {
-                                                            this.handleClickImage(image);
-                                                        }}
-                                                        onDragStart={(event) =>
-                                                            prepareForDropping(event, image)
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        ),
-                                    )}
+                    {(() => {
+                        if (isLoading) {
+                            return (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <div className="spinner-big" />
                                 </div>
-                            </div>
-                        </div>
-                    ) : null}
+                            );
+                        } else if (images.length < 1) {
+                            return null;
+                        } else {
+                            return (
+                                <div style={gridContainerStyle}>
+                                    <div style={gridItemLeftStyle}>
+                                        <figure style={selectedCardStyle}>
+                                            <div style={{maxHeight: '72%'}}>
+                                                <img
+                                                    style={imageStyle}
+                                                    alt=""
+                                                    src={selectedImage?.imageUrl}
+                                                    onDragStart={(event) =>
+                                                        prepareForDropping(event, selectedImage)
+                                                    }
+                                                />
+                                            </div>
+                                            <figcaption style={figCaptionStyle}>
+                                                {selectedImage?.caption}
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                    <div style={gridItemRightStyle}>
+                                        <div style={imageContentStyle}>
+                                            {images.map((image, index) => (
+                                                <div key={index} style={cardStyle}>
+                                                    <div
+                                                        style={
+                                                            imageWrapperStyle
+                                                        }
+                                                    >
+                                                        <img
+                                                            style={imageStyle}
+                                                            key={index}
+                                                            src={image.imageUrl}
+                                                            onClick={() => {
+                                                                this.handleClickImage(image);
+                                                            }}
+                                                            onDragStart={(event) =>
+                                                                prepareForDropping(event, image)
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+                    })()}
                 </div>
             </ToggleBox>
         );
