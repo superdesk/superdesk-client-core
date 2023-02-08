@@ -182,21 +182,23 @@ const getExportModal = (
 
 const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
     const showHighlightsModal = () => {
-        showModal(({closeModal}) => {
-            return (
-                <HighlightsModal
-                    article={getItem()}
-                    closeModal={closeModal}
-                />
-            );
+        sdApi.highlights.fetchHighlights().then((res) => {
+            if (res._items.length === 0) {
+                ui.alert(gettext('No highlights have been created yet.'));
+            } else {
+                showModal(({closeModal}) => (
+                    <HighlightsModal
+                        article={getItem()}
+                        closeModal={closeModal}
+                    />
+                ));
+            }
         });
     };
 
     return {
         label: gettext('Highlights'),
-        onTrigger: () => (
-            showHighlightsModal()
-        ),
+        onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
                 showHighlightsModal();

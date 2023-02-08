@@ -7,6 +7,7 @@ export const ui = {
         showModal(({closeModal}) => {
             return (
                 <Modal
+                    position="top"
                     visible
                     onHide={closeModal}
                     zIndex={1050}
