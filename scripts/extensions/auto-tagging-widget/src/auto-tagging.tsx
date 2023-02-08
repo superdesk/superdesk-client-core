@@ -15,7 +15,7 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-import {getImageTaggingComponent} from './ImageTaggingComponent/ImageTaggingComponent';
+import {ImageTagging} from './ImageTaggingComponent/ImageTaggingComponent';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -162,7 +162,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     const TagListComponent = getTagsListComponent(superdesk);
     const NewItemComponent = getNewItemComponent(superdesk);
-    const ImageTaggingComponent = getImageTaggingComponent(superdesk);
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
@@ -725,10 +724,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         <div className="widget-content__main">
                                             {allGroupedAndSorted.map((item) => item).toArray()}
                                             {this.state.showImagesPreference && (
-                                                <ImageTaggingComponent
-                                                    data={
-                                                        data.changes.analysis
-                                                    }
+                                                <ImageTagging
+                                                    data={data.changes.analysis}
                                                     article={this.props.article}
                                                 />
                                             )}

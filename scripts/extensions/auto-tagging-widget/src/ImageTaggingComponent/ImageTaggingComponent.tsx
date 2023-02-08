@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {superdesk} from '../superdesk';
+import {IArticle} from 'superdesk-api';
 import {ITagUi} from '../types';
 import {OrderedMap} from 'immutable';
 import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
@@ -97,279 +98,270 @@ const cardStyle: React.CSSProperties = {
     borderRadius: '2px',
 };
 
-const handleDragStart = (
+const prepareForDropping = (
     event: React.DragEvent<HTMLDivElement>,
     image: IImage | null,
-    article: IArticle,
 ) => {
-    if (!image) {
+    if (image == null) {
         return;
     }
-    let item: IArticle;
 
-    try {
-        item = {
-            ...article,
-            type: 'picture',
-            description_text: image?.caption ?? '',
-            headline: image?.headline ?? '',
-            source: image?.source ?? '',
-            fetch_endpoint: 'scanpix',
-            renditions: {
-                thumbnail: {
-                    href: image?.thumbnailUrl ?? '',
-                    mimetype: 'image/jpeg',
-                },
-                viewImage: {
-                    href: image?.imageUrl ?? '',
-                    mimetype: 'image/jpeg',
-                },
-                baseImage: {
-                    href: image?.imageUrl ?? '',
-                    mimetype: 'image/jpeg',
-                },
-            },
-            byline: image?.byline ?? '',
-        };
-    } catch {
-        return;
+    const additionalData: Partial<IArticle> = {};
+
+    if ((image.caption?.length ?? 0) > 0) {
+        additionalData.description_text = image.caption;
     }
-    event.dataTransfer.setData(
-        'application/superdesk.item.picture',
-        JSON.stringify(item),
+
+    if ((image.headline?.length ?? 0) > 0) {
+        additionalData.headline = image.headline;
+    }
+
+    if ((image.source?.length ?? 0) > 0) {
+        additionalData.source = image.source;
+    }
+
+    if ((image.byline?.length ?? 0) > 0) {
+        additionalData.byline = image.byline;
+    }
+
+    superdesk.ui.article.prepareExternalImageForDroppingToEditor(
+        event.nativeEvent,
+        {
+            thumbnail: {
+                href: image.thumbnailUrl,
+                mimetype: 'image/jpeg',
+            },
+            viewImage: {
+                href: image.imageUrl,
+                mimetype: 'image/jpeg',
+            },
+            baseImage: {
+                href: image.imageUrl,
+                mimetype: 'image/jpeg',
+            },
+        },
+        additionalData,
     );
 };
 
-export function getImageTaggingComponent(
-    superdesk: ISuperdesk,
-): React.ComponentType<IProps> {
-    const {httpRequestJsonLocal} = superdesk;
-    const {gettext} = superdesk.localization;
+const {httpRequestJsonLocal} = superdesk;
+const {gettext} = superdesk.localization;
 
-    return class ImageTagging extends React.PureComponent<IProps, IState> {
-        private abortController: AbortController;
-        private debouncedFetch;
-        constructor(props: IProps) {
-            super(props);
+export class ImageTagging extends React.PureComponent<IProps, IState> {
+    private abortController: AbortController;
+    private debouncedFetch;
+    constructor(props: IProps) {
+        super(props);
 
-            this.state = {
-                isLoading: false,
+        this.state = {
+            isLoading: false,
+            selectedImage: null,
+            images: [],
+        };
+        this.abortController = new AbortController();
+        this.debouncedFetch = debounce(() => {
+            this.runFetchImages();
+        }, 1500);
+        this.runFetchImages = this.runFetchImages.bind(this);
+        this.formatTags = this.formatTags.bind(this);
+        this.handleClickImage = this.handleClickImage.bind(this);
+    }
+
+    componentDidMount() {
+        if (!this.state.isLoading) {
+            this.runFetchImages();
+        }
+    }
+
+    componentWillUnmount() {
+        this.abortController.abort();
+        this.debouncedFetch.cancel();
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.data !== prevProps.data) {
+            this.debouncedFetch();
+        }
+    }
+
+    runFetchImages() {
+        const formattedTags: Array<ITagInput> = this.formatTags(
+            toServerFormat(this.props.data, superdesk),
+        );
+
+        if (!formattedTags || formattedTags.length < 1) {
+            this.setState({
                 selectedImage: null,
                 images: [],
-            };
-            this.abortController = new AbortController();
-            this.debouncedFetch = debounce(() => {
-                this.runFetchImages();
-            }, 1500);
-            this.runFetchImages = this.runFetchImages.bind(this);
-            this.formatTags = this.formatTags.bind(this);
-            this.handleClickImage = this.handleClickImage.bind(this);
-        }
-
-        componentDidMount() {
-            if (!this.state.isLoading) {
-                this.runFetchImages();
-            }
-        }
-
-        componentWillUnmount() {
-            this.abortController.abort();
-            this.debouncedFetch.cancel();
-        }
-
-        componentDidUpdate(prevProps: IProps) {
-            if (this.props.data !== prevProps.data) {
-                this.debouncedFetch();
-            }
-        }
-
-        runFetchImages() {
-            const formattedTags: Array<ITagInput> = this.formatTags(
-                toServerFormat(this.props.data, superdesk),
-            );
-
-            if (!formattedTags || formattedTags.length < 1) {
-                this.setState({
-                    selectedImage: null,
-                    images: [],
-                });
-                return;
-            }
-            this.setState({isLoading: true}, () => {
-                httpRequestJsonLocal<IImageServerResponse>({
-                    abortSignal: this.abortController.signal,
-                    method: 'POST',
-                    path: '/ai_image_suggestions/',
-                    payload: {
-                        service: 'imatrics',
-                        items: formattedTags,
-                    },
-                })
-                    .then((res) => {
-                        try {
-                            this.setState({
-                                selectedImage: res.result[0],
-                                images: res.result ?? [],
-                            });
-                        } catch {
-                            this.setState({
-                                selectedImage: null,
-                                images: [],
-                            });
-                        }
-                    })
-                    .catch((e: Error) => {
-                        superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!\r'
-                        + JSON.stringify(e));
-                    })
-                    .finally(() => this.setState({isLoading: false}));
             });
+            return;
         }
-
-        formatTags = (concepts: IServerResponse) => {
-            let res: Array<ITagInput> = [];
-
-            for (const key in concepts) {
-                if (key === 'subject') {
-                    concepts[key]?.forEach((concept: ITagBase) => {
-                        res.push({
-                            title: concept.name,
-                            type: 'category',
-                            pubStatus: true,
-                            weight: 1,
+        this.setState({isLoading: true}, () => {
+            httpRequestJsonLocal<IImageServerResponse>({
+                abortSignal: this.abortController.signal,
+                method: 'POST',
+                path: '/ai_image_suggestions/',
+                payload: {
+                    service: 'imatrics',
+                    items: formattedTags,
+                },
+            })
+                .then((res) => {
+                    try {
+                        this.setState({
+                            selectedImage: res.result[0],
+                            images: res.result ?? [],
                         });
-                    });
-                } else if (
-                    key === 'organisation' ||
-                    key === 'person' ||
-                    key === 'event' ||
-                    key === 'place' ||
-                    key === 'object'
-                ) {
-                    concepts[key]?.forEach((concept: ITagBase) => {
-                        res.push({
-                            title: concept.name,
-                            type: key,
-                            pubStatus: true,
-                            weight: 1,
+                    } catch {
+                        this.setState({
+                            selectedImage: null,
+                            images: [],
                         });
+                    }
+                })
+                .catch((e: Error) => {
+                    superdesk.ui.alert('Failed to fetch image suggestions. Please, try again!\r'
+                    + JSON.stringify(e));
+                })
+                .finally(() => this.setState({isLoading: false}));
+        });
+    }
+
+    formatTags = (concepts: IServerResponse) => {
+        let res: Array<ITagInput> = [];
+
+        for (const key in concepts) {
+            if (key === 'subject') {
+                concepts[key]?.forEach((concept: ITagBase) => {
+                    res.push({
+                        title: concept.name,
+                        type: 'category',
+                        pubStatus: true,
+                        weight: 1,
                     });
-                }
+                });
+            } else if (
+                key === 'organisation' ||
+                key === 'person' ||
+                key === 'event' ||
+                key === 'place' ||
+                key === 'object'
+            ) {
+                concepts[key]?.forEach((concept: ITagBase) => {
+                    res.push({
+                        title: concept.name,
+                        type: key,
+                        pubStatus: true,
+                        weight: 1,
+                    });
+                });
             }
-            return res;
         }
+        return res;
+    }
 
-        handleClickImage = (image: IImage) => {
-            this.setState({selectedImage: image});
-        }
+    handleClickImage = (image: IImage) => {
+        this.setState({selectedImage: image});
+    }
 
-        render() {
-            const {style} = this.props;
-            const {isLoading, selectedImage, images} = this.state;
+    render() {
+        const {style} = this.props;
+        const {isLoading, selectedImage, images} = this.state;
 
-            return (
-                <ToggleBox
-                    className="toggle-box--circle"
-                    title={isLoading ? gettext('image suggestions (...)')
-                        : gettext('image suggestions ({{n}})', {n: images.length})}
-                    initiallyOpen={true}
-                    badge={(
-                        <IconButton
-                            id="image-suggestions-info-btn"
-                            icon="info-sign"
-                            size="small"
-                            ariaValue="info"
-                        />
-                    )}
+        return (
+            <ToggleBox
+                className="toggle-box--circle"
+                title={isLoading ? gettext('image suggestions (...)')
+                    : gettext('image suggestions ({{n}})', {n: images.length})}
+                initiallyOpen={true}
+                badge={(
+                    <IconButton
+                        id="image-suggestions-info-btn"
+                        icon="info-sign"
+                        size="small"
+                        ariaValue="info"
+                    />
+                )}
+            >
+                <Popover
+                    title={gettext('Information')}
+                    placement="bottom-end"
+                    triggerSelector="#image-suggestions-info-btn"
+                    zIndex={999}
                 >
-                    <Popover
-                        title={gettext('Information')}
-                        placement="bottom-end"
-                        triggerSelector="#image-suggestions-info-btn"
-                        zIndex={999}
-                    >
-                        The image suggestions are based on the tags.
-                        You can drag and drop the images onto the body HTML.
-                    </Popover>
-                    <div style={style}>
-                        {isLoading ? (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <div className="spinner-big" />
-                            </div>
-                        ) : images?.length > 0 ? (
-                            <div style={gridContainerStyle}>
-                                <div style={gridItemLeftStyle}>
-                                    <figure style={selectedCardStyle}>
-                                        <div style={{maxHeight: '72%'}}>
-                                            <img
-                                                style={imageStyle}
-                                                alt=""
-                                                src={selectedImage?.imageUrl}
-                                                onDragStart={(e) =>
-                                                    handleDragStart(
-                                                        e,
-                                                        selectedImage,
-                                                        this.props.article,
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                        <figcaption
-                                            style={{
-                                                padding: '4px',
-                                                overflow: 'auto',
-                                                color: '#000',
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.75)',
-                                                height: '100%',
-                                            }}
-                                        >
-                                            {selectedImage?.caption}
-                                        </figcaption>
-                                    </figure>
-                                </div>
-                                <div style={gridItemRightStyle}>
-                                    <div style={imageContentStyle}>
-                                        {images.map(
-                                            (image: IImage, i: number) => (
-                                                <div key={i} style={cardStyle}>
-                                                    <div
-                                                        style={
-                                                            imageWrapperStyle
-                                                        }
-                                                    >
-                                                        <img
-                                                            style={imageStyle}
-                                                            key={i}
-                                                            alt=""
-                                                            src={image.imageUrl}
-                                                            onClick={() => {
-                                                                this.handleClickImage(image);
-                                                            }}
-                                                            onDragStart={(e) =>
-                                                                handleDragStart(
-                                                                    e,
-                                                                    image,
-                                                                    this.props.article,
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ),
-                                        )}
+                    The image suggestions are based on the tags.
+                    You can drag and drop the images onto the body HTML.
+                </Popover>
+                <div style={style}>
+                    {isLoading ? (
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <div className="spinner-big" />
+                        </div>
+                    ) : images?.length > 0 ? (
+                        <div style={gridContainerStyle}>
+                            <div style={gridItemLeftStyle}>
+                                <figure style={selectedCardStyle}>
+                                    <div style={{maxHeight: '72%'}}>
+                                        <img
+                                            style={imageStyle}
+                                            alt=""
+                                            src={selectedImage?.imageUrl}
+                                            onDragStart={(event) =>
+                                                prepareForDropping(event, selectedImage)
+                                            }
+                                        />
                                     </div>
+                                    <figcaption
+                                        style={{
+                                            padding: '4px',
+                                            overflow: 'auto',
+                                            color: '#000',
+                                            backgroundColor:
+                                                'rgba(255,255,255,0.75)',
+                                            height: '100%',
+                                        }}
+                                    >
+                                        {selectedImage?.caption}
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div style={gridItemRightStyle}>
+                                <div style={imageContentStyle}>
+                                    {images.map(
+                                        (image: IImage, i: number) => (
+                                            <div key={i} style={cardStyle}>
+                                                <div
+                                                    style={
+                                                        imageWrapperStyle
+                                                    }
+                                                >
+                                                    <img
+                                                        style={imageStyle}
+                                                        key={i}
+                                                        alt=""
+                                                        src={image.imageUrl}
+                                                        onClick={() => {
+                                                            this.handleClickImage(image);
+                                                        }}
+                                                        onDragStart={(event) =>
+                                                            prepareForDropping(event, image)
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                        ),
+                                    )}
                                 </div>
                             </div>
-                        ) : null}
-                    </div>
-                </ToggleBox>
-            );
-        }
-    };
+                        </div>
+                    ) : null}
+                </div>
+            </ToggleBox>
+        );
+    }
 }
