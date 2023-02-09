@@ -77,6 +77,7 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell: any;
+    toolbarStyle: 'normal' | 'table' | 'pullQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
@@ -170,6 +171,7 @@ export default function createEditorStore(
             showTitle: props.showTitle,
             activeCell: null, // currently focused table cell
             editorFormat: props.editorFormat || [],
+            toolbarStyle: 'normal',
             onChangeValue: onChangeValue,
             item: props.item,
             spellchecking: {

@@ -64,6 +64,7 @@ const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'italic',
     'bold',
     'table',
+    'pull quote',
 ];
 
 export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
@@ -120,6 +121,7 @@ const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     'tab as spaces',
     'undo',
     'redo',
+    'pull quote',
 ];
 
 /**

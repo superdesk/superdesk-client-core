@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
@@ -14,6 +13,7 @@ interface IProps {
     activeCell?: any;
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
+    togglePullQuoteToolbar?: () => void;
 }
 
 /**
@@ -129,7 +129,13 @@ export class TableBlockComponent extends React.Component<IProps> {
         });
 
         return (
-            <div className={cx} onMouseDown={this.onMouseDown}>
+            <div
+                className={cx}
+                onMouseDown={(e) => {
+                    this.onMouseDown(e);
+                    this.props.togglePullQuoteToolbar();
+                }}
+            >
                 <table>
                     <tbody>
                         {Array.from(new Array(numRows)).map((_, i) => (
@@ -161,6 +167,7 @@ const mapDispatchToProps = (dispatch) => ({
     setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
         actions.setActiveCell(i, j, key, currentStyle, selection),
     ),
+    togglePullQuoteToolbar: () => dispatch(actions.togglePullQuoteToolbar()),
 });
 
 const mapStateToProps = (state) => ({

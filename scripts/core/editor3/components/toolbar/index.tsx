@@ -14,6 +14,7 @@ import * as actions from '../../actions';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
+import PullQuoteControls from './PullQuoteControls';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -142,6 +143,7 @@ class ToolbarComponent extends React.Component<any, IState> {
             editorFormat,
             activeCell,
             addTable,
+            addPullQuote,
             insertMedia,
             suggestingMode,
             toggleSuggestingMode,
@@ -150,6 +152,7 @@ class ToolbarComponent extends React.Component<any, IState> {
             removeFormat,
             removeAllFormat,
             dispatch,
+            toolbarStyle,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -161,7 +164,17 @@ class ToolbarComponent extends React.Component<any, IState> {
             disabled: disabled && activeCell === null,
         });
 
-        return activeCell !== null ? <TableControls className={cx} /> : (
+        const pullQuoteOrTableToolbar = (() => {
+            if (toolbarStyle === 'pullQuote') {
+                return <PullQuoteControls className={cx} />;
+            } else if (toolbarStyle === 'table') {
+                return <TableControls className={cx} />;
+            } else {
+                return null;
+            }
+        })();
+
+        return activeCell !== null ? pullQuoteOrTableToolbar : (
             <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
                 {/* Styles */}
                 <BlockStyleButtons />
@@ -194,6 +207,15 @@ class ToolbarComponent extends React.Component<any, IState> {
                         onClick={addTable}
                         tooltip={gettext('Table')}
                         iconName="table"
+                    />
+                )}
+                {has('pull quote') && (
+                    <IconButton
+                        onClick={() => {
+                            addPullQuote();
+                        }}
+                        tooltip={gettext('Pull quote')}
+                        iconName="quote"
                     />
                 )}
                 {has('remove format') && (
@@ -316,8 +338,10 @@ ToolbarComponent.propTypes = {
     suggestingMode: PropTypes.bool,
     invisibles: PropTypes.bool,
     addTable: PropTypes.func,
+    addPullQuote: PropTypes.func,
     insertMedia: PropTypes.func,
     showPopup: PropTypes.func,
+    toolbarStyle: PropTypes.string,
     toggleSuggestingMode: PropTypes.func,
     toggleInvisibles: PropTypes.func,
     removeFormat: PropTypes.func,
@@ -336,6 +360,7 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
+    toolbarStyle,
 }) => ({
     editorFormat,
     activeCell,
@@ -343,12 +368,14 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
+    toolbarStyle,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
+    addPullQuote: () => dispatch(actions.addPullQuote()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

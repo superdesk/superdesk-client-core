@@ -5,6 +5,7 @@ import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
 import {ContentBlock} from 'draft-js';
 import {DragableEditor3Block} from './media/dragable-editor3-block';
+import {PullQuote} from './pullquote';
 
 const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
     const {block, contentState} = props;
@@ -23,6 +24,8 @@ const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
             return <EmbedBlock {...props} />;
         } else if (type === 'TABLE') {
             return <TableBlock {...props} />;
+        } else if (type === 'PULL_QUOTE') {
+            return <PullQuote {...props} />;
         } else {
             return null;
         }
