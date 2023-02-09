@@ -34,21 +34,15 @@ export class PullQuoteComponent extends React.Component<IProps> {
         } = this.props;
 
         return (
-            <div
-                style={{
-                    fontStyle: 'italic',
-                    fontWeight: 'lighter',
-                }}
-            >
-                <TableBlock
-                    block={block}
-                    editorState={editorState}
-                    parentOnChange={parentOnChange}
-                    readOnly={readOnly}
-                    setActiveCell={setActiveCell}
-                    activeCell={activeCell}
-                />
-            </div>
+            <TableBlock
+                className="multi-line-quote"
+                block={block}
+                editorState={editorState}
+                parentOnChange={parentOnChange}
+                readOnly={readOnly}
+                setActiveCell={setActiveCell}
+                activeCell={activeCell}
+            />
         );
     }
 }

@@ -24,7 +24,7 @@ const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
             return <EmbedBlock {...props} />;
         } else if (type === 'TABLE') {
             return <TableBlock {...props} />;
-        } else if (type === 'PULL_QUOTE') {
+        } else if (type === 'MULTI-LINE_QUOTE') {
             return <PullQuote {...props} />;
         } else {
             return null;

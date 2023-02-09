@@ -14,7 +14,7 @@ import {LinkToolbar} from '../links';
  * @ngdoc React
  * @module superdesk.core.editor3
  * @name PullQuoteControlsComponent
- * @description Holds the toolbar for pull quote operations.
+ * @description Holds the toolbar for multi-line quote operations.
  */
 const PullQuoteControlsComponent: React.StatelessComponent<any> = ({
     activeCell,

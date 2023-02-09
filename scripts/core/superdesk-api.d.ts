@@ -1302,7 +1302,7 @@ declare module 'superdesk-api' {
         'italic' |
         'bold' |
         'table' |
-        'pull quote';
+        'multi-line quote';
 
     export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
@@ -1338,7 +1338,7 @@ declare module 'superdesk-api' {
         'tab as spaces' |
         'undo' |
         'redo' |
-        'pull quote';
+        'multi-line quote';
 
     export interface IEditor3HtmlProps {
         value: string;

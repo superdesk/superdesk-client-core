@@ -209,12 +209,12 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="table"
                     />
                 )}
-                {has('pull quote') && (
+                {has('multi-line quote') && (
                     <IconButton
                         onClick={() => {
                             addPullQuote();
                         }}
-                        tooltip={gettext('Pull quote')}
+                        tooltip={gettext('Multi-line quote')}
                         iconName="quote"
                     />
                 )}

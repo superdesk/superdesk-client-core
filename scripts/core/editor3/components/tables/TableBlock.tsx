@@ -14,6 +14,7 @@ interface IProps {
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
     togglePullQuoteToolbar?: () => void;
+    className?: string;
 }
 
 /**
@@ -122,11 +123,12 @@ export class TableBlockComponent extends React.Component<IProps> {
     render() {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
-
-        const cx = classNames('table-inside', {
-            'table-block': true,
-            'table-header': withHeader,
-        });
+        const cx = this.props.className != null
+            ? this.props.className
+            : classNames('table-inside', {
+                'table-block': true,
+                'table-header': withHeader,
+            });
 
         return (
             <div
