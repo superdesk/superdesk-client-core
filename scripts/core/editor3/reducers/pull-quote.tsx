@@ -1,5 +1,6 @@
 import {ContentState, convertToRaw} from 'draft-js';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import {getBlockKeys} from '../helpers/selection/blockKeys';
 import {IEditorStore} from '../store';
 import {onChange} from './editor3';
 
@@ -24,17 +25,7 @@ const addPullQuote = (state: IEditorStore, data) => {
 
     if (!selectionState.isCollapsed()) {
         // Get user selected content and insert it into the newly created PULL_QUOTE block
-        const start = selectionState.getStartKey();
-        const end = selectionState.getEndKey();
-
-        // TODO: Deprecate scripts/core/editor3/helpers/selection/blockKeys.ts and make a new version
-        const selectedBlocks = contentState
-            .getBlockMap()
-            .keySeq()
-            .skipUntil((k) => k === start)
-            .takeUntil((k) => k === end)
-            .concat(end)
-            .toArray()
+        const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
             .map((key) => contentState.getBlockForKey(key));
         const cells = {0: {0: convertToRaw(ContentState.createFromBlockArray(selectedBlocks))}};
 

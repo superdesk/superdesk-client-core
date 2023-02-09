@@ -1,4 +1,4 @@
-export {getBlockKeys} from './blockKeys';
+export {getBlockKeys_deprecated} from './blockKeys';
 export {getSelectedBlocks} from './selectedBlocks';
 export {blockInsideSelection} from './blockInsideSelection';
 export {
