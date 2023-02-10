@@ -1,1 +1,0 @@
-export {PullQuote} from './PullQuote';

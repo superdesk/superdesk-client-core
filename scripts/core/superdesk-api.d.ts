@@ -1355,7 +1355,13 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
     }
 
-
+    export interface IActiveCell {
+        i: number;
+        j: number;
+        key: string;
+        currentStyle: Array<string>;
+        selection: any;
+    }
 
     // DATA API
 

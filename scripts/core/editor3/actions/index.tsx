@@ -1,5 +1,5 @@
 export * from './spellchecker';
-export * from './pull-quote';
+export * from './multi-line-quote';
 export * from './editor3';
 export * from './toolbar';
 export * from './find-replace';

@@ -5,15 +5,18 @@ import {connect} from 'react-redux';
 import {TableCell} from '.';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
+import {IActiveCell} from 'superdesk-api';
+import {IEditorStore} from 'core/editor3/store';
 
 interface IProps {
     block: ContentBlock;
     readOnly: boolean;
     editorState: EditorState;
-    activeCell?: any;
+    activeCell?: IActiveCell;
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
-    togglePullQuoteToolbar?: () => void;
+    setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
+    toolbarStyle?: IEditorStore['customToolbarStyle'];
     className?: string;
 }
 
@@ -135,7 +138,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
-                    this.props.togglePullQuoteToolbar();
+                    this.props.setCustomToolbar(this.props.toolbarStyle);
                 }}
             >
                 <table>
@@ -169,7 +172,7 @@ const mapDispatchToProps = (dispatch) => ({
     setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
         actions.setActiveCell(i, j, key, currentStyle, selection),
     ),
-    togglePullQuoteToolbar: () => dispatch(actions.togglePullQuoteToolbar()),
+    setCustomToolbar: (style: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(style)),
 });
 
 const mapStateToProps = (state) => ({

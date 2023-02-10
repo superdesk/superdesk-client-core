@@ -11,12 +11,9 @@ import {gettext} from 'core/utils';
 import {LinkToolbar} from '../links';
 
 /**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name PullQuoteControlsComponent
- * @description Holds the toolbar for multi-line quote operations.
+ * Holds the toolbar for multi-line quote operations.
  */
-const PullQuoteControlsComponent: React.StatelessComponent<any> = ({
+const MultiLineQuoteControlsComponent: React.StatelessComponent<any> = ({
     activeCell,
     editorState,
     editorFormat,
@@ -62,7 +59,7 @@ const PullQuoteControlsComponent: React.StatelessComponent<any> = ({
     );
 };
 
-PullQuoteControlsComponent.propTypes = {
+MultiLineQuoteControlsComponent.propTypes = {
     activeCell: PropTypes.object.isRequired,
     editorState: PropTypes.object,
     editorFormat: PropTypes.array,
@@ -83,6 +80,4 @@ const mapStateToProps = (state) => ({
     showPopup: state.showPopup,
 });
 
-const PullQuoteControls = connect(mapStateToProps, mapDispatchToProps)(PullQuoteControlsComponent);
-
-export default PullQuoteControls;
+export const MultiLineQuoteControls = connect(mapStateToProps, mapDispatchToProps)(MultiLineQuoteControlsComponent);

@@ -1,24 +1,44 @@
-import {ContentState, convertToRaw} from 'draft-js';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
+import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {getBlockKeys} from '../helpers/selection/blockKeys';
 import {IEditorStore} from '../store';
 import {onChange} from './editor3';
 
 /**
- * @description Contains the list of multi-line quote related reducers.
+ * Contains the list of multi-line quote related reducers.
  */
-const pullQuote = (state: IEditorStore | any = {}, action) => {
+const multiLineQuote = (state: IEditorStore | any = {}, action) => {
     switch (action.type) {
     case 'TOOLBAR_ADD_MULTI-LINE_QUOTE':
-        return addPullQuote(state, action.payload);
-    case 'TOGGLE_PULL_MULTI-LINE_TOOLBAR':
-        return togglePullQuoteToolbar(state);
+        return addMultiLineQuote(state);
     default:
         return state;
     }
 };
 
-const addPullQuote = (state: IEditorStore, data) => {
+const getBlockData = (cells?: RawDraftContentState) => {
+    const data = {
+        data: {
+            cells: [],
+            numRows: 1,
+            numCols: 1,
+            withHeader: false,
+        },
+    };
+
+    if (cells != null) {
+        return {
+            data: {
+                ...data.data,
+                cells: {0: {0: cells}},
+            },
+        };
+    } else {
+        return data;
+    }
+};
+
+const addMultiLineQuote = (state: IEditorStore) => {
     const contentState = state.editorState.getCurrentContent();
     const selectionState = state.editorState.getSelection();
     let contentStateWithEntity: ContentState;
@@ -27,11 +47,12 @@ const addPullQuote = (state: IEditorStore, data) => {
         // Get user selected content and insert it into the newly created MULTI-LINE_QUOTE block
         const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
             .map((key) => contentState.getBlockForKey(key));
-        const cells = {0: {0: convertToRaw(ContentState.createFromBlockArray(selectedBlocks))}};
 
-        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', {data: {...data, cells: cells}});
+        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE',
+            getBlockData(convertToRaw(ContentState.createFromBlockArray(selectedBlocks))),
+        );
     } else {
-        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', {data});
+        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', getBlockData());
     }
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
@@ -44,11 +65,4 @@ const addPullQuote = (state: IEditorStore, data) => {
     return onChange(state, editorState);
 };
 
-const togglePullQuoteToolbar = (state: IEditorStore) => {
-    return {
-        ...state,
-        toolbarStyle: 'pullQuote',
-    };
-};
-
-export default pullQuote;
+export default multiLineQuote;

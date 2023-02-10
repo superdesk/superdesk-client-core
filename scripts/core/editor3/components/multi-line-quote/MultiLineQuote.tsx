@@ -3,45 +3,30 @@ import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {EditorState, ContentBlock} from 'draft-js';
 import {TableBlock} from '../tables/TableBlock';
+import {IActiveCell} from 'superdesk-api';
 
 interface IProps {
     block: ContentBlock;
     readOnly: boolean;
     editorState: EditorState;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
-    activeCell?: any;
+    activeCell?: IActiveCell;
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
 }
 
 /**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name PullQuoteComponent
- * @description Handles multi line, styled quotes.
+ * Supports quotes that may contain multiple blocks including headings.
  */
-export class PullQuoteComponent extends React.Component<IProps> {
+export class MultiLineQuoteComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
     render() {
-        const {
-            block,
-            editorState,
-            parentOnChange,
-            readOnly,
-            setActiveCell,
-            activeCell,
-        } = this.props;
-
         return (
             <TableBlock
+                {...this.props}
                 className="multi-line-quote"
-                block={block}
-                editorState={editorState}
-                parentOnChange={parentOnChange}
-                readOnly={readOnly}
-                setActiveCell={setActiveCell}
-                activeCell={activeCell}
+                toolbarStyle="multiLineQuote"
             />
         );
     }
@@ -56,7 +41,7 @@ const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
 });
 
-export const PullQuote = connect(
+export const MultiLineQuote = connect(
     mapStateToProps,
     mapDispatchToProps,
-)(PullQuoteComponent);
+)(MultiLineQuoteComponent);

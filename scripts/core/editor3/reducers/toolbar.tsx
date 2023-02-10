@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, Modifier, ContentState, SelectionState, ContentBlock} from 'draft-js';
+import {RichUtils, EditorState, ContentState, SelectionState} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import * as Links from '../helpers/links';
@@ -44,6 +44,8 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.undo(state.editorState));
     case 'REDO':
         return onChange(state, EditorState.redo(state.editorState));
+    case 'SET_CUSTOM_TOOLBAR' :
+        return setCustomToolbar(state, action.payload);
     default:
         return state;
     }
@@ -315,5 +317,10 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
 
     return onChange(state, EditorState.forceSelection(nextEditorState, selection));
 }
+
+const setCustomToolbar = (state: IEditorStore, style: IEditorStore['customToolbarStyle']): IEditorStore => ({
+    ...state,
+    customToolbarStyle: style,
+});
 
 export default toolbar;

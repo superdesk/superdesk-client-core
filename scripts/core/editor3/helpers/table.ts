@@ -109,7 +109,6 @@ export function getData(contentState: ContentState, blockKey: string) {
     const block = contentState.getBlockForKey(blockKey);
     const entityKey = block.getEntityAt(0);
     const {data} = contentState.getEntity(entityKey).getData();
-
     const blockData = block.getData().get('data');
 
     if (!blockData && data) {

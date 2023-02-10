@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {IEditorStore} from '../store';
 
 /**
  * @ngdoc method
@@ -175,3 +176,6 @@ export function redo() {
 export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
+
+export const setCustomToolbar = (style: IEditorStore['customToolbarStyle']) =>
+    ({type: 'SET_CUSTOM_TOOLBAR', payload: style});
