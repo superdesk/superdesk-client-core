@@ -45,7 +45,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
 
                 if (fullWidthConfig.enabled) {
                     if (fullWidthConfig.allowed) {
-                        fullWidthConfig.onToggle();
+                        fullWidthConfig.onToggle(!scope.fullWidthEnabled);
                     }
                 } else {
                     // eslint-disable-next-line no-lonely-if

@@ -791,9 +791,13 @@ declare module 'superdesk-api' {
     // PAGE
 
     /**
-     * When not enabled, existing monitoring hiding functionality has to work.
+     * `enabled` means that monitoring hiding functionality will not work,because we're on a custom page.
+     * When we leave custom page, we have to set `enabled` to false to make it work again with monitoring.
+     * `allowed` (to make it full width) means that an arrow will appear when hovering a menu item to switch to full width.
+     * For example, if a custom page doesn't have a side panel open at the moment, it will be enabled, but not allowed.
+     * If a side panel is opened, it becomes `allowed` to make that panel full width.
      */
-    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: () => void};
+    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: (fullWidth: boolean) => void};
 
     export type IPage = DeepReadonly<{
         title: string;

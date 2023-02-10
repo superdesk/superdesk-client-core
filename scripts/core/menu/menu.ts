@@ -29,9 +29,9 @@ function setupFullWidthPage($scope) {
 
             const nextConfig: IFullWidthPageCapabilityConfiguration = {
                 ...config,
-                onToggle: () => {
-                    $scope.fullWidthEnabled = !$scope.fullWidthEnabled;
-                    originalToggleFn();
+                onToggle: (val) => {
+                    $scope.fullWidthEnabled = val;
+                    originalToggleFn(val);
                 },
             };
 
