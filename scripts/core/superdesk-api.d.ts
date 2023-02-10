@@ -1356,11 +1356,11 @@ declare module 'superdesk-api' {
     }
 
     export interface IActiveCell {
-        i: number;
-        j: number;
+        i: number; // row
+        j: number; // column
         key: string;
         currentStyle: Array<string>;
-        selection: any;
+        selection: import('draft-js').SelectionState;
     }
 
     // DATA API

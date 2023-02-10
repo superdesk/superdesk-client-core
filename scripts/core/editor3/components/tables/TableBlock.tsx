@@ -172,7 +172,7 @@ const mapDispatchToProps = (dispatch) => ({
     setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
         actions.setActiveCell(i, j, key, currentStyle, selection),
     ),
-    setCustomToolbar: (style: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(style)),
+    setCustomToolbar: (val: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(val)),
 });
 
 const mapStateToProps = (state) => ({

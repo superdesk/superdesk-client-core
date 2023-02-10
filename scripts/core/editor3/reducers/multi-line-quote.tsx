@@ -16,7 +16,11 @@ const multiLineQuote = (state: IEditorStore | any = {}, action) => {
     }
 };
 
-const getBlockData = (cells?: RawDraftContentState) => {
+/**
+ * Multi-line quote reuses the table component so data has to be
+ * compatible with table's data structure.
+ */
+const getTableData = (cells?: RawDraftContentState) => {
     const data = {
         data: {
             cells: [],
@@ -49,10 +53,10 @@ const addMultiLineQuote = (state: IEditorStore) => {
             .map((key) => contentState.getBlockForKey(key));
 
         contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE',
-            getBlockData(convertToRaw(ContentState.createFromBlockArray(selectedBlocks))),
+            getTableData(convertToRaw(ContentState.createFromBlockArray(selectedBlocks))),
         );
     } else {
-        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', getBlockData());
+        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', getTableData());
     }
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();

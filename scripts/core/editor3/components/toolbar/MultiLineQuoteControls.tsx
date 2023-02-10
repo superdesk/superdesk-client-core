@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
@@ -9,11 +8,18 @@ import {SelectionButton} from './SelectionButton';
 import {PopupTypes} from '../../actions';
 import {gettext} from 'core/utils';
 import {LinkToolbar} from '../links';
+import {IEditorStore} from 'core/editor3/store';
+
+interface IProps extends Partial<IEditorStore> {
+    className: string;
+    toggleTableStyle(): void;
+    showPopup(popupType: string, payload: any): void;
+}
 
 /**
- * Holds the toolbar for multi-line quote operations.
+ * Holds the logic for multi-line quote toolbar operations.
  */
-const MultiLineQuoteControlsComponent: React.StatelessComponent<any> = ({
+const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
     activeCell,
     editorState,
     editorFormat,
@@ -57,15 +63,6 @@ const MultiLineQuoteControlsComponent: React.StatelessComponent<any> = ({
             <LinkToolbar onEdit={(payload) => showPopup(PopupTypes.Link, payload)} />
         </div>
     );
-};
-
-MultiLineQuoteControlsComponent.propTypes = {
-    activeCell: PropTypes.object.isRequired,
-    editorState: PropTypes.object,
-    editorFormat: PropTypes.array,
-    toggleTableStyle: PropTypes.func,
-    className: PropTypes.string,
-    showPopup: PropTypes.func,
 };
 
 const mapDispatchToProps = (dispatch) => ({

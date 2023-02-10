@@ -24,9 +24,14 @@ export class MultiLineQuoteComponent extends React.Component<IProps> {
     render() {
         return (
             <TableBlock
-                {...this.props}
                 className="multi-line-quote"
                 toolbarStyle="multiLineQuote"
+                block={this.props.block}
+                readOnly={this.props.readOnly}
+                activeCell={this.props.activeCell}
+                editorState={this.props.editorState}
+                setActiveCell={this.props.setActiveCell}
+                parentOnChange={this.props.parentOnChange}
             />
         );
     }
