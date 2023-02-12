@@ -1,16 +1,35 @@
 <div sd-modal data-model="workspace" data-close="cancel()">
-    <div class="modal__header">
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-hide="workspace._id" translate>Create new Workspace</h3>
         <h3 class="modal__heading" ng-show="workspace._id" translate>Rename Workspace</h3>
+        <button aria-label="{{'Close' | translate }}" class="icn-btn" ng-click="cancel()">
+            <i class="icon-close-small" aria-hidden="true"></i>
+        </button>
     </div>
 
     <div class="modal__body">
         <fieldset>
-            <div class="field">
-                <label translate>Workspace name</label>
+            <div class="form__group form__group--default">
+                <div class="form__item">
+                    <div class="sd-input sd-input--required" ng-class="{'sd-input--invalid': errors.name}">
+                        <label class="sd-input__label" for="workspace-name" translate>Workspace name</label>
+                        <input id="workspace-name"
+                                type="text"
+                                class="sd-input__input"
+                                ng-model="workspace.name"
+                                required
+                        >
+                        <div class="sd-input__message-box">
+                            <span ng-show="errors.name" class="sd-input__message" translate>Sorry, given workspace name is in use</span>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- <label translate>Workspace name</label>
                 <input type="text" class="fullwidth-input" ng-class="{error: errors.name}"
                     ng-model="workspace.name" required>
-                <div class="error" ng-show="errors.name" translate>Sorry, given workspace name is in use</div>
+                <div class="error" ng-show="errors.name" translate>Sorry, given workspace name is in use</div> -->
             </div>
         </fieldset>
     </div>

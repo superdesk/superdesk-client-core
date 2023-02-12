@@ -7,8 +7,8 @@ $jcrop-handle-offset-small: -4px;
 .sd-photo-preview {
     .jcrop-handle {
         opacity: 1 !important;
-        background-color: #333333;
-        border: 1px #eeeeee solid;
+        background-color: hsl(214, 13%, 20%);
+        border: 1px hsl(214, 13%, 93%) solid;
         width: $jcrop-handle-size;
         height: $jcrop-handle-size;
         font-size: 1px;

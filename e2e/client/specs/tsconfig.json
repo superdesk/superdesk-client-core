@@ -7,7 +7,7 @@
         "lib": [
             "dom",
             "es2017",
-            "es2018.promise"
+            "es2018.promise",
         ],
         "jsx": "react"
     }

@@ -66,8 +66,8 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                 }}
             >
                 {this.props.children ? this.props.children : (
-                    <div>
-                        <div><i className="big-icon--upload-alt icon" /></div>
+                    <>
+                        <i className="big-icon--upload-alt sd-file-upload__icon" />
                         <span className="item-association__text-label">
                             {gettext(this.props.label)}
                         </span>

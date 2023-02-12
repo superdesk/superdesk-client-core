@@ -6,7 +6,7 @@
 
 .sd-widget.metadata {
     .widget-content {
-        background: $sd-background;
+        background: var(--sd-colour-panel-bg--100);
     }
     .ednote {
         @include clearfix();
@@ -25,7 +25,7 @@
     margin-bottom: 20px;
     &--dotted {
         .basic-list__item {
-            border-bottom: 1px dotted rgba(123, 123, 123, 0.5);
+            border-bottom: 1px dotted var(--sd-colour-line--medium);
         }
     }
     &--no-margin {
@@ -57,9 +57,9 @@
         text-transform: uppercase;
         padding-right: 1rem;
         margin: 0;
-        color: rgba(0, 0, 0, 0.5);
+        color: $sd-text-lighter;
         min-width: 6rem;
-        @include text-semibold();
+        font-weight: 500;
     }
     .basic-list__item-data {
         flex-grow: 1;

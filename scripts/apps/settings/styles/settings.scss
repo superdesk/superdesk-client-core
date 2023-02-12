@@ -27,7 +27,7 @@
             @include box-shadow(inset -3px 0 8px -3px rgba(0,0,0,0.1));
             overflow-y: auto;
             > li {
-                >a {
+                > a {
                     border: 1px solid #eee;
                     border-width: 1px 0;
                     color: #3097b5;
@@ -38,12 +38,11 @@
                         @include box-shadow(inset -3px 0 5px -3px rgba(0,0,0,0.1));
                     }
                 }
-                &.active>a {
-                    border-color:#e0e0e0;
+                &.active > a {
+                    border-color: var(--sd-colour-line--light);
                     position: relative;
                     border-radius: 0 !important;
-                    color: #484848;
-                    @include box-shadow(inset -3px 0 2px #f0f0f0);
+                    color: var(--color-text-light);
                     &:hover {
                         background: #fff;
                     }
@@ -195,5 +194,8 @@
         margin: 0 0 0 -10px;
         box-shadow: none;
     }
-    .flat-searchbar { margin-left: -20px; margin-right: 20px; }
+    .flat-searchbar {
+        margin-left: -20px; 
+        margin-right: 20px;
+    }
 }

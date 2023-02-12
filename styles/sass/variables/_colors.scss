@@ -5,14 +5,17 @@ $superdesk-green:       rgba(30,176,108,1);
 
 // Grays
 // -------------------------
-$black:                 #000;
-$grayDarker:            #222;
-$grayDark:              #333;
-$gray:                  #666;
-$grayText:              #686868;
-$grayLight:             #999;
-$grayLighter:           #F5F5F5;
-$white:                 #fff;
+
+$black:                 hsl(214, 13%, 0%);
+$grayDarker:            hsl(214, 13%, 13%);
+$grayDark:              hsl(214, 13%, 20%);
+$grayMedium:            hsl(214, 13%, 27%);
+$gray:                  hsl(214, 13%, 40%);
+$grayNeutral:           hsl(214, 13%, 48%);
+$grayText:              hsl(214, 13%, 45%);
+$grayLight:             hsl(214, 13%, 60%);
+$grayLighter:           hsl(214, 13%, 96%);
+$white:                 hsl(214, 13%, 100%);
 
 // Accent colors
 // -------------------------
@@ -24,14 +27,20 @@ $yellow:                #ffc40d;
 $orange:                #f89406;
 $purple:                #9c5e96;
 
-$sd-background:         #f8f8f8;
-$sd-archived-bg:        #f1f1f1;
-$sd-text:               $grayDark;
+$sd-background:         var(--sd-colour-panel-bg--100);
+$sd-archived-bg:        var(--sd-colour-panel-bg--100);
+
+$sd-text:               var(--color-text);
+$sd-text-light:         var(--color-text-light);
+$sd-text-lighter:       var(--color-text-lighter);
+$sd-slugline:           var(--sd-slugline-color);
+$sd-slugline-darkUI:    hsl(196, 19%, 50%);
+
 $sd-gray-text:          $grayText;
 $sd-blue:               #5ea9c8;
 $sd-blue-text:          #3599b6;
 $sd-hover:              #eff7fa;
-$sd-keyword:            #216278;
+$sd-keyword:            var(--sd-slugline-color);
 $sd-highlight:          #9b59b6;
 
 $label-light:           #dedede;
@@ -39,7 +48,7 @@ $label-medium:          #bababa;
 $label-prime:           #61a9c6;
 $label-snap:            #9761A0;
 
-$sd-text-label:         #555555;
+$sd-text-label:         $sd-text-light;
 
 $todo-color :           #b70000;
 $inprogress-color :     #cc7800;
@@ -55,8 +64,8 @@ $item-background-published:     lighten($state-border--published, 60%);
 
 // Links
 // -------------------------
-$linkColor:                     #5d9bc0;
-$linkColorHover:                lighten($linkColor, 15%);
+$linkColor:                     var(--sd-colour-interactive);
+$linkColorHover:                var(--sd-colour-interactive--hover);
 
 // Typography
 // -------------------------
@@ -64,10 +73,10 @@ $headingsColor:                 inherit; // empty to use BS default, $textColor
 
 // Tables
 // -------------------------
-$tableBackground:               transparent; // overall background-color
-$tableBackgroundAccent:         #f9f9f9; // for striping
-$tableBackgroundHover:          #f5f5f5; // for hover
-$tableBorder:                   #ddd; // table and cell border
+$tableBackground:               var(--sd-item__main-Bg); // overall background-color
+$tableBackgroundAccent:         var(--sd-item__main-Bg--alternate); // for striping
+$tableBackgroundHover:          var(--sd-item__main-Bg--hover); // for hover
+$tableBorder:                   var(--sd-colour-line--medium); // table and cell border
 
 // Forms
 // -------------------------
@@ -77,15 +86,15 @@ $inputDisabledBackground:       $grayLighter;
 
 // Dropdowns
 // -------------------------
-$dropdownBackground:            $white;
-$dropdownBorder:                1px solid #c6c6c6;
-$dropdownLinkColor:             $sd-text;
-$dropdownLinkColorHover:        $sd-text;
-$dropdownLinkBackgroundHover:   $sd-hover;
+$dropdownBackground:            var(--color-dropdown-menu-Bg);
+$dropdownBorder:                var(--sd-colour-line--light);
+$dropdownLinkColor:             var(--color-text);
+$dropdownLinkColorHover:        var(--color-text);
+$dropdownLinkBackgroundHover:   var(--sd-colour-interactive--alpha-20);
 
 // Input placeholder text color
 // -------------------------
-$placeholderText:               $grayLight;
+$placeholderText:               var(--color-text--lighter);
 
 // Hr border color
 // -------------------------
@@ -127,57 +136,68 @@ $background-main:      $sd-background;
 
 // Tablists and Tabpanes
 // -------------------------
-$tablist-background:   #a1a1a1;
+$tablist-background:   var(--sd-colour-panel-bg--100);
 
-$tabpane-background:   #f5f5f5;
-$tabpane-border:       #7c7c7c;
+$tabpane-background:   var(--sd-colour-panel-bg--100);
+$tabpane-border:       var(--sd-colour__side-panel-border);
 
-$sidebar-background:   #dedede;
-$archive-sidebar-bg:   #ededed;
+$sidebar-background:   var(--sd-colour-sidebar-menu--00);
+$archive-sidebar-bg:   var(--sd-colour-panel-bg--100);
 
 //State colors
-$state-color-default:  rgb(140, 140, 140);
-$state-color-blue:     rgb(93, 155, 192);
-$state-color-green:    rgb(94, 141, 50);
-$state-color-yellow:   rgb(210, 168, 0);
-$state-color-orange:   rgb(218, 114, 0);
-$state-color-navy:     rgb(0, 0, 128);
-$state-color-magenta:  rgb(139, 0, 139);
-$state-color-red:      rgb(190, 22, 0);
-$state-color-embargo:  rgb(255, 51, 129);
+$state-color-default:  hsl(0, 0%, 55%);
+$state-color-blue:     hsl(202, 44%, 56%);
+$state-color-green:    hsl(91, 48%, 37%);
+$state-color-yellow:   hsl(48, 100%, 41%);
+$state-color-orange:   hsl(31, 100%, 43%);
+$state-color-navy:     var(--sd-state-colour--navy);
+$state-color-magenta:  hsl(300, 100%, 27%);
+$state-color-red:      hsl(7, 100%, 37%);
+$state-color-embargo:  hsl(337, 100%, 60%);
 
 //Box shadows
-$block-shadow-depth-1: 0px 1px 2px 0 rgba(0, 0, 0, 0.12);
-$block-shadow-depth-2: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+$block-shadow-depth-1: 0px 1px 2px 0 hsla(0, 0%, 0%, 0.12);
+$block-shadow-depth-2: 0px 1px 4px 0 hsla(0, 0%, 0%, 0.2);
 
 // Widgets
-$widget_archive:       #3f51b5;
-$widget_world-clock:   #03a9f4;
-$widget_user-activity: #7F56C9;
-$widget_ingest-stats:  #00bcd4;
-$widget_activity:      #009688;
-$widget_aggregate:     #8bc34a;
-$widget_misc:          #c4c422;
-$widget_routing:       #e55028;
-$widget_analytics:     #d62776;
-$widget_ingest:        #673ab7;
-$widget_publish:       #AE44BE;
+$widget_archive:       hsl(231, 48%, 48%);
+$widget_world-clock:   hsl(199, 98%, 48%);
+$widget_user-activity: hsl(261, 52%, 56%);
+$widget_ingest-stats:  hsl(187, 100%, 42%);
+$widget_activity:      hsl(174, 100%, 29%);
+$widget_aggregate:     hsl(88, 50%, 53%);
+$widget_misc:          hsl(60, 70%, 45%);
+$widget_routing:       hsl(13, 78%, 53%);
+$widget_analytics:     hsl(333, 69%, 50%);
+$widget_ingest:        hsl(262, 52%, 47%);
+$widget_publish:       hsl(292, 48%, 51%);
 
 // Monitoring view
-$subnav-authoring:     #dedede;
-$embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
-
-// Monitoring view
-$subnav-authoring:     #dedede;
+$subnav-authoring:     var(--sd-colour-panel-bg--200);
 $embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
 
 // Custom button colors
-$btn-custom-hover:         #404040;
-$btn-publish:              #01579b;
-$btn-publish-hover:        #012c4f;
-$btn-publish-plus:         #623b7a;
-$btn-publish-plus-hover:   #392246;
+$btn-custom-hover:         hsl(214, 13%, 30%);
+$btn-publish:              hsl(206, 99%, 30%);
+$btn-publish-hover:        hsl(207, 98%, 20%);
+$btn-publish-plus:         hsl(277, 35%, 35%);
+$btn-publish-plus-hover:   hsl(277, 35%, 25%);
 
 // Pulsating BG
-$pulsateBG-off: rgba(255,87,34,0.1);
-$pulsateBG-on: rgba(255,87,34,0.8);
+$pulsateBG-off:  hsla(14, 100%, 57%, 0.1);
+$pulsateBG-on:   hsla(14, 100%, 57%, 0.8);
+
+:root {
+    --authoringHeaderBG: var(--sd-colour-panel-bg--100);
+    --sd-colour--locked-info: hsla(350, 70%, 50%, 1);
+    --sd-colour--locked-subnav: hsla(350, 70%, 90%, 1);
+
+    --sd-state-colour--navy: hsl(240, 92%, 43%);
+}
+[data-theme="dark-ui"] {
+    --authoringHeaderBG: var(--sd-colour-panel-bg--100);
+    --sd-colour--locked-info: hsla(350, 55%, 40%, 1);
+    --sd-colour--locked-subnav: hsla(350, 40%, 25%, 1);
+
+    --sd-state-colour--navy: hsl(240, 92%, 63%);
+}

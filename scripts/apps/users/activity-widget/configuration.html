@@ -1,21 +1,19 @@
 <div ng-controller="ActivityConfigController" class="widget-config">
-    <form class="form-horizontal">
+    <form>
         <fieldset>
-
-            <div class="field">
-                <label translate>Number of items</label>
-                <div class="control">
-                    <select ng-model="configuration.maxItems" class="input-mini">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
+            <div class="form__group form__group--inline-label sd-margin-t--1 sd-margin-b--0">
+                <div class="form__item form__item--auto-width">
+                    <div class="sd-input sd-input--is-select">
+                        <label class="sd-input__label" for="" translate>Number of items</label>
+                        <select ng-model="configuration.maxItems" class="sd-input__select">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-
         </fieldset>
-
     </form>
-
 </div>

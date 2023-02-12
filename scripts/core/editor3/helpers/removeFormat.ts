@@ -119,5 +119,9 @@ export function removeAllFormatAndStyles(editorState: EditorState): EditorState 
 
     const newContentState = ContentState.createFromText(plainText);
 
-    return EditorState.createWithContent(newContentState);
+    return EditorState.push(
+        editorState,
+        newContentState,
+        'change-block-type',
+    );
 }

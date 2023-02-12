@@ -39,12 +39,12 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticl
     }, pickBy(metadata, isNotEmptyString));
 
     const item = {
-        byline: meta['By-line'] || user.byline,
-        headline: meta.Headline,
-        description_text: meta['Caption-Abstract'],
-        copyrightnotice: meta.CopyrightNotice,
-        language: meta.LanguageIdentifier,
-        creditline: meta.Credit,
+        byline: meta['By-line']?.toString() || user.byline,
+        headline: meta.Headline?.toString(),
+        description_text: meta['Caption-Abstract']?.toString(),
+        copyrightnotice: meta.CopyrightNotice?.toString(),
+        language: meta.LanguageIdentifier?.toString(),
+        creditline: meta.Credit?.toString(),
     };
 
     return Object.values(extensions).filter(({activationResult}) =>

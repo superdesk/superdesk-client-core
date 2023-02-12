@@ -201,7 +201,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
             <div className="details-info">
 
                 {!readOnly && (
-                    <div className="sd-alert__container">
+                    <div className="sd-alert__container sd-margin-b--3">
                         <div className="sd-alert sd-alert--hollow">
                             <span className="alert-info-msg">
                                 {gettext('Please specify \'first name, last name\' or  \'organisation\' or both, ' +

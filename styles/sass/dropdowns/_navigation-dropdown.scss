@@ -23,7 +23,6 @@
         & > .dropdown__toggle {
             background: #fff;
             color:$sd-text;
-            box-shadow:-3px 0px 1px -2px #999,3px 0px 1px -2px #999;
             z-index: 3;
             &.sd-create-btn {
                 .circle {
@@ -41,7 +40,7 @@
     }
 
     .dropdown__menu {
-        @include border-radius(0px);
+        border-radius: 0px;
         border:0;
         z-index: 2;
         margin-top: -1px;
@@ -73,7 +72,7 @@
                     margin: 0;
                     height: 41px;
                     padding: 10px 10px;
-                    border-top: 1px solid #e0e0e0;
+                    border-top: 1px solid var(--sd-colour-line--light);
                     @include border-radius(0px);
                     i {
                         margin-right: 10px;

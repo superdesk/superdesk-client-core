@@ -8,7 +8,7 @@
     .activity-holder {
         position: absolute;
         left: 0; right: 0; top: 0; bottom: 0;
-        background-color: #fafafa;
+        background-color: var(--sd-colour__dashboard-widget-Bg);
         .shadow-list-holder {
             padding: 0 10px;
         }
@@ -22,7 +22,7 @@
                 span {
                     float: none;
                     padding: 3px 5px;
-                    color: #333;
+                    color: $sd-text;
                     text-transform: uppercase;
                     font-size: 11px;
                     @include text-semibold();
@@ -30,7 +30,7 @@
             }
         }
         li:hover {
-            @include box-shadow(none);
+            box-shadow: none;
         }
     }
 

@@ -7,16 +7,16 @@ sd-suggest {
     box-sizing: border-box;
     max-width: $panel-width;
     width: 100%;
-    border: 1px solid rgba(0,0,0,0.25);
+    border: 1px solid var(--sd-colour-line--medium);
     z-index: 100;
-    background: #fff;
+    background: var(--sd-item__main-Bg);
     position: absolute;
     top: 0px;
     left: -$panel-width;
     height: 100%;
     padding: 48px 0 0;
     overflow-x: scroll;
-    @include box-shadow(-2px -7px 5px 0 rgba(0,0,0,0.25));
+    //box-shadow: -2px -7px 5px 0 rgba(0,0,0,0.25);
 
     h6.no-suggestions {
         padding: 15px 18px;
@@ -29,14 +29,14 @@ sd-suggest {
     .live-suggest {
         &__header {
             top:0;
-            background: #fff;
+            background: var(--sd-item__main-Bg);
 
             h3 {color: $sd-text-label;}
 
             .close i:before {
                 cursor: pointer;
                 font-weight: bold;
-                color: #000;
+                color: $sd-text;
                 position: relative;
                 top: 13px;
                 right: 18px;
@@ -52,7 +52,7 @@ sd-suggest {
 
                 .list-item-view.active .media-box {
                     &:hover {
-                        background-color: #f4f4f4 !important;
+                        background-color: var(--sd-item__main-Bg--hover) !important;
                     }
                     background-color: transparent !important;
                     border-right: none !important;

@@ -1,6 +1,7 @@
 # 
 # Translators:
 # Helen Vogt <helen.vogt@ntb.no>, 2016-2018
+# Kåre Henriksen, 2022
 # Karel Petrak <karel.petrak@sourcefabric.org>, 2016,2018-2019,2021
 # Karel Petrak <karel.petrak@sourcefabric.org>, 2016-2017
 # Magnus Aabech <magnus.aabech@ntb.no>, 2018-2019
@@ -8,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-03-05 16:25+0000\n"
-"Last-Translator: Karel Petrak <karel.petrak@sourcefabric.org>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Kåre Henriksen, 2022\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -131,11 +132,11 @@ msgstr "*minst én mottaker kreves"
 
 #: ../superdesk-analytics/client/utils.js:193
 msgid "1 day"
-msgstr ""
+msgstr "1 dag"
 
 #: ../superdesk-analytics/client/utils.js:201
 msgid "1 hour"
-msgstr ""
+msgstr "1 time"
 
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:304
 msgid "1 item selected"
@@ -149,7 +150,7 @@ msgstr "1 element ble ikke eksportert"
 
 #: ../superdesk-analytics/client/utils.js:209
 msgid "1 minute"
-msgstr ""
+msgstr "1 minutt"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 month"
@@ -157,7 +158,7 @@ msgstr "1 måned"
 
 #: ../superdesk-analytics/client/utils.js:216
 msgid "1 second"
-msgstr ""
+msgstr "1 sekund"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:18
 msgid "1 week"
@@ -169,7 +170,7 @@ msgstr "1 år"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:25
 msgid "10 years"
-msgstr ""
+msgstr "10 år"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "10th update"
@@ -185,7 +186,7 @@ msgstr "12 timer"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:197
 msgid "12:00am"
-msgstr ""
+msgstr "12.00"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "12th update"
@@ -225,11 +226,11 @@ msgstr "2 uker"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:23
 msgid "2 years"
-msgstr ""
+msgstr "2 år"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:92
 msgid "200 minimum"
-msgstr ""
+msgstr "Minst 200"
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "20th update"
@@ -261,7 +262,7 @@ msgstr "Ny 4"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:24
 msgid "5 years"
-msgstr ""
+msgstr "5 år"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "5th update"
@@ -320,7 +321,7 @@ msgstr "En innholdsprofil med det navnet finnes fra før."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:281
 msgid "A desk is required"
-msgstr ""
+msgstr "En desk er påkrevd"
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
@@ -334,7 +335,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:233
 msgid "A user is required"
-msgstr ""
+msgstr "En bruker er påkrevd"
 
 #: scripts/apps/search/views/search-parameters.html:218
 msgid "AAP Image Keyword"
@@ -378,7 +379,7 @@ msgstr "VEDLEGG {{ index }} kreves"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:131
 msgid "ATTACHMENTS"
-msgstr ""
+msgstr "VEDLEGG"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:103
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:84
@@ -395,7 +396,7 @@ msgstr "ordliste forkortelser"
 
 #: scripts/core/menu/views/menu.html:59
 msgid "About Superdesk"
-msgstr ""
+msgstr "Om Superdesk"
 
 #: scripts/apps/authoring/views/theme-select.html:45
 #: scripts/apps/authoring/views/theme-select.html:96
@@ -1312,7 +1313,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:100
 msgid "Area"
-msgstr ""
+msgstr "Område"
 
 #: scripts/apps/users/views/user-preferences.html:53
 msgid "Article Defaults"
@@ -2196,12 +2197,12 @@ msgstr "Stoffgruppe"
 
 #: ../superdesk-analytics/client/utils.js:178
 msgid "Change Image"
-msgstr ""
+msgstr "Endre bilde"
 
 #: ../superdesk-analytics/client/utils.js:175
 #: ../superdesk-analytics/client/utils.js:176
 msgid "Change POI"
-msgstr ""
+msgstr "Endre POI"
 
 #: scripts/apps/users/config.ts:122
 msgid "Change avatar"
@@ -2209,7 +2210,7 @@ msgstr "Bytt avatar"
 
 #: scripts/apps/authoring/views/change-image.html:204
 msgid "Change image settings"
-msgstr ""
+msgstr "Endre bildeinnstillinger"
 
 #: scripts/core/auth/login-modal.html:85
 msgid "Change password"
@@ -2217,7 +2218,7 @@ msgstr "Endre passord"
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
-msgstr ""
+msgstr "Endre søkefiltre og prøv igjen!"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:151
 #: ../superdesk-analytics/client/featuremedia_updates_report/directives/FeaturemediaUpdatesReportPreview.js:28
@@ -15232,7 +15233,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/main.html:6
 msgid "show only online users"
-msgstr "vis bare aktive brukere"
+msgstr "bare vis påloggede brukere"
 
 #: scripts/apps/users/views/change-avatar.html:15
 msgid "shows your initials instead"

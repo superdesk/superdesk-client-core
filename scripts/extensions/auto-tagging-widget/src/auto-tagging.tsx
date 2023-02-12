@@ -191,6 +191,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract} = this.props.article;
+                const tags = dataBeforeLoading !== 'not-initialized' && dataBeforeLoading !== 'loading' ?
+                    dataBeforeLoading.changes.analysis :
+                    OrderedMap<string, ITagUi>();
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
@@ -204,6 +207,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             body_html,
                             abstract,
                         },
+                        tags: toServerFormat(tags, superdesk),
                     },
                 }).then((res) => {
                     const resClient = toClientFormat(res.analysis);

@@ -6,7 +6,7 @@ import {get} from 'lodash';
 import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
 
-import {Popup, Content} from '../../Popup';
+import {Popup, Content} from '../../Popup/index';
 
 import './style.scss';
 

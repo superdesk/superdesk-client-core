@@ -24,7 +24,7 @@ class UserPrefs {
         // the Preferences tab
         this.prefsTab = element.all(by.css('.nav-tabs button')).get(1);
 
-        this.btnCheckNone = element.all(by.css('.preferences__actions > a')).get(1);
+        this.btnCheckNone = element.all(by.linkText('none'));
         this.categoryCheckboxes = element.all(
             by.repeater('cat in categories')).all(by.css('.sd-checkbox'));
 

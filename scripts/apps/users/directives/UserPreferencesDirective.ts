@@ -41,6 +41,19 @@ export function UserPreferencesDirective(
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
             const userLang = getUserInterfaceLanguage().replace('_', '-');
+            const body = angular.element('body');
+
+            scope.activeNavigation = null;
+            scope.activeTheme = localStorage.getItem('theme');
+
+            scope.$watch('activeTheme', (val) => {
+                if (!val) {
+                    return;
+                }
+
+                localStorage.setItem('theme', val);
+                body.attr('data-theme', val);
+            });
 
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
@@ -56,6 +69,7 @@ export function UserPreferencesDirective(
 
                 scope.datelineSource = session.identity.dateline_source;
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
+                scope.featurePreview = scope.preferences['feature:preview'];
             });
 
             scope.cancel = function() {
@@ -63,6 +77,18 @@ export function UserPreferencesDirective(
                 buildPreferences(orig);
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
+            };
+
+            scope.goTo = function(id) {
+                document.getElementById(id).scrollIntoView({
+                    behavior: 'smooth',
+                });
+
+                scope.activeNavigation = id;
+            };
+
+            scope.checkNavigation = function(id) {
+                return scope.activeNavigation === id;
             };
 
             userList.getUser(scope.user._id, true).then((u) => {
