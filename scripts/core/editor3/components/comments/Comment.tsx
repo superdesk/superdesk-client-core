@@ -136,9 +136,7 @@ export class Comment extends React.Component<any, any> {
                                 </div>
                             )
                             : (
-                                <TextWithMentions>
-                                    {this.props.data.msg}
-                                </TextWithMentions>
+                                <TextWithMentions message={this.props.data.msg} />
                             )
                     }
                 </FluidRow>
