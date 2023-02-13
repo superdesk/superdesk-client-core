@@ -277,7 +277,6 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                     <Input
                                         type="text"
                                         label={gettext('Name')}
-                                        type="text"
                                         value={updates.name ?? ''}
                                         required={true}
                                         onChange={this.onChange.name}
@@ -290,7 +289,6 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                     <Input
                                         type="text"
                                         label={gettext('Description')}
-                                        type="text"
                                         value={updates.description ?? ''}
                                         onChange={this.onChange.description}
                                         disabled={false}
@@ -300,7 +298,6 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
-                                        type="text"
                                         label={gettext('Maximum Asset Size')}
                                         type="number"
                                         value={updates.maximum_asset_size || 0}

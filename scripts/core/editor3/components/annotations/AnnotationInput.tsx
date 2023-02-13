@@ -286,7 +286,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                     <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
                         {gettext('Submit')}
                     </button>
-                </Spacer>
+                </div>
             </div>
         );
 
