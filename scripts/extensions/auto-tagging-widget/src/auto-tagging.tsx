@@ -3,7 +3,7 @@ import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {IArticle, IAuthoringSideWidget, ISuperdesk} from 'superdesk-api';
 
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
@@ -36,9 +36,7 @@ interface IAutoTaggingSearchResult {
     };
 }
 
-interface IProps {
-    article: IArticle;
-}
+type IProps = React.ComponentProps<IAuthoringSideWidget['component']>;
 
 interface IIMatricsFields {
     [key: string]: {

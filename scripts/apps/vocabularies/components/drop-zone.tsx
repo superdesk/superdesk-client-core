@@ -76,7 +76,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                                 {gettext('Select Files')}
                             </span>
                         </div>
-                    </div>
+                    </>
                 )}
                 {this.props.onFileSelect != null && (
                     <input

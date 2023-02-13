@@ -30,7 +30,6 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {store} from 'core/data';
 import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
 import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
-import ng from 'core/services/ng';
 
 let body = angular.element('body');
 

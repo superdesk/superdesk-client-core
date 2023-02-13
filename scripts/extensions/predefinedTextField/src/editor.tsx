@@ -9,7 +9,7 @@ import {superdesk} from './superdesk';
 const {Editor3Html} = superdesk.components;
 const {gettext} = superdesk.localization;
 
-type IProps = IEditorComponentProps<string, IPredefinedFieldConfig>;
+type IProps = IEditorComponentProps<string | null, IPredefinedFieldConfig, never>;
 
 interface IState {
     freeText: boolean;

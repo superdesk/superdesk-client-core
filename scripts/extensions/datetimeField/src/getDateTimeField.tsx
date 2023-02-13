@@ -10,16 +10,16 @@ interface IPropsAdditional {
     hideToggle?: boolean;
 }
 
-export function getDateTimeField(superdesk: ISuperdesk) {
+type IProps = IEditorComponentProps<string | null, IDateTimeFieldConfig, never> & IPropsAdditional;
+
+export function getDateTimeField(superdesk: ISuperdesk): React.ComponentClass<IProps> {
     const {gettext, gettextPlural} = superdesk.localization;
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
 
     return class DateTimeField
-        extends React.PureComponent<
-            IEditorComponentProps<string | null, IDateTimeFieldConfig, never> & IPropsAdditional
-        > {
+        extends React.PureComponent<IProps> {
         render() {
             const checkbox = this.props.hideToggle !== true ? (
                 <Switch

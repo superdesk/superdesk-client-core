@@ -58,6 +58,7 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
                     }}
                     readOnly={this.props.readOnly}
                     config={field.fieldConfig}
+                    fieldId={field.id}
                     editorPreferences={this.props.editorPreferences}
                     onEditorPreferencesChange={(fieldPreferences) => {
                         this.props.onEditorPreferencesChange(field.id, fieldPreferences);

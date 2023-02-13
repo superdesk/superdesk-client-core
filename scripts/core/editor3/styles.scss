@@ -99,7 +99,6 @@ $editor-styleButton-size: 			3rem;
 				display: none;
 			}
 		}
-<<<<<<< HEAD
 		video, audio {
 			display: block;
 		}
@@ -124,8 +123,6 @@ $editor-styleButton-size: 			3rem;
 	}
 	.image-block__image-action {
         @include image-overlay_action-button;
-=======
->>>>>>> content-profiles-for-non-text-content-types
 
 		&.read-only {
 			cursor: not-allowed;

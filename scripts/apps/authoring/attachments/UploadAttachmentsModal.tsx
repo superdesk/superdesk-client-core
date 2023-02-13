@@ -146,20 +146,18 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                             <div className="other-info">
                                                 <div className="form__row">
                                                     <Switch
-                                                        label={{text: gettext('Internal'), hidden: true}}
+                                                        label={{text: gettext('Internal')}}
                                                         value={item.meta.internal}
                                                         onChange={(value) => {
                                                             this.updateItemMeta(index, 'internal', value);
                                                         }}
                                                         disabled={this.state.saving}
-                                                        label={{text: gettext('Internal')}}
                                                     />
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
                                                         type="text"
                                                         label={gettext('Title')}
-                                                        type="text"
                                                         required={true}
                                                         value={item.meta.title}
                                                         onChange={(value) => {
