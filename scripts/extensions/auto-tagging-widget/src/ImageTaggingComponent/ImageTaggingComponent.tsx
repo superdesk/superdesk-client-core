@@ -216,9 +216,11 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                 },
             })
                 .then((res) => {
+                    const filteredImages: Array<IImage> = res.result.filter((image: IImage) => image.imageUrl);
+
                     this.setState({
-                        selectedImage: res.result[0] ?? null,
-                        images: res.result,
+                        selectedImage: filteredImages[0] ?? null,
+                        images: filteredImages,
                     });
                 })
                 .catch(() => {
@@ -318,21 +320,23 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                             return (
                                 <div style={gridContainerStyle}>
                                     <div style={gridItemLeftStyle}>
-                                        <figure style={selectedCardStyle}>
-                                            <div style={{maxHeight: '72%'}}>
-                                                <img
-                                                    style={imageStyle}
-                                                    alt=""
-                                                    src={selectedImage?.imageUrl}
-                                                    onDragStart={(event) =>
-                                                        prepareForDropping(event, selectedImage)
-                                                    }
-                                                />
-                                            </div>
-                                            <figcaption style={figCaptionStyle}>
-                                                {selectedImage?.caption}
-                                            </figcaption>
-                                        </figure>
+                                        {selectedImage && (
+                                            <figure style={selectedCardStyle}>
+                                                <div style={{maxHeight: '72%'}}>
+                                                    <img
+                                                        style={imageStyle}
+                                                        alt=""
+                                                        src={selectedImage?.imageUrl}
+                                                        onDragStart={(event) =>
+                                                            prepareForDropping(event, selectedImage)
+                                                        }
+                                                    />
+                                                </div>
+                                                <figcaption style={figCaptionStyle}>
+                                                    {selectedImage?.caption}
+                                                </figcaption>
+                                            </figure>
+                                        )}
                                     </div>
                                     <div style={gridItemRightStyle}>
                                         <div style={imageContentStyle}>
