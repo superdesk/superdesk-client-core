@@ -4,18 +4,18 @@
 # Bruno Sarlo <bsarlo@gmail.com>, 2016
 # Carolina Sanchez <carolina.isis8@gmail.com>, 2017
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019
-# gaba <gaba@torproject.org>, 2020
-# gaba <gaba@torproject.org>, 2020
+# Gaba <gaba@torproject.org>, 2020
+# Gaba <gaba@torproject.org>, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-04-18 16:36+0000\n"
-"Last-Translator: Karel Petrak <karel.petrak@sourcefabric.org>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Gaba <gaba@torproject.org>, 2020\n"
 "Language-Team: Spanish (http://www.transifex.com/sourcefabric/superdesk/language/es/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
@@ -143,6 +143,7 @@ msgid "1 item selected"
 msgid_plural "{{number}} items selected"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/actions/multiSelect.js:217
 msgid "1 item was not included in the export."
@@ -2259,6 +2260,7 @@ msgid "Character {{chars}} not allowed in the {{field}}."
 msgid_plural "Characters {{chars}} not allowed in the {{field}}."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:55
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:55
@@ -3900,6 +3902,7 @@ msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish the articles?"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:135
 msgid "Do you want to reload the page now?"
@@ -6699,6 +6702,7 @@ msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
@@ -8318,6 +8322,7 @@ msgid "Only 1 image is allowed in this field"
 msgid_plural "Only {{number}} images are allowed in this field"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:14
 msgid "Only Posted"
@@ -12227,6 +12232,7 @@ msgid "The file was not uploaded"
 msgid_plural "Some files were not uploaded"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:108
 msgid "The following Events are in use and will not be spiked:"
@@ -12964,8 +12970,9 @@ msgstr "Demasiado largo"
 #: scripts/apps/authoring/attachments/actions.ts:30
 msgid "Too many files selected. Only 1 file is allowed."
 msgid_plural "Too many files selected. Only {{$count}} files are allowed."
-msgstr[0] "Se seleccionaron demasiados archivos. Solo se permite 1 archivo."
-msgstr[1] "Se seleccionaron demasiados archivos. Solo se permiten {{$count}} archivos."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/validators/profile.js:32
 #: ../superdesk-planning/client/validators/profile.js:33
@@ -13844,6 +13851,7 @@ msgid "WORD"
 msgid_plural "WORDS"
 msgstr[0] "PALABRA"
 msgstr[1] "PALABRAS"
+msgstr[2] "PALABRAS"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:658
 #: scripts/core/auth/auth.ts:211
@@ -14806,6 +14814,7 @@ msgid "line"
 msgid_plural "lines"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/core/editor2/editor.ts:1083
 msgid "link"
@@ -15348,6 +15357,7 @@ msgid "translation"
 msgid_plural "translations"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/views/authoring-header.html:84
 msgid "translations"
@@ -15555,6 +15565,7 @@ msgid "{{ multi.count}} Item selected"
 msgid_plural "{{ multi.count}} Items selected"
 msgstr[0] "{{ multi.count}} elemento seleccionado"
 msgstr[1] "{{ multi.count}} elementos seleccionados"
+msgstr[2] "{{ multi.count}} elementos seleccionados"
 
 #: ../superdesk-planning/client/validators/assignments.jsx:7
 #: ../superdesk-planning/client/validators/profile.js:40
@@ -15595,6 +15606,7 @@ msgid "{{ wordsCount}} word"
 msgid_plural "{{ $count}} words"
 msgstr[0] "{{ wordsCount}} palabra"
 msgstr[1] "{{ $count}} palabras"
+msgstr[2] "{{ $count}} palabras"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:42
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
@@ -15687,6 +15699,7 @@ msgid "{{multiSelectCount}} Item selected"
 msgid_plural "{{multiSelectCount}} Items selected"
 msgstr[0] "{{multiSelectCount}} elemento seleccionado"
 msgstr[1] "{{multiSelectCount}} elementos seleccionados"
+msgstr[2] "{{multiSelectCount}} elementos seleccionados"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
@@ -15732,6 +15745,7 @@ msgid "{{x}} hour"
 msgid_plural "{{x}} hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/search/components/fields/linesCount.tsx:14
 msgid "{{x}} lines"

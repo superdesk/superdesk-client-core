@@ -3089,6 +3089,7 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         language: string;
         config: IConfig;
+        fieldId: string;
 
         fieldsData: IFieldsData;
 

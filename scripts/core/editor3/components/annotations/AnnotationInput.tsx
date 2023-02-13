@@ -271,7 +271,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                         scrollContainer={'body'}
                     />
                 </div>
-                <Spacer h gap="4" justifyContent="end" noGrow>
+                <div className="button-group button-group--end button-group--comfort sd-flex--justify-end">
                     {typeof annotation === 'object' && (
                         <button
                             className="btn btn--cancel"

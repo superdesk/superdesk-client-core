@@ -68,7 +68,7 @@ export class Comment extends React.Component<any, any> {
             <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
                 <FluidRow scrollable={false}>
                     <EditorHighlightsHeader availableActions={availableActions}>
-                        <div className="flex-row sibling-spacer-10">
+                        <div className="sd-display--flex sd-gap--small">
                             <UserAvatarFromUserId userId={authorId} />
                             <div>
                                 <p className="editor-popup__author-name">{author}</p>
@@ -136,9 +136,7 @@ export class Comment extends React.Component<any, any> {
                                 </div>
                             )
                             : (
-                                <TextWithMentions>
-                                    {this.props.data.msg}
-                                </TextWithMentions>
+                                <TextWithMentions message={this.props.data.msg} />
                             )
                     }
                 </FluidRow>

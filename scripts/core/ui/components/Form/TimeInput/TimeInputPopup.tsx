@@ -5,7 +5,7 @@ import {range} from 'lodash';
 
 import {gettext} from 'core/utils';
 
-import {Popup, Content, Header, Footer} from '../../Popup';
+import {Popup, Content, Header, Footer} from '../../Popup/index';
 import {Button} from '../../';
 
 import './style.scss';

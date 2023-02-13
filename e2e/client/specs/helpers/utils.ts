@@ -1,6 +1,8 @@
 import {LoginModal} from './pages';
-import {browser, protractor, element, by, ElementFinder, ElementArrayFinder} from 'protractor';
-import {ECE, s} from '@superdesk/end-to-end-testing-helpers';
+import {
+    browser, protractor, element, by, ElementFinder, ElementArrayFinder, ExpectedConditions as EC,
+} from 'protractor';
+import {s} from '@superdesk/end-to-end-testing-helpers';
 
 // construct url from uri and base url
 export function constructUrl(base, uri) {
@@ -178,7 +180,7 @@ export function altKey(key) {
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
     const elem = element(s([`notification--${type}`], msg));
 
-    browser.wait(ECE.elementToBeClickable(elem), 2000);
+    click(elem);
 
     /**
      * It seems there's an issue with protractor:
@@ -282,4 +284,9 @@ export function acceptConfirm() {
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
         element(by.className('modal__backdrop')),
     ), 2000);
+}
+
+export function click(elem: ElementFinder, message?: string) {
+    browser.wait(EC.elementToBeClickable(elem), 2000, message);
+    return elem.click();
 }

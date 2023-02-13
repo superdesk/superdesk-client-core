@@ -61,7 +61,6 @@
             background: $white;
             float: left;
             height: 100%;
-            @include border-box();
             border: 1px solid #cacaca;
             border-width: 0 1px;
             position: relative;
@@ -78,9 +77,6 @@
                     i {
                         @include opacity(40);
                     }
-                }
-                &.open .dropdown__toggle {
-                    box-shadow: -3px -2px 1px -2px #999999, 3px -2px 1px -2px #999999;
                 }
                 .dropdown__menu {
                     margin-top: -4px;

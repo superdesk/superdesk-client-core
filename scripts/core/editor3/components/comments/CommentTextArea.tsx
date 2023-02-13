@@ -93,7 +93,7 @@ class CommentTextArea extends React.Component<any, any> {
             <div className="entry">
                 {item.type === 'desk'
                     ? <i className="icon-tasks" />
-                    : <UserAvatar user={item.user} />
+                    : <UserAvatar size="small" user={item.user} />
                 }
                 {highlightedDisplay}
             </div>

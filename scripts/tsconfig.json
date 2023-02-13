@@ -14,8 +14,7 @@
         "skipLibCheck": true,
         "lib": [
             "dom",
-            "es2017",
-            "es2018.promise"
+            "es2020"
         ],
         "jsx": "react"
     }

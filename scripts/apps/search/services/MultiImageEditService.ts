@@ -16,7 +16,7 @@ export function MultiImageEditService($modal) {
         $modal.open({
             templateUrl: 'scripts/apps/search/views/multi-image-edit-modal.html',
             controller: MultiImageEditModalController,
-            size: 'fullscreen modal--dark-ui',
+            size: 'fullscreen',
             resolve: {
                 imagesOriginal: () => imagesOriginal,
                 saveHandler: () => saveHandler,
