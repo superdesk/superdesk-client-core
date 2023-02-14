@@ -497,6 +497,15 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSideWidgetNameAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index].label;
                             }}
+                            openWidget={(name: string | null) => {
+                                this.setState({
+                                    ...this.state,
+                                    sideWidget: name == null ? null : {
+                                        name,
+                                        pinned: this.state.sideWidget?.pinned ?? false,
+                                    },
+                                });
+                            }}
                         />
                     );
                 }}

@@ -205,6 +205,7 @@ declare module 'superdesk-api' {
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
         getSideWidgetNameAtIndex(item: T, index: number): string;
+        openWidget(name: string | null): void;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments

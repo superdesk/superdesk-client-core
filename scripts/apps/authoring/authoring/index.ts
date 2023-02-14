@@ -33,6 +33,7 @@ import {sdApi} from 'api';
 import {TextWithMentions} from 'apps/users/components';
 import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
 
 export interface IOnChangeParams {
     item: IArticle;

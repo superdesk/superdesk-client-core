@@ -73,8 +73,8 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                 if (event.detail.editorId === editorId && this.isAwaitingSelectionIndex) {
                     this.setState({
                         currentSelectionIndex: event.detail.selectionIndex + 1,
-                        replaceValue: Object.values(this.props.currentMacro.diff).at(event.detail.selectionIndex),
-                        replaceTarget: Object.keys(this.props.currentMacro.diff).at(event.detail.selectionIndex),
+                        replaceValue: Object.values(this.props.currentMacro.diff)[event.detail.selectionIndex],
+                        replaceTarget: Object.keys(this.props.currentMacro.diff)[event.detail.selectionIndex],
                     });
                     this.isAwaitingSelectionIndex = false;
                 }

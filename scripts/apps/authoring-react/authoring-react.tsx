@@ -1005,6 +1005,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
+            sideWidget: this.props.sideWidget.name,
             toggleSideWidget: (name) => {
                 if (name == null || this.props.sideWidget?.name === name) {
                     this.props.onSideWidgetChange(null);
@@ -1120,15 +1121,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
                 const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
 
-                const nextState: IStateLoaded<T> = {
-                    ...state,
-                    openWidget: {
-                        name: nextWidgetName,
-                        pinned: state.openWidget?.pinned ?? false,
-                    },
-                };
-
-                this.setState(nextState);
+                this.props.openWidget(nextWidgetName);
             };
         }
 
