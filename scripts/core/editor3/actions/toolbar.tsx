@@ -177,5 +177,10 @@ export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
 
-export const setCustomToolbar = (style: IEditorStore['customToolbarStyle']) =>
-    ({type: 'SET_CUSTOM_TOOLBAR', payload: style});
+export const setMultiLineQuotePopup = (type, data) => ({
+    type: 'SET_MULTI-LINE_QUOTE_POPUP', payload: {type, data},
+});
+
+export const setCustomToolbar = (style: IEditorStore['customToolbarStyle']) => ({
+    type: 'SET_CUSTOM_TOOLBAR', payload: style,
+});

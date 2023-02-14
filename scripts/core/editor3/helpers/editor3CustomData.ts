@@ -101,7 +101,7 @@ export function setAllCustomDataForEditor__deprecated(editorState, value) {
     return editorStateWithSelectionRestored;
 }
 
-export function getAllCustomDataFromEditor(editorState) {
+export function getAllCustomDataFromEditor(editorState: EditorState) {
     return editorState
         .getCurrentContent()
         .getFirstBlock()

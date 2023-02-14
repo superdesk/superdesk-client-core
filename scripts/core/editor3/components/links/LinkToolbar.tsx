@@ -66,7 +66,6 @@ LinkToolbarComponent.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    editorState: state.editorState,
     suggestingMode: state.suggestingMode,
 });
 

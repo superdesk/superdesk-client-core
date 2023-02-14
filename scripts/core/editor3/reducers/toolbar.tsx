@@ -10,6 +10,8 @@ import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
+import {getCell} from '../helpers/table';
+import {processCells} from './table';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -46,6 +48,8 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.redo(state.editorState));
     case 'SET_CUSTOM_TOOLBAR' :
         return setCustomToolbar(state, action.payload);
+    case 'SET_MULTI-LINE_QUOTE_POPUP' :
+        return setMultiLinePopup(state, action.payload);
     default:
         return state;
     }
@@ -261,6 +265,23 @@ const setPopup = (state: IEditorStore, {type, data}) => {
     }
 
     return {...state, editorState: newEditorState, popup: {type, data}};
+};
+
+const setMultiLinePopup = (state: IEditorStore, {type, data}) => {
+    const {editorState} = state;
+    let newEditorState = editorState;
+
+    processCells(
+        state,
+        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
+            const data1 = {cells, numRows, numCols, withHeader};
+            const cellStateEditor = getCell(data1, i, j, currentStyle, selection);
+
+            // newEditorState = EditorState.forceSelection(cellStateEditor, cellStateEditor.getSelection());
+
+            return {...state, editorState: cellStateEditor, popup: {type, data}, data: data1, newCurrentStyle: currentStyle};
+        },
+    );
 };
 
 function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {

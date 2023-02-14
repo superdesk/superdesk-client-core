@@ -24,6 +24,8 @@ const table = (state = {}, action) => {
         return toggleTableHeader(state);
     case 'TOOLBAR_TABLE_STYLE':
         return toggleTableStyle(state, action.payload);
+    case 'TOOLBAR_MULTI-LINE_STYLE':
+        return toggleMultiLineQuoteBlockStyle(state, action.payload);
     default:
         return state;
     }
@@ -151,7 +153,7 @@ const removeCol = (state) =>
  * @description Helper function to help process the cells in the currently active
  * table and transform the entity data to a new form, using a callback function.
  */
-const processCells = (state, fn) => {
+export const processCells = (state, fn) => {
     const {activeCell, editorState} = state;
 
     if (activeCell === null) {
@@ -163,22 +165,26 @@ const processCells = (state, fn) => {
     const block = contentState.getBlockForKey(key);
     const {cells, numRows, numCols, withHeader} = getData(contentState, block.getKey());
     const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
-    const newEditorState = setData(editorState, block, data, 'change-block-data');
 
-    let newState = state;
+    if (data != null) {
+        const newEditorState = setData(editorState, block, data, 'change-block-data');
+        let newState = state;
 
-    if (newCurrentStyle !== null) {
-        newState = {
-            ...state,
-            activeCell: {
-                ...activeCell,
-                currentStyle: newCurrentStyle,
-                selection: selection,
-            },
-        };
+        if (newCurrentStyle !== null) {
+            newState = {
+                ...state,
+                activeCell: {
+                    ...activeCell,
+                    currentStyle: newCurrentStyle,
+                    selection: selection,
+                },
+            };
+        }
+
+        return onChange(state, newEditorState, true);
+    } else {
+        return onChange(editorState, editorState, true);
     }
-
-    return onChange(newState, newEditorState, true);
 };
 
 /**
@@ -217,6 +223,28 @@ const toggleTableStyle = (state, inlineStyle) =>
             const data = {cells, numRows, numCols, withHeader};
             const cellStateEditor = getCell(data, i, j, currentStyle, selection);
             const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
+            const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
+            const newData = setCell(data, i, j, newCellEditorState).data;
+
+            return {
+                data: newData,
+                newCurrentStyle: newCurrentStyle,
+            };
+        },
+    );
+
+const toggleMultiLineQuoteBlockStyle = (state, style) =>
+    processCells(
+        state,
+        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
+            const data = {cells, numRows, numCols, withHeader};
+            const cellStateEditor = getCell(data, i, j, currentStyle, selection);
+            const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, style);
+
+            // Get the block type properly
+            // console.log(data.cells[0][0].blocks[0].key)
+            // console.log(newCellEditorState.getBlockTree(data.cells[0][0].blocks[0].key).toJS())
+
             const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
             const newData = setCell(data, i, j, newCellEditorState).data;
 

@@ -48,6 +48,8 @@ export class AtomicBlockParser {
             return this.parseEmbed(data).trim();
         case 'TABLE':
             return this.parseTable(tableHelpers.getData(this.contentState, contentBlock.getKey())).trim();
+        case 'MULTI-LINE_QUOTE':
+            return this.parseMultiLineQuote(tableHelpers.getData(this.contentState, contentBlock.getKey())).trim();
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
         }
@@ -184,6 +186,27 @@ export class AtomicBlockParser {
         }
 
         html += '</table>';
+
+        return html;
+    }
+
+    /**
+     * Returns the HTML representation of an unstyled
+     * 'MULTI-LINE_QUOTE' block having the passed entity data.
+     */
+    parseMultiLineQuote(data) {
+        if (this.disabled.indexOf('table') > -1) {
+            return '';
+        }
+
+        const {cells} = data;
+        let html = '<div className="multi-line-quote">';
+        const cellContentState = cells[0] && cells[0][0]
+            ? convertFromRaw(cells[0][0])
+            : ContentState.createFromText('');
+
+        html += editor3StateToHtml(cellContentState);
+        html += '</div>';
 
         return html;
     }

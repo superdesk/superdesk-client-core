@@ -172,6 +172,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             insertMedia,
             addTable,
             dispatch,
+            editorState,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -334,7 +335,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     />
 
                     {/* LinkToolbar must be the last node. */}
-                    <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
+                    <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
                 </div>
             );
         } else if (customToolbarStyle === 'multiLineQuote') {
