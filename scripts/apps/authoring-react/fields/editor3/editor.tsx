@@ -402,6 +402,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         <Editor3
+                            uiTheme={this.props.uiTheme}
                             scrollContainer=".sd-editor-content__main-container"
                             singleLine={config.singleLine ?? false}
                             cleanPastedHtml={config.cleanPastedHtml ?? false}

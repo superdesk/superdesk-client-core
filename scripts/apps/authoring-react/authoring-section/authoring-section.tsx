@@ -17,6 +17,16 @@ export interface IPropsAuthoringSection {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     validationErrors: IAuthoringValidationErrors;
+    uiTheme?: {
+        backgroundColor: string;
+        textColor: string;
+
+        fieldThemes: {
+            [fieldId: string]: {
+                fontSize: string | undefined;
+            };
+        };
+    };
 }
 
 /**
@@ -51,6 +61,11 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
 
                         return (
                             <AuthoringSectionField
+                                uiTheme={{
+                                    backgroundColor: this.props.uiTheme.backgroundColor,
+                                    textColor: this.props.uiTheme.textColor,
+                                    fieldTheme: this.props.uiTheme.fieldThemes,
+                                }}
                                 key={field.id}
                                 field={field}
                                 fieldsData={this.props.fieldsData}

@@ -47,8 +47,9 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
-import {ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@superdesk/common/dist/src/ui/show-modal';
+import ng from 'core/services/ng';
 
 export function getFieldsData<T>(
     item: T,
@@ -137,6 +138,8 @@ function getInitialState<T extends IBaseRestApiResponse>(
     storageAdapter: IStorageAdapter<T>,
     language: string,
     validationErrors: IAuthoringValidationErrors,
+    defaultTheme: ITheme,
+    proofReadingTheme: ITheme,
 ): IStateLoaded<T> {
     const allFields = profile.header.merge(profile.content);
 
@@ -189,6 +192,11 @@ function getInitialState<T extends IBaseRestApiResponse>(
         spellcheckerEnabled,
         validationErrors: validationErrors,
         openWidget: null,
+        allThemes: {
+            default: defaultTheme,
+            proofreading: proofReadingTheme,
+        },
+        activeTheme: defaultTheme,
     };
 
     return initialState;
@@ -236,6 +244,8 @@ interface IStateLoaded<T> {
      * Prevents changes to state while async operation is in progress(e.g. saving).
      */
     loading: boolean;
+    allThemes: {default: ITheme, proofreading: ITheme};
+    activeTheme: ITheme;
 }
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
@@ -457,6 +467,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     }
 
     componentDidMount() {
+        const authThemes = ng.get('authThemes');
+
         this._mounted = true;
 
         const {authoringStorage} = this.props;
@@ -471,9 +483,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }),
                 authoringStorage.getUserPreferences(),
+                authThemes.get('theme'),
+                authThemes.get('proofreadTheme'),
             ],
         ).then((res) => {
-            const [{item, profile}, userPreferences] = res;
+            const [{item, profile}, userPreferences, defaultTheme, proofReadingTheme] = res;
 
             const spellcheckerEnabled =
                 userPreferences[SPELLCHECKER_PREFERENCE].enabled
@@ -490,6 +504,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 this.props.storageAdapter,
                 this.props.getLanguage(item.autosaved ?? item.saved),
                 {},
+                defaultTheme,
+                proofReadingTheme,
             );
 
             this.props.onEditingStart?.(initialState.itemWithChanges);
@@ -676,6 +692,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
                         state.validationErrors,
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
                     ));
                 });
             }),
@@ -700,6 +718,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
                         state.validationErrors,
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
                     ));
                 });
             }),
@@ -838,6 +858,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     this.props.storageAdapter,
                     this.props.getLanguage(item),
                     {}, // clear validation errors
+                    state.allThemes.default,
+                    state.allThemes.proofreading,
                 );
 
                 if (this._mounted) {
@@ -1002,6 +1024,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             itemWithChanges: itemPatched,
             fieldsDataWithChanges: fieldsDataNext,
         };
+    }
+
+    textColor(bgColor: string) {
+        if (bgColor === 'blue' || bgColor === 'dark') {
+            return 'white';
+        } else {
+            return 'black';
+        }
     }
 
     render() {
@@ -1194,10 +1224,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 );
             };
 
-            console.log(state.profile,
-                state.fieldsDataWithChanges,);
-
-
             const preview = {
                 jsxButton: () => {
                     return (
@@ -1252,6 +1278,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     )}
                                     main={(
                                         <Layout.AuthoringMain
+                                            withoutPaddingContent
                                             toolBar={(
                                                 <React.Fragment>
                                                     <div
@@ -1276,21 +1303,23 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                                                     <ButtonGroup align="end">
 
-
-
-
-                {/*////////////////////////////////////////// modal //////////////////////////////////////////*/}
-
-
-
-
                                                         {printPreviewAction.jsxButton()}
 
                                                         <IconButton
                                                             icon="adjust"
                                                             ariaValue={gettext('Toggle theme')}
                                                             onClick={() => {
-                                                                //execute();
+                                                                if (state.activeTheme === state.allThemes.default) {
+                                                                    this.setState({
+                                                                        ...state,
+                                                                        activeTheme: state.allThemes.proofreading,
+                                                                    });
+                                                                } else {
+                                                                    this.setState({
+                                                                        ...state,
+                                                                        activeTheme: state.allThemes.default,
+                                                                    });
+                                                                }
                                                             }}
                                                         />
 
@@ -1300,9 +1329,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                             onClick={() => {
                                                                 showModal(({closeModal}) => {
                                                                     return (
-                                                                        <ProofreadingThemeModal onHide={closeModal}/>
+                                                                        <ProofreadingThemeModal onHide={closeModal} />
                                                                     );
-                                                                })
+                                                                });
                                                             }}
                                                         />
 
@@ -1329,20 +1358,41 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 </div>
                                             )}
                                         >
-                                            <div>
-                                                <AuthoringSection
-                                                    fields={state.profile.content}
-                                                    fieldsData={state.fieldsDataWithChanges}
-                                                    onChange={this.handleFieldChange}
-                                                    language={getLanguage(state.itemWithChanges)}
-                                                    userPreferencesForFields={state.userPreferencesForFields}
-                                                    setUserPreferencesForFields={this.setUserPreferences}
-                                                    getVocabularyItems={this.getVocabularyItems}
-                                                    toggledFields={state.toggledFields}
-                                                    toggleField={this.toggleField}
-                                                    readOnly={readOnly}
-                                                    validationErrors={state.validationErrors}
-                                                />
+                                            <div className={`
+                                                sd-editor-content__authoring-body-padding
+                                                sd-editor--theme-${state.activeTheme.theme}
+                                                sd-editor--font-${state.activeTheme.font}
+                                            `}>
+                                                <div>
+                                                    <AuthoringSection
+                                                        uiTheme={{
+                                                            backgroundColor: state.activeTheme.theme,
+                                                            textColor: this.textColor(state.activeTheme.theme),
+                                                            fieldThemes: {
+                                                                abstract: {
+                                                                    fontSize: state.activeTheme.abstract,
+                                                                },
+                                                                headline: {
+                                                                    fontSize: state.activeTheme.headline,
+                                                                },
+                                                                body_html: {
+                                                                    fontSize: state.activeTheme.body,
+                                                                },
+                                                            },
+                                                        }}
+                                                        fields={state.profile.content}
+                                                        fieldsData={state.fieldsDataWithChanges}
+                                                        onChange={this.handleFieldChange}
+                                                        language={getLanguage(state.itemWithChanges)}
+                                                        userPreferencesForFields={state.userPreferencesForFields}
+                                                        setUserPreferencesForFields={this.setUserPreferences}
+                                                        getVocabularyItems={this.getVocabularyItems}
+                                                        toggledFields={state.toggledFields}
+                                                        toggleField={this.toggleField}
+                                                        readOnly={readOnly}
+                                                        validationErrors={state.validationErrors}
+                                                    />
+                                                </div>
                                             </div>
                                         </Layout.AuthoringMain>
                                     )}

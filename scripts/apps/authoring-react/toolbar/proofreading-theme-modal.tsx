@@ -1,238 +1,362 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Button, ButtonGroup, Modal, Select, Option, RadioButtonGroup} from 'superdesk-ui-framework/react';
+import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
 
 interface IProps {
     onHide(): void;
 }
 
 interface IBackgroundColor {
-    name?: string,
-    color?: string,
+    name?: string;
+    color?: string;
 }
 
 interface IState {
-    leftSideValue: IBackgroundColor;
-    rightSideValue: IBackgroundColor;
-    colorSwatchArray: Array<IBackgroundColor>;
+    defaultTheme?: ITheme;
+    proofReadingTheme?: ITheme;
 }
+
+type IFontSizeOptions = 'small' | 'medium' | 'large';
+
+export interface ITheme {
+    font: string;
+    theme: string;
+    headline: IFontSizeOptions;
+    abstract: IFontSizeOptions;
+    body: IFontSizeOptions;
+}
+
+const availableColors = [
+    {name: 'default', color: '#ffffff'},
+    {name: 'dark', color: '#1b1e19'},
+    {name: 'blue', color: '#1b4473f2'},
+    {name: 'turquoise', color: '#00ced1'},
+    {name: 'military', color: '#959f60'},
+    {name: 'natural', color: '#efe9c5'},
+];
+
+const radioButtonOptions = [
+    {value: 'small', label: 'S'},
+    {value: 'medium', label: 'M'},
+    {value: 'large', label: 'L'},
+];
+
+const fontOptions = [
+    {
+        label: 'Sans-serif (Roboto)',
+        key: 'sans',
+    },
+    {
+        label: 'Serif (Merriweather)',
+        key: 'serif',
+    },
+    {
+        label: 'Monospace (Roboto Mono)',
+        key: 'mono',
+    },
+];
 
 export class ProofreadingThemeModal extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            leftSideValue: {},
-            rightSideValue: {},
-            colorSwatchArray: [
-                {name: 'default', color: '#ffffff'},
-                {name: 'dark', color: '#1b1e19'},
-                {name: 'blue', color: '#1b4473f2'},
-                {name: 'turquoise', color: '#00ced1'},
-                {name: 'military', color: '#959f60'},
-                {name: 'natural', color: '#efe9c5'},
-            ],
-        }
+            defaultTheme: null,
+            proofReadingTheme: null,
+        };
     }
 
-    //sd-editor--theme-default ----------------------------------- #ffffff
-    //sd-editor--theme-dark ------- rgba(27, 30, 25, 1) ---------- #1b1e19
-    //sd-editor--theme-turquoise -- rgba(0, 206, 209, 1) --------- #00ced1
-    //sd-editor--theme-military --- rgba(149, 159, 96, 1) -------- #959f60
-    //sd-editor--theme-natural ---- rgba(239, 233, 197, 1) ------- #efe9c5
-    //sd-editor--theme-blue ------- rgba(27, 68, 115, 0.95) ------ #1b4473f2
+    componentDidMount(): void {
+        const authThemes = ng.get('authThemes');
+
+        Promise.all([
+            authThemes.get('theme'),
+            authThemes.get('proofreadTheme'),
+        ]).then(([defaultTheme, proofReadingTheme]) => {
+            this.setState({defaultTheme, proofReadingTheme});
+        });
+
+    }
 
     render() {
+        if (this.state.defaultTheme == null) {
+            return null;
+        }
+
+        const footerTemplate = <ButtonGroup align="end">
+            <Button text={gettext('Cancel')} onClick={() => this.props.onHide()}/>
+            <Button
+                type='primary'
+                text={gettext('Save')}
+                onClick={() => {
+                    const authThemes = ng.get('authThemes');
+
+                    authThemes.save('theme', this.state.defaultTheme);
+                    authThemes.save('proofreadTheme', this.state.proofReadingTheme);
+
+                    this.props.onHide();
+                }}
+            />
+        </ButtonGroup>;
 
         return (
             <Modal
+                size='x-large'
                 zIndex={1050}
                 visible
                 onHide={this.props.onHide}
                 headerTemplate={'Configure Editor themes'}
-                footerTemplate={
-                    <ButtonGroup align="end">
-                        <Button text='Cancel' onClick={() => false}/>
-                        <Button type='primary' text='Save' onClick={() => {}}/>
-                    </ButtonGroup>
-                }
-                contentPadding={'none'}
-            >
+                footerTemplate={footerTemplate}
+                contentPadding={'none'}>
                 <div className="">
                     <div className="sd-column-box--2">
-                        <div className="sd-column-box__main-column sd-column-box__main-column--left sd-column-box__main-column--padded" style={{flex: '1 1 50%'}}>
-
-                            <h2 className="modal__body-heading"
-                                style={{
-                                    fontSize: '1.8rem',
-                                    //fontWeight: '400',
-                                    marginBottom: '2rem',
-                                    lineHeight: '100%',
-                                }}
-                            >
-                                <span className="badge badge--success"
-                                    style={{
-                                        verticalAlign: 'bottom',
-                                        marginRight: '0.6rem',
-                                    }}
-                                >
+                        <div
+                            className="
+                            sd-column-box__main-column
+                            sd-column-box__main-column--left
+                            sd-column-box__main-column--padded
+                            proofreading-modal">
+                            <h2 className="modal__body-heading proofreading-modal__heading">
+                                <span className="badge badge--success proofreading-modal__badge">
                                     &nbsp;
                                 </span>
-                                Default Theme
+                                {gettext('Default Theme')}
                             </h2>
 
                             <div className="form__row">
-                                <Select
-                                    label='Font'
-                                    value='Option 1'
-                                    onChange={(value) => false}>
-                                    <Option>Option 1</Option>
-                                    <Option>Option 2</Option>
-                                </Select>
+                                <FontSelect
+                                    value={this.state.defaultTheme.font}
+                                    onChange={(value) => {
+                                        this.setState({
+                                            defaultTheme: {
+                                                ...this.state.defaultTheme,
+                                                font: value,
+                                            },
+                                        });
+                                    }}
+                                />
                             </div>
 
-                            <ColorSwatch options={this.state.colorSwatchArray} onChange={(item: IBackgroundColor) => this.setState({leftSideValue: item})} />
+                            <ColorSwatch
+                                value={this.state.defaultTheme.theme}
+                                options={availableColors}
+                                onChange={(item) => {
+                                    this.setState({
+                                        defaultTheme: {
+                                            ...this.state.defaultTheme,
+                                            theme: item.name,
+                                        },
+                                    });
+                                }}
+                            />
 
                             <div className={`
                                 theme-preview
-                                sd-editor--theme-${this.state.leftSideValue.name}
-                                sd-editor--headline-large
-                                sd-editor--theme-{{themePref.theme}}
-                                sd-editor--font-{{themePref.font}}
-                                sd-editor--headline-{{themePref.headline}}
-                                sd-editor--abstract-{{themePref.abstract}}
-                                sd-editor--body-{{themePref.body}}`
-                                }
-                            >
+                                sd-editor--theme-${this.state.defaultTheme.theme}
+                                sd-editor--headline-${this.state.defaultTheme.headline}
+                                sd-editor--abstract-${this.state.defaultTheme.abstract}
+                                sd-editor--body-${this.state.defaultTheme.body}
+                                sd-editor--font-${this.state.defaultTheme.font}
+                            `}>
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Headline'</label>
+                                    <label className="theme-preview__label">{gettext('Headline')}</label>
+
                                     <div className="theme-preview__text-field text-field__headline">
                                         'This is the headline'
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
-                                    </div>
+                                        <RadioButtonGroup
+                                            value={this.state.defaultTheme.headline}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
 
+                                                this.setState({
+                                                    defaultTheme: {
+                                                        ...this.state.defaultTheme,
+                                                        headline: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
+                                    </div>
                                 </div>
+
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Abstract'</label>
+                                    <label className="theme-preview__label">{gettext('Abstract')}</label>
+
                                     <div className="theme-preview__text-field text-field__abstract">
                                         'Abstract example'
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
+                                        <RadioButtonGroup
+                                            value={this.state.defaultTheme.abstract}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
+                                                this.setState({
+                                                    defaultTheme: {
+                                                        ...this.state.defaultTheme,
+                                                        abstract: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
+
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Body'</label>
+                                    <label className="theme-preview__label">{gettext('Body')}</label>
+
                                     <div className="theme-preview__text-field text-field__body">
                                         'Body text example'
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
+                                        <RadioButtonGroup
+                                            value={this.state.defaultTheme.body}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
+                                                this.setState({
+                                                    defaultTheme: {
+                                                        ...this.state.defaultTheme,
+                                                        body: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="sd-column-box__main-column sd-column-box__main-column--right sd-column-box__main-column--padded"  style={{flex: '1 1 50%'}}>
-
-                            <h2 className="modal__body-heading"
-                                style={{
-                                    fontSize: '1.8rem',
-                                    //fontWeight: '400',
-                                    marginBottom: '2rem',
-                                    lineHeight: '100%',
-                                }}
-                            >
-                                    <span className="badge badge--success"
-                                    style={{
-                                        verticalAlign: 'bottom',
-                                        marginRight: '0.6rem',
-                                    }}
-                                    >
-                                        &nbsp;
-                                    </span>
-                                    Default Theme
+                        <div
+                            className="
+                            sd-column-box__main-column
+                            sd-column-box__main-column--right
+                            sd-column-box__main-column--padded
+                            proofreading-modal">
+                            <h2 className="modal__body-heading proofreading-modal__heading">
+                                <span className="badge badge--success proofreading-modal__badge">
+                                    &nbsp;
+                                </span>
+                                {gettext('Proofreading Theme')}
                             </h2>
 
                             <div className="form__row">
-                                <Select
-                                    label='Font'
-                                    value='Option 1'
-                                    onChange={(value) => false}>
-                                    <Option>Option 1</Option>
-                                    <Option>Option 2</Option>
-                                </Select>
+                                <FontSelect
+                                    value={this.state.proofReadingTheme.font}
+                                    onChange={(value) => {
+                                        this.setState({
+                                            proofReadingTheme: {
+                                                ...this.state.proofReadingTheme,
+                                                font: value,
+                                            },
+                                        });
+                                    }}
+                                />
                             </div>
 
-                            <ColorSwatch options={this.state.colorSwatchArray} onChange={(item: IBackgroundColor) => this.setState({rightSideValue: item})} />
+                            <ColorSwatch
+                                value={this.state.proofReadingTheme.theme}
+                                options={availableColors}
+                                onChange={(item: IBackgroundColor) => {
+                                    this.setState({
+                                        proofReadingTheme: {
+                                            ...this.state.proofReadingTheme,
+                                            theme: item.name,
+                                        },
+                                    });
+                                }}
+                            />
 
-                            <div className={`
+                            <div
+                            className={`
                                 theme-preview
-                                sd-editor--theme-${this.state.rightSideValue.name}
-                                sd-editor--theme-{{themePref.theme}}
-                                sd-editor--font-{{themePref.font}}
-                                sd-editor--headline-{{themePref.headline}}
-                                sd-editor--abstract-{{themePref.abstract}}
-                                sd-editor--body-{{themePref.body}}`
-                                }
-                            >
+                                sd-editor--theme-${this.state.proofReadingTheme.theme}
+                                sd-editor--headline-${this.state.proofReadingTheme.headline}
+                                sd-editor--abstract-${this.state.proofReadingTheme.abstract}
+                                sd-editor--body-${this.state.proofReadingTheme.body}
+                                sd-editor--font-${this.state.proofReadingTheme.font}
+                            `}>
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Headline'</label>
+                                    <label className="theme-preview__label">{gettext('Headline')}</label>
+
                                     <div className="theme-preview__text-field text-field__headline">
                                         'This is the headline'
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
+                                        <RadioButtonGroup
+                                            value={this.state.proofReadingTheme.headline}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
+                                                this.setState({
+                                                    proofReadingTheme: {
+                                                        ...this.state.proofReadingTheme,
+                                                        headline: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
+
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Abstract'</label>
+                                    <label className="theme-preview__label">{gettext('Abstract')}</label>
+
                                     <div className="theme-preview__text-field text-field__abstract">
-                                        'Abstract example'. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                                        'Body text example'. Vestibulum ante ipsum primis
+                                        in faucibus orci luctus et ultrices posuere cubilia
+                                        Curae; Fusce id purus. Phasellus ullamcorper…
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
+                                        <RadioButtonGroup
+                                            value={this.state.proofReadingTheme.abstract}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
+                                                this.setState({
+                                                    proofReadingTheme: {
+                                                        ...this.state.proofReadingTheme,
+                                                        abstract: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
+
                                 <div className="theme-preview__block">
-                                    <label className="theme-preview__label">'Body'</label>
+                                    <label className="theme-preview__label">{gettext('Body')}</label>
+
                                     <div className="theme-preview__text-field text-field__body">
-                                        'Body text example'. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Phasellus ullamcorper…
+                                        'Body text example'. Vestibulum ante ipsum primis
+                                        in faucibus orci luctus et ultrices posuere cubilia
+                                        Curae; Fusce id purus. Phasellus ullamcorper…
                                     </div>
 
                                     <div className='form__row form__row--flex'>
-                                        <RadioButtonGroup group={{align: 'end'}} options={[
-                                            {value:'M', label:'M'},
-                                            {value:'S', label:'S'},
-                                            {value:'L', label:'L'},
-                                        ]} value={'M'} onChange={(value) => false } />
+                                        <RadioButtonGroup
+                                            value={this.state.proofReadingTheme.body}
+                                            group={{align: 'end'}}
+                                            options={radioButtonOptions}
+                                            onChange={(value: IFontSizeOptions) => {
+                                                this.setState({
+                                                    proofReadingTheme: {
+                                                        ...this.state.proofReadingTheme,
+                                                        body: value,
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -240,48 +364,61 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     </div>
                 </div>
             </Modal>
-            )
+        );
     }
 }
 
-
 interface IPropsColorSwatch {
+    value: string;
     options: Array<IBackgroundColor>;
     onChange(value: IBackgroundColor): void;
 }
 
-interface IStateColorSwatch {
-    active: string;
-}
-
-export class ColorSwatch extends React.Component<IPropsColorSwatch, IStateColorSwatch> {
-    constructor(props: IPropsColorSwatch) {
-        super(props);
-        this.state = {
-            active: '',
-        }
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(item: any) {
-        this.setState({
-            active: item.color,
-        });
-        this.props.onChange(item);
-    }
+export class ColorSwatch extends React.Component<IPropsColorSwatch> {
 
     render() {
         return (
             <div className="color-swatch__list">
-            {
-                this.props.options.map((item: any, index: number) => {
-                    return <div className={`color-swatch ${this.state.active === item.color ? 'color-swatch--selected' : ''}`} key={index}>
-                            <span className="color-swatch__inner"  style={{backgroundColor: `${item.color}`}} onClick={() => this.handleChange(item)}>a</span>
-                    </div>
-                })
-            }
+                {this.props.options.map((item: any, index: number) => {
+                    return (
+                        <div
+                            key={index}
+                            className={`color-swatch ${this.props.value === item.name
+                            ? 'color-swatch--selected'
+                            : ''}`}>
+                                <span
+                                    className="color-swatch__inner"
+                                    style={{backgroundColor: `${item.color}`}}
+                                    onClick={() => this.props.onChange(item)}>
+                                    a
+                                </span>
+                        </div>
+                    );
+                })}
             </div>
+        );
+    }
+}
+
+interface IPropsFontSelect {
+    value: string;
+    onChange(value: string): void;
+}
+
+export class FontSelect extends React.Component<IPropsFontSelect> {
+
+    render() {
+        return (
+            <Select
+                label='Font'
+                value={this.props.value}
+                onChange={(value) => {
+                    this.props.onChange(value);
+                }}>
+                {fontOptions.map((option) => {
+                    return <Option key={option.key} value={option.key}>{option.label}</Option>;
+                })}
+            </Select>
         );
     }
 }

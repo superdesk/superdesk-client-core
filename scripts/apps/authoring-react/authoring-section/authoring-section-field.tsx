@@ -19,6 +19,16 @@ interface IProps {
     useHeaderLayout: IPropsAuthoringSection['useHeaderLayout'];
     getVocabularyItems: IPropsAuthoringSection['getVocabularyItems'];
     validationError?: string;
+    uiTheme?: {
+        backgroundColor: string;
+        textColor: string;
+
+        fieldTheme: {
+            [fieldId: string]: {
+                fontSize: string;
+            };
+        };
+    };
 }
 
 export class AuthoringSectionField extends React.PureComponent<IProps> {
@@ -50,6 +60,10 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
         } else {
             return (
                 <FieldEditorConfig.editorComponent
+                    uiTheme={{
+                        textColor: this.props.uiTheme.textColor,
+                        fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize ?? undefined,
+                    }}
                     key={field.id}
                     editorId={field.id}
                     container={Container}

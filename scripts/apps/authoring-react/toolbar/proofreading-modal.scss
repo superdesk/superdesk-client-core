@@ -1,0 +1,15 @@
+.proofreading-modal {
+    flex: 1 1 50%;
+
+    &__heading {
+        font-size: 1.8rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+        line-height: 100%;
+    }
+
+    &__badge {
+        vertical-align: bottom;
+        margin-right: 0.6rem;
+    }
+}

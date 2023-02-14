@@ -135,6 +135,10 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    uiTheme?: {
+        fontSize: string;
+        textColor: string;
+    };
 }
 
 interface IState {
@@ -538,6 +542,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     render() {
+
         const {
             readOnly,
             locked,
@@ -573,6 +578,16 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
             if (type === 'code-block' && appConfig.features.showCharacterLimit) {
                 return 'showCharacterLimit';
+            }
+        };
+
+        const uiThemeFontSize = () => {
+            if (this.props.uiTheme.fontSize === 'small') {
+                return '1.4rem';
+            } else if (this.props.uiTheme.fontSize === 'medium') {
+                return '1.6rem';
+            } else {
+                return '1.8rem';
             }
         };
 
@@ -618,7 +633,10 @@ export class Editor3Component extends React.Component<IProps, IState> {
                     highlightsManager={this.props.highlightsManager}
                     onChange={this.props.onChange}
                 />
-                <div className="focus-screen" onMouseDown={this.focus}>
+                <div
+                    className="focus-screen"
+                    onMouseDown={this.focus}
+                    style={{fontSize: uiThemeFontSize(), color: this.props.uiTheme.textColor}}>
                     <Editor
                         editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
