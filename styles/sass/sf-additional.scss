@@ -210,15 +210,13 @@
             line-height: 100%;
             font-size: 14px;
             border: 0 !important;
-            width: 0;
+            width: auto;
             padding: 0;
             color: $sd-text;
             background-color: transparent;
             transition: all 0.3s ease;
             &:focus {
                 box-shadow: none;
-                width: auto;
-
             }
             &::placeholder {
                 color: $sd-text-light;
@@ -256,7 +254,7 @@
     .search-close {
         border: 0;
         background: none;
-        display: none;
+        display: inline-block;
         height: 1.6rem;
         width: 1.6rem;
         align-self: center;
