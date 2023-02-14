@@ -192,6 +192,13 @@ declare module 'superdesk-api' {
 
         disableWidgetPinning?: boolean; // defaults to false
 
+        sideWidget: null | {
+            name: string;
+            pinned: boolean;
+        };
+
+        onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
+
         // Runs before re-render.
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
@@ -323,6 +330,9 @@ declare module 'superdesk-api' {
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
+
+        // read time, character count, word count; defaults to true
+        showStatistics?: boolean;
 
         /**
          * Value - field ID of editor3 field.
@@ -3154,6 +3164,7 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         language: string;
         config: IConfig;
+        fieldId: string;
 
         fieldsData: IFieldsData;
 

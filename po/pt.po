@@ -4,13 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-01-14 17:35+0000\n"
-"Last-Translator: LordFader Pessoa <lordfader.sound@gmail.com>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Bob Heavybeats <tomheavybeats@hotmail.com>, 2018\n"
 "Language-Team: Portuguese (http://www.transifex.com/sourcefabric/superdesk/language/pt/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
@@ -138,6 +138,7 @@ msgid "1 item selected"
 msgid_plural "{{number}} items selected"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/actions/multiSelect.js:217
 msgid "1 item was not included in the export."
@@ -735,7 +736,7 @@ msgstr ""
 
 #: ../superdesk-planning/index.ts:45
 msgid "Add to Planning"
-msgstr ""
+msgstr "Adicionar ao Planejamento"
 
 #: scripts/apps/packaging/index.ts:73
 msgid "Add to current"
@@ -803,7 +804,7 @@ msgstr "Administrador"
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-panel.html:14
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:14
 msgid "Advanced"
-msgstr ""
+msgstr "Avançado "
 
 #: scripts/apps/search/views/search-panel.html:8
 msgid "Advanced Search"
@@ -968,7 +969,7 @@ msgstr "Todos os itens foram publicados com sucesso."
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr ""
+msgstr "Todos os itens abertos"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
@@ -1128,7 +1129,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/index.js:80
 msgid "Analytics"
-msgstr ""
+msgstr "Analíticas"
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:66
 #: scripts/core/editor3/components/toolbar/index.tsx:236
@@ -1702,7 +1703,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:75
 msgid "Authors"
-msgstr ""
+msgstr "Autores"
 
 #: scripts/apps/users/views/list.html:15
 msgid "Authors only"
@@ -1756,7 +1757,7 @@ msgstr "Voltar / Cancelar"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:11
 msgid "Back to original view"
-msgstr ""
+msgstr "Voltar à visualização original"
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
@@ -2209,7 +2210,7 @@ msgstr ""
 
 #: scripts/core/auth/login-modal.html:85
 msgid "Change password"
-msgstr ""
+msgstr "Alterar senha"
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
@@ -2254,6 +2255,7 @@ msgid "Character {{chars}} not allowed in the {{field}}."
 msgid_plural "Characters {{chars}} not allowed in the {{field}}."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:55
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:55
@@ -2889,7 +2891,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:579
 msgid "Corrections"
-msgstr ""
+msgstr "Correcções"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.jsx:24
 #: scripts/core/ui/components/Form/LinkInput.tsx:27
@@ -3333,7 +3335,7 @@ msgstr "CONCLUÍDO"
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:11
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:33
 msgid "Daily"
-msgstr ""
+msgstr "Diariamente"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:66
 msgid "Daily at"
@@ -3423,7 +3425,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:422
 msgid "Date/Time"
-msgstr ""
+msgstr "Data/Hora"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
@@ -3433,7 +3435,7 @@ msgstr "Linha de data"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:154
 msgid "Dates"
-msgstr ""
+msgstr "Datas"
 
 #: scripts/extensions/datetimeField/dist/src/extension.js:33
 #: scripts/extensions/datetimeField/src/extension.tsx:46
@@ -3895,6 +3897,7 @@ msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish the articles?"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:135
 msgid "Do you want to reload the page now?"
@@ -5780,7 +5783,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/events.ts:1003
 #: scripts/core/datetime/datetime.ts:258
 msgid "Friday"
-msgstr ""
+msgstr "Sexta-feira"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:43
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:44
@@ -5799,7 +5802,7 @@ msgstr ""
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:30
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/StartDate.tsx:29
 msgid "From:"
-msgstr ""
+msgstr "De:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:123
 #: ../superdesk-planning/index.ts:80
@@ -6694,6 +6697,7 @@ msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
@@ -7093,7 +7097,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:14
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Located"
-msgstr ""
+msgstr "Localizado"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:73
 #: ../superdesk-planning/client/components/Events/EventEditor/index.tsx:420
@@ -7517,7 +7521,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:39
 msgid "Monthly"
-msgstr ""
+msgstr "Por mês"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:74
 msgid "Monthly on the"
@@ -7537,7 +7541,7 @@ msgstr "Mais modelos..."
 
 #: ../superdesk-analytics/client/utils.js:164
 msgid "Move"
-msgstr ""
+msgstr "Mover"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Move Content to another desk"
@@ -7714,7 +7718,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/Name.tsx:21
 msgid "Name:"
-msgstr ""
+msgstr "Nome:"
 
 #: scripts/apps/desks/index.ts:56
 msgid "Navigate through the newsroom"
@@ -7751,7 +7755,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #: scripts/apps/users/views/settings-roles.html:30
 msgid "New Role"
@@ -7793,7 +7797,7 @@ msgstr "Próximo utilizador"
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:7
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:57
 msgid "No  calendar assigned"
@@ -8211,7 +8215,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:156
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:263
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:224
 msgid "Notification"
@@ -8313,6 +8317,7 @@ msgid "Only 1 image is allowed in this field"
 msgid_plural "Only {{number}} images are allowed in this field"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:14
 msgid "Only Posted"
@@ -8452,7 +8457,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:35
 msgid "Order"
-msgstr ""
+msgstr "Ordem"
 
 #: ../superdesk-planning/client/components/OrderBar/OrderFieldInput.jsx:21
 msgid "Order By: {{ name }}"
@@ -8540,7 +8545,7 @@ msgstr "Fonte original"
 #: ../superdesk-planning/client/components/UI/Form/SelectInputWithFreeText.jsx:68
 #: scripts/apps/vocabularies/controllers/VocabularyConfigController.ts:8
 msgid "Other"
-msgstr ""
+msgstr "Outros"
 
 #: scripts/apps/vocabularies/views/settings.html:28
 msgid "Other fields"
@@ -8582,7 +8587,7 @@ msgstr "Visão geral"
 
 #: scripts/apps/templates/views/templates.html:48
 msgid "Owner"
-msgstr ""
+msgstr "Proprietário"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:77
 msgid "P"
@@ -9698,7 +9703,7 @@ msgstr ""
 
 #: scripts/core/editor3/components/toolbar/index.tsx:293
 msgid "Redo"
-msgstr ""
+msgstr "Refazer"
 
 #: ../superdesk-planning/client/components/fields/editor/Reference.tsx:14
 msgid "Reference"
@@ -9855,7 +9860,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
-msgstr ""
+msgstr "Remover Provedor de Pesquisa"
 
 #: scripts/apps/templates/views/templates.html:37
 msgid "Remove Template"
@@ -9891,7 +9896,7 @@ msgstr ""
 
 #: scripts/core/editor3/components/toolbar/index.tsx:205
 msgid "Remove formatting"
-msgstr ""
+msgstr "Remover formatação"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningItem.jsx:61
 msgid "Remove from Feature Stories"
@@ -10505,7 +10510,7 @@ msgstr ""
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:129
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar alterações"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:269
 #: ../superdesk-planning/client/actions/planning/ui.js:289
@@ -10676,7 +10681,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:430
 #: scripts/apps/search/components/fields/state.tsx:22
 msgid "Scheduled"
-msgstr ""
+msgstr "Agendado"
 
 #: scripts/apps/workspace/content/constants.ts:133
 msgid "Scheduled Desk Output"
@@ -10874,7 +10879,7 @@ msgstr ""
 #: scripts/apps/publish/views/subscribers.html:10
 #: scripts/core/views/sdSearchList.html:3
 msgid "Select"
-msgstr ""
+msgstr "Seleccionar"
 
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:65
 msgid "Select Agenda"
@@ -10882,7 +10887,7 @@ msgstr ""
 
 #: scripts/apps/search/views/multi-image-edit.html:25
 msgid "Select All"
-msgstr ""
+msgstr "Selecionar todos"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.jsx:194
 msgid "Select Article Template"
@@ -11848,7 +11853,7 @@ msgstr ""
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:15
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-preview.html:6
 msgid "Subtitle"
-msgstr ""
+msgstr "Subtítulo"
 
 #: scripts/apps/authoring/track-changes/suggestions.ts:91
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:67
@@ -11873,7 +11878,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/events.ts:1005
 #: scripts/core/datetime/datetime.ts:260
 msgid "Sunday"
-msgstr ""
+msgstr "Domingo"
 
 #: scripts/apps/contacts/controllers/ContactsController.ts:32
 msgid "Superdesk Contacts Management"
@@ -12222,6 +12227,7 @@ msgid "The file was not uploaded"
 msgid_plural "Some files were not uploaded"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:108
 msgid "The following Events are in use and will not be spiked:"
@@ -12734,7 +12740,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:98
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniatura"
 
 #: scripts/apps/archive/views/related-items-preview.html:12
 #: scripts/apps/relations/views/related-items.html:35
@@ -12744,7 +12750,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/events.ts:1002
 #: scripts/core/datetime/datetime.ts:257
 msgid "Thursday"
-msgstr ""
+msgstr "Quinta-feira"
 
 #: ../superdesk-planning/client/components/Events/EventDateTime.jsx:34
 #: ../superdesk-planning/client/components/UI/DateTime.jsx:19
@@ -12961,6 +12967,7 @@ msgid "Too many files selected. Only 1 file is allowed."
 msgid_plural "Too many files selected. Only {{$count}} files are allowed."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/validators/profile.js:32
 #: ../superdesk-planning/client/validators/profile.js:33
@@ -12991,7 +12998,7 @@ msgstr ""
 
 #: scripts/apps/translations/index.ts:33
 msgid "Translate"
-msgstr ""
+msgstr "Traduzir"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:322
 msgid "Translate item to"
@@ -13042,7 +13049,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/events.ts:1000
 #: scripts/core/datetime/datetime.ts:255
 msgid "Tuesday"
-msgstr ""
+msgstr "Terça-feira"
 
 #: scripts/core/menu/views/menu.html:20
 msgid "Turn off feature preview"
@@ -13135,7 +13142,7 @@ msgstr ""
 
 #: scripts/core/editor3/components/toolbar/index.tsx:283
 msgid "Undo"
-msgstr ""
+msgstr "Desfazer"
 
 #: scripts/apps/archive/views/metadata-view.html:202
 #: scripts/apps/content-filters/views/production-test-view.html:19
@@ -13160,7 +13167,7 @@ msgstr ""
 
 #: scripts/apps/search/services/TagService.ts:193
 msgid "Unknown"
-msgstr ""
+msgstr "Desconhecido"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:39
 msgid "Unknown Error: Cannot kill the item"
@@ -13185,7 +13192,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:159
 msgid "Unlink"
-msgstr ""
+msgstr "Desfazer ligação"
 
 #: ../superdesk-planning/index.ts:107
 msgid "Unlink as Coverage"
@@ -13254,7 +13261,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:132
 #: scripts/apps/authoring/views/authoring-topbar.html:133
 msgid "Unpublish"
-msgstr ""
+msgstr "Retirar da Publicação"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:49
 msgid "Unpublish related items:"
@@ -13455,7 +13462,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:580
 msgid "Updates"
-msgstr ""
+msgstr "Actualizações"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:65
 msgid ""
@@ -13483,7 +13490,7 @@ msgstr "Upload a partir do computador"
 #: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:243
 #: scripts/extensions/videoEditor/src/VideoEditorThumbnail.tsx:342
 msgid "Upload image"
-msgstr ""
+msgstr "Carregar imagem"
 
 #: scripts/apps/archive/index.tsx:104
 #: scripts/apps/search/views/multi-image-edit.html:12
@@ -13717,7 +13724,7 @@ msgstr "Versões"
 #: ../superdesk-planning/client/utils/index.ts:659
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:186
 msgid "Video"
-msgstr ""
+msgstr "Vídeo"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:304
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:78
@@ -13839,6 +13846,7 @@ msgid "WORD"
 msgid_plural "WORDS"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:658
 #: scripts/core/auth/auth.ts:211
@@ -13878,7 +13886,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:36
 msgid "Weekly"
-msgstr ""
+msgstr "Semanal"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:70
 msgid "Weekly on"
@@ -14023,7 +14031,7 @@ msgstr ""
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:6
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:17
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:8
@@ -14214,7 +14222,7 @@ msgstr "arquivo"
 
 #: scripts/apps/search/components/ItemContainer.tsx:20
 msgid "archived"
-msgstr ""
+msgstr "arquivado"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:140
 msgid "as rewrite of"
@@ -14240,7 +14248,7 @@ msgstr "audio"
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html:7
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-inner-dropdown.html:7
 msgid "author"
-msgstr ""
+msgstr "autor"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "authoring"
@@ -14253,7 +14261,7 @@ msgstr "negrito"
 #: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:153
 #: scripts/core/ui/components/Form/FileInput.tsx:137
 msgid "browse"
-msgstr ""
+msgstr "navegar"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:43
 #: ../superdesk-planning/client/components/AuditInformation/index.jsx:48
@@ -14276,7 +14284,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:88
 msgid "cancelled"
-msgstr ""
+msgstr "cancelado"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "categories"
@@ -14299,7 +14307,7 @@ msgstr "caracteres"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:583
 msgid "city"
-msgstr ""
+msgstr "cidade"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:41
 msgid "closed"
@@ -14324,7 +14332,7 @@ msgstr "confirmar"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:69
 msgid "confirmed"
-msgstr ""
+msgstr "confirmou"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:155
 msgid "contact saved."
@@ -14344,15 +14352,15 @@ msgstr ""
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:20
 msgid "country"
-msgstr ""
+msgstr "país"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "create"
-msgstr ""
+msgstr "criar"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:188
 msgid "created"
-msgstr ""
+msgstr "criadas"
 
 #: ../superdesk-planning/client/actions/agenda.ts:232
 msgid "created  planning item."
@@ -14594,7 +14602,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/utils/events.ts:973
 msgid "for"
-msgstr ""
+msgstr "para"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:9
 msgid "for \"{{currentDesk.name}}\" Desk"
@@ -14801,6 +14809,7 @@ msgid "line"
 msgid_plural "lines"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/core/editor2/editor.ts:1083
 msgid "link"
@@ -15195,11 +15204,11 @@ msgstr "Pesquisar"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
-msgstr ""
+msgstr "palavra-passe do provedor de pesquisa"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:110
 msgid "search provider username"
-msgstr ""
+msgstr "nome de utilizador do provedor de pesquisa"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:144
 msgid "sec"
@@ -15343,6 +15352,7 @@ msgid "translation"
 msgid_plural "translations"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/views/authoring-header.html:84
 msgid "translations"
@@ -15550,6 +15560,7 @@ msgid "{{ multi.count}} Item selected"
 msgid_plural "{{ multi.count}} Items selected"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../superdesk-planning/client/validators/assignments.jsx:7
 #: ../superdesk-planning/client/validators/profile.js:40
@@ -15590,6 +15601,7 @@ msgid "{{ wordsCount}} word"
 msgid_plural "{{ $count}} words"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:42
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
@@ -15682,6 +15694,7 @@ msgid "{{multiSelectCount}} Item selected"
 msgid_plural "{{multiSelectCount}} Items selected"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
@@ -15727,6 +15740,7 @@ msgid "{{x}} hour"
 msgid_plural "{{x}} hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: scripts/apps/search/components/fields/linesCount.tsx:14
 msgid "{{x}} lines"

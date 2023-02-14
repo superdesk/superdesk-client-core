@@ -21,27 +21,29 @@
             box-shadow: none;
             padding: 16% 0 0;
             text-align: center;
-            color: #888;
+            color: var(--color-text-light);
             h3 {
-              font-weight: 400;
-              margin: 12px 0 4px;
+                font-weight: 400;
+                margin: 12px 0 4px;
             }
             .round-box {
-              padding-top: 16px;
-              height: 90px;
-              width: 90px;
-              background-color: #fff;
-              border-radius: 50%;
-              margin: 0 auto;
-              box-shadow: 0 0 6px 1px rgba(0,0,0,0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 90px;
+                width: 90px;
+                background-color: var(--sd-item__main-Bg);
+                border-radius: 9999px;
+                margin: 0 auto;
+                box-shadow: 0 0 6px 1px hsla(0, 0%, 0%, 0.12);
             }
             i {
-              display: block;
-              width: 56px;
-              height: 48px;
-              opacity: 0.2;
-              margin: 1.4rem auto 0 auto;
-              font-size: 5.2rem;
+                display: block;
+                width: 52px;
+                height: 52px;
+                opacity: 0.2;
+                font-size: 5.2rem;
+                line-height: 1;
             }
         }
     }

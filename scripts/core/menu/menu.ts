@@ -137,12 +137,18 @@ angular.module('superdesk.core.menu', [
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
                 link: function(scope, elem, attrs, ctrl) {
+                    let body = angular.element('body');
+
                     scope.currentRoute = null;
                     scope.flags = ctrl.flags;
                     scope.menu = [];
+                    scope.theme = localStorage.getItem('theme') || '';
                     scope.isTestEnvironment = appConfig.isTestEnvironment;
                     scope.environmentName = appConfig.environmentName;
                     scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
+
+                    // set theme
+                    body.attr('data-theme', scope.theme);
 
                     // menu items and groups - start
                     let group = null;
@@ -217,6 +223,15 @@ angular.module('superdesk.core.menu', [
                             return menu;
                         });
                     }
+
+                    scope.toggleTheme = function() {
+                        scope.theme = scope.theme === 'dark-ui' ? '' : 'dark-ui';
+                        localStorage.setItem('theme', scope.theme);
+
+                        scope.theme ?
+                            body.attr('data-theme', scope.theme) :
+                            body.removeAttr('data-theme');
+                    };
 
                     scope.toggleMenu = function() {
                         ctrl.flags.menu = !ctrl.flags.menu;

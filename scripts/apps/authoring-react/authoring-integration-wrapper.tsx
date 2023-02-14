@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import {ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -37,7 +37,6 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
 import {ExportModal} from './toolbar/export-modal';
 import {TemplateModal} from './toolbar/template-modal';
@@ -48,6 +47,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
+import {ITEM_STATE} from 'apps/search/interfaces';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -67,6 +67,10 @@ function getAuthoringActionsFromExtensions(
 }
 
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
+
+interface IProps {
+    itemId: IArticle['_id'];
+}
 
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
@@ -263,6 +267,10 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     isSidebarCollapsed: boolean;
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -273,6 +281,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
         this.state = {
             isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
+            sideWidget: null,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -405,6 +414,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ...authoringActionsFromExtensions,
                                     ...articleActionsFromExtensions,
                                 ];
+                            }}
+                            sideWidget={this.state.sideWidget}
+                            onSideWidgetChange={(sideWidget) => {
+                                this.setState({sideWidget});
                             }}
                             getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={

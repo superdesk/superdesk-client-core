@@ -268,7 +268,7 @@ $search-widget-preview-width: 440px;
 }
 .widget-container {
     .content-list-holder {
-        background-color: #fafafa;
+        background-color: var(--sd-colour-panel-bg--100);
         .desk {
             width: 100%;
         }
@@ -290,12 +290,12 @@ $search-widget-preview-width: 440px;
 .stage-header {
     display: flex;
     align-items: center;
-    height: 20px;
-    margin-bottom: 8px;
+    height: 2.4rem;
+    margin-bottom: $sd-base-increment;
     .stage-header__line, .stage-header__stretch-bar {
         height: 1px;
         margin: auto 4px;
-        background: #dcdcdc;
+        background: var(--sd-colour-line--medium);
         flex: 1;
     }
     .stage-header__stretch-bar {
@@ -303,8 +303,8 @@ $search-widget-preview-width: 440px;
         margin: auto 0;
     }
     .stage-header__name {
-        font-size: 11px;
-        line-height: 11px;
+        font-size: 1.1rem;
+        line-height: 1.1rem;
         @include text-semibold();
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -314,12 +314,20 @@ $search-widget-preview-width: 440px;
             display: inline-flex;
             align-items: center; 
         }
+        a {
+            color: var(--sd-colour-interactive);
+            &:hover {
+                color: var(--sd-colour-interactive--hover)
+            }
+
+        }
         span + span {
             margin-left: 5px;
         }
     }
     .stage-header__separator {
         padding: 0 6px;
+        opacity: 0.5;
     }
     .stage-header__toggle {
         border: 0;
@@ -331,6 +339,7 @@ $search-widget-preview-width: 440px;
             -webkit-transition: all 0.2s ease;
             -o-transition: all 0.2s ease;
             transition: all 0.2s ease;
+            color: var(--color-icon-default);
         }
         &.closed {
             i {
@@ -355,22 +364,27 @@ $search-widget-preview-width: 440px;
 }
 
 .notification-label, .label-total {
-    margin: 0;
-    box-sizing: border-box;
-    padding: 4px 6px;
-    height: 16px;
-    @include border-radius(10px);
-    color: $white !important;
-    background: $sd-blue;
-    font-size: 10px;
-    line-height: 100%;
-    letter-spacing: .06em;
-    @include text-normal();
+    display: inline-flex;
+    align-items: center;
     vertical-align: middle;
+    justify-content: center;
+    padding-block-start: 0;
+    padding-block-end: 0;
+    padding-inline: $sd-base-increment;
+    height: $sd-base-increment * 2;
+    border-radius: 999px;
+    color: $white !important;
+    background: var(--sd-colour-interactive);
+    font-size: 9px;
+    line-height: $sd-base-increment * 2;
+    letter-spacing: 0.125em;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: default;
 }
 
 .label-total {
-    background: $sd-gray-text;
+    background: var(--sd-colour-bg--08);
 }
 .refresh-box {
     display: flex;
@@ -453,16 +467,14 @@ $search-widget-preview-width: 440px;
                 top: 36px;
             }
         }
-
     }
 }
 
 .aggregate-widget-config {
     .legend {
-        color: $grayLight;
         text-transform: none;
         font-size: 16px;
-        color: #333;
+        color: $sd-text;
         font-weight: 400;
         margin-bottom: 16px;
         margin-top: 10px;
@@ -473,9 +485,9 @@ $search-widget-preview-width: 440px;
     }
     .desk {
         padding: 5px 0;
-        border-bottom: 1px dotted rgba(123,123,123,0.5);
+        border-bottom: 1px dotted var(--sd-colour-line--strong);
         &:first-of-type{
-            border-top: 1px dotted rgba(123,123,123,0.5);
+            border-top: 1px dotted var(--sd-colour-line--strong);
         }
         &--item-count {
             display: flex;
@@ -491,7 +503,7 @@ $search-widget-preview-width: 440px;
     }
     .content {
         .desk:first-of-type {
-                border-top: 1px dotted rgba(123,123,123,0.5) !important ;
+                border-top: 1px dotted var(--sd-colour-line--strong) !important;
             }
     }
     .desk-title {
@@ -506,7 +518,7 @@ $search-widget-preview-width: 440px;
         .search-description {
             font-size: 12px;
             font-weight: 300;
-            color: #747474;
+            color: $sd-text-light;
         }
         &--80 {
             width: 80%;

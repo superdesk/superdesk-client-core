@@ -59,7 +59,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
 
         this.state = {
             editorState: EditorState.createWithContent(
-                ContentState.createFromText(props.value || ''),
+                ContentState.createFromText(props.value?.toString() || ''),
             ),
             hasFocus: false,
         };

@@ -37,7 +37,13 @@ export function getFieldContainer(
                             alignItems: 'center',
                         }}
                     >
-                        <span className={classNames('form-label', {'form-label--invalid': validationError != null})}>
+                        <span
+                            className={classNames(
+                                'form-label',
+                                {'form-label--invalid': validationError != null},
+                            )}
+                            style={{minHeight: 'auto'}}
+                        >
                             <Spacer h gap="8" noGrow>
                                 <span>{field.name}</span>
                                 <span>{toggle}</span>

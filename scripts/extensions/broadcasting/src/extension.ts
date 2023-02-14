@@ -1,5 +1,7 @@
 import {ICustomFieldType, IExtension, IExtensionActivationResult} from 'superdesk-api';
 import {getSubItemsField} from './authoring-fields/subitems';
+import {BROADCASTING_MODULE_PATH} from './constants';
+import {notifications} from './notifications';
 import {RundownsPage} from './page';
 
 import {superdesk} from './superdesk';
@@ -16,7 +18,7 @@ const extension: IExtension = {
                         ? [
                             {
                                 title: gettext('Broadcasting'),
-                                url: '/broadcasting',
+                                url: BROADCASTING_MODULE_PATH,
                                 component: RundownsPage,
 
                                 showTopMenu: false,
@@ -33,6 +35,7 @@ const extension: IExtension = {
                     customFieldTypes: [
                         getSubItemsField() as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
                     ],
+                    notifications: notifications,
                 },
             }
             : {};
@@ -40,5 +43,7 @@ const extension: IExtension = {
         return Promise.resolve(result);
     },
 };
+
+export {setCustomizations} from './customization';
 
 export default extension;

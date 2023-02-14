@@ -26,9 +26,7 @@ export function getDateTimeField(
     const {dateToServerString} = superdesk.utilities;
 
     return class DateTimeField
-        extends React.PureComponent<
-            IEditorComponentProps<string | null, IDateTimeFieldConfig, never> & IPropsAdditional
-        > {
+        extends React.PureComponent<IProps> {
         render() {
             const checkbox = this.props.hideToggle !== true ? (
                 <Switch
@@ -54,10 +52,7 @@ export function getDateTimeField(
                 );
             } else {
                 const date = new Date(this.props.value);
-
-                const day = format(date, 'yyyy-MM-dd'); // ISO8601
                 const hour = format(date, 'HH:mm'); // ISO8601
-
                 const steps = this.props.config?.increment_steps ?? [];
 
                 // Get the DatePicker locale using the language of this item
@@ -72,7 +67,7 @@ export function getDateTimeField(
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
-                                value={day}
+                                value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {
                                         this.props.onChange(null);

@@ -9,31 +9,34 @@ $main-article-padding : 3.2rem 4rem $bottom-view-padding 4rem;
 //-----------------------------------------------------------
 
 // dark
-$dark-theme-bg: rgba(34, 34, 34, 1);
-$dark-theme-text: rgba(170, 204, 209, 1);
+$dark-theme-bg:             hsl(0, 0%, 13%);
+$dark-theme-text:           hsl(188, 30%, 74%);
 
 //natural
-$natural-theme-bg: rgba(239, 233, 197, 1);
-$natural-theme-text: rgba(50, 50, 50, 1);
+$natural-theme-bg:          hsl(51, 57%, 85%);
+$natural-theme-text:        hsl(0, 0%, 20%);
+
+
+
+//dark-khaki
+$dark-khaki-theme-bg:       hsl(70, 25%, 50%);
+$dark-khaki-theme-text:     hsl(71, 25%, 13%);
+
+//dark-turquise
+$dark-turquoise-theme-bg:   hsl(181, 100%, 41%);
+$dark-turquoise-theme-text: hsl(213, 49%, 14%);
+
+//dark-blue
+$dark-blue-theme-bg:        hsl(212, 89%, 22%);
+$dark-blue-theme-text:      hsl(0, 0%, 100%);
+
+//pale-yellow
+$pale-yellow-theme-bg:      hsl(62, 91%, 79%);
+$pale-yellow-theme-text:    hsl(0, 0%, 20%);
 
 //mono
 $monoFontFamily: "Roboto Mono", Consolas, Courier, monospace;
 
-//dark-khaki
-$dark-khaki-theme-bg: rgba(148, 158, 95, 1);
-$dark-khaki-theme-text: rgba(37, 40, 24, 1);
-
-//dark-turquise
-$dark-turquoise-theme-bg: rgba(0, 206, 209, 1);
-$dark-turquoise-theme-text: rgba(18, 34, 53, 1);
-
-//dark-blue
-$dark-blue-theme-bg: rgba(6, 53, 106, 1);
-$dark-blue-theme-text: rgba(255, 255, 255, 1);
-
-//pale-yellow
-$pale-yellow-theme-bg: rgba(247, 250, 152, 1);
-$pale-yellow-theme-text: rgba(50, 50, 50, 1);
 
 @mixin dark-theme() {
     background: $dark-theme-bg;
@@ -114,9 +117,13 @@ body, html {
             background-color: rgba(152, 152, 152, 0.3);
         }
         &.active {
-            @include box-shadow(inset 0 2px 0 rgba(55, 55, 55, 0.1));
-            background-color: $sd-blue;
+            box-shadow: inset 0 2px 0 rgba(55, 55, 55, 0.1);
+            background-color: var(--sd-colour-interactive--active);
             color: $white;
+            opacity: 1;
+            i {
+                opacity: 1;
+            }
         }
     }
 
@@ -234,13 +241,11 @@ body, html {
 
 .main-article {
     width:auto;
-    background: $white;
     position:relative;
     z-index: 1;
     padding: $main-article-padding;
     margin:0 auto;
     min-height:100%;
-    @include box-sizing(border-box);
     .field {
         max-width: 100%;
         margin-bottom: 20px;
@@ -253,7 +258,7 @@ body, html {
             align-items: flex-end;
 
             input, select, option {
-                color: inherit;
+                color: var(--sd-editor-colour__txt);
                 font-size: 14px;
                 font-weight: 400 !important;
                 padding: 0;
@@ -307,8 +312,8 @@ body, html {
         }
         &.active {
             .field__label {
-                background: $sd-blue;
-                @include transition(all ease 0.6s);
+                background: var(--sd-colour-interactive--active);
+                transition: all ease 0.6s;
             }
         }
     }
@@ -449,15 +454,15 @@ body, html {
         min-height: 18px;
     }
     // text styles
-    color: rgba(51, 51, 51, 1);
+    color: var(--sd-editor-colour__txt);
     .text-editor, .headline, .abstract {
-        color: inherit;
+        color: var(--sd-editor-colour__txt);
         padding-left: 0;
         padding-right: 0;
     }
     .keyword {
         text-transform: uppercase;
-        @include text-semibold();
+        font-weight: 500;
     }
     .byline {
         font-size: 16px;
@@ -470,12 +475,8 @@ body, html {
         .text-editor {
             min-height: 24px;
         }
-        &::-webkit-input-placeholder {
-            color: inherit;
-            opacity: 0.4;
-        }
-        &::-moz-placeholder {
-            color: inherit;
+        &::placeholder, &::-webkit-input-placeholder, &::-moz-placeholder {
+            color: var(--sd-editor-colour__txt);
             opacity: 0.4;
         }
         &:focus {
@@ -487,12 +488,8 @@ body, html {
         font-size: 14px;
         text-transform: none;
         line-height: 140%;
-        &::-webkit-input-placeholder {
-            color: inherit;
-            opacity: 0.4;
-        }
-        &::-moz-placeholder {
-            color: inherit;
+        &::placeholder, &::-webkit-input-placeholder, &::-moz-placeholder {
+            color: var(--sd-editor-colour__txt);
             opacity: 0.4;
         }
         &:focus {
@@ -506,14 +503,13 @@ body, html {
             padding: 0 !important;
             margin-bottom: 10px !important;
             font-size:16px !important;
-            line-height: 150% !important;
-            @include text-light();
+            line-height: 1.5 !important;
+            font-weight: 300;
         }
     }
     .headline, .headline p,  .headline div {
-
-        line-height: 120% !important;
-        @include text-semibold();
+        line-height: 1.2 !important;
+        font-weight: 500;
         .text-editor {
             min-height: 48px;
             padding: 6px 0;
@@ -526,8 +522,8 @@ body, html {
         clear: left;
         .html-preview {
             font-size: 1.6rem;
-            @include text-light();
-            line-height: 150%;
+            font-weight: 300;
+            line-height: 1.5;
             p {
                 font-size: 1.6rem;
             }
@@ -539,9 +535,8 @@ body, html {
     p {
         padding: 0;
         margin-bottom: 10px;
-
-        line-height: 150%;
-        @include text-light();
+        line-height: 1.5;
+        font-weight: 300;
     }
     p:last-of-type {
         margin-bottom: 0 !important;
@@ -644,8 +639,8 @@ body, html {
             color: $dark-theme-text !important;
         }
         .field label {
-            background: rgba(73, 73, 73, 0.7);
-            color: rgba(255, 255, 255, 0.6);
+            background: var(--sd-editor-colour__field-label-bg);
+            color: var(--sd-editor-colour__field-label-txt);
         }
     }
 
@@ -670,8 +665,8 @@ body, html {
             font-family: $monoFontFamily;
         }
         .field label {
-            background: rgba(73, 73, 73, 0.7);
-            color: rgba(255, 255, 255, 0.6);
+            background: var(--sd-editor-colour__field-label-bg);
+            color: var(--sd-editor-colour__field-label-txt);
         }
     }
 
@@ -696,8 +691,8 @@ body, html {
             color: $dark-blue-theme-text !important;
         }
         .field label {
-            background: rgba(73, 73, 73, 0.7);
-            color: rgba(255, 255, 255, 0.6);
+            background: var(--sd-editor-colour__field-label-bg);
+            color: var(--sd-editor-colour__field-label-txt);
         }
     }
 

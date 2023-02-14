@@ -341,6 +341,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }
 
         const {rundownItemAction} = this.props;
+        const sideWidget = rundownItemAction == null ? null : rundownItemAction.sideWidget;
 
         const closeBtn = (
             <Button
@@ -664,9 +665,17 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 onClick: () => {
                                                                     toggleSideWidget(_id);
                                                                 },
+                                                                active: sideWidget?.name === _id,
                                                             }))}
                                                         />
                                                     );
+                                                }}
+                                                sideWidget={sideWidget}
+                                                onSideWidgetChange={(sideWidgetNext) => {
+                                                    this.props.onRundownItemActionChange({
+                                                        ...rundownItemAction,
+                                                        sideWidget: sideWidgetNext,
+                                                    });
                                                 }}
                                                 getSidePanel={({
                                                     item,
@@ -677,18 +686,20 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     storageAdapter,
                                                     authoringStorage,
                                                     handleUnsavedChanges,
-                                                    sideWidget,
                                                 }) => {
-                                                    if (
-                                                        sideWidget == null
+                                                    const sideWidgetName = sideWidget?.name ?? null;
 
-                                                        // TODO: allow widgets in creation mode?
+                                                    if (
+                                                        sideWidgetName == null
+
+                                                        // Widgets are not allowed in creation mode.
+                                                        // Some require item ID.
                                                         || item._id == null
                                                     ) {
                                                         return null;
                                                     }
 
-                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidget);
+                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidgetName);
 
                                                     if (widget == null) {
                                                         return null;

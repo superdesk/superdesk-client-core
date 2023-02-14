@@ -78,9 +78,13 @@ interface Window {
     iframely: any;
 }
 
-// Allow importing json/html files
+// Allow importing json/html/svg files
 declare module "*.json";
 declare module "*.html";
+declare module "*.svg" {
+    const content: string;
+    export default content;
+}
 
 // ------------------------------------------------------------------------------------------------
 // TYPES

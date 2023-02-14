@@ -3,8 +3,9 @@ export default ({
         margin: 0,
 
         control: {
-            backgroundColor: '#fff',
+            backgroundColor: 'var(--sd-colour-bg__searchbar)',
             fontWeight: 'normal',
+            borderRadius: 'var(--b-radius--small)',
             width: '100%',
             margin: 0,
         },
@@ -24,42 +25,43 @@ export default ({
 
         '&multiLine': {
             control: {
-                border: '1px solid silver',
+                border: '1px solid var(--sd-colour-line--light)',
             },
 
             highlighter: {
-                padding: '3px',
-                paddingTop: '4px',
+                padding: '6px',
                 overflowY: 'hidden',
+                minHeight: '3.2rem',
             },
 
             input: {
-                padding: '3px',
-                paddingTop: '4px',
+                padding: '6px',
                 overflowY: 'scroll',
                 outline: 0,
                 border: 0,
+                minHeight: '3.2rem',
             },
         },
 
         suggestions: {
             list: {
-                backgroundColor: 'white',
-                border: '1px solid rgba(0,0,0,0.15)',
+                backgroundColor: 'var(--color-dropdown-menu-Bg)',
+                border: 'var(--sd-shadow__dropdown)',
+                borderRadius: 'var(--b-radius--small)',
             },
 
             item: {
                 padding: '5px 15px',
-                borderBottom: '1px solid rgba(0,0,0,0.15)',
+                borderBottom: '1px solid var(--sd-colour-line--x-light)',
 
                 '&focused': {
-                    backgroundColor: '#5ea9c8',
+                    backgroundColor: 'var(--sd-colour-interactive--alpha-20)',
                 },
             },
         },
     },
 
     mention: {
-        backgroundColor: '#cee4e5',
+        backgroundColor: 'var(--sd-colour-interactive--alpha-30)',
     },
 });

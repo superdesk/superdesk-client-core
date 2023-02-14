@@ -21,7 +21,7 @@
         height: 1px;
         margin: 0.8rem 0;
         overflow: hidden;
-        background-color: #e5e5e5;
+        background-color: var(--sd-colour-line--light);
     }
 
     &__menu-label {
@@ -66,9 +66,9 @@
     &__menu-header {
         font-weight: 300;
         font-size: 1.5rem;
-        color: $grayLight;
+        color: var(--color-text-light);
         padding: 1rem 1rem 0 1rem;
-        border-bottom: 1px solid #e5e5e5;
+        border-bottom: 1px solid var(--sd-colour-line--light);
 
         &--no-border {
             border-bottom: none;
@@ -82,7 +82,7 @@
     &__menu-footer {
         padding: 1rem;
         margin-top: 0.6rem;
-        border-top: 1px solid #e5e5e5;
+        border-top: 1px solid var(--sd-colour-line--light);
         display: inline-block;
         width: 100%;
 

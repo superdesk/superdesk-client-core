@@ -344,7 +344,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                     <div
                         className="search-box search-box--no-shadow search-box--fluid-height"
                     >
-                        <form className="search-box__content TEMP-WIDTH-FIX">
+                        <form className="search-box__content">
                             <SelectUser
                                 selectedUserId={this.props.user?._id}
                                 autoFocus={false}
