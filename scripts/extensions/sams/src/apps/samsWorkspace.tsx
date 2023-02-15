@@ -126,11 +126,13 @@ export function downloadAssetBinary(asset: IAssetItem): void {
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
+        // @ts-ignore
         return Promise.all<Array<IStorageDestinationItem>, Array<ISetItem>>([
             store.dispatch<any>(loadStorageDestinations()),
             store.dispatch<any>(loadSets()),
         ])
             .then(([destinations, sets]) => {
+                // @ts-ignore
                 if (destinations.length && sets.length) {
                     // Only load Assets if we have both StorageDestinations and Sets configured
                     return store.dispatch<any>(
