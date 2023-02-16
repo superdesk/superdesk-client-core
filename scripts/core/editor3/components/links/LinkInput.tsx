@@ -5,7 +5,13 @@ import {EditorState} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
-import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion} from '../../actions';
+import {
+    applyLink,
+    hidePopups,
+    createLinkSuggestion,
+    changeLinkSuggestion,
+    applyLinkToMuliLineQuote,
+} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
@@ -253,6 +259,13 @@ const LinkInputComponentWithDependenciesLoaded = connectPromiseResults(() => ({
 
 export const LinkInput: any = connect(mapStateToProps, {
     applyLink,
+    hidePopups,
+    createLinkSuggestion,
+    changeLinkSuggestion,
+})(LinkInputComponentWithDependenciesLoaded);
+
+export const LinkInputMultiLineQuote: any = connect(mapStateToProps, {
+    applyLink: applyLinkToMuliLineQuote,
     hidePopups,
     createLinkSuggestion,
     changeLinkSuggestion,

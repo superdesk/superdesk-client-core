@@ -1,9 +1,7 @@
-import {EditorState, Modifier, RichUtils} from 'draft-js';
-import {Map} from 'immutable';
+import {RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
-import {createBlockSelection} from '../helpers/selection';
-import {getCell, setCell, getData, setData} from '../helpers/table';
+import {getCell, setCell, getData, setData, ISetDataPayload} from '../helpers/table';
 
 /**
  * @description Contains the list of table related reducers.
@@ -164,13 +162,22 @@ export const processCells = (state, fn) => {
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
     const {cells, numRows, numCols, withHeader} = getData(contentState, block.getKey());
-    const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
+    const {data, newCurrentStyle, popup} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
+    const newEditorState = setData(editorState, block, data, 'change-block-data');
+    let newState = state;
 
-    if (data != null) {
-        const newEditorState = setData(editorState, block, data, 'change-block-data');
-        let newState = state;
-
-        if (newCurrentStyle !== null) {
+    if (newCurrentStyle !== null) {
+        if (popup != null) {
+            newState = {
+                ...state,
+                popup,
+                activeCell: {
+                    ...activeCell,
+                    currentStyle: newCurrentStyle,
+                    selection: selection,
+                },
+            };
+        } else {
             newState = {
                 ...state,
                 activeCell: {
@@ -180,11 +187,9 @@ export const processCells = (state, fn) => {
                 },
             };
         }
-
-        return onChange(state, newEditorState, true);
-    } else {
-        return onChange(editorState, editorState, true);
     }
+
+    return onChange(newState, newEditorState, true);
 };
 
 /**
@@ -237,14 +242,9 @@ const toggleMultiLineQuoteBlockStyle = (state, style) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const data = {cells, numRows, numCols, withHeader};
+            const data: ISetDataPayload = {cells, numRows, numCols, withHeader};
             const cellStateEditor = getCell(data, i, j, currentStyle, selection);
             const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, style);
-
-            // Get the block type properly
-            // console.log(data.cells[0][0].blocks[0].key)
-            // console.log(newCellEditorState.getBlockTree(data.cells[0][0].blocks[0].key).toJS())
-
             const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
             const newData = setCell(data, i, j, newCellEditorState).data;
 

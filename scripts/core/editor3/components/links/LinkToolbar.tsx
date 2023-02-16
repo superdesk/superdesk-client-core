@@ -74,7 +74,17 @@ const mapDispatchToProps = (dispatch) => ({
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
+const mapDispatchToPropsMultiLineQuote = (dispatch) => ({
+    removeLink: () => dispatch(actions.removeLinkFromMuliLineQuote()),
+    removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
+});
+
 export const LinkToolbar = connect(
     mapStateToProps,
     mapDispatchToProps,
+)(LinkToolbarComponent);
+
+export const LinkToolbarMultiLineQuote = connect(
+    mapStateToProps,
+    mapDispatchToPropsMultiLineQuote,
 )(LinkToolbarComponent);

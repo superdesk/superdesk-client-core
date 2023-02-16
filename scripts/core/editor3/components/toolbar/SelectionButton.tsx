@@ -50,3 +50,5 @@ const mapStateToProps = (state) => ({
 });
 
 export const SelectionButton = connect(mapStateToProps, null)(SelectionButtonComponent);
+
+export const SelectionButtonCustomEditorState = SelectionButtonComponent;

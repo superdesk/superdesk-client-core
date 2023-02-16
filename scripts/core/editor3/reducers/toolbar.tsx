@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, ContentState, SelectionState} from 'draft-js';
+import {RichUtils, EditorState, ContentState, SelectionState, convertToRaw, EntityInstance} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import * as Links from '../helpers/links';
@@ -10,7 +10,7 @@ import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
-import {getCell} from '../helpers/table';
+import {getCell, getData, ISetDataPayload, setData} from '../helpers/table';
 import {processCells} from './table';
 
 /**
@@ -24,8 +24,12 @@ const toolbar = (state: IEditorStore, action) => {
         return toggleInlineStyle(state, action.payload);
     case 'TOOLBAR_APPLY_LINK':
         return applyLink(state, action.payload);
+    case 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE':
+        return applyLinkToMultiLineQuote(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
+    case 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE':
+        return removeLinkInMultiLineQuote(state);
     case 'TOOLBAR_REMOVE_FORMAT':
         return removeFormat(state);
     case 'TOOLBAR_REMOVE_ALL_FORMAT':
@@ -118,6 +122,81 @@ const applyLink = (state, {link, entity}) => {
     }
 
     editorState = Links.createLink(editorState, link);
+    return onChange(state, editorState);
+};
+
+interface IBlockRange {
+    offset: number;
+    length: number;
+    key: number;
+}
+
+/**
+ * Applies the given URL to the current content selection in multi-line quote block.
+ * If the selection is a link, it applies the link to the entity instead.
+ */
+const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: EntityInstance}) => {
+    const {activeCell, editorState: mainEditorState} = state;
+
+    if (activeCell === null) {
+        return state;
+    }
+
+    const {i, j, key, currentStyle, selection} = activeCell;
+    const contentState = mainEditorState.getCurrentContent();
+    const block = contentState.getBlockForKey(key);
+    const data = getData(contentState, block.getKey());
+    const cellEditorState = getCell(data, i, j, currentStyle, selection);
+    let cellEditorStateData: EditorState;
+
+    // Check if the selection is a link
+    const selectedBlockKey = cellEditorState.getSelection().getAnchorKey();
+    const blockRanges: Array<IBlockRange> = entity.getData().data.cells[0][0].blocks
+        .find((x) => x.key === selectedBlockKey).entityRanges;
+    const cellSelection = cellEditorState.getSelection();
+    const anchorOffsetMatch: IBlockRange = blockRanges.find(({offset}) => offset === cellSelection.getAnchorOffset());
+    const selectionIsALink =
+        anchorOffsetMatch?.length === cellSelection.getFocusOffset() - cellSelection.getAnchorOffset();
+
+    if (!selectionIsALink) {
+        cellEditorStateData = Links.createLink(cellEditorState, link);
+    } else {
+        cellEditorStateData = entityUtils.replaceSelectedEntityData(cellEditorState, {link});
+    }
+
+    const dataNew: ISetDataPayload = {
+        ...data,
+        cells: [[convertToRaw(cellEditorStateData.getCurrentContent())]],
+    };
+
+    const newMainState = setData(mainEditorState, block, dataNew, 'change-block-data');
+
+    return onChange(state, newMainState, true);
+};
+
+/**
+ * Removes the link on the entire entity under the cursor in multi-line quote block.
+ */
+const removeLinkInMultiLineQuote = (state) => {
+    const {activeCell, editorState: mainEditorState} = state;
+
+    if (activeCell === null) {
+        return state;
+    }
+
+    const {i, j, key, currentStyle, selection} = activeCell;
+    const contentState = mainEditorState.getCurrentContent();
+    const block = contentState.getBlockForKey(key);
+    const data = getData(contentState, block.getKey());
+    const cellEditorStateWithRemovedLink =
+        Links.removeLink(getCell(data, i, j, currentStyle, selection));
+
+    const newData: ISetDataPayload = {
+        ...data.data,
+        cells: [[convertToRaw(cellEditorStateWithRemovedLink.getCurrentContent())]],
+    };
+    const editorState = setData(mainEditorState, block, newData, 'change-block-data');
+
     return onChange(state, editorState);
 };
 
@@ -267,22 +346,21 @@ const setPopup = (state: IEditorStore, {type, data}) => {
     return {...state, editorState: newEditorState, popup: {type, data}};
 };
 
-const setMultiLinePopup = (state: IEditorStore, {type, data}) => {
-    const {editorState} = state;
-    let newEditorState = editorState;
-
+const setMultiLinePopup = (state: IEditorStore, {type, data}) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const data1 = {cells, numRows, numCols, withHeader};
-            const cellStateEditor = getCell(data1, i, j, currentStyle, selection);
+            const newData = {cells, numRows, numCols, withHeader};
+            const cellEditorState = getCell(newData, i, j, currentStyle, selection);
 
-            // newEditorState = EditorState.forceSelection(cellStateEditor, cellStateEditor.getSelection());
-
-            return {...state, editorState: cellStateEditor, popup: {type, data}, data: data1, newCurrentStyle: currentStyle};
+            return {
+                ...state,
+                editorState: cellEditorState,
+                popup: {type, data},
+                data: newData,
+            };
         },
     );
-};
 
 function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {
     const getChangedText = (text: string) => {

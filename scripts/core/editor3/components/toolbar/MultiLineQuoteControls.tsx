@@ -4,19 +4,21 @@ import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {inlineStyles} from '../../helpers/inlineStyles';
 import {getData, getCell} from '../../helpers/table';
-import {SelectionButton} from './SelectionButton';
+import {SelectionButtonCustomEditorState} from './SelectionButton';
 import {PopupTypes} from '../../actions';
 import {gettext} from 'core/utils';
-import {LinkToolbar} from '../links';
 import {IEditorStore} from 'core/editor3/store';
 import {blockStyles} from './BlockStyleButtons';
 import {EditorState} from 'draft-js';
+import {LinkInputMultiLineQuote} from '../links/LinkInput';
+import {LinkToolbarMultiLineQuote} from '../links/LinkToolbar';
 
 interface IProps extends Partial<IEditorStore> {
     className: string;
     toggleTableStyle(): void;
     toggleMultiLineQuoteBlockStyle(style: string): void;
     setMultiLineQuotePopup(popupType: string, payload: any): void;
+    popup: any;
 }
 
 /**
@@ -30,68 +32,65 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
     className,
     setMultiLineQuotePopup,
     toggleMultiLineQuoteBlockStyle,
+    popup,
 }) => {
     const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const data = getData(contentState, key);
     const cellEditorState: EditorState = getCell(data, i, j, currentStyle, selection);
     const currentInlineStyle = cellEditorState.getCurrentInlineStyle();
-    const blockStyle: Array<string> = Object.values(
-        cellEditorState.getCurrentContent().getBlockMap().map((x) => x.getType()).toJS(),
-    );
+    const blockStyle = cellEditorState
+        .getCurrentContent()
+        .getBlockForKey(cellEditorState.getSelection().getStartKey())
+        .getType();
 
     return (
         <div className={'table-controls ' + className}>
             {
                 editorFormat
-                    .filter((type) =>
-                        type in blockStyles
-                        && type !== 'quote'
-                        || type in inlineStyles
-                        || type === 'link'
-                    )
-                    .map((type) => {
-                        if (type in blockStyles) {
-                            return (
-                                <StyleButton
-                                    key={type}
-                                    active={blockStyle.includes(blockStyles[type])}
-                                    label={type}
-                                    onToggle={() => toggleMultiLineQuoteBlockStyle(blockStyles[type])}
-                                    style={blockStyles[type]}
-                                />
-                            );
-                        }
-
-                        if (type !== 'link') {
-                            return (
-                                <StyleButton
-                                    key={type}
-                                    active={currentInlineStyle.has(inlineStyles[type])}
-                                    label={type}
-                                    onToggle={toggleTableStyle}
-                                    style={inlineStyles[type]}
-                                />
-                            );
-                        } else {
-                            return (
-                                <SelectionButton
-                                    onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
-                                    iconName="link"
-                                    tooltip={gettext('Link')}
-                                />
-                            );
-                        }
-                    })
+                    .filter((type) => type in blockStyles && type !== 'quote')
+                    .sort()
+                    .map((type) => (
+                        <StyleButton
+                            key={type}
+                            active={blockStyles[type] === blockStyle}
+                            label={type}
+                            onToggle={() => toggleMultiLineQuoteBlockStyle(blockStyles[type])}
+                            style={blockStyles[type]}
+                        />
+                    ))
             }
             {
-                cellEditorState && (
-                    <LinkToolbar
-                        editorState={cellEditorState}
-                        onEdit={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+                editorFormat
+                    .filter((type) => type in inlineStyles)
+                    .map((type) => (
+                        <StyleButton
+                            key={type}
+                            active={currentInlineStyle.has(inlineStyles[type])}
+                            label={type}
+                            onToggle={toggleTableStyle}
+                            style={inlineStyles[type]}
+                        />
+                    ))
+            }
+            <SelectionButtonCustomEditorState
+                key={'link'}
+                editorState={cellEditorState}
+                onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+                iconName="link"
+                tooltip={gettext('Link')}
+            />
+            {
+                popup.type === PopupTypes.Link && (
+                    <LinkInputMultiLineQuote
+                        data={popup.data}
                     />
                 )
             }
+            <LinkToolbarMultiLineQuote
+                editorState={cellEditorState}
+                onEdit={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+            />
         </div>
     );
 };
@@ -102,11 +101,16 @@ const mapDispatchToProps = (dispatch) => ({
     setMultiLineQuotePopup: (type, data) => dispatch(actions.setMultiLineQuotePopup(type, data)),
 });
 
-const mapStateToProps = (state) => ({
-    activeCell: state.activeCell,
-    editorState: state.editorState,
-    editorFormat: state.editorFormat,
-    showPopup: state.showPopup,
+const mapStateToProps = ({
+    activeCell,
+    editorState,
+    editorFormat,
+    popup,
+}) => ({
+    activeCell,
+    editorState,
+    editorFormat,
+    popup,
 });
 
 export const MultiLineQuoteControls = connect(mapStateToProps, mapDispatchToProps)(MultiLineQuoteControlsComponent);

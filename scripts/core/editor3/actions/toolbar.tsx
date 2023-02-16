@@ -45,6 +45,21 @@ export function applyLink(link, entity = null) {
 }
 
 /**
+ * Returns the action for applying links to multi-line quote selections.
+ */
+export function applyLinkToMuliLineQuote(link, entity = null) {
+    return {
+        type: 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE',
+        payload: {link, entity},
+    };
+}
+
+/**
+ * Returns the action for removing links from multi-line quote selections.
+ */
+export const removeLinkFromMuliLineQuote = () => ({type: 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE'});
+
+/**
  * @ngdoc method
  * @name removeLink
  * @return {String} action
