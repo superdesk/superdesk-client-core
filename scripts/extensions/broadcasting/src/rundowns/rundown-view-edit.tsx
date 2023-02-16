@@ -13,7 +13,10 @@ import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framewor
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
-export type IRundownAction = null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
+export type IRundownAction =
+    null
+    | {mode: 'view'; id: string; fullWidth: boolean}
+    | {mode: 'edit'; id: string; fullWidth: boolean};
 
 interface IProps {
     rundownId: string;
@@ -390,6 +393,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                     this.props.onRundownActionChange({
                                                                         id: this.props.rundownId,
                                                                         mode: 'edit',
+                                                                        fullWidth: false,
                                                                     });
                                                                 }}
                                                                 type="primary"
