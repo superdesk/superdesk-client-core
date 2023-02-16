@@ -3,8 +3,13 @@ import {extensions} from 'appConfig';
 import {logger} from './services/logger';
 import {flatMap} from 'lodash';
 import {getUrlPage} from './helpers/url';
+import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
-export class ExtensionPage extends React.Component {
+interface IProps {
+    setupFullWidthCapability: (config: IFullWidthPageCapabilityConfiguration) => void;
+}
+
+export class ExtensionPage extends React.Component<IProps> {
     render() {
         const currentUrl = getUrlPage();
 
@@ -18,7 +23,11 @@ export class ExtensionPage extends React.Component {
         if (currentPage != null) {
             const Component = currentPage.component;
 
-            return <Component />;
+            return (
+                <Component
+                    setupFullWidthCapability={this.props.setupFullWidthCapability}
+                />
+            );
         } else {
             logger.error(new Error(`Could not find a component for extension page. URL: ${currentUrl}`));
             return null;
