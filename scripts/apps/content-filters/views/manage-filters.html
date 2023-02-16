@@ -142,8 +142,8 @@
                         ng-class="{'sd-alert--alert': !test.match_results, 'sd-alert--success': test.match_results}"
                         class="sd-alert sd-alert--hollow sd-alert--small sd-alert--no-margin sd-margin-t--2"
                         ng-if="test.content_tested">
-                        <i ng-if="!test.match_results" class="icon-ban-circle sd-margin-r--1"></i>
-                        <i ng-if="test.match_results" class="icon-ok sd-margin-r--1"></i>
+                        <i ng-if="!test.match_results" class="icon-ban-circle sd-margin-end--1"></i>
+                        <i ng-if="test.match_results" class="icon-ok sd-margin-end--1"></i>
                         <span ng-if="test.match_results" translate>Does match</span>
                         <span ng-if="!test.match_results" translate>Doesn't match</span>
                     </div>
