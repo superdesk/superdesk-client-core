@@ -55,6 +55,7 @@ import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 import {AssetEditorPanel} from '../components/assets/assetEditorPanel';
 import {showImagePreviewModal} from '../components/assets/assetImagePreviewFullScreen';
+import {IPage} from 'superdesk-api';
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -123,7 +124,9 @@ export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
 }
 
-export class SamsWorkspaceApp extends React.PureComponent {
+type IPropsPage = React.ComponentProps<IPage['component']>;
+
+export class SamsWorkspaceApp extends React.PureComponent<IPropsPage> {
     onStoreInit(store: Store) {
         // Only load Assets if we have Sets configured
         return !getSets(store.getState()).length ?
