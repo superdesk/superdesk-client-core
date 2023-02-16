@@ -468,7 +468,7 @@ export function SearchResults(
                             criteria.params = {'preview_id': preview_id};
                             return api.query(getProvider(criteria), criteria).then((item_) => {
                                 if ('_items' in item_ && item_._items[0] !== undefined) {
-                                    processPreview(item_._items[0]);
+                                    processPreview(search.mergeHighlightFields(item_._items[0]));
                                 } else {
                                     processPreview(item);
                                 }
