@@ -167,6 +167,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.open = function openAuthoring(_id, readOnly, repo, action, state) {
         let endpoint = 'archive';
 
+        if (_id instanceof Object) {
+            return autosave.open(_id).then(null, (err) => _id);
+        }
         if ($location.$$path !== '/multiedit') {
             superdeskFlags.flags.authoring = true;
         }

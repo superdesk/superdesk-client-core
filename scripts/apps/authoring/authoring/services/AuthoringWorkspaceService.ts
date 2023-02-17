@@ -110,7 +110,11 @@ export class AuthoringWorkspaceService {
             ) {
                 return;
             }
-            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
+            if (item?._id.includes('urn:belga.be:360archive')) {
+                return this.authoringOpen(item, 'view');
+            } else {
+                this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
+            }
         } else {
             this.close();
         }
