@@ -1048,6 +1048,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 )}
                                 main={(
                                     <Layout.AuthoringMain
+                                        headerCollapsed={this.props.headerCollapsed}
                                         toolBar={(
                                             <React.Fragment>
                                                 <div
