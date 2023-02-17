@@ -159,22 +159,23 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     /**
      * Open an item for editing
      *
-     * @param {string} _id Item _id.
+     * @param {string} obj Item _id or Item
      * @param {boolean} readOnly
      * @param {string} repo - repository where an item whose identifier is _id can be found.
      * @param {string} action - action performed to open the story: edit, correct or kill
      */
-    this.open = function openAuthoring(_id, readOnly, repo, action, state) {
+    this.open = function openAuthoring(obj, readOnly, repo, action, state) {
         let endpoint = 'archive';
 
-        if (_id instanceof Object) {
-            return autosave.open(_id).then(null, (err) => _id);
+        if (obj instanceof Object) {
+            obj['is_belga'] = true;
+            return autosave.open(obj).then(null, (err) => obj);
         }
         if ($location.$$path !== '/multiedit') {
             superdeskFlags.flags.authoring = true;
         }
         if (_.includes(['legal_archive', 'archived'], repo)) {
-            return api.find(repo, _id).then((item) => {
+            return api.find(repo, obj).then((item) => {
                 item._editable = false;
                 return item;
             });
@@ -184,7 +185,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             endpoint = 'published';
         }
 
-        return api.find(endpoint, _id, {embedded: {lock_user: 1}})
+        return api.find(endpoint, obj, {embedded: {lock_user: 1}})
             .then(function _lock(item) {
                 if (readOnly) {
                     item._locked = lock.isLockedInCurrentSession(item);
