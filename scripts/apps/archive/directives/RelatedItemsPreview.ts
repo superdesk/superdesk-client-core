@@ -38,11 +38,13 @@ export function RelatedItemsPreview(relationsService) {
             scope.gettext = gettext;
             scope.getThumbnailForItem = getThumbnailForItem;
 
-            relationsService.getRelatedItemsForField(scope.item, scope.field._id)
+            scope.$watch('item', (item) => {
+                relationsService.getRelatedItemsForField(item, scope.field._id)
                 .then((items) => {
                     scope.relatedItems = items;
                     scope.loading = false;
                 });
+            });
         },
     };
 }
