@@ -40,10 +40,10 @@ export function RelatedItemsPreview(relationsService) {
 
             scope.$watch('item', (item) => {
                 relationsService.getRelatedItemsForField(item, scope.field._id)
-                .then((items) => {
-                    scope.relatedItems = items;
-                    scope.loading = false;
-                });
+                    .then((items) => {
+                        scope.relatedItems = items;
+                        scope.loading = false;
+                    });
             });
         },
     };
