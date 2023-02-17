@@ -98,7 +98,7 @@
         ng-click="deschedule()"
         translate>Deschedule</button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked() && userHasPrivileges({rewrite: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked() && userHasPrivileges({rewrite: 1}) === true && !item.is_belga"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
         aria-label="{{ 'Update' | translate }}"
@@ -107,17 +107,17 @@
             <span class="btn__text--short" translate>U</span>
       </button>
       
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({correct: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({correct: 1}) === true && !item.is_belga"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
-        ng-disabled="isCorrectionInProgress"
+        ng-disabled="isCorrectionInProgress "
         aria-label="{{ 'Correct' | translate }}"
         title="{{ 'Correct' | translate }}">
             <span class="btn__text" translate>Correct</span>
             <span class="btn__text--short" translate>C</span>
       </button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({takedown: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({takedown: 1}) === true && !item.is_belga"
         ng-show="(action === 'view' || !item._editable) && itemActions.takedown"
         ng-click="openAction('takedown')"
         aria-label="{{ 'Takedown' | translate }}"
@@ -126,7 +126,7 @@
             <span class="btn__text--short" translate>T</span>
       </button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({unpublish: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({unpublish: 1}) === true && !item.is_belga"
         ng-show="(action === 'view' || !item._editable) && itemActions.unpublish"
         ng-click="openAction('unpublish')"
         aria-label="{{ 'Unpublish' | translate }}"
@@ -135,7 +135,7 @@
             <span class="btn__text--short" translate>UP</span>
       </button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({kill: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({kill: 1}) === true && !item.is_belga"
         ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
         aria-label="{{ 'Kill' | translate }}"
