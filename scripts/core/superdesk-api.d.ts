@@ -184,6 +184,8 @@ declare module 'superdesk-api' {
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+
+        headerCollapsed?: boolean; // initial value
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
