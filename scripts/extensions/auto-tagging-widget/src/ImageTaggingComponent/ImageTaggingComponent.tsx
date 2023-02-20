@@ -326,15 +326,17 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                                                     <img
                                                         style={imageStyle}
                                                         alt=""
-                                                        src={selectedImage?.imageUrl}
+                                                        src={selectedImage.imageUrl}
                                                         onDragStart={(event) =>
                                                             prepareForDropping(event, selectedImage)
                                                         }
                                                     />
                                                 </div>
-                                                <figcaption style={figCaptionStyle}>
-                                                    {selectedImage?.caption}
-                                                </figcaption>
+                                                {selectedImage.caption && (
+                                                    <figcaption style={figCaptionStyle}>
+                                                        {selectedImage.caption}
+                                                    </figcaption>
+                                                )}
                                             </figure>
                                         )}
                                     </div>
