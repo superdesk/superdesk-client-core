@@ -126,19 +126,19 @@
 // STYLED TABLE
 // ------------
 .table.styled-table {
-    border-top: 2px solid #d7d7d7;
+    border-top: 2px solid var(--sd-colour-line--medium);
     th, td {
         vertical-align: middle;
-        background: $white;
+        background: var(--sd-item__main-Bg);
         &.align-right {
             text-align: right;
         }
     }
     th {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 500;
         padding: 11px;
-        color: #333;
+        color: var(--color-text);
     }
 }
 

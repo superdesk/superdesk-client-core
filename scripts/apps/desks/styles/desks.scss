@@ -205,7 +205,7 @@ $desk-width: 270px;
             vertical-align: middle;
         }
         time {
-            color:#999;
+            color: $sd-text-lighter;
             font-size: 11px;
         }
         .text {
@@ -237,12 +237,12 @@ $desk-width: 270px;
                 background: transparent;
                 height: 32px;
                 border: 0;
-                border-left: 1px solid #e0e0e0;
+                border-left: 1px solid var(--sd-colour-line--light);
                 display: block;
                 float: left;
                 &:hover {
                     cursor: pointer;
-                    background: #f0f0f0;
+                    background: var(--sd-item__main-Bg--hover);
                 }
             }
         }
@@ -355,15 +355,16 @@ $desk-width: 270px;
     .stages {
         .col {
             position: absolute;
-            @include border-box();
-            top: 60px; bottom: 10px;
-            left: 0; right: 50%;
+            top: 60px;
+            bottom: 10px;
+            left: 0;
+            right: 50%;
             padding: 10px 20px;
             overflow-x: hidden;
             overflow-y: auto;
             &:last-child {
                 left: 50%; right: 0;
-                border-left: 1px solid #e0e0e0;
+                border-left: 1px solid var(--sd-colour-line--light);
             }
         }
         .row {
@@ -378,7 +379,7 @@ $desk-width: 270px;
         }
         .heading {
             padding: 2px 0;
-            color: #666;
+            color: var(--color-text-light);
             margin-right: 10px;
             text-transform: uppercase;
         }
@@ -402,7 +403,7 @@ $desk-width: 270px;
                 label { line-height: 12px; }
                 .global-label {
                     font-size: 12px;
-                    color: #aaa;
+                    color: var(--color-text-lighter);
                     margin-top: 5px;
                     margin-right: 5px;
                     text-transform: none;
@@ -428,9 +429,10 @@ $desk-width: 270px;
             }
             &.edit-mode {
                 li.editable {
-                    @include box-shadow(none);
-                    outline: 1px solid $sd-blue;
-                    background-color: rgba(94,169,200,0.1);
+                    box-shadow: none;
+                    border-radius: 2px;
+                    outline: 1px solid var(--sd-colour-interactive);
+                    background-color: var(--sd-colour-interactive--alpha-20);
                     margin-bottom: 10px;
                 }
                 li:not(.editable) {
@@ -466,10 +468,11 @@ $desk-width: 270px;
         .header {
             .search-result {
                 overflow: auto;
-                border: 1px solid #ddd;
-                background: #fff;
+                background: var(--color-dropdown-menu-Bg);
+                box-shadow: var(--sd-shadow__dropdown);
                 padding: 10px;
                 z-index: 1;
+                border-radius: 0 0 3px 3px;
             }
         }
     }
@@ -478,21 +481,21 @@ $desk-width: 270px;
     }
     .col-heading {
         padding: 2px 0;
-        color: #666;
+        color: var(--color-text-light);
         margin-right: 10px;
         text-transform: uppercase;
     }
 }
 
 .user-email {
-    color: #3599b6;
+    color: var(--sd-colour-interactive);
     font-weight: 300;
     display: inline-block;
     padding: 0 2rem;
 }
 
 .content-expiry-label {
-    color: #333;
+    color: var(--color-text);
 }
 
 .modal--tabs {
@@ -500,12 +503,12 @@ $desk-width: 270px;
         position: absolute;
         top: 0;
         left: 0;
-        background: rgb(233, 240, 243);
+        background-color: var(--sd-colour-bg__sliding-toolbar);
         padding: 10px;
         text-align: right;
         width: 100%;
         animation: dropOut2 .3s cubic-bezier(.695,.105,.285,1.275) 1;
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,.2), 0 1px 0 0 rgba(0,0,0,.1);
+        box-shadow: var(--sd-shadow__subnav);
     }
 }
 
@@ -589,13 +592,12 @@ $desk-width: 270px;
 
 .content-item {
     cursor: default;
-    background: $white;
+    background: var(--sd-item__main-Bg);
     height: 32px;
     line-height: 32px;
-    @include border-box();
-    border-left: 3px solid rgba(255,255,255,0);
-    border-right: 2px solid $white;
-    border-bottom: 1px solid #eee;
+    border-left: 3px solid transparent;
+    border-right: 2px solid var(--sd-item__main-Bg);
+    border-bottom: 1px solid var(--sd-colour-line--light);
     position: relative;
     display:flex;
     padding-right: 8px;
@@ -610,8 +612,8 @@ $desk-width: 270px;
         border-bottom: none;
     }
     &--active {
-        background: $sd-hover;
-        border-right-color: $sd-blue;
+        background: var(--sd-item__main-Bg--activated);
+        border-right-color: var(--sd-colour-interactive);
     }
     &--locked {
         border-left-color: #b70101;
@@ -648,7 +650,7 @@ $desk-width: 270px;
         flex-shrink: 0;
     }
     time {
-        color:#999;
+        color: $sd-text-lighter;
         font-size: 11px;
     }
     &__text {
@@ -712,7 +714,7 @@ $desk-width: 270px;
     padding: 0 8px;
     margin:0;
     display:block;
-    border-bottom: 1px #eee solid;
+    border-bottom: 1px var(--sd-colour-line--light);
     &:last-child {
         border-bottom: none;
     }
@@ -727,7 +729,7 @@ $desk-width: 270px;
     .place {
         font-size: 12px;
         text-transform: uppercase;
-        color: #777;
+        color: $sd-text-light;
         font-weight: 500;
     }
     .slugline {
@@ -736,17 +738,17 @@ $desk-width: 270px;
         text-transform: uppercase;
     }
     .oldslugline {
-        color: lighten($sd-keyword, 25%);
+        color: $sd-keyword;
         font-weight: 400;
+        opacity: 0.75;
         text-transform: uppercase;
     }
     .headline {
         font-weight: 400;
-        //color: $grayDark;
-        color: #555;
+        color: $sd-text-light;
     }
     time {
-        color:#999;
+        color:$sd-text-light;
         font-size: 11px;
     }
 }

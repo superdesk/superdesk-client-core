@@ -10,6 +10,7 @@ import {store} from 'core/data';
 interface IProps {
     article: IArticle;
     unlock(): void;
+    isLockedInOtherSession(article: IArticle): boolean;
 }
 
 interface IState {
@@ -63,7 +64,7 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
 
 export class LockInfo extends React.PureComponent<IProps> {
     render() {
-        if (sdApi.article.isLockedInOtherSession(this.props.article) !== true) {
+        if (this.props.isLockedInOtherSession(this.props.article) !== true) {
             return null;
         }
 

@@ -72,19 +72,19 @@
     height: 48px;
     line-height: 54px;
     text-align: center;
-    background: $archive-sidebar-bg;
+    background: hsla(214, 13%, 45%, 0.1);
     flex-shrink: 0;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
     @include transition(all ease 0.1s);
     overflow: hidden;
     i {
         @include opacity(60);
+        color: var(--color-icon-default);
     }
     &:hover {
         cursor: pointer;
     }
     &--active {
-        background: $sd-blue-text;
+        background: var(--sd-colour-interactive--active);
         i {
             color:white;
         }
@@ -105,7 +105,6 @@
 }
 
 .multi-action-bar {
-    @include border-box();
     position: absolute;
     top: 0;
     bottom: 0;
@@ -113,10 +112,9 @@
     right: 0;
     z-index: 3;
     line-height: 48px;
-    background-color: #fff;
     padding: 0 16px;
     animation: dropOut2 .3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
-    background-color: #d2e5ed;
+    background-color: var(--sd-colour-bg__sliding-toolbar);
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     .navbtn {
         border: none;
@@ -157,13 +155,13 @@
 }
 
 .item-searchbar {
-    border-left: 1px solid #dfdfdf;
-    border-right: 1px solid #dfdfdf;
+    border-left: 1px solid var(--sd-colour-line--light);
+    border-right: 1px solid var(--sd-colour-line--light);
     position: relative;
 
     &.focused {
-        //border-right: 1px solid #dfdfdf;
-        background: $white;
+        background: var(--sd-colour-bg__searchbar);
+        box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 6px var(--sd-colour-interactive--alpha-20);
     }
     .search-icon {
         @include user-select(none);
@@ -171,10 +169,10 @@
         height: 28px;
         display: inline-block;
         background: url(~images/search-icon.png) no-repeat 5px 5px;
-        @include opacity(85);
+        opacity: 0.6;
         &:hover {
             cursor: pointer;
-            @include opacity(100);
+            opacity: 1;
         }
     }
 
@@ -198,13 +196,15 @@
         font-size: 14px;
         border: 0 !important;
         padding: 0 $nav-height;
-
+        color: $sd-text;
         background: none;
         &:focus, &:active {
             @include box-shadow(none !important);
         }
-        &::-webkit-input-placeholder {
-            line-height: 17px;
+        &::-webkit-input-placeholder,
+        &::placeholder  {
+            font-style: italic;
+            color: $sd-text-lighter;
         }
     }
 
@@ -237,8 +237,8 @@
     position: relative;
     z-index: 2;
     padding: 0 0 0 20px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.12);
-    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 0 var(--sd-colour-line--light), 0 1px 1px 0 rgba(0,0,0,0.1);
+    background-color: var(--sd-colour-panel-bg--000);
     .search-tags__list {
         flex-grow: 1;
         li {
@@ -359,7 +359,7 @@
 .sortbar {
     .label-total {
         margin: 0 $sd-base-increment / 2;
-        background-color: $grayText;
+        background-color: var(--sd-colour-bg--09);
     }
 }
 
@@ -374,17 +374,6 @@
 }
 
 .subnav.legal-archive {
-    .sortbar-container {
-        padding: 10px 16px 10px 0;
-    }
-    .sortbar {
-        margin: 0 0 0 15px;
-        padding: 0 0 0 10px;
-        height: 25px;
-        .lab {
-            line-height: 20px;
-        }
-    }
     .dropdown {
         .sortbar {
             width: 100%;

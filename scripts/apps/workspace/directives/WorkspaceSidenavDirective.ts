@@ -1,6 +1,6 @@
 import {appConfig} from 'appConfig';
 import {addEventListener, removeEventListener} from 'core/get-superdesk-api-implementation';
-import {IEvents} from 'superdesk-api';
+import {IEvents, IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
@@ -41,11 +41,20 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
              * @param {object} e Gets $event from the element
              */
             scope.hideMonitoring = function(state, e) {
-                if (superdeskFlags.flags.authoring && state) {
-                    e.preventDefault();
-                    superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration = scope.fullWidthConfig;
+
+                if (fullWidthConfig.enabled) {
+                    if (fullWidthConfig.allowed) {
+                        fullWidthConfig.onToggle(!scope.fullWidthEnabled);
+                    }
                 } else {
-                    superdeskFlags.flags.hideMonitoring = false;
+                    // eslint-disable-next-line no-lonely-if
+                    if (superdeskFlags.flags.authoring && state) {
+                        e.preventDefault();
+                        superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
+                    } else {
+                        superdeskFlags.flags.hideMonitoring = false;
+                    }
                 }
             };
 

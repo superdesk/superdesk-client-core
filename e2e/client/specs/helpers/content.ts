@@ -107,7 +107,10 @@ class Content {
 
             el(['context-menu-button'], null, itemElem).click();
 
-            return el(['context-menu']);
+            const menu = el(['context-menu']);
+
+            waitFor(menu, 2000);
+            return menu;
         };
 
         this.previewItem = function(item) {

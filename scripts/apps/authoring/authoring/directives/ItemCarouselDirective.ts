@@ -2,10 +2,11 @@ import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
-import {gettext, gettextPlural} from 'core/utils';
+import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
 import {getAssociationsByFieldId} from '../controllers/AssociationController';
+import {IArticle} from 'superdesk-api';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -53,8 +54,8 @@ function isOrderOrItemsChanged(items: Array<any>, prevItems: Array<any>): boolea
  * @module superdesk.apps.authoring
  * @name sdItemCarousel
  */
-ItemCarouselDirective.$inject = ['notify'];
-export function ItemCarouselDirective(notify) {
+ItemCarouselDirective.$inject = ['notify', 'relationsService'];
+export function ItemCarouselDirective(notify, relationsService) {
     return {
         scope: {
             allowAudio: '<',
@@ -216,6 +217,18 @@ export function ItemCarouselDirective(notify) {
 
                     event.preventDefault();
                     event.stopPropagation();
+
+                    const type: string = getSuperdeskType(event, false);
+                    const item: IArticle = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+                    const isWorkflowAllowed: boolean = relationsService.itemHasAllowedStatus(item, scope.field);
+
+                    if (!isWorkflowAllowed) {
+                        notify.error(gettext(
+                            'The following status is not allowed in this field: {{status}}',
+                            {status: item.state},
+                        ));
+                        return;
+                    }
 
                     if (isAllowedMediaType(scope, event)) {
                         const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;

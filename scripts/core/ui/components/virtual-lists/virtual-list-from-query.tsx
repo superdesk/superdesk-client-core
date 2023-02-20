@@ -45,7 +45,7 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
         IPropsVirtualListFromQuery<T, IToJoin> & {onInitialized(): void},
         IState<T, IToJoin>
     > {
-    private virtualListRef: IExposedFromVirtualList;
+    private virtualListRef: IExposedFromVirtualList | null;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
     /**
@@ -238,6 +238,10 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener('resource:updated', (event) => {
+                if (this.virtualListRef == null) {
+                    return;
+                }
+
                 const {resource, _id} = event.extra;
 
                 const sortFields: Array<string> = this.props.query.sort.reduce((acc, item) => {

@@ -118,7 +118,11 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             const _template: IRundownTemplate | null =
                                                 _items.length === 1 ? _items[0] : null;
 
-                                            this.setState({showId: val, template: _template, rundownTitle: null});
+                                            this.setState({
+                                                showId: val,
+                                                template: _template,
+                                                rundownTitle: _template == null ? '' : _template.title_template.prefix,
+                                            });
                                         });
                                     }}
                                     required={true}
@@ -142,8 +146,8 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                                     path: `/shows/${showId}/templates/${templateId}`,
                                                 }).then((_template) => {
                                                     this.setState({
-                                                        rundownTitle: _template.title_template.prefix,
                                                         template: _template,
+                                                        rundownTitle: _template.title_template.prefix,
                                                         loading: false,
                                                     });
                                                 });
