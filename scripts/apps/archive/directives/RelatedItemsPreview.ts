@@ -1,6 +1,7 @@
 import {IArticle, IArticleField, IRendition} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getThumbnailForItem} from 'core/helpers/item';
+import {throttle} from 'lodash';
 
 /**
  * @ngdoc directive
@@ -38,12 +39,18 @@ export function RelatedItemsPreview(relationsService) {
             scope.gettext = gettext;
             scope.getThumbnailForItem = getThumbnailForItem;
 
-            scope.$watch('item', (item) => {
+            // Define the throttled function
+            const getRelatedItems = throttle((item) => {
                 relationsService.getRelatedItemsForField(item, scope.field._id)
                     .then((items) => {
                         scope.relatedItems = items;
                         scope.loading = false;
                     });
+            }, 1000);
+
+            scope.$watch('item', (item) => {
+                scope.loading = true;
+                getRelatedItems(item);
             });
         },
     };
