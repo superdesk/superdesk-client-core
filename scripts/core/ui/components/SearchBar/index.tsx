@@ -145,11 +145,14 @@ export default class SearchBar extends React.Component<IProps, IState> {
                             )
                             : (
                                 <ManualSearch
+                                    value={this.state.searchInputValue}
                                     actionButtons={actionButtons}
                                     onInputChange={(value) => this.setState({
                                         searchInputValue: value,
                                     })}
-                                    onSearch={() => this.props.onSearch(this.state.searchInputValue)}
+                                    onSearch={() => {
+                                        this.props.onSearch(this.state.searchInputValue);
+                                    }}
                                 />
                             )
                     }
@@ -160,6 +163,5 @@ export default class SearchBar extends React.Component<IProps, IState> {
 }
 
 SearchBar.defaultProps = {
-    timeout: 800,
     allowCollapsed: true,
 };
