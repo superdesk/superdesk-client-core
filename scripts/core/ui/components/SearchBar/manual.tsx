@@ -12,7 +12,7 @@ export class ManualSearch extends React.PureComponent<IProps> {
     inputRef: HTMLInputElement;
 
     componentDidMount() {
-        if (this.props.value != '') {
+        if (this.props.value !== '' || this.props.value != null) {
             this.inputRef.focus();
         }
     }
