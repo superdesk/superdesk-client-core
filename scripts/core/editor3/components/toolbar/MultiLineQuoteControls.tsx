@@ -74,7 +74,6 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                     ))
             }
             <SelectionButtonCustomEditorState
-                key={'link'}
                 editorState={cellEditorState}
                 onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
                 iconName="link"
@@ -84,6 +83,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                 popup.type === PopupTypes.Link && (
                     <LinkInputMultiLineQuote
                         data={popup.data}
+                        editorState={cellEditorState}
                     />
                 )
             }

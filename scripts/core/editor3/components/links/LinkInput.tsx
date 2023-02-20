@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {EditorState} from 'draft-js';
+import {EditorState, EntityInstance} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
@@ -15,6 +15,7 @@ import {
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {IEditorStore} from 'core/editor3/store';
 
 /**
  * @ngdoc React
@@ -30,7 +31,17 @@ const linkTypes = {
     attachement: 'attachement',
 };
 
-export class LinkInputComponent extends React.Component<any, any> {
+interface IProps extends Partial<IEditorStore> {
+    applyLink(link, entity: EntityInstance): void,
+    hidePopups(): void,
+    data: any,
+    item: any,
+    createLinkSuggestion(link): void,
+    changeLinkSuggestion(link, entity): void,
+    localDomains?: Array<string>,
+}
+
+export class LinkInputComponent extends React.Component<IProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -234,37 +245,30 @@ export class LinkInputComponent extends React.Component<any, any> {
     }
 }
 
-LinkInputComponent.propTypes = {
-    editorState: PropTypes.instanceOf(EditorState).isRequired,
-    applyLink: PropTypes.func.isRequired,
-    hidePopups: PropTypes.func.isRequired,
-    data: PropTypes.object,
-    item: PropTypes.object,
-    suggestingMode: PropTypes.bool,
-    createLinkSuggestion: PropTypes.func,
-    changeLinkSuggestion: PropTypes.func,
-    localDomains: PropTypes.array,
-};
-
 const mapStateToProps = (state) => ({
     item: state.item,
     editorState: state.editorState,
     suggestingMode: state.suggestingMode,
 });
 
-const LinkInputComponentWithDependenciesLoaded = connectPromiseResults(() => ({
+const LinkInputComponentWithDependenciesLoaded = connectPromiseResults<IProps>(() => ({
     localDomains: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.local_domains),
 }))(LinkInputComponent);
 
-export const LinkInput: any = connect(mapStateToProps, {
+export const LinkInput = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,
     changeLinkSuggestion,
 })(LinkInputComponentWithDependenciesLoaded);
 
-export const LinkInputMultiLineQuote: any = connect(mapStateToProps, {
+const mapStateToPropsNoEditorState = (state) => ({
+    item: state.item,
+    suggestingMode: state.suggestingMode,
+});
+
+export const LinkInputMultiLineQuote = connect(mapStateToPropsNoEditorState, {
     applyLink: applyLinkToMuliLineQuote,
     hidePopups,
     createLinkSuggestion,

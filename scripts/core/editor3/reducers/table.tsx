@@ -1,7 +1,7 @@
 import {RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
-import {getCell, setCell, getData, setData, ISetDataPayload} from '../helpers/table';
+import {getCell, setCell, getData, setData, IEditor3TableData} from '../helpers/table';
 
 /**
  * @description Contains the list of table related reducers.
@@ -167,6 +167,9 @@ export const processCells = (state, fn) => {
     let newState = state;
 
     if (newCurrentStyle !== null) {
+        // We have to set the popup to the result from `fn` only when it has
+        // been modified so we don't break existing logic checking popup.type
+        // when the editor reloads. e.g. after setting an inline style
         if (popup != null) {
             newState = {
                 ...state,
@@ -238,13 +241,13 @@ const toggleTableStyle = (state, inlineStyle) =>
         },
     );
 
-const toggleMultiLineQuoteBlockStyle = (state, style) =>
+const toggleMultiLineQuoteBlockStyle = (state, blockType) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const data: ISetDataPayload = {cells, numRows, numCols, withHeader};
+            const data: IEditor3TableData = {cells, numRows, numCols, withHeader};
             const cellStateEditor = getCell(data, i, j, currentStyle, selection);
-            const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, style);
+            const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, blockType);
             const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
             const newData = setCell(data, i, j, newCellEditorState).data;
 

@@ -53,7 +53,9 @@ export const editor3StateToHtml = (
 
         blockRenderers: {
             atomic: (block: ContentBlock) =>
-                block.getData().get('data') != null && new AtomicBlockParser(contentState, disabled).parse(block),
+                block.getData().get('data') != null
+                    ? new AtomicBlockParser(contentState, disabled).parse(block)
+                    : null,
         },
 
         inlineStyleFn: (styles: DraftInlineStyle) => {

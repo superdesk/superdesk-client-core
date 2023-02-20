@@ -10,7 +10,7 @@ import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
-import {getCell, getData, ISetDataPayload, setData} from '../helpers/table';
+import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
 import {processCells} from './table';
 
 /**
@@ -125,17 +125,10 @@ const applyLink = (state, {link, entity}) => {
     return onChange(state, editorState);
 };
 
-interface IBlockRange {
-    offset: number;
-    length: number;
-    key: number;
-}
-
-/**
- * Applies the given URL to the current content selection in multi-line quote block.
- * If the selection is a link, it applies the link to the entity instead.
- */
-const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: EntityInstance}) => {
+function applyChangesToTableCell(
+    state: IEditorStore,
+    operation: (editorState: EditorState) => EditorState,
+): IEditorStore {
     const {activeCell, editorState: mainEditorState} = state;
 
     if (activeCell === null) {
@@ -147,32 +140,35 @@ const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: En
     const block = contentState.getBlockForKey(key);
     const data = getData(contentState, block.getKey());
     const cellEditorState = getCell(data, i, j, currentStyle, selection);
-    let cellEditorStateData: EditorState;
 
-    // Check if the selection is a link
-    const selectedBlockKey = cellEditorState.getSelection().getAnchorKey();
-    const blockRanges: Array<IBlockRange> = entity.getData().data.cells[0][0].blocks
-        .find((x) => x.key === selectedBlockKey).entityRanges;
-    const cellSelection = cellEditorState.getSelection();
-    const anchorOffsetMatch: IBlockRange = blockRanges.find(({offset}) => offset === cellSelection.getAnchorOffset());
-    const selectionIsALink =
-        anchorOffsetMatch?.length === cellSelection.getFocusOffset() - cellSelection.getAnchorOffset();
+    const editorStateNext = operation(cellEditorState);
 
-    if (!selectionIsALink) {
-        cellEditorStateData = Links.createLink(cellEditorState, link);
-    } else {
-        cellEditorStateData = entityUtils.replaceSelectedEntityData(cellEditorState, {link});
-    }
-
-    const dataNew: ISetDataPayload = {
+    const dataNew: IEditor3TableData = {
         ...data,
-        cells: [[convertToRaw(cellEditorStateData.getCurrentContent())]],
+        cells: [[convertToRaw(editorStateNext.getCurrentContent())]],
     };
 
     const newMainState = setData(mainEditorState, block, dataNew, 'change-block-data');
 
     return onChange(state, newMainState, true);
-};
+}
+
+/**
+ * Applies the given URL to the current content selection in multi-line quote block.
+ * If the selection is a link, it applies the link to the entity instead.
+ */
+const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: EntityInstance}) =>
+    applyChangesToTableCell(state, (editorState) => {
+        let editorStateNext: EditorState;
+
+        if (!entity) {
+            editorStateNext = Links.createLink(editorState, link);
+        } else {
+            editorStateNext = entityUtils.replaceSelectedEntityData(editorState, {link});
+        }
+
+        return editorStateNext;
+    });
 
 /**
  * Removes the link on the entire entity under the cursor in multi-line quote block.
@@ -191,7 +187,7 @@ const removeLinkInMultiLineQuote = (state) => {
     const cellEditorStateWithRemovedLink =
         Links.removeLink(getCell(data, i, j, currentStyle, selection));
 
-    const newData: ISetDataPayload = {
+    const newData: IEditor3TableData = {
         ...data.data,
         cells: [[convertToRaw(cellEditorStateWithRemovedLink.getCurrentContent())]],
     };
@@ -346,16 +342,16 @@ const setPopup = (state: IEditorStore, {type, data}) => {
     return {...state, editorState: newEditorState, popup: {type, data}};
 };
 
-const setMultiLinePopup = (state: IEditorStore, {type, data}) =>
+type PopupType = keyof typeof PopupTypes;
+
+const setMultiLinePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
             const newData = {cells, numRows, numCols, withHeader};
-            const cellEditorState = getCell(newData, i, j, currentStyle, selection);
 
             return {
                 ...state,
-                editorState: cellEditorState,
                 popup: {type, data},
                 data: newData,
             };

@@ -1,8 +1,8 @@
 import {ContentState, convertFromRaw, convertToRaw, ContentBlock} from 'draft-js';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
-import * as tableHelpers from 'core/editor3/helpers/table';
 import {editor3StateToHtml} from './editor3StateToHtml';
+import {getData, IEditor3TableData} from 'core/editor3/helpers/table';
 
 /**
  * @ngdoc class
@@ -47,9 +47,9 @@ export class AtomicBlockParser {
         case 'EMBED':
             return this.parseEmbed(data).trim();
         case 'TABLE':
-            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock.getKey())).trim();
+            return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
         case 'MULTI-LINE_QUOTE':
-            return this.parseMultiLineQuote(tableHelpers.getData(this.contentState, contentBlock.getKey())).trim();
+            return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
         }
@@ -191,17 +191,17 @@ export class AtomicBlockParser {
     }
 
     /**
-     * Returns the HTML representation of an unstyled
+     * Returns the HTML representation of an atomic
      * 'MULTI-LINE_QUOTE' block having the passed entity data.
      */
-    parseMultiLineQuote(data) {
+    parseMultiLineQuote(data: IEditor3TableData): string {
         if (this.disabled.indexOf('table') > -1) {
             return '';
         }
 
         const {cells} = data;
         let html = '<div className="multi-line-quote">';
-        const cellContentState = cells[0] && cells[0][0]
+        const cellContentState = cells[0]?.[0] != null
             ? convertFromRaw(cells[0][0])
             : ContentState.createFromText('');
 

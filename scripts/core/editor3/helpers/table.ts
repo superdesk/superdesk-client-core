@@ -21,7 +21,7 @@ import {createBlockSelection} from './selection';
  * @param {Number} col The column of the cell in the table
  * @description Retrieves the content state of the cell at row/col.
  */
-export function getCell(data: ISetDataPayload, row, col, currentStyle, selection): EditorState {
+export function getCell(data: IEditor3TableData, row, col, currentStyle, selection): EditorState {
     const decorator = new CompositeDecorator([LinkDecorator]);
     const {cells} = data;
     let cellEditorState;
@@ -75,7 +75,7 @@ export function getCell(data: ISetDataPayload, row, col, currentStyle, selection
  * @description Updates data about this cell inside the entity for this atomic
  * block.
  */
-export function setCell(data: ISetDataPayload, row, col, cellEditorState: EditorState) {
+export function setCell(data: IEditor3TableData, row, col, cellEditorState: EditorState) {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
@@ -119,7 +119,7 @@ export function getData(contentState: ContentState, blockKey: string) {
     return JSON.parse(blockData);
 }
 
-export interface ISetDataPayload {
+export interface IEditor3TableData {
     cells: Array<Array<RawDraftContentState>>;
     numRows: number;
     numCols: number;
@@ -138,7 +138,7 @@ export interface ISetDataPayload {
 export function setData(
     editorState: EditorState,
     block: ContentBlock,
-    data: ISetDataPayload,
+    data: IEditor3TableData,
     lastChangeType,
 ): EditorState {
     const contentState = editorState.getCurrentContent();
@@ -165,7 +165,7 @@ export function setDataForContent(
     contentState: ContentState,
     selection: SelectionState,
     block: ContentBlock,
-    data: ISetDataPayload,
+    data: IEditor3TableData,
 ): ContentState {
     const entityKey = block.getEntityAt(0);
     const newContentState = Modifier.setBlockData(
