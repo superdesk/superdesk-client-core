@@ -247,6 +247,9 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
 
             let diff = generatePatch(original, _current);
 
+            // Object patching is overriding fields of object type with diff.
+            // If we make changes to such a field it is not saved correctly.
+            // So we need to add all fields which are of object type to the diff object.
             Object.keys(diff).forEach((key) => {
                 if (isObject(diff[key])) {
                     diff[key] = _current[key];

@@ -71,7 +71,7 @@ export default function PlacesServiceFactory(api, features, metadata) {
     class PlacesService implements IPlacesService {
         searchDateline(query: string, lang: string) {
             return this._searchGeonames(query, lang, true)
-                .then((geonames) => geonames.map(geoNameToCity))
+                .then((geonames) => geonames.map((x) => geoNameToCity(x)))
                 .catch(() => this._searchCities(query));
         }
 

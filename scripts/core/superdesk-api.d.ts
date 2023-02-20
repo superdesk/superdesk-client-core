@@ -248,7 +248,6 @@ declare module 'superdesk-api' {
     }
 
     export type IDatelineValueOperational = {
-        day?: string;
         date?: string;
         source?: string;
         located?: ILocated;
