@@ -130,7 +130,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                             )
                         }
                         {
-                            item.duration != null && (
+                            item.duration != null && item.duration > 0 && (
                                 <DurationLabel
                                     duration={item.duration}
                                     planned_duration={item.planned_duration}
