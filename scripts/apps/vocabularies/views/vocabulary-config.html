@@ -1,6 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
-        <sd-search-handler ng-model="query.display_name" data-debounce="200"></sd-search-handler>
+        <sd-search-handler ng-model="query" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary"
           ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">
@@ -19,7 +19,7 @@
           <i class="icon-plus-sign icon--white"></i>
           <span translate>Add New</span>
         </button>
- 
+
         <button class="btn btn--primary"
           ng-click="createVocabulary()" ng-if="tab === 'vocabularies'">
           <i class="icon-plus-sign icon--white"></i>
