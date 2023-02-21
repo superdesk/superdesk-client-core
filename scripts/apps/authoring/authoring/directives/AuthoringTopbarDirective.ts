@@ -25,11 +25,7 @@ export function AuthoringTopbarDirective(
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             function setActionsFromExtensions() {
-                scope.articleActionsFromExtensions = [];
-
-                getArticleActionsFromExtensions(scope.item).then((articleActions) => {
-                    scope.articleActionsFromExtensions = articleActions;
-                });
+                scope.articleActionsFromExtensions = getArticleActionsFromExtensions(scope.item);
             }
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;

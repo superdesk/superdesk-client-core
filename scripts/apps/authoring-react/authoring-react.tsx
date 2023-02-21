@@ -12,6 +12,7 @@ import {
     IPropsAuthoring,
     ITopBarWidget,
     IExposedFromAuthoring,
+    IKeyBindings,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -45,6 +46,7 @@ import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
+import {WithKeyBindings} from './with-keybindings';
 
 export function getFieldsData<T>(
     item: T,
@@ -188,6 +190,17 @@ function getInitialState<T extends IBaseRestApiResponse>(
     };
 
     return initialState;
+}
+
+function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>): IKeyBindings {
+    return actions
+        .filter((action) => action.keyBindings != null)
+        .reduce((acc, action) => {
+            return {
+                ...acc,
+                ...action.keyBindings,
+            };
+        }, {});
 }
 
 /**
@@ -1043,6 +1056,118 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
+        const authoringActions: Array<IAuthoringAction> = (() => {
+            const actions = this.props.getActions?.(exposed) ?? [];
+            const coreActions: Array<IAuthoringAction> = [];
+
+            if (appConfig.features.useTansaProofing !== true) {
+                if (state.spellcheckerEnabled) {
+                    const nextValue = false;
+
+                    coreActions.push({
+                        label: gettext('Disable spellchecker'),
+                        onTrigger: () => {
+                            this.setState({
+                                ...state,
+                                spellcheckerEnabled: nextValue,
+                            });
+
+                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                type: 'bool',
+                                enabled: nextValue,
+                                default: true,
+                            });
+                        },
+                        keyBindings: {
+                            'ctrl+shift+y': () => {
+                                this.setState({
+                                    ...state,
+                                    spellcheckerEnabled: nextValue,
+                                });
+
+                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                    type: 'bool',
+                                    enabled: nextValue,
+                                    default: true,
+                                });
+                            },
+                        },
+                    });
+                } else {
+                    coreActions.push({
+                        label: gettext('Enable spellchecker'),
+                        onTrigger: () => {
+                            const nextValue = true;
+
+                            this.setState({
+                                ...state,
+                                spellcheckerEnabled: true,
+                            });
+
+                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                type: 'bool',
+                                enabled: nextValue,
+                                default: true,
+                            });
+                        },
+                        keyBindings: {
+                            'ctrl+shift+y': () => {
+                                const nextValue = true;
+
+                                this.setState({
+                                    ...state,
+                                    spellcheckerEnabled: true,
+                                });
+
+                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                    type: 'bool',
+                                    enabled: nextValue,
+                                    default: true,
+                                });
+                            },
+                        },
+                    });
+                }
+            }
+
+            return [...coreActions, ...actions];
+        })();
+
+        const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
+            return {
+                ...acc,
+                ...(action.keyBindings ?? {}),
+            };
+        }, {});
+
+        const widgetsCount = this.props.getSidebar(exposed).props.items.length;
+
+        const widgetKeybindings: IKeyBindings = {};
+
+        for (let i = 0; i < widgetsCount; i++) {
+            widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
+                const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
+
+                const nextState: IStateLoaded<T> = {
+                    ...state,
+                    openWidget: {
+                        name: nextWidgetName,
+                        pinned: state.openWidget?.pinned ?? false,
+                    },
+                };
+
+                this.setState(nextState);
+            };
+        }
+
         const toolbar1Widgets: Array<ITopBarWidget<T>> = [
             ...authoringOptions.actions,
             {
@@ -1050,61 +1175,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 priority: 0.4,
                 component: () => {
                     return (
-                        <AuthoringActionsMenu
-                            getActions={() => {
-                                return (
-                                    this.props.getActions?.(exposed) ?? Promise.resolve([])
-                                ).then((actions) => {
-                                    const coreActions: Array<IAuthoringAction> = [];
-
-                                    if (appConfig.features.useTansaProofing !== true) {
-                                        if (state.spellcheckerEnabled) {
-                                            const nextValue = false;
-
-                                            coreActions.push({
-                                                label: gettext('Disable spellchecker'),
-                                                onTrigger: () => {
-                                                    this.setState({
-                                                        ...state,
-                                                        spellcheckerEnabled: nextValue,
-                                                    });
-
-                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                        type: 'bool',
-                                                        enabled: nextValue,
-                                                        default: true,
-                                                    });
-                                                },
-                                            });
-                                        } else {
-                                            coreActions.push({
-                                                label: gettext('Enable spellchecker'),
-                                                onTrigger: () => {
-                                                    const nextValue = true;
-
-                                                    this.setState({
-                                                        ...state,
-                                                        spellcheckerEnabled: true,
-                                                    });
-
-                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                        type: 'bool',
-                                                        enabled: nextValue,
-                                                        default: true,
-                                                    });
-                                                },
-                                            });
-                                        }
-                                    }
-
-                                    return [...coreActions, ...actions];
-                                });
-                            }}
-                        />
+                        <AuthoringActionsMenu getActions={() => authoringActions} />
                     );
                 },
                 availableOffline: true,
@@ -1112,6 +1183,43 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ];
 
         const pinned = state.openWidget?.pinned === true;
+
+        const printPreviewAction = (() => {
+            const execute = () => {
+                previewAuthoringEntity(
+                    state.profile,
+                    state.fieldsDataWithChanges,
+                );
+            };
+
+            const preview = {
+                jsxButton: () => {
+                    return (
+                        <IconButton
+                            icon="preview-mode"
+                            ariaValue={gettext('Print preview')}
+                            onClick={() => {
+                                execute();
+                            }}
+                        />
+                    );
+                },
+                keybindings: {
+                    'ctrl+shift+i': () => {
+                        execute();
+                    },
+                },
+            };
+
+            return preview;
+        })();
+
+        const allKeyBindings: IKeyBindings = {
+            ...printPreviewAction.keybindings,
+            ...getKeyBindingsFromActions(authoringOptions.actions),
+            ...keyBindingsFromAuthoringActions,
+            ...widgetKeybindings,
+        };
 
         return (
             <React.Fragment>
@@ -1121,67 +1229,76 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     )
                 }
 
-                <WithInteractiveArticleActionsPanel location="authoring">
-                    {(panelState, panelActions) => {
-                        return (
-                            <Layout.AuthoringFrame
-                                header={(
-                                    <SubNav>
-                                        <AuthoringToolbar
-                                            entity={state.itemWithChanges}
-                                            coreWidgets={toolbar1Widgets}
-                                            extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
-                                            backgroundColor={authoringOptions.toolbarBgColor}
-                                        />
-                                    </SubNav>
-                                )}
-                                main={(
-                                    <Layout.AuthoringMain
-                                        toolBar={(
-                                            <React.Fragment>
-                                                <div
-                                                    style={{paddingRight: 16,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 8,
-                                                    }}
-                                                >
-                                                    {
-                                                        this.props.topBar2Widgets
-                                                            .map((Component, i) => {
-                                                                return (
-                                                                    <Component
-                                                                        key={i}
-                                                                        item={state.itemWithChanges}
-                                                                    />
-                                                                );
-                                                            })
-                                                    }
-                                                </div>
-
-                                                <ButtonGroup align="end">
-                                                    <IconButton
-                                                        icon="preview-mode"
-                                                        ariaValue={gettext('Print preview')}
-                                                        onClick={() => {
-                                                            previewAuthoringEntity(
-                                                                state.profile,
-                                                                state.fieldsDataWithChanges,
-                                                            );
+                <WithKeyBindings keyBindings={allKeyBindings}>
+                    <WithInteractiveArticleActionsPanel location="authoring">
+                        {(panelState, panelActions) => {
+                            return (
+                                <Layout.AuthoringFrame
+                                    header={(
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                coreWidgets={toolbar1Widgets}
+                                                extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
+                                                backgroundColor={authoringOptions.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )}
+                                    main={(
+                                        <Layout.AuthoringMain
+                                            toolBar={(
+                                                <React.Fragment>
+                                                    <div
+                                                        style={{paddingRight: 16,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 8,
                                                         }}
+                                                    >
+                                                        {
+                                                            this.props.topBar2Widgets
+                                                                .map((Component, i) => {
+                                                                    return (
+                                                                        <Component
+                                                                            key={i}
+                                                                            item={state.itemWithChanges}
+                                                                        />
+                                                                    );
+                                                                })
+                                                        }
+                                                    </div>
+
+                                                    <ButtonGroup align="end">
+                                                        {printPreviewAction.jsxButton()}
+                                                    </ButtonGroup>
+                                                </React.Fragment>
+                                            )}
+                                            authoringHeader={(
+                                                <div>
+                                                    <AuthoringSection
+                                                        fields={state.profile.header}
+                                                        fieldsData={state.fieldsDataWithChanges}
+                                                        onChange={this.handleFieldChange}
+                                                        language={getLanguage(state.itemWithChanges)}
+                                                        userPreferencesForFields={state.userPreferencesForFields}
+                                                        useHeaderLayout
+                                                        setUserPreferencesForFields={this.setUserPreferences}
+                                                        getVocabularyItems={this.getVocabularyItems}
+                                                        toggledFields={state.toggledFields}
+                                                        toggleField={this.toggleField}
+                                                        readOnly={readOnly}
+                                                        validationErrors={state.validationErrors}
                                                     />
-                                                </ButtonGroup>
-                                            </React.Fragment>
-                                        )}
-                                        authoringHeader={(
+                                                </div>
+                                            )}
+                                        >
                                             <div>
                                                 <AuthoringSection
-                                                    fields={state.profile.header}
+                                                    fields={state.profile.content}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
-                                                    useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
                                                     toggledFields={state.toggledFields}
@@ -1190,34 +1307,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                 />
                                             </div>
-                                        )}
-                                    >
-                                        <div>
-                                            <AuthoringSection
-                                                fields={state.profile.content}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
-                                                language={getLanguage(state.itemWithChanges)}
-                                                userPreferencesForFields={state.userPreferencesForFields}
-                                                setUserPreferencesForFields={this.setUserPreferences}
-                                                getVocabularyItems={this.getVocabularyItems}
-                                                toggledFields={state.toggledFields}
-                                                toggleField={this.toggleField}
-                                                readOnly={readOnly}
-                                                validationErrors={state.validationErrors}
-                                            />
-                                        </div>
-                                    </Layout.AuthoringMain>
-                                )}
-                                sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar?.(exposed)}
-                            />
-                        );
-                    }}
-                </WithInteractiveArticleActionsPanel>
+                                        </Layout.AuthoringMain>
+                                    )}
+                                    sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                                    sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                    sidePanelOpen={pinned && OpenWidgetComponent != null}
+                                    sideBar={this.props.getSidebar?.(exposed)}
+                                />
+                            );
+                        }}
+                    </WithInteractiveArticleActionsPanel>
+                </WithKeyBindings>
             </React.Fragment>
         );
     }

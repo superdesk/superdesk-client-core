@@ -162,6 +162,7 @@ declare module 'superdesk-api' {
         availableOffline: boolean;
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
+        keyBindings?: IKeyBindings;
     }
 
     interface IPropsAuthoring<T> {
@@ -178,7 +179,7 @@ declare module 'superdesk-api' {
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
-        getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+        getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
         getAuthoringTopBarWidgets(
             options: IExposedFromAuthoring<T>,
@@ -195,6 +196,8 @@ declare module 'superdesk-api' {
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+
+        getSideWidgetNameAtIndex(item: T, index: number): string;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -430,12 +433,20 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
+    /**
+     * EXAMPLE: `{'ctrl+shift+s': () => save()}`
+     */
+    export interface IKeyBindings {
+        [key: string]: () => void;
+    }
+
     export interface IAuthoringAction {
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
         label: string;
         onTrigger(): void;
+        keyBindings?: IKeyBindings;
     }
 
     export interface IArticleActionBulk {
@@ -623,7 +634,7 @@ declare module 'superdesk-api' {
                 article: IArticle,
                 contentProfile: IContentProfileV2,
                 fieldsData: import('immutable').Map<string, unknown>,
-            ): Promise<Array<IAuthoringAction>>;
+            ): Array<IAuthoringAction>;
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -637,7 +648,7 @@ declare module 'superdesk-api' {
             };
             entities?: {
                 article?: {
-                    getActions?(article: IArticle): Promise<Array<IAuthoringAction>>;
+                    getActions?(article: IArticle): Array<IAuthoringAction>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -892,6 +903,14 @@ declare module 'superdesk-api' {
 
     export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
+    export interface IHighlight extends IBaseRestApiResponse {
+        name: string;
+        auto_insert: string;
+        desks: Array<IDesk['_id']>;
+        groups: Array<string>;
+    }
+
+    export type IHighlightResponse = IRestApiResponse<IHighlight>;
     export interface ITranslation extends IBaseRestApiResponse {
         label: string;
         language: string;
@@ -1220,7 +1239,7 @@ declare module 'superdesk-api' {
         sams_settings?: {
             allowed_sets?: Array<string>;
         };
-        send_to_desk_not_allowed: boolean;
+        send_to_desk_not_allowed?: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {

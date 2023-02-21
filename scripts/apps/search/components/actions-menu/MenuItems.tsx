@@ -64,10 +64,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // actions(except viewing an item) are not allowed for items in legal archive
         if (this.props.item._type !== 'legal_archive') {
-            getArticleActionsFromExtensions(this.props.item).then((actions) => {
-                this.setState({
-                    actionsFromExtensions: actions,
-                });
+            this.setState({
+                actionsFromExtensions: getArticleActionsFromExtensions(this.props.item),
             });
         } else {
             this.setState({

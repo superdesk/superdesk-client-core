@@ -25,11 +25,16 @@ export function registerAuthoringReactFields() {
                         onTrigger: () => {
                             runTansa(contentProfile, fieldsData);
                         },
+                        keyBindings: {
+                            'ctrl+shift+y': () => {
+                                runTansa(contentProfile, fieldsData);
+                            },
+                        },
                     };
 
-                    return Promise.resolve([checkSpellingAction]);
+                    return [checkSpellingAction];
                 } else {
-                    return Promise.resolve([]);
+                    return [];
                 }
             },
             customFieldTypes: [
