@@ -163,7 +163,7 @@ const getMultiEditModal = (getItem: () => IArticle): IAuthoringAction => ({
         showModal(({closeModal}) => (
             <MultiEditToolbarAction
                 onClose={closeModal}
-                selectedArticles={[getItem()]}
+                initiallySelectedArticle={getItem()}
             />
         ));
     },

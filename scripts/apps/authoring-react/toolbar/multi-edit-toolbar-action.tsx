@@ -6,9 +6,10 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {showModal} from '@superdesk/common';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
+import {nameof} from 'core/helpers/typescript-helpers';
 
 interface IProps {
-    selectedArticles: Array<IArticle>;
+    initiallySelectedArticle: IArticle;
     onClose(): void;
 }
 
@@ -21,7 +22,7 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            selectedArticles: this.props.selectedArticles,
+            selectedArticles: [this.props.initiallySelectedArticle],
         };
     }
 
@@ -37,10 +38,10 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <MultiSelect
-                        optionLabel="slugline"
+                        optionLabel={nameof<IArticle>('slugline')}
                         value={this.state.selectedArticles}
                         onChange={(values) => {
-                            this.setState({selectedArticles: values as Array<IArticle>});
+                            this.setState({selectedArticles: values});
                         }}
                         options={
                             sdApi.article.getWorkQueueItems()
