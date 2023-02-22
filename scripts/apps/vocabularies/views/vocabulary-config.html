@@ -1,6 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
-        <sd-search-handler ng-model="localQuery" data-debounce="200"></sd-search-handler>
+        <sd-search-handler ng-model="searchString" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary"
           ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">

@@ -17,7 +17,7 @@ export interface IScope extends IDirectiveScope<void> {
     tags: IVocabulary['tags'];
     loading: boolean;
     mediaTypes: object;
-    localQuery: string;
+    searchString: string;
     openVocabulary(vocabulary: IVocabulary): void;
     downloadVocabulary(vocabulary: IVocabulary): void;
     uploadConfig(): void;
@@ -147,11 +147,11 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * query or if it matches a translation of that vocabulary.
      */
     $scope.filterVocab = function(vocabulary: IVocabulary): boolean {
-        const translationMach = Object.values(vocabulary?.translations?.display_name ?? [])
-            .find((tr: string) => tr.toLowerCase().indexOf($scope.localQuery) != -1);
-        const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.localQuery) != -1;
+        const translationMach = Object.values(vocabulary?.translations?.display_name ?? {})
+            .find((tr: string) => tr.toLowerCase().indexOf($scope.searchString) != -1);
+        const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) != -1;
 
-        if (!$scope.localQuery || displayNameMatch || translationMach != null) {
+        if (!$scope.searchString || displayNameMatch || translationMach != null) {
             return true;
         } else {
             return false;
