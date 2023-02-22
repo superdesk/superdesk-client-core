@@ -11,7 +11,7 @@ function getOther() {
 }
 
 export interface IScope extends IDirectiveScope<void> {
-    filterVocab(vocabulary: IVocabulary): boolean;
+    filterVocabulary(vocabulary: IVocabulary): boolean;
     vocabularies: Array<IVocabulary>;
     vocabulary: any;
     tags: IVocabulary['tags'];
@@ -146,12 +146,12 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * Checks if a vocabulary's display_name matches the search
      * query or if it matches a translation of that vocabulary.
      */
-    $scope.filterVocab = function(vocabulary: IVocabulary): boolean {
+    $scope.filterVocabulary = function(vocabulary: IVocabulary): boolean {
         const translationMach = Object.values(vocabulary?.translations?.display_name ?? {})
-            .find((tr: string) => tr.toLowerCase().indexOf($scope.searchString) != -1);
-        const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) != -1;
+            .find((translation: string) => translation.toLowerCase().indexOf($scope.searchString) !== -1);
+        const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) !== -1;
 
-        if (!$scope.searchString || displayNameMatch || translationMach != null) {
+        if (($scope.searchString?.length ?? 0) > 0 || displayNameMatch || translationMach != null) {
             return true;
         } else {
             return false;
