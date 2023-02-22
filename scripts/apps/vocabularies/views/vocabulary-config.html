@@ -1,6 +1,6 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
-        <sd-search-handler ng-model="query" data-debounce="200"></sd-search-handler>
+        <sd-search-handler ng-model="localQuery" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
         <button class="btn btn--primary"
           ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">
@@ -56,7 +56,7 @@
             <div class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
                 <div
                   class="sd-list-item sd-shadow--z1"
-                  ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id"
+                  ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: filterVocab track by vocabulary._id"
                   data-test-id="vocabulary-item"
                 >
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
