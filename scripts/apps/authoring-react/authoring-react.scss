@@ -55,24 +55,6 @@
     @include text-semibold();
 }
 
-// BackgroundColor
-
-.sd-editor--theme-dark {
-    background-color: rgba(27, 30, 25, 1);
-}
-.sd-editor--theme-turquoise {
-    background-color: rgba(0, 206, 209, 1);
-}
-.sd-editor--theme-military {
-    background-color: rgba(149, 159, 96, 1);
-}
-.sd-editor--theme-blue {
-    background-color: rgba(27, 68, 115, 0.95);
-}
-.sd-editor--theme-natural {
-    background-color: rgba(239, 233, 197, 1);
-}
-
 //Font-family
 
 .sd-editor--font-sans {

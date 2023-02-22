@@ -22,7 +22,7 @@ import {
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
-import {AuthoringSection} from './authoring-section/authoring-section';
+import {AuthoringSection, IAuthoringSectionTheme} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
@@ -47,9 +47,10 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
-import {ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {availableThemes, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@superdesk/common/dist/src/ui/show-modal';
 import ng from 'core/services/ng';
+import classNames from 'classnames';
 
 export function getFieldsData<T>(
     item: T,
@@ -191,7 +192,6 @@ function getInitialState<T extends IBaseRestApiResponse>(
         userPreferencesForFields,
         spellcheckerEnabled,
         validationErrors: validationErrors,
-        openWidget: null,
         allThemes: {
             default: defaultTheme,
             proofreading: proofReadingTheme,
@@ -1066,7 +1066,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: state.openWidget?.name ?? null,
+            sideWidget: this.props.sideWidget?.name ?? null,
             toggleSideWidget: (name) => {
                 if (name == null || state.openWidget?.name === name) {
                     this.setState({
@@ -1253,6 +1253,22 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ...widgetKeybindings,
         };
 
+        const uiTheme: IAuthoringSectionTheme = {
+            backgroundColor: state.activeTheme.theme,
+            textColor: this.textColor(state.activeTheme.theme),
+            fieldTheme: {
+                abstract: {
+                    fontSize: state.activeTheme.abstract,
+                },
+                headline: {
+                    fontSize: state.activeTheme.headline,
+                },
+                body_html: {
+                    fontSize: state.activeTheme.body,
+                },
+            },
+        };
+
         return (
             <React.Fragment>
                 {
@@ -1325,7 +1341,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                                                         <IconButton
                                                             icon="switches"
-                                                            ariaValue={gettext('')}
+                                                            ariaValue={gettext('Configure themes')}
                                                             onClick={() => {
                                                                 showModal(({closeModal}) => {
                                                                     return (
@@ -1342,6 +1358,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             authoringHeader={(
                                                 <div>
                                                     <AuthoringSection
+                                                        uiTheme={uiTheme}
                                                         fields={state.profile.header}
                                                         fieldsData={state.fieldsDataWithChanges}
                                                         onChange={this.handleFieldChange}
@@ -1358,28 +1375,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 </div>
                                             )}
                                         >
-                                            <div className={`
-                                                sd-editor-content__authoring-body-padding
-                                                sd-editor--theme-${state.activeTheme.theme}
-                                                sd-editor--font-${state.activeTheme.font}
-                                            `}>
+                                            <div
+                                                className={classNames(
+                                                    'sd-editor-content__authoring-body-padding',
+                                                    `sd-editor--font-${state.activeTheme.font}`,
+                                                )}
+                                                style={{
+                                                    backgroundColor: availableThemes.find(({name}) => name === state.activeTheme.theme).color,
+                                                }}
+                                            >
                                                 <div>
                                                     <AuthoringSection
-                                                        uiTheme={{
-                                                            backgroundColor: state.activeTheme.theme,
-                                                            textColor: this.textColor(state.activeTheme.theme),
-                                                            fieldThemes: {
-                                                                abstract: {
-                                                                    fontSize: state.activeTheme.abstract,
-                                                                },
-                                                                headline: {
-                                                                    fontSize: state.activeTheme.headline,
-                                                                },
-                                                                body_html: {
-                                                                    fontSize: state.activeTheme.body,
-                                                                },
-                                                            },
-                                                        }}
+                                                        uiTheme={uiTheme}
                                                         fields={state.profile.content}
                                                         fieldsData={state.fieldsDataWithChanges}
                                                         onChange={this.handleFieldChange}

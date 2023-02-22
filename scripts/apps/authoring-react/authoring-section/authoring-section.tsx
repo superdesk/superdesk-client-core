@@ -4,6 +4,17 @@ import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
+export interface IAuthoringSectionTheme {
+    backgroundColor: string;
+    textColor: string;
+
+    fieldTheme: {
+        [fieldId: string]: {
+            fontSize: string | undefined;
+        };
+    };
+}
+
 export interface IPropsAuthoringSection {
     language: string;
     fieldsData: Map<string, unknown>;
@@ -17,16 +28,7 @@ export interface IPropsAuthoringSection {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     validationErrors: IAuthoringValidationErrors;
-    uiTheme?: {
-        backgroundColor: string;
-        textColor: string;
-
-        fieldThemes: {
-            [fieldId: string]: {
-                fontSize: string | undefined;
-            };
-        };
-    };
+    uiTheme?: IAuthoringSectionTheme;
 }
 
 /**
@@ -61,11 +63,7 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
 
                         return (
                             <AuthoringSectionField
-                                uiTheme={{
-                                    backgroundColor: this.props.uiTheme.backgroundColor,
-                                    textColor: this.props.uiTheme.textColor,
-                                    fieldTheme: this.props.uiTheme.fieldThemes,
-                                }}
+                                uiTheme={this.props.uiTheme}
                                 key={field.id}
                                 field={field}
                                 fieldsData={this.props.fieldsData}

@@ -33,7 +33,7 @@ import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE} from '../constants';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
@@ -135,10 +135,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
-    uiTheme?: {
-        fontSize: string;
-        textColor: string;
-    };
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
 }
 
 interface IState {
@@ -636,7 +633,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 <div
                     className="focus-screen"
                     onMouseDown={this.focus}
-                    style={{fontSize: uiThemeFontSize(), color: this.props.uiTheme.textColor}}>
+                    style={{fontSize: uiThemeFontSize(), color: this.props.uiTheme.textColor}}
+                >
                     <Editor
                         editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
