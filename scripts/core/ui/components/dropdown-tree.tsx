@@ -89,11 +89,8 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             }}
                         >
                             <div
+                                className="custom-dropdown__menu"
                                 style={{
-                                    background: '#F8F8F8',
-                                    maxHeight: 400,
-                                    overflow: 'auto',
-                                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1)',
                                     ...(this.props.wrapperStyles || {}),
                                 }}
                             >

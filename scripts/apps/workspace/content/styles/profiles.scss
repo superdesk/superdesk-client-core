@@ -11,10 +11,16 @@ sd-content-schema-editor {
 
         ul.pills-list {
             padding-top: 10px;
-
-            > li {
+            .vocabulary-field-type {
+                font-weight: 300;
+                font-style: italic;
+            }
+            > li.schema-item {
+                cursor: grab;
+                border: 1px solid var(--sd-colour-line--x-light);
                 padding: 20px;
                 margin-bottom: 12px;
+                border-radius: 6px;
                 .header {
                     margin-bottom: 10px;
 
@@ -48,6 +54,7 @@ sd-content-schema-editor {
                 }
 
                 &:hover {
+                    background: var(--sd-item__main-Bg);
                     .header button {
                         opacity: 1
                     }
@@ -66,6 +73,9 @@ sd-content-schema-editor {
                     }
                 }
                 &.ui-sortable-helper {
+                    border-color: var(--sd-colour-interactive--alpha-50);
+                    box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.24), 0 0 1px hsla(0, 0%, 0%, 0.1);
+                    cursor: grabbing !important;
                     .dropdown--add-more {
                         display: none;
                     }
@@ -73,6 +83,7 @@ sd-content-schema-editor {
             }
 
             .dropdown--add-more {
+                cursor: grabbing;
                 position: absolute;
                 margin-left: -14px;
                 left: 50%;

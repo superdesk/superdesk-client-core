@@ -1,7 +1,9 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
-import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
+import {
+    element, by, browser, protractor, ElementFinder, promise as wdpromise, ExpectedConditions as EC,
+} from 'protractor';
+import {nav, click, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList, hover} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
@@ -17,8 +19,8 @@ class Monitoring {
     showSearch: () => void;
     createItemAction: (action: any) => void;
     createFromDeskTemplate: () => any;
-    getGroup: (group: any) => any;
-    getGroups: any;
+    getGroup: (group: number) => any;
+    getGroups: () => any;
     getItem: (group: any, item: any) => any;
     getGroupItems: (group: any) => any;
     actionOnDeskSingleView: () => void;
@@ -52,6 +54,7 @@ class Monitoring {
     actionOnItem: (action: any, group: any, item: any, useFullButtonText?: any, confirm?: any) => void;
     getMenuActionElement: (action: any, group: any, item: any) => any;
     actionOnItemSubmenu: (action: any, submenu: any, group: any, item: any) => void;
+    editItem: (group: any, item: any) => void;
     selectItem: (group: any, item: any) => any;
     selectSpikedItem: (item: any) => any;
     selectGivenItem: (item: any) => any;
@@ -176,15 +179,17 @@ class Monitoring {
          */
         this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
 
-        this.getGroup = function(group) {
+        this.getGroup = function(group: number) {
             return this.getGroups().get(group);
         };
 
         this.getGroups = function() {
-            browser.sleep(3000); // due to debouncing, loading does not start immediately
-            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+            const groups = element.all(by.repeater('group in aggregate.groups'));
 
-            return element.all(by.repeater('group in aggregate.groups'));
+            browser.sleep(3000); // due to debouncing, loading does not start immediately
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 2000);
+
+            return groups;
         };
 
         /**
@@ -231,7 +236,9 @@ class Monitoring {
         };
 
         this.getDeskSingleViewTitle = function() {
-            return element.all(by.css('[ng-if="monitoring.singleGroup.singleViewType === \'desk\'"]')).get(0).getText();
+            return element.all(by.css('[ng-if="monitoring.singleGroup.singleViewType === \'desk\'"]')).get(0)
+                .getText()
+                .then((text) => text.replace(/\n/g, ' '));
         };
 
         this.actionOnStageSingleView = function() {
@@ -439,6 +446,11 @@ class Monitoring {
             if (confirm) {
                 acceptConfirm();
             }
+        };
+
+        this.editItem = (group, item) => {
+            this.actionOnItem('Edit', group, item);
+            browser.sleep(2000); // wait for authoring to be loaded
         };
 
         this.getMenuActionElement = function(action, group, item) {
@@ -770,26 +782,29 @@ class Monitoring {
          */
         this.checkMarkedForHighlight = function(highlight, group, item) {
             const crtItem = this.getItem(group, item);
-            const highlightsPreviewTriggerButton = el(['highlights-indicator'], null, crtItem);
+            const highlightsPreviewTriggerButton = crtItem.element(by.className('highlights-box'))
+                .element(by.className('dropdown__toggle'));
 
-            browser.wait(ECE.visibilityOf(highlightsPreviewTriggerButton));
+            // first click doesn't do it, not sure why
+            click(highlightsPreviewTriggerButton);
+            click(highlightsPreviewTriggerButton, 'Can\'t click on highlights button');
 
-            highlightsPreviewTriggerButton.click();
+            const highlightList = el(['highlights-list']);
 
-            var highlightList = el(['highlights-list']);
-
-            browser.wait(ECE.visibilityOf(highlightList));
+            browser.wait(EC.visibilityOf(highlightList), 2000, 'Highlights popup is not visible');
 
             expect(highlightList.getText()).toContain(highlight);
+
+            this.closeHighlightsPopup();
         };
 
         /**
          * Close mark for highlights popup
          */
         this.closeHighlightsPopup = () => {
-            element(by.className('highlights-list-menu'))
-                .element(by.className('icon-close-small'))
-                .click();
+            const closeBtn = element(by.className('highlights-list-menu')).element(by.className('icon-close-small'));
+
+            click(closeBtn, 'Can\'t click on close in highlights popup');
         };
 
         /**
@@ -968,7 +983,7 @@ class Monitoring {
          */
         this.getSendToDropdown = () => {
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
                 dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
             return dropdownSelected;

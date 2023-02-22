@@ -3,13 +3,13 @@
 # Grisha Kostyuk <naspeh@ya.ru>, 2016
 # Iryna Cherednychenko <cia@ukrinform.com>, 2016
 # Olga Budnik <olga.budnik.lo@gmail.com>, 2016
-# Serg Yakovlev <smy@industrialinnovationgroup.com>, 2016-2017,2019
+# Serg Yakovlev <smy@industrialinnovationgroup.com>, 2016-2017,2019,2021
 # Юрий <hrabovetskyy@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-01-14 17:35+0000\n"
-"Last-Translator: Olga Budnik <olga.budnik.lo@gmail.com>\n"
+"PO-Revision-Date: 2015-05-07 07:31+0000\n"
+"Last-Translator: Serg Yakovlev <smy@industrialinnovationgroup.com>, 2016-2017,2019,2021\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/sourcefabric/superdesk/language/uk_UA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -85,7 +85,7 @@ msgstr "'має бути з переліку'"
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:39
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:141
 msgid "'not scheduled yet'"
-msgstr ""
+msgstr "ще не заплановано"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:63
 msgid "(Global)"
@@ -974,7 +974,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr ""
+msgstr "Всі елементи відкриті"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
@@ -1646,14 +1646,14 @@ msgstr ""
 
 #: scripts/core/editor3/components/links/LinkInput.tsx:48
 msgid "Attachment"
-msgstr ""
+msgstr "Вкладення"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:122
 #: scripts/apps/authoring/attachments/attachments.ts:146
 #: scripts/apps/authoring/views/article-edit.html:837
 #: scripts/apps/workspace/content/constants.ts:74
 msgid "Attachments"
-msgstr ""
+msgstr "Вкладення"
 
 #: ../superdesk-planning/client/utils/index.ts:665
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:189
@@ -1682,7 +1682,7 @@ msgstr "Токен аутентифікації"
 
 #: scripts/apps/users/views/edit-form.html:50
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #: scripts/apps/users/views/edit-form.html:40
 msgid "Author info"
@@ -1762,7 +1762,7 @@ msgstr "Назад / Відмінити"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:11
 msgid "Back to original view"
-msgstr ""
+msgstr "Назад до початкового вигляду"
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
@@ -2215,7 +2215,7 @@ msgstr ""
 
 #: scripts/core/auth/login-modal.html:85
 msgid "Change password"
-msgstr ""
+msgstr "Змінити пароль"
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
@@ -2503,7 +2503,7 @@ msgstr ""
 #: scripts/core/editor3/components/toolbar/index.tsx:225
 #: scripts/core/editor3/highlightsConfig.ts:11
 msgid "Comment"
-msgstr ""
+msgstr "Коментар"
 
 #: scripts/apps/authoring/comments/comments.ts:141
 msgid "Comments"
@@ -2897,7 +2897,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:579
 msgid "Corrections"
-msgstr ""
+msgstr "Виправлення"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.jsx:24
 #: scripts/core/ui/components/Form/LinkInput.tsx:27
@@ -3441,7 +3441,7 @@ msgstr "Дата-місце"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:154
 msgid "Dates"
-msgstr ""
+msgstr "Дати"
 
 #: scripts/extensions/datetimeField/dist/src/extension.js:33
 #: scripts/extensions/datetimeField/src/extension.tsx:46
@@ -3528,7 +3528,7 @@ msgstr ""
 #: scripts/core/editor3/components/comments/Comment.tsx:61
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:52
 msgid "Delete"
-msgstr ""
+msgstr "Видалити"
 
 #: ../superdesk-planning/client/components/Tooltips.jsx:12
 #: ../superdesk-planning/client/constants/tooltips.js:7
@@ -3962,7 +3962,7 @@ msgstr "Виконано"
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:164
 #: scripts/apps/authoring/attachments/AttachmentsList.tsx:63
 msgid "Download"
-msgstr ""
+msgstr "Завантажити"
 
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:18
 #: ../superdesk-planning/client/utils/index.ts:414
@@ -4718,7 +4718,7 @@ msgid ""
 "Error: Please re-assign new format for each destination as the changed "
 "subscriber type has formats which are not supported by existing "
 "destination(s)."
-msgstr "Помилка: Визначте новий формат для кожного пункту призначення як зміненого типу передплатника, що має формати, які не підтримуються існуючими призначеннями."
+msgstr ""
 
 #: scripts/core/itemList/itemList.ts:110
 msgid "Error: Slugline required."
@@ -5456,7 +5456,7 @@ msgstr "Ознака передперегляду"
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeatureLabel.jsx:9
 #: ../superdesk-planning/client/components/fields/editor/Featured.tsx:14
 msgid "Featured"
-msgstr ""
+msgstr "Відомий"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:8
 msgid "Featured Media"
@@ -5587,7 +5587,7 @@ msgstr "І'мя файла/рядок"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:166
 msgid "File types"
-msgstr ""
+msgstr "Типи файлів"
 
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/EventFiles.jsx:20
 msgid "Files"
@@ -5627,7 +5627,7 @@ msgstr "Запис фільтру"
 
 #: scripts/apps/content-filters/views/manage-filters.html:133
 msgid "Filter Test"
-msgstr ""
+msgstr "Тест фільтру"
 
 #: scripts/apps/content-filters/views/production-test.html:4
 msgid "Filter Test Results"
@@ -6536,7 +6536,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:41
 msgid "Is Default"
-msgstr ""
+msgstr "за замовчуванням"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Iso"
@@ -6857,7 +6857,7 @@ msgstr ""
 
 #: scripts/apps/search/views/search-filters.html:18
 msgid "Languages"
-msgstr ""
+msgstr "Мови"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:76
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:11
@@ -8012,7 +8012,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:34
 msgid "No recent templates."
-msgstr ""
+msgstr "Немає нових шаблонів"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:260
 msgid "No related planning items."
@@ -8596,7 +8596,7 @@ msgstr "Перегляд"
 
 #: scripts/apps/templates/views/templates.html:48
 msgid "Owner"
-msgstr ""
+msgstr "Власник"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:77
 msgid "P"
@@ -9346,7 +9346,7 @@ msgstr "Ім'я постачальника"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:72
 msgid "Provider Type"
-msgstr ""
+msgstr "Тип постачальника"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:504
 msgid "Provider saved!"
@@ -9620,7 +9620,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:219
 msgid "Rearrange Groups"
-msgstr ""
+msgstr "Переставити групи"
 
 #: scripts/apps/dashboard/views/workspace.html:5
 msgid "Rearrange widgets"
@@ -9869,7 +9869,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
-msgstr ""
+msgstr "Видалити Пошук постачальника"
 
 #: scripts/apps/templates/views/templates.html:37
 msgid "Remove Template"
@@ -10152,7 +10152,7 @@ msgstr "Скинути пароль"
 
 #: scripts/core/editor3/components/comments/CommentPopup.tsx:173
 msgid "Resolve"
-msgstr ""
+msgstr "Дозволити"
 
 #: scripts/apps/authoring/track-changes/views/inline-comments-widget.html:4
 msgid "Resolved"
@@ -10519,7 +10519,7 @@ msgstr ""
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:129
 msgid "Save changes"
-msgstr ""
+msgstr "Зберегти зміни"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:269
 #: ../superdesk-planning/client/actions/planning/ui.js:289
@@ -11862,7 +11862,7 @@ msgstr ""
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:15
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-preview.html:6
 msgid "Subtitle"
-msgstr ""
+msgstr "Підзаголовок"
 
 #: scripts/apps/authoring/track-changes/suggestions.ts:91
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:67
@@ -13473,7 +13473,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:580
 msgid "Updates"
-msgstr ""
+msgstr "Оновлення"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:65
 msgid ""
@@ -14222,7 +14222,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:56
 msgid "and"
-msgstr ""
+msgstr "та"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:45
 msgid "and '{{ user }}'"
@@ -14372,7 +14372,7 @@ msgstr "створити"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:188
 msgid "created"
-msgstr ""
+msgstr "створено"
 
 #: ../superdesk-planning/client/actions/agenda.ts:232
 msgid "created  planning item."
@@ -14723,7 +14723,7 @@ msgstr ""
 #: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195
 msgid "image"
-msgstr ""
+msgstr "зображення"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:7
 msgid "in 1 h"
@@ -14956,7 +14956,7 @@ msgstr "жоден"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:650
 msgid "notes"
-msgstr ""
+msgstr "нотатки"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "notifications"
@@ -15217,11 +15217,11 @@ msgstr "пошук"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
-msgstr ""
+msgstr "пароль Пошуку постачальника"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:110
 msgid "search provider username"
-msgstr ""
+msgstr "шукати імя постачальника"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:144
 msgid "sec"
@@ -15282,11 +15282,11 @@ msgstr "Таке ім'я користувача вже використане "
 
 #: scripts/apps/search/components/MediaInfo.tsx:26
 msgid "source"
-msgstr ""
+msgstr "джерело"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:90
 msgid "source of the search provider"
-msgstr ""
+msgstr "джерело з пошуку постачальника"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"

@@ -32,7 +32,7 @@
         <div ng-if="vm.current_tab === 'content'" sd-media-preview data-item="item" class="sd-wrap-helper"></div>
         <div ng-if="vm.current_tab === 'metadata'" sd-media-metadata data-item="item" class="sd-wrap-helper"></div>
         <div ng-if="vm.current_tab === 'related' && showRelatedTab" class="preview-tab--enable-scrolling">
-            <sd-related-view item="item" related-items="relatedItems"></sd-related-view>
+            <sd-related-view class="sd-display--block sd-padding--3" item="item" related-items="relatedItems"></sd-related-view>
         </div>
         <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item" class="sd-wrap-helper"></div>
         <div ng-if="vm.current_tab === 'used' && links.length" sd-media-used data-item="item" class="sd-wrap-helper" data-links="links"></div>

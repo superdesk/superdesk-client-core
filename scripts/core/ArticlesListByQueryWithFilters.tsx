@@ -15,6 +15,8 @@ import {MultiSelectHoc} from './MultiSelectHoc';
 import {IArticleActionBulkExtended, MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
+import {ButtonGroup} from 'superdesk-ui-framework';
+import {SubNav} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
@@ -199,8 +201,8 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
             // TODO: Implement compact mode when multi select component is available in UI framework.
 
             return (
-                <div>
-                    <div className="button-list">
+                <div className="sd-display--contents">
+                    <ButtonGroup padded={true} align="start">
                         {options.map(({label, icon, selected, onSelect}) => (
                             <button
                                 key={label}
@@ -220,7 +222,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                 }
                             </button>
                         ))}
-                    </div>
+                    </ButtonGroup>
                 </div>
             );
         };
@@ -228,20 +230,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         const sortFilterToolbar = (
             <ResizeObserverComponent>
                 {(dimensions) => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            height: toolbar2Height,
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            borderTop: '1px solid #d5d5d5',
-                            borderBottom: '1px solid #d5d5d5',
-                            paddingTop: 8,
-                            paddingBottom: 8,
-                            paddingLeft: padding,
-                            paddingRight: padding,
-                        }}
-                    >
+                    <SubNav zIndex={4}>
                         {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
 
                         <SortBar
@@ -251,7 +240,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                 this.setState({sortOption});
                             }}
                         />
-                    </div>
+                    </SubNav>
                 )}
             </ResizeObserverComponent>
         );
@@ -315,25 +304,15 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         return (
                             <ResizeObserverComponent>
                                 {(dimensions) => (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            height: toolbar2Height,
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            backgroundColor: '#d2e5ed',
-                                            paddingLeft: padding,
-                                            paddingRight: padding,
-                                        }}
-                                    >
-                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <div className="sliding-toolbar sliding-toolbar--static">
+                                        <div className="sliding-toolbar__inner">
                                             <Button
                                                 text={gettext('Cancel')}
                                                 onClick={() => {
                                                     multiSelectOptions.unselectAll();
                                                 }}
                                             />
-                                            <h4 style={{marginLeft: 20}}>
+                                            <h4 className="sliding-toolbar__info-text">
                                                 {gettextPlural(
                                                     articles.length,
                                                     '1 item selected',
@@ -359,18 +338,10 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                     const header = (itemsCount: number): JSX.Element => {
                         return (
                             <div data-test-id="articles-list--toolbar">
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        paddingLeft: padding,
-                                        paddingRight: padding,
-                                    }}
-                                >
+                                <SubNav zIndex={5}>
                                     <div className="space-between">
                                         <h3
                                             className="subnav__page-title sd-flex-no-grow"
-                                            style={{padding: 0, marginRight: 10}}
                                             data-test-id="articles-list--heading"
                                         >
                                             {this.props.heading}
@@ -390,7 +361,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                                     {
                                         extraButtons == null ? null : (
-                                            <div style={{marginLeft: 10}}>
+                                            <ButtonGroup padded={true} align="end">
                                                 {
                                                     extraButtons.map(({label, onClick}) => (
                                                         <Button
@@ -401,10 +372,10 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                                         />
                                                     ))
                                                 }
-                                            </div>
+                                            </ButtonGroup>
                                         )
                                     }
-                                </div>
+                                </SubNav>
 
                                 {(() => {
                                     const articles = multiSelectOptions.selected.toArray();

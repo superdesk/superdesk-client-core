@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import {IModalFooterProps} from 'superdesk-api';
 
 export class ModalFooter extends React.PureComponent<IModalFooterProps> {
@@ -13,9 +14,13 @@ export class ModalFooter extends React.PureComponent<IModalFooterProps> {
             ? {}
             : {justifyContent: 'flex-end'};
 
+        const classes = classNames('modal__footer', {
+            'modal__footer--flex': flex,
+        });
+
         return (
             <div
-                className={flex ? 'modal-footer--flex' : 'modal__footer'}
+                className={classes}
                 data-test-id="modal-footer"
                 style={styles}
             >

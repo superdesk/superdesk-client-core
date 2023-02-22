@@ -5,54 +5,17 @@ import {
     IContentProfileV2,
     IDropdownConfigVocabulary,
     IEditor3Config,
-    RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
 import {
     CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
-    SHOW_PART_VOCABULARY_ID,
     STATUS_VOCABULARY_ID,
 } from '../constants';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
-
-export const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
-    'uppercase',
-    'lowercase',
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'ordered list',
-    'unordered list',
-    'quote',
-    'link',
-    'embed',
-    'media',
-    'underline',
-    'italic',
-    'bold',
-    'annotation',
-    'comments',
-    'pre',
-    'superscript',
-    'subscript',
-    'strikethrough',
-];
-
-const editor3TestConfig: IEditor3Config = {
-    editorFormat: testEditorFormat,
-    minLength: undefined,
-    maxLength: undefined,
-    cleanPastedHtml: false,
-    singleLine: false,
-    disallowedCharacters: [],
-};
 
 const editor3TestConfigWithoutFormatting: IEditor3Config = {
     editorFormat: [],
@@ -61,6 +24,7 @@ const editor3TestConfigWithoutFormatting: IEditor3Config = {
     cleanPastedHtml: false,
     singleLine: true,
     disallowedCharacters: [],
+    showStatistics: false,
 };
 
 const titleField: IAuthoringFieldV2 = {
@@ -83,11 +47,16 @@ const technicalTitle: IAuthoringFieldV2 = {
     },
 };
 
+const contentFieldConfig: IEditor3Config = {
+    ...editor3TestConfigWithoutFormatting,
+    singleLine: false,
+};
+
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
     name: gettext('Content'),
     fieldType: 'editor3',
-    fieldConfig: editor3TestConfig,
+    fieldConfig: contentFieldConfig,
 };
 
 const itemTypesConfig: IDropdownConfigVocabulary = {
@@ -132,29 +101,6 @@ const plannedDurationField: IAuthoringFieldV2 = {
     },
 };
 
-const additionalNotesField: IAuthoringFieldV2 = {
-    id: 'additional_notes',
-    name: gettext('Additional notes'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const currentShowCode = 'ABC'; // FINISH: remove test data
-
-const showPartConfig: IDropdownConfigVocabulary = {
-    source: 'vocabulary',
-    vocabularyId: SHOW_PART_VOCABULARY_ID,
-    multiple: false,
-    filter: (item) => item['show_reference'] == null || item['show_reference'] === currentShowCode,
-};
-
-const showPartField: IAuthoringFieldV2 = {
-    id: 'show_part',
-    name: gettext('Show part'),
-    fieldType: 'dropdown',
-    fieldConfig: showPartConfig,
-};
-
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
@@ -190,7 +136,6 @@ export const rundownItemContentProfile: IContentProfileV2 = {
     header: OrderedMap([
         [technicalTitle.id, technicalTitle],
         [itemTypeField.id, itemTypeField],
-        [showPartField.id, showPartField],
         [cameraField.id, cameraField],
         [statusField.id, statusField],
         [durationField.id, durationField],
@@ -199,7 +144,6 @@ export const rundownItemContentProfile: IContentProfileV2 = {
     content: OrderedMap([
         [titleField.id, titleField],
         [contentField.id, contentField],
-        [additionalNotesField.id, additionalNotesField],
         [subitemsField.id, subitemsField],
         [subitemAttachments.id, subitemAttachments],
     ]),

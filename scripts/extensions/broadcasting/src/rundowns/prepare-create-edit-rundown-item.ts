@@ -14,20 +14,27 @@ const {tryLocking, fixPatchResponse, fixPatchRequest} = superdesk.helpers;
 const {generatePatch} = superdesk.utilities;
 const {httpRequestJsonLocal} = superdesk;
 
-interface ICreate extends IWithAuthoringReactKey {
+interface IRundownItemActionBase extends IWithAuthoringReactKey {
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
+}
+
+interface ICreate extends IRundownItemActionBase {
     type: 'create';
     rundownId: IRundown['_id'];
     initialData: Partial<IRundownItem>;
     authoringStorage: IAuthoringStorage<IRundownItem>;
 }
 
-interface IEdit extends IWithAuthoringReactKey {
+interface IEdit extends IRundownItemActionBase {
     type: 'edit';
     itemId: IRundownItem['_id'];
     authoringStorage: IAuthoringStorage<IRundownItem>;
 }
 
-interface IPreview extends IWithAuthoringReactKey {
+interface IPreview extends IRundownItemActionBase {
     type: 'preview';
     itemId: IRundownItem['_id'];
     authoringStorage: IAuthoringStorage<IRundownItem>;
@@ -172,8 +179,12 @@ function getRundownItemCreationAuthoringStorage(
                 rundown: rundownId, // read-only, but needs to be sent when creating an item
             };
 
+            if (itemToSave.duration == null) {
+                itemToSave.duration = itemToSave.planned_duration;
+            }
+
             // same logic is applied when creating a rundown item inside the template
-            readOnlyFields.forEach((field) => {
+            readOnlyFields.toArray().forEach((field) => {
                 /**
                  * Remove read-only fields to avoid getting an error from the server.
                  * Since it's read-only it would contain an empty value anyway.
@@ -215,6 +226,7 @@ export function prepareForCreation(
             onSave,
         ),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: null,
     };
 }
 
@@ -227,6 +239,7 @@ export function prepareForEditing(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: null,
     };
 }
 
@@ -239,5 +252,6 @@ export function prepareForPreview(
         itemId: id,
         authoringStorage: getRundownItemAuthoringStorage(id),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
+        sideWidget: null,
     };
 }

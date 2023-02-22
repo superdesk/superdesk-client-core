@@ -1,5 +1,6 @@
 <button title="{{ :: activity.label | translate }}"
     ng-if=":: !activity.dropdown"
+    class="icn-btn"
     ng-click="run(activity, $event)">
     <i class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show=":: activity.icon"></i>
     <span>{{ :: activity.label | translate }}</span>

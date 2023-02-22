@@ -3,7 +3,7 @@
 
 .template-card {
     .card-box__header--dark {
-        background-color: #747c87;
+        background-color: hsl(215, 8%, 49%);
     }
 
     .card-box__content {
@@ -15,15 +15,6 @@
         .creation-time {
             display: inline-block;
         }
-    }
-}
-
-.header {
-    .sortbar {
-        .lab { margin-top: -2px; }
-        margin: 3px 10px 0 0;
-        padding: 0 5px 0 0;
-        border-right: 2px dotted #bcbcbc;
     }
 }
 
@@ -117,8 +108,7 @@
     }
 
     .template-editor {
-        border-top: 1px solid rgba(0,0,0,0.1);
-        background-color: $white;
+        border-top: 1px solid var(--sd-colour-line--medium);
         .authoring-header__general-info {
             display: none;
         }
@@ -177,12 +167,12 @@
                 display: none;
                 right: 5px;
                 top: 6px;
-                @include opacity(0);
-                @include transition(all .5s);
+                opacity: 0;
+                transition: all .5s ease;
             }
             &:hover {
                 cursor: pointer;
-                background: #e0e0e0;
+                background: var(--sd-item__main-Bg--hover);
                 i {
                     @include opacity(70);
                 }
@@ -193,8 +183,8 @@
                 }
             }
             &.selected {
-                background: #333333;
-                color: #e8e8e8;
+                background: hsl(214, 13%, 20%);
+                color: hsl(214, 13%, 91%);
             }
         }
     }

@@ -30,20 +30,19 @@
         }
         .header {
             height: 110px;
-            background: #2c2c2c;
-            padding: 15px;
+            background: var(--sd-colour-bg--02);
+            padding: 16px;
             color: $white;
-            @include border-box();
-            @include border-radius(2px 2px 0 0);
+            border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
             .title {
                 padding-bottom: 6px;
-                @include text-semibold();
+                font-weight: 500;
             }
             .sub-title {
-                color: $gray;
+                color: hsla(0, 0%, 100%, 0.5);
                 .text {
-                    color: $grayLight;
-                    @include text-semibold();
+                    color: hsla(0, 0%, 100%, 0.75);
+                    font-weight: 500;
                 }
             }
         }
@@ -67,28 +66,28 @@
             }
         }
         .ingested-count {
-            padding: 10px 15px;
+            padding: 10px 16px;
             text-align: center;
-            border-bottom: 1px  solid #e3e3e3;
+            border-bottom: 1px  solid var(--sd-colour-line--light);
             .count {
                 font-size: 30px;
                 line-height: 34px;
-                @include text-bold();
+                font-weight: 500;
             }
             .text {
                 font-size: 11px;
-                color: $gray;
+                color: var(--color-text-light);
             }
         }
         .update-time {
             padding: 0 15px 10px 15px;
-            border-bottom: 1px  solid #e3e3e3;
+            border-bottom: 1px  solid var(--sd-colour-line--light);
             .text {
                 margin-top: 10px;
                 font-size: 12px;
                 text-transform: uppercase;
-                color: $gray;
-                @include text-semibold();
+                color: var(--color-text-light);
+                font-weight: 500;
             }
             .time {
                 font-size: 11px;
@@ -109,10 +108,10 @@
                     background: none;
                 }
                 i {
-                    @include opacity(60);
+                    opacity: 0.6;
                 }
                 .chevron {
-                    background-color: #fff;
+                    background-color: hsl(0, 0%, 100%);
                 }
             }
         }

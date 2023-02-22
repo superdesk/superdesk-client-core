@@ -1,1 +1,7 @@
-<ul sd-workspace-sidenav ng-class="{'authoring-active': superdesk.flags.authoring, 'list-hidden': superdesk.flags.hideMonitoring}" data-test-id="workspace-navigation"></ul>
+<ul
+    sd-workspace-sidenav
+    ng-class="{'authoring-active': superdesk.flags.authoring, 'full-width-toggle-available': fullWidthConfig.enabled && fullWidthConfig.allowed, 'list-hidden': fullWidthConfig.enabled && fullWidthConfig.allowed ? fullWidthEnabled : superdesk.flags.hideMonitoring}"
+    data-test-id="workspace-navigation"
+></ul>
+
+

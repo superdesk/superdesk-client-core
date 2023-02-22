@@ -16,7 +16,6 @@
             flex-direction: column;
             overflow-y: auto;
         }
-        .modal__header,
         .modal__footer {
             display: block;
         }
@@ -31,19 +30,17 @@
 // > used for upload avatar task
 $split-modal-sidebar : 200px;
 .split-popup {
-    //min-height: 270px;
-    height: 400px;
-    max-height: 400px;
+    min-height: 400px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr;
     .sidebar {
-        position: absolute;
-        top:0; left: 0; bottom: 0;
         width: $split-modal-sidebar;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid var(--sd-colour-line--medium);
+        grid-column: 1 / 2;
     }
     .main {
-        position: absolute;
-        top:0; right: 0; bottom: 0;
-        left: $split-modal-sidebar;
+        grid-column: 2 / 3;
     }
 }
 
@@ -139,7 +136,7 @@ $split-modal-sidebar : 200px;
         flex: 0 0 auto;
         padding: 20px;
         & + .main {
-            border-left: 1px solid #e0e0e0;
+            border-left: 1px solid var(--sd-colour-line--light);
         }
     }
     .main {
@@ -147,7 +144,7 @@ $split-modal-sidebar : 200px;
     }
     .main + .main {
         //left: 50%; right: 0;
-        border-left: 1px solid #e0e0e0;
+        border-left: 1px solid var(--sd-colour-line--light);
     }
     .content {
         padding: 2rem;
@@ -318,26 +315,30 @@ $split-modal-sidebar : 200px;
     }
 }
 
-$sd-leftNav-borderColor: #dedede;
-$sd-leftNavBtn-bgHoverColor: rgba(94,169,200,0.2);
-$sd-leftNavBtn-bgActiveColor: rgba(94,169,200,0.1);
-$sd-leftNavBtn-borderActive: 4px solid rgba(94,169,200,1);
+
+$sd-leftNav-bgColor: var(--sd-colour-panel-bg--100);
+$sd-leftNav-borderColor: var(--sd-colour-line--light);
+$sd-leftNavBtn-bgHoverColor: var(--sd-colour-interactive--alpha-20);
+$sd-leftNavBtn-bgActiveColor: var(--sd-colour-interactive--alpha-10);
+$sd-leftNavBtn-borderActive: 4px solid var(--sd-colour-interactive--active);
+$sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
 
 .modal__body--with-navigation {
     display: flex;
     padding: 0 !important;
 
     .modal__navigation {
-        background: $white;
+        background: $sd-leftNav-bgColor;
         border-right: 1px solid $sd-leftNav-borderColor;
 
         li {
             button {
                 font-size: 1.3rem;
-                color: $grayDark;
+                color: $sd-text;
                 padding: 1.6rem 3rem 1.6rem 3rem;
                 text-align: left;
                 min-width: 200px;
+                transition: $sd-leftNavBtn-transition;
             }
             &:hover {
                 background-color: $sd-leftNavBtn-bgHoverColor;
@@ -364,7 +365,7 @@ $sd-leftNavBtn-borderActive: 4px solid rgba(94,169,200,1);
 
         .table-list {
             height: calc(100% - 96px);
-            overflow: auto;
+            overflow: auto !important;
         }
 
         table {
@@ -373,11 +374,12 @@ $sd-leftNavBtn-borderActive: 4px solid rgba(94,169,200,1);
     }
 }
 
-.modal-footer--flex {
-    border: 1px solid var(--color-line__modal);
-    padding: 0.8rem 1.6rem;
-
+.modal-footer--flex,
+.modal__footer--flex {
+    // border: 1px solid var(--color-line__modal);
+    // padding: $sd-base-increment $sd-base-increment * 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: $sd-base-increment / 2;
 }

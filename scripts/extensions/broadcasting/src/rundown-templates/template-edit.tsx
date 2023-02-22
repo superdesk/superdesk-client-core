@@ -97,6 +97,13 @@ interface IPropsReadOnly {
 
 type IProps = IPropsEditable | IPropsReadOnly;
 
+interface IState {
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
+}
+
 export type IRundownItemAction = ICreate | IEdit | IPreview | null;
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
@@ -114,14 +121,14 @@ const readOnlyFields = allFields.filter((field) => field.fieldConfig.readOnly ==
 function dropReadOnlyFields(item: IRundownItemBase): IRundownItemBase {
     const shallowCopy = {...item};
 
-    readOnlyFields.forEach((field) => {
+    readOnlyFields.toArray().forEach((field) => {
         delete (shallowCopy as {[key: string]: any})[field.id];
     });
 
     return shallowCopy;
 }
 
-export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
+export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
     private templateFieldsInitial: Partial<IRundownTemplateBase>;
 
     constructor(props: IProps) {
@@ -135,6 +142,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         this.handleCancelling = this.handleCancelling.bind(this);
 
         this.templateFieldsInitial = {};
+
+        this.state = {
+            sideWidget: null,
+        };
     }
 
     private getRundownItems() {
@@ -156,17 +167,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
             this.props.onRundownItemActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
                     if (!this.props.readOnly) {
-                        const itemWithDuration: Partial<IRundownItemBase> = {
-                            ...val.data,
-                            duration: val.data.planned_duration,
-                        };
-
                         const currentItems = this.getRundownItems();
 
                         this.props.onChange({
                             items: arrayInsertAtIndex(
                                 currentItems,
-                                dropReadOnlyFields(itemWithDuration as unknown as IRundownItemBase),
+                                dropReadOnlyFields(val.data as unknown as IRundownItemBase),
                                 insertAtIndex ?? currentItems.length,
                             ),
                         });
@@ -517,6 +523,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                 authoringStorage={rundownItemAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
+                                                sideWidget={this.state.sideWidget}
+                                                onSideWidgetChange={(sideWidget) => {
+                                                    this.setState({sideWidget});
+                                                }}
                                                 getInlineToolbarActions={({
                                                     hasUnsavedChanges,
                                                     save,
@@ -579,7 +589,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                     }
 
                                                     return {
-                                                        readOnly: rundownItemAction.type !== 'edit',
+                                                        readOnly:
+                                                            rundownItemAction.type !== 'edit'
+                                                            && rundownItemAction.type !== 'create',
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
                                                         actions,
                                                     };

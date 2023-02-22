@@ -62,7 +62,7 @@ export class ToggleBox extends React.Component<any, any> {
         return (
             <div
                 className={classNames(
-                    'toggle-box toggle-box--circle',
+                    'toggle-box toggle-box--margin-normal toggle-box--circle',
                     style,
                     {hidden: !this.state.isOpen},
                 )}

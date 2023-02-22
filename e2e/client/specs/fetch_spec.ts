@@ -98,6 +98,7 @@ describe('fetch', () => {
         // consider existing stage with Global Read ON
         desks.editStage('Working Stage');
         expect(desks.getGlobalReadFlag().getAttribute('checked')).toBeTruthy();
+        desks.cancelEditStage();
         desks.actionDoneOnStagesTab();
 
         // Now test expections for stages of Test Desk as selected desk, in Fetch To panel at workspace.

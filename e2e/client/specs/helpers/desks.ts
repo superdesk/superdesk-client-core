@@ -1,8 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor} from 'protractor';
-import {nav} from './utils';
-import {el} from '@superdesk/end-to-end-testing-helpers';
+import {el, ECE} from '@superdesk/end-to-end-testing-helpers';
+import {nav, click} from './utils';
 
 class Desks {
     list: any;
@@ -22,6 +22,7 @@ class Desks {
     showTab: (name: any) => void;
     getStage: (name: any) => any;
     editStage: (name: any) => void;
+    cancelEditStage: () => void;
     removeStage: (name: any) => void;
     save: () => void;
     close: () => void;
@@ -207,6 +208,10 @@ class Desks {
             });
         };
 
+        this.cancelEditStage = () => {
+            click(element(by.buttonText('Cancel')));
+        };
+
         /**
          * Delete a named stage on desk settings wizard, stages tab
          * @param {string} name of stage
@@ -303,7 +308,7 @@ class Desks {
          * Done action on stages tab
          **/
         this.actionDoneOnStagesTab = function() {
-            element(by.id('done-stages')).click();
+            click(element(by.id('done-stages')));
         };
 
         /**
@@ -429,7 +434,7 @@ class Desks {
          * Saves new stage settings
          **/
         this.saveNewStage = function() {
-            element(by.id('save-new-stage')).click();
+            click(element(by.id('save-new-stage')));
         };
 
         /**

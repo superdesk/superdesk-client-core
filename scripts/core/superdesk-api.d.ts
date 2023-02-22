@@ -192,12 +192,20 @@ declare module 'superdesk-api' {
 
         disableWidgetPinning?: boolean; // defaults to false
 
+        sideWidget: null | {
+            name: string;
+            pinned: boolean;
+        };
+
+        onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
+
         // Runs before re-render.
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
         getSideWidgetNameAtIndex(item: T, index: number): string;
+        openWidget(name: string | null): void;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -323,6 +331,9 @@ declare module 'superdesk-api' {
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
+
+        // read time, character count, word count; defaults to true
+        showStatistics?: boolean;
 
         /**
          * Value - field ID of editor3 field.
@@ -1452,10 +1463,19 @@ declare module 'superdesk-api' {
 
     // PAGE
 
+    /**
+     * `enabled` means that monitoring hiding functionality will not work,because we're on a custom page.
+     * When we leave custom page, we have to set `enabled` to false to make it work again with monitoring.
+     * `allowed` (to make it full width) means that an arrow will appear when hovering a menu item to switch to full width.
+     * For example, if a custom page doesn't have a side panel open at the moment, it will be enabled, but not allowed.
+     * If a side panel is opened, it becomes `allowed` to make that panel full width.
+     */
+    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: (fullWidth: boolean) => void};
+
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentType;
+        component: React.ComponentType<{setupFullWidthCapability: (config: IFullWidthPageCapabilityConfiguration) => void}>;
         priority?: number;
 
         /**
@@ -3154,6 +3174,7 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         language: string;
         config: IConfig;
+        fieldId: string;
 
         fieldsData: IFieldsData;
 
