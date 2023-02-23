@@ -157,7 +157,7 @@ function applyChangesToTableCell(
  * Applies the given URL to the current content selection in multi-line quote block.
  * If the selection is a link, it applies the link to the entity instead.
  */
-const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: EntityInstance}) =>
+const applyLinkToMultiLineQuote = (state, {link, entity}: {link: {href: string}, entity: EntityInstance}) =>
     applyChangesToTableCell(state, (editorState) =>
         entity
             ? entityUtils.replaceSelectedEntityData(editorState, {link})
