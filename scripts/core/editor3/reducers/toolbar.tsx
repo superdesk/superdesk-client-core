@@ -158,17 +158,11 @@ function applyChangesToTableCell(
  * If the selection is a link, it applies the link to the entity instead.
  */
 const applyLinkToMultiLineQuote = (state, {link, entity}: {link: any, entity: EntityInstance}) =>
-    applyChangesToTableCell(state, (editorState) => {
-        let editorStateNext: EditorState;
-
-        if (!entity) {
-            editorStateNext = Links.createLink(editorState, link);
-        } else {
-            editorStateNext = entityUtils.replaceSelectedEntityData(editorState, {link});
-        }
-
-        return editorStateNext;
-    });
+    applyChangesToTableCell(state, (editorState) =>
+        entity
+            ? entityUtils.replaceSelectedEntityData(editorState, {link})
+            : Links.createLink(editorState, link),
+    );
 
 /**
  * Removes the link on the entire entity under the cursor in multi-line quote block.
