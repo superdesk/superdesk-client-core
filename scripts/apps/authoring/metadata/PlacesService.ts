@@ -1,5 +1,6 @@
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {omit} from 'lodash';
-import {ILocated} from 'superdesk-api';
+import {IBaseRestApiResponse, ILocated, IRestApiResponse} from 'superdesk-api';
 
 export interface IGeoName {
     /** name of the place, eg. Prague */
@@ -69,8 +70,8 @@ export default function PlacesServiceFactory(api, features, metadata) {
     });
 
     class PlacesService implements IPlacesService {
-        searchDateline(query: string, lang: string) {
-            return this._searchGeonames(query, lang, true)
+        searchDateline(query: string, lang: string, abortSignal?: AbortSignal) {
+            return this._searchGeonames(query, lang, true, abortSignal)
                 .then((geonames) => geonames.map((x) => geoNameToCity(x)))
                 .catch(() => this._searchCities(query));
         }
@@ -87,7 +88,7 @@ export default function PlacesServiceFactory(api, features, metadata) {
             );
         }
 
-        _searchGeonames(name: string, lang: string, dateline: boolean = false) {
+        _searchGeonames(name: string, lang: string, dateline: boolean = false, abortSignal?: AbortSignal) {
             const params = {name, lang};
 
             if (name == null || name.length === 0) {
@@ -100,7 +101,12 @@ export default function PlacesServiceFactory(api, features, metadata) {
             }
 
             return features.places_autocomplete
-                ? api.query('places_autocomplete', params)
+                ? httpRequestJsonLocal<IRestApiResponse<ILocated>>({
+                    method: 'GET',
+                    abortSignal: abortSignal,
+                    path: '/places_autocomplete',
+                    urlParams: params,
+                })
                     .then((response) => response._items.map((place) => omit(place, ['_created', '_updated', '_etag'])))
                 : Promise.reject();
         }

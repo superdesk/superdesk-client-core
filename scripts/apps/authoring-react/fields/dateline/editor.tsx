@@ -25,14 +25,16 @@ function searchOptions(
     term: string,
     callback: (res: any) => void,
 ): ICancelFn {
-    ng.get('places').searchDateline(term, 'en').then((res) => {
+    const abortController = new AbortController();
+
+    ng.get('places').searchDateline(term, 'en', abortController.signal).then((res) => {
         callback({
             nodes: res.slice(0, 10).map((item) => ({value: item})),
             lookup: {},
         });
     });
 
-    return () => null;
+    return () => abortController.abort();
 }
 
 export class Editor extends React.PureComponent<IProps> {
