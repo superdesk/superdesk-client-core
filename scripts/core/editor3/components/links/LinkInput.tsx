@@ -32,13 +32,13 @@ const linkTypes = {
 };
 
 interface IProps extends Partial<IEditorStore> {
-    applyLink(link, entity: EntityInstance): void,
-    hidePopups(): void,
-    data: any,
-    item: any,
-    createLinkSuggestion(link): void,
-    changeLinkSuggestion(link, entity): void,
-    localDomains?: Array<string>,
+    applyLink(link, entity: EntityInstance): void;
+    hidePopups(): void;
+    data: any;
+    item: any;
+    createLinkSuggestion(link): void;
+    changeLinkSuggestion(link, entity): void;
+    localDomains?: Array<string>;
 }
 
 export class LinkInputComponent extends React.Component<IProps, any> {
