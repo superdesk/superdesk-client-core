@@ -60,6 +60,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                         />
                     ))
             }
+
             {
                 editorFormat
                     .filter((type) => type in inlineStyles)
@@ -73,12 +74,18 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                         />
                     ))
             }
-            <SelectionButtonCustomEditorState
-                editorState={cellEditorState}
-                onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
-                iconName="link"
-                tooltip={gettext('Link')}
-            />
+
+            {
+                editorFormat.includes('link') && (
+                    <SelectionButtonCustomEditorState
+                        editorState={cellEditorState}
+                        onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+                        iconName="link"
+                        tooltip={gettext('Link')}
+                    />
+                )
+            }
+
             {
                 popup.type === PopupTypes.Link && (
                     <LinkInputMultiLineQuote
@@ -87,6 +94,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                     />
                 )
             }
+
             <LinkToolbarMultiLineQuote
                 editorState={cellEditorState}
                 onEdit={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
