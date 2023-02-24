@@ -121,7 +121,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 end: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
-                            item.planned_duration != null && (
+                            item.planned_duration != null && item.planned_duration > 0 && (
                                 <PlannedDurationLabel
                                     label={gettext('Planned')}
                                     planned_duration={item.planned_duration}
