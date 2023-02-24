@@ -20,6 +20,7 @@ export type IRundownAction =
 
 interface IProps {
     rundownId: string;
+    rundownAction: IRundownAction;
     rundownItemAction: IRundownItemActionNext;
     onRundownItemActionChange(action: IRundownItemActionNext): void;
     onRundownActionChange(action: IRundownAction): void;
@@ -390,10 +391,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             <Button
                                                                 text={gettext('Edit')}
                                                                 onClick={() => {
+                                                                    const {rundownAction} = this.props;
+
                                                                     this.props.onRundownActionChange({
                                                                         id: this.props.rundownId,
                                                                         mode: 'edit',
-                                                                        fullWidth: false,
+                                                                        fullWidth: rundownAction?.fullWidth ?? false,
                                                                     });
                                                                 }}
                                                                 type="primary"

@@ -102,9 +102,9 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     private prepareRundownEditing(id: IRundown['_id']): Promise<IState['rundownAction']> {
         return tryLocking<IRundown>('/rundowns', id).then(({success}) => {
             if (success) {
-                return {mode: 'edit', id, fullWidth: false};
+                return {mode: 'edit', id, fullWidth: this.state.rundownAction?.fullWidth ?? false};
             } else {
-                return {mode: 'view', id, fullWidth: false};
+                return {mode: 'view', id, fullWidth: this.state.rundownAction?.fullWidth ?? false};
             }
         });
     }
@@ -367,7 +367,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                 this.setState({
                                                     rundownAction: {
                                                         mode: 'view',
-                                                        fullWidth: false,
+                                                        fullWidth: this.state.rundownAction?.fullWidth ?? false,
                                                         id,
                                                     },
                                                 });
@@ -401,6 +401,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                             rundownAction != null && (
                                 <RundownViewEdit
                                     key={rundownAction.id + rundownAction.mode}
+                                    rundownAction={rundownAction}
                                     rundownId={rundownAction.id}
                                     onClose={(rundown: IRundown) => {
                                         const doUnlock = isLockedInCurrentSession(rundown)
