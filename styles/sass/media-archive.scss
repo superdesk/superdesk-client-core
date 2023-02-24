@@ -758,6 +758,13 @@ $rightfield-width:60px;
             }
 
         }
+        &.media-box-hover{
+            &:hover {
+                background-color: transparent !important;
+                border-right: none !important;
+                cursor: auto;
+            }
+        }
 
         &.gone {
             opacity: 0.5;
