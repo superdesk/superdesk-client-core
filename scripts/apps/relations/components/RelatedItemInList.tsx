@@ -29,6 +29,9 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> 
         const {authoringWorkspace} = this.services;
         const {item} = this.props;
 
+        if (item['_type'] === 'externalsource') {
+            return;
+        }
         if (isPublished(item)) {
             authoringWorkspace.view(item);
         } else {
