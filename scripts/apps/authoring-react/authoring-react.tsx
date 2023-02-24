@@ -973,6 +973,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
     }
 
+    onArticleChange(state: IStateLoaded<T>, itemWithChanges: T) {
+        this.setState({
+            ...state,
+            itemWithChanges,
+        });
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1001,11 +1008,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
+            onArticleChange: (item: T) => this.onArticleChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget.name,
+            sideWidget: this.props.sideWidget?.name,
             toggleSideWidget: (name) => {
                 if (name == null || this.props.sideWidget?.name === name) {
                     this.props.onSideWidgetChange(null);
