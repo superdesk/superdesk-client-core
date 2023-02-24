@@ -231,6 +231,43 @@ declare module 'superdesk-api' {
         shortcuts?: Array<IDateShortcut>;
     }
 
+    // AUTHORING-REACT FIELD TYPES - date
+
+    export interface ILocated {
+        /** dateline format - list of fields which should be used to identify the place */
+        dateline: 'city' | 'city,state' | 'city,country' | 'city,state,country';
+
+        city: string;
+        state: string;
+        country: string;
+
+        city_code: string;
+        state_code: string;
+        country_code: string;
+
+        /** timezone identifier, eg. Europe/Prague  */
+        tz: string;
+
+        /** scheme identifier */
+        scheme: string;
+
+        /** code for place in the scheme */
+        code: string;
+
+        /** geonames place data */
+        place?: IGeoName;
+    }
+
+    export type IDatelineValueOperational = {
+        date?: string;
+        source?: string;
+        located?: ILocated;
+        text?: string;
+    };
+    export type IDatelineValueStorage = IDatelineValueOperational;
+    export type IDatelineUserPreferences = never;
+    export interface IDatelineFieldConfig extends ICommonFieldConfig {}
+
     // AUTHORING-REACT FIELD TYPES - time
 
     export type ITimeValueOperational = string; // ISO 8601, 13:59:01.123

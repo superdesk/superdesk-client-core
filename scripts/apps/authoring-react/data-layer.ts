@@ -17,7 +17,7 @@ import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {AutoSaveHttp} from './auto-save-http';
-import {omit} from 'lodash';
+import {isObject, omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
@@ -256,6 +256,15 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             const etag = original._etag;
 
             let diff = generatePatch(original, _current);
+
+            // Object patching is overriding fields of object type with diff.
+            // If we make changes to such a field it is not saved correctly.
+            // So we need to add all fields which are of object type to the diff object.
+            Object.keys(diff).forEach((key) => {
+                if (isObject(diff[key])) {
+                    diff[key] = _current[key];
+                }
+            });
 
             // when object has changes, send entire object to avoid server dropping keys
             if (diff.fields_meta != null) {
