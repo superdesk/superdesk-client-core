@@ -8,7 +8,7 @@ import {IEditorStore} from 'core/editor3/store';
 
 interface IProps extends Partial<IEditorStore> {
     removeLink(): void;
-    removeLinkSuggestion(): void;
+    removeLinkSuggestion?(): void;
     onEdit(link: any): void;
 }
 

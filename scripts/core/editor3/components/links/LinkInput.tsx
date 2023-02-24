@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {EditorState, EntityInstance} from 'draft-js';
+import {EntityInstance} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
@@ -16,6 +15,7 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
+import {IArticle, ILink} from 'superdesk-api';
 
 /**
  * @ngdoc React
@@ -32,13 +32,13 @@ const linkTypes = {
 };
 
 interface IProps extends Partial<IEditorStore> {
-    applyLink(link, entity: EntityInstance): void;
+    applyLink?(link, entity: EntityInstance): void;
     hidePopups(): void;
-    data: any;
-    item: any;
-    createLinkSuggestion(link): void;
-    changeLinkSuggestion(link, entity): void;
-    localDomains?: Array<string>;
+    data: ILink;
+    item?: IArticle;
+    createLinkSuggestion?(link): void;
+    changeLinkSuggestion?(link, entity): void;
+    localDomains?: Array<{is_active: boolean, domain: string}>;
 }
 
 export class LinkInputComponent extends React.Component<IProps, any> {

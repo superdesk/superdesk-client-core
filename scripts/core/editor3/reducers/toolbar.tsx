@@ -12,6 +12,7 @@ import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
 import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
 import {processCells} from './table';
+import {ILink} from 'superdesk-api';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -157,7 +158,7 @@ function applyChangesToTableCell(
  * Applies the given URL to the current content selection in multi-line quote block.
  * If the selection is a link, it applies the link to the entity instead.
  */
-const applyLinkToMultiLineQuote = (state, {link, entity}: {link: {href: string}, entity: EntityInstance}) =>
+const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
     applyChangesToTableCell(state, (editorState) =>
         entity
             ? entityUtils.replaceSelectedEntityData(editorState, {link})
