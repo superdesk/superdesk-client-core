@@ -1175,6 +1175,16 @@ declare module 'superdesk-api' {
         // holds info on packages
         groups?: Array<any>;
 
+        creditline?: string;
+        original_source?: string;
+        ingest_provider_sequence?: string;
+        expiry?: string;
+        archive_description?: string;
+        original_id?: string;
+        originalCreator?: string;
+        versioncreator?: string;
+        archive_description?: string;
+
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
         _editable?: any;

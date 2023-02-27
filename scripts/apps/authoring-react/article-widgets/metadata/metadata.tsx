@@ -4,10 +4,11 @@ import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {Spacer} from 'core/ui/components/Spacer';
-import {Input, Select, Switch, Option, Heading, ContentDivider} from 'superdesk-ui-framework/react';
+import {Input, Select, Switch, Option, Heading, ContentDivider, Label} from 'superdesk-ui-framework/react';
 import {MetadataItem} from './metadata-item';
 import {dataApi} from 'core/helpers/CrudManager';
 import {ILanguage} from 'superdesk-interfaces/Language';
+import {DateTime} from 'core/ui/components/DateTime';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
@@ -58,16 +59,34 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             anpa_take_key,
             genre,
             dateline,
+            slugline,
             byline,
             sign_off,
-            version,
-            created,
-            used_updated,
+
             guid,
-            _id,
             unique_name,
             type,
             language,
+            copyrightholder,
+            copyrightnotice,
+            creditline,
+            original_source,
+            ingest_provider_sequence,
+            archive_description,
+            ingest_provider,
+            keywords,
+            signal,
+            anpa_category,
+            place,
+            ednote,
+            _current_version,
+            firstcreated,
+            versioncreated,
+            renditions,
+            original_id,
+            originalCreator,
+            versioncreator,
+            description_text,
         } = this.props.article;
 
         const {onArticleChange} = this.props;
@@ -81,12 +100,9 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <Spacer v gap="16">
-                        <Spacer h gap="64" justifyContent="space-between" noGrow>
-                            <Heading
-                                type="h6"
-                                align="start"
-                            >
+                    <Spacer v gap="16" noWrap>
+                        <Spacer h gap="64" justifyContent="space-between" noWrap>
+                            <Heading type="h6" align="start">
                                 {getNotForPublicationLabel()}
                             </Heading>
                             <Switch
@@ -94,18 +110,20 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 onChange={() => {
                                     onArticleChange({
                                         ...this.props.article,
-                                        flags: {...flags, marked_for_not_publication: !flags.marked_for_not_publication},
+                                        flags: {
+                                            ...flags,
+                                            marked_for_not_publication: !flags.marked_for_not_publication,
+                                        },
                                     });
                                 }}
                                 value={flags.marked_for_not_publication}
                             />
                         </Spacer>
-                        <ContentDivider border type="dotted" margin="x-small" />
-                        <Spacer h gap="64" justifyContent="space-between" noGrow>
-                            <Heading
-                                type="h6"
-                                align="start"
-                            >
+
+                        <ContentDivider border type="dotted" margin="none" />
+
+                        <Spacer h gap="64" justifyContent="space-between" noWrap>
+                            <Heading type="h6" align="start">
                                 {getLegalLabel()}
                             </Heading>
                             <Switch
@@ -119,9 +137,11 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 value={flags.marked_for_legal}
                             />
                         </Spacer>
+
                         <ContentDivider border type="dotted" margin="x-small" />
+
                         <Input
-                            label="Usage terms"
+                            label={gettext('USAGE TERMS')}
                             inlineLabel
                             type="text"
                             value={usageterms}
@@ -132,10 +152,12 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                         />
+
                         <ContentDivider border type="dotted" margin="x-small" />
+
                         <Select
                             inlineLabel
-                            label={'Language'}
+                            label={gettext('LANGUAGE')}
                             value={language}
                             onChange={(val) => {
                                 onArticleChange({
@@ -144,108 +166,229 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                         >
-                            {this.state.languages.map((lang) => <Option key={lang._id} value={lang.language} />)}
-                        </Select>
-                        <ContentDivider border type="dotted" margin="x-small" />
-                        <MetadataItem
-                            label="Pubstatus"
-                            value={pubstatus}
-                        />
-                        <MetadataItem
-                            label="State"
-                            value={state}
-                        />
-                        <MetadataItem
-                            label="Expiry"
-                            value={expiry}
-                        />
-                        <MetadataItem
-                            label="Urgency"
-                            value={urgency}
-                        />
-                        <MetadataItem
-                            label="Priority"
-                            value={priority}
-                        />
-                        <MetadataItem
-                            label="Word count"
-                            value={word_count}
-                        />
-                        <MetadataItem
-                            label="Source"
-                            value={source}
-                        />
-                        <MetadataItem
-                            label="Take key"
-                            value={anpa_take_key}
-                        />
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            Genre:
                             {
-                                genre.map((genre) => (
-                                    <div key={genre.qcode}>
-                                        {genre.name}
-                                    </div>
-                                ))
+                                this.state.languages.map((lang) =>
+                                    <Option value={lang.language} key={lang._id}>{lang.label}</Option>,
+                                )
                             }
-                        </div>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <div>
-                                Metadata:
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                <div>{dateline.date}</div>
-                                <div>{dateline.located.city}</div>
-                            </div>
-                        </div>
-                        <MetadataItem
-                            label="Byline"
-                            value={byline}
-                        />
-                        <MetadataItem
-                            label="Sign-off"
-                            value={sign_off}
-                        />
-                        <MetadataItem
-                            label="Version"
-                            value={version}
-                        />
-                        <MetadataItem
-                            label="Created"
-                            value={created}
-                        />
-                        <MetadataItem
-                            label="Last updated"
-                            value={used_updated}
-                        />
-                        <MetadataItem
-                            label="Original Id"
-                            value={_id}
-                        />
-                        <MetadataItem
-                            label="GUID"
-                            value={guid}
-                        />
+                        </Select>
+
+                        <ContentDivider border type="dotted" margin="x-small" />
+
+                        {(pubstatus?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Pubstatus')}
+                                value={pubstatus}
+                            />
+                        )}
+
+                        {(original_source?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Original source')}
+                                value={original_source}
+                            />
+                        )}
+
+                        {(copyrightholder?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Copyright')}
+                                value={copyrightholder}
+                            />
+                        )}
+
+                        {(copyrightnotice?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Copyright')}
+                                value={copyrightnotice}
+                            />
+                        )}
+
+                        {(creditline?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Copyright')}
+                                value={creditline}
+                            />
+                        )}
+
+                        {
+                            <>
+                                <Spacer h gap="64" justifyContent="space-between" noWrap>
+                                    <Heading type="h6">
+                                        {gettext('STATE')}
+                                    </Heading>
+                                    <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
+                                        <Label text={state} style="hollow" type="warning" size="small" />
+                                        {flags.marked_archived_only && (
+                                            <Label
+                                                text={gettext('Archived')}
+                                                style="hollow"
+                                                type="alert"
+                                            />
+                                        )}
+                                        {flags.marked_for_legal && (
+                                            <Label
+                                                text={gettext('Legal')}
+                                                style="hollow"
+                                                type="alert"
+                                            />
+                                        )}
+                                        {flags.marked_for_not_publication && (
+                                            <Label
+                                                text={gettext('Not for publication')}
+                                                style="hollow"
+                                                type="alert"
+                                            />
+                                        )}
+                                        {flags.marked_for_sms && (
+                                            <Label
+                                                text={gettext('SMS')}
+                                                style="hollow"
+                                                type="alert"
+                                            />
+                                        )}
+                                    </Spacer>
+                                </Spacer>
+                                <ContentDivider border type="dotted" margin="x-small" />
+                            </>
+                        }
+
+                        {ingest_provider != null && (
+                            <MetadataItem
+                                label={gettext('Ingest provider')}
+                                value={ingest_provider}
+                            />
+                        )}
+
+                        {
+                            (ingest_provider_sequence?.length ?? 0) > 0 && (
+                                <MetadataItem
+                                    label={gettext('Ingest provider sequence')}
+                                    value={ingest_provider_sequence}
+                                />
+                            )
+                        }
+
+                        {expiry && <MetadataItem label={gettext('Expiry')} value={expiry} />}
+
+                        {(slugline?.length ?? 0) > 0 && <MetadataItem label={gettext('Slugline')} value={slugline} />}
+
+                        {(urgency?.length ?? 0) > 0 && <MetadataItem label={gettext('Urgency')} value={urgency} />}
+
+                        {priority && <MetadataItem label={gettext('Priority')} value={priority} />}
+
+                        {word_count > 0 && <MetadataItem label={gettext('Word count')} value={word_count} />}
+
+                        {keywords && <MetadataItem label={gettext('Keywords')} value={keywords} />}
+
+                        {(source?.length ?? 0) > 0 && <MetadataItem label={gettext('Source')} value={source} />}
+
+                        <MetadataItem label={gettext('Take key')} value={anpa_take_key} />
+
+                        {
+                            signal && (
+                                <MetadataItem
+                                    label={gettext('Signal')}
+                                    value={<div>{(signal.map((val) => <>{val.name ?? val.qcode}</>))}</div>}
+                                />
+                            )
+                        }
+
+                        {anpa_category && <MetadataItem label={gettext('Category')} value={anpa_category.name} />}
+
+                        {
+                            (genre.length ?? 0) > 0 && (
+                                <Spacer h gap="4" justifyContent="space-between">
+                                    <Heading type="h6" align="start">
+                                        {gettext('GENRE')}
+                                    </Heading>
+                                    {
+                                        genre.map((val) => (
+                                            <React.Fragment key={val.qcode}>
+                                                {val.name}
+                                            </React.Fragment>
+                                        ))
+                                    }
+                                </Spacer>
+                            )
+                        }
+
+                        {
+                            (place.length ?? 0) > 0 && (
+                                <Spacer h gap="4" justifyContent="space-between">
+                                    <Heading type="h6" align="start">
+                                        {gettext('PLACE')}
+                                    </Heading>
+                                    {
+                                        place.map((val) => (
+                                            <React.Fragment key={val.qcode}>
+                                                {val.name}
+                                            </React.Fragment>
+                                        ))
+                                    }
+                                </Spacer>
+                            )
+                        }
+
+                        {(ednote?.length ?? 0) > 0 && <MetadataItem label={gettext('Editorial note')} value={ednote} />}
+
+                        <ContentDivider border type="dotted" margin="x-small" />
+
+                        <Spacer v gap="4" justifyContent="space-between">
+                            <Heading type="h6" align="start">
+                                {gettext('DATELINE')}
+                            </Heading>
+                            <Spacer h gap="4" justifyContent="space-between" noWrap>
+                                <DateTime dateTime={dateline.date} /> /
+                                <span>{dateline.located.city}</span>
+                            </Spacer>
+                        </Spacer>
+
+                        <ContentDivider border type="dotted" margin="x-small" />
+
+                        <MetadataItem label={gettext('Byline')} value={byline} />
+
+                        <MetadataItem label={gettext('Sign-off')} value={sign_off} />
+
+                        {_current_version && <MetadataItem label={gettext('Version')} value={_current_version} />}
+
+                        {firstcreated && (
+                            <MetadataItem
+                                label={gettext('Created')}
+                                value={(
+                                    <DateTime
+                                        dateTime={firstcreated}
+                                    />
+                                )}
+                            />
+                        )}
+
+                        {versioncreated && (
+                            <MetadataItem
+                                label={gettext('Last updated')}
+                                value={<DateTime dateTime={versioncreated} />}
+                            />
+                        )}
+
+                        <MetadataItem label={gettext('Original Id')} value={original_id} />
+
+                        {(originalCreator?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Original creator')}
+                                value={originalCreator}
+                            />
+                        )}
+
+                        {(versioncreator?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Version creator')}
+                                value={versioncreator}
+                            />
+                        )}
+
+                        <MetadataItem label={gettext('GUID')} value={guid} />
+
                         <Input
-                            label="Unique name"
+                            label={gettext('Unique name')}
                             inlineLabel
                             type="text"
                             value={unique_name}
@@ -256,10 +399,28 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                         />
-                        <MetadataItem
-                            label="Type"
-                            value={type}
-                        />
+
+                        <ContentDivider border type="dotted" margin="x-small" />
+
+                        <MetadataItem label={gettext('Type')} value={type} />
+
+                        {
+                            renditions?.original != null && (
+                                <MetadataItem
+                                    label={gettext('Type')}
+                                    value={`${renditions.original.width} x ${renditions.original.height}`}
+                                />
+                            )
+                        }
+
+                        {
+                            (archive_description?.length ?? 0) > 0 && archive_description !== description_text && (
+                                <MetadataItem
+                                    label={gettext('Description')}
+                                    value={archive_description}
+                                />
+                            )
+                        }
                     </Spacer>
                 )}
             />
