@@ -721,6 +721,11 @@ declare module 'superdesk-api' {
         service: {};
         priority?: number;
         unique_field: string;
+        translations?: {
+            display_name: {
+                [key: string]: string;
+            };
+        };
         schema: {};
         field_type:
             | 'text'
