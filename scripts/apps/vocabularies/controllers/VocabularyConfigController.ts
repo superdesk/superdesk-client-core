@@ -147,11 +147,15 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * query or if it matches a translation of that vocabulary.
      */
     $scope.filterVocabulary = function(vocabulary: IVocabulary): boolean {
+        if (($scope.searchString?.length ?? 0) === 0) {
+            return true;
+        }
+
         const translationMach = Object.values(vocabulary?.translations?.display_name ?? {})
             .find((translation: string) => translation.toLowerCase().indexOf($scope.searchString) !== -1);
         const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) !== -1;
 
-        if (($scope.searchString?.length ?? 0) > 0 || displayNameMatch || translationMach != null) {
+        if (displayNameMatch || translationMach != null) {
             return true;
         } else {
             return false;
