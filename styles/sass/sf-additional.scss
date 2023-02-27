@@ -224,6 +224,8 @@
             flex-grow: 1;
             &:focus {
                 box-shadow: none;
+                width: auto;
+
             }
             &::placeholder {
                 color: var(--color-text-lighter);
@@ -2378,6 +2380,7 @@ sd-multi-image-edit {
         border-radius: 0 !important;
     }
 }
+
 .sd-flex--align-self-stretch {
     align-self: stretch !important;
 }
