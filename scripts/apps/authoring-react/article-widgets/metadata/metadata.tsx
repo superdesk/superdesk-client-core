@@ -9,9 +9,11 @@ import {MetadataItem} from './metadata-item';
 import {dataApi} from 'core/helpers/CrudManager';
 import {ILanguage} from 'superdesk-interfaces/Language';
 import {DateTime} from 'core/ui/components/DateTime';
+import {vocabularies} from 'api/vocabularies';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
+
 const getNotForPublicationLabel = () => gettext('Not for publication');
 const getLegalLabel = () => gettext('Legal');
 
@@ -46,6 +48,8 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
     }
 
     render() {
+        const {article} = this.props;
+
         const {
             flags,
             usageterms,
@@ -62,7 +66,6 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             slugline,
             byline,
             sign_off,
-
             guid,
             unique_name,
             type,
@@ -87,7 +90,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             originalCreator,
             versioncreator,
             description_text,
-        } = this.props.article;
+        } = article;
 
         const {onArticleChange} = this.props;
 
@@ -109,7 +112,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 label={getNotForPublicationLabel()}
                                 onChange={() => {
                                     onArticleChange({
-                                        ...this.props.article,
+                                        ...article,
                                         flags: {
                                             ...flags,
                                             marked_for_not_publication: !flags.marked_for_not_publication,
@@ -130,7 +133,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 label={getLegalLabel()}
                                 onChange={() => {
                                     onArticleChange({
-                                        ...this.props.article,
+                                        ...article,
                                         flags: {...flags, marked_for_legal: !flags.marked_for_legal},
                                     });
                                 }}
@@ -147,7 +150,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             value={usageterms}
                             onChange={(value) => {
                                 onArticleChange({
-                                    ...this.props.article,
+                                    ...article,
                                     usageterms: value,
                                 });
                             }}
@@ -161,7 +164,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             value={language}
                             onChange={(val) => {
                                 onArticleChange({
-                                    ...this.props.article,
+                                    ...article,
                                     language: val,
                                 });
                             }}
@@ -293,7 +296,28 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             )
                         }
 
-                        {anpa_category && <MetadataItem label={gettext('Category')} value={anpa_category.name} />}
+                        {
+                            anpa_category.name != null && (
+                                <MetadataItem
+                                    label={gettext('Category')}
+                                    value={anpa_category.name}
+                                />
+                            )
+                        }
+
+                        {
+                            vocabularies
+                                .getAll()
+                                .filter((cv) => article[cv.schema_field] != null)
+                                .toArray()
+                                .map((filtered) => (
+                                    <MetadataItem
+                                        key={filtered._id}
+                                        label={filtered.display_name}
+                                        value={vocabularies.getLocaleName(article[filtered.schema_field], article)}
+                                    />
+                                ))
+                        }
 
                         {
                             (genre.length ?? 0) > 0 && (
@@ -394,7 +418,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             value={unique_name}
                             onChange={(value) => {
                                 onArticleChange({
-                                    ...this.props.article,
+                                    ...article,
                                     unique_name: value,
                                 });
                             }}
