@@ -2,7 +2,7 @@ import React from 'react';
 import {IAuthoringFieldV2, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
-import {IPropsAuthoringSection} from './authoring-section';
+import {IAuthoringSectionTheme, IPropsAuthoringSection} from './authoring-section';
 import {memoize} from 'core/memoize';
 
 interface IProps {
@@ -19,16 +19,7 @@ interface IProps {
     useHeaderLayout: IPropsAuthoringSection['useHeaderLayout'];
     getVocabularyItems: IPropsAuthoringSection['getVocabularyItems'];
     validationError?: string;
-    uiTheme?: {
-        backgroundColor: string;
-        textColor: string;
-
-        fieldTheme: {
-            [fieldId: string]: {
-                fontSize: string;
-            };
-        };
-    };
+    uiTheme?: IAuthoringSectionTheme;
 }
 
 export class AuthoringSectionField extends React.PureComponent<IProps> {
@@ -60,9 +51,12 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
         } else {
             return (
                 <FieldEditorConfig.editorComponent
-                    uiTheme={{
+                    uiTheme={this.props.uiTheme == null ? undefined : {
+                        backgroundColor: this.props.uiTheme.backgroundColor,
+                        backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
                         textColor: this.props.uiTheme.textColor,
-                        fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize ?? undefined,
+                        fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
+                        fontFamily: this.props.uiTheme.fontFamily,
                     }}
                     key={field.id}
                     editorId={field.id}

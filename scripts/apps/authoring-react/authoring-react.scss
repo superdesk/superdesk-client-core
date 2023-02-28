@@ -54,16 +54,3 @@
     color: $grayDark;
     @include text-semibold();
 }
-
-//Font-family
-
-.sd-editor--font-sans {
-    font-family: "Roboto", Helvetica, Arial, sans-serif;
-}
-.sd-editor--font-serif {
-    font-family: "Merriweather", Georgia, "Times New Roman", Times, serif;
-}
-.sd-editor--font-mono {
-    font-family: "Roboto Mono", "Consolas", "monaco", monospace;
-}
-

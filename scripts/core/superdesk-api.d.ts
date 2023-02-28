@@ -3194,7 +3194,10 @@ declare module 'superdesk-api' {
 
         uiTheme?: {
             textColor: string;
+            backgroundColor: string;
+            backgroundColorSecondary: string;
             fontSize: string;
+            fontFamily: string;
         };
     }
 

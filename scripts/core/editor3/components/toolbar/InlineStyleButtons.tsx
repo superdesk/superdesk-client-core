@@ -48,6 +48,7 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
             <span>
                 {editorFormat.filter((type) => type in inlineStyles).map((type) => (
                     <StyleButton
+                        uiTheme={this.props.uiTheme}
                         key={type}
                         active={currentStyle.has(inlineStyles[type])}
                         label={type}

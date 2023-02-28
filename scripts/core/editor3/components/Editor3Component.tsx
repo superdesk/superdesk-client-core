@@ -539,7 +539,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     render() {
-
         const {
             readOnly,
             locked,
@@ -579,16 +578,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
             }
         };
 
-        const uiThemeFontSize = () => {
-            if (this.props.uiTheme.fontSize === 'small') {
-                return '1.4rem';
-            } else if (this.props.uiTheme.fontSize === 'medium') {
-                return '1.6rem';
-            } else {
-                return '1.8rem';
-            }
-        };
-
         return (
             <div
                 className={cx}
@@ -616,6 +605,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                     showToolbar && this.state.draggingInProgress !== true
                         ? (
                             <Toolbar
+                                uiTheme={this.props.uiTheme}
                                 disabled={locked || readOnly}
                                 scrollContainer={scrollContainer}
                                 editorNode={this.editorNode}
@@ -634,7 +624,15 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 <div
                     className="focus-screen"
                     onMouseDown={this.focus}
-                    style={{fontSize: uiThemeFontSize(), color: this.props.uiTheme.textColor}}
+                    style={
+                        this.props.uiTheme == null
+                            ? {}
+                            : {
+                                fontSize: this.props.uiTheme.fontSize,
+                                color: this.props.uiTheme.textColor,
+                                fontFamily: this.props.uiTheme.fontFamily,
+                            }
+                    }
                 >
                     <Editor
                         editorState={editorState}

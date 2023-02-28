@@ -6,7 +6,12 @@ import {AuthoringSectionField} from './authoring-section-field';
 
 export interface IAuthoringSectionTheme {
     backgroundColor: string;
+
+    // used in placed where we need to differetiate some ui components from background for example toolbars
+    backgroundColorSecondary: string;
+
     textColor: string;
+    fontFamily: string;
 
     fieldTheme: {
         [fieldId: string]: {
@@ -53,9 +58,17 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
 
     render() {
         const {toggledFields} = this.props;
+        const themeApplies = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null);
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+            <div
+                style={{
+                    backgroundColor: themeApplies && this.props.uiTheme.backgroundColor,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                }}
+            >
                 {
                     this.props.fields.map((field) => {
                         const canBeToggled = toggledFields[field.id] != null;

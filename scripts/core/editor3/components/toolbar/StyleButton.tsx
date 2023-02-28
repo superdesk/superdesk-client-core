@@ -76,7 +76,13 @@ export default class StyleButton extends React.Component<any, any> {
         };
 
         return (
-            <span className={cx} data-sd-tooltip={styleTooltips[label]} data-flow={'down'} onMouseDown={this.onToggle}>
+            <span
+                className={cx}
+                data-sd-tooltip={styleTooltips[label]}
+                data-flow={'down'}
+                onMouseDown={this.onToggle}
+                style={{color: this.props.uiTheme.textColor}}
+            >
                 {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
             </span>
         );
