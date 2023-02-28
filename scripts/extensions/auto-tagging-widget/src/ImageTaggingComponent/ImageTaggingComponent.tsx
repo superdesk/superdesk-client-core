@@ -216,11 +216,9 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                 },
             })
                 .then((res) => {
-                    const filteredImages: Array<IImage> = res.result.filter((image: IImage) => image.imageUrl);
-
                     this.setState({
-                        selectedImage: filteredImages[0] ?? null,
-                        images: filteredImages,
+                        selectedImage: res.result[0] ?? null,
+                        images: res.result,
                     });
                 })
                 .catch(() => {
