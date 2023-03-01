@@ -1367,7 +1367,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        getLocaleName: sdApi.vocabularies.getLocaleName,
+        getLocaleName: sdApi.vocabularies.getVocabularyItemLabel,
     };
 
     $rootScope.$on('subscriber:create', () => service.fetchSubscribers());

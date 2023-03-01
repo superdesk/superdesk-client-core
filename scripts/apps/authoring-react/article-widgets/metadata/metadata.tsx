@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {IArticleSideWidget, IExtensionActivationResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -10,12 +10,13 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {ILanguage} from 'superdesk-interfaces/Language';
 import {DateTime} from 'core/ui/components/DateTime';
 import {vocabularies} from 'api/vocabularies';
+import Datetime from 'core/datetime/datetime';
+import {sdApi} from 'api';
+import {StateComponent} from 'apps/search/components/fields/state';
+import {AnnotationsPreview} from './AnnotationsPreview';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
-
-const getNotForPublicationLabel = () => gettext('Not for publication');
-const getLegalLabel = () => gettext('Legal');
 
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
@@ -54,7 +55,6 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             flags,
             usageterms,
             pubstatus,
-            state,
             expiry,
             urgency,
             priority,
@@ -75,7 +75,6 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             creditline,
             original_source,
             ingest_provider_sequence,
-            archive_description,
             ingest_provider,
             keywords,
             signal,
@@ -89,10 +88,14 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             original_id,
             originalCreator,
             versioncreator,
-            description_text,
+            rewritten_by,
         } = article;
 
         const {onArticleChange} = this.props;
+
+        const getNotForPublicationLabel: string = gettext('Not For Publication');
+        const getLegalLabel: string = gettext('Legal');
+        const allVocabularies = sdApi.vocabularies.getAll();
 
         return (
             <AuthoringWidgetLayout
@@ -106,10 +109,10 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                     <Spacer v gap="16" noWrap>
                         <Spacer h gap="64" justifyContent="space-between" noWrap>
                             <Heading type="h6" align="start">
-                                {getNotForPublicationLabel()}
+                                {getNotForPublicationLabel}
                             </Heading>
                             <Switch
-                                label={getNotForPublicationLabel()}
+                                label={{text: ''}} // TODO: Implement accessibility
                                 onChange={() => {
                                     onArticleChange({
                                         ...article,
@@ -127,10 +130,10 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         <Spacer h gap="64" justifyContent="space-between" noWrap>
                             <Heading type="h6" align="start">
-                                {getLegalLabel()}
+                                {getLegalLabel}
                             </Heading>
                             <Switch
-                                label={getLegalLabel()}
+                                label={{text: ''}} // TODO: Implement accessibility
                                 onChange={() => {
                                     onArticleChange({
                                         ...article,
@@ -144,7 +147,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                         <ContentDivider border type="dotted" margin="x-small" />
 
                         <Input
-                            label={gettext('USAGE TERMS')}
+                            label={gettext('Usage terms').toUpperCase()}
                             inlineLabel
                             type="text"
                             value={usageterms}
@@ -160,7 +163,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         <Select
                             inlineLabel
-                            label={gettext('LANGUAGE')}
+                            label={gettext('Language').toUpperCase()}
                             value={language}
                             onChange={(val) => {
                                 onArticleChange({
@@ -201,14 +204,14 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         {(copyrightnotice?.length ?? 0) > 0 && (
                             <MetadataItem
-                                label={gettext('Copyright')}
+                                label={gettext('Copyright notice')}
                                 value={copyrightnotice}
                             />
                         )}
 
                         {(creditline?.length ?? 0) > 0 && (
                             <MetadataItem
-                                label={gettext('Copyright')}
+                                label={gettext('Credit')}
                                 value={creditline}
                             />
                         )}
@@ -217,13 +220,20 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             <>
                                 <Spacer h gap="64" justifyContent="space-between" noWrap>
                                     <Heading type="h6">
-                                        {gettext('STATE')}
+                                        {gettext('State').toUpperCase()}
                                     </Heading>
                                     <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
-                                        <Label text={state} style="hollow" type="warning" size="small" />
-                                        {flags.marked_archived_only && (
+                                        <StateComponent item={article} />
+                                        {article.embargo && (
                                             <Label
-                                                text={gettext('Archived')}
+                                                style="hollow"
+                                                type="alert"
+                                                text={gettext('embargo')}
+                                            />
+                                        )}
+                                        {flags.marked_for_not_publication && (
+                                            <Label
+                                                text={gettext('Not For Publication')}
                                                 style="hollow"
                                                 type="alert"
                                             />
@@ -235,16 +245,16 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                                 type="alert"
                                             />
                                         )}
-                                        {flags.marked_for_not_publication && (
+                                        {flags.marked_for_sms && (
                                             <Label
-                                                text={gettext('Not for publication')}
+                                                text={gettext('Sms')}
                                                 style="hollow"
                                                 type="alert"
                                             />
                                         )}
-                                        {flags.marked_for_sms && (
+                                        {(rewritten_by?.length ?? 0) > 0 && (
                                             <Label
-                                                text={gettext('SMS')}
+                                                text={gettext('Updated')}
                                                 style="hollow"
                                                 type="alert"
                                             />
@@ -257,7 +267,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         {ingest_provider != null && (
                             <MetadataItem
-                                label={gettext('Ingest provider')}
+                                label={gettext('Ingest Provider')}
                                 value={ingest_provider}
                             />
                         )}
@@ -265,13 +275,18 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                         {
                             (ingest_provider_sequence?.length ?? 0) > 0 && (
                                 <MetadataItem
-                                    label={gettext('Ingest provider sequence')}
+                                    label={gettext('Ingest sequence')}
                                     value={ingest_provider_sequence}
                                 />
                             )
                         }
 
-                        {expiry && <MetadataItem label={gettext('Expiry')} value={expiry} />}
+                        {expiry && (
+                            <MetadataItem
+                                label={gettext('Expiry')}
+                                value={<Datetime datetime={expiry} />}
+                            />
+                        )}
 
                         {(slugline?.length ?? 0) > 0 && <MetadataItem label={gettext('Slugline')} value={slugline} />}
 
@@ -279,9 +294,14 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         {priority && <MetadataItem label={gettext('Priority')} value={priority} />}
 
-                        {word_count > 0 && <MetadataItem label={gettext('Word count')} value={word_count} />}
+                        {word_count > 0 && <MetadataItem label={gettext('Word Count')} value={word_count} />}
 
-                        {keywords && <MetadataItem label={gettext('Keywords')} value={keywords} />}
+                        {keywords && (
+                            <MetadataItem
+                                label={gettext('Word Count')}
+                                value={sdApi.filters.mergeArrayToString(keywords) as string}
+                            />
+                        )}
 
                         {(source?.length ?? 0) > 0 && <MetadataItem label={gettext('Source')} value={source} />}
 
@@ -291,79 +311,70 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             signal && (
                                 <MetadataItem
                                     label={gettext('Signal')}
-                                    value={<div>{(signal.map((val) => <>{val.name ?? val.qcode}</>))}</div>}
+                                    value={(
+                                        <div>
+                                            {(signal.map(({name, qcode}) => (
+                                                <Fragment key={name}>{name ?? qcode}</Fragment>
+                                            )))}
+                                        </div>
+                                    )}
                                 />
                             )
                         }
 
                         {
-                            anpa_category.name != null && (
+                            anpa_category?.name != null && (
                                 <MetadataItem
                                     label={gettext('Category')}
-                                    value={anpa_category.name}
+                                    value={sdApi.filters.mergeArrayToString(anpa_category, 'name') as string}
                                 />
                             )
                         }
 
                         {
-                            vocabularies
-                                .getAll()
+                            allVocabularies
                                 .filter((cv) => article[cv.schema_field] != null)
                                 .toArray()
-                                .map((filtered) => (
+                                .map((v) => (
                                     <MetadataItem
-                                        key={filtered._id}
-                                        label={filtered.display_name}
-                                        value={vocabularies.getLocaleName(article[filtered.schema_field], article)}
+                                        key={v._id}
+                                        label={v.display_name}
+                                        value={vocabularies.getVocabularyItemLabel(article[v.schema_field], article)}
                                     />
                                 ))
                         }
 
                         {
-                            (genre.length ?? 0) > 0 && (
-                                <Spacer h gap="4" justifyContent="space-between">
-                                    <Heading type="h6" align="start">
-                                        {gettext('GENRE')}
-                                    </Heading>
-                                    {
-                                        genre.map((val) => (
-                                            <React.Fragment key={val.qcode}>
-                                                {val.name}
-                                            </React.Fragment>
-                                        ))
-                                    }
-                                </Spacer>
-                            )
+                            (genre.length ?? 0) > 0
+                                && allVocabularies.map((v) => v.schema_field).includes('genre') === false
+                                && (
+                                    <MetadataItem
+                                        label={gettext('Genre')}
+                                        value={sdApi.filters.mergeArrayToString(genre, 'name') as string}
+                                    />
+                                )
                         }
 
                         {
-                            (place.length ?? 0) > 0 && (
-                                <Spacer h gap="4" justifyContent="space-between">
-                                    <Heading type="h6" align="start">
-                                        {gettext('PLACE')}
-                                    </Heading>
-                                    {
-                                        place.map((val) => (
-                                            <React.Fragment key={val.qcode}>
-                                                {val.name}
-                                            </React.Fragment>
-                                        ))
-                                    }
-                                </Spacer>
-                            )
+                            (place.length ?? 0) > 0
+                                && allVocabularies.map((v) => v.schema_field).includes('place') === false
+                                && (
+                                    <MetadataItem
+                                        label={gettext('Place')}
+                                        value={sdApi.filters.mergeArrayToString(place, 'name') as string}
+                                    />
+                                )
                         }
 
                         {(ednote?.length ?? 0) > 0 && <MetadataItem label={gettext('Editorial note')} value={ednote} />}
 
-                        <ContentDivider border type="dotted" margin="x-small" />
-
                         <Spacer v gap="4" justifyContent="space-between">
                             <Heading type="h6" align="start">
-                                {gettext('DATELINE')}
+                                {gettext('Dateline').toUpperCase()}
                             </Heading>
                             <Spacer h gap="4" justifyContent="space-between" noWrap>
-                                <DateTime dateTime={dateline.date} /> /
-                                <span>{dateline.located.city}</span>
+                                <DateTime dateTime={dateline?.date} /> /
+                                <span>{dateline?.located.city}</span>
                             </Spacer>
                         </Spacer>
 
@@ -409,10 +420,10 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             />
                         )}
 
-                        <MetadataItem label={gettext('GUID')} value={guid} />
+                        <MetadataItem label={gettext('Guid').toUpperCase()} value={guid} />
 
                         <Input
-                            label={gettext('Unique name')}
+                            label={gettext('Unique name').toUpperCase()}
                             inlineLabel
                             type="text"
                             value={unique_name}
@@ -438,12 +449,11 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                         }
 
                         {
-                            (archive_description?.length ?? 0) > 0 && archive_description !== description_text && (
-                                <MetadataItem
-                                    label={gettext('Description')}
-                                    value={archive_description}
-                                />
-                            )
+                            ['picture'].includes(article.type)
+                                && article?.archive_description !== article?.description_text
+                                && (
+                                    <AnnotationsPreview article={article} />
+                                )
                         }
                     </Spacer>
                 )}

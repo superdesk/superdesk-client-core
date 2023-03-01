@@ -257,6 +257,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
+        this.onArticleChange = this.onArticleChange.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 

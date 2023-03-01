@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {stripHtmlTags} from '../utils';
 import {formatDatelineText} from 'apps/authoring/authoring/helpers';
+import {sdApi} from 'api';
 
 export function removeLodash(value) {
     var cleanedValue = value || '';
@@ -24,27 +25,7 @@ export default angular.module('superdesk.core.filters', [])
         return texts.join('\n');
     })
     .filter('mergeWords', [function() {
-        return function(array, propertyName, schemeName, returnArray) {
-            var subjectMerged = [];
-
-            _.forEach(array, (item) => {
-                var value = _.isNil(propertyName) ? item : item[propertyName];
-
-                if (value) {
-                    subjectMerged.push(value);
-
-                    if (schemeName && item.scheme !== schemeName) {
-                        subjectMerged.pop();
-                    }
-                }
-            });
-
-            if (returnArray) {
-                return subjectMerged;
-            }
-
-            return subjectMerged.join(', ');
-        };
+        return sdApi.filters.mergeArrayToString;
     }])
     .filter('splitWords', () => function(word) {
         var split = [];

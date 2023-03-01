@@ -16,7 +16,15 @@ function getAnnotationTypesAsync(scope) {
         });
 }
 
-function getAllAnnotations(item) {
+interface IAnotationData {
+    body: string;
+    id: number;
+    index: number;
+    styleName: string;
+    type: string;
+}
+
+export function getAllAnnotations(item): Array<IAnotationData> {
     const annotations = [];
 
     for (const field in item[META_FIELD_NAME]) {

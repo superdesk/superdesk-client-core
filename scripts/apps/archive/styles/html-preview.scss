@@ -22,3 +22,10 @@ sup.annotation-id {
         padding: 0;
     }
 }
+
+.annotation-body-react {
+    border-bottom: 1px dotted;
+    p {
+        display: inline;
+    }
+}

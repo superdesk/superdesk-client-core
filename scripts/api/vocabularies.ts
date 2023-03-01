@@ -15,7 +15,7 @@ function isCustomFieldVocabulary(vocabulary: IVocabulary): boolean {
     return vocabulary.field_type != null || vocabulary.custom_field_type != null;
 }
 
-function getLocaleName(term: IVocabularyItem, item: IArticle): string {
+function getVocabularyItemLabel(term: IVocabularyItem, item: IArticle): string {
     if (!term) {
         return 'None';
     }
@@ -43,5 +43,5 @@ export const vocabularies = {
     getAll,
     isCustomFieldVocabulary,
     isSelectionVocabulary,
-    getLocaleName,
+    getVocabularyItemLabel,
 };

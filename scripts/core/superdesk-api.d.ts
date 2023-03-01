@@ -1184,6 +1184,7 @@ declare module 'superdesk-api' {
         originalCreator?: string;
         versioncreator?: string;
         archive_description?: string;
+        rewritten_by?: string;
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
