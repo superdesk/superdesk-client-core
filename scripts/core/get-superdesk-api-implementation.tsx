@@ -116,7 +116,32 @@ export const removeEventListener = <T extends keyof IEvents>(eventName: T, callb
     }
 };
 
-let applicationState: Writeable<ISuperdesk['state']> = {
+export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
+    window.dispatchEvent(
+        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
+    );
+};
+
+export function prepareExternalImageForDroppingToEditor(
+    event: DragEvent,
+    renditions: IArticle['renditions'],
+    additionalData?: Partial<IArticle>,
+) {
+    const item: Partial<IArticle> = {
+        _fetchable: false,
+        _type: 'externalsource',
+        ...(additionalData ?? {}),
+        type: 'picture',
+        renditions: renditions,
+    };
+
+    event.dataTransfer.setData(
+        'application/superdesk.item.picture',
+        JSON.stringify(item),
+    );
+}
+
+export let applicationState: Writeable<ISuperdesk['state']> = {
     articleInEditMode: undefined,
 };
 
@@ -281,6 +306,7 @@ export function getSuperdeskApiImplementation(
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },
+                prepareExternalImageForDroppingToEditor,
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string, title?: string) => new Promise((resolve) => {
