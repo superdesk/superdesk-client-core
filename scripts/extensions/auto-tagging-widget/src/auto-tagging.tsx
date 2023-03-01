@@ -460,7 +460,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     <div className="widget-content sd-padding-all--2">
                         <div>
                             <div className="form__row form__row--flex sd-padding-b--1">
-                                <ButtonGroup align="left">
+                                <ButtonGroup align="start">
                                     <Switch
                                         value={runAutomaticallyPreference}
                                         disabled={readOnly}

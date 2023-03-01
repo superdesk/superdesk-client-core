@@ -5,7 +5,7 @@ import {ITagUi} from '../types';
 import {OrderedMap} from 'immutable';
 import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
 import {ToggleBox, IconButton, Popover} from 'superdesk-ui-framework/react';
-import {debounce} from 'lodash';
+import {debounce, noop} from 'lodash';
 
 interface ITagInput {
     title: string;
@@ -284,6 +284,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                         icon="info-sign"
                         size="small"
                         ariaValue="info"
+                        onClick={noop}
                     />
                 )}
             >
