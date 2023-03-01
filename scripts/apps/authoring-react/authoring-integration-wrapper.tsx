@@ -147,6 +147,7 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     isSidebarCollapsed: boolean;
+    activeSidebarTab: string | null;
 }
 
 const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
@@ -169,6 +170,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
         this.state = {
             isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
+            activeSidebarTab: null,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -219,10 +221,17 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     onClick: () => {
                         toggleSideWidget(widget.label);
                     },
+                    id: widget._id,
                 }));
 
             return (
                 <Nav.SideBarTabs
+                    activeTab={this.state.activeSidebarTab}
+                    onActiveTabChange={(val) => {
+                        this.setState({
+                            activeSidebarTab: val,
+                        });
+                    }}
                     items={sidebarTabs}
                 />
             );
