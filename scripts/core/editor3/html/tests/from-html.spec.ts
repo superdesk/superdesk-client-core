@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {getContentStateFromHtml} from '../from-html';
-import {convertFromRaw, ContentState, ContentBlock} from 'draft-js';
+import {convertFromRaw, ContentState, ContentBlock, convertToRaw} from 'draft-js';
+import {getRawContentStateWithoutBlockAndEntityKeys} from 'core/editor3/helpers/draftInsertEntity.spec';
 
 /**
  * @description Returns the set of blocks corresponding to the content state
@@ -103,5 +104,68 @@ describe('core.editor3.html.from-html', () => {
         expect(blocks[0].getText()).toEqual('bold');
         expect(blocks[1].getText()).toEqual('italic');
         expect(blocks[2].getText()).toEqual('underline');
+    });
+
+    it('should add embeds as external in case association for ID is missing', () => {
+        const html =
+            '<p>Line 1-1</p>'
+            + '<p><!-- EMBED START Image {id: "id123"} --><figure><img src="https://domain.com/image.jpg" alt="image-alt"><figcaption></figcaption></figure><!-- EMBED END Image {id: "id123"} --></p>"'
+            + '<p>Line 2</p>';
+
+        const contentState: ContentState = getContentStateFromHtml(html);
+
+        expect(getRawContentStateWithoutBlockAndEntityKeys(convertToRaw(contentState))).toEqual({
+            'blocks': [
+                {
+                    'text': 'Line 1-1',
+                    'type': 'unstyled',
+                    'depth': 0,
+                    'inlineStyleRanges': [],
+                    'entityRanges': [],
+                    'data': {},
+                },
+                {
+                    'text': ' ',
+                    'type': 'atomic',
+                    'depth': 0,
+                    'inlineStyleRanges': [],
+                    'entityRanges': [
+                        {
+                            'offset': 0,
+                            'length': 1,
+                        },
+                    ],
+                    'data': {},
+                },
+                {
+                    'text': '"',
+                    'type': 'unstyled',
+                    'depth': 0,
+                    'inlineStyleRanges': [],
+                    'entityRanges': [],
+                    'data': {},
+                },
+                {
+                    'text': 'Line 2',
+                    'type': 'unstyled',
+                    'depth': 0,
+                    'inlineStyleRanges': [],
+                    'entityRanges': [],
+                    'data': {},
+                },
+            ],
+            'entityMap': {
+                '0': {
+                    'type': 'EMBED',
+                    'mutability': 'MUTABLE',
+                    'data': {
+                        'data': {
+                            'html': '<img src="https://domain.com/image.jpg" alt="image-alt">',
+                        },
+                        'description': '',
+                    },
+                },
+            },
+        });
     });
 });
