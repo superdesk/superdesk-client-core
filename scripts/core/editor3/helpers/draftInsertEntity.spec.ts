@@ -4,7 +4,7 @@ import {insertEntity} from './draftInsertEntity';
 import {convertFromRaw, SelectionState, EditorState, RawDraftContentState, convertToRaw} from 'draft-js';
 
 // removes keys from blocks and their entity ranges so resulting objects can be compared by value as JSON strings
-function getRawContentStateWithoutBlockAndEntityKeys(
+export function getRawContentStateWithoutBlockAndEntityKeys(
     rawContentState: RawDraftContentState,
 ): Partial<RawDraftContentState> {
     return {
