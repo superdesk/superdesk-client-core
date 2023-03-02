@@ -39,7 +39,6 @@ export default class SearchBar extends React.Component<IProps, IState> {
         };
 
         this.dom = {searchIcon: null};
-        this.toggleSearchBar = this.toggleSearchBar.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
         this.resetSearch = this.resetSearch.bind(this);
         this.resetSearchValue = this.resetSearchValue.bind(this);
@@ -52,14 +51,6 @@ export default class SearchBar extends React.Component<IProps, IState> {
             this.dom.searchIcon.click();
             this.dom.searchIcon.focus();
         }
-    }
-
-    toggleSearchBar() {
-        if (this.props.allowCollapsed === false) {
-            return;
-        }
-
-        this.setState({searchBarExtended: !this.state.searchBarExtended});
     }
 
     /** Reset the field value, close the search bar and load events */
@@ -112,13 +103,13 @@ export default class SearchBar extends React.Component<IProps, IState> {
                             <>
                                 {removeButton}
 
-                                <IconButton
-                                    style="outline"
-                                    size="small"
-                                    ariaValue={gettext('Search')}
-                                    icon="chevron-right-thin"
+                                <button
+                                    className="search-start visible"
                                     onClick={() => this.props.onSearch(this.state.searchInputValue)}
-                                />
+                                    aria-label="Start search"
+                                >
+                                    <i className="icon-chevron-right-thin" />
+                                </button>
                             </>
                         )
                         : null
@@ -126,12 +117,11 @@ export default class SearchBar extends React.Component<IProps, IState> {
         );
 
         return (
-            <div className={'SearchBar flat-searchbar' + (searchBarExtended ? ' extended' : '')}>
-                <div className="search-handler" style={{alignItems: 'center'}}>
+            <div className="SearchBar flat-searchbar extended">
+                <div className="search-handler">
                     <label
                         htmlFor={_uniqueId}
                         className="trigger-icon"
-                        onClick={this.toggleSearchBar}
                         ref={(node) => this.dom.searchIcon = node}
                     >
                         <i className="icon-search" />
@@ -155,11 +145,14 @@ export default class SearchBar extends React.Component<IProps, IState> {
                             )
                             : (
                                 <ManualSearch
+                                    value={this.state.searchInputValue}
                                     actionButtons={actionButtons}
                                     onInputChange={(value) => this.setState({
                                         searchInputValue: value,
                                     })}
-                                    onSearch={() => this.props.onSearch(this.state.searchInputValue)}
+                                    onSearch={() => {
+                                        this.props.onSearch(this.state.searchInputValue);
+                                    }}
                                 />
                             )
                     }
@@ -170,6 +163,5 @@ export default class SearchBar extends React.Component<IProps, IState> {
 }
 
 SearchBar.defaultProps = {
-    timeout: 800,
     allowCollapsed: true,
 };

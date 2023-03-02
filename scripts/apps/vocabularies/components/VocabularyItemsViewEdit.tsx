@@ -185,7 +185,6 @@ interface IState {
     items: Array<IVocabularyItemWithId>;
     page: number;
     searchTerm: string;
-    searchExtended: boolean;
     sortDropdownOpen: boolean;
     sort: ISortOption | null;
     errorMessage: string | null;
@@ -220,7 +219,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
             ),
             page: 1,
             searchTerm: '',
-            searchExtended: false,
             sortDropdownOpen: false,
             sort: initialSortOption,
             errorMessage: null,
@@ -330,15 +328,12 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         return (
             <React.Fragment>
                 <div className="subnav">
-                    <div className={'flat-searchbar' + (this.state.searchExtended ? ' extended' : '')}>
+                    <div className="flat-searchbar extended">
                         <div className="search-handler" role="search">
                             <label
                                 className="trigger-icon"
                                 htmlFor="vocabulary-search"
                                 aria-label={gettext('Toggle search')}
-                                onClick={() => {
-                                    this.setState({searchExtended: !this.state.searchExtended});
-                                }}
                             >
                                 <i className="icon-search" />
                             </label>
@@ -357,7 +352,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         </div>
                     </div>
 
-                    <div className="sortbar sd-margin-l--auto">
+                    <div className="sortbar sd-margin-start--auto">
                         {this.state.sort == null ? null : (
                             <Dropdown
                                 isOpen={this.state.sortDropdownOpen}
