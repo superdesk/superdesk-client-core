@@ -26,7 +26,7 @@ export function getTagInputField(): TagInputFieldType {
         editorComponent: Editor,
         previewComponent: Preview,
         differenceComponent: Difference,
-        hasValue: (valueOperational) => valueOperational != null,
+        hasValue: (valueOperational) => (valueOperational?.length ?? 0) > 0,
         getEmptyValue: () => null,
         configComponent: () => null,
     };

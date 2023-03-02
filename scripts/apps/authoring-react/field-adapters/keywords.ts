@@ -13,7 +13,7 @@ export function getKeywordsAdapter(): IFieldAdapter<IArticle> {
 
     if (hasKeywordCV) {
         return {
-            getFieldV2: (fieldEditor, fieldSchema) => {
+            getFieldV2: () => {
                 const fieldConfig: IDropdownConfigVocabulary = {
                     source: 'vocabulary',
                     vocabularyId: 'keywords',
@@ -30,7 +30,7 @@ export function getKeywordsAdapter(): IFieldAdapter<IArticle> {
                 return fieldV2;
             },
             retrieveStoredValue: (article) => {
-                return article.keywords;
+                return article.keywords ?? [];
             },
             storeValue: (val: Array<string>, article) => {
                 return {
@@ -41,12 +41,12 @@ export function getKeywordsAdapter(): IFieldAdapter<IArticle> {
         };
     } else {
         return {
-            getFieldV2: (fieldEditor, fieldSchema) => {
+            getFieldV2: () => {
                 const fieldV2: IAuthoringFieldV2 = {
                     id: 'keywords',
                     name: gettext('Keywords'),
                     fieldType: TAG_INPUT_FIELD_ID,
-                    fieldConfig: null,
+                    fieldConfig: {},
                 };
 
                 return fieldV2;

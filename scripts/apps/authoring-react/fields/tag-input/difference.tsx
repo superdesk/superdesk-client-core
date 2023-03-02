@@ -10,9 +10,9 @@ export class Difference extends React.PureComponent<IProps> {
 
         return (
             <DifferenceGeneric
-                items1={value1 == null ? [] : [value1]}
-                items2={value2 == null ? [] : [value2]}
-                getId={(item) => item.toString()}
+                items1={value1 == null ? [] : value1}
+                items2={value2 == null ? [] : value2}
+                getId={(item) => JSON.stringify(item)}
                 template={({item}) => <span>{item}</span>}
             />
         );

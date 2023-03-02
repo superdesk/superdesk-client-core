@@ -259,7 +259,6 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     this.fields = (profile) => {
         const editor = profile.editor || {};
 
-        console.log(this._fields);
         return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
 

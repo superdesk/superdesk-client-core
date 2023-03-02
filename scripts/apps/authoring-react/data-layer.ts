@@ -102,7 +102,6 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,
                         name: getLabelForFieldId(fieldId),
-                        // fieldType: fieldId === 'keywords' ? 'keywords' : field.custom_field_type,
                         fieldType: field.custom_field_type,
                         fieldConfig: {
                             ...commonConfigs,
