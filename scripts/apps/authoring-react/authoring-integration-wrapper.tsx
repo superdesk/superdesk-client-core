@@ -39,7 +39,6 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@superdesk/common';
 import {ExportModal} from './toolbar/export-modal';
-import {TemplateModal} from './toolbar/template-modal';
 import {TranslateModal} from './toolbar/translate-modal';
 import {HighlightsModal} from './toolbar/highlights-modal';
 import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
@@ -332,10 +331,20 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     onClick: () => {
                         toggleSideWidget(widget.label);
                     },
+                    id: widget._id,
                 }));
 
             return (
                 <Nav.SideBarTabs
+                    activeTab={this.state.sideWidget.name}
+                    onActiveTabChange={(val) => {
+                        this.setState({
+                            sideWidget: {
+                                name: val,
+                                pinned: this.state.sideWidget?.pinned ?? false,
+                            },
+                        });
+                    }}
                     items={sidebarTabs}
                 />
             );

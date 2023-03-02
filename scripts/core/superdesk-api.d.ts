@@ -46,10 +46,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IFieldAdapter<T> {
-        getFieldV2: (
-            fieldEditor,
-            fieldSchema,
-        ) => IAuthoringFieldV2;
+        getFieldV2: (fieldEditor, fieldSchema) => IAuthoringFieldV2;
 
         /**
          * Allows to customize where values are stored.
@@ -276,6 +273,13 @@ declare module 'superdesk-api' {
         allowSeconds?: boolean;
     };
     export type ITimeUserPreferences = never;
+
+    // AUTHORING-REACT FIELD TYPES - tag input
+
+    export type ITagInputValueOperational = Array<string>;
+    export type ITagInputValueStorage = ITagInputValueOperational;
+    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
 
