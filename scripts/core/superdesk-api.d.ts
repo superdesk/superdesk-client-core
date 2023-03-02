@@ -721,6 +721,11 @@ declare module 'superdesk-api' {
         service: {};
         priority?: number;
         unique_field: string;
+        translations?: {
+            display_name: {
+                [key: string]: string;
+            };
+        };
         schema: {};
         field_type:
             | 'text'
@@ -790,10 +795,19 @@ declare module 'superdesk-api' {
 
     // PAGE
 
+    /**
+     * `enabled` means that monitoring hiding functionality will not work,because we're on a custom page.
+     * When we leave custom page, we have to set `enabled` to false to make it work again with monitoring.
+     * `allowed` (to make it full width) means that an arrow will appear when hovering a menu item to switch to full width.
+     * For example, if a custom page doesn't have a side panel open at the moment, it will be enabled, but not allowed.
+     * If a side panel is opened, it becomes `allowed` to make that panel full width.
+     */
+    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: (fullWidth: boolean) => void};
+
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentType;
+        component: React.ComponentType<{setupFullWidthCapability: (config: IFullWidthPageCapabilityConfiguration) => void}>;
         priority?: number;
 
         showTopMenu?: boolean;
@@ -1692,10 +1706,16 @@ declare module 'superdesk-api' {
                 addImage(field: string, image: IArticle): void;
 
                 /**
-                 * Programatically triggers saving of an article in edit mode.
+                 * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.
                 */
                 save(): void;
+
+                prepareExternalImageForDroppingToEditor(
+                    event: DragEvent,
+                    renditions: IArticle['renditions'],
+                    additionalData?: Partial<IArticle>,
+                ): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;

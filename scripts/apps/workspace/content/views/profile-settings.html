@@ -3,11 +3,13 @@
         <div class="sd-page__header sd-page__header--white">
             <h2 class="sd-page__page-heading" translate>Content Profiles</h2>
         </div>
-        <div class="sd-page__header">
+        <div class="sd-page__header">         
             <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
-    
-            <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
-            <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
+            <div class="button-group button-group--start button-group--comfort">
+                <sd-check ng-model="active_only" label-position="inside" type="radio" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
+                <sd-check ng-model="active_only" ng-value="true" label-position="inside" type="radio" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
+            </div>
+
             <span class="sd-page__element-grow"></span>
             <button id="add-new-content-profile" class="btn btn--primary" ng-click="ctrl.toggleCreate()" data-close="cancel()">
                 <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}

@@ -2,13 +2,16 @@ import * as React from 'react';
 import {
     IFormGroup,
     IGenericListPageComponent,
+    IPage,
     ISuperdesk,
 } from 'superdesk-api';
 import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
 
-export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
-    return class AnnotationsLibraryPage extends React.Component {
+type IProps = React.ComponentProps<IPage['component']>;
+
+export function getAnnotationsLibraryPage(superdesk: ISuperdesk): React.ComponentType<IProps> {
+    return class AnnotationsLibraryPage extends React.Component<IProps> {
         render() {
             const {gettext} = superdesk.localization;
             const {
