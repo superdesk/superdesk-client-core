@@ -47,17 +47,17 @@ const arrowDownStyles = {
     verticalAlign: 'middle',
     borderLeft: '0.4rem solid transparent',
     borderRight: '0.4rem solid transparent',
-    borderTop: '0.4rem solid black',
+    borderTop: '0.4rem solid var(--color-text)',
     opacity: 0.3,
 };
 
 // copied from https://github.com/reactjs/react-autocomplete/blob/master/lib/Autocomplete.js#L178
 const menuStyleDefault: React.CSSProperties = {
     borderRadius: '3px',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-    background: 'rgba(255, 255, 255, 0.9)',
-    padding: '2px 0',
-    fontSize: '90%',
+    boxShadow: 'var(--sd-shadow__dropdown)',
+    background: 'var(--color-dropdown-menu-Bg)',
+    padding: '1rem 0',
+    fontSize: '100%',
     position: 'fixed',
     overflow: 'auto',
 };
@@ -222,6 +222,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     style={{height: this.lastButtonHeight + 'px'}}
                                     placeholder={'Search'}
                                     autoFocus
+                                    className="basic-input"
                                     data-test-id="filter-input"
                                 />
                             );
@@ -265,7 +266,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                                         style={
                                                             this.props.horizontalSpacing === true
                                                                 ? {}
-                                                                : {marginLeft: -8}
+                                                                : {}
                                                         }
                                                     >
                                                         {this.props.placeholder}
@@ -276,7 +277,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                                         style={
                                                             this.props.horizontalSpacing === true
                                                                 ? {}
-                                                                : {marginLeft: -8}
+                                                                : {}
                                                         }
                                                     >
                                                         {this.props.renderItem(selectedItem)}
@@ -286,7 +287,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         <div
                                             style={{
                                                 ...arrowDownStyles,
-                                                ...(this.props.horizontalSpacing === true ? {} : {marginRight: 0}),
+                                                ...(this.props.horizontalSpacing === true ? {} : {marginRight: 8}),
                                             }}
                                         />
                                     </button>
@@ -300,10 +301,10 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                                 onClick={() => {
                                                     this.props.onSelect(null);
                                                 }}
-                                                className="btn btn--small btn--icon-only-circle"
+                                                className="icn-btn icn-btn--small sd-line-input__custom-clear"
                                                 style={{marginLeft: 20}}
                                             >
-                                                <i className="icon-close-small" />
+                                                <i className="icon-remove-sign" />
                                             </button>
                                         </div>
                                     )
@@ -319,10 +320,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             width: '100%',
                             textAlign: 'left',
                             padding: 0,
-                            background: 'white',
+                            color: 'var(--color-dropdown-menu-text)',
+                            background: 'transparent',
                         };
                         const style: React.CSSProperties = isHighlighted
-                            ? {...commonStyles, cursor: 'pointer', background: '#eff7fa'}
+                            ? {...commonStyles, cursor: 'pointer', background: 'var(--sd-colour-interactive--alpha-20)'}
                             : commonStyles;
 
                         return (

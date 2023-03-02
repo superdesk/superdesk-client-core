@@ -74,12 +74,23 @@ export class RundownsList extends React.PureComponent<IProps> {
         super(props);
 
         this.doPreview = this.doPreview.bind(this);
+        this.doEdit = this.doEdit.bind(this);
     }
 
     doPreview(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
         this.props.onEditModeChange(
             rundownId,
             prepareForPreview(
+                this.props.rundownItemAction,
+                rundownItemId,
+            ),
+        );
+    }
+
+    doEdit(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
+        this.props.onEditModeChange(
+            rundownId,
+            prepareForEditing(
                 this.props.rundownItemAction,
                 rundownItemId,
             ),
@@ -114,6 +125,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                         itemTemplate={({entity: rundown, joined}) => (
                             <div style={{margin: 4}}>
                                 <ContentListItem
+                                    locked={rundown._lock}
                                     itemColum={[
                                         {
                                             itemRow: [
@@ -217,7 +229,6 @@ export class RundownsList extends React.PureComponent<IProps> {
                                             fullwidth: true,
                                         },
                                     ]}
-                                    locked={false}
                                     action={(
                                         <Menu
                                             items={[
@@ -265,7 +276,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     rundown.matching_items && (
                                         <div style={{paddingInlineStart: 20, paddingTop: 8}}>
                                             <RundownItems
-                                                readOnly="yes"
+                                                rundownReadOnly="yes"
                                                 items={rundown.matching_items}
                                                 getActions={((rundownItem) => {
                                                     const preview: IMenuItem = {
@@ -303,6 +314,9 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                 })}
                                                 preview={(rundownItem) => {
                                                     this.doPreview(rundown._id, rundownItem._id);
+                                                }}
+                                                edit={(rundownItem) => {
+                                                    this.doEdit(rundown._id, rundownItem._id);
                                                 }}
                                             />
                                         </div>

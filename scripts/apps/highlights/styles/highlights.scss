@@ -102,7 +102,7 @@
         .dropdown__menu-label {
             font-size: 11px;
             padding-left: 0;
-            color: #a7a7a7;
+            color: var(--color-text-lighter);
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

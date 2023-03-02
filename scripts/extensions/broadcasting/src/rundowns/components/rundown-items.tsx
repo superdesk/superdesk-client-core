@@ -7,12 +7,12 @@ import {PlannedDurationLabel} from './planned-duration-label';
 import {superdesk} from '../../superdesk';
 import {IVocabularyItem} from 'superdesk-api';
 import {
-    SHOW_PART_VOCABULARY_ID,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     STATUS_VOCABULARY_ID,
 } from '../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
+import {customizations} from '../../customization';
 const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
@@ -21,14 +21,23 @@ const {Spacer} = superdesk.components;
  * Simpler interface - allows to pass fewer props
  */
 interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
-    readOnly: 'yes';
+    /**
+     * It's a rundown that's in edit mode - not rundown items.
+     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     */
+    rundownReadOnly: 'yes';
     items: Array<T>;
     getActions(item: T): JSX.Element;
     preview(item: T): void;
+    edit(item: T): void;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
-    readOnly: boolean;
+    /**
+     * It's a rundown that's in edit mode - not rundown items.
+     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     */
+    rundownReadOnly: boolean;
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
@@ -49,10 +58,6 @@ function isRundownItem(x: IRundownItem | Partial<IRundownItemBase>): x is IRundo
 
 export class RundownItems<T extends IRundownItem | IRundownItemBase> extends React.PureComponent<IProps<T>> {
     render() {
-        const showParts = Map<string, IVocabularyItem>(
-            vocabulary.getVocabulary(SHOW_PART_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
-        );
-
         const statuses = Map<string, IVocabularyItem>(
             vocabulary.getVocabulary(STATUS_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
         );
@@ -67,7 +72,6 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
 
         const array: React.ComponentProps<typeof TableList>['array'] = this.props.items.map((item) => {
             const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
-            const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
             const subitemVocabularies = item.subitems == null
                 ? null
@@ -91,30 +95,8 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                         }
 
                         {
-                            showPart != null && (
-                                <Label
-                                    text={showPart.name}
-                                    hexColor={showPart.color}
-                                    size="normal"
-                                />
-                            )
-                        }
-
-                        {
-                        // TODO: show 3 letter show symbol
-                        }
-                    </Spacer>
-                ),
-                center: (
-                    <span>
-                        {item.title}
-                    </span>
-                ),
-                end: (
-                    <Spacer h gap="4" justifyContent="start" noGrow>
-                        {
                             subitemVocabularies != null && (
-                                <Spacer h gap="4" justifyContent="start" noGrow>
+                                <Spacer h gap="4" justifyContent="start" noGrow style={{flexWrap: 'wrap'}}>
                                     {
                                         subitemVocabularies.map(({name, color}, i) => (
                                             <Label
@@ -129,6 +111,15 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                                 </Spacer>
                             )
                         }
+                    </Spacer>
+                ),
+                center: (
+                    <span>
+                        {customizations.getRundownItemDisplayName?.(item) ?? item.title}
+                    </span>
+                ),
+                end: (
+                    <Spacer h gap="4" justifyContent="start" noGrow>
                         {
                             item.planned_duration != null && (
                                 <PlannedDurationLabel
@@ -154,14 +145,12 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     this.props.preview(item);
                 },
                 onDoubleClick: () => {
-                    if (!this.props.readOnly) {
-                        this.props.edit(item);
-                    }
+                    this.props.edit(item);
                 },
             });
         });
 
-        if (this.props.readOnly) {
+        if (this.props.rundownReadOnly) {
             return (
                 <TableList
                     array={array}

@@ -1,64 +1,103 @@
-<div>
-  <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
-      <div class="pull-left">
+<div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}"
+    data-text="{{environmentName}}">
+    <div class="pull-left">
         <span id="hamburger-menu">
-          <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()" ng-class="{'is-active': flags.menu}" aria-controls="main-menu" aria-expanded="{{flags.menu ? true : false}}" aria-label="{{ :: 'Toggle main menu' | translate }}">
-            <span class="hamburger__box">
-              <span class="hamburger__inner"></span>
-            </span>
-          </button>
+            <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()"
+                ng-class="{'is-active': flags.menu}" aria-controls="main-menu"
+                aria-expanded="{{flags.menu ? true : false}}" aria-label="{{ :: 'Toggle main menu' | translate }}">
+                <span class="hamburger__box">
+                    <span class="hamburger__inner"></span>
+                </span>
+            </button>
         </span>
-        <h1 class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings' && !currentRoute.topTemplateUrl"
-          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</h1>
-        <h1 class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'">{{ "Settings" | translate}}</h1>
+        <h1 class="sd-top-menu__header"
+            ng-if="currentRoute.category !== 'superdesk.core.menu.settings' && !currentRoute.topTemplateUrl"
+            ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</h1>
+        <h1 class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'">{{
+            "Settings" | translate}}</h1>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
-      </div>
-      <div class="top-menu__content-block top-menu__content-block--right">
+    </div>
+    <div class="top-menu__content-block top-menu__content-block--right">
         <div sd-top-menu-info-placeholder></div>
         <button ng-if="privileges.feature_preview" ng-click="toggleBeta()" class="beta-switch">
-            <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
-            <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
+            <span class="stable" ng-hide="beta"
+                title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
+            <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}"
+                flow="down">feature preview</span>
         </button>
         <div style="float: right">
-          <sd-global-menu-horizontal></sd-global-menu-horizontal>
+            <sd-global-menu-horizontal></sd-global-menu-horizontal>
         </div>
-        <button class="current-user" ng-click="toggleNotifications()" aria-label="{{ 'View notifications and profile' | translate }}">
-          <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
-          <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+
+        <button class="navbtn" ng-click="toggleTheme()">
+            <i class="icon-adjust" style="color: white"></i>
         </button>
-      </div>
-  </div>
 
-  <div id="side-menu" ng-class="{'menu-open': flags.menu}" ng-include="currentRoute.sideTemplateUrl"></div>
+        <button class="navbtn dropdown__toggle" ng-click="toggleNotifications()"
+            aria-label="{{ 'View notifications' | translate }}">
+            <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{
+                notifications.unread }}</span>
+            <i class="icon-bell" style="color: white"></i>
+        </button>
 
-  <nav id="main-menu" class="main-menu" aria-labelledby="main-menu_title">
+        <div class="dropdown dropdown--align-right current-user__dropdown" dropdown>
+            <button class="current-user__button dropdown__toggle" aria-label="{{ 'View profile details' | translate }}" dropdown__toggle>
+                <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+            </button>
+            <ul class="dropdown__menu">
+                <li class="sd-text-align--center">
+                    <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+                    <h4 class="current-user__display-name">{{currentUser.display_name }}</h4>
+                    <span class="current-user__username">{{currentUser.username }}</span>
+                </li>
+                <li class="dropdown__menu-divider"></li>
+                <li class="sd-text-align--center  sd-padding-x--2 sd-padding-t--1 sd-padding-b--1" >
+                    <div class="button-group button-group--vertical">
+                        <a href="#/profile/" class="btn btn--hollow btn--expanded" translate>Manage profile</a>
+                        <button class="btn btn--hollow btn--expanded" ng-click="logout()" translate>Sign out</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="side-menu" ng-class="{'menu-open': flags.menu}" ng-include="currentRoute.sideTemplateUrl"></div>
+
+<nav id="main-menu" data-theme="dark-ui" class="main-menu" aria-labelledby="main-menu_title">
     <div class="main-menu__header">
-      <h2 id="main-menu_title" class="main-menu__heading" translate>Main menu</h2>
+        <h2 id="main-menu_title" class="main-menu__heading" translate>Main menu</h2>
     </div>
     <div class="main-menu__content">
-      <ul class="main-menu__list">
-        <li class="main-menu__list-item" ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'" ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
-          <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
-        </li>
-        <li class="main-menu__group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
-        <li class="main-menu__list-item" ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions" ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
-          <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">
-            {{ :: item.label | translate }}
-            <sup class="btn-toggle-label" ng-if="item.betaMark">Beta</sup>
-          </a>
-        </li>
-        <li ng-if="feedback_url" class="main-menu__group-header" translate>Feedback</li>
-        <li class="main-menu__list-item" ng-if="feedback_url" >
-          <a class="main-menu__menu-item" ng-href="{{ feedback_url }}" target="_blank" translate>Feedback/Suggestions</a>
-        </li>
-      </ul>
+        <ul class="main-menu__list">
+            <li class="main-menu__list-item"
+                ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'"
+                ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+                <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
+                    title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
+            </li>
+            <li class="main-menu__group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
+            <li class="main-menu__list-item"
+                ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions"
+                ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+                <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
+                    title="{{ :: item.description | translate }}">
+                    {{ :: item.label | translate }}
+                    <sup class="btn-toggle-label" ng-if="item.betaMark">Beta</sup>
+                </a>
+            </li>
+            <li ng-if="feedback_url" class="main-menu__group-header" translate>Feedback</li>
+            <li class="main-menu__list-item" ng-if="feedback_url">
+                <a class="main-menu__menu-item" ng-href="{{ feedback_url }}" target="_blank"
+                    translate>Feedback/Suggestions</a>
+            </li>
+        </ul>
     </div>
     <div class="main-menu__footer">
-      <span class="powered" translate>Powered by Superdesk technology</span>
-      <i role="img" class="icon-superdesk" aria-label="{{ :: 'Superdesk logo' | translate }}"></i>
-      <span class="about"><a ng-click="openAbout()" translate>About Superdesk</a></span>
+        <span class="powered" translate>Powered by Superdesk technology</span>
+        <i role="img" class="icon-superdesk" aria-label="{{ :: 'Superdesk logo' | translate }}"></i>
+        <span class="about"><a ng-click="openAbout()" translate>About Superdesk</a></span>
     </div>
-  </nav>
+</nav>
 
-  <div sd-about data-active="aboutActive"></div>
-</div>
+<div sd-about data-active="aboutActive"></div>

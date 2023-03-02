@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -26,10 +26,8 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        const selectedDestination = getInitialDestination(props.items, false);
-
         this.state = {
-            selectedDestination: selectedDestination,
+            selectedDestination: getInitialDestination(props.items, false),
         };
 
         this.fetchItems = this.fetchItems.bind(this);

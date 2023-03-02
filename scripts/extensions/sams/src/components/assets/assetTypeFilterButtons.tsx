@@ -13,7 +13,7 @@ import {updateAssetSearchParamsAndListItems} from '../../store/assets/actions';
 import {getAssetSearchParams} from '../../store/assets/selectors';
 
 // UI
-import {CheckButtonGroup, RadioGroup} from 'superdesk-ui-framework/react';
+import {RadioButtonGroup} from 'superdesk-ui-framework/react';
 
 interface IProps {
     searchParams: IAssetSearchParams;
@@ -48,19 +48,17 @@ export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps>
         const {gettext} = superdeskApi.localization;
 
         return (
-            <CheckButtonGroup padded={true}>
-                <RadioGroup
-                    value={this.props.searchParams.mimetypes}
-                    onChange={this.changeFilter}
-                    options={[
-                        {value: ASSET_TYPE_FILTER.ALL, label: gettext('All item types')},
-                        {value: ASSET_TYPE_FILTER.IMAGES, label: gettext('Images only')},
-                        {value: ASSET_TYPE_FILTER.VIDEOS, label: gettext('Videos only')},
-                        {value: ASSET_TYPE_FILTER.AUDIO, label: gettext('Audio only')},
-                        {value: ASSET_TYPE_FILTER.DOCUMENTS, label: gettext('Documents only')},
-                    ]}
-                />
-            </CheckButtonGroup>
+            <RadioButtonGroup
+                value={this.props.searchParams.mimetypes}
+                onChange={this.changeFilter}
+                options={[
+                    {value: ASSET_TYPE_FILTER.ALL, label: gettext('All item types')},
+                    {value: ASSET_TYPE_FILTER.IMAGES, label: gettext('Images only')},
+                    {value: ASSET_TYPE_FILTER.VIDEOS, label: gettext('Videos only')},
+                    {value: ASSET_TYPE_FILTER.AUDIO, label: gettext('Audio only')},
+                    {value: ASSET_TYPE_FILTER.DOCUMENTS, label: gettext('Documents only')},
+                ]}
+            />
         );
     }
 }

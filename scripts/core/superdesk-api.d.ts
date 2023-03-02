@@ -159,6 +159,7 @@ declare module 'superdesk-api' {
         availableOffline: boolean;
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
+        keyBindings?: IKeyBindings;
     }
 
     interface IPropsAuthoring<T> {
@@ -175,7 +176,7 @@ declare module 'superdesk-api' {
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
-        getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+        getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
         getAuthoringTopBarWidgets(
             options: IExposedFromAuthoring<T>,
@@ -188,10 +189,20 @@ declare module 'superdesk-api' {
 
         disableWidgetPinning?: boolean; // defaults to false
 
+        sideWidget: null | {
+            name: string;
+            pinned: boolean;
+        };
+
+        onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
+
         // Runs before re-render.
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+
+        getSideWidgetNameAtIndex(item: T, index: number): string;
+        openWidget(name: string | null): void;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -325,6 +336,9 @@ declare module 'superdesk-api' {
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
 
+        // read time, character count, word count; defaults to true
+        showStatistics?: boolean;
+
         /**
          * Value - field ID of editor3 field.
          *
@@ -434,12 +448,20 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
+    /**
+     * EXAMPLE: `{'ctrl+shift+s': () => save()}`
+     */
+    export interface IKeyBindings {
+        [key: string]: () => void;
+    }
+
     export interface IAuthoringAction {
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
         label: string;
         onTrigger(): void;
+        keyBindings?: IKeyBindings;
     }
 
     export interface IArticleActionBulk {
@@ -627,7 +649,7 @@ declare module 'superdesk-api' {
                 article: IArticle,
                 contentProfile: IContentProfileV2,
                 fieldsData: import('immutable').Map<string, unknown>,
-            ): Promise<Array<IAuthoringAction>>;
+            ): Array<IAuthoringAction>;
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -641,7 +663,7 @@ declare module 'superdesk-api' {
             };
             entities?: {
                 article?: {
-                    getActions?(article: IArticle): Promise<Array<IAuthoringAction>>;
+                    getActions?(article: IArticle): Array<IAuthoringAction>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -896,6 +918,14 @@ declare module 'superdesk-api' {
 
     export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
+    export interface IHighlight extends IBaseRestApiResponse {
+        name: string;
+        auto_insert: string;
+        desks: Array<IDesk['_id']>;
+        groups: Array<string>;
+    }
+
+    export type IHighlightResponse = IRestApiResponse<IHighlight>;
     export interface ITranslation extends IBaseRestApiResponse {
         label: string;
         language: string;
@@ -1224,6 +1254,7 @@ declare module 'superdesk-api' {
         sams_settings?: {
             allowed_sets?: Array<string>;
         };
+        send_to_desk_not_allowed?: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -1428,12 +1459,27 @@ declare module 'superdesk-api' {
     }
 
 
+    export interface ISubjectCode {
+        name: string;
+        qcode: string;
+        parent?: string;
+    }
+
     // PAGE
+
+    /**
+     * `enabled` means that monitoring hiding functionality will not work,because we're on a custom page.
+     * When we leave custom page, we have to set `enabled` to false to make it work again with monitoring.
+     * `allowed` (to make it full width) means that an arrow will appear when hovering a menu item to switch to full width.
+     * For example, if a custom page doesn't have a side panel open at the moment, it will be enabled, but not allowed.
+     * If a side panel is opened, it becomes `allowed` to make that panel full width.
+     */
+    export type IFullWidthPageCapabilityConfiguration = {enabled: false} | {enabled: true; allowed: false} | {enabled: true; allowed: true; onToggle: (fullWidth: boolean) => void};
 
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentType;
+        component: React.ComponentType<{setupFullWidthCapability: (config: IFullWidthPageCapabilityConfiguration) => void}>;
         priority?: number;
 
         /**
@@ -3132,6 +3178,7 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         language: string;
         config: IConfig;
+        fieldId: string;
 
         fieldsData: IFieldsData;
 

@@ -1,5 +1,5 @@
 import React, {CSSProperties} from 'react';
-import {IArticle, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -27,6 +27,8 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     item: IArticle;

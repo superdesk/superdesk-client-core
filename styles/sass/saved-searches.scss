@@ -14,7 +14,8 @@
     margin-bottom: 10px;
     padding: 9px 20px;
     font-size: 13px;
-    background: #DEE5E8;
+    background: var(--sd-item__main-Bg--alternate);
+    border-bottom: 1px solid var(--sd-colour-line--x-light);
 }
 
 .saved-search-subscriptions--action {

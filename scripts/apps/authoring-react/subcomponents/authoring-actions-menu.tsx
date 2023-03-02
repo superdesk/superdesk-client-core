@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 interface IProps {
-    getActions: () => Promise<Array<IAuthoringAction>>;
+    getActions: () => Array<IAuthoringAction>;
 }
 
 interface IState {
@@ -25,9 +25,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     }
 
     getActions() {
-        this.props.getActions().then((actions) => {
-            this.setState({actions});
-        });
+        this.setState({actions: this.props.getActions()});
     }
 
     render() {

@@ -30,7 +30,7 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
             <ul className="simple-list" style={{padding: 0}}>
                 {this.state.items.length === 0 && (
                     <li style={{minHeight: this.props.ids.length * 1.5 + 'em'}}>
-                        <div className="sd-loader sd-loader--dark-ui" />
+                        <div className="sd-loader" />
                     </li>
                 )}
                 {this.state.items.map((item) => {

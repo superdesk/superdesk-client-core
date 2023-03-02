@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -10,6 +10,7 @@ import {getInitialDestination} from '../utils/get-initial-destination';
 import {canSendToPersonal} from '../utils/can-send-to-personal';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     items: Array<IArticle>;

@@ -6,8 +6,8 @@
     margin-top: 4px;
     max-height: 10em;
     overflow-y: auto;
-    background-color: #fff;
-    border: 1px solid #dfdfdf;
+    background-color: var(--sd-item__main-Bg);
+    border: 1px solid var(--sd-colour-line--light);
 
     li {
         padding: 2px 2px 2px 8px;
@@ -16,7 +16,7 @@
         align-items: center;
         justify-content: space-between;
         &:hover {
-            background-color: #e7f2f7;
+            background-color: var(--sd-item__main-Bg--alternate);
         }
         &.vs-repeat-before-content, &.vs-repeat-after-content {
             padding: 0; margin: 0;
@@ -56,7 +56,7 @@
     &--abbreviation {
         font-weight: 400;
         font-size: 1.4rem;
-        color: $grayText;
+        color: var(--color-text-light);
     }
 }
 .abbreviations-field + .abbreviations-field {

@@ -128,6 +128,7 @@ export class SubitemsViewEdit extends React.PureComponent<IProps> {
                                                             }
                                                         }}
                                                         readOnly={this.props.readOnly}
+                                                        editorFormat={[]}
                                                     />
                                                 </div>
                                             </Spacer>

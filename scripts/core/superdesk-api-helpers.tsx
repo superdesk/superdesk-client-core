@@ -2,7 +2,7 @@ import {IArticle, IAuthoringAction, IExtensionActivationResult} from 'superdesk-
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 
-export function getArticleActionsFromExtensions(item: IArticle): Promise<Array<IAuthoringAction>> {
+export function getArticleActionsFromExtensions(item: IArticle): Array<IAuthoringAction> {
     const actionGetters
         : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
     = flatMap(
@@ -10,8 +10,7 @@ export function getArticleActionsFromExtensions(item: IArticle): Promise<Array<I
         (extension) => extension.activationResult.contributions?.entities?.article?.getActions ?? [],
     );
 
-    return Promise.all(actionGetters.map((getPromise) => getPromise(item)))
-        .then((res) => {
-            return flatMap(res);
-        });
+    return flatMap(
+        actionGetters.map((getAction) => getAction(item)),
+    );
 }

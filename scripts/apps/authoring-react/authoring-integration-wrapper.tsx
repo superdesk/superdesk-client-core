@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import {ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -12,6 +12,10 @@ import {
     IExtensionActivationResult,
     ITopBarWidget,
     IExposedFromAuthoring,
+    IAuthoringStorage,
+    IFieldsAdapter,
+    IStorageAdapter,
+    IRestApiResponse,
 } from 'superdesk-api';
 import {AuthoringReact} from './authoring-react';
 import {authoringStorageIArticle} from './data-layer';
@@ -33,17 +37,22 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {TemplateModal} from './toolbar/template-modal';
-import {IProps} from './authoring-angular-integration';
 import {showModal} from '@superdesk/common';
-import ExportModal from './toolbar/export-modal';
-import TranslateModal from './toolbar/translate-modal';
+import {ExportModal} from './toolbar/export-modal';
+import {TranslateModal} from './toolbar/translate-modal';
+import {HighlightsModal} from './toolbar/highlights-modal';
+import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {getArticleAdapter} from './article-adapter';
+import {ui} from 'core/ui-utils';
+import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
+import {ITEM_STATE} from 'apps/search/interfaces';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
     contentProfile: IContentProfileV2,
     fieldsData: Map<string, unknown>,
-): Promise<Array<IAuthoringAction>> {
+): Array<IAuthoringAction> {
     const actionGetters
         : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
     = flatMap(
@@ -51,13 +60,16 @@ function getAuthoringActionsFromExtensions(
         (extension) => extension.activationResult.contributions?.getAuthoringActions ?? [],
     );
 
-    return Promise.all(actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)))
-        .then((res) => {
-            return flatMap(res);
-        });
+    return flatMap(
+        actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)),
+    );
 }
 
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
+
+interface IProps {
+    itemId: IArticle['_id'];
+}
 
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
@@ -107,6 +119,46 @@ function getPublishToolbarWidget(
     return publishWidgetButton;
 }
 
+const getCompareVersionsModal = (
+    getLatestItem: () => IArticle,
+    authoringStorage: IAuthoringStorage<IArticle>,
+    fieldsAdapter: IFieldsAdapter<IArticle>,
+    storageAdapter: IStorageAdapter<IArticle>,
+): IAuthoringAction => ({
+    label: gettext('Compare versions'),
+    onTrigger: () => {
+        const article = getLatestItem();
+
+        Promise.all([
+            httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                method: 'GET',
+                path: `/archive/${article._id}?version=all`,
+            }),
+            getArticleAdapter(),
+        ]).then(([res, adapter]) => {
+            const versions = res._items.map((item) => adapter.toAuthoringReact(item)).reverse();
+
+            if (versions.length <= 1) {
+                ui.alert(gettext('At least two versions are needed for comparison. This article has only one.'));
+            } else {
+                showModal(({closeModal}) => {
+                    return (
+                        <CompareArticleVersionsModal
+                            closeModal={closeModal}
+                            authoringStorage={authoringStorage}
+                            fieldsAdapter={fieldsAdapter}
+                            storageAdapter={storageAdapter}
+                            versions={versions}
+                            article={article}
+                            getLanguage={() => article.language}
+                        />
+                    );
+                });
+            }
+        });
+    },
+});
+
 const getExportModal = (
     getLatestItem: () => IArticle,
     handleUnsavedChanges: () => Promise<IArticle>,
@@ -131,6 +183,73 @@ const getExportModal = (
     },
 });
 
+const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
+    const showHighlightsModal = () => {
+        sdApi.highlights.fetchHighlights().then((res) => {
+            if (res._items.length === 0) {
+                ui.alert(gettext('No highlights have been created yet.'));
+            } else {
+                showModal(({closeModal}) => (
+                    <HighlightsModal
+                        article={getItem()}
+                        closeModal={closeModal}
+                    />
+                ));
+            }
+        });
+    };
+
+    return {
+        label: gettext('Highlights'),
+        onTrigger: () => showHighlightsModal(),
+        keyBindings: {
+            'ctrl+shift+h': () => {
+                showHighlightsModal();
+            },
+        },
+    };
+};
+
+const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Save as template'),
+    onTrigger: () => (
+        showModal(({closeModal}) => {
+            return (
+                <TemplateModal
+                    closeModal={closeModal}
+                    item={getItem()}
+                />
+            );
+        })
+    ),
+});
+
+const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Translate'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <TranslateModal
+                closeModal={closeModal}
+                article={getItem()}
+            />
+        ));
+    },
+});
+
+const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Marked for desks'),
+    onTrigger: () => (
+        showModal(({closeModal}) => {
+            return (
+                <MarkForDesksModal
+                    closeModal={closeModal}
+                    article={getItem()}
+                />
+            );
+        })
+    ),
+});
+
 interface IPropsWrapper extends IProps {
     onClose?(): void;
     getInlineToolbarActions?(options: IExposedFromAuthoring<IArticle>): {
@@ -147,20 +266,11 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     isSidebarCollapsed: boolean;
-    activeSidebarTab: string | null;
+    sideWidget: null | {
+        name: string;
+        pinned: boolean;
+    };
 }
-
-const getTranslateAction = (getItem: () => IArticle): IAuthoringAction => ({
-    label: gettext('Translate'),
-    onTrigger: () => {
-        showModal(({closeModal}) => (
-            <TranslateModal
-                closeModal={closeModal}
-                article={getItem()}
-            />
-        ));
-    },
-});
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
@@ -170,7 +280,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
         this.state = {
             isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
-            activeSidebarTab: null,
+            sideWidget: null,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -226,10 +336,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.activeSidebarTab}
+                    activeTab={this.state.sideWidget.name}
                     onActiveTabChange={(val) => {
                         this.setState({
-                            activeSidebarTab: val,
+                            sideWidget: {
+                                name: val,
+                                pinned: this.state.sideWidget?.pinned ?? false,
+                            },
                         });
                     }}
                     items={sidebarTabs}
@@ -244,20 +357,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             defaultToolbarItems.concat(topbar2WidgetsFromExtensions).map(
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
-
-        const saveAsTemplate = (item: IArticle): IAuthoringAction => ({
-            label: gettext('Save as template'),
-            onTrigger: () => (
-                showModal(({closeModal}) => {
-                    return (
-                        <TemplateModal
-                            closeModal={closeModal}
-                            item={item}
-                        />
-                    );
-                })
-            ),
-        });
 
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
@@ -298,23 +397,38 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 getLatestItem,
                                 handleUnsavedChanges,
                                 hasUnsavedChanges,
+                                authoringStorage,
+                                fieldsAdapter,
+                                storageAdapter,
                             }) => {
-                                return Promise.all([
-                                    getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
-                                    getArticleActionsFromExtensions(item),
-                                ]).then((res) => {
-                                    const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
+                                const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
+                                    item,
+                                    contentProfile,
+                                    fieldsData,
+                                );
+                                const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
 
-                                    return [
-                                        saveAsTemplate(item),
-                                        getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
-                                        getTranslateAction(getLatestItem),
-                                        ...authoringActionsFromExtensions,
-                                        ...articleActionsFromExtensions,
-                                    ];
-                                });
+                                return [
+                                    getSaveAsTemplate(getLatestItem),
+                                    getCompareVersionsModal(
+                                        getLatestItem,
+                                        authoringStorage,
+                                        fieldsAdapter,
+                                        storageAdapter,
+                                    ),
+                                    getHighlightsAction(getLatestItem),
+                                    getMarkedForDesksModal(getLatestItem),
+                                    getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
+                                    getTranslateModal(getLatestItem),
+                                    ...authoringActionsFromExtensions,
+                                    ...articleActionsFromExtensions,
+                                ];
                             }}
-                            getInlineToolbarActions={(x) => this.props.getInlineToolbarActions(x)}
+                            sideWidget={this.state.sideWidget}
+                            onSideWidgetChange={(sideWidget) => {
+                                this.setState({sideWidget});
+                            }}
+                            getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={
                                 () => Object.values(extensions)
                                     .flatMap(({activationResult}) =>
@@ -389,6 +503,18 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSidebar={this.state.isSidebarCollapsed ? null : getSidebar}
                             topBar2Widgets={topbar2WidgetsReady}
                             validateBeforeSaving={false}
+                            getSideWidgetNameAtIndex={(article, index) => {
+                                return getWidgetsFromExtensions(article)[index].label;
+                            }}
+                            openWidget={(name: string | null) => {
+                                this.setState({
+                                    ...this.state,
+                                    sideWidget: name == null ? null : {
+                                        name,
+                                        pinned: this.state.sideWidget?.pinned ?? false,
+                                    },
+                                });
+                            }}
                         />
                     );
                 }}

@@ -4,7 +4,7 @@ import React from 'react';
 export const UploadComplete = () => {
     return (
         <div className="file-uploaded">
-            <span><i className="icon-ok icon--green" /></span>
+            <i className="big-icon--checkmark-circle sd-file-upload__icon" />
             <p>{gettext('Your upload was successful')}</p>
         </div>
     );

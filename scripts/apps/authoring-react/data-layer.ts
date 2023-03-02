@@ -7,6 +7,7 @@ import {
     ICommonFieldConfig,
     IAuthoringStorage,
     IFieldsAdapter,
+    IEditor3Config,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -22,6 +23,7 @@ import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
+import {description_text, DESCRIPTION_TEXT_FIELD_ID} from './field-adapters/description_text';
 
 function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -120,6 +122,14 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             } else {
                 throw new Error('invalid section');
             }
+        }
+
+        // TODO: write an upgrade script and remove hardcoding
+        // after angular based authoring is removed from the codebase
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema);
+
+            contentFields = contentFields.set(description_field.id, description_field);
         }
 
         const profile: IContentProfileV2 = {

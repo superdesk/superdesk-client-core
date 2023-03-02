@@ -1,27 +1,27 @@
 <div ng-controller="IngestStatsConfigController" class="widget-config">
     <form class="form-horizontal">
         <fieldset>
-
-            <div class="field">
-                <label translate>Select source</label>
-                <div class="control">
-                    <select ng-model="configuration.source" class="input-medium">
-                        <option value="source" translate>Source stats</option>
-                        <option value="urgency" translate>Urgency stats</option>
-                        <option value="type" translate>Item type stats</option>
-                    </select>
+            <div class="form__group form__group--default form__group--mb-2 sd-margin-t--0-5">
+                <div class="form__item">
+                    <div class="sd-input sd-input--is-select">
+                        <label class="sd-input__label" for="ingest-sources" translate>Select source</label>
+                        <select id="ingest-sources" ng-model="configuration.source" class="sd-input__select">
+                            <option value="source" translate>Source stats</option>
+                            <option value="urgency" translate>Urgency stats</option>
+                            <option value="type" translate>Item type stats</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="field">
-                <label translate>Select color</label>
-                <div class="control">
-                    <select class="input-medium" ng-model="configuration.colorScheme" ng-options="scheme.name as scheme.name for scheme in schemes"></select>
+            <div class="form__group form__group--default form__group--mb-2">
+                <div class="form__item">
+                    <div class="sd-input sd-input--is-select">
+                        <label class="sd-input__label" for="source-color" translate>Select color</label>
+                        <select class="sd-input__select" ng-model="configuration.colorScheme" ng-options="scheme.name as scheme.name for scheme in schemes"></select>
+                    </div>
                 </div>
             </div>
-
         </fieldset>
-
     </form>
-
 </div>

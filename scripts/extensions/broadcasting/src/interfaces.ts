@@ -48,13 +48,12 @@ export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 export interface IRundownItemBase {
     readonly rundown: IRundown['_id'];
     item_type?: string;
-    show_part?: string;
     duration: number;
     status?: string;
     planned_duration: number;
     title: string;
+    technical_title: string;
     content?: string;
-    additional_notes?: string;
     fields_meta?: {
         [key: string]: {
             draftjsState?: [RawDraftContentState];

@@ -27,9 +27,9 @@
 }
 
 .sd-widget {
-    background: #fff;
+    background: var(--sd-colour__dashboard-widget-Bg);
     border-top:0;
-    border-radius: 2px;
+    border-radius: var(--b-radius--medium);
     box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
     width: 100%;
     height: 100%;
@@ -40,21 +40,23 @@
 
     .widget-line {
         grid-row: topLine;
-        @include border-radius(1px 1px 0 0);
-        height: 3px;
-        background: #444;
+        border-radius: 1px 1px 0 0;
+        height: 0px;
+        background: transparent;
     }
     .widget-header {
         grid-row: mainHeader;
         display: flex;
         align-items: center;
         height: 34px;
-        box-shadow: 0 1px 0 0 rgba(0,0,0,.12);
+        box-shadow: 0 1px 0 0 var(--sd-colour-line--medium);
         position: relative;
         z-index: 2;
+        background-color: var(--sd-item__main-Bg);
+        border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
         .widget-title {
-            color: #333;
-            padding-left: 8px;
+            color: $sd-text;
+            padding-inline-start: 12px;
             font-size: 1.3rem;
             font-weight: 400;
         }
@@ -65,11 +67,13 @@
         width: 36px;
         justify-content: center;
         height: 100%;
-        border-right: 1px solid rgba(123, 123, 123, 0.2);
+        border-right: 1px solid var(--sd-colour-line--light);
         transition: all ease-in-out 0.1s;
+        border-radius: var(--b-radius--medium) 0 0 0;
         i {
             opacity: 0.5;
             transition: all ease-in-out 0.1s;
+            color: $sd-text;
         }
         &:hover {
             i {
@@ -80,12 +84,12 @@
         &:active {
             i {
                 opacity: 1;
-                color: $sd-blue;
+                color: var(--sd-colour-interactive);
                 //transition: all ease-in-out 0.1s;
             }
         }
         &--active {
-            background-color:  $sd-blue;
+            background-color: var(--sd-colour-interactive);
             i {
                 opacity: 0.5;
                 color: $white;
@@ -97,22 +101,24 @@
         grid-row: mainContent;
         overflow-y: hidden;
         .activity-list.card-list>li {
-            box-shadow: 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
-            @include border-radius(2px);
+            box-shadow: 0 0 0 1px var(--sd-shadow-outline--2), 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
+            border-radius: 2px;
             &:hover {
-                box-shadow: 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
+                box-shadow: 0 0 0 1px var(--sd-shadow-outline--2), 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
             }
         }
     }
     .widget-footer {
-        border-top: 1px solid #e7e7e7;
+        border-top: 1px solid var(--sd-colour-line--medium);
         height: 31px;
+        background-color: var(--sd-item__main-Bg);
+        border-radius: 0 0 var(--b-radius--medium) var(--b-radius--medium);
     }
     .widget-settings {
         position: absolute;
-        top : 6px;
-        right: 4px;
-        line-height: 14px;
+        top : 2px;
+        right: 6px;
+        line-height: 1;
         width: 28px;
         height: 28px;
         text-align: center;
@@ -120,7 +126,7 @@
         .dropdown__toggle {
             margin-top: 4px;
             i {
-                @include opacity(70);
+                opacity: 0.7;
             }
         }
         .dropdown__menu {
@@ -134,7 +140,7 @@
             height: 12px;
             background: url(~images/widget-slider.png) no-repeat 0 0;
             margin-top: 9px;
-            @include opacity(85);
+            opacity: 0.85;
             &.left {
                 float: left;
                 margin-left: 9px;
@@ -146,10 +152,10 @@
             }
             &:hover {
                 cursor: pointer;
-                @include opacity(100);
+                opacity: 1;
             }
             &.disable {
-                @include opacity(40);
+                opacity: 0.4;
             }
         }
     }
@@ -226,7 +232,7 @@ Widgets styles
             padding-bottom: 10px;
             border-bottom: 1px solid #f0f0f0;
             font-size: 18px;
-            color: #666;
+            color: $sd-text;
             letter-spacing: 1px;
         }
         .block {
@@ -472,17 +478,16 @@ Add new widget modal
         width: calc(#{33%} - #{40px});
         margin: 20px;
         padding: 0;
-        @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
-        @include border-radius(2px);
-        @include box-sizing(border-box);
-        background-color: white;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+        border-radius: 4px;
+        background-color: var(--sd-item__main-Bg);
         position: relative;
         .thumbnail {
-            @include border-radius(2px 2px 0 0);
+            border-radius: 4px 4px 0 0;
             position: relative;
             padding-top: 6px;
             min-height: 177px;
-            background-color: #dadada;
+            background-color: var(--sd-item__main-Bg--hover);
             &::before {
                 content: "";
                 position: absolute;
@@ -491,7 +496,7 @@ Add new widget modal
                 right: 0;
                 height: 8px;
                 background-color: rgba(0,0,0,.2);
-                @include border-radius (2px 2px 0 0);
+                border-radius: 4px 4px 0 0;
             }
             img {
                 max-width: 100%;
@@ -508,7 +513,7 @@ Add new widget modal
         }
         &:hover {
             cursor:pointer;
-            @include box-shadow (0 1px 8px 0 rgba(0,0,0,0.5));
+            box-shadow: 0 1px 8px 0 rgba(0,0,0,0.5);
         }
         &.widget {
             // specific colors
@@ -598,9 +603,8 @@ Add new widget modal
         position: relative;
         width: calc(#{60%} - #{30px});
         margin-right: 30px;
-        @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.2));
-        @include border-radius (2px);
-        @include box-sizing(border-box);
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+        border-radius: 2px;
         &::before {
             content: "";
             position: absolute;
@@ -609,7 +613,7 @@ Add new widget modal
             right: 0;
             height: 8px;
             background-color: rgba(0,0,0,.2);
-            @include border-radius (2px 2px 0 0);
+            border-radius: 4px 4px 0 0;
             }
 
         // specific colors
@@ -637,6 +641,9 @@ Add new widget modal
         &.analytics {
             background-color: $widget_analytics;
         }
+        &.user-activity {
+            background-color: $widget_user-activity;
+        }
     }
     .content-box {
         display: flex;
@@ -661,4 +668,3 @@ Add new widget modal
         }
     }
 }
-

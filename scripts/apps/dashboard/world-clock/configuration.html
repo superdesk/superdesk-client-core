@@ -1,26 +1,20 @@
 <div ng-controller="WorldClockConfigController" class="widget-config world-clock">
     <div sd-wizard>
         <div sd-wizard-step data-title="Your clock" data-code="your-clock">
-            <div class="grid grid--wrap grid--padding-fix">
-                <label class="form-label grid__item grid__item--col-12">{{'Clock type'|translate}}</label>
-                <div class="grid__item grid__item--col-12">
-                    <div class="btn-group">
-
-                        <!--<sd-check ng-model="configuration.digital" type="radio" ng-value="false" label-position="inside">Analog</sd-check>
-                        <sd-check ng-model="configuration.digital" type="radio" ng-value="true" label-position="inside">Digital</sd-check>-->
-
-                        <button type="button" class="btn" ng-class="{active: !configuration.digital}" ng-click="configuration.digital = false">Analog</button>
-                        <button type="button" class="btn" ng-class="{active: configuration.digital}" ng-click="configuration.digital = true">Digital</button>
-                    </div>
+            <div class="sd-margin-b--3">
+                <label class="form-label">{{'Clock type'|translate}}</label>
+                <div class="button-group button-group--start">
+                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': !configuration.digital}" ng-click="configuration.digital = false">Analog</button>
+                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': configuration.digital}" ng-click="configuration.digital = true">Digital</button>
                 </div>
             </div>
-            <div class="grid grid--wrap grid--padding-fix">
+            <div class="sd-margin-b--2">
                 <label class="form-label grid__item grid__item--col-12">{{'Your clock'|translate}}</label>
                 <div class="grid__item grid__item--col-12">
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="zone in configuration.zones">
-                            <a href="">{{ getTimezoneLabel(zone) }}</a>
-                            <a href="" class="pull-right" ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"><i class="icon-close-small"></i></a>
+                        <li class="list-group-item list-group-item--no-click" ng-repeat="zone in configuration.zones">
+                            <a class="sd-margin-e--auto" href="">{{ getTimezoneLabel(zone) }}</a>
+                            <a href="" class="icn-btn" ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"><i class="icon-trash"></i></a>
                         </li>
                     </ul>
                     <div class="alert alert-info" ng-hide="configuration.zones.length" translate>No clock here!</div>
@@ -28,27 +22,28 @@
             </div>
         </div>
         <div sd-wizard-step data-title="Available clocks" data-code="available-clocks">
-            <div class="grid grid--wrap grid--padding-fix">
-                <label class="form-label grid__item grid__item--col-12">{{'Available clock'|translate}}</label>
-                <div class=" grid__item grid__item--col-12">
-                    <div class="input-append" style="margin-bottom:10px;">
+            <div class="form__group form__group--default form__group--mb-2 sd-margin-t--0-5">
+                <div class="form__item">
+                    <div class="sd-input">
+                        <label class="sd-input__label">{{'Available clocks'|translate}}</label>
                         <input
                             type="text"
-                            class="input-large"
+                            class="sd-input__input"
                             ng-model="search"
                             ng-change="searchZones(search)"
                             placeholder="{{ 'Search for clock'|translate }}"
                         >
-                        <button class="btn" ng-disabled="!search" ng-click="search = ''; searchZones('')" translate>Clear</button>
                     </div>
-
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)" ng-click="configuration.zones.push(zone); notify('add', zone)">
-                            <a href="">{{ getTimezoneLabel(zone) }}</a>
-                        </li>
-                    </ul>
+                </div>
+                <div class="form__item form__item--auto-width">
+                    <button class="btn btn--hollow" ng-disabled="!search" ng-click="search = ''; searchZones('')" translate>Clear</button>
                 </div>
             </div>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)" ng-click="configuration.zones.push(zone); notify('add', zone)">
+                    <a href="">{{ getTimezoneLabel(zone) }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

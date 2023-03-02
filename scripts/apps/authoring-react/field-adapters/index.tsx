@@ -48,6 +48,7 @@ import {computeEditor3Output} from './utilities/compute-editor3-output';
 import {package_items} from './package_items';
 import {LINKED_ITEMS_FIELD_TYPE} from '../fields/linked-items';
 import {getKeywordsAdapter} from './keywords';
+import {description_text} from './description_text';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -72,6 +73,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         usageterms: usageterms,
         groups: package_items,
         keywords: getKeywordsAdapter(),
+        description_text: description_text,
     };
 
     return adapter;
