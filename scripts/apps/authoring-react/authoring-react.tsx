@@ -1005,7 +1005,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget.name,
+            sideWidget: this.props.sideWidget?.name,
             toggleSideWidget: (name) => {
                 if (name == null || this.props.sideWidget?.name === name) {
                     this.props.onSideWidgetChange(null);

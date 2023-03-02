@@ -46,7 +46,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
-import {ITEM_STATE} from 'apps/search/interfaces';
+import {TemplateModal} from './toolbar/template-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -336,7 +336,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.sideWidget.name}
+                    activeTab={this.state.sideWidget?.name}
                     onActiveTabChange={(val) => {
                         this.setState({
                             sideWidget: {

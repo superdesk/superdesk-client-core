@@ -30,7 +30,7 @@ export function getKeywordsAdapter(): IFieldAdapter<IArticle> {
                 return fieldV2;
             },
             retrieveStoredValue: (article) => {
-                return article.keywords ?? [];
+                return article.keywords ?? null;
             },
             storeValue: (val: Array<string>, article) => {
                 return {

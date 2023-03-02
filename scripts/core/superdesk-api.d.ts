@@ -276,7 +276,7 @@ declare module 'superdesk-api' {
 
     // AUTHORING-REACT FIELD TYPES - tag input
 
-    export type ITagInputValueOperational = Array<string>;
+    export type ITagInputValueOperational = Array<string> | null;
     export type ITagInputValueStorage = ITagInputValueOperational;
     export interface ITagInputFieldConfig extends ICommonFieldConfig {};
     export type ITagInputUserPreferences = never;
