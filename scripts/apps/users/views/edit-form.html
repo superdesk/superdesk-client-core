@@ -120,32 +120,60 @@
                             </div>
                         </div>
 
-                <div sd-info-item class="password form__row form__row--flex" ng-if="features.reset_user_password && user._id && profile" id="password-change-trigger" style="margin-bottom:2rem;">
-                    <div class="form__row-item">
-                        <label class="form-label" translate>password</label>
-                    </div>
-                    <div class="form__row-item" style="text-align:right;">
-                        <span class="change-btn btn btn--hollow btn--primary btn--small" ng-click="show.change_password = !show.change_password" ng-show="!show.change_password">change password</span>
-                    </div>
-                </div>
-
-                <div class="form__row field__email" sd-info-item>
-                    <div class="sd-line-input sd-line-input--required">
-                        <label class="sd-line-input__label" for="email" translate>email</label>
-                        <input class="sd-line-input__input" type="email" name="email" id="email"
-                            ng-model="user.email"
-                            sd-user-unique data-unique-field="email" data-exclude="user"
-                            ng-readonly="user._readonly && user._readonly.email"
-                            required
-                            data-test-id="field--email">
-                        <div class="sd-line-input__message" ng-show="userForm.email.$error.required" translate>This field is required.</div>
-                        <div class="sd-line-input__message" ng-show="userForm.email.$error.email" sd-valid-info>
-                            <i class="icon-info-sign-warning"></i>
-                            <span translate>please provide a valid email address</span>
+                        <div class="field__email form__group form__group--default form__group--mb-3" sd-info-item>
+                            <div class="form__item">
+                                <div class="sd-input sd-input--required">
+                                    <label class="sd-input__label" for="email" translate>email</label>
+                                    <input class="sd-input__input" type="email" name="email" id="email"
+                                        ng-model="user.email"
+                                        sd-user-unique data-unique-field="email" data-exclude="user"
+                                        ng-readonly="user._readonly && user._readonly.email"
+                                        required
+                                        data-test-id="field--email">
+                                    <div class="sd-input__message-box">
+                                        <div class="sd-input__message" ng-show="userForm.email.$error.required" translate>This field is required.</div>
+                                        <div class="sd-input__message" ng-show="userForm.email.$error.email" sd-valid-info>
+                                            <i class="icon-info-sign-warning"></i>
+                                            <span translate>please provide a valid email address</span>
+                                        </div>
+                                        <div class="sd-input__message" ng-show="error.email" sd-valid-info>
+                                            <i class="icon-info-sign-warning"></i>
+                                            <span translate>{{error.email}}</span>
+                                        </div>
+                                        <div class="sd-input__message" ng-show="userForm.email.$error.unique || error.email.unique" sd-valid-error translate>sorry, a user with this email already exists</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="sd-line-input__message" ng-show="error.email" sd-valid-info>
-                            <i class="icon-info-sign-warning"></i>
-                            <span>{{error.email}}</span>
+
+                        <div class="user_role field__role form__group form__group--default form__group--mb-3" sd-info-item>
+                            <div class="form__item">
+                                <div class="sd-input sd-input--is-select">
+                                    <label class="sd-input__label" for="user_role" translate>Role</label>
+                                    <select class="sd-input__select"
+                                            ng-focus="focused()"
+                                            ng-disabled="!privileges.users"
+                                            ng-model="user.role"
+                                            name="user_role"
+                                            id="user_role"
+                                            ng-options="role._id as role.name for role in roles">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div sd-info-item class="user_type sd-check__group-new sd-check__group-new--vertical" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
+                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{ :: 'Administrator'|translate }}</sd-check>
+                            <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
+                        </div>
+
+                        <div class="field__phone_number form__group form__group--default form__group--mb-3" sd-info-item  ng-hide="profileConfig.phone === false">
+                            <div class="form__item">
+                                <div class="sd-input">
+                                    <label class="sd-input__label" for="phone" translate>phone number</label>
+                                    <input class="sd-input__input" type="text" name="phone" id="phone" ng-model="user.phone">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form__group form__group--default form__group--mb-3" ng-hide="profileConfig.jid === false || !xmppEnabled">
