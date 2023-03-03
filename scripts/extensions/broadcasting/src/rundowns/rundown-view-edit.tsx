@@ -51,6 +51,7 @@ import {
     prepareForEditing,
     prepareForPreview,
 } from './prepare-create-edit-rundown-item';
+import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {
@@ -678,13 +679,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             onActiveTabChange={(val) => {
                                                                 toggleSideWidget(val);
                                                             }}
-                                                            items={sideWidgetsAllowed.map(({icon, _id}) => ({
-                                                                id: _id,
-                                                                size: 'big',
-                                                                icon,
-                                                                onClick: noop,
-                                                                active: sideWidget?.name === _id,
-                                                            }))}
+                                                            items={sideWidgetsAllowed.map(({icon, _id}) => {
+                                                                const sidebarTab: ISideBarTab = {
+                                                                    id: _id,
+                                                                    size: 'big',
+                                                                    icon,
+                                                                };
+
+                                                                return sidebarTab;
+                                                            })}
                                                         />
                                                     );
                                                 }}

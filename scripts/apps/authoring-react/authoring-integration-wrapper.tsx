@@ -322,17 +322,18 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 .sort((a, b) => a.order - b.order);
         }
 
-        const getSidebar = ({item, toggleSideWidget}) => {
-            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(item)
-                .map((widget) => ({
-                    icon: widget.icon,
-                    size: 'big',
-                    tooltip: widget.label,
-                    onClick: () => {
-                        toggleSideWidget(widget.label);
-                    },
-                    id: widget._id,
-                }));
+        const getSidebar = (options: IExposedFromAuthoring<IArticle>) => {
+            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(options.item)
+                .map((widget) => {
+                    const tab: ISideBarTab = {
+                        icon: widget.icon,
+                        size: 'big',
+                        tooltip: widget.label,
+                        id: widget._id,
+                    };
+
+                    return tab;
+                });
 
             return (
                 <Nav.SideBarTabs
