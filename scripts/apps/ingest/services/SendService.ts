@@ -212,10 +212,13 @@ export function SendService(
                     $rootScope.$broadcast('item:update', {item: _item});
                     return _item;
                 });
-        } else if (!item.lock_user) {
+        } else {
             return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
                 .then((_item) => {
                     $rootScope.$broadcast('item:update', {item: _item});
+                    if (item.lock_user) {
+                        getAuthoringWorkspace().close();
+                    }
                     if (config.open) {
                         getAuthoringWorkspace().edit(_item);
                     }
