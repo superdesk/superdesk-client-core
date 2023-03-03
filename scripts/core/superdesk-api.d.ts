@@ -183,17 +183,27 @@ declare module 'superdesk-api' {
         ): Array<ITopBarWidget<T>>;
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
-        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
+        // positioned relatively; shown at the same time as getSidePanel
+        // used for rendering icon buttons of available side widgets
         getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
+
+        // positioned absolutely; shown at the same time as getSidebar
+        // used for side widgets
+        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
+
+        getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
             name: string;
             pinned: boolean;
         };
 
+        getSideWidgetNameAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
@@ -202,9 +212,6 @@ declare module 'superdesk-api' {
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
         headerCollapsed?: boolean; // initial value
-
-        getSideWidgetNameAtIndex(item: T, index: number): string;
-        openWidget(name: string | null): void;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments

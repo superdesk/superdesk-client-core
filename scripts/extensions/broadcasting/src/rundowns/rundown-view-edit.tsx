@@ -356,6 +356,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             />
         );
 
+        function getAvailableSideWidgets(item: IRundownItem) {
+            return sideWidgets.filter(
+                ({isAllowed}) => isAllowed(
+                    item,
+                ),
+            );
+        }
+
         return (
             <WithValidation validators={rundownValidator}>
                 {(validate, validationErrors) => (
@@ -577,7 +585,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     item,
                                                     hasUnsavedChanges,
                                                     save,
-                                                    discardChangesAndClose,
+                                                    initiateClosing,
                                                     stealLock,
                                                 }) => {
                                                     const actions: Array<ITopBarWidget<IRundownItem>> = [
@@ -590,7 +598,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                     ariaValue={gettext('Close')}
                                                                     icon="close-small"
                                                                     onClick={() => {
-                                                                        discardChangesAndClose();
+                                                                        initiateClosing();
                                                                     }}
                                                                 />
                                                             ),
@@ -654,12 +662,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 }}
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
+                                                getSidebarWidgetsCount={({item}) => {
+                                                    return getAvailableSideWidgets(item).length;
+                                                }}
                                                 getSidebar={({item, toggleSideWidget}) => {
-                                                    const sideWidgetsAllowed = sideWidgets.filter(
-                                                        ({isAllowed}) => isAllowed(
-                                                            item,
-                                                        ),
-                                                    );
+                                                    const sideWidgetsAllowed = getAvailableSideWidgets(item);
 
                                                     if (sideWidgetsAllowed.length < 1) {
                                                         return <span />;
@@ -667,12 +674,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Nav.SideBarTabs
+                                                            activeTab={sideWidget?.name ?? null}
+                                                            onActiveTabChange={(val) => {
+                                                                toggleSideWidget(val);
+                                                            }}
                                                             items={sideWidgetsAllowed.map(({icon, _id}) => ({
+                                                                id: _id,
                                                                 size: 'big',
                                                                 icon,
-                                                                onClick: () => {
-                                                                    toggleSideWidget(_id);
-                                                                },
+                                                                onClick: noop,
                                                                 active: sideWidget?.name === _id,
                                                             }))}
                                                         />
@@ -729,6 +739,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         />
                                                     );
                                                 }}
+                                                getSideWidgetNameAtIndex={(_item, index) => sideWidgets[index].label}
                                                 disableWidgetPinning
                                             />
                                         )

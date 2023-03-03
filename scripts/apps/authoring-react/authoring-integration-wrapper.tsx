@@ -424,6 +424,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ...articleActionsFromExtensions,
                                 ];
                             }}
+                            getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
                             sideWidget={this.state.sideWidget}
                             onSideWidgetChange={(sideWidget) => {
                                 this.setState({sideWidget});
@@ -505,15 +506,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index].label;
-                            }}
-                            openWidget={(name: string | null) => {
-                                this.setState({
-                                    ...this.state,
-                                    sideWidget: name == null ? null : {
-                                        name,
-                                        pinned: this.state.sideWidget?.pinned ?? false,
-                                    },
-                                });
                             }}
                         />
                     );
