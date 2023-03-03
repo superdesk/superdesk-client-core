@@ -350,7 +350,14 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                         </h3>
                                         <Badge type="default">{itemsCount}</Badge>
                                     </div>
-                                    <div style={{marginLeft: 10, flexGrow: 1}}>
+                                    <div
+                                        className={classNames(
+                                            'sd-display--flex',
+                                            'sd-flex--grow',
+                                            'sd-flex--align-self-stretch',
+                                            'sd-margin-start--2',
+                                        )}
+                                    >
                                         <SearchBar
                                             allowCollapsed={false}
                                             extendOnOpen={false}

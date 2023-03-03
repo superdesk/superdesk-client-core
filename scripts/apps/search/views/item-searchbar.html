@@ -1,6 +1,8 @@
 <div class="item-searchbar" ng-class="{focused: focused}" ng-click="$event.stopPropagation();">
 
-    <label for="search-input" class="button search-icon"></label>
+    <label for="search-input" class="search-icon">
+        <i class="icon-search"></i>
+    </label>
 
     <input id="search-input"
         type="text"
@@ -14,8 +16,8 @@
         <i class="icon-remove-sign"></i>
     </button>
 
-    <button id="search-button" ng-click="search();" class="button trigger" ng-if="focused" tabindex="2">
-        <i class="svg-icon-right"></i>
+    <button id="search-button" ng-click="search();" class="search-start" aria-label="{{ 'Start search' | translate }}" ng-if="focused" tabindex="2">
+        <i class="icon-chevron-right-thin"></i>
     </button>
 
 </div>

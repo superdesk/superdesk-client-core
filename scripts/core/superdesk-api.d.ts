@@ -862,6 +862,11 @@ declare module 'superdesk-api' {
         };
         priority?: number;
         unique_field: string;
+        translations?: {
+            display_name: {
+                [key: string]: string;
+            };
+        };
         schema: {};
         field_type:
             | 'text'
@@ -1933,10 +1938,16 @@ declare module 'superdesk-api' {
                 addImage(field: string, image: IArticle): void;
 
                 /**
-                 * Programatically triggers saving of an article in edit mode.
+                 * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.
                 */
                 save(): void;
+
+                prepareExternalImageForDroppingToEditor(
+                    event: DragEvent,
+                    renditions: IArticle['renditions'],
+                    additionalData?: Partial<IArticle>,
+                ): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
