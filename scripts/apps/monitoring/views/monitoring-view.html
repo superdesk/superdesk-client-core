@@ -6,7 +6,7 @@
             <div class="content-list monitoring__content" ng-class="{'sd-loader': aggregate.loading}">
                 <div class="monitoring__toolbar-container" ng-if="hideMonitoringToolbar1 !== true || hideMonitoringToolbar2 !== true">
                     <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
-                        <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
+                        <div class="monitoring-backlink" ng-if="monitoring.singleGroup">
                             <button sd-tooltip="{{ 'Back to original view' | translate }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
                                 <i class="icon-arrow-left"></i>
                             </button>
@@ -91,9 +91,9 @@
                         </div>
 
                         <!-- search not implemented for usage with custom data source -->
-                        <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+                        <div ng-if="customDataSource == null" class="flat-searchbar extended monitoring-flat-searchbar">
                             <div class="search-handler" ng-class="{'search-handler--left-border': !monitoring.singleGroup}">
-                                <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+                                <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
                                 <input id="search-input" type="text" placeholder="{{ 'Search' | translate }}" ng-model="query"
                                        ng-keyup="aggregate.searchOnEnter($event, query)">
                                 <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}" aria-label="{{ 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
@@ -104,7 +104,7 @@
                         </div>
 
                         <div sd-multi-action-bar></div>
-                        <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
+                        <div class="subnav__button-stack--square-buttons sd-margin-start--auto">
                             <div class="refresh-box">
                                 <button ng-if="monitoring.showRefresh && (monitoring.singleGroup || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
@@ -199,7 +199,7 @@
 
                         <div ng-if="type === 'monitoring' && monitoring.viewColumn === true" class="subnav__button-stack subnav__button-stack--padded">
                             <span class="sd-overflow-ellipsis" translate>Columns:</span>
-                            <input class="line-input line-input--inline-mini sd-margin-l--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
+                            <input class="line-input line-input--inline-mini sd-margin-start--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
                         </div>
 
                         <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring'">

@@ -96,9 +96,7 @@ const plannedDurationField: IAuthoringFieldV2 = {
     id: 'planned_duration',
     name: gettext('Planned duration'),
     fieldType: 'duration',
-    fieldConfig: {
-        required: true,
-    },
+    fieldConfig: {},
 };
 
 const subitemAttachmentsConfig: IAttachmentsConfig = {};

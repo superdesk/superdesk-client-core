@@ -13,10 +13,14 @@ import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framewor
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
-export type IRundownAction = null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
+export type IRundownAction =
+    null
+    | {mode: 'view'; id: string; fullWidth: boolean}
+    | {mode: 'edit'; id: string; fullWidth: boolean};
 
 interface IProps {
     rundownId: string;
+    rundownAction: IRundownAction;
     rundownItemAction: IRundownItemActionNext;
     onRundownItemActionChange(action: IRundownItemActionNext): void;
     onRundownActionChange(action: IRundownAction): void;
@@ -387,9 +391,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             <Button
                                                                 text={gettext('Edit')}
                                                                 onClick={() => {
+                                                                    const {rundownAction} = this.props;
+
                                                                     this.props.onRundownActionChange({
                                                                         id: this.props.rundownId,
                                                                         mode: 'edit',
+                                                                        fullWidth: rundownAction?.fullWidth ?? false,
                                                                     });
                                                                 }}
                                                                 type="primary"
@@ -543,11 +550,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         </Layout.MainPanel>
 
                         <Layout.RightPanel open={rundownItemAction != null}>
-                            <Layout.Panel side="right" background="grey" size="x-large">
+                            <Layout.Panel side="right" background="grey" size="xx-large">
                                 <Layout.PanelContent>
                                     {
                                         rundownItemAction != null && (
                                             <AuthoringReact
+                                                headerCollapsed={true}
                                                 key={rundownItemAction.authoringReactKey}
                                                 itemId=""
                                                 resourceNames={['rundown_items']}

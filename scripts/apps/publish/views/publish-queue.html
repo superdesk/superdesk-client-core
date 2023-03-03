@@ -2,9 +2,9 @@
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
 
         <header class="subnav">
-                <div class="flat-searchbar" ng-class="{extended: queueSearch}">
+                <div class="flat-searchbar extended">
                     <div class="search-handler" role="search">
-                        <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
+                        <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
                         <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
                         <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}" aria-label="{{ :: 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
                     </div>

@@ -90,7 +90,7 @@
                             <sd-user-avatar data-user="term.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
                         </span>
                         <span>{{getLocaleName(term, item)}}</span>
-                        <i class="icon-chevron-right-thin sd-margin-l--auto nested-indicator"></i></button>
+                        <i class="icon-chevron-right-thin sd-margin-start--auto nested-indicator"></i></button>
                     <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)" title="{{getLocaleName(term, item)}}" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{getLocaleName(term, item)}}
                     </button>
