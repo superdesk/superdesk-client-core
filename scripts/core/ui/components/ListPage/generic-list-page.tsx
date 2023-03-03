@@ -4,7 +4,7 @@
 import React from 'react';
 import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
-
+import classNames from 'classnames';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';

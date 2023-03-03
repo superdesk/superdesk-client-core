@@ -397,8 +397,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 )}
                                 flow="down"
                             >
-                                <span className="sd-margin-r--1">
-                                    <span className="sd-margin-r--1">
+                                <span className="sd-margin-end--1">
+                                    <span className="sd-margin-end--1">
                                         {gettext('Total:')}
                                     </span>
                                     <Badge text={numberToString(this.props.totalAssets)} />

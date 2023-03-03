@@ -29,6 +29,9 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> 
         const {authoringWorkspace} = this.services;
         const {item} = this.props;
 
+        if (item['_type'] === 'externalsource') {
+            return;
+        }
         if (isPublished(item)) {
             authoringWorkspace.view(item);
         } else {
@@ -43,10 +46,14 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> 
         let itemProps = {item, listConfig, desk: deskId == null ? undefined : this.services.desks.deskLookup[deskId]};
 
         const elemProps = {className: 'line line--no-margin'};
+        const mediaBoxClassName =
+            item._type === 'externalsource'
+                ? 'media-box media-box--no-padding media-box-hover'
+                : 'media-box media-box--no-padding';
 
         return (
             <div className="mlist-view mlist-view--no-shadow" onDoubleClick={this.onItemDoubleClick}>
-                <div className="media-box media-box--no-padding">
+                <div className={mediaBoxClassName}>
                     <div className="item-info">
                         {renderArea('firstLine', itemProps, elemProps)}
                         {renderArea('secondLine', itemProps, elemProps)}
