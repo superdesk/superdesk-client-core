@@ -52,7 +52,7 @@
                             ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
                             <button class="btn__check"
                                     ng-class="{active: stage._id === selectedStage._id}"
-                                    ng-disabled="mode !== 'spike' && stage._id === destination_last.send_to.stage"
+                                    ng-disabled="mode !== 'spike' && stage._id !== destination_last.send_to.stage"
                                     ng-click="selectStage(stage)">
                                 {{::stage.name}}
                             </button>
