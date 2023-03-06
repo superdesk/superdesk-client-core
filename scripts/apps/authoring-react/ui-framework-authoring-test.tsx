@@ -47,6 +47,8 @@ interface IState {
     rightPanelOpen: boolean;
     rightPanelPinned: boolean;
     sideOverlayOpen: boolean;
+    activeTab: string;
+    activeTab2: string;
 }
 
 export class EditorTest extends React.Component<IProps, IState> {
@@ -66,6 +68,8 @@ export class EditorTest extends React.Component<IProps, IState> {
             rightPanelOpen: false,
             rightPanelPinned: false,
             sideOverlayOpen: false,
+            activeTab: null,
+            activeTab2: null,
         };
         this.handleTheme = this.handleTheme.bind(this);
     }
@@ -132,12 +136,18 @@ export class EditorTest extends React.Component<IProps, IState> {
                 )}
                 leftPanel={(
                     <Nav.SideBarTabs
+                        onActiveTabChange={(val) => {
+                            this.setState({
+                                activeTab: val,
+                            });
+                        }}
+                        activeTab={this.state.activeTab}
                         items={[
-                            {icon: 'semantics', size: 'big', tooltip: 'Semantics', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'create-list', size: 'big', tooltip: 'Create list', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'picture', size: 'big', tooltip: 'Pictures', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'annotation', size: 'big', tooltip: 'Annotations', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'export', size: 'big', tooltip: 'Export', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})}]
+                            {icon: 'semantics', size: 'big', tooltip: 'Semantics', id: 'Semantics'},
+                            {icon: 'create-list', size: 'big', tooltip: 'Create list', id: 'Create list'},
+                            {icon: 'picture', size: 'big', tooltip: 'Pictures', id: 'Pictures'},
+                            {icon: 'annotation', size: 'big', tooltip: 'Annotations', id: 'Annotations'},
+                            {icon: 'export', size: 'big', tooltip: 'Export', id: 'Export'}]
                         }
                     />
                 )}
@@ -370,14 +380,20 @@ export class EditorTest extends React.Component<IProps, IState> {
                 )}
                 sideBar={(
                     <Nav.SideBarTabs
+                        activeTab={this.state.activeTab2}
+                        onActiveTabChange={(val) => {
+                            this.setState({
+                                activeTab2: val,
+                            });
+                        }}
                         items={[
-                            {icon: 'info', size: 'big', tooltip: 'Info', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'chat', size: 'big', tooltip: 'Comments', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'history', size: 'big', tooltip: 'History', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'package', size: 'big', tooltip: 'Packages', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'attachment', size: 'big', tooltip: 'Attachments', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'comments', size: 'big', tooltip: 'Inline Comments', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
-                            {icon: 'suggestion', size: 'big', tooltip: 'Suggestions', onClick: () => this.setState({'sideOverlayOpen': !this.state.sideOverlayOpen})},
+                            {icon: 'info', size: 'big', tooltip: 'Info', id: 'Info'},
+                            {icon: 'chat', size: 'big', tooltip: 'Comments', id: 'Comments'},
+                            {icon: 'history', size: 'big', tooltip: 'History', id: 'History'},
+                            {icon: 'package', size: 'big', tooltip: 'Packages', id: 'Packages'},
+                            {icon: 'attachment', size: 'big', tooltip: 'Attachments', id: 'Attachments'},
+                            {icon: 'comments', size: 'big', tooltip: 'Inline Comments', id: 'Inline Comments'},
+                            {icon: 'suggestion', size: 'big', tooltip: 'Suggestions', id: 'Suggestions'},
                         ]}
                     />
                 )}

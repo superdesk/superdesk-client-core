@@ -1148,7 +1148,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             };
         }, {});
 
-        const widgetsCount = this.props.getSidebar(exposed).props.items.length;
+        const widgetsCount = this.props.getSidebarWidgetsCount(exposed);
 
         const widgetKeybindings: IKeyBindings = {};
 
@@ -1156,7 +1156,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
                 const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
 
-                this.props.openWidget(nextWidgetName);
+                this.props.onSideWidgetChange({
+                    name: nextWidgetName,
+                    pinned: this.props.sideWidget?.pinned ?? false,
+                });
             };
         }
 
@@ -1258,7 +1261,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     )}
                                     main={(
                                         <Layout.AuthoringMain
-                                            // withoutPaddingContent
+                                            headerCollapsed={this.props.headerCollapsed}
                                             toolBar={(
                                                 <React.Fragment>
                                                     <div

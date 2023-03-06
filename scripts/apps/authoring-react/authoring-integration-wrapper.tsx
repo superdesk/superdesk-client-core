@@ -39,7 +39,6 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@superdesk/common';
 import {ExportModal} from './toolbar/export-modal';
-import {TemplateModal} from './toolbar/template-modal';
 import {TranslateModal} from './toolbar/translate-modal';
 import {HighlightsModal} from './toolbar/highlights-modal';
 import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
@@ -47,7 +46,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
-import {ITEM_STATE} from 'apps/search/interfaces';
+import {TemplateModal} from './toolbar/template-modal';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -323,19 +322,30 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 .sort((a, b) => a.order - b.order);
         }
 
-        const getSidebar = ({item, toggleSideWidget}) => {
-            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(item)
-                .map((widget) => ({
-                    icon: widget.icon,
-                    size: 'big',
-                    tooltip: widget.label,
-                    onClick: () => {
-                        toggleSideWidget(widget.label);
-                    },
-                }));
+        const getSidebar = (options: IExposedFromAuthoring<IArticle>) => {
+            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(options.item)
+                .map((widget) => {
+                    const tab: ISideBarTab = {
+                        icon: widget.icon,
+                        size: 'big',
+                        tooltip: widget.label,
+                        id: widget._id,
+                    };
+
+                    return tab;
+                });
 
             return (
                 <Nav.SideBarTabs
+                    activeTab={this.state.sideWidget?.name}
+                    onActiveTabChange={(val) => {
+                        this.setState({
+                            sideWidget: {
+                                name: val,
+                                pinned: this.state.sideWidget?.pinned ?? false,
+                            },
+                        });
+                    }}
                     items={sidebarTabs}
                 />
             );
@@ -415,6 +425,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ...articleActionsFromExtensions,
                                 ];
                             }}
+                            getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
                             sideWidget={this.state.sideWidget}
                             onSideWidgetChange={(sideWidget) => {
                                 this.setState({sideWidget});
@@ -496,15 +507,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index].label;
-                            }}
-                            openWidget={(name: string | null) => {
-                                this.setState({
-                                    ...this.state,
-                                    sideWidget: name == null ? null : {
-                                        name,
-                                        pinned: this.state.sideWidget?.pinned ?? false,
-                                    },
-                                });
                             }}
                         />
                     );

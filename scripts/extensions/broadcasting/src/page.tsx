@@ -29,12 +29,13 @@ import {superdesk} from './superdesk';
 import {ManageShows} from './shows/manage-shows';
 import {IRundownItemActionNext, prepareForPreview} from './rundowns/prepare-create-edit-rundown-item';
 import {events, IBroadcastingEvents} from './events';
+import {IPage} from 'superdesk-api';
 
 const {gettext} = superdesk.localization;
 const {isLockedInCurrentSession} = superdesk.utilities;
 const {tryLocking, tryUnlocking} = superdesk.helpers;
 
-type IProps = {};
+type IProps = React.ComponentProps<IPage['component']>;
 
 interface IState {
     rundownAction: IRundownAction;
@@ -58,10 +59,35 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
             filtersApplied: {},
         };
 
+        this.updateFullWidthCapability = this.updateFullWidthCapability.bind(this);
         this.setFilter = this.setFilter.bind(this);
         this.prepareRundownEditing = this.prepareRundownEditing.bind(this);
         this.prepareNextRundownItemAction = this.prepareNextRundownItemAction.bind(this);
         this.openRundownItemEventHandler = this.openRundownItemEventHandler.bind(this);
+    }
+
+    private updateFullWidthCapability(options?: {disable: true}) {
+        if (options?.disable === true) {
+            this.props.setupFullWidthCapability({enabled: false});
+            return;
+        }
+
+        const {rundownAction} = this.state;
+
+        if (rundownAction == null) {
+            this.props.setupFullWidthCapability({enabled: true, allowed: false});
+        } else {
+            this.props.setupFullWidthCapability({
+                enabled: true,
+                allowed: true,
+                onToggle: (val) => {
+                    this.setState({rundownAction: {
+                        ...rundownAction,
+                        fullWidth: val,
+                    }});
+                },
+            });
+        }
     }
 
     private setFilter(filters: Partial<IState['filters']>) {
@@ -76,9 +102,9 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     private prepareRundownEditing(id: IRundown['_id']): Promise<IState['rundownAction']> {
         return tryLocking<IRundown>('/rundowns', id).then(({success}) => {
             if (success) {
-                return {mode: 'edit', id};
+                return {mode: 'edit', id, fullWidth: this.state.rundownAction?.fullWidth ?? false};
             } else {
-                return {mode: 'view', id};
+                return {mode: 'view', id, fullWidth: this.state.rundownAction?.fullWidth ?? false};
             }
         });
     }
@@ -121,15 +147,24 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     componentDidMount(): void {
         events.addListener('openRundownItem', this.openRundownItemEventHandler);
         events.dispatchEvent('broadcastingPageDidLoad', true);
+
+        this.updateFullWidthCapability();
+    }
+
+    componentDidUpdate(): void {
+        this.updateFullWidthCapability();
     }
 
     componentWillUnmount(): void {
         events.removeListener('openRundownItem', this.openRundownItemEventHandler);
+
+        this.updateFullWidthCapability({disable: true});
     }
 
     render() {
         const {rundownAction} = this.state;
-        const rundownsListVisible = !(rundownAction != null && this.state.rundownItemAction != null);
+        const rundownItemOpen = rundownAction != null && this.state.rundownItemAction != null;
+        const rundownsListVisible = rundownAction?.fullWidth !== true && !rundownItemOpen;
 
         return (
             <div
@@ -332,6 +367,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                 this.setState({
                                                     rundownAction: {
                                                         mode: 'view',
+                                                        fullWidth: this.state.rundownAction?.fullWidth ?? false,
                                                         id,
                                                     },
                                                 });
@@ -365,6 +401,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                             rundownAction != null && (
                                 <RundownViewEdit
                                     key={rundownAction.id + rundownAction.mode}
+                                    rundownAction={rundownAction}
                                     rundownId={rundownAction.id}
                                     onClose={(rundown: IRundown) => {
                                         const doUnlock = isLockedInCurrentSession(rundown)

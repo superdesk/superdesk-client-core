@@ -38,7 +38,7 @@ class HTMLParser {
     associations: any;
     tree: any;
 
-    constructor(html, associations) {
+    constructor(html, associations = {}) {
         this.iframes = {};
         this.scripts = {};
         this.figures = {};
@@ -79,6 +79,14 @@ class HTMLParser {
             const associationId = html.match(/<!-- EMBED START (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)?.[1];
 
             if (associationId != null) {
+                if (this.associations[associationId] == null) {
+                    /**
+                     * Stop processing in case embed comment contains an ID that can't be found in associations.
+                     * In such case, {@link pruneNodes} will run and add media as external embeds.
+                     */
+                    continue;
+                }
+
                 const nextIndex = Object.keys(this.media).length;
 
                 html = html.replace(

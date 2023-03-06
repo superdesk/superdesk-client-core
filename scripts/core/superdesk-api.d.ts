@@ -46,10 +46,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IFieldAdapter<T> {
-        getFieldV2: (
-            fieldEditor,
-            fieldSchema,
-        ) => IAuthoringFieldV2;
+        getFieldV2: (fieldEditor, fieldSchema) => IAuthoringFieldV2;
 
         /**
          * Allows to customize where values are stored.
@@ -186,17 +183,27 @@ declare module 'superdesk-api' {
         ): Array<ITopBarWidget<T>>;
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
-        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
+        // positioned relatively; shown at the same time as getSidePanel
+        // used for rendering icon buttons of available side widgets
         getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
+
+        // positioned absolutely; shown at the same time as getSidebar
+        // used for side widgets
+        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
+
+        getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
             name: string;
             pinned: boolean;
         };
 
+        getSideWidgetNameAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
@@ -204,8 +211,7 @@ declare module 'superdesk-api' {
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
-        getSideWidgetNameAtIndex(item: T, index: number): string;
-        openWidget(name: string | null): void;
+        headerCollapsed?: boolean; // initial value
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -231,6 +237,43 @@ declare module 'superdesk-api' {
         shortcuts?: Array<IDateShortcut>;
     }
 
+    // AUTHORING-REACT FIELD TYPES - date
+
+    export interface ILocated {
+        /** dateline format - list of fields which should be used to identify the place */
+        dateline: 'city' | 'city,state' | 'city,country' | 'city,state,country';
+
+        city: string;
+        state: string;
+        country: string;
+
+        city_code: string;
+        state_code: string;
+        country_code: string;
+
+        /** timezone identifier, eg. Europe/Prague  */
+        tz: string;
+
+        /** scheme identifier */
+        scheme: string;
+
+        /** code for place in the scheme */
+        code: string;
+
+        /** geonames place data */
+        place?: IGeoName;
+    }
+
+    export type IDatelineValueOperational = {
+        date?: string;
+        source?: string;
+        located?: ILocated;
+        text?: string;
+    };
+    export type IDatelineValueStorage = IDatelineValueOperational;
+    export type IDatelineUserPreferences = never;
+    export interface IDatelineFieldConfig extends ICommonFieldConfig {}
+
     // AUTHORING-REACT FIELD TYPES - time
 
     export type ITimeValueOperational = string; // ISO 8601, 13:59:01.123
@@ -239,6 +282,13 @@ declare module 'superdesk-api' {
         allowSeconds?: boolean;
     };
     export type ITimeUserPreferences = never;
+
+    // AUTHORING-REACT FIELD TYPES - tag input
+
+    export type ITagInputValueOperational = Array<string> | null;
+    export type ITagInputValueStorage = ITagInputValueOperational;
+    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
 
@@ -1357,6 +1407,11 @@ declare module 'superdesk-api' {
         };
         priority?: number;
         unique_field: string;
+        translations?: {
+            display_name: {
+                [key: string]: string;
+            };
+        };
         schema: {};
         field_type:
             | 'text'
@@ -2538,10 +2593,16 @@ declare module 'superdesk-api' {
                 addImage(field: string, image: IArticle): void;
 
                 /**
-                 * Programatically triggers saving of an article in edit mode.
+                 * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.
                 */
                 save(): void;
+
+                prepareExternalImageForDroppingToEditor(
+                    event: DragEvent,
+                    renditions: IArticle['renditions'],
+                    additionalData?: Partial<IArticle>,
+                ): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
