@@ -216,7 +216,7 @@ export function SendService(
             return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
                 .then((_item) => {
                     $rootScope.$broadcast('item:update', {item: _item});
-                    if (item?.lock_user && getAuthoringWorkspace().getItem()?._id === item?._id) {
+                    if (item.lock_user !== null && getAuthoringWorkspace().getItem()._id === item._id) {
                         getAuthoringWorkspace().close();
                     }
                     if (config.open) {
