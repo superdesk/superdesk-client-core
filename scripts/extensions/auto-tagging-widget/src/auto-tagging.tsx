@@ -378,7 +378,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this._mounted = false;
         }
         render() {
-            const {runAutomaticallyPreference, vocabularyLabels, showImagesPreference} = this.state;
+            const {runAutomaticallyPreference, vocabularyLabels} = this.state;
 
             if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
