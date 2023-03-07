@@ -1,0 +1,49 @@
+diff --git a/node_modules/@types/draft-js/node_modules/immutable/dist/immutable.d.ts b/node_modules/@types/draft-js/node_modules/immutable/dist/immutable.d.ts
+index f8eb1c6..87fe41e 100644
+--- a/node_modules/@types/draft-js/node_modules/immutable/dist/immutable.d.ts
++++ b/node_modules/@types/draft-js/node_modules/immutable/dist/immutable.d.ts
+@@ -1982,7 +1982,7 @@ declare module Immutable {
+      *
+      */
+     map<M>(
+-      mapper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => M,
++      mapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => M,
+       context?: any
+     ): /*this*/Iterable<K, M>;
+ 
+@@ -1995,7 +1995,7 @@ declare module Immutable {
+      *
+      */
+     filter(
+-      predicate: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => boolean,
++      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
+       context?: any
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -2008,7 +2008,7 @@ declare module Immutable {
+      *
+      */
+     filterNot(
+-      predicate: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => boolean,
++      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
+       context?: any
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -2044,7 +2044,7 @@ declare module Immutable {
+      *
+      */
+     sortBy<C>(
+-      comparatorValueMapper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => C,
++      comparatorValueMapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => C,
+       comparator?: (valueA: C, valueB: C) => number
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -2055,7 +2055,7 @@ declare module Immutable {
+      * Note: This is always an eager operation.
+      */
+     groupBy<G>(
+-      grouper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => G,
++      grouper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => G,
+       context?: any
+     ): /*Map*/Seq.Keyed<G, /*this*/Iterable<K, V>>;
+ 
