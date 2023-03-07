@@ -83,7 +83,7 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
                                 markedHighlights: value.map(({_id}) => _id),
                             });
                         }}
-                        optionLabel={nameof<IHighlight>('name')}
+                        optionLabel={(highlight) => highlight.name}
                         options={state.availableHighlights}
                         value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
                     />
