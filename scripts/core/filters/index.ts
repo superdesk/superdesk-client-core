@@ -25,7 +25,7 @@ export default angular.module('superdesk.core.filters', [])
         return texts.join('\n');
     })
     .filter('mergeWords', [function() {
-        return sdApi.filters.mergeArrayToString;
+        return sdApi.vocabularies.getVocabularyItemsPreview;
     }])
     .filter('splitWords', () => function(word) {
         var split = [];

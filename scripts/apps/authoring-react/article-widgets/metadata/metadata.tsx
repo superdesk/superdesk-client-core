@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {IArticleSideWidget, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IExtensionActivationResult, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -93,8 +93,6 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
         const {onArticleChange} = this.props;
 
-        const getNotForPublicationLabel: string = gettext('Not For Publication');
-        const getLegalLabel: string = gettext('Legal');
         const allVocabularies = sdApi.vocabularies.getAll();
 
         return (
@@ -109,7 +107,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                     <Spacer v gap="16" noWrap>
                         <Spacer h gap="64" justifyContent="space-between" noWrap>
                             <Heading type="h6" align="start">
-                                {getNotForPublicationLabel}
+                                {gettext('Not For Publication')}
                             </Heading>
                             <Switch
                                 label={{text: ''}} // TODO: Implement accessibility
@@ -130,7 +128,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         <Spacer h gap="64" justifyContent="space-between" noWrap>
                             <Heading type="h6" align="start">
-                                {getLegalLabel}
+                                {gettext('Legal')}
                             </Heading>
                             <Switch
                                 label={{text: ''}} // TODO: Implement accessibility
@@ -299,7 +297,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                         {keywords && (
                             <MetadataItem
                                 label={gettext('Word Count')}
-                                value={sdApi.filters.mergeArrayToString(keywords) as string}
+                                value={sdApi.vocabularies.vocabularyItemsToString(keywords)}
                             />
                         )}
 
@@ -326,7 +324,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             anpa_category?.name != null && (
                                 <MetadataItem
                                     label={gettext('Category')}
-                                    value={sdApi.filters.mergeArrayToString(anpa_category, 'name') as string}
+                                    value={sdApi.vocabularies.vocabularyItemsToString(anpa_category, 'name')}
                                 />
                             )
                         }
@@ -335,11 +333,14 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             allVocabularies
                                 .filter((cv) => article[cv.schema_field] != null)
                                 .toArray()
-                                .map((v) => (
+                                .map((vocabulary) => (
                                     <MetadataItem
-                                        key={v._id}
-                                        label={v.display_name}
-                                        value={vocabularies.getVocabularyItemLabel(article[v.schema_field], article)}
+                                        key={vocabulary._id}
+                                        label={vocabulary.display_name}
+                                        value={vocabularies.getVocabularyItemLabel(
+                                            article[vocabulary.schema_field],
+                                            article,
+                                        )}
                                     />
                                 ))
                         }
@@ -350,7 +351,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 && (
                                     <MetadataItem
                                         label={gettext('Genre')}
-                                        value={sdApi.filters.mergeArrayToString(genre, 'name') as string}
+                                        value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
                                     />
                                 )
                         }
@@ -361,7 +362,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 && (
                                     <MetadataItem
                                         label={gettext('Place')}
-                                        value={sdApi.filters.mergeArrayToString(place, 'name') as string}
+                                        value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
                                     />
                                 )
                         }
@@ -449,8 +450,8 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                         }
 
                         {
-                            ['picture'].includes(article.type)
-                                && article?.archive_description !== article?.description_text
+                            article.type === 'picture'
+                                && article.archive_description !== article.description_text
                                 && (
                                     <AnnotationsPreview article={article} />
                                 )

@@ -2,10 +2,10 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {getVocabularySelectionTypes} from '../../vocabularies/constants';
-import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
+import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
-import {ISubject} from 'superdesk-api';
+import {IArticle, ISubject, IVocabularyItem} from 'superdesk-api';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
 import {sdApi} from 'api';
@@ -1367,7 +1367,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        getLocaleName: sdApi.vocabularies.getVocabularyItemLabel,
+        getLocaleName: (term: IVocabularyItem, item: IArticle) => sdApi.vocabularies.getVocabularyItemLabel(term, item),
     };
 
     $rootScope.$on('subscriber:create', () => service.fetchSubscribers());

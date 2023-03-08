@@ -29,19 +29,81 @@ function getVocabularyItemLabel(term: IVocabularyItem, item: IArticle): string {
     return getVocabularyItemNameTranslated(term, language);
 }
 
+const vocabularyItemsToString = (
+    array: Array<IVocabularyItem>,
+    propertyName?: keyof IVocabularyItem,
+    schemeName?: string,
+): string =>
+    getVocabularyItemsByPropertyName(array, propertyName, schemeName).join(', ');
+
+const getVocabularyItemsByPropertyName = (
+    array: Array<IVocabularyItem>,
+    propertyName?: keyof IVocabularyItem,
+    schemeName?: string,
+): Array<string> => {
+    let subjectMerged = [];
+
+    array.forEach((item) => {
+        const value = propertyName == null ? item : item[propertyName];
+
+        if (value) {
+            subjectMerged.push(value);
+
+            if ((schemeName?.length ?? 0) && item.scheme !== schemeName) {
+                subjectMerged.pop();
+            }
+        }
+    });
+
+    return subjectMerged;
+};
+
+const getVocabularyItemsPreview = (
+    array: Array<IVocabularyItem>,
+    propertyName?: keyof IVocabularyItem,
+    schemeName?: string,
+    returnArray?: boolean,
+): Array<string> | string => {
+    if (returnArray) {
+        return getVocabularyItemsByPropertyName(array, propertyName, schemeName);
+    } else {
+        return vocabularyItemsToString(array, propertyName, schemeName);
+    }
+};
+
 /**
  * Selection vocabularies may be configured to be included in content profiles.
  */
-function isSelectionVocabulary(vocabulary: IVocabulary) {
+function isSelectionVocabulary(vocabulary: IVocabulary): boolean {
     return !isCustomFieldVocabulary(vocabulary) && (
         vocabulary.selection_type === 'multi selection'
         || vocabulary.selection_type === 'single selection'
     );
 }
 
-export const vocabularies = {
+interface IVocabulariesApi {
+    getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
+    isCustomFieldVocabulary:(vocabulary: IVocabulary) => boolean;
+    isSelectionVocabulary: (vocabulary: IVocabulary) => boolean;
+    getVocabularyItemLabel: (term: IVocabularyItem, item: IArticle) => string;
+    getVocabularyItemsPreview: (
+        array: Array<IVocabularyItem>,
+        propertyName?: keyof IVocabularyItem,
+        schemeName?: string,
+        returnArray?: boolean
+    ) => Array<string> | string;
+    vocabularyItemsToString: (
+        array: Array<IVocabularyItem>,
+        propertyName?: keyof IVocabularyItem,
+        schemeName?: string,
+    ) => string;
+}
+
+export const vocabularies: IVocabulariesApi = {
     getAll,
     isCustomFieldVocabulary,
     isSelectionVocabulary,
     getVocabularyItemLabel,
+    getVocabularyItemsPreview,
+    vocabularyItemsToString,
 };
