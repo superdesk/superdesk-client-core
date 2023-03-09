@@ -52,10 +52,7 @@ export const editor3StateToHtml = (
         },
 
         blockRenderers: {
-            atomic: (block: ContentBlock) =>
-                block.getData().get('data') != null
-                    ? new AtomicBlockParser(contentState, disabled).parse(block)
-                    : null,
+            atomic: (block: ContentBlock) => new AtomicBlockParser(contentState, disabled).parse(block),
         },
 
         inlineStyleFn: (styles: DraftInlineStyle) => {
