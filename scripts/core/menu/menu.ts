@@ -3,6 +3,7 @@ import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {NewAuthoringToggle} from './new-authoring-toggle';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -72,6 +73,14 @@ angular.module('superdesk.core.menu', [
             [],
         ),
     )
+    .component(
+        'sdNewAuthoringToggle',
+        reactToAngular1(
+            NewAuthoringToggle,
+            [],
+        ),
+    )
+    
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
