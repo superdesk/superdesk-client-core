@@ -38,7 +38,16 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <MultiSelect
-                        optionLabel={nameof<IArticle>('slugline')}
+                        zIndex={1050}
+                        optionLabel={(option) => {
+                            if ((option.slugline?.length ?? 0) > 0) {
+                                return option.slugline;
+                            } else if ((option.headline?.length ?? 0) > 0) {
+                                return option.headline;
+                            } else {
+                                return option._id;
+                            }
+                        }}
                         value={this.state.selectedArticles}
                         onChange={(values) => {
                             this.setState({selectedArticles: values});
