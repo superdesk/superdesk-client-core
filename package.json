@@ -93,8 +93,8 @@
     "medium-editor": "5.23.3",
     "medium-editor-tables": "0.6.1",
     "ment.io": "0.9.23",
-    "moment": "2.20.1",
-    "moment-timezone": "0.5.14",
+    "moment": "2.29.4",
+    "moment-timezone": "0.5.41",
     "ng-file-upload": "12.2.13",
     "node-sass": "4.14.0",
     "owl.carousel": "2.2.0",
@@ -130,8 +130,6 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",
-    "@types/moment": "^2.13.0",
-    "@types/moment-timezone": "^0.5.13",
     "@types/webpack-env": "^1.16.3",
     "btoa": "^1.1.2",
     "enzyme": "3.9.0",
@@ -155,7 +153,7 @@
     "webdriver-manager": "12.1.8"
   },
   "resolutions": {
-    "moment": "2.20.1"
+    "moment": "2.29.4"
   },
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
