@@ -83,13 +83,19 @@ export function prepareForCreation(
     initialValue: Partial<IRundownItemBase>,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): ICreate {
+    let withDuration = {...initialValue};
+
+    if (withDuration.duration == null) {
+        withDuration.duration = withDuration.planned_duration;
+    }
+
     const item: IRundownItemTemplateInitial = {
         _id: '',
         _created: '',
         _updated: '',
         _etag: '',
         _links: {},
-        data: initialValue,
+        data: withDuration,
     };
 
     return {

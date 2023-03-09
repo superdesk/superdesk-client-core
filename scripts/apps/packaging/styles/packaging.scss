@@ -16,7 +16,7 @@
     margin-bottom: 10px;
     transition: all 0.2s;
     &__icon-holder {
-        margin: 5px 10px 0 0 !important;
+        margin: 0 12px 0 0 !important;
         opacity:0.5;
         max-width: 24px;
         min-width: 24px;
@@ -79,10 +79,11 @@
         flex-direction: column;
     }
     &__item-headline {
-        padding-right: 40px;
+        padding-right: 64px;
         max-height: 74px;
         overflow: hidden;
-        font-size: 14px;
+        font-size: 1.4rem;
+        line-height: 1.2;
         flex-grow: 1;
         font-weight: bold;
     }
@@ -97,8 +98,8 @@
     }
     &__action-menu {
         position: absolute;
-        top: 5px;
-        right: 16px;
+        top: 6px;
+        right: 6px;
         .more-activity-toggle {
             width: 16px;
             height: 16px !important;
@@ -150,30 +151,38 @@
             border-width: 0 1px;
             background: #fcfcfc;
             padding: 30px 60px 20px;
-            @include border-box();
             overflow: auto;
         }
 
         .toggle-box h6 {
-            background: #fcfcfc;
+            background: var(--sd-editor-colour__main-bg);
+            color: var(--sd-editor-colour__txt)
         }
 
         .package-header {
-
             margin-bottom: 30px;
             position: relative;
             min-height: 52px;
 
             .title {
-                @include text-semibold();
-                font-size: 18px;
+                font-weight: 600;
+                font-size: 20px;
+                line-height: 1.4;
             }
 
             input, textarea {
-                border-color: #fff !important;
-                &:hover, &:focus {
-                    border-color: #d0d0d0 !important;
+                border: 1px solid var(--sd-editor-colour__controls-border);
+                transition: all ease 0.2s;
+                border-radius: var(--b-radius--small);
+                background-color: transparent;
+                color: var(--sd-editor-colour__txt);
+                &:focus {
+                    border-color: var(--sd-colour-interactive) !important;
+                    box-shadow: 0 0 0 3px var(--sd-colour-interactive--alpha-30);
                 }
+            }
+            textarea {
+                padding: 8px;
             }
         }
     }
@@ -240,17 +249,15 @@
         .item-container {
             position: relative;
             .remove {
-                background: none;
-                border: 0;
                 position: absolute;
-                right: 25px;
+                right: 38px;
                 top: 6px;
                 opacity: 0;
             }
 
             &:hover {
                 .remove {
-                    opacity: 0.3;
+                    opacity: 0.7;
                     &:hover {
                         opacity: 1;
                     }

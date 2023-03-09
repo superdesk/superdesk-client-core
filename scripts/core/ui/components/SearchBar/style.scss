@@ -1,8 +1,7 @@
 .SearchBar.extended {
     .search-handler {
         display: flex;
-        height: 47px;
-        border-left: 1px solid #e0e0e0;
+        border-left: 1px solid var(--sd-colour-line--light) !important;
         input {
             flex-grow: 1;
         }
@@ -12,10 +11,5 @@
                 opacity: .8;
             }
         }
-    }
-}
-.flat-searchbar {
-    .search-handler {
-        height: 47px !important;
     }
 }

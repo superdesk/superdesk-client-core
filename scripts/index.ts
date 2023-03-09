@@ -24,10 +24,12 @@ import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {keyBy, merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
+import ng from 'core/services/ng';
 import {sdApi} from 'api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {store} from 'core/data';
 import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
+import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
 
 let body = angular.element('body');
 
@@ -214,6 +216,7 @@ export function startApp(
                 document.write('Invalid date format specified in config.view.dateFormat');
                 return;
             }
+
             /**
              * @ngdoc module
              * @name superdesk-client
@@ -227,7 +230,15 @@ export function startApp(
                 'superdesk.register_extensions',
             ].concat(appConfig.apps || []), {strictDi: true});
 
+            setTimeout(() => { // required to avoid protractor timing out and failing tests
+                if (ng.get('session').sessionId != null) { // user logged in
+                    maybeDisplayInvalidInstanceConfigurationMessage();
+                }
+            });
+
             window['superdeskIsReady'] = true;
+
+            body.attr('data-theme', 'dark-ui');
 
             if (sdApi.user.isLoggedIn()) {
                 if (appConfig.features.useTansaProofing) {

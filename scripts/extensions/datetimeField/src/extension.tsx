@@ -30,7 +30,7 @@ type IProps = IPreviewComponentProps<IValueOperational, IDateTimeFieldConfig>;
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IProps> {
+    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<string, IDateTimeFieldConfig>> {
         render() {
             if (this.props.value == null) {
                 return null;

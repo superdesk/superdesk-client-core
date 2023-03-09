@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {onEventCapture} from '../../utils';
 import {KEYCODES} from '../../constants';
 
-import {Popup, Header, Content, Label} from '../../Popup';
+import {Popup, Header, Content, Label} from '../../Popup/index';
 import {gettext} from 'core/utils';
 
 import './style.scss';

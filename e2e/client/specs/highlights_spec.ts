@@ -131,7 +131,6 @@ describe('highlights', () => {
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
-            monitoring.closeMarkedForDeskPopup();
 
             // again trigger keyoard shortcut for multimark
             ctrlShiftKey('^');
@@ -161,7 +160,6 @@ describe('highlights', () => {
             monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight three', 1, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 1, 0);
             monitoring.checkMarkedForHighlight('Highlight three', 1, 2);
-            monitoring.closeHighlightsPopup();
 
             // mark for highlight in authoring
             monitoring.actionOnItem('Edit', 1, 1);
@@ -192,14 +190,14 @@ describe('highlights', () => {
             monitoring.selectItem(2, 2);
             highlights.multiMarkHighlight('Highlight All Desks');
             monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
-            monitoring.selectItem(2, 2); // to close the popup
 
             // Highlighting two items out of which first is already highlighted should retain it's highlight mark
-            monitoring.actionOnItem('Edit', 2, 2);
+            monitoring.editItem(2, 2);
             authoring.markForHighlights();
             highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
             monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
+
             // now remove from the first highlight
             monitoring.removeFromFirstHighlight(2, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);

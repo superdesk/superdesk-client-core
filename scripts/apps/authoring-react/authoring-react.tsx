@@ -186,7 +186,6 @@ function getInitialState<T extends IBaseRestApiResponse>(
         userPreferencesForFields,
         spellcheckerEnabled,
         validationErrors: validationErrors,
-        openWidget: null,
     };
 
     return initialState;
@@ -223,10 +222,6 @@ interface IStateLoaded<T> {
     profile: IContentProfileV2;
     userPreferencesForFields: {[key: string]: unknown};
     toggledFields: IToggledFields;
-    openWidget: null | {
-        name: string;
-        pinned: boolean;
-    };
     spellcheckerEnabled: boolean;
     validationErrors: IAuthoringValidationErrors;
 
@@ -287,52 +282,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
-            const state = this.state;
-
-            if (state.initialized) {
-                const nextState: IStateLoaded<T> = {
-                    ...state,
-                    openWidget: {
-                        ...state.openWidget,
-                        pinned: !(state.openWidget?.pinned ?? false),
-                    },
-                };
-
-                this.setState(nextState);
-            }
+            this.props.onSideWidgetChange({
+                ...this.props.sideWidget,
+                pinned: !(this.props.sideWidget?.pinned ?? false),
+            });
         };
+
         widgetReactIntegration.getActiveWidget = () => {
-            if (this.state.initialized) {
-                return this.state.openWidget?.name ?? null;
-            } else {
-                return null;
-            }
+            return this.props.sideWidget?.name ?? null;
         };
-        widgetReactIntegration.getPinnedWidget = () => {
-            if (this.state.initialized) {
-                const pinned = this.state.openWidget?.pinned === true;
 
-                if (pinned) {
-                    return this.state.openWidget.name;
-                } else {
-                    return null;
-                }
+        widgetReactIntegration.getPinnedWidget = () => {
+            const pinned = this.props.sideWidget?.pinned === true;
+
+            if (pinned) {
+                return this.props.sideWidget.name;
             } else {
                 return null;
             }
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
-            const state = this.state;
-
-            if (state.initialized) {
-                const nextState: IStateLoaded<T> = {
-                    ...state,
-                    openWidget: undefined,
-                };
-
-                this.setState(nextState);
-            }
+            this.props.onSideWidgetChange(null);
         };
 
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
@@ -1034,20 +1005,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: state.openWidget?.name ?? null,
+            sideWidget: this.props.sideWidget?.name,
             toggleSideWidget: (name) => {
-                if (name == null || state.openWidget?.name === name) {
-                    this.setState({
-                        ...state,
-                        openWidget: null,
-                    });
+                if (name == null || this.props.sideWidget?.name === name) {
+                    this.props.onSideWidgetChange(null);
                 } else {
-                    this.setState({
-                        ...state,
-                        openWidget: {
-                            name,
-                            pinned: false,
-                        },
+                    this.props.onSideWidgetChange({
+                        name: name,
+                        pinned: false,
                     });
                 }
             },
@@ -1156,15 +1121,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
                 const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
 
-                const nextState: IStateLoaded<T> = {
-                    ...state,
-                    openWidget: {
-                        name: nextWidgetName,
-                        pinned: state.openWidget?.pinned ?? false,
-                    },
-                };
-
-                this.setState(nextState);
+                this.props.openWidget(nextWidgetName);
             };
         }
 
@@ -1182,7 +1139,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         ];
 
-        const pinned = state.openWidget?.pinned === true;
+        const pinned = this.props.sideWidget?.pinned === true;
 
         const printPreviewAction = (() => {
             const execute = () => {

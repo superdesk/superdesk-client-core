@@ -30,9 +30,10 @@ import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
-import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
+import {TextWithMentions} from 'apps/users/components';
 import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -121,6 +122,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
+    .component('sdTextWithMentions', reactToAngular1(TextWithMentions, ['message']))
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
@@ -398,7 +400,7 @@ angular.module('superdesk.apps.authoring', [
             .activity('edit.crop', {
                 label: gettext('Details'),
                 modal: true,
-                cssClass: 'modal--fullscreen modal--dark-ui',
+                cssClass: 'modal--fullscreen',
                 controller: ctrl.ChangeImageController,
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],

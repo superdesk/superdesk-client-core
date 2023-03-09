@@ -11,13 +11,12 @@
         max-height: 170px;
         overflow-y: auto;
         overflow-x: hidden;
-        background: #fff;
-        color: $sd-text;
-        border: 1px #bbb;
-        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+        background: var(--color-dropdown-menu-Bg);
+        color: var(--color-text);
+        box-shadow: var(--sd-shadow__dropdown);
+        border-radius: 0 0 3px 3px;
         position: absolute;
-        top:28px;
-        
+        top: 28px;
         li {
             width: 100%;
             font-size: 1.3rem;
@@ -25,10 +24,10 @@
             font-family: $baseFontFamily;
             &:hover {
                 cursor: pointer;
-                background-color: rgba(94, 169, 200, 0.1);
+                background-color: var(--sd-colour-interactive--alpha-20);
             }
             &.active {
-                background-color: rgba(94, 169, 200, 0.4) !important;
+                background-color: var(--sd-colour-interactive--alpha-30) !important;
             }
             .country_state_info {
                 font-weight: 500;

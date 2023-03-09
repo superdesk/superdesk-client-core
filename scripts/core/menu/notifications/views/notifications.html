@@ -1,22 +1,22 @@
-<div class="notification-pane" ng-class="{show: flags.notifications}">
-    <div class="header" ng-if="flags.notifications">
-        <div class="flex-row sibling-spacer-10">
-            <sd-user-avatar data-user="currentUser"></sd-user-avatar>
-            <div>
-                <div class="user-info">
-                    <span class="name">{{currentUser.display_name }}</span>
-                    <span class="displayname">{{currentUser.username }}</span>
-                </div>
-                <div class="actions">
-                    <a href="#/profile/" ng-click="flags.notifications = false" translate>Profile</a>
-                    <button ng-click="logout()" translate>SIGN OUT</button>
-                </div>
+<div class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui">
+    <div class="notification-pane__header" ng-if="flags.notifications">
+        <h3 class="notification-pane__title" translate>Notifications</h3>
+        <button class="icn-btn" ng-click="toggleNotifications()"><i class="icon-close-small"></i></button>
+    </div>
+    <div class="notification-pane__content" ng-if="flags.notifications">
+        <div class="content-state__empty-container content-state__empty-container--absolute" ng-show="notifications._items.length === 0">
+            <div class="content-state__empty-info">
+                <figure class="content-state__image content-state__image--small">
+                    <img src="{{emptyState}}" alt="Empty state illustration">
+                </figure>
+                <h3 class="content-state__heading" translate>All good so far</h3>
+                <p class="content-state__description" translate>You don't have any notifications</p>
             </div>
         </div>
-    </div>
-    <div class="content" ng-if="flags.notifications">
+        <div class="sd-loading-overlay" ng-show="notifications._items == null">
+            <span class="a11y-only" translate>Loading</span>
+        </div>
         <section class="module">
-            <header class="title" translate>Notifications</header>
             <div class="notification-list">
                 <ul>
                     <li ng-repeat="notification in notifications._items track by notification._id" ng-class="{unread: notification._unread}" sd-mark-as-read>
@@ -63,8 +63,8 @@
                             </div>
                         </div>
                     </li>
-                    <div class="info" ng-show="notifications._items.length === 0" translate>All good so far.</div>
-                    <div class="info" ng-show="notifications._items == null" translate>Loading...</div>
+                    <!-- <li class="info" ng-show="notifications._items.length === 0" translate>All good so far.</li> -->
+                    <!-- <li class="info" ng-show="notifications._items == null" translate>Loading...</li> -->
                 </ul>
             </div>
         </section>

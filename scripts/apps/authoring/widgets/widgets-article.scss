@@ -49,13 +49,14 @@
         .widget-header {
             height: 48px;
             box-sizing: border-box;
+            background-color: var(--sd-item__main-Bg);
             .widget-icon {
                 display: none;
             }
             .widget-title {
                 line-height: 100%;
                 font-size: 1.4rem;
-                padding: 0 1rem;
+                padding: 0 1.2rem;
                 font-weight: 400;
             }
         }
@@ -74,7 +75,7 @@
             right: 35px;
         }
         .widget-content {
-            background-color: $sd-background;
+            background-color: var(--sd-colour-panel-bg--100);
             margin-top: 0;
             overflow: auto;
             bottom: 0;
@@ -98,8 +99,15 @@
             }
             .nav-tabs {
                 padding: 0 6px;
-                background-color: $white;
-                @include box-shadow(0, 1px, 0, 0, rgba(0, 0, 0, 0.1));
+                background-color: var(--sd-item__main-Bg);
+                box-shadow: 0 1px 0 0 var(--sd-colour-line--light);
+                grid-row: 1 / 2;
+                position: relative;
+                z-index: 1;
+            }
+            .content {
+                grid-row: 2 / 3;
+                overflow-y: auto;
             }
             .widget-content-padding {
                 padding: 10px;
@@ -141,7 +149,7 @@
             transition: all .2s ease-in-out;
 
             &.active {
-                color: $sd-blue;
+                color: var(--sd-colour-interactive--active);
                 transform: rotate(90deg);
             }
 
@@ -154,6 +162,10 @@
     sd-widget-react > div {
         display: contents;
     }
+}
+.tabpane .sd-widget .widget-content .content {
+    grid-row: 2 / 3;
+    overflow-y: auto;
 }
 
 /*

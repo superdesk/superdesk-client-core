@@ -13,7 +13,7 @@ import {
 } from '../../helpers';
 import {FB_URL, IG_URL} from '../../constants';
 import {ProfileDetail} from './ProfileDetail';
-import {IContact, IContactsService, IContactType} from '../../Contacts';
+import {IContact, IContactsService} from '../../Contacts';
 
 interface IProps {
     svc: {
@@ -253,16 +253,18 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                                 </div>
                             </StretchBar>
                             <StretchBar right={true}>
-                                <button className="btn" onClick={onCancel}>
-                                    {gettext('Cancel')}
-                                </button>
-                                {!readOnly && (
-                                    <button
-                                        className="btn btn--primary"
-                                        onClick={this.save}
-                                        disabled={!isFormValid || !dirty}
-                                    >{gettext('Save')}</button>
-                                )}
+                                <div className="button-group button-group--end button-group--comfort" role="group">
+                                    <button className="btn" onClick={onCancel}>
+                                        {gettext('Cancel')}
+                                    </button>
+                                    {!readOnly && (
+                                        <button
+                                            className="btn btn--primary"
+                                            onClick={this.save}
+                                            disabled={!isFormValid || !dirty}
+                                        >{gettext('Save')}</button>
+                                    )}
+                                </div>
                             </StretchBar>
                         </div>
                     )}

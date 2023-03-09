@@ -33,6 +33,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
             });
+            scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
             scope.features = features;
             scope.usernamePattern = appConfig.user?.username_pattern != null ?
@@ -65,7 +66,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             api('roles').query()
                 .then((result) => {
-                    scope.roles = result._items;
+                    scope.roles = _.keyBy(result._items, '_id');
                 });
             // get available translation languages
             var noBaseLanguage = true;
@@ -107,6 +108,18 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 superdesk.intent('edit', 'avatar', scope.user).then((avatar) => {
                     scope.user.picture_url = avatar; // prevent replacing Avatar which would get into diff
                 });
+            };
+
+            scope.goTo = function(id) {
+                document.getElementById(id).scrollIntoView({
+                    behavior: 'smooth',
+                });
+
+                scope.activeNavigation = id;
+            };
+
+            scope.checkNavigation = function(id) {
+                return scope.activeNavigation === id;
             };
 
             function validateField(response, field) {

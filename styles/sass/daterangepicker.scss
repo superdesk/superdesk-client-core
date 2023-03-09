@@ -75,7 +75,7 @@
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 1;
     label {
-      color: #333;
+      color: var(--color-text);
       font-size: 11px;
       margin-bottom: 2px;
       text-transform: uppercase;

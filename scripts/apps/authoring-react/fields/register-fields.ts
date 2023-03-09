@@ -14,6 +14,8 @@ import {getAttachmentsField} from './attachments';
 import {getTimeField} from './time';
 import {geDurationField} from './duration';
 import {getArticlesInPackageField} from './package-items';
+import {getTagInputField} from './tag-input';
+import {getDatelineField} from './dateline';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -49,6 +51,8 @@ export function registerAuthoringReactFields() {
                 getLinkedItemsField(),
                 getAttachmentsField(),
                 getArticlesInPackageField(),
+                getTagInputField(),
+                getDatelineField(),
             ],
         },
     };

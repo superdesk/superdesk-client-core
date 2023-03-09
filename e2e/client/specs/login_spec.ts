@@ -1,14 +1,11 @@
 import {element, browser, by} from 'protractor';
 
-import {waitForSuperdesk} from './helpers/utils';
-import {LoginModal} from './helpers/pages';
+import {waitForSuperdesk, click, waitFor} from './helpers/utils';
+import {LoginModal, currentUserButton, signOutButton} from './helpers/pages';
 
 describe('login', () => {
-    var modal;
-
-    beforeEach(() => {
-        modal = new LoginModal();
-    });
+    const modal = new LoginModal();
+    const currentUserUsername = element(by.className('current-user__username'));
 
     it('form renders modal on load', () => {
         expect(modal.btn.isDisplayed()).toBe(true);
@@ -19,23 +16,16 @@ describe('login', () => {
         waitForSuperdesk();
         expect(modal.btn.isDisplayed()).toBe(false);
         expect(browser.getCurrentUrl()).toBe(browser.baseUrl + '/#/workspace');
-        element(by.css('button.current-user')).click();
-        expect(
-            element(by.css('.user-info .displayname'))
-                .waitReady()
-                .then((elem) => elem.getText()),
-        ).toBe('admin');
+        click(currentUserButton);
+        waitFor(currentUserUsername);
+        expect(currentUserUsername.getText()).toBe('admin');
     });
 
     it('user can log out', () => {
         modal.login('admin', 'admin');
         waitForSuperdesk();
-        element(by.css('button.current-user')).click();
-
-        // wait for sidebar animation to finish
-        browser.wait(() => element(by.buttonText('SIGN OUT')).isDisplayed(), 200);
-
-        element(by.buttonText('SIGN OUT')).click();
+        click(currentUserButton);
+        click(signOutButton);
 
         browser.wait(() => element(by.id('login-btn')).isPresent(), 5000);
     });

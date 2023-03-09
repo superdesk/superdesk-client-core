@@ -21,14 +21,15 @@
                 <tbody>
                     <tr ng-repeat="p in privileges">
                         <td class="name">
-                            <div style="display: flex">
+                            <div>
                                 <span>{{ :: p.label | translate }}</span>
 
                                 <span
                                     ng-if="p.description"
                                     sd-tooltip="{{ :: p.description }}"
                                     flow="right"
-                                    style="margin-left: 6px"
+                                    
+                                    
                                 >
                                     <span class="icon-info-sign"></span>
                                 </span>

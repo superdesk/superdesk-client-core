@@ -1,11 +1,13 @@
 <div class="subnav subnav--absolute">
-    <div class="flat-searchbar monitoring-backlink" ng-if="privileges.users">
-        <div class="search-handler">
-            <button sd-tooltip="{{ :: 'Back to users list' | translate }}" flow="right" class="backlink" ng-click="intent('list', 'user')"></button>            
-        </div>
+    <div class="button-group button-group--left" ng-if="privileges.users">
+        <button sd-tooltip="{{ :: 'Back to users list' | translate }}" flow="right" class="sd-navbtn" ng-click="intent('list', 'user')">
+            <i class="icon-arrow-left"></i>
+        </button>            
     </div>
-
-    <h2 class="page-nav-title"><span translate>Users Profile</span>: <b>{{ user | username }}</b></h2>
+    <h2 class="page-nav-title page-nav-title--flex page-nav-title--users">
+        <sd-user-avatar data-user="user" data-size="'medium'"></sd-user-avatar>
+        <span class="a11y-only" translate >Users Profile:</span><span>{{ user | username }}</span>
+    </h2>
 </div>
 
 <section class="main-section user-profile-page">

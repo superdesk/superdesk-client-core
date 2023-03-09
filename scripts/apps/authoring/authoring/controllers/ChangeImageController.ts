@@ -510,9 +510,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     * @description Apply image modifications
     */
     $scope.applyImageChanges = () => {
-        let flip = 'none',
-            flipH = Math.abs($scope.controls.fliph / 180 % 2),
-            flipV = Math.abs($scope.controls.flipv / 180 % 2);
+        let flip: 'none' | 'both' | 'horizontal' | 'vertical' = 'none';
+        const flipH = Math.abs($scope.controls.fliph / 180 % 2);
+        const flipV = Math.abs($scope.controls.flipv / 180 % 2);
 
         if (flipH === 1 && flipV === 1) {
             flip = 'both';
@@ -522,15 +522,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             flip = 'vertical';
         }
 
-        $scope.loaderForMediaEdit = true;
-        return api.save('media_editor', {item: $scope.data.item, edit: {
-            brightness: $scope.controls.brightness,
-            contrast: $scope.controls.contrast,
-            saturation: $scope.controls.saturation,
-            rotate: -$scope.controls.rotate,
-            flip: flip,
+        const edit = [
+            ['brightness', $scope.controls.brightness],
+            ['contrast', $scope.controls.contrast],
+            ['saturation', $scope.controls.saturation],
+            ['flip', flip],
+            ['rotate', -$scope.controls.rotate],
+        ];
 
-        }}).then((result) => {
+        $scope.loaderForMediaEdit = true;
+        return api.save('media_editor', {item: $scope.data.item, edit}).then((result) => {
             $scope.data.item.renditions = result.renditions;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
