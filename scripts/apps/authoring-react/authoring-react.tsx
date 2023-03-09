@@ -280,6 +280,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
+        this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -355,6 +356,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         } else {
             return Promise.resolve();
         }
+    }
+
+    showThemeConfigModal(state: IStateLoaded<T>) {
+        showModal(({closeModal}) => {
+            return (
+                <ProofreadingThemeModal
+                    onHide={closeModal}
+                    onThemeChange={(res) => {
+                        this.setState({
+                            ...state,
+                            allThemes: {
+                                default: res.default,
+                                proofreading: res.proofreading,
+                            },
+                        });
+                    }}
+                />
+            );
+        });
     }
 
     /**
@@ -1288,39 +1308,27 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                                                         {printPreviewAction.jsxButton()}
 
-                                                        <IconButton
-                                                            icon="adjust"
-                                                            ariaValue={gettext('Toggle theme')}
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    ...state,
-                                                                    proofreadEnable: !state.proofreadEnable,
-                                                                });
-                                                            }}
-                                                        />
-
-                                                        <IconButton
-                                                            icon="switches"
-                                                            ariaValue={gettext('Configure themes')}
-                                                            onClick={() => {
-                                                                showModal(({closeModal}) => {
-                                                                    return (
-                                                                        <ProofreadingThemeModal
-                                                                            onHide={closeModal}
-                                                                            onThemeChange={(res) => {
-                                                                                this.setState({
-                                                                                    ...state,
-                                                                                    allThemes: {
-                                                                                        default: res.default,
-                                                                                        proofreading: res.proofreading,
-                                                                                    },
-                                                                                });
-                                                                            }}
-                                                                        />
-                                                                    );
-                                                                });
-                                                            }}
-                                                        />
+                                                        {this.props.themeEnabled === true && (
+                                                            <>
+                                                                <IconButton
+                                                                    icon="adjust"
+                                                                    ariaValue={gettext('Toggle theme')}
+                                                                    onClick={() => {
+                                                                        this.setState({
+                                                                            ...state,
+                                                                            proofreadEnable: !state.proofreadEnable,
+                                                                        });
+                                                                    }}
+                                                                />
+                                                                <IconButton
+                                                                    icon="switches"
+                                                                    ariaValue={gettext('Configure themes')}
+                                                                    onClick={() => {
+                                                                        this.showThemeConfigModal(state);
+                                                                    }}
+                                                                />
+                                                            </>
+                                                        )}
 
                                                     </ButtonGroup>
 

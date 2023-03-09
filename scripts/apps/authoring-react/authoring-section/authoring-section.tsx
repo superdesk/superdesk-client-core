@@ -76,7 +76,7 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
 
                         return (
                             <AuthoringSectionField
-                                uiTheme={this.props.uiTheme}
+                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
                                 key={field.id}
                                 field={field}
                                 fieldsData={this.props.fieldsData}

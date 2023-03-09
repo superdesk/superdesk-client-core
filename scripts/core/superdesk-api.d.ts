@@ -212,6 +212,8 @@ declare module 'superdesk-api' {
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
         headerCollapsed?: boolean; // initial value
+
+        themeEnabled?: boolean; // only works with article; default false
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments

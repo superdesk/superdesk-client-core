@@ -364,6 +364,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 {(panelState, panelActions) => {
                     return (
                         <AuthoringReact
+                            themeEnabled
                             ref={(component) => {
                                 this.authoringReactRef = component;
                             }}
