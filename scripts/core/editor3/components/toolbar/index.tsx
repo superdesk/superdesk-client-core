@@ -225,7 +225,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                                 addMultiLineQuote();
                             }}
                             tooltip={gettext('Multi-line quote')}
-                            iconName="quote"
+                            iconName="text-block"
                         />
                     )}
                     {has('remove format') && (
