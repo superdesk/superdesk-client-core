@@ -22,7 +22,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 ACTIONS = 'allowed_actions',
                 userPreferences = {
                     'feature:preview': 1,
-                    'feature:authoring': 1,
+                    'authoring': 1,
                     'archive:view': 1,
                     'email:notification': 1,
                     'desktop:notification': 1,
