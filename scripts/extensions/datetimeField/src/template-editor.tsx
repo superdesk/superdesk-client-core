@@ -2,8 +2,7 @@ import * as React from 'react';
 import {Switch} from 'superdesk-ui-framework/react';
 import {ITemplateEditorComponentProps} from 'superdesk-api';
 import {superdesk} from './superdesk';
-import {IConfig} from './extension';
-import {IValueOperational} from './interfaces';
+import {IConfig, IValueOperational} from './interfaces';
 
 const {gettext} = superdesk.localization;
 

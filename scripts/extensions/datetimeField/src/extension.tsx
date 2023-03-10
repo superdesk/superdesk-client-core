@@ -1,49 +1,16 @@
-import * as React from 'react';
-
 import {
     IExtension,
     IExtensionActivationResult,
-    IPreviewComponentProps,
-    ICommonFieldConfig,
     ICustomFieldType,
 } from 'superdesk-api';
 import {Editor} from './editor';
 import {Config} from './config';
 import {TemplateEditor} from './template-editor';
 import {superdesk} from './superdesk';
-import {IUserPreferences, IValueOperational, IValueStorage} from './interfaces';
+import {IConfig, IUserPreferences, IValueOperational, IValueStorage} from './interfaces';
+import {Preview} from './preview';
 
 const {gettext} = superdesk.localization;
-
-export function isDateValue(value: string | undefined | null) {
-    if (value == null) {
-        return false;
-    } else {
-        return isNaN(Date.parse(value)) !== true;
-    }
-}
-
-const {formatDateTime} = superdesk.localization;
-
-class DateTimePreview extends React.PureComponent<IPreviewComponentProps<IValueOperational, IConfig>> {
-    render() {
-        if (this.props.value == null) {
-            return null;
-        } else {
-            return <div>{formatDateTime(new Date(this.props.value))}</div>;
-        }
-    }
-}
-
-export interface IConfig extends ICommonFieldConfig {
-    initial_offset_minutes: number;
-    increment_steps: Array<number>;
-}
-
-export const defaultDateTimeConfig: IConfig = {
-    initial_offset_minutes: 0,
-    increment_steps: [],
-};
 
 function onTemplateCreate(_value: string, config: IConfig) {
     const initialOffset = config.initial_offset_minutes;
@@ -59,7 +26,7 @@ const datetimeField: ICustomFieldType<IValueOperational, IValueStorage, IConfig,
     id: 'datetime',
     label: gettext('Datetime'),
     editorComponent: Editor,
-    previewComponent: DateTimePreview,
+    previewComponent: Preview,
     configComponent: Config,
     templateEditorComponent: TemplateEditor,
     onTemplateCreate: onTemplateCreate,

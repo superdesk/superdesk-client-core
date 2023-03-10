@@ -4,14 +4,19 @@ import * as React from 'react';
 import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps} from 'superdesk-api';
 import {superdesk} from './superdesk';
-import {IConfig, defaultDateTimeConfig} from './extension';
+import {IConfig} from './interfaces';
 
 const gettext = superdesk.localization.gettext;
 const {Spacer, SpacerBlock} = superdesk.components;
 
+export const defaultConfig: IConfig = {
+    initial_offset_minutes: 0,
+    increment_steps: [],
+};
+
 export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
-        const config: IConfig = this.props.config ?? defaultDateTimeConfig;
+        const config: IConfig = this.props.config ?? defaultConfig;
         const {onChange} = this.props;
 
         return (
