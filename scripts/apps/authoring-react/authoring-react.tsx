@@ -1035,21 +1035,10 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             .sort((a, b) => a.order - b.order);
 
         const sidebarTabs: Array<ISideBarTab> = widgetsFromExtensions.map((widget) => ({
+            id: widget.icon,
             icon: widget.icon,
             size: 'big',
             tooltip: widget.label,
-            onClick: () => {
-                const selfToggled = state.openWidget != null && widget.label === state.openWidget?.name;
-
-                const nextState: IStateLoaded = {
-                    ...state,
-                    openWidget: selfToggled
-                        ? undefined
-                        : {name: widget.label, pinned: state.openWidget?.pinned ?? false},
-                };
-
-                this.setState(nextState);
-            },
         }));
 
         const toolbar1Widgets: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [
@@ -1353,6 +1342,19 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                 sideBar={(
                                     <Nav.SideBarTabs
                                         items={sidebarTabs}
+                                        activeTab={state.openWidget?.name ?? null}
+                                        onActiveTabChange={(val) => {
+                                            const selfToggled = state.openWidget?.name === val;
+
+                                            const nextState: IStateLoaded = {
+                                                ...state,
+                                                openWidget: selfToggled
+                                                    ? null
+                                                    : {name: val, pinned: state.openWidget?.pinned ?? false},
+                                            };
+
+                                            this.setState(nextState);
+                                        }}
                                     />
                                 )}
                             />
