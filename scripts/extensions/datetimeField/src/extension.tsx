@@ -7,9 +7,9 @@ import {
     ICommonFieldConfig,
     ICustomFieldType,
 } from 'superdesk-api';
-import {Editor} from './getDateTimeField';
-import {Config} from './getConfigComponent';
-import {TemplateEditor} from './getToggleTemplateDateTimeField';
+import {Editor} from './editor';
+import {Config} from './config';
+import {TemplateEditor} from './template-editor';
 import {superdesk} from './superdesk';
 import {IUserPreferences, IValueOperational, IValueStorage} from './interfaces';
 
