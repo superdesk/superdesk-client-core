@@ -1,14 +1,19 @@
 import * as React from 'react';
 
 import {
-    ISuperdesk,
     IExtension,
     IExtensionActivationResult,
     IPreviewComponentProps,
+    ICommonFieldConfig,
+    ICustomFieldType,
 } from 'superdesk-api';
-import {getDateTimeField} from './getDateTimeField';
-import {getConfigComponent} from './getConfigComponent';
-import {getToggleDateTimeField} from './getToggleTemplateDateTimeField';
+import {Editor} from './getDateTimeField';
+import {Config} from './getConfigComponent';
+import {TemplateEditor} from './getToggleTemplateDateTimeField';
+import {superdesk} from './superdesk';
+import {IUserPreferences, IValueOperational, IValueStorage} from './interfaces';
+
+const {gettext} = superdesk.localization;
 
 export function isDateValue(value: string | undefined | null) {
     if (value == null) {
@@ -18,31 +23,29 @@ export function isDateValue(value: string | undefined | null) {
     }
 }
 
-function getDateTimePreviewComponent(superdesk: ISuperdesk) {
-    const {formatDateTime} = superdesk.localization;
+const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<string, IDateTimeFieldConfig>> {
-        render() {
-            if (this.props.value == null) {
-                return null;
-            } else {
-                return <div>{formatDateTime(new Date(this.props.value))}</div>;
-            }
+class DateTimePreview extends React.PureComponent<IPreviewComponentProps<IValueOperational, IConfig>> {
+    render() {
+        if (this.props.value == null) {
+            return null;
+        } else {
+            return <div>{formatDateTime(new Date(this.props.value))}</div>;
         }
-    };
+    }
 }
 
-export interface IDateTimeFieldConfig {
+export interface IConfig extends ICommonFieldConfig {
     initial_offset_minutes: number;
     increment_steps: Array<number>;
 }
 
-export const defaultDateTimeConfig: IDateTimeFieldConfig = {
+export const defaultDateTimeConfig: IConfig = {
     initial_offset_minutes: 0,
     increment_steps: [],
 };
 
-function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
+function onTemplateCreate(_value: string, config: IConfig) {
     const initialOffset = config.initial_offset_minutes;
 
     if (_value == null) {
@@ -52,22 +55,24 @@ function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
     }
 }
 
-const extension: IExtension = {
-    activate: (superdesk: ISuperdesk) => {
-        const gettext = superdesk.localization.gettext;
+const datetimeField: ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> = {
+    id: 'datetime',
+    label: gettext('Datetime'),
+    editorComponent: Editor,
+    previewComponent: DateTimePreview,
+    configComponent: Config,
+    templateEditorComponent: TemplateEditor,
+    onTemplateCreate: onTemplateCreate,
+    hasValue: (val) => val != null,
+    getEmptyValue: () => null,
+};
 
+const extension: IExtension = {
+    activate: () => {
         const result: IExtensionActivationResult = {
             contributions: {
                 customFieldTypes: [
-                    {
-                        id: 'datetime',
-                        label: gettext('Datetime'),
-                        editorComponent: getDateTimeField(superdesk),
-                        previewComponent: getDateTimePreviewComponent(superdesk),
-                        configComponent: getConfigComponent(superdesk),
-                        templateEditorComponent: getToggleDateTimeField(superdesk),
-                        onTemplateCreate: onTemplateCreate,
-                    },
+                    datetimeField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
                 ],
             },
         };

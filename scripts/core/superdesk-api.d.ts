@@ -2586,7 +2586,7 @@ declare module 'superdesk-api' {
         label: string;
 
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
          * Must return `true` if not empty.

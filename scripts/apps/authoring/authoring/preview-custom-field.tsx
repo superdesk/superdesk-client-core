@@ -31,6 +31,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
                 <FieldType.previewComponent
                     item={item}
                     value={value}
+                    config={field.custom_field_config}
                 />
             </div>
         );
