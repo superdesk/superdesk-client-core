@@ -447,17 +447,19 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                 getSidebar={({item, toggleSideWidget}) => {
                                     const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(item)
                                         .map((widget) => ({
+                                            id: widget.icon,
                                             icon: widget.icon,
                                             size: 'big',
                                             tooltip: widget.label,
-                                            onClick: () => {
-                                                toggleSideWidget(widget.label);
-                                            },
                                         }));
 
                                     return (
                                         <Nav.SideBarTabs
                                             items={sidebarTabs}
+                                            activeTab={this.state.sideWidget?.name}
+                                            onActiveTabChange={(name) => {
+                                                toggleSideWidget(name);
+                                            }}
                                         />
                                     );
                                 }}
