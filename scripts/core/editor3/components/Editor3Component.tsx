@@ -552,7 +552,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
-            'Editor3-single-line-style': this.props.singleLine === true,
+            'Editor3-single-line-style': this.props.singleLine === true || this.props.uiTheme == null,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
             'unstyled__block--invisibles': this.props.invisibles,
@@ -600,6 +600,13 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 onFocus={() => {
                     this.setState({contentChangesAfterLastFocus: 0});
                 }}
+                style={
+                    this.props.uiTheme == null
+                        ? undefined
+                        : {
+                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                        }
+                }
             >
                 {
                     showToolbar && this.state.draggingInProgress !== true

@@ -43,7 +43,7 @@ const SelectionButtonComponent: React.StatelessComponent<IProps> = (
             data-flow={'down'}
             data-sd-tooltip={tooltip}
             className="Editor3-styleButton"
-            style={{color: uiTheme.textColor}}
+            style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
         >
             <span className={cx} onClick={clickHandler}>
                 <i className={`icon-${iconName}`} />
