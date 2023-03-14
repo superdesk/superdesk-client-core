@@ -1,7 +1,7 @@
 <div sd-modal data-model="modalActive" data-close="cancel()">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!configEdit._id" translate>Create highlight configuration</h3>
-        <h3 class="modal__heading" ng-show="configEdit._id" translate-params-config-name="{{configEdit.name}}" translate>Edit "{{configName}}" highlight</h3>
+        <h3 class="modal__heading" ng-show="configEdit._id" translate-params-name="{{configEdit.name}}" translate>Edit "{{name}}" highlight</h3>
         <a href="" class="close icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
