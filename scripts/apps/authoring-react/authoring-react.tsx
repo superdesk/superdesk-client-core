@@ -1289,6 +1289,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     toggledFields={state.toggledFields}
                                                     toggleField={this.toggleField}
                                                     readOnly={readOnly}
+                                                    item={state.itemWithChanges}
                                                 />
                                             </div>
                                         )}
@@ -1305,6 +1306,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 toggledFields={state.toggledFields}
                                                 toggleField={this.toggleField}
                                                 readOnly={readOnly}
+                                                item={state.itemWithChanges}
                                             />
                                         </div>
                                     </Layout.AuthoringMain>

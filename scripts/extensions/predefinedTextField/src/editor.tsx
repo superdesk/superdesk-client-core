@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {get} from 'lodash';
 import {IEditorComponentProps, IArticle} from 'superdesk-api';
-import {IPredefinedFieldConfig, IExtensionConfigurationOptions} from './interfaces';
+import {IConfig, IExtensionConfigurationOptions, IValueOperational} from './interfaces';
 import {Select, Option, Icon} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
@@ -9,7 +9,7 @@ import {superdesk} from './superdesk';
 const {Editor3Html} = superdesk.components;
 const {gettext} = superdesk.localization;
 
-type IProps = IEditorComponentProps<string | null, IPredefinedFieldConfig, never>;
+type IProps = IEditorComponentProps<IValueOperational, IConfig, never>;
 
 interface IState {
     freeText: boolean;
@@ -27,7 +27,7 @@ function applyPlaceholders(definition: string, article: IArticle): string {
     return result;
 }
 
-export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
+export class Editor extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -57,13 +57,13 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                     value={selectedOption?.title ?? ''}
                     onChange={(title) => {
                         if (title === '' && !freeTextMode) {
-                            this.props.setValue('');
+                            this.props.onChange('');
                         } else {
                             const selected = options.find((option) => option.title === title);
 
                             if (selected != null) {
                                 this.setState({freeText: false});
-                                this.props.setValue(applyPlaceholders(selected.definition, this.props.item));
+                                this.props.onChange(applyPlaceholders(selected.definition, this.props.item));
                             }
                         }
                     }}
@@ -109,9 +109,9 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
 
                                 <div style={{flexGrow: 1}}>
                                     <Editor3Html
-                                        value={value}
+                                        value={value ?? ''}
                                         onChange={(val) => {
-                                            this.props.setValue(val);
+                                            this.props.onChange(val);
                                         }}
                                         readOnly={fieldReadOnly || freeTextMode !== true}
                                     />

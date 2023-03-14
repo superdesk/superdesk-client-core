@@ -119,6 +119,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             }}
                             getVocabularyItems={() => []} // only used in authoring-react
                             container={({children}) => (<div>{children}</div>)}
+                            item={item}
                         />
                     )
                 }

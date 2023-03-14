@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import * as React from 'react';
 import {IConfigComponentProps, IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
-import {IPredefinedFieldConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
+import {IConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
 import {Tag, Checkbox} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
@@ -75,7 +75,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
     }
 }
 
-export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentProps<IPredefinedFieldConfig>> {
+export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
         const formConfig: IFormGroup = {
             direction: 'vertical',
@@ -138,7 +138,7 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
                         });
                     }}
                     onChange={(val) => {
-                        const nextConfig: IPredefinedFieldConfig = {
+                        const nextConfig: IConfig = {
                             ...this.props.config,
                             options: val,
                         };

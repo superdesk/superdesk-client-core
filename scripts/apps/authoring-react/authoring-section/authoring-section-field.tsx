@@ -5,25 +5,26 @@ import {getFieldContainer} from './get-field-container';
 import {IPropsAuthoringSection} from './authoring-section';
 import {memoize} from 'core/memoize';
 
-interface IProps {
+interface IProps<T> {
     field: IAuthoringFieldV2;
     value: unknown;
-    onChange: IPropsAuthoringSection['onChange'];
+    onChange: IPropsAuthoringSection<T>['onChange'];
     readOnly: boolean;
     language: string;
     canBeToggled: boolean;
     toggledOn: boolean;
-    toggleField: IPropsAuthoringSection['toggleField'];
+    toggleField: IPropsAuthoringSection<T>['toggleField'];
     editorPreferences: unknown;
     onEditorPreferencesChange: (fieldId: string, preferences: unknown) => void;
-    useHeaderLayout: IPropsAuthoringSection['useHeaderLayout'];
-    getVocabularyItems: IPropsAuthoringSection['getVocabularyItems'];
+    useHeaderLayout: IPropsAuthoringSection<T>['useHeaderLayout'];
+    getVocabularyItems: IPropsAuthoringSection<T>['getVocabularyItems'];
+    item: T;
 }
 
-export class AuthoringSectionField extends React.PureComponent<IProps> {
+export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
     private getFieldContainer: typeof getFieldContainer;
 
-    constructor(props: IProps) {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.getFieldContainer = memoize(getFieldContainer, 1);
@@ -64,6 +65,7 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
                         this.props.onEditorPreferencesChange(field.id, fieldPreferences);
                     }}
                     getVocabularyItems={this.props.getVocabularyItems}
+                    item={this.props.item}
                 />
             );
         }
