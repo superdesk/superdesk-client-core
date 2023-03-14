@@ -1179,7 +1179,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const allKeyBindings: IKeyBindings = {
             ...printPreviewAction.keybindings,
-            ...(getKeyBindingsFromActions(authoringOptions?.actions ?? [])),
+            ...getKeyBindingsFromActions(authoringOptions?.actions ?? []),
             ...keyBindingsFromAuthoringActions,
             ...widgetKeybindings,
         };
@@ -1197,16 +1197,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         {(panelState, panelActions) => {
                             return (
                                 <Layout.AuthoringFrame
-                                    header={authoringOptions == null ? undefined : (
-                                        <SubNav>
-                                            <AuthoringToolbar
-                                                entity={state.itemWithChanges}
-                                                coreWidgets={toolbar1Widgets}
-                                                extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
-                                                backgroundColor={authoringOptions.toolbarBgColor}
-                                            />
-                                        </SubNav>
-                                    )}
+                                    header={
+                                        toolbar1Widgets.length < 1 && this.props.getAuthoringTopBarWidgets == null
+                                            ? undefined
+                                            : (
+                                                <SubNav>
+                                                    <AuthoringToolbar
+                                                        entity={state.itemWithChanges}
+                                                        coreWidgets={toolbar1Widgets}
+                                                        extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
+                                                        backgroundColor={authoringOptions.toolbarBgColor}
+                                                    />
+                                                </SubNav>
+                                            )
+                                    }
                                     main={(
                                         <Layout.AuthoringMain
                                             headerCollapsed={this.props.headerCollapsed}

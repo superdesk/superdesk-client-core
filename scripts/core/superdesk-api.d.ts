@@ -179,7 +179,7 @@ declare module 'superdesk-api' {
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
-        getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
+        getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
         getAuthoringTopBarWidgets(
             options: IExposedFromAuthoring<T>,
         ): Array<ITopBarWidget<T>>;

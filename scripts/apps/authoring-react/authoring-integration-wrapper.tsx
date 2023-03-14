@@ -68,9 +68,7 @@ function getAuthoringActionsFromExtensions(
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
 
 interface IProps {
-    // Has to be non-mandatory for the case when we're editing
-    // an article template which doesn't have an _id property
-    itemId?: IArticle['_id'];
+    itemId: IArticle['_id'];
 }
 
 function getPublishToolbarWidget(
@@ -265,7 +263,6 @@ interface IPropsWrapper extends IProps {
     // If it's set to true or false then it can be collapsed/expanded back.
     sidebarMode?: boolean | 'hidden';
     authoringStorage: IAuthoringStorage<IArticle>;
-    hideSidebarAndHeader?: boolean;
     onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => IArticle): IFieldsData;
 }
 
@@ -299,13 +296,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     public toggleSidebar() {
-        if (this.state.sidebarMode !== 'hidden') {
+        if (typeof this.state.sidebarMode === 'boolean') {
             this.setState({sidebarMode: !this.state.sidebarMode});
         }
     }
 
     public isSidebarCollapsed() {
-        return this.state.sidebarMode;
+        return this.state.sidebarMode != null;
     }
 
     public prepareForUnmounting() {
@@ -516,11 +513,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     );
                                 }
                             }}
-                            getSidebar={
-                                this.state.sidebarMode || this.state.sidebarMode === 'hidden'
-                                    ? null
-                                    : getSidebar
-                            }
+                            getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
                             topBar2Widgets={topbar2WidgetsReady}
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {

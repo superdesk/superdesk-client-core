@@ -55,14 +55,15 @@
                     </div>
                 </div>
 
-                <div class="template-editor" ng-if="!authoringReactViewEnabled">
+                <div ng-if="authoringReactViewEnabled && item != null && item.profile != null">
+                    <sd-edit-template data-scope-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
+                </div>
+
+                <div class="template-editor" ng-if="authoringReactViewEnabled === false">
                     <header sd-authoring-header></header>
                     <div class="main-article">
                         <div class="fieldset" sd-article-edit></div>
                     </div>
-                </div>
-                <div ng-if="authoringReactViewEnabled && item != null && item.profile != null">
-                    <sd-edit-template data-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
                 </div>
             </form>
             <form class="template-container__metadata" name="metadataForm">
