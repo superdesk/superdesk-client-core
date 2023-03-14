@@ -73,11 +73,9 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     label=""
                     inlineLabel
                     labelHidden
-                    searchOptions={(term, callback) => {
-                        props.searchOptions(term, (res) => {
-                            callback(res.nodes);
-                        });
-                    }}
+                    searchOptions={(term, callback) => props.searchOptions(term, (res) => {
+                        callback(res.nodes);
+                    })}
                     value={values}
                     onChange={(val) => {
                         this.props.onChange(val);
