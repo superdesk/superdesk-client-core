@@ -16,9 +16,9 @@ import {
     IFieldsAdapter,
     IStorageAdapter,
     IRestApiResponse,
+    IFieldsData,
 } from 'superdesk-api';
 import {AuthoringReact} from './authoring-react';
-import {authoringStorageIArticle} from './data-layer';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {extensions} from 'appConfig';
@@ -68,7 +68,9 @@ function getAuthoringActionsFromExtensions(
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
 
 interface IProps {
-    itemId: IArticle['_id'];
+    // Has to be non-mandatory for the case when we're editing
+    // an article template which doesn't have an _id property
+    itemId?: IArticle['_id'];
 }
 
 function getPublishToolbarWidget(
@@ -256,7 +258,15 @@ interface IPropsWrapper extends IProps {
         readOnly: boolean;
         actions: Array<ITopBarWidget<IArticle>>;
     };
-    sidebarInitiallyVisible?: boolean;
+    hideToolbar?: boolean;
+
+    // If it's not passed then the sidebar is shown expanded and can't be collapsed.
+    // If hidden is passed then it can't be expanded.
+    // If it's set to true or false then it can be collapsed/expanded back.
+    sidebarMode?: boolean | 'hidden';
+    authoringStorage: IAuthoringStorage<IArticle>;
+    hideSidebarAndHeader?: boolean;
+    onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => IArticle): IFieldsData;
 }
 
 /**
@@ -265,7 +275,7 @@ interface IPropsWrapper extends IProps {
  */
 
 interface IState {
-    isSidebarCollapsed: boolean;
+    sidebarMode: boolean | 'hidden';
     sideWidget: null | {
         name: string;
         pinned: boolean;
@@ -279,7 +289,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         super(props);
 
         this.state = {
-            isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
+            sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
             sideWidget: null,
         };
 
@@ -289,11 +299,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     public toggleSidebar() {
-        this.setState({isSidebarCollapsed: !this.state.isSidebarCollapsed});
+        if (this.state.sidebarMode !== 'hidden') {
+            this.setState({sidebarMode: !this.state.sidebarMode});
+        }
     }
 
     public isSidebarCollapsed() {
-        return this.state.isSidebarCollapsed;
+        return this.state.sidebarMode;
     }
 
     public prepareForUnmounting() {
@@ -364,14 +376,16 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 {(panelState, panelActions) => {
                     return (
                         <AuthoringReact
+                            onFieldChange={this.props.onFieldChange}
+                            hideToolbar={this.props.hideToolbar}
                             ref={(component) => {
                                 this.authoringReactRef = component;
                             }}
                             itemId={this.props.itemId}
                             resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
                             onClose={() => this.props.onClose()}
-                            authoringStorage={authoringStorageIArticle}
-                            fieldsAdapter={getFieldsAdapter(authoringStorageIArticle)}
+                            authoringStorage={this.props.authoringStorage}
+                            fieldsAdapter={getFieldsAdapter(this.props.authoringStorage)}
                             storageAdapter={{
                                 storeValue: (value, fieldId, article) => {
                                     return {
@@ -502,7 +516,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     );
                                 }
                             }}
-                            getSidebar={this.state.isSidebarCollapsed ? null : getSidebar}
+                            getSidebar={
+                                this.state.sidebarMode || this.state.sidebarMode === 'hidden'
+                                    ? null
+                                    : getSidebar
+                            }
                             topBar2Widgets={topbar2WidgetsReady}
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {

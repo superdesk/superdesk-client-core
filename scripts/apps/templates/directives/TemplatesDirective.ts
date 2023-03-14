@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {getTemplateFilters} from '../constants';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle} from 'superdesk-api';
+import {authoringReactViewEnabled} from 'appConfig';
 
 const defaultTemplate: Partial<IArticle> = {
     type: 'text',
@@ -83,6 +84,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.onDeskToggle(desk);
             };
 
+            $scope.authoringReactViewEnabled = authoringReactViewEnabled;
+
             /*
              * Called on desk toggle on multiple desk selection
              */
@@ -151,6 +154,23 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.template_desk = null;
                 }
             };
+
+            let _isDirty;
+
+            /**
+             * Set dirty on autosave - it is called on change
+             */
+            $scope.autosave = () => {
+                _isDirty = true;
+            };
+
+            $scope.setDirtyFromReact = () => {
+                _isDirty = true;
+
+                $scope.$apply();
+            };
+
+            $scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
 
             $scope.templatesFilter = function(templateType) {
                 if ($scope.template._id && $scope.template.template_type === 'kill') {
@@ -245,6 +265,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         .then(
                             () => {
                                 notify.success(gettext('Template saved.'));
+                                _isDirty = false;
                                 $scope.cancel();
                             },
                             (response) => {

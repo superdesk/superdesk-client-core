@@ -9,6 +9,9 @@ import {
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringOptions,
+    IAuthoringStorage,
+    IAuthoringAutoSave,
+    ITemplate,
 } from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -20,6 +23,7 @@ import ng from 'core/services/ng';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
+import {authoringStorageIArticle, getArticleContentProfile} from './data-layer';
 
 export interface IProps {
     itemId: IArticle['_id'];
@@ -308,8 +312,70 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={getInlineToolbarActions}
+                    authoringStorage={authoringStorageIArticle}
                 />
             </div>
         );
     }
+}
+
+export class AuthoringAngularTemplateIntegration extends React.PureComponent<{template: ITemplate, apply(): void}> {
+    render(): React.ReactNode {
+        return (
+            <div className="sd-authoring-react-template-edit-view">
+                <AuthoringIntegrationWrapper
+                    sidebarMode="hidden"
+                    hideToolbar={true}
+                    onClose={onClose}
+                    authoringStorage={getTemplateEditViewAuthoringStorage(this.props.template.data as IArticle)}
+                    onFieldChange={(fieldId, fieldsData, computeLatestEntity) => {
+                        this.props.template.data = computeLatestEntity();
+                        this.props.apply();
+
+                        return fieldsData;
+                    }}
+                />
+            </div>
+        );
+    }
+}
+
+function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStorage<IArticle> {
+    class AutoSaveTemplate implements IAuthoringAutoSave<IArticle> {
+        get() {
+            return Promise.resolve(article);
+        }
+
+        delete() {
+            return Promise.resolve();
+        }
+
+        schedule(
+            getItem: () => IArticle,
+            callback: (autosaved: IArticle) => void,
+        ) {
+            callback(getItem());
+        }
+
+        cancel() {
+            // noop
+        }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
+        }
+    }
+
+    const authoringStorageTemplateEditView: IAuthoringStorage<IArticle> = {
+        autosave: new AutoSaveTemplate(),
+        getEntity: () => Promise.resolve({saved: article, autosaved: null}),
+        isLockedInCurrentSession: () => true,
+        forceLock: (entity) => Promise.resolve(entity),
+        saveEntity: (current) => Promise.resolve(current),
+        getContentProfile: (item, fieldsAdapter) => getArticleContentProfile(item, fieldsAdapter),
+        closeAuthoring: () => null,
+        getUserPreferences: () => ng.get('preferencesService').get(),
+    };
+
+    return authoringStorageTemplateEditView;
 }

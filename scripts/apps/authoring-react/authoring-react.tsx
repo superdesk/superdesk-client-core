@@ -13,6 +13,7 @@ import {
     ITopBarWidget,
     IExposedFromAuthoring,
     IKeyBindings,
+    IAuthoringOptions,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -373,7 +374,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ...state,
             fieldsDataWithChanges: onFieldChange == null
                 ? fieldsDataUpdated
-                : onFieldChange(fieldId, fieldsDataUpdated),
+                : onFieldChange(fieldId, fieldsDataUpdated, this.computeLatestEntity),
         });
     }
 
@@ -1017,8 +1018,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
             },
         };
-        const authoringOptions = this.props.getInlineToolbarActions(exposed);
-        const readOnly = state.initialized ? authoringOptions.readOnly : false;
+
+        const authoringOptions: IAuthoringOptions<T> | null =
+            this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
+        const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
         const authoringActions: Array<IAuthoringAction> = (() => {
@@ -1128,7 +1131,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             };
         }
 
-        const toolbar1Widgets: Array<ITopBarWidget<T>> = [
+        const toolbar1Widgets: Array<ITopBarWidget<T>> = authoringOptions?.actions != null ? [
             ...authoringOptions.actions,
             {
                 group: 'end',
@@ -1140,7 +1143,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 },
                 availableOffline: true,
             },
-        ];
+        ] : [];
 
         const pinned = this.props.sideWidget?.pinned === true;
 
@@ -1176,7 +1179,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const allKeyBindings: IKeyBindings = {
             ...printPreviewAction.keybindings,
-            ...getKeyBindingsFromActions(authoringOptions.actions),
+            ...(getKeyBindingsFromActions(authoringOptions?.actions ?? [])),
             ...keyBindingsFromAuthoringActions,
             ...widgetKeybindings,
         };
@@ -1194,7 +1197,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         {(panelState, panelActions) => {
                             return (
                                 <Layout.AuthoringFrame
-                                    header={(
+                                    header={authoringOptions == null ? undefined : (
                                         <SubNav>
                                             <AuthoringToolbar
                                                 entity={state.itemWithChanges}
@@ -1207,10 +1210,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     main={(
                                         <Layout.AuthoringMain
                                             headerCollapsed={this.props.headerCollapsed}
-                                            toolBar={(
+                                            toolBar={this.props.hideToolbar ? undefined : (
                                                 <React.Fragment>
                                                     <div
-                                                        style={{paddingRight: 16,
+                                                        style={{
+                                                            paddingRight: 16,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             gap: 8,

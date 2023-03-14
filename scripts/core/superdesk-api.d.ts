@@ -171,6 +171,8 @@ declare module 'superdesk-api' {
          */
         resourceNames: Array<string>;
 
+        hideToolbar?: boolean;
+        hideHeader?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
@@ -207,7 +209,7 @@ declare module 'superdesk-api' {
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
-        onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
+        onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => T): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 

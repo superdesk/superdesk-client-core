@@ -7,6 +7,7 @@ import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
+import {authoringStorageIArticle} from './data-layer';
 
 interface IProps {
     onClose(): void;
@@ -224,7 +225,8 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                         }
                                         <div style={{width: '100%'}}>
                                             <AuthoringIntegrationWrapper
-                                                sidebarInitiallyVisible={true}
+                                                authoringStorage={authoringStorageIArticle}
+                                                sidebarMode={true}
                                                 ref={(component) => {
                                                     this.componentRefs[_id] = component;
                                                 }}
