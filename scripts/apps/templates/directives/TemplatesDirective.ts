@@ -155,31 +155,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 }
             };
 
-            let _isDirty;
-
-            /**
-             * Set dirty on autosave - it is called on change
-             */
-            $scope.autosave = () => {
-                _isDirty = true;
-            };
-
-            $scope.setDirtyFromReact = () => {
-                _isDirty = true;
-
-                $scope.$apply();
-            };
-
-            $scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
-
-            $scope.templatesFilter = function(templateType) {
-                if ($scope.template._id && $scope.template.template_type === 'kill') {
-                    return templateType._id === 'kill';
-                }
-
-                return templateType._id !== 'kill';
-            };
-
             /*
              * Returns desks names
              */
@@ -265,7 +240,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         .then(
                             () => {
                                 notify.success(gettext('Template saved.'));
-                                _isDirty = false;
                                 $scope.cancel();
                             },
                             (response) => {
@@ -321,7 +295,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, $scope, $scope.item);
+                if ($scope.item != null) {
+                    content.setupAuthoring(profile, $scope, $scope.item);
+                }
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {

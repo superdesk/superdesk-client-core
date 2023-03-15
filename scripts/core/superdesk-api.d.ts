@@ -171,8 +171,8 @@ declare module 'superdesk-api' {
          */
         resourceNames: Array<string>;
 
+        // Hides the toolbar which includes the "Print Preview" button.
         hideToolbar?: boolean;
-        hideHeader?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;

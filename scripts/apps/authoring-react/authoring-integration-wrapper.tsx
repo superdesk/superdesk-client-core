@@ -71,54 +71,6 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
-function getPublishToolbarWidget(
-    panelState: IStateInteractiveActionsPanelHOC,
-    panelActions: IActionsInteractiveActionsPanelHOC,
-): ITopBarWidget<IArticle> {
-    const publishWidgetButton: ITopBarWidget<IArticle> = {
-        priority: 99,
-        availableOffline: false,
-        group: 'end',
-        // eslint-disable-next-line react/display-name
-        component: (props: {entity: IArticle}) => (
-            <ButtonGroup align="end">
-                <ButtonGroup subgroup={true} spaces="no-space">
-                    <NavButton
-                        type="highlight"
-                        icon="send-to"
-                        iconSize="big"
-                        text={gettext('Send to / Publish')}
-                        onClick={() => {
-                            if (panelState.active) {
-                                panelActions.closePanel();
-                            } else {
-                                const availableTabs: Array<IArticleActionInteractive> = [
-                                    'send_to',
-                                ];
-
-                                const canPublish =
-                                    sdApi.article.canPublish(props.entity);
-
-                                if (canPublish) {
-                                    availableTabs.push('publish');
-                                }
-
-                                dispatchInternalEvent('interactiveArticleActionStart', {
-                                    items: [props.entity],
-                                    tabs: availableTabs,
-                                    activeTab: canPublish ? 'publish' : availableTabs[0],
-                                });
-                            }
-                        }}
-                    />
-                </ButtonGroup>
-            </ButtonGroup>
-        ),
-    };
-
-    return publishWidgetButton;
-}
-
 const getCompareVersionsModal = (
     getLatestItem: () => IArticle,
     authoringStorage: IAuthoringStorage<IArticle>,
@@ -252,10 +204,16 @@ const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
 
 interface IPropsWrapper extends IProps {
     onClose?(): void;
+    getAuthoringTopBarWidgets?: (
+        panelState: IStateInteractiveActionsPanelHOC,
+        panelActions: IActionsInteractiveActionsPanelHOC,
+    ) => Array<ITopBarWidget<IArticle>>;
     getInlineToolbarActions?(options: IExposedFromAuthoring<IArticle>): {
         readOnly: boolean;
         actions: Array<ITopBarWidget<IArticle>>;
     };
+
+    // Hides the toolbar which includes the "Print Preview" button.
     hideToolbar?: boolean;
 
     // If it's not passed then the sidebar is shown expanded and can't be collapsed.
@@ -443,21 +401,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             }}
                             getInlineToolbarActions={this.props.getInlineToolbarActions}
                             getAuthoringTopBarWidgets={
-                                () => Object.values(extensions)
-                                    .flatMap(({activationResult}) =>
-                                            activationResult?.contributions?.authoringTopbarWidgets ?? [],
-                                    )
-                                    .map((item): ITopBarWidget<IArticle> => {
-                                        const Component = item.component;
-
-                                        return {
-                                            ...item,
-                                            component: (props: {entity: IArticle}) => (
-                                                <Component article={props.entity} />
-                                            ),
-                                        };
-                                    })
-                                    .concat([getPublishToolbarWidget(panelState, panelActions)])
+                                this.props.getAuthoringTopBarWidgets != null
+                                    ? () => this.props.getAuthoringTopBarWidgets(panelState, panelActions)
+                                    : undefined
                             }
                             getSidePanel={({
                                 item,

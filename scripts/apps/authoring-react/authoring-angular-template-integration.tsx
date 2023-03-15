@@ -12,7 +12,7 @@ interface IProps {
 export class AuthoringAngularTemplateIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
-            <div style={{padding: '1rem'}}>
+            <div style={{padding: '1rem', height: '100%'}}>
                 <AuthoringIntegrationWrapper
                     itemId={null} // Id doesn't apply when editing embedded JSON.
                     sidebarMode="hidden"

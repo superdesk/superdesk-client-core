@@ -1206,7 +1206,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         entity={state.itemWithChanges}
                                                         coreWidgets={toolbar1Widgets}
                                                         extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
-                                                        backgroundColor={authoringOptions.toolbarBgColor}
+                                                        backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 </SubNav>
                                             )

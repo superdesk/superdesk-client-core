@@ -3,14 +3,14 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, IconButton, NavButton, Popover} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, NavButton, Popover} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringOptions,
 } from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import React from 'react';
 import {gettext} from 'core/utils';
@@ -21,6 +21,9 @@ import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 import {authoringStorageIArticle} from './data-layer';
+import {IStateInteractiveActionsPanelHOC, IActionsInteractiveActionsPanelHOC} from 'core/interactive-article-actions-panel/index-hoc';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 export interface IProps {
     itemId: IArticle['_id'];
@@ -301,11 +304,81 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
     }
 }
 
+function getPublishToolbarWidget(
+    panelState: IStateInteractiveActionsPanelHOC,
+    panelActions: IActionsInteractiveActionsPanelHOC,
+): ITopBarWidget<IArticle> {
+    const publishWidgetButton: ITopBarWidget<IArticle> = {
+        priority: 99,
+        availableOffline: false,
+        group: 'end',
+        // eslint-disable-next-line react/display-name
+        component: (props: {entity: IArticle}) => (
+            <ButtonGroup align="end">
+                <ButtonGroup subgroup={true} spaces="no-space">
+                    <NavButton
+                        type="highlight"
+                        icon="send-to"
+                        iconSize="big"
+                        text={gettext('Send to / Publish')}
+                        onClick={() => {
+                            if (panelState.active) {
+                                panelActions.closePanel();
+                            } else {
+                                const availableTabs: Array<IArticleActionInteractive> = [
+                                    'send_to',
+                                ];
+
+                                const canPublish =
+                                    sdApi.article.canPublish(props.entity);
+
+                                if (canPublish) {
+                                    availableTabs.push('publish');
+                                }
+
+                                dispatchInternalEvent('interactiveArticleActionStart', {
+                                    items: [props.entity],
+                                    tabs: availableTabs,
+                                    activeTab: canPublish ? 'publish' : availableTabs[0],
+                                });
+                            }
+                        }}
+                    />
+                </ButtonGroup>
+            </ButtonGroup>
+        ),
+    };
+
+    return publishWidgetButton;
+}
+
+export function getAuthoringTopBarWidgets(
+    panelState: IStateInteractiveActionsPanelHOC,
+    panelActions: IActionsInteractiveActionsPanelHOC,
+) {
+    return Object.values(extensions)
+        .flatMap(({activationResult}) =>
+                activationResult?.contributions?.authoringTopbarWidgets ?? [],
+        )
+        .map((item): ITopBarWidget<IArticle> => {
+            const Component = item.component;
+
+            return {
+                ...item,
+                component: (props: {entity: IArticle}) => (
+                    <Component article={props.entity} />
+                ),
+            };
+        })
+        .concat([getPublishToolbarWidget(panelState, panelActions)]);
+}
+
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
             <div className="sd-authoring-react">
                 <AuthoringIntegrationWrapper
+                    getAuthoringTopBarWidgets={getAuthoringTopBarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={getInlineToolbarActions}

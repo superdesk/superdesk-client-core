@@ -55,8 +55,8 @@
                     </div>
                 </div>
 
-                <div ng-if="authoringReactViewEnabled && item != null && item.profile != null">
-                    <sd-edit-template data-scope-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
+                <div style="height: 100%;" ng-if="authoringReactViewEnabled && item != null && item.profile != null">
+                    <sd-edit-template class="sd-authoring-bridge" data-scope-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
                 </div>
 
                 <div class="template-editor" ng-if="authoringReactViewEnabled === false">
