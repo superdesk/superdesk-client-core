@@ -1131,7 +1131,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             };
         }
 
-        const toolbar1Widgets: Array<ITopBarWidget<T>> = authoringOptions?.actions != null ? [
+        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions?.actions != null ? [
             ...authoringOptions.actions,
             {
                 group: 'end',
@@ -1198,14 +1198,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             return (
                                 <Layout.AuthoringFrame
                                     header={
-                                        toolbar1Widgets.length < 1 && this.props.getAuthoringTopBarWidgets == null
+                                        primaryToolbarWidgets.length < 1
+                                        && this.props.getAuthoringPrimaryToolbarWidgets == null
                                             ? undefined
                                             : (
                                                 <SubNav>
                                                     <AuthoringToolbar
                                                         entity={state.itemWithChanges}
-                                                        coreWidgets={toolbar1Widgets}
-                                                        extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
+                                                        coreWidgets={primaryToolbarWidgets}
+                                                        extraWidgets={
+                                                            this.props.getAuthoringPrimaryToolbarWidgets(exposed)
+                                                        }
                                                         backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 </SubNav>
@@ -1214,7 +1217,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     main={(
                                         <Layout.AuthoringMain
                                             headerCollapsed={this.props.headerCollapsed}
-                                            toolBar={this.props.hideToolbar ? undefined : (
+                                            toolBar={this.props.hideSecondaryToolbar ? undefined : (
                                                 <React.Fragment>
                                                     <div
                                                         style={{
@@ -1225,7 +1228,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         }}
                                                     >
                                                         {
-                                                            this.props.topBar2Widgets
+                                                            this.props.secondaryToolbarWidgets
                                                                 .map((Component, i) => {
                                                                     return (
                                                                         <Component

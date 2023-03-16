@@ -21,7 +21,10 @@ import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 import {authoringStorageIArticle} from './data-layer';
-import {IStateInteractiveActionsPanelHOC, IActionsInteractiveActionsPanelHOC} from 'core/interactive-article-actions-panel/index-hoc';
+import {
+    IStateInteractiveActionsPanelHOC,
+    IActionsInteractiveActionsPanelHOC,
+} from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
 
@@ -352,7 +355,7 @@ function getPublishToolbarWidget(
     return publishWidgetButton;
 }
 
-export function getAuthoringTopBarWidgets(
+export function getAuthoringPrimaryToolbarWidgets(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
 ) {
@@ -378,7 +381,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
         return (
             <div className="sd-authoring-react">
                 <AuthoringIntegrationWrapper
-                    getAuthoringTopBarWidgets={getAuthoringTopBarWidgets}
+                    getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={getInlineToolbarActions}

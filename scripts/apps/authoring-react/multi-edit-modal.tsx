@@ -8,7 +8,7 @@ import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {authoringStorageIArticle} from './data-layer';
-import {getAuthoringTopBarWidgets} from './authoring-angular-integration';
+import {getAuthoringPrimaryToolbarWidgets} from './authoring-angular-integration';
 
 interface IProps {
     onClose(): void;
@@ -226,7 +226,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                         }
                                         <div style={{width: '100%'}}>
                                             <AuthoringIntegrationWrapper
-                                                getAuthoringTopBarWidgets={getAuthoringTopBarWidgets}
+                                                getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                                                 authoringStorage={authoringStorageIArticle}
                                                 sidebarMode={true}
                                                 ref={(component) => {

@@ -204,7 +204,7 @@ const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
 
 interface IPropsWrapper extends IProps {
     onClose?(): void;
-    getAuthoringTopBarWidgets?: (
+    getAuthoringPrimaryToolbarWidgets?: (
         panelState: IStateInteractiveActionsPanelHOC,
         panelActions: IActionsInteractiveActionsPanelHOC,
     ) => Array<ITopBarWidget<IArticle>>;
@@ -214,7 +214,7 @@ interface IPropsWrapper extends IProps {
     };
 
     // Hides the toolbar which includes the "Print Preview" button.
-    hideToolbar?: boolean;
+    hideSecondaryToolbar?: boolean;
 
     // If it's not passed then the sidebar is shown expanded and can't be collapsed.
     // If hidden is passed then it can't be expanded.
@@ -318,11 +318,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             );
         };
 
-        const topbar2WidgetsFromExtensions = Object.values(extensions)
+        const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
-        const topbar2WidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
-            defaultToolbarItems.concat(topbar2WidgetsFromExtensions).map(
+        const secondaryToolbarWidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
+            defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions).map(
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
@@ -332,7 +332,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     return (
                         <AuthoringReact
                             onFieldChange={this.props.onFieldChange}
-                            hideToolbar={this.props.hideToolbar}
+                            hideSecondaryToolbar={this.props.hideSecondaryToolbar}
                             ref={(component) => {
                                 this.authoringReactRef = component;
                             }}
@@ -400,9 +400,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 this.setState({sideWidget});
                             }}
                             getInlineToolbarActions={this.props.getInlineToolbarActions}
-                            getAuthoringTopBarWidgets={
-                                this.props.getAuthoringTopBarWidgets != null
-                                    ? () => this.props.getAuthoringTopBarWidgets(panelState, panelActions)
+                            getAuthoringPrimaryToolbarWidgets={
+                                this.props.getAuthoringPrimaryToolbarWidgets != null
+                                    ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
                                     : undefined
                             }
                             getSidePanel={({
@@ -460,7 +460,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 }
                             }}
                             getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
-                            topBar2Widgets={topbar2WidgetsReady}
+                            secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index].label;

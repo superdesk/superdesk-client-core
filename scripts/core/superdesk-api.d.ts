@@ -172,7 +172,7 @@ declare module 'superdesk-api' {
         resourceNames: Array<string>;
 
         // Hides the toolbar which includes the "Print Preview" button.
-        hideToolbar?: boolean;
+        hideSecondaryToolbar?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
@@ -180,7 +180,7 @@ declare module 'superdesk-api' {
         fieldsAdapter: IFieldsAdapter<T>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
-        getAuthoringTopBarWidgets(
+        getAuthoringPrimaryToolbarWidgets?(
             options: IExposedFromAuthoring<T>,
         ): Array<ITopBarWidget<T>>;
         onEditingStart?(item: T): void;
@@ -194,7 +194,7 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 

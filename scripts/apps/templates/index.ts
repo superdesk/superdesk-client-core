@@ -29,7 +29,14 @@ angular.module('superdesk.apps.templates', [
 
     .directive('sdTemplates', directive.TemplatesDirective)
     .directive('sdTemplateEditorModal', directive.TemplateEditorModal)
-    .component('sdEditTemplate', reactToAngular1(AuthoringAngularTemplateIntegration, ['template', 'scopeApply']))
+    .component(
+        'sdEditTemplate',
+        reactToAngular1(
+            AuthoringAngularTemplateIntegration,
+            ['template', 'scopeApply'],
+            [],
+            'height: 100%;',
+        ))
 
     .controller('CreateTemplateController', ctrl.CreateTemplateController)
     .controller('TemplateMenu', ctrl.TemplateMenuController)
