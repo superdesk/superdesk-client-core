@@ -353,7 +353,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 },
                                 retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                             }}
-                            getLanguage={(article) => article.language}
+                            getLanguage={(article) => article.language ?? 'en'}
                             onEditingStart={(article) => {
                                 dispatchCustomEvent('articleEditStart', article);
                             }}
