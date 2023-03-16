@@ -122,7 +122,7 @@
     "superdesk-ui-framework": "3.0.0-rc12",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
-    "typescript": "~4.9.5",
+    "typescript": "3.9.7",
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
     "webpack": "3.11.0",
