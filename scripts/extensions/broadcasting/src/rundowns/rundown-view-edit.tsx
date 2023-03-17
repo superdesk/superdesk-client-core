@@ -667,14 +667,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Nav.SideBarTabs
-                                                            items={sideWidgetsAllowed.map(({icon, _id}) => ({
-                                                                size: 'big',
+                                                            activeTab={sideWidget?.name ?? null}
+                                                            items={sideWidgetsAllowed.map(({icon}) => ({
+                                                                id: icon,
                                                                 icon,
-                                                                onClick: () => {
-                                                                    toggleSideWidget(_id);
-                                                                },
-                                                                active: sideWidget?.name === _id,
+                                                                size: 'big',
                                                             }))}
+                                                            onActiveTabChange={(val) => {
+                                                                toggleSideWidget(val);
+                                                            }}
                                                         />
                                                     );
                                                 }}
