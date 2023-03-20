@@ -56,6 +56,7 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
 
         const fieldsOrdered =
             Object.keys(editor)
+                .filter((key) => editor[key] != null) // don't take disabled ones
                 .map((key) => {
                     const result: {fieldId: string, editorItem: any} =
                         {
