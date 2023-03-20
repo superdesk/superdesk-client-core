@@ -381,6 +381,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
         return (
             <div className="sd-authoring-react">
                 <AuthoringIntegrationWrapper
+                    sidebarMode={true}
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
