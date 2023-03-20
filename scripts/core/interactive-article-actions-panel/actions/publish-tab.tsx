@@ -96,10 +96,17 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
-                        ng.get('authoringWorkspace').close();
-                        notify.success('Item published.');
-                    });
+                    ng.get('authoring').publish(
+                        cloneDeep(this.props.item),
+                        cloneDeep(itemToPublish),
+                        'publish',
+                        false,
+                        {notifyErrors: true},
+                    )
+                        .then(() => {
+                            ng.get('authoringWorkspace').close();
+                            notify.success('Item published.');
+                        });
                 });
             })
             .catch(() => {
