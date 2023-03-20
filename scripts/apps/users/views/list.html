@@ -13,6 +13,7 @@
                 <div class="button-list button-list--padded">
                     <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All user types' | translate}}</button>
                     <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="externalUserFilter=!externalUserFilter" ng-class="{'toggle-button--active': externalUserFilter}">{{:: 'External' | translate}}</button>
                 </div>
                 <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:100px; margin:0 40px;">
                     <select class="sd-line-input__select" 

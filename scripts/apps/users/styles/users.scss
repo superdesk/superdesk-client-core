@@ -370,6 +370,7 @@
 
         .user_type {
             align-items: flex-end;
+
         }
     }
 
@@ -816,6 +817,16 @@ Profile page styles
             padding-bottom: 32px;
             .details-info {
                 padding-inline: 16px;
+            }
+        }
+        .field__user-type {
+            flex-direction: column;
+            
+            .form__row-item {
+                justify-content: space-around;
+                display: flex;
+                width: 100%;
+                margin-bottom: 1rem;
             }
         }
         .action-bar {
