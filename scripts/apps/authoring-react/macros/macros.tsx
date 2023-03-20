@@ -279,7 +279,9 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
         }).then((res) => {
             macroProcessor.afterPatch(res.item as IArticle);
         }).catch((err) => {
-            notify.error(err._message);
+            if ((err._message?.length ?? 0) > 0) {
+                notify.error(err._message);
+            }
         });
     }
 

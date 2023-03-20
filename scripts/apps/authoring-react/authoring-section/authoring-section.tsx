@@ -19,6 +19,37 @@ export interface IPropsAuthoringSection {
     validationErrors: IAuthoringValidationErrors;
 }
 
+function groupItemsToRow<T>(items: Array<T>, getWidth: (item: T) => number) {
+    const itemGroups: Array<Array<T>> = [
+        [],
+    ];
+
+    let rowWidth = 0; // percent
+
+    for (const item of items) {
+        const itemWidth = getWidth(item);
+        const fitOnThisRow = rowWidth + itemWidth <= 100;
+
+        if (fitOnThisRow) {
+            rowWidth = rowWidth + itemWidth;
+        } else {
+            itemGroups.push([]);
+        }
+
+        const lastGroup = itemGroups[itemGroups.length - 1];
+
+        lastGroup.push(item);
+
+        // if row is full after pushing - add a new one
+        if (rowWidth === 100) {
+            itemGroups.push([]);
+            rowWidth = 0;
+        }
+    }
+
+    return itemGroups;
+}
+
 /**
  * A variable is needed in order to use the same object reference
  * and allow PureComponent to skip re-renders.
@@ -41,35 +72,44 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
 
     render() {
         const {toggledFields} = this.props;
+        const grouped = groupItemsToRow(this.props.fields.toArray(), (field) => field.fieldConfig.width);
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
                 {
-                    this.props.fields.map((field) => {
-                        const canBeToggled = toggledFields[field.id] != null;
-                        const toggledOn = toggledFields[field.id];
+                    grouped.map((group, index) => (
+                        <div key={index} style={{display: 'flex', gap: '10px'}}>
+                            {
+                                group.map((field) => {
+                                    const canBeToggled = toggledFields[field.id] != null;
+                                    const toggledOn = toggledFields[field.id];
 
-                        return (
-                            <AuthoringSectionField
-                                key={field.id}
-                                field={field}
-                                fieldsData={this.props.fieldsData}
-                                onChange={this.props.onChange}
-                                readOnly={this.props.readOnly}
-                                language={this.props.language}
-                                canBeToggled={canBeToggled}
-                                toggledOn={toggledOn}
-                                toggleField={this.props.toggleField}
-                                editorPreferences={
-                                    this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
-                                }
-                                onEditorPreferencesChange={this.onEditorPreferencesChange}
-                                useHeaderLayout={this.props.useHeaderLayout}
-                                getVocabularyItems={this.props.getVocabularyItems}
-                                validationError={this.props.validationErrors[field.id]}
-                            />
-                        );
-                    }).toArray()
+                                    return (
+                                        <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
+                                            <AuthoringSectionField
+                                                field={field}
+                                                fieldsData={this.props.fieldsData}
+                                                onChange={this.props.onChange}
+                                                readOnly={this.props.readOnly}
+                                                language={this.props.language}
+                                                canBeToggled={canBeToggled}
+                                                toggledOn={toggledOn}
+                                                toggleField={this.props.toggleField}
+                                                editorPreferences={
+                                                    this.props.userPreferencesForFields[field.id]
+                                                        ?? defaultUserPreferences
+                                                }
+                                                onEditorPreferencesChange={this.onEditorPreferencesChange}
+                                                useHeaderLayout={this.props.useHeaderLayout}
+                                                getVocabularyItems={this.props.getVocabularyItems}
+                                                validationError={this.props.validationErrors[field.id]}
+                                            />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </div>
+                    ))
                 }
             </div>
         );

@@ -3277,6 +3277,7 @@ declare module 'superdesk-api' {
         readOnly?: boolean;
         required?: boolean;
         allow_toggling?: boolean;
+        width?: number; // percentage of row width
     }
 
     export interface IConfigComponentProps<IConfig extends ICommonFieldConfig> {

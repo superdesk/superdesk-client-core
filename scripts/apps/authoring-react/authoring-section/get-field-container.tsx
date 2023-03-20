@@ -42,7 +42,12 @@ export function getFieldContainer(
                                 'form-label',
                                 {'form-label--invalid': validationError != null},
                             )}
-                            style={{minHeight: 'auto'}}
+                            style={{
+                                minHeight: 'auto',
+                                minWidth: '90px',
+                                maxWidth: '90px',
+                                justifyContent: 'end',
+                            }}
                         >
                             <Spacer h gap="8" noGrow>
                                 <span>{field.name}</span>
