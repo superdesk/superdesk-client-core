@@ -363,7 +363,15 @@
         border-radius: 2px;
     }
 
+    .field__user-type {
+        padding-bottom: 0.3rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--sd-colour-line--light);
 
+        .user_type {
+            align-items: flex-end;
+        }
+    }
 
     .ng-invalid-required {
         .required-info {

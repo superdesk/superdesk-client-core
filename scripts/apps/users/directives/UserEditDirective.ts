@@ -85,6 +85,41 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 return {code: lang, nativeName: lang};
             });
 
+            scope.formFields = {
+                'regular': {
+                    'firstName': true,
+                    'lastName': true,
+                    'username': true,
+                    'email': true,
+                    'role': true,
+                    'author': true,
+                    'phone': true,
+                    'password': true,
+                    'defaultDesk': true,
+                    'language': true,
+                },
+                'administrator': {
+                    'firstName': true,
+                    'lastName': true,
+                    'username': true,
+                    'email': true,
+                    'role': true,
+                    'author': true,
+                    'phone': true,
+                    'password': true,
+                    'defaultDesk': true,
+                    'language': true,
+                },
+                'external': {
+                    'firstName': true,
+                    'lastName': true,
+                    'username': true,
+                    'email': true,
+                    'author': true,
+                    'phone': true,
+                },
+            };
+
             // add baseLanguage if needed
             if (noBaseLanguage) {
                 scope.languages.unshift({
