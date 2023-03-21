@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {get} from 'lodash';
-import {IEditorComponentProps, IArticle} from 'superdesk-api';
+import {IEditorComponentProps, IFieldsData} from 'superdesk-api';
 import {IConfig, IExtensionConfigurationOptions, IValueOperational} from './interfaces';
 import {Select, Option, Icon} from 'superdesk-ui-framework/react';
 

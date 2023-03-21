@@ -4,7 +4,7 @@ import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-u
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {showModal} from '@superdesk/common';
 
-import {IArticle, IAuthoringSideWidget, ISuperdesk} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, ISuperdesk} from 'superdesk-api';
 
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
@@ -39,7 +39,7 @@ interface IAutoTaggingSearchResult {
     };
 }
 
-type IProps = React.ComponentProps<IAuthoringSideWidget['component']>;
+type IProps = React.ComponentProps<IArticleSideWidget['component']>;
 
 interface IIMatricsFields {
     [key: string]: {

@@ -4,7 +4,7 @@ import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
 
 interface IProps {
-    wrapperRef: (element: HTMLDivElement) => void;
+    wrapperRef: React.Ref<HTMLDivElement>;
     playPause: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
