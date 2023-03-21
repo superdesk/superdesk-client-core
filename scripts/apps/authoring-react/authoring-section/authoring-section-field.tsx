@@ -8,7 +8,6 @@ import {memoize} from 'core/memoize';
 interface IProps<T> {
     field: IAuthoringFieldV2;
     fieldsData: IFieldsData;
-    value: unknown;
     onChange: IPropsAuthoringSection<T>['onChange'];
     readOnly: boolean;
     language: string;
