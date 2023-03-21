@@ -598,8 +598,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                     };
                                                 }}
                                                 getSideWidgetNameAtIndex={() => ''}
-                                                getAuthoringTopBarWidgets={() => []}
-                                                topBar2Widgets={[]}
+                                                getAuthoringPrimaryToolbarWidgets={() => []}
+                                                secondaryToolbarWidgets={[]}
                                                 disableWidgetPinning
                                             />
                                         )
