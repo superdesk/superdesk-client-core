@@ -13,22 +13,12 @@ const predefinedField: ICustomFieldType<IValueOperational, IValueStorage, IConfi
     editorComponent: Editor,
     previewComponent: Preview,
     configComponent: Config,
-    hasValue: (x) => x != null,
-    getEmptyValue: () => null,
+    hasValue: (val) => typeof val === 'string' && val.length > 0,
+    getEmptyValue: () => '',
 };
 
 const extension: IExtension = {
     activate: () => {
-        const predefinedTextField: ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> = {
-            id: 'predefined-text',
-            label: gettext('Predefined text field'),
-            editorComponent: PredefinedFieldEditor,
-            previewComponent: PredefinedFieldPreview,
-            configComponent: PredefinedFieldConfig,
-            hasValue: (val) => typeof val === 'string' && val.length > 0,
-            getEmptyValue: () => '',
-        };
-
         const result: IExtensionActivationResult = {
             contributions: {
                 customFieldTypes: [
