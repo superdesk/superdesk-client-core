@@ -61,6 +61,9 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
         // Avoid having unnecessary adapters for fields
         // to which we do not write data e.g. 'footer'.
+        // Authoring react doesn't support companion
+        // fields like 'footer' that don't have data on
+        // their own but simply modify the data of other fields.
         const fieldsToOmit = ['footer'];
 
         const fieldsOrdered =

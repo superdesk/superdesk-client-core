@@ -21,7 +21,9 @@ export const body_footer: IFieldAdapter<IArticle> = {
             disallowedCharacters: [],
         };
 
-        // If we don't have the predefined snippets
+        // If we don't have the 'footer' field setup
+        // or we don't have the 'footers' vocabulary
+        // we won't set vocabularyId
         if (addPredefinedSnippetsField) {
             fieldConfig.vocabularyId = FOOTERS_VOCABULARY_ID;
         }
