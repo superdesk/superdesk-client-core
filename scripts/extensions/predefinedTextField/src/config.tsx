@@ -75,7 +75,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
     }
 }
 
-export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentProps<IConfig>> {
+export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
         const formConfig: IFormGroup = {
             direction: 'vertical',

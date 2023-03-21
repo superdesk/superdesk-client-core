@@ -1260,6 +1260,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         toggleField={this.toggleField}
                                                         readOnly={readOnly}
                                                         validationErrors={state.validationErrors}
+                                                        item={state.itemWithChanges}
                                                     />
                                                 </div>
                                             )}
@@ -1277,6 +1278,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     toggleField={this.toggleField}
                                                     readOnly={readOnly}
                                                     validationErrors={state.validationErrors}
+                                                    item={state.itemWithChanges}
                                                 />
                                             </div>
                                         </Layout.AuthoringMain>

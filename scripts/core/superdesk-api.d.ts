@@ -3254,6 +3254,8 @@ declare module 'superdesk-api' {
          * At the moment, there are only dependent fields based on anpa_category.
          */
         getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
+
+        item: any;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {

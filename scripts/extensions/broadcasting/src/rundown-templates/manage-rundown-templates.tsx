@@ -101,12 +101,16 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                             label: 'Delete',
                                             icon: 'icon-trash',
                                             onClick: () => {
-                                                httpRequestRawLocal({
-                                                    method: 'DELETE',
-                                                    path: `/shows/${this.state.showId}/templates/${template._id}`,
-                                                    headers: {
-                                                        'If-Match': template._etag,
-                                                    },
+                                                superdesk.ui.confirm(
+                                                    gettext('Are you sure you want to delete it?'),
+                                                ).then(() => {
+                                                    httpRequestRawLocal({
+                                                        method: 'DELETE',
+                                                        path: `/shows/${this.state.showId}/templates/${template._id}`,
+                                                        headers: {
+                                                            'If-Match': template._etag,
+                                                        },
+                                                    });
                                                 });
                                             },
                                         },
