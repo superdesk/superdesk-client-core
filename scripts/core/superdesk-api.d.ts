@@ -388,6 +388,9 @@ declare module 'superdesk-api' {
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
+
+        // Users may configure predefined text
+        // snippets to append to the field
         vocabularyId?: string;
 
         // read time, character count, word count; defaults to true

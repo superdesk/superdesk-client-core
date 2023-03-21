@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import {ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,

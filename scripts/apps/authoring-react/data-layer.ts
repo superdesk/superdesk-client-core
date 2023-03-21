@@ -57,16 +57,20 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
         const [getLabelForFieldId] = res;
 
         const {editor, fields, schema} = fakeScope;
+        const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
+
+        // Avoid having unnecessary adapters for fields
+        // to which we do not write data e.g. 'footer'.
+        const fieldsToOmit = ['footer'];
 
         const fieldsOrdered =
             Object.keys(editor)
-                .filter((key) => editor[key] != null) // don't take disabled ones
+                .filter((key) => editor[key] != null && !fieldsToOmit.includes(key)) // don't take disabled ones
                 .map((key) => {
-                    const result: {fieldId: string, editorItem: any} =
-                        {
-                            fieldId: key,
-                            editorItem: editor[key],
-                        };
+                    const result: {fieldId: string, editorItem: any} = {
+                        fieldId: key,
+                        editorItem: editor[key],
+                    };
 
                     return result;
                 })
@@ -91,7 +95,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
                     const f: IAuthoringFieldV2 = fieldsAdapter[fieldId]
-                        .getFieldV2(fieldEditor, fieldSchema, (_fieldId) => editor[_fieldId] != null);
+                        .getFieldV2(fieldEditor, fieldSchema, fieldExists);
 
                     return {
                         ...f,
@@ -132,7 +136,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             const description_field = description_text.getFieldV2(
                 fakeScope.editor,
                 fakeScope.schema,
-                (fieldId) => fakeScope.editor[fieldId] != null,
+                fieldExists,
             );
 
             contentFields = contentFields.set(description_field.id, description_field);

@@ -412,7 +412,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         );
 
         const options = this.props.config.vocabularyId != null
-            ? this.props.getVocabularyItems('footers')
+            ? this.props.getVocabularyItems(this.props.config.vocabularyId)
             : null;
 
         return (
@@ -420,7 +420,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         {
-                            this.props.config.vocabularyId != null && (
+                            options != null && (
                                 <>
                                     <Select
                                         placeholder=""
@@ -438,8 +438,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                     >
                                         <Option value="" />
                                         {
-                                            options.map((vocabularyItem) => (
-                                                <Option key={vocabularyItem.qcode} value={vocabularyItem.value}>
+                                            options.map((vocabularyItem, i) => (
+                                                <Option key={i} value={vocabularyItem.value}>
                                                     {vocabularyItem.value}
                                                 </Option>
                                             ))

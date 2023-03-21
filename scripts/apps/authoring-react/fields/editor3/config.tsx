@@ -110,19 +110,15 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     </label>
 
                     <SelectFilterable
-                        items={
-                            sdApi.vocabularies.getAll().toArray()
-                                .filter((vocabulary) =>
-                                    !sdApi.vocabularies.isCustomFieldVocabulary(vocabulary))
-                        }
-                        value={sdApi.vocabularies.getAll().get(this.props.config?.vocabularyId)}
+                        items={sdApi.vocabularies.getAll().toArray()}
+                        value={sdApi.vocabularies.getAll().get(this.props.config.vocabularyId)}
                         onChange={(vocabulary) => {
                             this.props.onChange({
                                 ...config,
                                 vocabularyId: vocabulary._id,
                             });
                         }}
-                        getLabel={(item) => item?.display_name}
+                        getLabel={(item) => item.display_name}
                         zIndex={1050}
                     />
                 </div>
