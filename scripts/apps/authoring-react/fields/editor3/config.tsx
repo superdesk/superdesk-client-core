@@ -5,6 +5,8 @@ import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
 import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {Spacer} from 'core/ui/components/Spacer';
+import {SelectFilterable} from 'core/ui/components/select-filterable';
+import {sdApi} from 'api';
 
 export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Config>> {
     render() {
@@ -99,6 +101,29 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                         onChange={(event) => {
                             this.props.onChange({...config, copyFromFieldOnToggle: event.target.value});
                         }}
+                    />
+                </div>
+
+                <div>
+                    <label className="form-label">
+                        {gettext('Select a vocabulary for predefined snippets')}
+                    </label>
+
+                    <SelectFilterable
+                        items={
+                            sdApi.vocabularies.getAll().toArray()
+                                .filter((vocabulary) =>
+                                    !sdApi.vocabularies.isCustomFieldVocabulary(vocabulary))
+                        }
+                        value={sdApi.vocabularies.getAll().get(this.props.config?.vocabularyId)}
+                        onChange={(vocabulary) => {
+                            this.props.onChange({
+                                ...config,
+                                vocabularyId: vocabulary._id,
+                            });
+                        }}
+                        getLabel={(item) => item?.display_name}
+                        zIndex={1050}
                     />
                 </div>
             </Spacer>

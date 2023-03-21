@@ -46,7 +46,14 @@ declare module 'superdesk-api' {
     }
 
     export interface IFieldAdapter<T> {
-        getFieldV2: (fieldEditor, fieldSchema) => IAuthoringFieldV2;
+        getFieldV2: (
+            fieldEditor,
+            fieldSchema,
+
+            // If a field depends on another field being present in the editor
+            // this function is used to check the presence of that dependency field
+            fieldExists: (fieldId: string) => boolean
+        ) => IAuthoringFieldV2;
 
         /**
          * Allows to customize where values are stored.
@@ -381,6 +388,7 @@ declare module 'superdesk-api' {
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
+        vocabularyId?: string;
 
         // read time, character count, word count; defaults to true
         showStatistics?: boolean;

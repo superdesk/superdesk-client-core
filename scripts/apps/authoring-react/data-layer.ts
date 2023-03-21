@@ -90,7 +90,8 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
 
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
+                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId]
+                        .getFieldV2(fieldEditor, fieldSchema, (_fieldId) => editor[_fieldId] != null);
 
                     return {
                         ...f,
@@ -128,7 +129,11 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
         // TODO: write an upgrade script and remove hardcoding
         // after angular based authoring is removed from the codebase
         if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
-            const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema);
+            const description_field = description_text.getFieldV2(
+                fakeScope.editor,
+                fakeScope.schema,
+                (fieldId) => fakeScope.editor[fieldId] != null,
+            );
 
             contentFields = contentFields.set(description_field.id, description_field);
         }

@@ -50,9 +50,7 @@ import {LINKED_ITEMS_FIELD_TYPE} from '../fields/linked-items';
 import {getKeywordsAdapter} from './keywords';
 import {dateline} from './dateline';
 import {description_text} from './description_text';
-import {body_footer} from './body_footer';
-import {getHelplines} from './helplines';
-import {nameof} from 'core/helpers/typescript-helpers';
+import {getBodyFooter} from './body_footer';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -79,12 +77,9 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         keywords: getKeywordsAdapter(),
         dateline: dateline,
         description_text: description_text,
-        body_footer: body_footer,
+        body_footer: getBodyFooter(),
+        footer: getBodyFooter(),
     };
-
-    if ((sdApi.vocabularies.getAll().toArray().filter((v) => v._id === 'footers')?.length ?? 0) < 1) {
-        adapter[nameof<IArticle>('footer')] = getHelplines();
-    }
 
     return adapter;
 }
