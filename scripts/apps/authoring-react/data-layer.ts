@@ -91,7 +91,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
                 } else {
                     return 100;
                 }
-            }
+            };
 
             const commonConfigs: ICommonFieldConfig = {
                 readOnly: fieldEditor.readonly === true,
