@@ -81,10 +81,23 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
             const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
 
+            const WidthConverter = (width: string) => {
+                if (width === 'full') {
+                    return 100;
+                } else if (width === 'half') {
+                    return 50;
+                } else if (width === 'quarter') {
+                    return 25;
+                } else {
+                    return 100;
+                }
+            }
+
             const commonConfigs: ICommonFieldConfig = {
                 readOnly: fieldEditor.readonly === true,
                 required: fieldEditor.required === true,
                 allow_toggling: fieldEditor.allow_toggling === true,
+                width: WidthConverter(fieldEditor.sdWidth),
             };
 
             const fieldV2: IAuthoringFieldV2 = (() => {
