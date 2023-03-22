@@ -81,7 +81,7 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
             const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
             const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
 
-            const WidthConverter = (width: string) => {
+            const WidthConverter = (width: string): number => {
                 if (width === 'full') {
                     return 100;
                 } else if (width === 'half') {
