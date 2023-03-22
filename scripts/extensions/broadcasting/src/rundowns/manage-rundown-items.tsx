@@ -114,9 +114,12 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         const deleteAction: IMenuItem = {
                             label: gettext('Delete'),
                             onSelect: () => {
-                                superdesk.ui.confirm(gettext('Are you sure you want to delete it?')).then(() => {
-                                    this.props.onDelete(item);
-                                });
+                                superdesk.ui.confirm(gettext('Are you sure you want to delete it?'))
+                                    .then((confirmed) => {
+                                        if (confirmed) {
+                                            this.props.onDelete(item);
+                                        }
+                                    });
                             },
                         };
 
