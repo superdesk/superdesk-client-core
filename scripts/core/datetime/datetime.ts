@@ -20,7 +20,7 @@ const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 *
 * @param {String} d iso format datetime
 */
-export function longFormat(d: string): string {
+export function longFormat(d: string | moment.Moment): string {
     return moment(d).format(LONG_FORMAT);
 }
 
