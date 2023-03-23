@@ -2,7 +2,7 @@
 
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!desk.edit._id" translate>Add New Desk</h3>
-        <h3 class="modal__heading" ng-show="desk.edit._id" translate>Edit "{{desk.edit.name}}" Desk</h3>
+        <h3 class="modal__heading" ng-show="desk.edit._id" translate translate-params-name="{{desk.edit.name}}">Edit "{{name}}" Desk</h3>
         <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
@@ -299,11 +299,13 @@
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.is_visible">
                                 <span class="text-label list-row__item list-row__item--grow" translate>Global Read: </span>
-                                <span class="list-row__item" translate>{{selected.is_visible ? 'ON' : 'OFF'}}</span>
+                                <span ng-if="selected.is_visible" class="list-row__item" translate>ON</span>
+                                <span ng-if="!selected.is_visible" class="list-row__item" translate>OFF</span>
                             </div>
                             <div class="list-row list-row--dotted list-row--flex" ng-if="selected.local_readonly">
                                 <span class="text-label list-row__item list-row__item--grow" translate>Local Read Only: </span>
-                                <span class="list-row__item" translate>{{selected.local_readonly ? 'ON' : 'OFF'}}</span>
+                                <span ng-if="selected.local_readonly" class="list-row__item" translate>ON</span>
+                                <span ng-if="!selected.local_readonly" class="list-row__item" translate>OFF</span>
                             </div>
                             <div class="list-row list-row--dotted" ng-if="selected.description">
                                 <span class="text-label list-row__item list-row__item--block" translate>Stage description: </span>

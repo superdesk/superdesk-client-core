@@ -5,9 +5,9 @@ import {updateMarkedUser, canChangeMarkedUser} from './common';
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
-    return function getActions(article: IArticle): Promise<Array<IAuthoringAction>> {
+    return function getActions(article: IArticle): Array<IAuthoringAction> {
         if (!canChangeMarkedUser(superdesk, article)) {
-            return Promise.resolve([]);
+            return [];
         }
 
         const markForUser: IAuthoringAction = {
@@ -38,9 +38,9 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         };
 
         if (article.marked_for_user == null) {
-            return Promise.resolve([markForUser]);
+            return [markForUser];
         } else {
-            return Promise.resolve([unmark, markForOtherUser]);
+            return [unmark, markForOtherUser];
         }
     };
 }

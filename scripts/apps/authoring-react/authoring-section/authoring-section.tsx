@@ -4,7 +4,7 @@ import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
-export interface IPropsAuthoringSection {
+export interface IPropsAuthoringSection<T> {
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
@@ -17,6 +17,7 @@ export interface IPropsAuthoringSection {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     validationErrors: IAuthoringValidationErrors;
+    item: T;
 }
 
 function groupItemsToRow<T>(items: Array<T>, getWidth: (item: T) => number) {
@@ -56,8 +57,8 @@ function groupItemsToRow<T>(items: Array<T>, getWidth: (item: T) => number) {
  */
 const defaultUserPreferences = {};
 
-export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection> {
-    constructor(props: IPropsAuthoringSection) {
+export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSection<T>> {
+    constructor(props: IPropsAuthoringSection<T>) {
         super(props);
 
         this.onEditorPreferencesChange = this.onEditorPreferencesChange.bind(this);
@@ -103,6 +104,7 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
                                                 useHeaderLayout={this.props.useHeaderLayout}
                                                 getVocabularyItems={this.props.getVocabularyItems}
                                                 validationError={this.props.validationErrors[field.id]}
+                                                item={this.props.item}
                                             />
                                         </div>
                                     );
