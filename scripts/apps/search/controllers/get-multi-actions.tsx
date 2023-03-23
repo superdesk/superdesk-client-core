@@ -292,7 +292,7 @@ export function getMultiActions(
         const selectedItems = getSelectedItems();
 
         confirmPublish(selectedItems).then(() => {
-            Promise.all(
+            Promise.all<void>(
                 selectedItems.map((item) => new Promise((resolve) => {
                     authoring.publish(item, item)
                         .then((response) => {

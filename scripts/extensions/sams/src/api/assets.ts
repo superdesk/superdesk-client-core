@@ -310,18 +310,6 @@ export function queryAssets(
         querySizeRange,
     ].forEach((func) => func(source, params));
 
-    if (source.query.bool.must.length === 0) {
-        delete source.query.bool.must;
-    }
-
-    if (source.query.bool.must_not.length === 0) {
-        delete source.query.bool.must_not;
-    }
-
-    if (Object.keys(source.query.bool).length === 0) {
-        delete source.query;
-    }
-
     const sortOrder = params.sortOrder === SORT_ORDER.ASCENDING ? 1 : 0;
     const sort = `[("${params.sortField}",${sortOrder})]`;
 

@@ -132,6 +132,7 @@
     "@superdesk/build-tools": "file:build-tools",
     "@types/classnames": "^2.2.10",
     "@types/webpack-env": "^1.17.0",
+    "@types/webrtc": "0.0.33",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^2.0.0",
