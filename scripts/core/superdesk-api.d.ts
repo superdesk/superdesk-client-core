@@ -171,14 +171,16 @@ declare module 'superdesk-api' {
          */
         resourceNames: Array<string>;
 
+        // Hides the toolbar which includes the "Print Preview" button.
+        hideSecondaryToolbar?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
-        getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
-        getAuthoringTopBarWidgets(
+        getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
+        getAuthoringPrimaryToolbarWidgets?(
             options: IExposedFromAuthoring<T>,
         ): Array<ITopBarWidget<T>>;
         onEditingStart?(item: T): void;
@@ -192,7 +194,7 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 
@@ -207,7 +209,7 @@ declare module 'superdesk-api' {
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
-        onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
+        onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => T): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
@@ -3262,6 +3264,7 @@ declare module 'superdesk-api' {
             fontSize: string;
             fontFamily: string;
         };
+        item: any;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {

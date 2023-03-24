@@ -16,9 +16,9 @@ import {
     IFieldsAdapter,
     IStorageAdapter,
     IRestApiResponse,
+    IFieldsData,
 } from 'superdesk-api';
 import {AuthoringReact} from './authoring-react';
-import {authoringStorageIArticle} from './data-layer';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {extensions} from 'appConfig';
@@ -69,54 +69,6 @@ const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [Cr
 
 interface IProps {
     itemId: IArticle['_id'];
-}
-
-function getPublishToolbarWidget(
-    panelState: IStateInteractiveActionsPanelHOC,
-    panelActions: IActionsInteractiveActionsPanelHOC,
-): ITopBarWidget<IArticle> {
-    const publishWidgetButton: ITopBarWidget<IArticle> = {
-        priority: 99,
-        availableOffline: false,
-        group: 'end',
-        // eslint-disable-next-line react/display-name
-        component: (props: {entity: IArticle}) => (
-            <ButtonGroup align="end">
-                <ButtonGroup subgroup={true} spaces="no-space">
-                    <NavButton
-                        type="highlight"
-                        icon="send-to"
-                        iconSize="big"
-                        text={gettext('Send to / Publish')}
-                        onClick={() => {
-                            if (panelState.active) {
-                                panelActions.closePanel();
-                            } else {
-                                const availableTabs: Array<IArticleActionInteractive> = [
-                                    'send_to',
-                                ];
-
-                                const canPublish =
-                                    sdApi.article.canPublish(props.entity);
-
-                                if (canPublish) {
-                                    availableTabs.push('publish');
-                                }
-
-                                dispatchInternalEvent('interactiveArticleActionStart', {
-                                    items: [props.entity],
-                                    tabs: availableTabs,
-                                    activeTab: canPublish ? 'publish' : availableTabs[0],
-                                });
-                            }
-                        }}
-                    />
-                </ButtonGroup>
-            </ButtonGroup>
-        ),
-    };
-
-    return publishWidgetButton;
 }
 
 const getCompareVersionsModal = (
@@ -252,11 +204,24 @@ const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
 
 interface IPropsWrapper extends IProps {
     onClose?(): void;
+    getAuthoringPrimaryToolbarWidgets?: (
+        panelState: IStateInteractiveActionsPanelHOC,
+        panelActions: IActionsInteractiveActionsPanelHOC,
+    ) => Array<ITopBarWidget<IArticle>>;
     getInlineToolbarActions?(options: IExposedFromAuthoring<IArticle>): {
         readOnly: boolean;
         actions: Array<ITopBarWidget<IArticle>>;
     };
-    sidebarInitiallyVisible?: boolean;
+
+    // Hides the toolbar which includes the "Print Preview" button.
+    hideSecondaryToolbar?: boolean;
+
+    // If it's not passed then the sidebar is shown expanded and can't be collapsed.
+    // If hidden is passed then it can't be expanded.
+    // If it's set to true or false then it can be collapsed/expanded back.
+    sidebarMode?: boolean | 'hidden';
+    authoringStorage: IAuthoringStorage<IArticle>;
+    onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => IArticle): IFieldsData;
 }
 
 /**
@@ -265,7 +230,7 @@ interface IPropsWrapper extends IProps {
  */
 
 interface IState {
-    isSidebarCollapsed: boolean;
+    sidebarMode: boolean | 'hidden';
     sideWidget: null | {
         name: string;
         pinned: boolean;
@@ -279,7 +244,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         super(props);
 
         this.state = {
-            isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
+            sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
             sideWidget: null,
         };
 
@@ -289,11 +254,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     public toggleSidebar() {
-        this.setState({isSidebarCollapsed: !this.state.isSidebarCollapsed});
+        if (typeof this.state.sidebarMode === 'boolean') {
+            this.setState({sidebarMode: !this.state.sidebarMode});
+        }
     }
 
     public isSidebarCollapsed() {
-        return this.state.isSidebarCollapsed;
+        return this.state.sidebarMode != null;
     }
 
     public prepareForUnmounting() {
@@ -351,11 +318,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             );
         };
 
-        const topbar2WidgetsFromExtensions = Object.values(extensions)
+        const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
-        const topbar2WidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
-            defaultToolbarItems.concat(topbar2WidgetsFromExtensions).map(
+        const secondaryToolbarWidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
+            defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions).map(
                 (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
             );
 
@@ -365,14 +332,16 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     return (
                         <AuthoringReact
                             themeEnabled
+                            onFieldChange={this.props.onFieldChange}
+                            hideSecondaryToolbar={this.props.hideSecondaryToolbar}
                             ref={(component) => {
                                 this.authoringReactRef = component;
                             }}
                             itemId={this.props.itemId}
                             resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
                             onClose={() => this.props.onClose()}
-                            authoringStorage={authoringStorageIArticle}
-                            fieldsAdapter={getFieldsAdapter(authoringStorageIArticle)}
+                            authoringStorage={this.props.authoringStorage}
+                            fieldsAdapter={getFieldsAdapter(this.props.authoringStorage)}
                             storageAdapter={{
                                 storeValue: (value, fieldId, article) => {
                                     return {
@@ -385,7 +354,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 },
                                 retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                             }}
-                            getLanguage={(article) => article.language}
+                            getLanguage={(article) => article.language ?? 'en'}
                             onEditingStart={(article) => {
                                 dispatchCustomEvent('articleEditStart', article);
                             }}
@@ -432,22 +401,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 this.setState({sideWidget});
                             }}
                             getInlineToolbarActions={this.props.getInlineToolbarActions}
-                            getAuthoringTopBarWidgets={
-                                () => Object.values(extensions)
-                                    .flatMap(({activationResult}) =>
-                                            activationResult?.contributions?.authoringTopbarWidgets ?? [],
-                                    )
-                                    .map((item): ITopBarWidget<IArticle> => {
-                                        const Component = item.component;
-
-                                        return {
-                                            ...item,
-                                            component: (props: {entity: IArticle}) => (
-                                                <Component article={props.entity} />
-                                            ),
-                                        };
-                                    })
-                                    .concat([getPublishToolbarWidget(panelState, panelActions)])
+                            getAuthoringPrimaryToolbarWidgets={
+                                this.props.getAuthoringPrimaryToolbarWidgets != null
+                                    ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
+                                    : undefined
                             }
                             getSidePanel={({
                                 item,
@@ -503,8 +460,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     );
                                 }
                             }}
-                            getSidebar={this.state.isSidebarCollapsed ? null : getSidebar}
-                            topBar2Widgets={topbar2WidgetsReady}
+                            getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
+                            secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
                             validateBeforeSaving={false}
                             getSideWidgetNameAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index].label;

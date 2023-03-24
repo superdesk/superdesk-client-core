@@ -114,7 +114,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     </Spacer>
                 ),
                 center: (
-                    <span>
+                    <span style={{cursor: 'text'}}>
                         {customizations.getRundownItemDisplayName?.(item) ?? item.title}
                     </span>
                 ),

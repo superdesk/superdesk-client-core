@@ -4,7 +4,7 @@ import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
 
 interface IProps {
-    wrapperRef: (element: HTMLDivElement) => void;
+    wrapperRef: React.Ref<HTMLDivElement>;
     playPause: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
@@ -93,5 +93,5 @@ class VideoEditorToolsComponent extends React.PureComponent<IProps> {
 }
 
 export const VideoEditorTools = React.forwardRef((props: IProps, ref: React.Ref<HTMLDivElement>) =>
-    <VideoEditorToolsComponent wrapperRef={ref} {...props} />,
+    <VideoEditorToolsComponent {...props} wrapperRef={props.wrapperRef ?? ref} />,
 );
