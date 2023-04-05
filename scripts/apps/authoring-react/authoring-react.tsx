@@ -258,6 +258,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
+        this.onArticleChange = this.onArticleChange.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -974,6 +975,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
     }
 
+    onArticleChange(state: IStateLoaded<T>, itemWithChanges: T) {
+        this.setState({
+            ...state,
+            itemWithChanges,
+        });
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1002,6 +1010,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
+            onArticleChange: (item: T) => this.onArticleChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,

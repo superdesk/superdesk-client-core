@@ -149,6 +149,7 @@ declare module 'superdesk-api' {
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
+        onArticleChange(item: T): void;
         save(): Promise<T>;
         initiateClosing(): void;
         keepChangesAndClose(): void;
@@ -603,6 +604,7 @@ declare module 'superdesk-api' {
             fieldsAdapter: IFieldsAdapter<IArticle>;
             storageAdapter: IStorageAdapter<IArticle>;
 
+            onArticleChange?(article: IArticle): void;
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
@@ -1235,6 +1237,17 @@ declare module 'superdesk-api' {
 
         // holds info on packages
         groups?: Array<any>;
+
+        creditline?: string;
+        original_source?: string;
+        ingest_provider_sequence?: string;
+        expiry?: string;
+        archive_description?: string;
+        original_id?: string;
+        originalCreator?: string;
+        versioncreator?: string;
+        archive_description?: string;
+        rewritten_by?: string;
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
