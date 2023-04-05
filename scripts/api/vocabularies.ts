@@ -49,7 +49,7 @@ const getVocabularyItemsByPropertyName = (
         if (value) {
             subjectMerged.push(value);
 
-            if ((schemeName?.length ?? 0) && item.scheme !== schemeName) {
+            if ((schemeName?.length ?? 0) < 1 && item.scheme !== schemeName) {
                 subjectMerged.pop();
             }
         }
