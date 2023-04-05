@@ -40,7 +40,7 @@ export class ConfigFromVocabulary extends React.PureComponent<IConfigComponentPr
                             vocabularyId: vocabulary._id,
                         });
                     }}
-                    getLabel={(item) => item?.display_name}
+                    getLabel={(item) => item.display_name}
                     zIndex={1050}
                 />
             </div>

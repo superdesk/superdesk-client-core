@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {Checkbox} from 'superdesk-ui-framework/react';
+import {Checkbox, Select, Option} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps, IEditor3Config, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
 import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {Spacer} from 'core/ui/components/Spacer';
+import {sdApi} from 'api';
 
 export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Config>> {
     render() {
@@ -101,6 +102,23 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                         }}
                     />
                 </div>
+
+                <Select
+                    label={gettext('Select a vocabulary for predefined snippets')}
+                    onChange={(val) => {
+                        this.props.onChange({
+                            ...config,
+                            vocabularyId: val == '' ? undefined : val,
+                        });
+                    }}
+                >
+                    <Option />
+                    {
+                        sdApi.vocabularies.getAll().toArray().map((item) => (
+                            <Option key={item._id} value={item._id}>{item.display_name}</Option>
+                        ))
+                    }
+                </Select>
             </Spacer>
         );
     }

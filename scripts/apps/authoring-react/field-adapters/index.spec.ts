@@ -50,7 +50,7 @@ describe('field adapters', () => {
         const dropdownAdapters =
             Object.values(baseAdapter)
                 .filter((adapter) => {
-                    const fieldAdapter = adapter.getFieldV2({}, {});
+                    const fieldAdapter = adapter.getFieldV2({}, {}, () => false);
 
                     /**
                      * Subject only works in multi-select mode,
