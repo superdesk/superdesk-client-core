@@ -4,7 +4,7 @@ import {MultiEditModal} from '../multi-edit-modal';
 import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {showModal} from '@superdesk/common';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';
 
@@ -39,25 +39,14 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <MultiSelect
                         zIndex={1050}
-                        optionLabel={(option) => {
-                            if ((option.slugline?.length ?? 0) > 0) {
-                                return option.slugline;
-                            } else if ((option.headline?.length ?? 0) > 0) {
-                                return option.headline;
-                            } else {
-                                return option._id;
-                            }
-                        }}
+                        optionLabel={getItemLabel}
                         value={this.state.selectedArticles}
                         onChange={(values) => {
                             this.setState({selectedArticles: values});
                         }}
-                        options={
-                            sdApi.article.getWorkQueueItems()
-                                .filter((article) =>
-                                    this.state.selectedArticles.map(({_id}) => _id).includes(article._id) === false,
-                                )
-                        }
+                        options={sdApi.article.getWorkQueueItems().filter((article) =>
+                            this.state.selectedArticles.map(({_id}) => _id).includes(article._id) === false,
+                        )}
                     />
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button
