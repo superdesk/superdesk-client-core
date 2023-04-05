@@ -15,6 +15,8 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {AuthoringAngularTemplateIntegration} from 'apps/authoring-react/authoring-angular-template-integration';
 
 angular.module('superdesk.apps.templates', [
     'superdesk.core.activity',
@@ -27,6 +29,14 @@ angular.module('superdesk.apps.templates', [
 
     .directive('sdTemplates', directive.TemplatesDirective)
     .directive('sdTemplateEditorModal', directive.TemplateEditorModal)
+    .component(
+        'sdEditTemplate',
+        reactToAngular1(
+            AuthoringAngularTemplateIntegration,
+            ['template', 'scopeApply'],
+            [],
+            'height: 100%;',
+        ))
 
     .controller('CreateTemplateController', ctrl.CreateTemplateController)
     .controller('TemplateMenu', ctrl.TemplateMenuController)

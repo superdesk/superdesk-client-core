@@ -241,12 +241,18 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                 {
                                                     label: gettext('Delete'),
                                                     onClick: () => {
-                                                        httpRequestRawLocal({
-                                                            method: 'DELETE',
-                                                            path: `/rundowns/${rundown._id}`,
-                                                            headers: {
-                                                                'If-Match': rundown._etag,
-                                                            },
+                                                        superdesk.ui.confirm(
+                                                            gettext('Are you sure you want to delete it?'),
+                                                        ).then((confirmed) => {
+                                                            if (confirmed) {
+                                                                httpRequestRawLocal({
+                                                                    method: 'DELETE',
+                                                                    path: `/rundowns/${rundown._id}`,
+                                                                    headers: {
+                                                                        'If-Match': rundown._etag,
+                                                                    },
+                                                                });
+                                                            }
                                                         });
                                                     },
                                                 },

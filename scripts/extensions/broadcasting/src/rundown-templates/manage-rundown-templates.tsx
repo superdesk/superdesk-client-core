@@ -16,6 +16,7 @@ import {IRundownItemAction, RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
 import {prepareRundownTemplateForSaving} from '../rundowns/rundown-view-edit';
 import {SelectShow} from '../rundowns/components/select-show';
+import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
@@ -66,6 +67,40 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
         this.itemTemplate = (templateProps) => {
             const template = templateProps.entity;
 
+            const actions: Array<IMenuItem> = [
+                {
+                    label: gettext('Edit'),
+                    icon: 'icon-pencil',
+                    onClick: () => {
+                        this.setState({
+                            template: {
+                                type: 'edit',
+                                value: template,
+                            },
+                        });
+                    },
+                },
+                {
+                    label: 'Delete',
+                    icon: 'icon-trash',
+                    onClick: () => {
+                        superdesk.ui.confirm(
+                            gettext('Are you sure you want to delete it?'),
+                        ).then((confirmed) => {
+                            if (confirmed) {
+                                httpRequestRawLocal({
+                                    method: 'DELETE',
+                                    path: `/shows/${this.state.showId}/templates/${template._id}`,
+                                    headers: {
+                                        'If-Match': template._etag,
+                                    },
+                                });
+                            }
+                        });
+                    },
+                },
+            ];
+
             return (
                 <div style={showListItemStyle}>
                     <BoxedListItem
@@ -84,33 +119,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                         actions={(
                             <span>
                                 <Menu
-                                    items={[
-                                        {
-                                            label: gettext('Edit'),
-                                            icon: 'icon-pencil',
-                                            onClick: () => {
-                                                this.setState({
-                                                    template: {
-                                                        type: 'edit',
-                                                        value: template,
-                                                    },
-                                                });
-                                            },
-                                        },
-                                        {
-                                            label: 'Delete',
-                                            icon: 'icon-trash',
-                                            onClick: () => {
-                                                httpRequestRawLocal({
-                                                    method: 'DELETE',
-                                                    path: `/shows/${this.state.showId}/templates/${template._id}`,
-                                                    headers: {
-                                                        'If-Match': template._etag,
-                                                    },
-                                                });
-                                            },
-                                        },
-                                    ]}
+                                    items={actions}
                                 >
                                     {(toggle) => (
                                         <IconButton

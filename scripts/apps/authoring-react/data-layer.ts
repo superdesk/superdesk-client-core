@@ -23,9 +23,12 @@ import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
-import {description_text, DESCRIPTION_TEXT_FIELD_ID} from './field-adapters/description_text';
+import {description_text} from './field-adapters/description_text';
 
-function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+export function getArticleContentProfile<T>(
+    item: IArticle,
+    fieldsAdapter: IFieldsAdapter<T>,
+): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -156,7 +159,10 @@ function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapt
     });
 }
 
-function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+function getPackagesContentProfile<T>(
+    item: IArticle,
+    fieldsAdapter: IFieldsAdapter<T>,
+): Promise<IContentProfileV2> {
     const headlineField: IAuthoringFieldV2 = {
         id: 'headline',
         name: gettext('Headline'),
