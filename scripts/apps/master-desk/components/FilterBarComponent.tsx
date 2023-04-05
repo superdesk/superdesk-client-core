@@ -30,7 +30,7 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
                             ) : null,
                         )}
                     </ul>
-                    <a className="text-link sd-margin-l--auto" onClick={() => this.props.removeAllFilters()}>
+                    <a className="text-link sd-margin-start--auto" onClick={() => this.props.removeAllFilters()}>
                         {gettext('Clear all filters')}
                     </a>
                 </div>

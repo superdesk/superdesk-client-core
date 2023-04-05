@@ -16,8 +16,8 @@
                     </div>
                     <div class="boxed-list__item-content" ng-click="view(item)">
                         <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
-                            <span class="badge badge--square green--600 sd-margin-r--1" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
-                            <span class="badge badge--square indigo--600 sd-margin-r--1" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
+                            <span class="badge badge--square green--600 sd-margin-end--1" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
+                            <span class="badge badge--square indigo--600 sd-margin-end--1" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
                             <span class="sd-text__slugline sd-overflow-ellipsis" title="{{ item.slugline }}">{{ item.slugline }}</span>
                             <time class="sd-text__date-time sd-text__date-time--small ml-auto" sd-datetime data-date="item.versioncreated">25.04.2019</time>
                         </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div class="boxed-list__item-content-row">
                             <span ng-if="item.takes && item.takes.sequence > 1" class="state-label takes" translate>Takes</span>
-                            <span class="state-label state-{{item.state}}" translate>{{item.state | removeLodash}}</span>
+                            <span class="state-label state-{{item.state}}">{{item.state | removeLodash}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>

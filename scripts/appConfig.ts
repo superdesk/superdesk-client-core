@@ -46,7 +46,7 @@ export const debugInfo = {
 };
 
 //
-export const authoringReactViewEnabled = true;
+export const authoringReactViewEnabled = localStorage.getItem('authoring-react-enabled') != null;
 export const uiFrameworkAuthoringPanelTest = false;
 
 export const extensions: IExtensions = {};

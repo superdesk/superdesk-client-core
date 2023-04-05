@@ -1,5 +1,5 @@
 import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
-import {IVocabulary, IVocabularyTag} from 'superdesk-api';
+import {IVocabulary, IVocabularyItem, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext, downloadFile} from 'core/utils';
@@ -11,11 +11,13 @@ function getOther() {
 }
 
 export interface IScope extends IDirectiveScope<void> {
+    filterVocabulary(vocabulary: IVocabulary): boolean;
     vocabularies: Array<IVocabulary>;
     vocabulary: any;
     tags: IVocabulary['tags'];
     loading: boolean;
     mediaTypes: object;
+    searchString: string;
     openVocabulary(vocabulary: IVocabulary): void;
     downloadVocabulary(vocabulary: IVocabulary): void;
     uploadConfig(): void;
@@ -139,6 +141,26 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
 
     $scope.existsVocabulariesForTag = (currentTag: IVocabularyTag, tab: string) =>
         ($scope.vocabularies || []).some((vocabulary) => checkTag(vocabulary, currentTag, tab));
+
+    /**
+     * Checks if a vocabulary's display_name matches the search
+     * query or if it matches a translation of that vocabulary.
+     */
+    $scope.filterVocabulary = function(vocabulary: IVocabulary): boolean {
+        if (($scope.searchString?.length ?? 0) === 0) {
+            return true;
+        }
+
+        const translationMach = Object.values(vocabulary?.translations?.display_name ?? {})
+            .find((translation: string) => translation.toLowerCase().indexOf($scope.searchString) !== -1);
+        const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) !== -1;
+
+        if (displayNameMatch || translationMach != null) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     /**
      * Don't show OTHER tag if it is the only tag available for current tab

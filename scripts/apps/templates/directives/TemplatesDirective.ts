@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {getTemplateFilters} from '../constants';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle} from 'superdesk-api';
+import {authoringReactViewEnabled} from 'appConfig';
 
 const defaultTemplate: Partial<IArticle> = {
     type: 'text',
@@ -83,6 +84,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.onDeskToggle(desk);
             };
 
+            $scope.authoringReactViewEnabled = authoringReactViewEnabled;
+
             /*
              * Called on desk toggle on multiple desk selection
              */
@@ -150,14 +153,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 if ($scope.template.template_type === 'create') {
                     $scope.template_desk = null;
                 }
-            };
-
-            $scope.templatesFilter = function(templateType) {
-                if ($scope.template._id && $scope.template.template_type === 'kill') {
-                    return templateType._id === 'kill';
-                }
-
-                return templateType._id !== 'kill';
             };
 
             /*
@@ -300,7 +295,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, $scope, $scope.item);
+                if ($scope.item != null) {
+                    content.setupAuthoring(profile, $scope, $scope.item);
+                }
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {

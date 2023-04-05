@@ -171,38 +171,49 @@ declare module 'superdesk-api' {
          */
         resourceNames: Array<string>;
 
+        // Hides the toolbar which includes the "Print Preview" button.
+        hideSecondaryToolbar?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
-        getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
-        getAuthoringTopBarWidgets(
+        getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
+        getAuthoringPrimaryToolbarWidgets?(
             options: IExposedFromAuthoring<T>,
         ): Array<ITopBarWidget<T>>;
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
-        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
+        // positioned relatively; shown at the same time as getSidePanel
+        // used for rendering icon buttons of available side widgets
         getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
-        topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+
+        // positioned absolutely; shown at the same time as getSidebar
+        // used for side widgets
+        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+
+        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
 
         disableWidgetPinning?: boolean; // defaults to false
+
+        getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
             name: string;
             pinned: boolean;
         };
 
+        getSideWidgetNameAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
-        onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
+        onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => T): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
-        getSideWidgetNameAtIndex(item: T, index: number): string;
-        openWidget(name: string | null): void;
+        headerCollapsed?: boolean; // initial value
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -1398,6 +1409,11 @@ declare module 'superdesk-api' {
         };
         priority?: number;
         unique_field: string;
+        translations?: {
+            display_name: {
+                [key: string]: string;
+            };
+        };
         schema: {};
         field_type:
             | 'text'
@@ -2579,10 +2595,16 @@ declare module 'superdesk-api' {
                 addImage(field: string, image: IArticle): void;
 
                 /**
-                 * Programatically triggers saving of an article in edit mode.
+                 * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.
                 */
                 save(): void;
+
+                prepareExternalImageForDroppingToEditor(
+                    event: DragEvent,
+                    renditions: IArticle['renditions'],
+                    additionalData?: Partial<IArticle>,
+                ): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
@@ -3232,6 +3254,8 @@ declare module 'superdesk-api' {
          * At the moment, there are only dependent fields based on anpa_category.
          */
         getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
+
+        item: any;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {

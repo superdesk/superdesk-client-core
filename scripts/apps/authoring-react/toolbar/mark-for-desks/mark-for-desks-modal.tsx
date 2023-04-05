@@ -45,7 +45,7 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
                                 selectedDesks: value.map((desk) => desk._id),
                             });
                         }}
-                        optionLabel={(option) => option.name}
+                        optionLabel={(desk) => desk.name}
                         options={allDesks.toArray()}
                         value={selectedDesks}
                         placeholder={gettext('Select desks')}

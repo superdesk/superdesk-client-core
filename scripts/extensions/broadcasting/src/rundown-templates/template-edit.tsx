@@ -523,6 +523,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 authoringStorage={rundownItemAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
+                                                getSidebarWidgetsCount={() => 0}
                                                 sideWidget={this.state.sideWidget}
                                                 onSideWidgetChange={(sideWidget) => {
                                                     this.setState({sideWidget});
@@ -530,7 +531,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 getInlineToolbarActions={({
                                                     hasUnsavedChanges,
                                                     save,
-                                                    discardChangesAndClose,
+                                                    initiateClosing,
                                                 }) => {
                                                     const actions: Array<ITopBarWidget<IRundownItemTemplateInitial>> = [
                                                         {
@@ -542,7 +543,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                     ariaValue={gettext('Close')}
                                                                     icon="close-small"
                                                                     onClick={() => {
-                                                                        discardChangesAndClose();
+                                                                        initiateClosing();
                                                                     }}
                                                                 />
                                                             ),
@@ -596,8 +597,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         actions,
                                                     };
                                                 }}
-                                                getAuthoringTopBarWidgets={() => []}
-                                                topBar2Widgets={[]}
+                                                getSideWidgetNameAtIndex={() => ''}
+                                                getAuthoringPrimaryToolbarWidgets={() => []}
+                                                secondaryToolbarWidgets={[]}
                                                 disableWidgetPinning
                                             />
                                         )
