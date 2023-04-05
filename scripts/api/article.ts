@@ -178,7 +178,7 @@ function createNewUsingDeskTemplate(): void {
             });
     });
 }
-c
+
 /**
  * Checks if associations is with rewrite_of item then open then modal to add associations.
  * The user has options to add associated media to the current item and review the media change
