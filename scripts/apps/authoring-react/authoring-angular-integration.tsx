@@ -27,7 +27,6 @@ import {
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {notify} from 'core/notify/notify';
 
 export interface IProps {
     itemId: IArticle['_id'];
@@ -202,28 +201,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             group: 'start',
             priority: 0.2,
             component: ({entity}) => <DeskAndStage article={entity} />,
-            availableOffline: false,
-        });
-
-        actions.push({
-            group: 'start',
-            priority: 0.3,
-            component: ({entity}) => (
-                <NavButton
-                    onClick={() => {
-                        const getLatestItem = hasUnsavedChanges() ? handleUnsavedChanges() : Promise.resolve(entity);
-
-                        getLatestItem.then((article) => {
-                            sdApi.article.publishItem(article, article, {}).then((published) => {
-                                published
-                                    ? ng.get('authoring').rewrite(published)
-                                    : notify.error(gettext('Failed to publish and continue.'));
-                            });
-                        });
-                    }}
-                    text="Nice"
-                />
-            ),
             availableOffline: false,
         });
 
