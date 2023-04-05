@@ -1,4 +1,4 @@
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -9,10 +9,14 @@ import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/sub
 import {sendItems} from './article-send';
 import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
 import {dataApi} from 'core/helpers/CrudManager';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {flatMap, get as lodashGet, includes, trim} from 'lodash';
+import {copyJson} from 'core/helpers/utils';
+import {gettext} from 'core/utils';
+import {notify} from 'core/notify/notify';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -174,6 +178,143 @@ function createNewUsingDeskTemplate(): void {
             });
     });
 }
+c
+/**
+ * Checks if associations is with rewrite_of item then open then modal to add associations.
+ * The user has options to add associated media to the current item and review the media change
+ * or publish the current item without media.
+ * User will be prompted in following scenarios:
+ * 1. Edit feature image and confirm media update is enabled.
+ * 2. Once item is published then no confirmation.
+ * 3. If current item is update and updated story has associations
+ */
+function checkMediaAssociatedToUpdate(item: IArticle, action: string, $scope: any) {
+    if (!appConfig.features?.confirmMediaOnUpdate
+        || !appConfig.features?.editFeaturedImage
+        || !item.rewrite_of
+        || ['kill', 'correct', 'takedown'].includes(action)
+        || item.associations?.featuremedia
+    ) {
+        return Promise.resolve(true);
+    }
+
+    return ng.get('api').find('rewrite', item._id)
+        .then((rewriteOfItem) => {
+            if (rewriteOfItem?.associations?.featuremedia) {
+                return ng.get('confirm').confirmFeatureMedia(rewriteOfItem);
+            }
+
+            return true;
+        })
+        .then((result) => {
+            if (result?.associations) {
+                item.associations = result.associations;
+                $scope.autosave(item);
+                return false;
+            }
+
+            return true;
+        });
+}
+
+function notifyPreconditionFailed($scope: any) {
+    notify.error(gettext('Item has changed since it was opened. ' +
+        'Please close and reopen the item to continue. ' +
+        'Regrettably, your changes cannot be saved.'));
+    $scope._editable = false;
+    $scope.dirty = false;
+}
+
+function publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boolean | IArticle> {
+    ng.get('autosave').stop(item);
+
+    let warnings: Array<{text: string}> = [];
+    const action = $scope.action != null ? ($scope.action === 'edit' ? 'publish' : $scope.action) : 'publish';
+    const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
+
+    $scope.error = {};
+
+    return flatMap(Object.values(extensions).map(({activationResult}) => activationResult), (activationResult) =>
+        activationResult.contributions?.entities?.article?.onPublish != null
+            ? activationResult.contributions.entities.article.onPublish
+            : [],
+    ).reduce((current, next) => {
+        return current.then((result) => {
+            if ((result?.warnings?.length ?? 0) > 0) {
+                warnings = warnings.concat(result.warnings);
+            }
+
+            return next(Object.assign({
+                _id: lodashGet(orig, '_id'),
+                type: lodashGet(orig, 'type'),
+            }, item));
+        });
+    }, initialValue)
+        .then((result) => {
+            if ((result?.warnings?.length ?? 0) > 0) {
+                warnings = warnings.concat(result.warnings);
+            }
+
+            return result;
+        })
+        .then(() => checkMediaAssociatedToUpdate(item, action, $scope))
+        .then((result) => (result && warnings.length < 1
+            ? ng.get('authoring').publish(orig, item, action)
+            : Promise.reject(false)
+        ))
+        .then((response: IArticle) => {
+            notify.success(gettext('Item published.'));
+            $scope.item = response;
+            $scope.dirty = false;
+            ng.get('authoringWorkspace').close(true);
+
+            // After we publish the item a rewrite of the published item
+            // has to be created. If we do a rewrite on a non-published
+            // item the operation will fail. Hence we return this response
+            // only for React use cases. For Angular we are assigning
+            // the response to the `$scope` object.
+            return response;
+        })
+        .catch((response) => {
+            const issues = response.data._issues;
+            const errors = issues?.['validator exception'];
+
+            if (errors != null) {
+                const modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+
+                modifiedErrors.forEach((error) => {
+                    const message = trim(error, '\' ');
+                    // the message format is 'Field error text' (contains ')
+                    const field = message.split(' ')[0];
+
+                    $scope.error[field.toLocaleLowerCase()] = true;
+                    notify.error(message);
+                });
+
+                if (issues.fields) {
+                    Object.assign($scope.error, issues.fields);
+                }
+
+                $scope.$applyAsync(); // make $scope.error changes visible
+
+                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
+                    ng.get('authoring').open(item._id, true).then((res) => {
+                        $scope.origItem = res;
+                        $scope.dirty = false;
+                        $scope.item = copyJson($scope.origItem);
+                    });
+                }
+            } else if (issues?.unique_name?.unique) {
+                notify.error(gettext('Error: Unique Name is not unique.'));
+            } else if (response && response.status === 412) {
+                notifyPreconditionFailed($scope);
+            } else if (warnings.length > 0) {
+                warnings.forEach((warning) => notify.error(warning.text));
+            }
+
+            return Promise.reject(false);
+        });
+}
 
 /**
  * Gets opened items from your workspace.
@@ -269,6 +410,8 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
+
+    publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boolean | IArticle>;
 }
 
 export const article: IArticleApi = {
@@ -298,4 +441,5 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
+    publishItem,
 };
