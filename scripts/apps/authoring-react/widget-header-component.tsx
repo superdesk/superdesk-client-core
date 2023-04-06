@@ -1,10 +1,17 @@
 import React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import classNames from 'classnames';
 import {IWidgetIntegrationComponentProps, widgetReactIntegration} from 'apps/authoring/widgets/widgets';
-import {ButtonGroup} from 'superdesk-ui-framework';
+import {IconButton} from 'superdesk-ui-framework';
 
-export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
+export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps, {pinned: boolean}> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            pinned: false,
+        }
+    }
+
     render() {
         const {
             widget,
@@ -17,31 +24,22 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
             <Layout.PanelHeader
                 title={customContent == null ? this.props.widgetName : ''}
                 onClose={() => this.props.closeWidget()}
+                iconButtons={widgetReactIntegration.disableWidgetPinning !== true && [
+                    <IconButton
+                        key='pin'
+                        icon='pin'
+                        ariaValue='Pin'
+                        //rotate={this.state.pinned && '90'}
+                        onClick={() => {
+                            //debugger;
+                            pinWidget(widget);
+                            this.setState({pinned: true});
+                            console.log(this.state.pinned);
+                        }}
+                    />,
+                ]}
             >
                 {customContent ?? null}
-
-                {
-                    widgetReactIntegration.disableWidgetPinning !== true && (
-                        <ButtonGroup align="end">
-                            <button
-                                className={
-                                    classNames(
-                                        'sd-widget-pin icn-btn',
-                                        {
-                                            'sd-widget-pinned': pinned,
-                                            'active': pinned,
-                                        },
-                                    )
-                                }
-                                onClick={() => {
-                                    pinWidget(widget);
-                                }}
-                            >
-                                <i className="icon-pin" />
-                            </button>
-                        </ButtonGroup>
-                    )
-                }
 
                 {
                     this.props.editMode && (
