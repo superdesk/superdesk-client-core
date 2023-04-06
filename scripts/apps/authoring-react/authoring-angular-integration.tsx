@@ -205,27 +205,40 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             availableOffline: false,
         });
 
-        actions.push({
-            group: 'start',
-            priority: 0.3,
-            component: ({entity}) => (
-                <NavButton
-                    onClick={() => {
-                        const getLatestItem = hasUnsavedChanges() ? handleUnsavedChanges() : Promise.resolve(entity);
+        if (
+            appConfig.features?.customAuthoringTopbar?.publishAndContinue
+            && !(ng.get('$location').path() === '/workspace/personal')
+            && appConfig.features?.noPublishOnAuthoringDesk
+            && sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type === 'authoring'
+            && item.task.desk != null
+            && item.state !== 'draft'
+        ) {
+            actions.push({
+                group: 'middle',
+                priority: 0.3,
+                component: ({entity}) => (
+                    <Button
+                        type="highlight"
+                        onClick={() => {
+                            const getLatestItem = hasUnsavedChanges()
+                                ? handleUnsavedChanges()
+                                : Promise.resolve(entity);
 
-                        getLatestItem.then((article) => {
-                            sdApi.article.publishItem(article, article, {}).then((published) => {
-                                published
-                                    ? ng.get('authoring').rewrite(published)
-                                    : notify.error(gettext('Failed to publish and continue.'));
+                            getLatestItem.then((article) => {
+                                sdApi.article.publishItem(article, article).then((result) => {
+                                    typeof result !== 'boolean'
+                                        ? ng.get('authoring').rewrite(result)
+                                        : notify.error(gettext('Failed to publish and continue.'));
+                                });
                             });
-                        });
-                    }}
-                    text="Nice"
-                />
-            ),
-            availableOffline: false,
-        });
+                        }}
+                        text={gettext('P & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
 
         // FINISH: ensure locking is available in generic version of authoring
         actions.push({

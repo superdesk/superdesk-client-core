@@ -13,7 +13,7 @@ import {appConfig, extensions} from 'appConfig';
 import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
 import {dataApi} from 'core/helpers/CrudManager';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {flatMap, get as lodashGet, includes, trim} from 'lodash';
+import {flatMap, trim} from 'lodash';
 import {copyJson} from 'core/helpers/utils';
 import {gettext} from 'core/utils';
 import {notify} from 'core/notify/notify';
@@ -188,7 +188,11 @@ function createNewUsingDeskTemplate(): void {
  * 2. Once item is published then no confirmation.
  * 3. If current item is update and updated story has associations
  */
-function checkMediaAssociatedToUpdate(item: IArticle, action: string, $scope: any) {
+function checkMediaAssociatedToUpdate(
+    item: IArticle,
+    action: string,
+    autosave: (item: IArticle) => void,
+): Promise<boolean> {
     if (!appConfig.features?.confirmMediaOnUpdate
         || !appConfig.features?.editFeaturedImage
         || !item.rewrite_of
@@ -198,7 +202,7 @@ function checkMediaAssociatedToUpdate(item: IArticle, action: string, $scope: an
         return Promise.resolve(true);
     }
 
-    return ng.get('api').find('rewrite', item._id)
+    return ng.get('api').find('archive', item.rewrite_of)
         .then((rewriteOfItem) => {
             if (rewriteOfItem?.associations?.featuremedia) {
                 return ng.get('confirm').confirmFeatureMedia(rewriteOfItem);
@@ -209,7 +213,7 @@ function checkMediaAssociatedToUpdate(item: IArticle, action: string, $scope: an
         .then((result) => {
             if (result?.associations) {
                 item.associations = result.associations;
-                $scope.autosave(item);
+                autosave(item);
                 return false;
             }
 
@@ -225,19 +229,36 @@ function notifyPreconditionFailed($scope: any) {
     $scope.dirty = false;
 }
 
-function publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boolean | IArticle> {
-    ng.get('autosave').stop(item);
+interface IScope {
+    item?: IArticle;
+    error?: {};
+    autosave?: (item: IArticle) => void;
+    dirty?: boolean;
+    $applyAsync?: () => void;
+    origItem?: IArticle;
+}
 
+function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle> {
+    const scope: IScope = {};
+
+    return publishItem_legacy(orig, item, scope)
+        .then((published) => published ? scope.item : published);
+}
+
+function publishItem_legacy(
+    orig: IArticle,
+    item: IArticle,
+    scope: IScope,
+    action: string = 'publish',
+): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
-    const action = $scope.action != null ? ($scope.action === 'edit' ? 'publish' : $scope.action) : 'publish';
     const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
 
-    $scope.error = {};
+    scope.error = {};
 
-    return flatMap(Object.values(extensions).map(({activationResult}) => activationResult), (activationResult) =>
-        activationResult.contributions?.entities?.article?.onPublish != null
-            ? activationResult.contributions.entities.article.onPublish
-            : [],
+    return flatMap(
+        Object.values(extensions).map(({activationResult}) => activationResult),
+        (activationResult) => activationResult.contributions?.entities?.article?.onPublish ?? [],
     ).reduce((current, next) => {
         return current.then((result) => {
             if ((result?.warnings?.length ?? 0) > 0) {
@@ -245,8 +266,8 @@ function publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boole
             }
 
             return next(Object.assign({
-                _id: lodashGet(orig, '_id'),
-                type: lodashGet(orig, 'type'),
+                _id: orig._id,
+                type: orig.type,
             }, item));
         });
     }, initialValue)
@@ -257,23 +278,18 @@ function publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boole
 
             return result;
         })
-        .then(() => checkMediaAssociatedToUpdate(item, action, $scope))
+        .then(() => checkMediaAssociatedToUpdate(item, action, scope.autosave))
         .then((result) => (result && warnings.length < 1
             ? ng.get('authoring').publish(orig, item, action)
             : Promise.reject(false)
         ))
         .then((response: IArticle) => {
             notify.success(gettext('Item published.'));
-            $scope.item = response;
-            $scope.dirty = false;
+            scope.item = response;
+            scope.dirty = false;
             ng.get('authoringWorkspace').close(true);
 
-            // After we publish the item a rewrite of the published item
-            // has to be created. If we do a rewrite on a non-published
-            // item the operation will fail. Hence we return this response
-            // only for React use cases. For Angular we are assigning
-            // the response to the `$scope` object.
-            return response;
+            return true;
         })
         .catch((response) => {
             const issues = response.data._issues;
@@ -287,27 +303,27 @@ function publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boole
                     // the message format is 'Field error text' (contains ')
                     const field = message.split(' ')[0];
 
-                    $scope.error[field.toLocaleLowerCase()] = true;
+                    scope.error[field.toLocaleLowerCase()] = true;
                     notify.error(message);
                 });
 
-                if (issues.fields) {
-                    Object.assign($scope.error, issues.fields);
+                if (errors.fields) {
+                    Object.assign(scope.error, errors.fields);
                 }
 
-                $scope.$applyAsync(); // make $scope.error changes visible
+                scope.$applyAsync(); // make $scope.error changes visible
 
                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                     ng.get('authoring').open(item._id, true).then((res) => {
-                        $scope.origItem = res;
-                        $scope.dirty = false;
-                        $scope.item = copyJson($scope.origItem);
+                        scope.origItem = res;
+                        scope.dirty = false;
+                        scope.item = copyJson(scope.origItem);
                     });
                 }
             } else if (issues?.unique_name?.unique) {
                 notify.error(gettext('Error: Unique Name is not unique.'));
             } else if (response && response.status === 412) {
-                notifyPreconditionFailed($scope);
+                notifyPreconditionFailed(scope);
             } else if (warnings.length > 0) {
                 warnings.forEach((warning) => notify.error(warning.text));
             }
@@ -411,7 +427,8 @@ interface IArticleApi {
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
 
-    publishItem(orig: IArticle, item: IArticle, $scope: any): Promise<boolean | IArticle>;
+    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
+    publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
 }
 
 export const article: IArticleApi = {
@@ -441,5 +458,6 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
+    publishItem_legacy,
     publishItem,
 };

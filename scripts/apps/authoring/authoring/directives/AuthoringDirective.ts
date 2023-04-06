@@ -1,6 +1,6 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
-import {merge, flatMap} from 'lodash';
+import {merge} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
@@ -11,8 +11,8 @@ import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
-import {appConfig, extensions} from 'appConfig';
-import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -241,7 +241,7 @@ export function AuthoringDirective(
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
 
-                    $scope.publishAndContinueEnabled = appConfig.features.customAuthoringTopbar?.publishAndContinue
+                    $scope.publishAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.publishAndContinue
                         && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
                 }, true);
             });
@@ -443,8 +443,13 @@ export function AuthoringDirective(
                 return true;
             }
 
-            function publishItem(orig, item) {
-                return sdApi.article.publishItem(orig, item, $scope);
+            function publishItem(orig, item): Promise<boolean> {
+                autosave.stop(item);
+                const action: string = $scope.action != null
+                    ? ($scope.action === 'edit' ? 'publish' : $scope.action)
+                    : 'publish';
+
+                return sdApi.article.publishItem_legacy(orig, item, $scope, action);
             }
 
             function notifyPreconditionFailed() {
