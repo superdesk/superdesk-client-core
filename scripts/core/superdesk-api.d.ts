@@ -1257,10 +1257,6 @@ declare module 'superdesk-api' {
         children?: Array<ITreeNode<T>>;
     }
 
-    export interface ILink {
-        href: string;
-    }
-
     // EDITOR3
     export interface IEditor3AnnotationInputTab {
         label: string;
