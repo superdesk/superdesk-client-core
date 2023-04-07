@@ -810,7 +810,7 @@ export function AuthoringDirective(
             // Close the current article, create an update of the article and open it in the edit mode.
             $scope.closeAndContinue = function() {
                 $scope.close().then(() => {
-                    sdApi.article.rewrite($scope.item);
+                    authoring.rewrite($scope.item);
                 });
             };
 
@@ -826,7 +826,30 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // returned promise used by superdesk-fi
-                return sdApi.article.close($scope, $rootScope);
+                return authoring.close(
+                    $scope.item,
+                    $scope.origItem,
+                    $scope.save_enabled(),
+                    () => {
+                        authoringWorkspace.close(true);
+                        const itemId = $scope.origItem._id;
+
+                        $rootScope.$broadcast('item:close', itemId);
+
+                        const storedItemId = storage.getItem(`open-item-after-related-closed--${itemId}`);
+
+                        /**
+                         * If related item was just created and saved, open the original item
+                         * that triggered the creation of this related item.
+                         */
+                        if (storedItemId != null) {
+                            return autosave.get({_id: storedItemId}).then((resulted) => {
+                                authoringWorkspace.open(resulted);
+                                storage.removeItem(`open-item-after-related-closed--${itemId}`);
+                            });
+                        }
+                    },
+                );
             };
 
             /**
