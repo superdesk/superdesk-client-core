@@ -15,7 +15,7 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
-import {IArticle, ILink} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc React
@@ -30,6 +30,10 @@ const linkTypes = {
     href: 'href',
     attachement: 'attachement',
 };
+
+export interface ILink {
+    href: string;
+}
 
 interface IProps extends Partial<IEditorStore> {
     applyLink?(link, entity: EntityInstance): void;

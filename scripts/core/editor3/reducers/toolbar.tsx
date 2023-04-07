@@ -12,7 +12,7 @@ import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
 import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
 import {processCells} from './table';
-import {ILink} from 'superdesk-api';
+import {ILink} from '../components/links/LinkInput';
 
 /**
  * @description Contains the list of toolbar related reducers.
