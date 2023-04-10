@@ -340,7 +340,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             );
         } else if (customToolbarStyle === 'multiLineQuote') {
             return <MultiLineQuoteControls className={cx} />;
-        } else if (customToolbarStyle === 'table') {
+        } else if (activeCell || customToolbarStyle === 'table') {
             return <TableControls className={cx} />;
         } else {
             assertNever(customToolbarStyle);

@@ -63,6 +63,12 @@ export class TableBlockComponent extends React.Component<IProps> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
+        if (this.props.activeCell != null) {
+            this.props.setCustomToolbar(this.props.toolbarStyle);
+        } else {
+            this.props.setCustomToolbar(null);
+        }
+
         setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
     }
 
@@ -138,7 +144,6 @@ export class TableBlockComponent extends React.Component<IProps> {
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
-                    this.props.setCustomToolbar(this.props.toolbarStyle);
                 }}
             >
                 <table>
