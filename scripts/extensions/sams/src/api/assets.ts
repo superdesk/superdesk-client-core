@@ -311,14 +311,17 @@ export function queryAssets(
     ].forEach((func) => func(source, params));
 
     if (source.query.bool.must.length === 0) {
+        // @ts-ignore
         delete source.query.bool.must;
     }
 
     if (source.query.bool.must_not.length === 0) {
+        // @ts-ignore
         delete source.query.bool.must_not;
     }
 
     if (Object.keys(source.query.bool).length === 0) {
+        // @ts-ignore
         delete source.query;
     }
 
