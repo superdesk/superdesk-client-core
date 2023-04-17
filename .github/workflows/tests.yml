@@ -46,7 +46,7 @@ jobs:
       working-directory: e2e/server
 
     - name: Build client
-      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
+      run: npm ci && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
 
     - name: Protractor
