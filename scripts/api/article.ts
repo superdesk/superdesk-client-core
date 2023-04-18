@@ -213,32 +213,6 @@ function isEditable(_article: IArticle): boolean {
     }
 }
 
-function close(scope: any, rootScope: any): Promise<any> {
-    return ng.get('authoring').close(
-        scope.item,
-        scope.origItem,
-        scope.save_enabled(),
-        () => {
-            ng.get('authoringWorkspace').close(true);
-            const itemId = scope.origItem._id;
-            const storedItemId = localStorage.getItem(`open-item-after-related-closed--${itemId}`);
-
-            rootScope.$broadcast('item:close', itemId);
-
-            /**
-             * If related item was just created and saved, open the original item
-             * that triggered the creation of this related item.
-             */
-            if (storedItemId != null) {
-                return ng.get('autosave').get({_id: storedItemId}).then((resulted) => {
-                    ng.get('authoringWorkspace').open(resulted);
-                    localStorage.removeItem(`open-item-after-related-closed--${itemId}`);
-                });
-            }
-        },
-    );
-}
-
 function rewrite(item: IArticle) {
     return ng.get('authoring').rewrite(item);
 }
