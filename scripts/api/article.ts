@@ -245,13 +245,29 @@ function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle
         .then((published) => published ? scope.item : published);
 }
 
-function showPublishAndContinue(item: IArticle): boolean {
+function canPublishOnDesk(deskType: string): boolean {
+    return !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+        ng.get('privileges').privileges.userHasPrivileges({publish: 1});
+}
+
+function isPersonalSpace(): boolean {
+    return !(ng.get('$location').path() === '/workspace/personal');
+}
+
+function checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean {
+    if (personal) {
+        return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
+    }
+
+    return item.task && item.task.desk && item.state !== 'draft' || dirty;
+}
+
+// TODO: Keep in sync with scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:224
+function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
-        && !(ng.get('$location').path() === '/workspace/personal')
-        && appConfig.features?.noPublishOnAuthoringDesk
-        && sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type === 'authoring'
-        && item.task.desk != null
-        && item.state !== 'draft';
+        && isPersonalSpace()
+        && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
+        && checkShortcutButtonAvailability(item, dirty, isPersonalSpace());
 }
 
 function publishItem_legacy(
@@ -435,7 +451,10 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
-    showPublishAndContinue(item: IArticle): boolean;
+    canPublishOnDesk(deskType: string): boolean;
+    isPersonalSpace(): boolean;
+    checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean;
+    showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
 
     // Instead of passing a fake scope from React
@@ -471,6 +490,9 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
+    isPersonalSpace,
+    canPublishOnDesk,
+    checkShortcutButtonAvailability,
     showPublishAndContinue,
     publishItem_legacy,
     publishItem,

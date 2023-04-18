@@ -145,13 +145,6 @@ export function AuthoringDirective(
                 }
             }, true);
 
-            function checkShortcutButtonAvailability(personal = false) {
-                if (personal) {
-                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
-                }
-                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
-            }
-
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.proofread = false;
@@ -218,29 +211,24 @@ export function AuthoringDirective(
                 }
             }
 
-            /**
-             * Check if it is allowed to publish on desk
-             * @returns {Boolean}
-             */
-            function canPublishOnDesk() {
-                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-                    privileges.userHasPrivileges({publish: 1});
-            }
-
             desks.initialize().then(() => {
                 getDeskStage();
                 getCurrentTemplate();
                 $scope.$watch('item', () => {
                     $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    && !sdApi.article.isPersonalSpace() && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
                     $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    && !sdApi.article.isPersonalSpace() && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
+                    // TODO: Keep in sync with scripts/api/article.ts:226
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
-                        && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
-
-                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item);
+                        && sdApi.article.canPublishOnDesk($scope.deskType)
+                        && sdApi.article.checkShortcutButtonAvailability(
+                            $scope.item,
+                            $scope.dirty,
+                            sdApi.article.isPersonalSpace(),
+                        );
                 }, true);
             });
 

@@ -205,7 +205,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             availableOffline: false,
         });
 
-        if (sdApi.article.showPublishAndContinue(item)) {
+        if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
             actions.push({
                 group: 'middle',
                 priority: 0.3,
