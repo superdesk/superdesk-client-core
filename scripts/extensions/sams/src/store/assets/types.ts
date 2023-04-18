@@ -40,17 +40,6 @@ interface IAssetSetListStyleAction {
     payload: ASSET_LIST_STYLE;
 }
 
-export interface IAssetState {
-    assets: Dictionary<string, IAssetItem>;
-    searchParams: IAssetSearchParams;
-    selectedAssetId?: string;
-    selectedAssetIds: Array<string>;
-    listItemIds: Array<string>;
-    searchResultTotal: number;
-    listStyle: ASSET_LIST_STYLE;
-    contentPanelState: ASSET_CONTENT_PANEL_STATE;
-}
-
 export const MANAGE_ASSETS_PREVIEW = 'manage_assets__preview';
 interface IPreviewAssetAction {
     type: typeof MANAGE_ASSETS_PREVIEW;
