@@ -205,14 +205,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             availableOffline: false,
         });
 
-        if (
-            appConfig.features?.customAuthoringTopbar?.publishAndContinue
-            && !(ng.get('$location').path() === '/workspace/personal')
-            && appConfig.features?.noPublishOnAuthoringDesk
-            && sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type === 'authoring'
-            && item.task.desk != null
-            && item.state !== 'draft'
-        ) {
+        if (sdApi.article.showPublishAndContinue(item)) {
             actions.push({
                 group: 'middle',
                 priority: 0.3,

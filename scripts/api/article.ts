@@ -1,22 +1,22 @@
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
-import {patchArticle} from './article-patch';
-import ng from 'core/services/ng';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
-import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
-import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
-import {sendItems} from './article-send';
-import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
 import {appConfig, extensions} from 'appConfig';
-import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
+import {ITEM_STATE, KILLED_STATES, PUBLISHED_STATES} from 'apps/archive/constants';
+import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {dataApi} from 'core/helpers/CrudManager';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {flatMap, trim} from 'lodash';
 import {copyJson} from 'core/helpers/utils';
-import {gettext} from 'core/utils';
+import {ISendToDestination, ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
+import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {notify} from 'core/notify/notify';
+import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
+import {flatMap, trim} from 'lodash';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {duplicateItems} from './article-duplicate';
+import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
+import {patchArticle} from './article-patch';
+import {sendItems} from './article-send';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -245,6 +245,15 @@ function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle
         .then((published) => published ? scope.item : published);
 }
 
+function showPublishAndContinue(item: IArticle): boolean {
+    return appConfig.features?.customAuthoringTopbar?.publishAndContinue
+        && !(ng.get('$location').path() === '/workspace/personal')
+        && appConfig.features?.noPublishOnAuthoringDesk
+        && sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type === 'authoring'
+        && item.task.desk != null
+        && item.state !== 'draft';
+}
+
 function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
@@ -426,8 +435,12 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
-
+    showPublishAndContinue(item: IArticle): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
+
+    // Instead of passing a fake scope from React
+    // every time to the publishItem_legacy we can use this function which
+    // creates a fake scope for us.
     publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
 }
 
@@ -458,6 +471,7 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
+    showPublishAndContinue,
     publishItem_legacy,
     publishItem,
 };

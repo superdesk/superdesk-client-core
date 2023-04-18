@@ -1,27 +1,26 @@
-import * as helpers from 'apps/authoring/authoring/helpers';
-import _ from 'lodash';
-import {merge} from 'lodash';
-import postscribe from 'postscribe';
-import thunk from 'redux-thunk';
-import {gettext} from 'core/utils';
-import {logger} from 'core/services/logger';
-import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {getArticleSchemaMiddleware} from '..';
-import {isPublished} from 'apps/archive/utils';
-import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {copyJson} from 'core/helpers/utils';
-import {appConfig} from 'appConfig';
-import {IArticle} from 'superdesk-api';
-import {addInternalEventListener} from 'core/internal-events';
-import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
-import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {ITEM_STATE} from 'apps/archive/constants';
-import {isMediaType} from 'core/helpers/item';
-import {confirmPublish} from '../services/quick-publish-modal';
-import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {sdApi} from 'api';
+import {appConfig} from 'appConfig';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {isPublished} from 'apps/archive/utils';
+import * as helpers from 'apps/authoring/authoring/helpers';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {isMediaType} from 'core/helpers/item';
+import {copyJson} from 'core/helpers/utils';
+import {addInternalEventListener} from 'core/internal-events';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {logger} from 'core/services/logger';
+import {gettext} from 'core/utils';
+import _, {merge} from 'lodash';
+import postscribe from 'postscribe';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import thunk from 'redux-thunk';
+import {IArticle} from 'superdesk-api';
+import {getArticleSchemaMiddleware} from '..';
+import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 /**
  * @ngdoc directive
@@ -241,8 +240,7 @@ export function AuthoringDirective(
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
 
-                    $scope.publishAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.publishAndContinue
-                        && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
+                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item);
                 }, true);
             });
 
