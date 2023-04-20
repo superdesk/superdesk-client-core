@@ -27,6 +27,7 @@ import {
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {notify} from 'core/notify/notify';
 
 export interface IProps {
     itemId: IArticle['_id'];
@@ -203,6 +204,34 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             component: ({entity}) => <DeskAndStage article={entity} />,
             availableOffline: false,
         });
+
+        if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
+            actions.push({
+                group: 'middle',
+                priority: 0.3,
+                component: ({entity}) => (
+                    <Button
+                        type="highlight"
+                        onClick={() => {
+                            const getLatestItem = hasUnsavedChanges()
+                                ? handleUnsavedChanges()
+                                : Promise.resolve(entity);
+
+                            getLatestItem.then((article) => {
+                                sdApi.article.publishItem(article, article).then((result) => {
+                                    typeof result !== 'boolean'
+                                        ? ng.get('authoring').rewrite(result)
+                                        : notify.error(gettext('Failed to publish and continue.'));
+                                });
+                            });
+                        }}
+                        text={gettext('P & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
 
         // FINISH: ensure locking is available in generic version of authoring
         actions.push({
