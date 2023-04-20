@@ -826,7 +826,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // returned promise used by superdesk-fi
-                return authoringApiCommon.closeAuthoringStage2($scope, $rootScope);
+                return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
 
             /**

@@ -25,13 +25,11 @@ export interface IAuthoringApiCommon {
     closeAuthoringForce(): void;
 
     /**
-     * This function calls AuthoringService's close function
-     * which in turn calls the closeAuthoring function from
-     * this file with more arguments added to it. In order to
-     * reuse these functions in different contexts
-     * we need to keep them separate.
+     * We need to keep the steps separate because it needs to be called
+     * separately in Angular. When we remove Angular the closeAuthoring
+     * and closeAuthoringStep2 will be merged together.
      */
-    closeAuthoringStage2(scope: any, rootScope: any): Promise<any>;
+    closeAuthoringStep2(scope: any, rootScope: any): Promise<any>;
 }
 
 /**
@@ -44,7 +42,7 @@ export const authoringApiCommon: IAuthoringApiCommon = {
     saveAfter: (current, original) => {
         runAfterUpdateEvent(original, current);
     },
-    closeAuthoringStage2: (scope: any, rootScope: any): Promise<any> => {
+    closeAuthoringStep2: (scope: any, rootScope: any): Promise<any> => {
         return ng.get('authoring').close(
             scope.item,
             scope.origItem,

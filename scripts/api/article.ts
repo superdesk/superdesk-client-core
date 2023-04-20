@@ -1,18 +1,18 @@
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
-import {patchArticle} from './article-patch';
-import ng from 'core/services/ng';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
-import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
-import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
-import {sendItems} from './article-send';
-import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
-import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
+import {ITEM_STATE, KILLED_STATES, PUBLISHED_STATES} from 'apps/archive/constants';
+import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {dataApi} from 'core/helpers/CrudManager';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {ISendToDestination, ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
+import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
+import ng from 'core/services/ng';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
+import {duplicateItems} from './article-duplicate';
+import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
+import {patchArticle} from './article-patch';
+import {sendItems} from './article-send';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -273,14 +273,11 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
-
-    close(scope: any, rootScope?: any);
     rewrite(item: IArticle);
 }
 
 export const article: IArticleApi = {
     rewrite,
-    close,
     isLocked,
     isEditable,
     isLockedInCurrentSession,
