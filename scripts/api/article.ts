@@ -262,7 +262,6 @@ function checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, person
     return item.task && item.task.desk && item.state !== 'draft' || dirty;
 }
 
-// TODO: Keep in sync with scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:224
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
         && isPersonalSpace()

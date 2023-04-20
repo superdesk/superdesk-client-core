@@ -221,14 +221,15 @@ export function AuthoringDirective(
                     $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
                     && !sdApi.article.isPersonalSpace() && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    // TODO: Keep in sync with scripts/api/article.ts:226
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)
                         && sdApi.article.checkShortcutButtonAvailability(
                             $scope.item,
-                            $scope.dirty,
+                            false,
                             sdApi.article.isPersonalSpace(),
                         );
+
+                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
