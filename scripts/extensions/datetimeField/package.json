@@ -14,6 +14,6 @@
     "date-fns": "2.7.0"
   },
   "peerDependencies": {
-    "superdesk-ui-framework": "^3.0.8"
+    "superdesk-ui-framework": "3.0.16"
   }
 }

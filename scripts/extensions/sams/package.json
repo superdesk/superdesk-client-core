@@ -21,7 +21,7 @@
   },
   "peerDependencies": {
     "react": "^16.9.0",
-    "superdesk-ui-framework": "^3.0.8",
+    "superdesk-ui-framework": "3.0.16",
     "classnames": "^2.2.5",
     "lodash": "^4.17.5",
     "json-merge-patch": "0.2.3"
