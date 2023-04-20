@@ -21,6 +21,7 @@ import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 /**
  * @ngdoc directive
@@ -217,15 +218,15 @@ export function AuthoringDirective(
                 $scope.$watch('item', () => {
                     $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
                         && !sdApi.navigation.isPersonalSpace()
-                        && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
                     $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
                         && !sdApi.navigation.isPersonalSpace()
-                        && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)
-                        && sdApi.article.checkShortcutButtonAvailability(
+                        && authoringApiCommon.checkShortcutButtonAvailability(
                             $scope.item,
                             false,
                             sdApi.navigation.isPersonalSpace(),

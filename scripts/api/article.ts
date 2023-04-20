@@ -17,6 +17,7 @@ import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -250,19 +251,11 @@ function canPublishOnDesk(deskType: string): boolean {
         ng.get('privileges').privileges.userHasPrivileges({publish: 1});
 }
 
-function checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean {
-    if (personal) {
-        return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
-    }
-
-    return item.task && item.task.desk && item.state !== 'draft' || dirty;
-}
-
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
         && sdApi.navigation.isPersonalSpace()
         && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
-        && checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
 }
 
 function publishItem_legacy(
@@ -447,7 +440,6 @@ interface IArticleApi {
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
     canPublishOnDesk(deskType: string): boolean;
-    checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
 
@@ -485,7 +477,6 @@ export const article: IArticleApi = {
     getWorkQueueItems,
     get,
     canPublishOnDesk,
-    checkShortcutButtonAvailability,
     showPublishAndContinue,
     publishItem_legacy,
     publishItem,
