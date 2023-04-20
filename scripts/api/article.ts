@@ -250,10 +250,6 @@ function canPublishOnDesk(deskType: string): boolean {
         ng.get('privileges').privileges.userHasPrivileges({publish: 1});
 }
 
-function isPersonalSpace(): boolean {
-    return !(ng.get('$location').path() === '/workspace/personal');
-}
-
 function checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean {
     if (personal) {
         return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
@@ -264,9 +260,9 @@ function checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, person
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
-        && isPersonalSpace()
+        && sdApi.navigation.isPersonalSpace()
         && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
-        && checkShortcutButtonAvailability(item, dirty, isPersonalSpace());
+        && checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
 }
 
 function publishItem_legacy(
@@ -451,7 +447,6 @@ interface IArticleApi {
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
     canPublishOnDesk(deskType: string): boolean;
-    isPersonalSpace(): boolean;
     checkShortcutButtonAvailability(item: IArticle, dirty?: boolean, personal?: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
@@ -489,7 +484,6 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
-    isPersonalSpace,
     canPublishOnDesk,
     checkShortcutButtonAvailability,
     showPublishAndContinue,

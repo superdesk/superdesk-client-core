@@ -216,17 +216,19 @@ export function AuthoringDirective(
                 getCurrentTemplate();
                 $scope.$watch('item', () => {
                     $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
-                    && !sdApi.article.isPersonalSpace() && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                        && !sdApi.navigation.isPersonalSpace()
+                        && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
                     $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
-                    && !sdApi.article.isPersonalSpace() && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                        && !sdApi.navigation.isPersonalSpace()
+                        && sdApi.article.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)
                         && sdApi.article.checkShortcutButtonAvailability(
                             $scope.item,
                             false,
-                            sdApi.article.isPersonalSpace(),
+                            sdApi.navigation.isPersonalSpace(),
                         );
 
                     $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
