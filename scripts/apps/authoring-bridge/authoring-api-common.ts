@@ -24,7 +24,7 @@ export interface IAuthoringApiCommon {
      * and item is not locked.
      */
     closeAuthoringForce(): void;
-    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean) => boolean
+    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean) => boolean;
 }
 
 /**
