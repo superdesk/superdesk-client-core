@@ -423,7 +423,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             options != null && (
                                 <>
                                     <Select
-                                        placeholder=""
                                         value=""
                                         onChange={(value) => {
                                             const editorState: EditorState = this.props.value.store
