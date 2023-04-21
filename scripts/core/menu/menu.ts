@@ -41,10 +41,7 @@ function setupFullWidthPage($scope) {
         } else {
             $scope.$applyAsync(() => {
                 $scope.fullWidthConfig = config;
-
-                if (config.enabled !== true) {
-                    $scope.fullWidthEnabled = false;
-                }
+                $scope.fullWidthEnabled = false;
             });
         }
     };
