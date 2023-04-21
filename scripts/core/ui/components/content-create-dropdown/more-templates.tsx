@@ -2,15 +2,13 @@
 
 import React from 'react';
 import {Map} from 'immutable';
-import {IconButton, Input} from 'superdesk-ui-framework/react';
+import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
-import {ResizeObserverComponent} from 'core/components/resize-observer-component';
 import {IRestApiResponse, ITemplate} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getPaginationInfo} from 'core/helpers/pagination';
 import {DropdownOption} from './dropdown-option';
-import {VirtualList} from '../virtual-lists/virtual-list';
 import {nameof} from 'core/helpers/typescript-helpers';
 
 interface IProps {
@@ -34,10 +32,6 @@ interface IStateLoaded {
 type IState = IStateLoading | IStateLoaded;
 
 export class MoreTemplates extends React.PureComponent<IProps, IState> {
-    private itemTemplate: React.ComponentType<{item: ITemplate}>;
-    private wrapperEl: HTMLDivElement;
-    private headerEl: HTMLDivElement;
-
     constructor(props: IProps) {
         super(props);
 
@@ -46,32 +40,12 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
             searchString: '',
         };
 
-        this.itemTemplate = class ItemTemplate extends React.PureComponent<{item: ITemplate}> {
-            render() {
-                const {item} = this.props;
-
-                return (
-                    <DropdownOption
-                        label={item.template_name}
-                        privateTag={item.is_public !== true}
-                        icon={{
-                            name: 'plus-sign',
-                            color: 'var(--sd-colour-primary)',
-                        }}
-                        onClick={() => {
-                            props.onSelect(item);
-                        }}
-                    />
-                );
-            }
-        };
-
         this.fetchData = this.fetchData.bind(this);
         this.fetchInitialData = this.fetchInitialData.bind(this);
         this.loadMoreItems = this.loadMoreItems.bind(this);
     }
 
-    fetchData(pageToFetch: number, pageSize: number): Promise<IRestApiResponse<ITemplate>> {
+    fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
         return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
             method: 'GET',
             path: '/content_templates',
@@ -86,6 +60,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     },
                 },
             },
+            abortSignal,
         });
     }
 
@@ -128,10 +103,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        this.fetchInitialData().then(() => {
-            // fix height when data first loads to reduce layout flickering
-            this.wrapperEl.style.height = this.wrapperEl.offsetHeight + 'px';
-        });
+        this.fetchInitialData();
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
@@ -144,8 +116,8 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
         const {state} = this;
 
         return (
-            <div ref={(el) => this.wrapperEl = el}>
-                <div style={{padding: 10}} ref={(el) => this.headerEl = el}>
+            <div style={{height: '100%'}}>
+                <div style={{padding: 10}}>
                     <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                         <IconButton
                             ariaValue={gettext('Back')}
@@ -156,12 +128,11 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                         />
                         <span className="form-label" style={{minHeight: 0}}>{gettext('More templates')}</span>
                     </Spacer>
-
                     <SpacerBlock v gap="4" />
-
                     <Input
                         type="text"
                         labelHidden
+                        inlineLabel
                         value={state.searchString}
                         onChange={(val) => {
                             const nextState: IState = {
@@ -172,29 +143,46 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                             this.setState(nextState);
                         }}
                     />
-
                     <div className="content-create-dropdown--spacer" />
                 </div>
-
-                <ResizeObserverComponent>
-                    {({width}) => {
-                        if (state.loading === true) {
-                            return null;
-                        } else {
-                            return (
-                                <VirtualList
-                                    width={width}
-                                    height={this.props.height - this.headerEl.offsetHeight}
-                                    totalItemsCount={state.templatesCount}
-                                    initialItems={state.templatesData}
-                                    loadItems={this.loadMoreItems}
-                                    itemTemplate={this.itemTemplate}
-                                    getId={(item) => item._id}
-                                />
-                            );
-                        }
-                    }}
-                </ResizeObserverComponent>
+                {
+                    state.loading === false && (
+                        <WithPagination
+                            getItems={(pageNo, signal) =>
+                                this.fetchData(pageNo, 10, signal)
+                                    .then((res) => Promise.resolve({
+                                        items: res._items,
+                                        itemCount: res._meta.total,
+                                    }))
+                            }
+                        >
+                            {
+                                (items: Array<ITemplate>) => (
+                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        {
+                                            items.map((item) => {
+                                                return (
+                                                    <DropdownOption
+                                                        key={item._id}
+                                                        label={item.template_name}
+                                                        privateTag={item.is_public !== true}
+                                                        icon={{
+                                                            name: 'plus-sign',
+                                                            color: 'var(--sd-colour-primary)',
+                                                        }}
+                                                        onClick={() => {
+                                                            this.props.onSelect(item);
+                                                        }}
+                                                    />
+                                                );
+                                            })
+                                        }
+                                    </div>
+                                )
+                            }
+                        </WithPagination>
+                    )
+                }
             </div>
         );
     }
