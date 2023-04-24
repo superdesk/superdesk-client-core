@@ -48,8 +48,8 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
-import {availableThemes, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
-import {showModal} from '@superdesk/common/dist/src/ui/show-modal';
+import {IFontSizeOptions, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import classNames from 'classnames';
 
@@ -197,7 +197,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
             default: defaultTheme,
             proofreading: proofReadingTheme,
         },
-        proofreadEnable: false,
+        proofreadingEnabled: false,
     };
 
     return initialState;
@@ -214,13 +214,27 @@ function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>): IKeyBin
         }, {});
 }
 
-const uiThemeFontSize = (value) => {
+export const getUiThemeFontSize = (value: IFontSizeOptions) => {
     if (value === 'small') {
         return '1.4rem';
     } else if (value === 'medium') {
         return '1.6rem';
-    } else {
+    } else if (value === 'large') {
         return '1.8rem';
+    } else {
+        assertNever(value);
+    }
+};
+
+export const getUiThemeFontSizeHeading = (value: IFontSizeOptions) => {
+    if (value === 'small') {
+        return '2.3rem';
+    } else if (value === 'medium') {
+        return '2.8rem';
+    } else if (value === 'large') {
+        return '3.2rem';
+    } else {
+        assertNever(value);
     }
 };
 
@@ -252,7 +266,7 @@ interface IStateLoaded<T> {
      */
     loading: boolean;
     allThemes: {default: ITheme, proofreading: ITheme};
-    proofreadEnable: boolean;
+    proofreadingEnabled: boolean;
 }
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
@@ -359,7 +373,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }
     }
 
-    showThemeConfigModal(state: IStateLoaded<T>) {
+    private showThemeConfigModal(state: IStateLoaded<T>) {
         showModal(({closeModal}) => {
             return (
                 <ProofreadingThemeModal
@@ -1239,22 +1253,22 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ...widgetKeybindings,
         };
 
-        const activeTheme = state.proofreadEnable ? state.allThemes.proofreading : state.allThemes.default;
+        const activeTheme = state.proofreadingEnabled ? state.allThemes.proofreading : state.allThemes.default;
 
         const uiTheme: IAuthoringSectionTheme = {
             backgroundColor: activeTheme.theme,
-            backgroundColorSecondary: activeTheme.themeShadow,
+            backgroundColorSecondary: activeTheme.themeColorSecondary,
             textColor: activeTheme.textColor,
             fontFamily: activeTheme.fontFamily,
             fieldTheme: {
-                abstract: {
-                    fontSize: uiThemeFontSize(activeTheme.abstract),
-                },
                 headline: {
-                    fontSize: uiThemeFontSize(activeTheme.headline),
+                    fontSize: getUiThemeFontSizeHeading(activeTheme.headline),
+                },
+                abstract: {
+                    fontSize: getUiThemeFontSize(activeTheme.abstract),
                 },
                 body_html: {
-                    fontSize: uiThemeFontSize(activeTheme.body),
+                    fontSize: getUiThemeFontSize(activeTheme.body),
                 },
             },
         };
@@ -1319,7 +1333,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                                                         {printPreviewAction.jsxButton()}
 
-                                                        {this.props.themeEnabled === true && (
+                                                        {this.props.themingEnabled === true && (
                                                             <>
                                                                 <IconButton
                                                                     icon="adjust"
@@ -1327,7 +1341,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                                     onClick={() => {
                                                                         this.setState({
                                                                             ...state,
-                                                                            proofreadEnable: !state.proofreadEnable,
+                                                                            proofreadingEnabled: !state.proofreadingEnabled,
                                                                         });
                                                                     }}
                                                                 />

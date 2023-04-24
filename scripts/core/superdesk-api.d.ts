@@ -215,7 +215,7 @@ declare module 'superdesk-api' {
 
         headerCollapsed?: boolean; // initial value
 
-        themeEnabled?: boolean; // only works with article; default false
+        themingEnabled?: boolean; // only works with article; default false
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments

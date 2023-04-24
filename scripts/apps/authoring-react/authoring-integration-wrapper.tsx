@@ -331,7 +331,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 {(panelState, panelActions) => {
                     return (
                         <AuthoringReact
-                            themeEnabled
+                            themingEnabled
                             onFieldChange={this.props.onFieldChange}
                             hideSecondaryToolbar={this.props.hideSecondaryToolbar}
                             ref={(component) => {
