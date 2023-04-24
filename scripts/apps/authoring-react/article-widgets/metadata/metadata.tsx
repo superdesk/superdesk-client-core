@@ -110,7 +110,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 {gettext('Not For Publication')}
                             </Heading>
                             <Switch
-                                label={{text: ''}} // TODO: Implement accessibility
+                                label={{content: ''}} // TODO: Implement accessibility
                                 onChange={() => {
                                     onArticleChange({
                                         ...article,
@@ -131,7 +131,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                                 {gettext('Legal')}
                             </Heading>
                             <Switch
-                                label={{text: ''}} // TODO: Implement accessibility
+                                label={{content: ''}} // TODO: Implement accessibility
                                 onChange={() => {
                                     onArticleChange({
                                         ...article,

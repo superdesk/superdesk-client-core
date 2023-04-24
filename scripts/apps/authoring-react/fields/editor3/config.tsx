@@ -108,7 +108,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     onChange={(val) => {
                         this.props.onChange({
                             ...config,
-                            vocabularyId: val == '' ? undefined : val,
+                            vocabularyId: val === '' ? undefined : val,
                         });
                     }}
                 >

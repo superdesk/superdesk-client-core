@@ -5,6 +5,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
 import {IUnsavedChangesActionWithSaving, showUnsavedChangesPrompt} from 'core/ui/components/prompt-for-unsaved-changes';
 import {IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;
@@ -30,12 +31,20 @@ export interface IAuthoringApiCommon {
      * and closeAuthoringStep2 will be merged together.
      */
     closeAuthoringStep2(scope: any, rootScope: any): Promise<any>;
+    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean) => boolean;
 }
 
 /**
  * Immutable API that is used in both - angularjs and reactjs based authoring code.
  */
 export const authoringApiCommon: IAuthoringApiCommon = {
+    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean): boolean => {
+        if (personal) {
+            return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
+        }
+
+        return item.task && item.task.desk && item.state !== 'draft' || dirty;
+    },
     saveBefore: (current, original) => {
         return runBeforeUpdateMiddlware(current, original);
     },

@@ -1,5 +1,5 @@
 import {sdApi} from 'api';
-import {appConfig, extensions} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isPublished} from 'apps/archive/utils';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
@@ -12,15 +12,15 @@ import {addInternalEventListener} from 'core/internal-events';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
-import _, {flatMap, merge} from 'lodash';
+import _, {merge} from 'lodash';
 import postscribe from 'postscribe';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import {IArticle, IExtensionActivationResult, onPublishMiddlewareResult} from 'superdesk-api';
 import {getArticleSchemaMiddleware} from '..';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
+import {IArticle} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 
 /**
@@ -146,13 +146,6 @@ export function AuthoringDirective(
                 }
             }, true);
 
-            function checkShortcutButtonAvailability(personal = false) {
-                if (personal) {
-                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
-                }
-                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
-            }
-
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.proofread = false;
@@ -219,30 +212,27 @@ export function AuthoringDirective(
                 }
             }
 
-            /**
-             * Check if it is allowed to publish on desk
-             * @returns {Boolean}
-             */
-            function canPublishOnDesk() {
-                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-                    privileges.userHasPrivileges({publish: 1});
-            }
-
             desks.initialize().then(() => {
                 getDeskStage();
                 getCurrentTemplate();
                 $scope.$watch('item', () => {
-                    $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
+                        && !sdApi.navigation.isPersonalSpace()
+                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
+                        && !sdApi.navigation.isPersonalSpace()
+                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
-                        && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+                    $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
+                        && sdApi.article.canPublishOnDesk($scope.deskType)
+                        && authoringApiCommon.checkShortcutButtonAvailability(
+                            $scope.item,
+                            false,
+                            sdApi.navigation.isPersonalSpace(),
+                        );
 
-                    $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
-                        && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
+                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
@@ -443,155 +433,13 @@ export function AuthoringDirective(
                 return true;
             }
 
-            /**
-             * Checks if associations is with rewrite_of item then open then modal to add associations.
-             * The user has options to add associated media to the current item and review the media change
-             * or publish the current item without media.
-             * User will be prompted in following scenarios:
-             * 1. Edit feature image and confirm media update is enabled.
-             * 2. Once item is published then no confirmation.
-             * 3. If current item is update and updated story has associations
-             */
-            function checkMediaAssociatedToUpdate() {
-                let rewriteOf = $scope.item.rewrite_of;
-
-                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
-                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
-                    !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
-                    $scope.item.associations && $scope.item.associations.featuremedia) {
-                    return $q.when(true);
-                }
-
-                return api.find('archive', rewriteOf)
-                    .then((rewriteOfItem) => {
-                        if (rewriteOfItem && rewriteOfItem.associations &&
-                            rewriteOfItem.associations.featuremedia) {
-                            return confirm.confirmFeatureMedia(rewriteOfItem);
-                        }
-                        return true;
-                    })
-                    .then((result) => {
-                        if (result && result.associations) {
-                            $scope.item.associations = result.associations;
-                            $scope.autosave($scope.item);
-                            return false;
-                        }
-
-                        return true;
-                    });
-            }
-
-            function getOnPublishMiddlewares()
-            : Array<IExtensionActivationResult['contributions']['entities']['article']['onPublish']> {
-                return flatMap(
-                    Object.values(extensions).map(({activationResult}) => activationResult),
-                    (activationResult) =>
-                        activationResult.contributions != null
-                        && activationResult.contributions.entities != null
-                        && activationResult.contributions.entities.article != null
-                        && activationResult.contributions.entities.article.onPublish != null
-                            ? activationResult.contributions.entities.article.onPublish
-                            : [],
-                );
-            }
-
-            function publishItem(orig, item) {
+            function publishItem(orig, item): Promise<boolean> {
                 autosave.stop(item);
+                const action: string = $scope.action != null
+                    ? ($scope.action === 'edit' ? 'publish' : $scope.action)
+                    : 'publish';
 
-                var action = $scope.action === 'edit' ? 'publish' : $scope.action;
-                const onPublishMiddlewares = getOnPublishMiddlewares();
-                let warnings: Array<{text: string}> = [];
-                const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
-
-                $scope.error = {};
-
-                return onPublishMiddlewares.reduce(
-                    (current, next) => {
-                        return current.then((result) => {
-                            if (result && result.warnings && result.warnings.length > 0) {
-                                warnings = warnings.concat(result.warnings);
-                            }
-
-                            return next(Object.assign({
-                                _id: _.get(orig, '_id'),
-                                type: _.get(orig, 'type'),
-                            }, item));
-                        });
-                    },
-                    initialValue,
-                )
-                    .then((result) => {
-                        if (result && result.warnings && result.warnings.length > 0) {
-                            warnings = warnings.concat(result.warnings);
-                        }
-
-                        return result;
-                    })
-                    .then(() => checkMediaAssociatedToUpdate())
-                    .then((result) => {
-                        if (result && warnings.length < 1) {
-                            return authoring.publish(orig, item, action);
-                        }
-                        return $q.reject(false);
-                    })
-                    .then((response: IArticle) => {
-                        notify.success(gettext('Item published.'));
-                        $scope.item = response;
-                        $scope.dirty = false;
-                        authoringWorkspace.close(true);
-                        return true;
-                    }, (response) => {
-                        let issues = _.get(response, 'data._issues');
-
-                        if (issues) {
-                            if (angular.isDefined(issues['validator exception'])) {
-                                var errors = issues['validator exception'];
-                                var modifiedErrors = errors.replace(/\[/g, '')
-                                    .replace(/\]/g, '')
-                                    .split(',');
-
-                                modifiedErrors.forEach((error) => {
-                                    const message = _.trim(error, '\' ');
-                                    // the message format is 'Field error text' (contains ')
-                                    const field = message.split(' ')[0];
-
-                                    $scope.error[field.toLocaleLowerCase()] = true;
-                                    notify.error(message);
-                                });
-
-                                if (issues.fields) {
-                                    Object.assign($scope.error, issues.fields);
-                                }
-
-                                $scope.$applyAsync(); // make $scope.error changes visible
-
-                                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                    authoring.open(item._id, true).then((res) => {
-                                        $scope.origItem = res;
-                                        $scope.dirty = false;
-                                        $scope.item = copyJson($scope.origItem);
-                                    });
-                                }
-                                return $q.reject(false);
-                            }
-
-                            if (issues.unique_name && issues.unique_name.unique) {
-                                notify.error(UNIQUE_NAME_ERROR);
-                                return $q.reject(false);
-                            }
-                        } else if (response && response.status === 412) {
-                            notifyPreconditionFailed();
-                            return $q.reject(false);
-                        } else if (warnings.length > 0) {
-                            warnings.forEach(
-                                (warning) => {
-                                    notify.error(warning.text);
-                                },
-                            );
-                            return $q.reject(false);
-                        }
-                        return $q.reject(false);
-                    });
+                return sdApi.article.publishItem_legacy(orig, item, $scope, action);
             }
 
             function notifyPreconditionFailed() {

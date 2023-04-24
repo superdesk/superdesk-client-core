@@ -95,7 +95,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                         />
 
                         <Switch
-                            label={{text: gettext('Case sensitive'), side: 'right'}}
+                            label={{content: gettext('Case sensitive'), side: 'right'}}
                             value={this.state.caseSensitive}
                             onChange={(caseSensitive) => {
                                 this.setState({caseSensitive});

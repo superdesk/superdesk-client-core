@@ -83,14 +83,14 @@ function isSelectionVocabulary(vocabulary: IVocabulary): boolean {
 
 interface IVocabulariesApi {
     getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
-    isCustomFieldVocabulary:(vocabulary: IVocabulary) => boolean;
+    isCustomFieldVocabulary: (vocabulary: IVocabulary) => boolean;
     isSelectionVocabulary: (vocabulary: IVocabulary) => boolean;
     getVocabularyItemLabel: (term: IVocabularyItem, item: IArticle) => string;
     getVocabularyItemsPreview: (
         array: Array<IVocabularyItem>,
         propertyName?: keyof IVocabularyItem,
         schemeName?: string,
-        returnArray?: boolean
+        returnArray?: boolean,
     ) => Array<string> | string;
     vocabularyItemsToString: (
         array: Array<IVocabularyItem>,

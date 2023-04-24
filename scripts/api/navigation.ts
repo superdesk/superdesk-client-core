@@ -19,7 +19,12 @@ function currentPathStartsWith(
     return true;
 }
 
+function isPersonalSpace(): boolean {
+    return !(ng.get('$location').path() === '/workspace/personal');
+}
+
 export const navigation = {
     getPath,
     currentPathStartsWith,
+    isPersonalSpace,
 };
