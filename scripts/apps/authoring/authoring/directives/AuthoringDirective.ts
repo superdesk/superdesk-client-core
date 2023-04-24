@@ -220,9 +220,7 @@ export function AuthoringDirective(
                         && !sdApi.navigation.isPersonalSpace()
                         && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
-                        && !sdApi.navigation.isPersonalSpace()
-                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                    $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)

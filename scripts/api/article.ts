@@ -258,6 +258,12 @@ function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
         && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
 }
 
+function showCloseAndContinue(item: IArticle, dirty: boolean): boolean {
+    return appConfig.features?.customAuthoringTopbar?.closeAndContinue
+        && !sdApi.navigation.isPersonalSpace()
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
+}
+
 function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
@@ -445,6 +451,7 @@ interface IArticleApi {
     getWorkQueueItems(): Array<IArticle>;
     rewrite(item: IArticle);
     canPublishOnDesk(deskType: string): boolean;
+    showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
 
@@ -484,6 +491,7 @@ export const article: IArticleApi = {
     get,
     canPublishOnDesk,
     showPublishAndContinue,
+    showCloseAndContinue,
     publishItem_legacy,
     publishItem,
 };
