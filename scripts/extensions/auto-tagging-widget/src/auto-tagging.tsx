@@ -489,7 +489,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         this.runAnalysis();
                                                     }
                                                 }}
-                                                label={{text: gettext('Run automatically')}}
+                                                label={{content: gettext('Run automatically')}}
                                             />
                                         </ButtonGroup>
                                     </div>
