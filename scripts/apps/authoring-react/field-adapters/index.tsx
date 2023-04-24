@@ -50,6 +50,7 @@ import {LINKED_ITEMS_FIELD_TYPE} from '../fields/linked-items';
 import {getKeywordsAdapter} from './keywords';
 import {dateline} from './dateline';
 import {description_text} from './description_text';
+import {body_footer} from './body_footer';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -76,6 +77,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         keywords: getKeywordsAdapter(),
         dateline: dateline,
         description_text: description_text,
+        body_footer: body_footer,
     };
 
     return adapter;
@@ -343,6 +345,7 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
 
     sdApi.vocabularies.getAll()
         .filter((vocabulary) =>
+            vocabulary._id !== 'footers' &&
             adapter[vocabulary._id] == null
             && sdApi.vocabularies.isSelectionVocabulary(vocabulary),
         )

@@ -2,6 +2,7 @@ import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
 
 function getAnnotationTypesAsync(scope) {
     ng.get('metadata').initialize()
@@ -16,7 +17,15 @@ function getAnnotationTypesAsync(scope) {
         });
 }
 
-function getAllAnnotations(item) {
+interface IAnotationData {
+    body: string;
+    id: number;
+    index: number;
+    styleName: string;
+    type: string;
+}
+
+export function getAllAnnotations(item: IArticle): Array<IAnotationData> {
     const annotations = [];
 
     for (const field in item[META_FIELD_NAME]) {

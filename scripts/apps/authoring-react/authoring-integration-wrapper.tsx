@@ -45,6 +45,7 @@ import {CompareArticleVersionsModal} from './toolbar/compare-article-versions';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getArticleAdapter} from './article-adapter';
 import {ui} from 'core/ui-utils';
+import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 
@@ -108,6 +109,18 @@ const getCompareVersionsModal = (
                 });
             }
         });
+    },
+});
+
+const getMultiEditModal = (getItem: () => IArticle): IAuthoringAction => ({
+    label: gettext('Multi-edit'),
+    onTrigger: () => {
+        showModal(({closeModal}) => (
+            <MultiEditToolbarAction
+                onClose={closeModal}
+                initiallySelectedArticle={getItem()}
+            />
+        ));
     },
 });
 
@@ -387,6 +400,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         fieldsAdapter,
                                         storageAdapter,
                                     ),
+                                    getMultiEditModal(getLatestItem),
                                     getHighlightsAction(getLatestItem),
                                     getMarkedForDesksModal(getLatestItem),
                                     getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
@@ -417,6 +431,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 authoringStorage,
                                 handleUnsavedChanges,
                                 sideWidget,
+                                onArticleChange,
                             }, readOnly) => {
                                 const OpenWidgetComponent = (() => {
                                     if (panelState.active === true) {
@@ -456,6 +471,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             onFieldsDataChange={handleFieldsDataChange}
                                             readOnly={readOnly}
                                             handleUnsavedChanges={() => handleUnsavedChanges()}
+                                            onArticleChange={onArticleChange}
                                         />
                                     );
                                 }

@@ -46,7 +46,14 @@ declare module 'superdesk-api' {
     }
 
     export interface IFieldAdapter<T> {
-        getFieldV2: (fieldEditor, fieldSchema) => IAuthoringFieldV2;
+        getFieldV2: (
+            fieldEditor,
+            fieldSchema,
+
+            // If a field depends on another field being present in the editor
+            // this function is used to check the presence of that dependency field
+            fieldExists: (fieldId: string) => boolean
+        ) => IAuthoringFieldV2;
 
         /**
          * Allows to customize where values are stored.
@@ -142,6 +149,7 @@ declare module 'superdesk-api' {
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
+        onArticleChange(item: T): void;
         save(): Promise<T>;
         initiateClosing(): void;
         keepChangesAndClose(): void;
@@ -386,6 +394,10 @@ declare module 'superdesk-api' {
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
 
+        // Users may configure predefined text
+        // snippets to append to the field
+        vocabularyId?: string;
+
         // read time, character count, word count; defaults to true
         showStatistics?: boolean;
 
@@ -594,6 +606,7 @@ declare module 'superdesk-api' {
             fieldsAdapter: IFieldsAdapter<IArticle>;
             storageAdapter: IStorageAdapter<IArticle>;
 
+            onArticleChange?(article: IArticle): void;
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
@@ -1226,6 +1239,17 @@ declare module 'superdesk-api' {
 
         // holds info on packages
         groups?: Array<any>;
+
+        creditline?: string;
+        original_source?: string;
+        ingest_provider_sequence?: string;
+        expiry?: string;
+        archive_description?: string;
+        original_id?: string;
+        originalCreator?: string;
+        versioncreator?: string;
+        archive_description?: string;
+        rewritten_by?: string;
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
