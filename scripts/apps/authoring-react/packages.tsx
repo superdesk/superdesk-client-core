@@ -20,6 +20,8 @@ type IProps = React.ComponentProps<
 
 const getLabel = () => gettext('Packages');
 
+const WIDGET_ID = 'packages-widget';
+
 function openPackage(packageItem: IArticle): void {
     if (packageItem._type === 'published') {
         openArticle(packageItem._id, 'view');
@@ -79,6 +81,7 @@ class PackagesWidget extends React.Component<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -118,7 +121,7 @@ class PackagesWidget extends React.Component<IProps, IState> {
 
 export function getPackagesWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'packages-widget',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'package',

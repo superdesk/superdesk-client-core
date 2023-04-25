@@ -17,6 +17,8 @@ import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Resolved suggestions');
 
+const WIDGET_ID = 'editor3-suggestions-widget';
+
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
@@ -217,6 +219,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -230,7 +233,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
 
 export function getSuggestionsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'editor3-suggestions-widget',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 3,
         icon: 'suggestion',

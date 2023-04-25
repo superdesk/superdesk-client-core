@@ -14,6 +14,8 @@ import {VersionsTab} from './versions-tab';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Versions and item history');
 
+const WIDGET_ID = 'versions-and-item-history';
+
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
@@ -36,6 +38,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                         customContent={(
@@ -73,7 +76,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
 
 export function getVersionsAndItemHistoryWidget() {
     const widget: IArticleSideWidget = {
-        _id: 'versions-and-item-history',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 4,
         icon: 'history',

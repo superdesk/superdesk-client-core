@@ -1964,6 +1964,7 @@ declare module 'superdesk-api' {
 
     export interface IPropsWidgetHeading {
         widgetName: string;
+        widgetId: string;
         editMode: boolean;
 
         // will only work for authoring-react

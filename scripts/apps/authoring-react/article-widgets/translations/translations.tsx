@@ -13,6 +13,8 @@ import {TranslationsBody} from './TranslationsBody';
 
 const getLabel = () => gettext('Translations');
 
+const WIDGET_ID = 'translation-widget';
+
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
@@ -23,6 +25,7 @@ class Translations extends React.Component<IProps> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -90,7 +93,7 @@ class Translations extends React.Component<IProps> {
 
 export function getTranslationsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'translation-widget',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'web',

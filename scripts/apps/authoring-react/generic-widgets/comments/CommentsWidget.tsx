@@ -19,6 +19,7 @@ import {MentionsInput, Mention} from 'react-mentions';
 import mentionsStyle from './mention.style';
 import {Comment} from './Comment';
 import {IDeskSuggestion, IUserSuggestion, IUserSuggestionData} from './interfaces';
+import {COMMENT_WIDGET_ID} from '.';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
@@ -221,6 +222,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={COMMENT_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />

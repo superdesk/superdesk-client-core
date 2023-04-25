@@ -5,13 +5,6 @@ import {IconButton} from 'superdesk-ui-framework';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps, {pinned: boolean}> {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            pinned: false,
-        }
-    }
-
     render() {
         const {
             widget,
@@ -25,16 +18,13 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                 title={customContent == null ? this.props.widgetName : ''}
                 onClose={() => this.props.closeWidget()}
                 iconButtons={widgetReactIntegration.disableWidgetPinning !== true && [
-                    <IconButton
+                    <IconButton 
                         key='pin'
                         icon='pin'
                         ariaValue='Pin'
-                        //rotate={this.state.pinned && '90'}
+                        rotate={pinned && '90'}
                         onClick={() => {
-                            //debugger;
                             pinWidget(widget);
-                            this.setState({pinned: true});
-                            console.log(this.state.pinned);
                         }}
                     />,
                 ]}

@@ -39,6 +39,8 @@ type IProps = React.ComponentProps<
 
 const getLabel = () => gettext('Macros widget');
 
+const WIDGET_ID = 'macros-widget';
+
 interface IState {
     macros: Array<IMacro> | null;
 
@@ -327,6 +329,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -384,7 +387,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
 export function getMacrosWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'macros-widget',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'macro',

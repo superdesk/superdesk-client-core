@@ -15,8 +15,8 @@ import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 export class AuthoringWidgetHeading extends React.Component<IPropsWidgetHeading> {
     render() {
         const widget = widgetReactIntegration.getActiveWidget();
-        const pinned = widgetReactIntegration.getPinnedWidget() === this.props.widgetName;
-        const {pinWidget, WidgetHeaderComponent} = widgetReactIntegration;
+        const pinned = widgetReactIntegration.getPinnedWidget() === this.props.widgetId;
+        const {pinWidget, WidgetHeaderComponent} = widgetReactIntegration;     
 
         return (
             <WidgetHeaderComponent

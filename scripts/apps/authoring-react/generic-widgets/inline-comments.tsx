@@ -18,6 +18,8 @@ import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Inline comments');
 
+const WIDGET_ID = 'inline-comments-widget';
+
 type IProps<T> = React.ComponentProps<IGenericSideWidget<T>['component']>;
 
 type IInlineCommentsTab = 'resolved' | 'unresolved';
@@ -220,6 +222,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -233,7 +236,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
 
 export function getInlineCommentsWidgetGeneric<T>() {
     const metadataWidget: IGenericSideWidget<T> = {
-        _id: 'inline-comments-widget-generic',
+        _id: WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'comments',
