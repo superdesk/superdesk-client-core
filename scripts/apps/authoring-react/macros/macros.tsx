@@ -340,7 +340,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                             <>
                                 {this.state.displayGrouped !== 'not-supported' && (
                                     <Switch
-                                        label={{text: gettext('Group Macros')}}
+                                        label={{content: gettext('Group Macros')}}
                                         value={this.state.displayGrouped}
                                         onChange={() =>
                                             this.setState({displayGrouped: !this.state.displayGrouped})

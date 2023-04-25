@@ -1,5 +1,9 @@
 import * as React from 'react';
-import {IEditorComponentProps, IEditor3ValueOperational, IEditor3Config} from 'superdesk-api';
+import {
+    IEditorComponentProps,
+    IEditor3ValueOperational,
+    IEditor3Config,
+} from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
 import {
     initializeSpellchecker,
@@ -21,6 +25,7 @@ import {
     multiReplace,
     patchHTMLonEditorState,
     setEditorStateFromItem,
+    changeEditorState,
 } from 'core/editor3/actions';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -34,6 +39,10 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
+import {ContentState, EditorState, Modifier} from 'draft-js';
+import {Select, Option} from 'superdesk-ui-framework/react';
+import {appendText} from 'core/editor3/helpers/draftInsertEntity';
+import {SpacerBlock} from 'core/ui/components/Spacer';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -402,10 +411,43 @@ export class Editor extends React.PureComponent<IProps, IState> {
             </div>
         );
 
+        const options = this.props.config.vocabularyId != null
+            ? this.props.getVocabularyItems(this.props.config.vocabularyId)
+            : null;
+
         return (
             <Container miniToolbar={miniToolbar}>
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
+                        {
+                            options != null && (
+                                <>
+                                    <Select
+                                        value=""
+                                        onChange={(value) => {
+                                            const editorState: EditorState = this.props.value.store
+                                                .getState().editorState;
+
+                                            this.props.value.store.dispatch(
+                                                changeEditorState(appendText(value as string, editorState)),
+                                            );
+                                        }}
+                                        label=""
+                                        labelHidden
+                                    >
+                                        <Option value="" />
+                                        {
+                                            options.map((vocabularyItem, i) => (
+                                                <Option key={i} value={vocabularyItem.value}>
+                                                    {vocabularyItem.value}
+                                                </Option>
+                                            ))
+                                        }
+                                    </Select>
+                                    <SpacerBlock v gap="16" />
+                                </>
+                            )
+                        }
                         <Editor3
                             scrollContainer=".sd-editor-content__main-container"
                             singleLine={config.singleLine ?? false}

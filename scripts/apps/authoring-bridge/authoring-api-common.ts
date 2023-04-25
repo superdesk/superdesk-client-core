@@ -5,6 +5,7 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {isArticleLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
 import ng from 'core/services/ng';
 import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from 'apps/authoring/authoring/services/authoring-helpers';
+import {appConfig} from 'appConfig';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;
@@ -23,12 +24,20 @@ export interface IAuthoringApiCommon {
      * and item is not locked.
      */
     closeAuthoringForce(): void;
+    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean) => boolean;
 }
 
 /**
  * Immutable API that is used in both - angularjs and reactjs based authoring code.
  */
 export const authoringApiCommon: IAuthoringApiCommon = {
+    checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean): boolean => {
+        if (personal) {
+            return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
+        }
+
+        return item.task && item.task.desk && item.state !== 'draft' || dirty;
+    },
     saveBefore: (current, original) => {
         return runBeforeUpdateMiddlware(current, original);
     },

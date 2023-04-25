@@ -1,7 +1,6 @@
 import React from 'react';
 import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
 import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
-import {nameof} from 'core/helpers/typescript-helpers';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
@@ -83,7 +82,7 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
                                 markedHighlights: value.map(({_id}) => _id),
                             });
                         }}
-                        optionLabel={(highlight) => highlight.name}
+                        optionLabel={(option) => option.name}
                         options={state.availableHighlights}
                         value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
                     />

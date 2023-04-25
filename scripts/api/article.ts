@@ -1,18 +1,23 @@
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
-import {patchArticle} from './article-patch';
-import ng from 'core/services/ng';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
-import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
-import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
-import {sendItems} from './article-send';
-import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
-import {appConfig} from 'appConfig';
-import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
+import {appConfig, extensions} from 'appConfig';
+import {ITEM_STATE, KILLED_STATES, PUBLISHED_STATES} from 'apps/archive/constants';
+import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {dataApi} from 'core/helpers/CrudManager';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {copyJson} from 'core/helpers/utils';
+import {ISendToDestination, ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
+import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
+import {notify} from 'core/notify/notify';
+import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
+import {flatMap, trim} from 'lodash';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {duplicateItems} from './article-duplicate';
+import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
+import {patchArticle} from './article-patch';
+import {sendItems} from './article-send';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -176,6 +181,171 @@ function createNewUsingDeskTemplate(): void {
 }
 
 /**
+ * Checks if associations is with rewrite_of item then open then modal to add associations.
+ * The user has options to add associated media to the current item and review the media change
+ * or publish the current item without media.
+ * User will be prompted in following scenarios:
+ * 1. Edit feature image and confirm media update is enabled.
+ * 2. Once item is published then no confirmation.
+ * 3. If current item is update and updated story has associations
+ */
+function checkMediaAssociatedToUpdate(
+    item: IArticle,
+    action: string,
+    autosave: (item: IArticle) => void,
+): Promise<boolean> {
+    if (!appConfig.features?.confirmMediaOnUpdate
+        || !appConfig.features?.editFeaturedImage
+        || !item.rewrite_of
+        || ['kill', 'correct', 'takedown'].includes(action)
+        || item.associations?.featuremedia
+    ) {
+        return Promise.resolve(true);
+    }
+
+    return ng.get('api').find('archive', item.rewrite_of)
+        .then((rewriteOfItem) => {
+            if (rewriteOfItem?.associations?.featuremedia) {
+                return ng.get('confirm').confirmFeatureMedia(rewriteOfItem);
+            }
+
+            return true;
+        })
+        .then((result) => {
+            if (result?.associations) {
+                item.associations = result.associations;
+                autosave(item);
+                return false;
+            }
+
+            return true;
+        });
+}
+
+function notifyPreconditionFailed($scope: any) {
+    notify.error(gettext('Item has changed since it was opened. ' +
+        'Please close and reopen the item to continue. ' +
+        'Regrettably, your changes cannot be saved.'));
+    $scope._editable = false;
+    $scope.dirty = false;
+}
+
+interface IScope {
+    item?: IArticle;
+    error?: {};
+    autosave?: (item: IArticle) => void;
+    dirty?: boolean;
+    $applyAsync?: () => void;
+    origItem?: IArticle;
+}
+
+function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle> {
+    const scope: IScope = {};
+
+    return publishItem_legacy(orig, item, scope)
+        .then((published) => published ? scope.item : published);
+}
+
+function canPublishOnDesk(deskType: string): boolean {
+    return !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+        ng.get('privileges').privileges.userHasPrivileges({publish: 1});
+}
+
+function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
+    return appConfig.features?.customAuthoringTopbar?.publishAndContinue
+        && sdApi.navigation.isPersonalSpace()
+        && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
+}
+
+function publishItem_legacy(
+    orig: IArticle,
+    item: IArticle,
+    scope: IScope,
+    action: string = 'publish',
+): Promise<boolean> {
+    let warnings: Array<{text: string}> = [];
+    const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
+
+    scope.error = {};
+
+    return flatMap(
+        Object.values(extensions).map(({activationResult}) => activationResult),
+        (activationResult) => activationResult.contributions?.entities?.article?.onPublish ?? [],
+    ).reduce((current, next) => {
+        return current.then((result) => {
+            if ((result?.warnings?.length ?? 0) > 0) {
+                warnings = warnings.concat(result.warnings);
+            }
+
+            return next(Object.assign({
+                _id: orig._id,
+                type: orig.type,
+            }, item));
+        });
+    }, initialValue)
+        .then((result) => {
+            if ((result?.warnings?.length ?? 0) > 0) {
+                warnings = warnings.concat(result.warnings);
+            }
+
+            return result;
+        })
+        .then(() => checkMediaAssociatedToUpdate(item, action, scope.autosave))
+        .then((result) => (result && warnings.length < 1
+            ? ng.get('authoring').publish(orig, item, action)
+            : Promise.reject(false)
+        ))
+        .then((response: IArticle) => {
+            notify.success(gettext('Item published.'));
+            scope.item = response;
+            scope.dirty = false;
+            ng.get('authoringWorkspace').close(true);
+
+            return true;
+        })
+        .catch((response) => {
+            const issues = response.data._issues;
+            const errors = issues?.['validator exception'];
+
+            if (errors != null) {
+                const modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
+
+                modifiedErrors.forEach((error) => {
+                    const message = trim(error, '\' ');
+                    // the message format is 'Field error text' (contains ')
+                    const field = message.split(' ')[0];
+
+                    scope.error[field.toLocaleLowerCase()] = true;
+                    notify.error(message);
+                });
+
+                if (errors.fields) {
+                    Object.assign(scope.error, errors.fields);
+                }
+
+                scope.$applyAsync(); // make $scope.error changes visible
+
+                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
+                    ng.get('authoring').open(item._id, true).then((res) => {
+                        scope.origItem = res;
+                        scope.dirty = false;
+                        scope.item = copyJson(scope.origItem);
+                    });
+                }
+            } else if (issues?.unique_name?.unique) {
+                notify.error(gettext('Error: Unique Name is not unique.'));
+            } else if (response && response.status === 412) {
+                notifyPreconditionFailed(scope);
+            } else if (warnings.length > 0) {
+                warnings.forEach((warning) => notify.error(warning.text));
+            }
+
+            return Promise.reject(false);
+        });
+}
+
+/**
  * Gets opened items from your workspace.
  */
 function getWorkQueueItems(): Array<IArticle> {
@@ -269,6 +439,14 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
+    canPublishOnDesk(deskType: string): boolean;
+    showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
+    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
+
+    // Instead of passing a fake scope from React
+    // every time to the publishItem_legacy we can use this function which
+    // creates a fake scope for us.
+    publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
 }
 
 export const article: IArticleApi = {
@@ -298,4 +476,8 @@ export const article: IArticleApi = {
     createNewUsingDeskTemplate,
     getWorkQueueItems,
     get,
+    canPublishOnDesk,
+    showPublishAndContinue,
+    publishItem_legacy,
+    publishItem,
 };
