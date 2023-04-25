@@ -3,18 +3,25 @@ import {Select, Option, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getTextColor} from 'core/helpers/utils';
-import {ThemeSelector} from './theme-selector';
-import {IFontSizeOptions, ITheme} from './proofreading-theme-modal';
+import {IBackgroundColor, BackgroundColorSelector} from './theme-selector';
+import {IFontSizeOption, ITheme} from './proofreading-theme-modal';
 import {getUiThemeFontSize, getUiThemeFontSizeHeading} from '../authoring-react';
+import classNames from 'classnames';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IPropsPanel {
     theme: ITheme;
     title: string;
-    badge: string;
+    badgeColor: 'green' | 'grey';
     onChange: (val: ITheme) => void;
 }
 
-export const availableThemes = [
+interface fontOption {
+    value: IFontSizeOption;
+    label: string;
+}
+
+export const availableThemes: Array<IBackgroundColor> = [
     {name: 'default', color: '#ffffff', secondaryColor: '#f3f5f6'},
     {name: 'dark', color: '#1b1e19', secondaryColor: '#23282e'},
     {name: 'blue', color: '#06356a', secondaryColor: '#073e7d'},
@@ -23,7 +30,7 @@ export const availableThemes = [
     {name: 'natural', color: '#efe9c5', secondaryColor: '#ebe3b7'},
 ];
 
-export const fontOptions = [
+export const fontOptions: Array<fontOption> = [
     {value: 'small', label: 'S'},
     {value: 'medium', label: 'M'},
     {value: 'large', label: 'L'},
@@ -46,17 +53,34 @@ export const availableFonts = [
 
 export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
     render(): React.ReactNode {
+
         return (
             <div className='proofreading-panel'>
                 <div className='proofreading-panel-header'>
                     <Spacer v gap='16'>
                         <h2 className="proofreading-panel__heading">
                             <Spacer justifyContent="start" alignItems="center" gap="4" noGrow>
-                                <span className={`proofreading-panel__badge proofreading-panel__badge--${this.props.badge}`}>
-                                    &nbsp;
-                                </span>
+                                {
+                                    (() => {
+                                        let badgeClasses: string = 'proofreading-panel__badge';
+
+                                        if (this.props.badgeColor === 'green') {
+                                            badgeClasses += ' proofreading-panel__badge--green';
+                                        } else if (this.props.badgeColor === 'grey') {
+                                            badgeClasses += ' proofreading-panel__badge--grey';
+                                        } else {
+                                            assertNever(this.props.badgeColor);
+                                        }
+
+                                        return (
+                                            <span className={badgeClasses}>
+                                                &nbsp;
+                                            </span>
+                                        )
+                                    })()
+                                }
                                 <span>
-                                    {gettext(this.props.title)}
+                                    {this.props.title}
                                 </span>
                             </Spacer>
                         </h2>
@@ -78,8 +102,8 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                             </Select>
                         </div>
 
-                        <ThemeSelector
-                            value={this.props.theme.theme}
+                        <BackgroundColorSelector
+                            value={availableThemes.find(e => e.color === this.props.theme.theme)}
                             options={availableThemes}
                             onChange={(item) => {
                                 this.props.onChange({
@@ -119,7 +143,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                     value={this.props.theme.headline}
                                     group={{align: 'end'}}
                                     options={fontOptions}
-                                    onChange={(value: IFontSizeOptions) => {
+                                    onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({
                                             ...this.props.theme,
                                             headline: value,
@@ -149,7 +173,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                     value={this.props.theme.abstract}
                                     group={{align: 'end'}}
                                     options={fontOptions}
-                                    onChange={(value: IFontSizeOptions) => {
+                                    onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({
                                             ...this.props.theme,
                                             abstract: value,
@@ -179,7 +203,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                     value={this.props.theme.body}
                                     group={{align: 'end'}}
                                     options={fontOptions}
-                                    onChange={(value: IFontSizeOptions) => {
+                                    onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({
                                             ...this.props.theme,
                                             body: value,

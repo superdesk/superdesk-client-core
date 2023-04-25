@@ -48,10 +48,9 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
-import {IFontSizeOptions, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
-import classNames from 'classnames';
 
 export function getFieldsData<T>(
     item: T,
@@ -214,7 +213,7 @@ function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>): IKeyBin
         }, {});
 }
 
-export const getUiThemeFontSize = (value: IFontSizeOptions) => {
+export const getUiThemeFontSize = (value: IFontSizeOption) => {
     if (value === 'small') {
         return '1.4rem';
     } else if (value === 'medium') {
@@ -226,7 +225,7 @@ export const getUiThemeFontSize = (value: IFontSizeOptions) => {
     }
 };
 
-export const getUiThemeFontSizeHeading = (value: IFontSizeOptions) => {
+export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
     if (value === 'small') {
         return '2.3rem';
     } else if (value === 'medium') {
@@ -1314,6 +1313,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     }
                                     main={(
                                         <Layout.AuthoringMain
+                                            noPaddingForContent
                                             headerCollapsed={this.props.headerCollapsed}
                                             toolBar={this.props.hideSecondaryToolbar ? undefined : (
                                                 <React.Fragment>
@@ -1369,33 +1369,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 </React.Fragment>
                                             )}
                                             authoringHeader={(
-                                                <div>
-                                                    <AuthoringSection
-                                                        fields={state.profile.header}
-                                                        fieldsData={state.fieldsDataWithChanges}
-                                                        onChange={this.handleFieldChange}
-                                                        language={getLanguage(state.itemWithChanges)}
-                                                        userPreferencesForFields={state.userPreferencesForFields}
-                                                        useHeaderLayout
-                                                        setUserPreferencesForFields={this.setUserPreferences}
-                                                        getVocabularyItems={this.getVocabularyItems}
-                                                        toggledFields={state.toggledFields}
-                                                        toggleField={this.toggleField}
-                                                        readOnly={readOnly}
-                                                        validationErrors={state.validationErrors}
-                                                        item={state.itemWithChanges}
-                                                    />
-                                                </div>
-                                            )}
-                                        >
-                                            <div>
                                                 <AuthoringSection
-                                                    uiTheme={uiTheme}
-                                                    fields={state.profile.content}
+                                                    fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
+                                                    useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
                                                     toggledFields={state.toggledFields}
@@ -1404,7 +1384,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
                                                 />
-                                            </div>
+                                            )}
+                                        >
+                                            <AuthoringSection
+                                                uiTheme={uiTheme}
+                                                padding='3.2rem 4rem 5.2rem 4rem'
+                                                fields={state.profile.content}
+                                                fieldsData={state.fieldsDataWithChanges}
+                                                onChange={this.handleFieldChange}
+                                                language={getLanguage(state.itemWithChanges)}
+                                                userPreferencesForFields={state.userPreferencesForFields}
+                                                setUserPreferencesForFields={this.setUserPreferences}
+                                                getVocabularyItems={this.getVocabularyItems}
+                                                toggledFields={state.toggledFields}
+                                                toggleField={this.toggleField}
+                                                readOnly={readOnly}
+                                                validationErrors={state.validationErrors}
+                                                item={state.itemWithChanges}
+                                            />
                                         </Layout.AuthoringMain>
                                     )}
                                     sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}

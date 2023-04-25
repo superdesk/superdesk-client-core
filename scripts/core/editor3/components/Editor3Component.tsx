@@ -553,7 +553,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
             /**
-                There is global theming and article-edit specific.
+                There is global theming and article-edit specific one.
                 When inside article-edit we always pass a theme,
                 otherwise we want to use Editor3-single-line-style for global theme styling.
             */

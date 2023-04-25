@@ -33,6 +33,7 @@ export interface IPropsAuthoringSection<T> {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     validationErrors: IAuthoringValidationErrors;
+    padding?: string | number;
     uiTheme?: IAuthoringSectionTheme;
     item: T;
 }
@@ -59,15 +60,16 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
 
     render() {
         const {toggledFields} = this.props;
-        const themeApplies = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null);
+        const themeApplies: boolean = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
 
         return (
             <div
                 style={{
-                    backgroundColor: themeApplies && this.props.uiTheme.backgroundColor,
+                    backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '20px',
+                    padding: this.props.padding,
                 }}
             >
                 {

@@ -11,12 +11,12 @@ export interface ITheme {
     themeColorSecondary: string;
     textColor: string;
     fontFamily: string;
-    headline: IFontSizeOptions;
-    abstract: IFontSizeOptions;
-    body: IFontSizeOptions;
+    headline: IFontSizeOption;
+    abstract: IFontSizeOption;
+    body: IFontSizeOption;
 }
 
-export type IFontSizeOptions = 'small' | 'medium' | 'large';
+export type IFontSizeOption = 'small' | 'medium' | 'large';
 
 interface IState {
     defaultTheme?: ITheme;
@@ -95,7 +95,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     <ProofreadingThemePanel
                         theme={this.state.defaultTheme}
                         title={gettext('Default Theme')}
-                        badge='success'
+                        badgeColor='green'
                         onChange={(theme: ITheme) => {
                             this.setState({defaultTheme: theme});
                         }}
@@ -103,7 +103,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     <ProofreadingThemePanel
                         theme={this.state.proofReadingTheme}
                         title={gettext('Proofreading Theme')}
-                        badge='light'
+                        badgeColor='grey'
                         onChange={(theme: ITheme) => {
                             this.setState({proofReadingTheme: theme});
                         }}

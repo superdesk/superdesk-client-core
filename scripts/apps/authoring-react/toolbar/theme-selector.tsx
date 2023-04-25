@@ -1,29 +1,33 @@
 import React from 'react';
 import {getTextColor} from 'core/helpers/utils';
+import classNames from 'classnames';
 
 interface IPropsThemeSelector {
-    value: string;
+    value: IBackgroundColor;
     options: Array<IBackgroundColor>;
     onChange(value: IBackgroundColor): void;
 }
 
-interface IBackgroundColor {
+export interface IBackgroundColor {
     name: string;
     color: string;
     secondaryColor: string;
 }
 
-export class ThemeSelector extends React.Component<IPropsThemeSelector> {
+export class BackgroundColorSelector extends React.Component<IPropsThemeSelector> {
     render() {
+        
         return (
             <div className="color-selector__list">
                 {this.props.options.map((item, index: number) => {
+                    const swatchClasses = classNames('color-selector__swatch', {
+                        'color-selector__swatch--selected': this.props.value === item,
+                    })
+                    
                     return (
                         <div
                             key={index}
-                            className={
-                                `color-selector__swatch ${this.props.value === item.color ? 'color-selector__swatch--selected' : ''}`
-                            }
+                            className={swatchClasses}
                         >
                             <span
                                 className="color-selector__swatch-content"

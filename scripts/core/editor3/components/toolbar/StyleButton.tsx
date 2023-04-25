@@ -5,11 +5,11 @@ import {gettext} from 'core/utils';
 import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
 
 interface IPropsStyleButton {
-    onToggle: any;
+    onToggle?(style: string, active: boolean): void;
     uiTheme?: IAuthoringSectionTheme;
-    style: string;
-    active: boolean;
-    label: string;
+    style?: string;
+    active?: boolean;
+    label?: string;
 };
 
 const StyleIcons = {
@@ -39,7 +39,7 @@ const StyleIcons = {
  * @name StyleButton
  * @description Toolbar button that can be toggled.
  */
-export default class StyleButton extends React.Component<IPropsStyleButton, any> {
+export default class StyleButton extends React.Component<IPropsStyleButton> {
     static propTypes: any;
     static defaultProps: any;
 
