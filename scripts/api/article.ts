@@ -248,7 +248,7 @@ function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle
 
 function canPublishOnDesk(deskType: string): boolean {
     return !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-        ng.get('privileges').privileges.userHasPrivileges({publish: 1});
+        ng.get('privileges').privileges === 1;
 }
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
