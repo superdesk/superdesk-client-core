@@ -205,24 +205,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             availableOffline: false,
         });
 
-        if (sdApi.highlights.showHighlightExportButton(item)) {
-            actions.push({
-                group: 'end',
-                priority: 0.4,
-                component: () => (
-                    <Button
-                        type="default"
-                        onClick={() => {
-                            sdApi.highlights.exportHighlight(item._id, hasUnsavedChanges());
-                        }}
-                        text={gettext('Export')}
-                        style="filled"
-                    />
-                ),
-                availableOffline: false,
-            });
-        }
-
         if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
             actions.push({
                 group: 'middle',

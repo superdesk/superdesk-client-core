@@ -120,7 +120,7 @@ export function AuthoringDirective(
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
-            $scope.showExportButton = sdApi.highlights.showHighlightExportButton($scope.origItem);
+            $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
             $scope.openCompareVersions = (item) => compareVersions.init(item);
             $scope.isValidEmbed = {};
@@ -313,15 +313,45 @@ export function AuthoringDirective(
              * Export the list of highlights as a text item.
              */
             $scope.exportHighlight = function(item) {
-                sdApi.highlights.exportHighlight(item._id, $scope.save_enabled());
+                if ($scope.save_enabled()) {
+                    modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
+                        .then(() => {
+                            _exportHighlight(item._id);
+                        },
+                        );
+                } else {
+                    _exportHighlight(item._id);
+                }
             };
 
+            function _exportHighlight(_id) {
+                api.generate_highlights.save({}, {package: _id})
+                    .then(authoringWorkspace.edit, (response) => {
+                        if (response.status === 403) {
+                            _forceExportHighlight(_id);
+                        } else {
+                            notify.error(gettext('Error creating highlight.'));
+                        }
+                    });
+            }
+
+            function _forceExportHighlight(_id) {
+                modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
+                    .then(() => {
+                        api.generate_highlights.save({}, {package: _id, export: true})
+                            .then(authoringWorkspace.edit, (response) => {
+                                notify.error(gettext('Error creating highlight.'));
+                            });
+                    });
+            }
+
             function _previewHighlight(_id) {
-                sdApi.highlights.previewHighlight(_id).then((res) => {
-                    $scope.highlight_preview = res;
-                }).catch((err) => {
-                    $scope.highlight_preview = err;
-                });
+                api.generate_highlights.save({}, {package: _id, preview: true})
+                    .then((response) => {
+                        $scope.highlight_preview = response.body_html;
+                    }, (data) => {
+                        $scope.highlight_preview = data.message;
+                    });
             }
 
             if ($scope.origItem.highlight) {
