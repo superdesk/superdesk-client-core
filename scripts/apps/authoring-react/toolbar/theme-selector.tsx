@@ -16,14 +16,13 @@ export interface IBackgroundColor {
 
 export class BackgroundColorSelector extends React.Component<IPropsThemeSelector> {
     render() {
-        
         return (
             <div className="color-selector__list">
                 {this.props.options.map((item, index: number) => {
                     const swatchClasses = classNames('color-selector__swatch', {
                         'color-selector__swatch--selected': this.props.value === item,
-                    })
-                    
+                    });
+
                     return (
                         <div
                             key={index}

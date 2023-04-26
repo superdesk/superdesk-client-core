@@ -16,7 +16,7 @@ interface IPropsPanel {
     onChange: (val: ITheme) => void;
 }
 
-interface fontOption {
+interface IFontOption {
     value: IFontSizeOption;
     label: string;
 }
@@ -30,7 +30,7 @@ export const availableThemes: Array<IBackgroundColor> = [
     {name: 'natural', color: '#efe9c5', secondaryColor: '#ebe3b7'},
 ];
 
-export const fontOptions: Array<fontOption> = [
+export const fontOptions: Array<IFontOption> = [
     {value: 'small', label: 'S'},
     {value: 'medium', label: 'M'},
     {value: 'large', label: 'L'},
@@ -53,11 +53,15 @@ export const availableFonts = [
 
 export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
     render(): React.ReactNode {
+        let classes = 'proofreading-panel-content__text-field';
+        let headlineClasses = `${classes} proofreading-panel-content__text-field--headline`;
+        let bodyClasses = `${classes} proofreading-panel-content__text-field--body`;
+        let abstractClasses = `${classes} proofreading-panel-content__text-field--abstract`;
 
         return (
-            <div className='proofreading-panel'>
-                <div className='proofreading-panel-header'>
-                    <Spacer v gap='16'>
+            <div className="proofreading-panel">
+                <div className="proofreading-panel-header">
+                    <Spacer v gap="16">
                         <h2 className="proofreading-panel__heading">
                             <Spacer justifyContent="start" alignItems="center" gap="4" noGrow>
                                 {
@@ -76,7 +80,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                             <span className={badgeClasses}>
                                                 &nbsp;
                                             </span>
-                                        )
+                                        );
                                     })()
                                 }
                                 <span>
@@ -103,7 +107,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         </div>
 
                         <BackgroundColorSelector
-                            value={availableThemes.find(e => e.color === this.props.theme.theme)}
+                            value={availableThemes.find((theme) => theme.color === this.props.theme.theme)}
                             options={availableThemes}
                             onChange={(item) => {
                                 this.props.onChange({
@@ -124,12 +128,14 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         color: getTextColor(this.props.theme.theme),
                     }}
                 >
-                    <Spacer v gap='16'>
+                    <Spacer v gap="16">
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">{gettext('Headline')}</label>
+                            <label className="proofreading-panel-content__label">
+                                {gettext('Headline')}
+                            </label>
 
                             <div
-                                className="proofreading-panel-content__text-field proofreading-panel-content__text-field--headline"
+                                className={headlineClasses}
                                 style={{
                                     fontFamily: this.props.theme.fontFamily,
                                     fontSize: getUiThemeFontSizeHeading(this.props.theme.headline),
@@ -154,10 +160,12 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         </div>
 
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">{gettext('Abstract')}</label>
+                            <label className="proofreading-panel-content__label">
+                                {gettext('Abstract')}
+                            </label>
 
                             <div
-                                className="proofreading-panel-content__text-field proofreading-panel-content__text-field--abstract"
+                                className={abstractClasses}
                                 style={{
                                     fontFamily: this.props.theme.fontFamily,
                                     fontSize: getUiThemeFontSize(this.props.theme.abstract),
@@ -184,10 +192,12 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         </div>
 
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">{gettext('Body')}</label>
+                            <label className="proofreading-panel-content__label">
+                                {gettext('Body')}
+                            </label>
 
                             <div
-                                className="proofreading-panel-content__text-field proofreading-panel-content__text-field--body"
+                                className={bodyClasses}
                                 style={{
                                     fontFamily: this.props.theme.fontFamily,
                                     fontSize: getUiThemeFontSize(this.props.theme.body),

@@ -60,7 +60,8 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
 
     render() {
         const {toggledFields} = this.props;
-        const themeApplies: boolean = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
+        const themeApplies: boolean
+            = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
 
         return (
             <div

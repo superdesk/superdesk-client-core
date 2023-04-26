@@ -95,7 +95,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     <ProofreadingThemePanel
                         theme={this.state.defaultTheme}
                         title={gettext('Default Theme')}
-                        badgeColor='green'
+                        badgeColor="green"
                         onChange={(theme: ITheme) => {
                             this.setState({defaultTheme: theme});
                         }}
@@ -103,7 +103,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     <ProofreadingThemePanel
                         theme={this.state.proofReadingTheme}
                         title={gettext('Proofreading Theme')}
-                        badgeColor='grey'
+                        badgeColor="grey"
                         onChange={(theme: ITheme) => {
                             this.setState({proofReadingTheme: theme});
                         }}

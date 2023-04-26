@@ -1350,7 +1350,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                                     onClick={() => {
                                                                         this.setState({
                                                                             ...state,
-                                                                            proofreadingEnabled: !state.proofreadingEnabled,
+                                                                            proofreadingEnabled:
+                                                                                !state.proofreadingEnabled,
                                                                         });
                                                                     }}
                                                                 />
@@ -1388,7 +1389,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         >
                                             <AuthoringSection
                                                 uiTheme={uiTheme}
-                                                padding='3.2rem 4rem 5.2rem 4rem'
+                                                padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}

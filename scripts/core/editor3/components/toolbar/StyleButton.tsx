@@ -10,7 +10,7 @@ interface IPropsStyleButton {
     style?: string;
     active?: boolean;
     label?: string;
-};
+}
 
 const StyleIcons = {
     bold: 'icon-bold',
