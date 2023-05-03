@@ -10,7 +10,6 @@ import {nameof} from 'core/helpers/typescript-helpers';
 interface IProps {
     onSelect(template: ITemplate): void;
     back(): void;
-    height: number;
 }
 
 interface IState {
@@ -76,12 +75,12 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                 {
                     <WithPagination
                         getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
-                            .then((res) => Promise.resolve({items: res._items, itemCount: res._meta.total}))
+                            .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
                     >
                         {
                             (items: Array<ITemplate>) => (
-                                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                <Spacer v alignItems="center" gap="8">
                                     {
                                         items.map((item) => {
                                             return (
@@ -100,7 +99,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                                             );
                                         })
                                     }
-                                </div>
+                                </Spacer>
                             )
                         }
                     </WithPagination>
