@@ -317,7 +317,7 @@ export function AuthoringDirective(
             };
 
             function _previewHighlight(_id) {
-                sdApi.highlights.previewHighlight(_id).then((res) => {
+                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
                     $scope.highlight_preview = res;
                 }).catch((err) => {
                     $scope.highlight_preview = err;
