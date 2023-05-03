@@ -389,7 +389,7 @@ function isEditable(_article: IArticle): boolean {
     }
 }
 
-function rewrite(item: IArticle) {
+function rewrite(item: IArticle): void {
     return ng.get('authoring').rewrite(item);
 }
 
@@ -449,7 +449,7 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
-    rewrite(item: IArticle);
+    rewrite(item: IArticle): void;
     canPublishOnDesk(deskType: string): boolean;
     showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
