@@ -101,21 +101,14 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
+        item: {
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
+        },
         action?: IAuthoringAction,
-    ) {
-        if (item) {
-            // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (
-                item._type === 'externalsource'
-                && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
-            ) {
-                return;
-            }
-            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
-        } else {
-            this.close();
-        }
+    ) { // FIXME: action as any
+        return sdApi.article.edit(item, action as any);
     }
 
     /**

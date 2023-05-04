@@ -12,7 +12,7 @@ import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {flatMap, trim} from 'lodash';
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {IArticle, IAuthoringAction, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
@@ -248,7 +248,7 @@ function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle
 
 function canPublishOnDesk(deskType: string): boolean {
     return !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-        ng.get('privileges').privileges.userHasPrivileges({publish: 1});
+        ng.get('privileges').privileges.publish === 1;
 }
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
@@ -343,6 +343,36 @@ function publishItem_legacy(
 
             return Promise.reject(false);
         });
+}
+
+function edit(
+    item: {
+        _id: IArticle['_id'],
+        _type?: IArticle['_type'],
+        state?: IArticle['state']
+    },
+    action?: IAuthoringAction,
+): void {
+    if (item != null) {
+        // disable edit of external ingest sources
+        // that are not editable (editFeaturedImage false or not available)
+
+        if (
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+        ) {
+            return;
+        }
+
+        ng.get('authoringWorkspace').authoringOpen(
+            item._id,
+            action || 'edit',
+            item._type || null,
+            item.state === 'being_corrected',
+        );
+    } else {
+        ng.get('authoringWorkspace').close();
+    }
 }
 
 /**
@@ -447,6 +477,14 @@ interface IArticleApi {
     // every time to the publishItem_legacy we can use this function which
     // creates a fake scope for us.
     publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
+    edit(
+        item: {
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
+        },
+        action?: IAuthoringAction,
+    ): void;
 }
 
 export const article: IArticleApi = {
@@ -480,4 +518,5 @@ export const article: IArticleApi = {
     showPublishAndContinue,
     publishItem_legacy,
     publishItem,
+    edit,
 };

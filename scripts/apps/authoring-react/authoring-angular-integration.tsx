@@ -30,6 +30,7 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 
 export interface IProps {
+    action?: string;
     itemId: IArticle['_id'];
 }
 
@@ -38,7 +39,7 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAuthoringOptions<IArticle> {
+function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: string): IAuthoringOptions<IArticle> {
     const {
         item,
         hasUnsavedChanges,
@@ -233,6 +234,24 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             });
         }
 
+        if (action === 'view' && !item._editable) {
+            actions.push({
+                group: 'middle',
+                priority: 0.4,
+                component: ({entity}) => (
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state});
+                        }}
+                        text={gettext('Edit')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
         // FINISH: ensure locking is available in generic version of authoring
         actions.push({
             group: 'start',
@@ -414,7 +433,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={getInlineToolbarActions}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
                     authoringStorage={authoringStorageIArticle}
                 />
             </div>
