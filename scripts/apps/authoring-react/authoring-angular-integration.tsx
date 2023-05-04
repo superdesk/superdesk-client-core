@@ -3,7 +3,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, NavButton, Popover} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, Label, NavButton, Popover} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -144,11 +144,46 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         availableOffline: true,
     });
 
+    const getReadOnlyAndArchivedFrom = (): Array<ITopBarWidget<IArticle>> => {
+        const actions: Array<ITopBarWidget<IArticle>> = [];
+
+        if (item._type === 'archived') {
+            actions.push({
+                group: 'start',
+                availableOffline: false,
+                component: () => (
+                    <span>
+                        <b>
+                            {gettext('Archived from')}
+                            {sdApi.desks.getDeskById(item.task.desk).name}
+                            /
+                            {sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage)}
+                        </b>
+                    </span>
+                ),
+                priority: 0.2,
+            });
+        }
+
+        if (item._type !== 'archived' && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly) {
+            actions.push({
+                group: 'start',
+                availableOffline: false,
+                component: () => (
+                    <Label text={gettext('Read-only')} style="filled" type="warning" />
+                ),
+                priority: 0.3,
+            });
+        }
+
+        return actions;
+    };
+
     switch (itemState) {
     case ITEM_STATE.DRAFT:
         return {
             readOnly: false,
-            actions: [saveButton, minimizeButton],
+            actions: [saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
         };
 
     case ITEM_STATE.SUBMITTED:
@@ -160,6 +195,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         const actions: Array<ITopBarWidget<IArticle>> = [
             minimizeButton,
             closeButton,
+            ...getReadOnlyAndArchivedFrom(),
         ];
 
         if (item.highlights != null) {
