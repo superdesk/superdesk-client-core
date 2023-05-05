@@ -196,7 +196,6 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             minimizeButton,
             closeButton,
             ...getReadOnlyAndArchivedFrom(),
-            ...getReadOnlyAndArchivedFrom(),
         ];
 
         if (item.highlights != null) {
