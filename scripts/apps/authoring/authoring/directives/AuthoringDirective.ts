@@ -165,7 +165,9 @@ export function AuthoringDirective(
                         $scope.deskName = $scope.origItem.task.desk;
                         $scope.stage = $scope.origItem.task.stage;
                     } else {
-                        api('stages').getById($scope.origItem.task.stage)
+                        // gets the  whole stage object by Id
+                        api('stages')
+                            .getById($scope.origItem.task.stage)
                             .then((result) => {
                                 $scope.stage = result;
                             });

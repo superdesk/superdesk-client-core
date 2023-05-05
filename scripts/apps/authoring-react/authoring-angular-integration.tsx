@@ -196,6 +196,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             minimizeButton,
             closeButton,
             ...getReadOnlyAndArchivedFrom(),
+            ...getReadOnlyAndArchivedFrom(),
         ];
 
         if (item.highlights != null) {
@@ -234,12 +235,14 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             actions.push(manageDesksButton);
         }
 
-        actions.push({
-            group: 'start',
-            priority: 0.2,
-            component: ({entity}) => <DeskAndStage article={entity} />,
-            availableOffline: false,
-        });
+        if (item._type !== 'archived') {
+            actions.push({
+                group: 'start',
+                priority: 0.2,
+                component: ({entity}) => <DeskAndStage article={entity} />,
+                availableOffline: false,
+            });
+        }
 
         if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
             actions.push({
