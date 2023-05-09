@@ -309,7 +309,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         icon: widget.icon,
                         size: 'big',
                         tooltip: widget.label,
-                        id: widget._id,
+                        id: widget.label,
                     };
 
                     return tab;
