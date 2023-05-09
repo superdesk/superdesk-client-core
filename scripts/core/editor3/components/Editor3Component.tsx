@@ -33,7 +33,7 @@ import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE} from '../constants';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
@@ -135,6 +135,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
 }
 
 interface IState {
@@ -551,7 +552,12 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
-            'Editor3-single-line-style': this.props.singleLine === true,
+            /**
+                There is global theming and article-edit specific one.
+                When inside article-edit we always pass a theme,
+                otherwise we want to use Editor3-single-line-style for global theme styling.
+            */
+            'Editor3-single-line-style': this.props.singleLine === true || this.props.uiTheme == null,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
             'unstyled__block--invisibles': this.props.invisibles,
@@ -599,11 +605,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 onFocus={() => {
                     this.setState({contentChangesAfterLastFocus: 0});
                 }}
+                style={
+                    this.props.uiTheme == null
+                        ? undefined
+                        : {
+                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                        }
+                }
             >
                 {
                     showToolbar && this.state.draggingInProgress !== true
                         ? (
                             <Toolbar
+                                uiTheme={this.props.uiTheme}
                                 disabled={locked || readOnly}
                                 scrollContainer={scrollContainer}
                                 editorNode={this.editorNode}
@@ -619,7 +633,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
                     highlightsManager={this.props.highlightsManager}
                     onChange={this.props.onChange}
                 />
-                <div className="focus-screen" onMouseDown={this.focus}>
+                <div
+                    className="focus-screen"
+                    onMouseDown={this.focus}
+                    style={
+                        this.props.uiTheme == null
+                            ? {}
+                            : {
+                                fontSize: this.props.uiTheme.fontSize,
+                                color: this.props.uiTheme.textColor,
+                                fontFamily: this.props.uiTheme.fontFamily,
+                            }
+                    }
+                >
                     <Editor
                         editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
