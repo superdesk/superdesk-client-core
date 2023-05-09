@@ -258,6 +258,12 @@ function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
         && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
 }
 
+function showCloseAndContinue(item: IArticle, dirty: boolean): boolean {
+    return appConfig.features?.customAuthoringTopbar?.closeAndContinue
+        && !sdApi.navigation.isPersonalSpace()
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
+}
+
 function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
@@ -383,6 +389,10 @@ function isEditable(_article: IArticle): boolean {
     }
 }
 
+function rewrite(item: IArticle): void {
+    return ng.get('authoring').rewrite(item);
+}
+
 interface IArticleApi {
     get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
@@ -439,7 +449,9 @@ interface IArticleApi {
 
     createNewUsingDeskTemplate(): void;
     getWorkQueueItems(): Array<IArticle>;
+    rewrite(item: IArticle): void;
     canPublishOnDesk(deskType: string): boolean;
+    showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
 
@@ -450,6 +462,7 @@ interface IArticleApi {
 }
 
 export const article: IArticleApi = {
+    rewrite,
     isLocked,
     isEditable,
     isLockedInCurrentSession,
@@ -478,6 +491,7 @@ export const article: IArticleApi = {
     get,
     canPublishOnDesk,
     showPublishAndContinue,
+    showCloseAndContinue,
     publishItem_legacy,
     publishItem,
 };

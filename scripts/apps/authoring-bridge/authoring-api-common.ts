@@ -1,10 +1,10 @@
-import {IArticle} from 'superdesk-api';
-import {showUnsavedChangesPrompt, IUnsavedChangesActionWithSaving} from 'core/ui/components/prompt-for-unsaved-changes';
-import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {runAfterUpdateEvent, runBeforeUpdateMiddlware} from 'apps/authoring/authoring/services/authoring-helpers';
 import {isArticleLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
-import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from 'apps/authoring/authoring/services/authoring-helpers';
+import {IUnsavedChangesActionWithSaving, showUnsavedChangesPrompt} from 'core/ui/components/prompt-for-unsaved-changes';
+import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 export interface IAuthoringApiCommon {
@@ -24,6 +24,13 @@ export interface IAuthoringApiCommon {
      * and item is not locked.
      */
     closeAuthoringForce(): void;
+
+    /**
+     * We need to keep the steps separate because it needs to be called
+     * separately in Angular. When we remove Angular the closeAuthoring
+     * and closeAuthoringStep2 will be merged together.
+     */
+    closeAuthoringStep2(scope: any, rootScope: any): Promise<any>;
     checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean) => boolean;
 }
 
@@ -43,6 +50,31 @@ export const authoringApiCommon: IAuthoringApiCommon = {
     },
     saveAfter: (current, original) => {
         runAfterUpdateEvent(original, current);
+    },
+    closeAuthoringStep2: (scope: any, rootScope: any): Promise<any> => {
+        return ng.get('authoring').close(
+            scope.item,
+            scope.origItem,
+            scope.save_enabled(),
+            () => {
+                ng.get('authoringWorkspace').close(true);
+                const itemId = scope.origItem._id;
+                const storedItemId = localStorage.getItem(`open-item-after-related-closed--${itemId}`);
+
+                rootScope.$broadcast('item:close', itemId);
+
+                /**
+                 * If related item was just created and saved, open the original item
+                 * that triggered the creation of this related item.
+                 */
+                if (storedItemId != null) {
+                    return ng.get('autosave').get({_id: storedItemId}).then((resulted) => {
+                        ng.get('authoringWorkspace').open(resulted);
+                        localStorage.removeItem(`open-item-after-related-closed--${itemId}`);
+                    });
+                }
+            },
+        );
     },
     closeAuthoring: (original: IArticle, hasUnsavedChanges, save, unlock, cancelAutoSave, doClose) => {
         if (!isArticleLockedInCurrentSession(original)) {
