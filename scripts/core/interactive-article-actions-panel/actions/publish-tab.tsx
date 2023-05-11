@@ -245,7 +245,6 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                         onClick={() => {
                             this.doPublish();
                         }}
-                        disabled={otherDeskSelected}
                         size="large"
                         type="highlight"
                         expand
