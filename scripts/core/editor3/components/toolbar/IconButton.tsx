@@ -13,7 +13,7 @@ interface IProps {
     onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
     tooltip: string;
     iconName: string;
-    uiTheme: IAuthoringSectionTheme;
+    uiTheme?: IAuthoringSectionTheme; // nullable since not present in angularjs based authoring
 }
 
 export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, tooltip, uiTheme}) => (
@@ -21,7 +21,7 @@ export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, 
         data-flow={'down'}
         data-sd-tooltip={tooltip}
         className="Editor3-styleButton"
-        style={{color: uiTheme.textColor}}
+        style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
     >
         <span onClick={onClick}><i className={`icon-${iconName}`} /></span>
     </div>
