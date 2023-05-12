@@ -2,6 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
+import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
+
+interface IPropsStyleButton {
+    onToggle?(style: string, active: boolean): void;
+    uiTheme?: IAuthoringSectionTheme;
+    style?: string;
+    active?: boolean;
+    label?: string;
+}
 
 const StyleIcons = {
     bold: 'icon-bold',
@@ -30,7 +39,7 @@ const StyleIcons = {
  * @name StyleButton
  * @description Toolbar button that can be toggled.
  */
-export default class StyleButton extends React.Component<any, any> {
+export default class StyleButton extends React.Component<IPropsStyleButton> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -76,16 +85,15 @@ export default class StyleButton extends React.Component<any, any> {
         };
 
         return (
-            <span className={cx} data-sd-tooltip={styleTooltips[label]} data-flow={'down'} onMouseDown={this.onToggle}>
+            <span
+                className={cx}
+                data-sd-tooltip={styleTooltips[label]}
+                data-flow={'down'}
+                onMouseDown={this.onToggle}
+                style={this.props.uiTheme == null ? undefined : {color: this.props.uiTheme.textColor}}
+            >
                 {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
             </span>
         );
     }
 }
-
-StyleButton.propTypes = {
-    onToggle: PropTypes.func,
-    style: PropTypes.string,
-    active: PropTypes.bool,
-    label: PropTypes.string,
-};

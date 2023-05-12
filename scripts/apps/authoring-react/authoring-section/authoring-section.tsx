@@ -4,6 +4,22 @@ import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
+export interface IAuthoringSectionTheme {
+    backgroundColor: string;
+
+    // used in placed where we need to differetiate some ui components from background for example toolbars
+    backgroundColorSecondary: string;
+
+    textColor: string;
+    fontFamily: string;
+
+    fieldTheme: {
+        [fieldId: string]: {
+            fontSize: string | undefined;
+        };
+    };
+}
+
 export interface IPropsAuthoringSection<T> {
     language: string;
     fieldsData: Map<string, unknown>;
@@ -17,6 +33,8 @@ export interface IPropsAuthoringSection<T> {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     validationErrors: IAuthoringValidationErrors;
+    padding?: string | number;
+    uiTheme?: IAuthoringSectionTheme;
     item: T;
 }
 
@@ -73,10 +91,20 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
 
     render() {
         const {toggledFields} = this.props;
+        const themeApplies: boolean
+            = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
         const grouped = groupItemsToRow(this.props.fields.toArray(), (field) => field.fieldConfig.width);
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+            <div
+                style={{
+                    backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    padding: this.props.padding,
+                }}
+            >
                 {
                     grouped.map((group, index) => (
                         <div key={index} style={{display: 'flex', gap: '10px'}}>
@@ -88,6 +116,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     return (
                                         <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
                                             <AuthoringSectionField
+                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
                                                 onChange={this.props.onChange}
