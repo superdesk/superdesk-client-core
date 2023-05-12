@@ -1167,6 +1167,100 @@ function LoadingDirective() {
     };
 }
 
+interface IScope {
+    option: string,
+    formatOptionsDictionary: {[key: string]: string},
+    change: any,
+    output: any,
+    disabled?: boolean,
+    selectedOptions: {[key: string]: string},
+    formatOptionsDictionaryCopy: {[key: string]: string},
+    labelsList: Array<string>,
+    activeDictionary: boolean,
+    selectItem: (item: string) => void,
+    selectedTerm: string,
+    removeItem: (item: string) => void,
+    searchTerms: (term: string) => void,
+    $watch: any,
+    selectedItems: {[key: string]: string},
+}
+
+formattingOptionsMultiSelectDirective.$inject = [];
+function formattingOptionsMultiSelectDirective() {
+    return {
+        scope: {
+            item: '=',
+            dictionary: '=',
+            change: '&',
+            output: '@',
+            disabled: '=',
+        },
+        templateUrl: 'scripts/core/ui/views/sd-formatting-options-multi-select.html',
+        link: function(scope: IScope) {
+            scope.selectedItems = {};
+
+            // use dictionaryCopy in order not to mutate the original list
+            // mutating the original list prevents passing expression as a list argument
+            // which means you can't pass a function result like so `list="getList()"`
+            scope.dictionaryCopy = scope.dictionary;
+            scope.labelsList = Object.values(scope.dictionary);
+            scope.activeDictionary = false;
+
+            scope.selectItem = function(item: string) {
+                scope.dictionaryCopy = scope.dictionary._.without(scope.dictionaryCopy, item);
+                scope.activeDictionary = false;
+                scope.selectedTerm = '';
+                scope.selectedItems.push(item);
+
+                updateItem();
+            };
+
+            scope.removeItem = function(item) {
+                scope.dictionaryCopy.push(item);
+                scope.dictionaryCopy = _.sortBy(scope.dictionaryCopy);
+                scope.selectedItems = _.without(scope.selectedItems, item);
+
+                updateItem();
+            };
+
+            scope.$watch('item', (item) => {
+                if (!item) {
+                    return false;
+                }
+
+                scope.selectedItems = _.union(scope.item, scope.selectedItems);
+                scope.listCopy = _.sortBy(_.difference(scope.dictionaryCopy, scope.item));
+            });
+
+            function updateItem() {
+                switch (scope.output) {
+                case 'string':
+                    scope.item = scope.selectedItems.join(', ');
+                    break;
+
+                default:
+                    scope.item = scope.selectedItems;
+                }
+
+                scope.change(scope.item);
+            }
+
+            // Typeahead search
+            scope.searchTerms = function(term) {
+                if (!term) {
+                    scope.$applyAsync(() => {
+                        scope.activeDictionary = false;
+                    });
+                }
+
+                scope.terms = _.filter(scope.dictionaryCopy, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
+
+                scope.activeDictionary = true;
+            };
+        },
+    };
+}
+
 multiSelectDirective.$inject = [];
 function multiSelectDirective() {
     return {

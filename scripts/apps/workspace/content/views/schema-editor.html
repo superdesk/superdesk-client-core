@@ -55,7 +55,7 @@
 
                     <div class="field">
                         <label class="" translate>Width</label>
-                        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">                            
+                        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
                             <select class="sd-line-input__select" ng-model="model.editor[id].sdWidth">
                                 <option value="full" translate>Full</option>
                                 <option value="half" translate>Half</option>
@@ -92,11 +92,14 @@
                     <!-- ELSE IF EDITOR2 -->
                     <div class="field" ng-if="hasFormatOptions(id) && model.editor.body_html.editor3 !== true">
                         <label translate>Format options</label>
-                        <div class="controls" ng-if="!model.editor.body_html.editor3"
-                             sd-multi-select
-                             data-item="model.editor[id].formatOptions"
-                             data-list="formattingOptions"
-                             data-change="setDirty()">
+                        <div
+                            class="controls"
+                            ng-if="!model.editor.body_html.editor3"
+                            sd-multi-select
+                            data-item="model.editor[id].formatOptions"
+                            data-list="formattingOptions"
+                            data-change="setDirty()"
+                        >
                         </div>
                     </div>
                     <!-- END IF -->
