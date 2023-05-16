@@ -18,11 +18,11 @@ export function getInitialDestination(
     const currentDeskId = sdApi.desks.getCurrentDeskId();
 
     let destinationDesk: string = (() => {
-        if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
-            return lastDestination.desk;
-        } else if (currentDeskId != null) {
+        if (currentDeskId != null) {
             return currentDeskId;
-        } else if (items.length === 1 && items[0].task?.desk != null) {
+        }else if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
+            return lastDestination.desk;
+        }else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
             return availableDesks.first()?._id ?? null;
