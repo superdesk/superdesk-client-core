@@ -165,7 +165,6 @@ export function ContentProfileSchemaEditor(vocabularies) {
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
                     && scope.fields[fieldName].field_type === 'text';
 
-                debugger;
                 if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField) {
                     return getEditor3RichFormattingOptions();
                 } else {

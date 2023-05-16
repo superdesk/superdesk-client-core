@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {mapValues} from 'lodash';
+import _, {difference, filter, mapValues, sortBy, union, without} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
@@ -1182,7 +1182,10 @@ interface IScope {
     removeItem: (item: string) => void,
     searchTerms: (term: string) => void,
     $watch: any,
-    selectedItems: {[key: string]: string},
+    selectedItems: Array<string>,
+    dictionaryCopy: Array<string>,
+    dictionary: {[key: string]: string},
+    item: string,
 }
 
 formattingOptionsMultiSelectDirective.$inject = [];
@@ -1190,25 +1193,24 @@ function formattingOptionsMultiSelectDirective() {
     return {
         scope: {
             item: '=',
-            dictionary: '=',
+            list: '&',
             change: '&',
             output: '@',
             disabled: '=',
         },
-        templateUrl: 'scripts/core/ui/views/sd-formatting-options-multi-select.html',
-        link: function(scope: IScope) {
-            scope.selectedItems = {};
+        templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
+        link: function(scope) {
+            scope.selectedItems = [];
 
-            // use dictionaryCopy in order not to mutate the original list
+            // use listCopy in order not to mutate the original list
             // mutating the original list prevents passing expression as a list argument
             // which means you can't pass a function result like so `list="getList()"`
-            scope.dictionaryCopy = scope.dictionary;
-            scope.labelsList = Object.values(scope.dictionary);
-            scope.activeDictionary = false;
+            scope.listCopy = Object.values(scope.list());
+            scope.activeList = false;
 
-            scope.selectItem = function(item: string) {
-                scope.dictionaryCopy = scope.dictionary._.without(scope.dictionaryCopy, item);
-                scope.activeDictionary = false;
+            scope.selectItem = function(item) {
+                scope.listCopy = without(scope.listCopy, item);
+                scope.activeList = false;
                 scope.selectedTerm = '';
                 scope.selectedItems.push(item);
 
@@ -1216,9 +1218,9 @@ function formattingOptionsMultiSelectDirective() {
             };
 
             scope.removeItem = function(item) {
-                scope.dictionaryCopy.push(item);
-                scope.dictionaryCopy = _.sortBy(scope.dictionaryCopy);
-                scope.selectedItems = _.without(scope.selectedItems, item);
+                scope.listCopy.push(item);
+                scope.listCopy = sortBy(scope.listCopy);
+                scope.selectedItems = without(scope.selectedItems, item);
 
                 updateItem();
             };
@@ -1228,11 +1230,13 @@ function formattingOptionsMultiSelectDirective() {
                     return false;
                 }
 
-                scope.selectedItems = _.union(scope.item, scope.selectedItems);
-                scope.listCopy = _.sortBy(_.difference(scope.dictionaryCopy, scope.item));
+                scope.selectedItems = union(scope.item, scope.selectedItems);
+                scope.listCopy = sortBy(difference(scope.listCopy, scope.item));
             });
 
             function updateItem() {
+                const item = Object.entries(scope.list()).find(([key, val]) => val == scope.item)?.[0];
+
                 switch (scope.output) {
                 case 'string':
                     scope.item = scope.selectedItems.join(', ');
@@ -1242,20 +1246,23 @@ function formattingOptionsMultiSelectDirective() {
                     scope.item = scope.selectedItems;
                 }
 
-                scope.change(scope.item);
+                debugger;
+                const asd = Object.entries(scope.list()).find(([key, val]) => val == scope.item)?.[0];
+
+                scope.change(asd);
             }
 
-            // Typeahead search
+            // Type ahead search
             scope.searchTerms = function(term) {
                 if (!term) {
                     scope.$applyAsync(() => {
-                        scope.activeDictionary = false;
+                        scope.activeList = false;
                     });
                 }
 
-                scope.terms = _.filter(scope.dictionaryCopy, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
+                scope.terms = filter(scope.listCopy, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
 
-                scope.activeDictionary = true;
+                scope.activeList = true;
             };
         },
     };
@@ -1381,6 +1388,8 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdLoading', LoadingDirective)
     .directive('sdMultipleEmails', MultipleEmailsValidation)
     .directive('sdMultiSelect', multiSelectDirective)
+    .directive('sdFormattingOptionsMultiSelect', formattingOptionsMultiSelectDirective)
+
 
     .component('sdVideo',
         reactToAngular1(
