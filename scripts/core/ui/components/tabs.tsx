@@ -17,13 +17,11 @@ interface IProps {
 export class TabList extends React.PureComponent<IProps> {
     render() {
         const {tabs, selected, onChange} = this.props;
-        const selectedTab = tabs.find(({label}) => label === selected);
-
-        // TODO: `Tabs` component doesn't accept selected value yet
-        const selectedIndex = selectedTab == null ? 0 : tabs.indexOf(selectedTab);
+        const selectedTab = tabs.find(({id}) => id === selected);
 
         return (
             <Tabs
+                initiallySelectedIndex={tabs.indexOf(selectedTab)}
                 onClick={(index) => {
                     onChange(tabs[index].id);
                 }}

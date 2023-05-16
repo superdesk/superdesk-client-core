@@ -65,15 +65,6 @@ export class InteractiveArticleActionsPanel
         };
     }
 
-    componentDidMount() {
-        const el = document.querySelector('.sd-overlay-panel--open');
-
-        if (el instanceof HTMLElement) {
-            // TODO: remove when setting width is fixed in ui-framework
-            el.style.width = '80rem';
-        }
-    }
-
     render() {
         const {items, tabs, onClose} = this.props;
         const {activeTab} = this.state;
