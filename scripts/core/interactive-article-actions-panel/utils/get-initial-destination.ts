@@ -20,9 +20,9 @@ export function getInitialDestination(
     let destinationDesk: string = (() => {
         if (currentDeskId != null) {
             return currentDeskId;
-        }else if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
+        } else if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
             return lastDestination.desk;
-        }else if (items.length === 1 && items[0].task?.desk != null) {
+        } else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
             return availableDesks.first()?._id ?? null;
