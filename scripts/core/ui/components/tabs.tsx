@@ -10,13 +10,13 @@ interface IProps {
     size?: 'normal' | 'large' | 'small';
     theme?: 'light' | 'dark';
     tabs: Array<ITabListTab>;
-    selected: string; // label of a selected tab
+    selectedTabId: string;
     onChange(tab: string): void;
 }
 
 export class TabList extends React.PureComponent<IProps> {
     render() {
-        const {tabs, selected, onChange} = this.props;
+        const {tabs, selectedTabId: selected, onChange} = this.props;
         const selectedTab = tabs.find(({id}) => id === selected);
 
         return (

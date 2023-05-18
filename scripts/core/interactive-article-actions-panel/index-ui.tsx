@@ -79,7 +79,7 @@ export class InteractiveArticleActionsPanel
                             tabs={
                                 tabs.map((id) => ({id, label: getTabLabel(id)}))
                             }
-                            selected={activeTab}
+                            selectedTabId={activeTab}
                             onChange={(tab: IArticleActionInteractive) => {
                                 this.setState({
                                     activeTab: tab,
