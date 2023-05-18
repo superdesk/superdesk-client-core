@@ -45,7 +45,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
 
                         this.props.onChange(copiedDate);
                     }}
-                    required
+                    required={this.props.required}
                 />
 
                 <Button

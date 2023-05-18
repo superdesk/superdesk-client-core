@@ -86,7 +86,7 @@ export class Config extends React.PureComponent<IProps, IState> {
                             label: gettext('Manual entry'),
                         },
                     ]}
-                    selected={this.state.source}
+                    selectedTabId={this.state.source}
                     onChange={(val: IDropdownConfig['source']) => {
                         this.setState({source: val});
                     }}

@@ -10,20 +10,18 @@ interface IProps {
     size?: 'normal' | 'large' | 'small';
     theme?: 'light' | 'dark';
     tabs: Array<ITabListTab>;
-    selected: string; // label of a selected tab
+    selectedTabId: string;
     onChange(tab: string): void;
 }
 
 export class TabList extends React.PureComponent<IProps> {
     render() {
-        const {tabs, selected, onChange} = this.props;
-        const selectedTab = tabs.find(({label}) => label === selected);
-
-        // TODO: `Tabs` component doesn't accept selected value yet
-        const selectedIndex = selectedTab == null ? 0 : tabs.indexOf(selectedTab);
+        const {tabs, selectedTabId: selected, onChange} = this.props;
+        const selectedTab = tabs.find(({id}) => id === selected);
 
         return (
             <Tabs
+                initiallySelectedIndex={tabs.indexOf(selectedTab)}
                 onClick={(index) => {
                     onChange(tabs[index].id);
                 }}

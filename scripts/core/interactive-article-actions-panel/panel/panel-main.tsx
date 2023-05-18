@@ -21,7 +21,7 @@ export class Panel extends React.PureComponent<IPropsSendToPanel> {
         } else {
             return (
                 <div className="sd-overlay-panel sd-overlay-panel--open sd-overlay-panel--dark-ui">
-                    <div className="side-panel side-panel--shadow-right side-panel--dark-ui">
+                    <div className="side-panel side-panel--shadow-right side-panel--dark-ui" data-theme="dark-ui">
                         {this.props.children}
                     </div>
                 </div>
