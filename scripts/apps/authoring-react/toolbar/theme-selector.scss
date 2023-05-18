@@ -1,0 +1,34 @@
+.color-selector__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(6.8rem, 6.8rem));
+    grid-gap: 0.9rem;
+}
+
+.color-selector__swatch {
+    height: 6.8rem;
+    width: 6.8rem;
+    padding: 0.2rem;
+    border-radius: var(--b-radius--full);
+    border: 2px solid transparent;
+}
+
+.color-selector__swatch--selected {
+    border-color: var(--sd-colour-interactive);
+}
+
+.color-selector__swatch-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 6rem;
+    width: 6rem;
+    font-size: 2rem;
+    line-height: 6rem;
+    text-transform: uppercase;
+    border-radius: var(--b-radius--full);
+    background-color: var(--sd-editor-colour__main-bg);
+    color: var(--sd-editor-colour__txt);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}

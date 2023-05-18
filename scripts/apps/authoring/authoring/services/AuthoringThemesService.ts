@@ -1,8 +1,10 @@
+import {ITheme} from 'apps/authoring-react/toolbar/proofreading-theme-modal';
+
+export var PREFERENCES_KEY = 'editor:theme';
+
 AuthoringThemesService.$inject = ['storage', 'preferencesService'];
 export function AuthoringThemesService(storage, preferencesService) {
     var service: any = {};
-
-    var PREFERENCES_KEY = 'editor:theme';
 
     var THEME_DEFAULT = {
         font: 'sans',
@@ -87,6 +89,14 @@ export function AuthoringThemesService(storage, preferencesService) {
     service.save = function(key, theme) {
         return preferencesService.get().then((result) => {
             result[PREFERENCES_KEY][key] = JSON.stringify(theme);
+            return preferencesService.update(result);
+        });
+    };
+
+    service.saveBoth = function(payload: {default: ITheme; proofreading: ITheme}): Promise<any> {
+        return preferencesService.get().then((result) => {
+            result[PREFERENCES_KEY]['theme'] = JSON.stringify(payload.default);
+            result[PREFERENCES_KEY]['proofreadTheme'] = JSON.stringify(payload.proofreading);
             return preferencesService.update(result);
         });
     };

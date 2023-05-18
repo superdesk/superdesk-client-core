@@ -102,7 +102,7 @@ export class ExportModal extends React.PureComponent<IProps, IState> {
                         }
                     </Select>
                     <Switch
-                        label={{text: gettext('Validate'), side: 'left'}}
+                        label={{content: gettext('Validate'), side: 'left'}}
                         value={state.validate}
                         onChange={(value) => this.setState({...state, validate: value})}
                     />

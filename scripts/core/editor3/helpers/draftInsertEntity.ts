@@ -60,6 +60,22 @@ export function insertEntity(
     return EditorState.push(editorState, contentStateWithBlockInserted, 'insert-fragment');
 }
 
+export function appendText(
+    value: string,
+    editorState: EditorState,
+): EditorState {
+    const currentBlocksArr = editorState
+        .getCurrentContent().getBlocksAsArray();
+    const blockToAppend = ContentState
+        .createFromText(value as string).getBlocksAsArray();
+    const newBlocksArr = currentBlocksArr.concat(blockToAppend);
+    const newContentState = ContentState
+        .createFromBlockArray(currentBlocksArr.concat(newBlocksArr));
+    const newEditorState = EditorState.createWithContent(newContentState);
+
+    return newEditorState;
+}
+
 function insertBlocks(
     contentState: ContentState,
     blocksToInsert,

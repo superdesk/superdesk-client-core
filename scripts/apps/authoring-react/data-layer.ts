@@ -60,16 +60,23 @@ export function getArticleContentProfile<T>(
         const [getLabelForFieldId] = res;
 
         const {editor, fields, schema} = fakeScope;
+        const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
+
+        // Avoid having unnecessary adapters for fields
+        // to which we do not write data e.g. 'footer'.
+        // Authoring react doesn't support companion
+        // fields like 'footer' that don't have data on
+        // their own but simply modify the data of other fields.
+        const fieldsToOmit = ['footer'];
 
         const fieldsOrdered =
             Object.keys(editor)
-                .filter((key) => editor[key] != null) // don't take disabled ones
+                .filter((key) => editor[key] != null && !fieldsToOmit.includes(key)) // don't take disabled ones
                 .map((key) => {
-                    const result: {fieldId: string, editorItem: any} =
-                        {
-                            fieldId: key,
-                            editorItem: editor[key],
-                        };
+                    const result: {fieldId: string, editorItem: any} = {
+                        fieldId: key,
+                        editorItem: editor[key],
+                    };
 
                     return result;
                 })
@@ -93,7 +100,8 @@ export function getArticleContentProfile<T>(
 
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
+                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId]
+                        .getFieldV2(fieldEditor, fieldSchema, fieldExists);
 
                     return {
                         ...f,
@@ -131,7 +139,11 @@ export function getArticleContentProfile<T>(
         // TODO: write an upgrade script and remove hardcoding
         // after angular based authoring is removed from the codebase
         if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
-            const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema);
+            const description_field = description_text.getFieldV2(
+                fakeScope.editor,
+                fakeScope.schema,
+                fieldExists,
+            );
 
             contentFields = contentFields.set(description_field.id, description_field);
         }
