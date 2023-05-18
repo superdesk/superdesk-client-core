@@ -38,7 +38,7 @@ export interface IPropsAuthoringSection<T> {
     item: T;
 }
 
-function groupItemsToRow<T>(items: Array<T>, getWidth: (item: T) => number) {
+function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
     const itemGroups: Array<Array<T>> = [
         [],
     ];
@@ -93,7 +93,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const {toggledFields} = this.props;
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
-        const grouped = groupItemsToRow(this.props.fields.toArray(), (field) => field.fieldConfig.width);
+        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width);
 
         return (
             <div
@@ -116,7 +116,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     return (
                                         <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
                                             <AuthoringSectionField
-                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
+                                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
                                                 onChange={this.props.onChange}

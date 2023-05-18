@@ -43,9 +43,7 @@ export function getFieldContainer(
                                 {'form-label--invalid': validationError != null},
                             )}
                             style={{
-                                minHeight: 'auto',
-                                minWidth: '90px',
-                                maxWidth: '90px',
+                                width: '90px',
                                 justifyContent: 'end',
                             }}
                         >

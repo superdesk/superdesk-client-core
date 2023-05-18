@@ -92,7 +92,7 @@ export function getArticleContentProfile<T>(
             const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
             const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
 
-            const WidthConverter = (width: string): number => {
+            const convertWidth = (width: string): number => {
                 if (width === 'full') {
                     return 100;
                 } else if (width === 'half') {
@@ -108,7 +108,7 @@ export function getArticleContentProfile<T>(
                 readOnly: fieldEditor.readonly === true,
                 required: fieldEditor.required === true,
                 allow_toggling: fieldEditor.allow_toggling === true,
-                width: WidthConverter(fieldEditor.sdWidth),
+                width: convertWidth(fieldEditor.sdWidth),
             };
 
             const fieldV2: IAuthoringFieldV2 = (() => {
