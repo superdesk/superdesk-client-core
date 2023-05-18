@@ -239,10 +239,10 @@ interface IScope {
     origItem?: IArticle;
 }
 
-function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle> {
+function publishItem(orig: IArticle, item: IArticle, action: string = 'publish', onError: (error: string) => void): Promise<boolean | IArticle> {
     const scope: IScope = {};
 
-    return publishItem_legacy(orig, item, scope)
+    return publishItem_legacy(orig, item, scope, action, onError)
         .then((published) => published ? scope.item : published);
 }
 
@@ -269,6 +269,7 @@ function publishItem_legacy(
     item: IArticle,
     scope: IScope,
     action: string = 'publish',
+    onError?: (error: any) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
     const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
@@ -326,11 +327,13 @@ function publishItem_legacy(
                     notify.error(message);
                 });
 
-                if (errors.fields) {
-                    Object.assign(scope.error, errors.fields);
+                if (issues.fields) {
+                    Object.assign(scope.error, issues.fields);
                 }
 
-                scope.$applyAsync(); // make $scope.error changes visible
+                onError?.(scope.error);
+
+                scope.$applyAsync?.(); // make $scope.error changes visible
 
                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                     ng.get('authoring').open(item._id, true).then((res) => {
@@ -458,7 +461,7 @@ interface IArticleApi {
     // Instead of passing a fake scope from React
     // every time to the publishItem_legacy we can use this function which
     // creates a fake scope for us.
-    publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
+    publishItem(orig: IArticle, item: IArticle, action?: string, onError?: (error: any) => void): Promise<boolean | IArticle>;
 }
 
 export const article: IArticleApi = {

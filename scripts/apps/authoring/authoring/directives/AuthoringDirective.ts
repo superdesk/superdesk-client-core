@@ -431,6 +431,12 @@ export function AuthoringDirective(
                 return true;
             }
 
+            $scope.onError = (error: any) => {
+                $scope.error = {};
+                Object.assign($scope.error, error);
+                $scope.$applyAsync();
+            };
+
             function publishItem(orig, item): Promise<boolean> {
                 autosave.stop(item);
                 const action: string = $scope.action != null

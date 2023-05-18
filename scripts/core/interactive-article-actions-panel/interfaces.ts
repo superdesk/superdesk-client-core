@@ -6,6 +6,7 @@ export interface IPanelAction {
     items: Array<IArticle>;
     tabs: Array<IArticleActionInteractive>;
     activeTab: IArticleActionInteractive;
+    onError?: (error: any) => void;
 }
 
 export interface ISendToDestinationDesk {

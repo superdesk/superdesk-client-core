@@ -28,13 +28,13 @@ import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
+    onError: (error: any) => void;
 }
 
 interface IState {
@@ -96,10 +96,11 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
-                        ng.get('authoringWorkspace').close();
-                        notify.success('Item published.');
-                    });
+                    sdApi.article.publishItem(cloneDeep(this.props.item), cloneDeep(itemToPublish), 'publish', this.props.onError)
+                        .then(() => {
+                            ng.get('authoringWorkspace').close();
+                            notify.success('Item published.');
+                        });
                 });
             })
             .catch(() => {

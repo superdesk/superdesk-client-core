@@ -11,6 +11,7 @@ interface IProps {
     location: 'authoring' | 'list-view';
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
+    onError: (error: any) => void;
 }
 
 export class InteractiveArticleActionsPanelCombined extends React.PureComponent<IProps> {
@@ -24,6 +25,7 @@ export class InteractiveArticleActionsPanelCombined extends React.PureComponent<
 
                     return (
                         <InteractiveArticleActionsPanel
+                            onError={this.props.onError}
                             items={state.items}
                             tabs={state.tabs}
                             activeTab={state.activeTab}
