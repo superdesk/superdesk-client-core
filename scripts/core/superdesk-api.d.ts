@@ -222,6 +222,8 @@ declare module 'superdesk-api' {
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
         headerCollapsed?: boolean; // initial value
+
+        themingEnabled?: boolean; // only works with article; default false
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -3279,6 +3281,13 @@ declare module 'superdesk-api' {
          */
         getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
 
+        uiTheme?: {
+            textColor: string;
+            backgroundColor: string;
+            backgroundColorSecondary: string;
+            fontSize: string;
+            fontFamily: string;
+        };
         item: any;
     }
 

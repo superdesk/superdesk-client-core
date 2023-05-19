@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
 
 /**
  * @ngdoc React
@@ -7,14 +8,21 @@ import PropTypes from 'prop-types';
  * @name IconButton
  * @description IconButton displays a button with an icon on the toolbar.
  */
-export const IconButton: React.StatelessComponent<any> = ({onClick, iconName, tooltip}) => (
-    <div data-flow={'down'} data-sd-tooltip={tooltip} className="Editor3-styleButton">
+
+interface IProps {
+    onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+    tooltip: string;
+    iconName: string;
+    uiTheme?: IAuthoringSectionTheme; // nullable since not present in angularjs based authoring
+}
+
+export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, tooltip, uiTheme}) => (
+    <div
+        data-flow={'down'}
+        data-sd-tooltip={tooltip}
+        className="Editor3-styleButton"
+        style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
+    >
         <span onClick={onClick}><i className={`icon-${iconName}`} /></span>
     </div>
 );
-
-IconButton.propTypes = {
-    onClick: PropTypes.func.isRequired,
-    tooltip: PropTypes.string,
-    iconName: PropTypes.string.isRequired,
-};

@@ -162,14 +162,25 @@ class ToolbarComponent extends React.Component<any, IState> {
         });
 
         return activeCell !== null ? <TableControls className={cx} /> : (
-            <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
+            <div
+                className={cx}
+                style={{
+                    width: this.state.width,
+                    backgroundColor: this.props.uiTheme == null
+                        ? undefined
+                        : this.props.uiTheme.backgroundColorSecondary,
+                    color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
+                }}
+                ref={this.toolbarNode}
+            >
                 {/* Styles */}
-                <BlockStyleButtons />
-                <InlineStyleButtons />
+                <BlockStyleButtons uiTheme={this.props.uiTheme} />
+                <InlineStyleButtons uiTheme={this.props.uiTheme} />
 
                 {/* Formatting options */}
                 {has('link') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
                         tooltip={gettext('Link')}
@@ -177,6 +188,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('embed') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={showPopup(PopupTypes.Embed)}
                         iconName="code"
                         tooltip="Embed"
@@ -184,6 +196,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('media') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={insertMedia}
                         tooltip={gettext('Media')}
                         iconName="picture"
@@ -191,6 +204,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('table') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={addTable}
                         tooltip={gettext('Table')}
                         iconName="table"
@@ -198,6 +212,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('remove format') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={removeFormat}
                         precondition={!suggestingMode}
                         key="remove-format-button"
@@ -207,8 +222,8 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('remove all format') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={removeAllFormat}
-                        precondition={!suggestingMode}
                         key="remove-all-format-button"
                         iconName="clear-all"
                         tooltip={gettext('Remove all formatting')}
@@ -216,6 +231,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('comments') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
                             this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
@@ -227,6 +243,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
                 {has('annotation') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
                             this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
@@ -239,6 +256,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('suggestions') && (
                     <StyleButton
+                        uiTheme={this.props.uiTheme}
                         active={suggestingMode}
                         label={'suggestions'}
                         style={'suggestions'}
@@ -248,6 +266,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('formatting marks') && (
                     <StyleButton
+                        uiTheme={this.props.uiTheme}
                         active={invisibles}
                         label={'invisibles'}
                         style={'invisibles'}
@@ -257,6 +276,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('uppercase') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
                         precondition={!suggestingMode}
                         key="uppercase-button"
@@ -267,6 +287,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('lowercase') && (
                     <SelectionButton
+                        uiTheme={this.props.uiTheme}
                         onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
                         precondition={!suggestingMode}
                         key="lowercase-button"
@@ -277,6 +298,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('undo') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={() => {
                             this.props.dispatch(undo());
                         }}
@@ -287,6 +309,7 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {has('redo') && (
                     <IconButton
+                        uiTheme={this.props.uiTheme}
                         onClick={() => {
                             this.props.dispatch(redo());
                         }}
@@ -296,6 +319,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                 )}
 
                 <ToolbarPopup
+                    uiTheme={this.props.uiTheme}
                     type={popup.type}
                     data={popup.data}
                     editorState={this.props.editorState}
