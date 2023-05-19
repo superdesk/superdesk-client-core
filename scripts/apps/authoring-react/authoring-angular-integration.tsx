@@ -153,12 +153,8 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                 availableOffline: false,
                 component: () => (
                     <span>
-                        <b>
-                            {gettext('Archived from')}
-                            {sdApi.desks.getDeskById(item.task.desk).name}
-                            /
-                            {sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage)}
-                        </b>
+                        <b>{gettext('Archived from')}</b>
+                        <DeskAndStage article={item} />
                     </span>
                 ),
                 priority: 0.2,
