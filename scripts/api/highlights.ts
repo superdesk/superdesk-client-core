@@ -34,7 +34,16 @@ function exportHighlight(id: IArticle['_id'], hasUnsavedChanges: boolean): Promi
             .then(() => notify.success('Export successful.'))
             .catch((response) => {
                 if (response.internal_error === 403) {
-                    forceExportHighlight(id);
+                    ui.confirm(gettext('There are items locked or not published. Do you want to continue?'))
+                        .then(() => {
+                            httpRequestJsonLocal({
+                                method: 'POST',
+                                path: '/generate_highlights',
+                                payload: {package: id, export: true},
+                            }).then(ng.get('authoringWorkspace').edit, () => {
+                                notify.error(gettext('Error creating highlight.'));
+                            });
+                        });
                 } else {
                     notify.error(gettext('Error creating highlight.'));
                 }
@@ -43,19 +52,6 @@ function exportHighlight(id: IArticle['_id'], hasUnsavedChanges: boolean): Promi
 
     return hasUnsavedChanges ? ui.confirm(gettext('You have unsaved changes, do you want to continue?'))
         .then(() => request()) : request();
-}
-
-function forceExportHighlight(id: IArticle['_id']): void {
-    ui.confirm(gettext('There are items locked or not published. Do you want to continue?'))
-        .then(() => {
-            httpRequestJsonLocal({
-                method: 'POST',
-                path: '/generate_highlights',
-                payload: {package: id, export: true},
-            }).then(ng.get('authoringWorkspace').edit, () => {
-                notify.error(gettext('Error creating highlight.'));
-            });
-        });
 }
 
 function prepareHighlightForPreview(id: IArticle['_id']): Promise<string> {
