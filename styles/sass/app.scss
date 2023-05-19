@@ -69,4 +69,8 @@
 @import '../../scripts/apps/authoring-react/fields/media/media-field.scss';
 @import '../../scripts/core/ui/components/content-create-dropdown/content-create-dropdown.scss';
 
-@import '../../scripts/apps/authoring/authoring/services/quick-publish-modal.scss'
+@import '../../scripts/apps/authoring/authoring/services/quick-publish-modal.scss';
+
+// Proofreading Modal
+@import '../../scripts/apps/authoring-react/toolbar/proofreading.scss';
+@import '../../scripts/apps/authoring-react/toolbar/theme-selector.scss';

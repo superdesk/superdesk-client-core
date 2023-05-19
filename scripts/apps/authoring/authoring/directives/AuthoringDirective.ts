@@ -2,6 +2,7 @@ import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isPublished} from 'apps/archive/utils';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -15,13 +16,12 @@ import _, {merge} from 'lodash';
 import postscribe from 'postscribe';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import {IArticle} from 'superdesk-api';
 import {getArticleSchemaMiddleware} from '..';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
+import {IArticle} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
-import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 /**
  * @ngdoc directive
@@ -220,9 +220,7 @@ export function AuthoringDirective(
                         && !sdApi.navigation.isPersonalSpace()
                         && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = appConfig.features?.customAuthoringTopbar?.closeAndContinue
-                        && !sdApi.navigation.isPersonalSpace()
-                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                    $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)
@@ -658,7 +656,7 @@ export function AuthoringDirective(
             // Close the current article, create an update of the article and open it in the edit mode.
             $scope.closeAndContinue = function() {
                 $scope.close().then(() => {
-                    authoring.rewrite($scope.item);
+                    sdApi.article.rewrite($scope.item);
                 });
             };
 
@@ -674,30 +672,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // returned promise used by superdesk-fi
-                return authoring.close(
-                    $scope.item,
-                    $scope.origItem,
-                    $scope.save_enabled(),
-                    () => {
-                        authoringWorkspace.close(true);
-                        const itemId = $scope.origItem._id;
-
-                        $rootScope.$broadcast('item:close', itemId);
-
-                        const storedItemId = storage.getItem(`open-item-after-related-closed--${itemId}`);
-
-                        /**
-                         * If related item was just created and saved, open the original item
-                         * that triggered the creation of this related item.
-                         */
-                        if (storedItemId != null) {
-                            return autosave.get({_id: storedItemId}).then((resulted) => {
-                                authoringWorkspace.open(resulted);
-                                storage.removeItem(`open-item-after-related-closed--${itemId}`);
-                            });
-                        }
-                    },
-                );
+                return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
 
             /**

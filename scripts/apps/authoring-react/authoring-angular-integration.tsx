@@ -254,6 +254,32 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, actio
             });
         }
 
+        if (sdApi.article.showCloseAndContinue(item, hasUnsavedChanges())) {
+            actions.push({
+                group: 'middle',
+                priority: 0.4,
+                component: ({entity}) => (
+                    <Button
+                        type="highlight"
+                        onClick={() => {
+                            const getLatestItem = hasUnsavedChanges()
+                                ? handleUnsavedChanges()
+                                : Promise.resolve(entity);
+
+                            getLatestItem.then((article) => {
+                                ng.get('authoring').close().then(() => {
+                                    sdApi.article.rewrite(article);
+                                });
+                            });
+                        }}
+                        text={gettext('C & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
         // FINISH: ensure locking is available in generic version of authoring
         actions.push({
             group: 'start',

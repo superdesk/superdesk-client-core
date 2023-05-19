@@ -309,7 +309,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         icon: widget.icon,
                         size: 'big',
                         tooltip: widget.label,
-                        id: widget._id,
+                        id: widget.label,
                     };
 
                     return tab;
@@ -344,6 +344,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 {(panelState, panelActions) => {
                     return (
                         <AuthoringReact
+                            themingEnabled
                             onFieldChange={this.props.onFieldChange}
                             hideSecondaryToolbar={this.props.hideSecondaryToolbar}
                             ref={(component) => {

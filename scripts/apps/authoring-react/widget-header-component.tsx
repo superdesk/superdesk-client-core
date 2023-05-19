@@ -1,8 +1,8 @@
 import React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import classNames from 'classnames';
 import {IWidgetIntegrationComponentProps, widgetReactIntegration} from 'apps/authoring/widgets/widgets';
-import {ButtonGroup} from 'superdesk-ui-framework';
+import {IconButton, Rotate} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
     render() {
@@ -17,31 +17,22 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
             <Layout.PanelHeader
                 title={customContent == null ? this.props.widgetName : ''}
                 onClose={() => this.props.closeWidget()}
-            >
-                {customContent ?? null}
-
-                {
-                    widgetReactIntegration.disableWidgetPinning !== true && (
-                        <ButtonGroup align="end">
-                            <button
-                                className={
-                                    classNames(
-                                        'sd-widget-pin icn-btn',
-                                        {
-                                            'sd-widget-pinned': pinned,
-                                            'active': pinned,
-                                        },
-                                    )
-                                }
+                iconButtons={widgetReactIntegration.disableWidgetPinning == null
+                    ? undefined
+                    : [
+                        <Rotate degrees={pinned ? 90 : 0} key="noop">
+                            <IconButton
+                                icon="pin"
+                                ariaValue={gettext('Pin')}
                                 onClick={() => {
                                     pinWidget(widget);
                                 }}
-                            >
-                                <i className="icon-pin" />
-                            </button>
-                        </ButtonGroup>
-                    )
+                            />
+                        </Rotate>,
+                    ]
                 }
+            >
+                {customContent ?? null}
 
                 {
                     this.props.editMode && (
