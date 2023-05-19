@@ -29,8 +29,10 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 
+type IAction = 'edit' | string;
+
 export interface IProps {
-    action?: string;
+    action?: IAction;
     itemId: IArticle['_id'];
 }
 
@@ -39,7 +41,7 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: string): IAuthoringOptions<IArticle> {
+function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: IAction): IAuthoringOptions<IArticle> {
     const {
         item,
         hasUnsavedChanges,
@@ -234,7 +236,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, actio
             });
         }
 
-        if (action === 'view' && !item._editable) {
+        if (action === 'view' && item._editable !== true) {
             actions.push({
                 group: 'middle',
                 priority: 0.4,

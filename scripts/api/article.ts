@@ -18,6 +18,7 @@ import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -351,7 +352,7 @@ function edit(
         _type?: IArticle['_type'],
         state?: IArticle['state']
     },
-    action?: IAuthoringAction,
+    action?: IArticleAction,
 ): void {
     if (item != null) {
         // disable edit of external ingest sources
@@ -477,13 +478,15 @@ interface IArticleApi {
     // every time to the publishItem_legacy we can use this function which
     // creates a fake scope for us.
     publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
+
+    // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
         item: {
             _id: IArticle['_id'],
             _type?: IArticle['_type'],
             state?: IArticle['state']
         },
-        action?: IAuthoringAction,
+        action?: IArticleAction,
     ): void;
 }
 
