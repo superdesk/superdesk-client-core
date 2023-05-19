@@ -1,11 +1,11 @@
 import React, {CSSProperties} from 'react';
-import {IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
 import {DestinationSelect} from '../subcomponents/destination-select';
-import {ISendToDestination} from '../interfaces';
+import {IPanelError, ISendToDestination} from '../interfaces';
 import {getInitialDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
@@ -34,7 +34,7 @@ interface IProps {
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
-    onError: (error: any) => void;
+    onError: (error: IPanelError) => void;
 }
 
 interface IState {

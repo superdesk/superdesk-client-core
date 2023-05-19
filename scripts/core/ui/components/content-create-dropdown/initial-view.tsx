@@ -234,7 +234,6 @@ export class InitialView extends React.PureComponent<IProps, IState> {
 
                                     this.setState(nextState);
                                 }}
-                                height={this.maxChildrenHeight}
                             />
                         );
                     } else {

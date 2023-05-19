@@ -22,6 +22,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
 import {IArticle} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 
 /**
  * @ngdoc directive
@@ -431,9 +432,9 @@ export function AuthoringDirective(
                 return true;
             }
 
-            $scope.onError = (error: any) => {
+            $scope.onError = (error: IPanelError) => {
                 $scope.error = {};
-                Object.assign($scope.error, error);
+                Object.assign($scope.error, error.fields);
                 $scope.$applyAsync();
             };
 

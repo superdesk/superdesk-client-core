@@ -2,6 +2,7 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {InteractiveArticleActionsPanel} from './index-ui';
 import {WithInteractiveArticleActionsPanel} from './index-hoc';
+import {IPanelError} from './interfaces';
 
 interface IProps {
     /**
@@ -11,7 +12,7 @@ interface IProps {
     location: 'authoring' | 'list-view';
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
-    onError: (error: any) => void;
+    onError: (error: IPanelError) => void;
 }
 
 export class InteractiveArticleActionsPanelCombined extends React.PureComponent<IProps> {
