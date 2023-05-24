@@ -357,10 +357,10 @@ export class EditorTest extends React.Component<IProps, IState> {
                             <Layout.PanelContentBlock>
                                 <SimpleList border={true}>
                                     <SimpleListItem justify="space-between">
-                                        <Switch value={this.state.value1} label={{text: 'My label'}} onChange={(value) => this.setState(() => ({value1: value}))} />
+                                        <Switch value={this.state.value1} label={{content: 'My label'}} onChange={(value) => this.setState(() => ({value1: value}))} />
                                     </SimpleListItem>
                                     <SimpleListItem justify="space-between">
-                                        <Switch value={this.state.value2} label={{text: 'My label'}} onChange={(value) => this.setState(() => ({value2: value}))} />
+                                        <Switch value={this.state.value2} label={{content: 'My label'}} onChange={(value) => this.setState(() => ({value2: value}))} />
                                     </SimpleListItem>
                                     <SimpleListItem stacked={true}>
                                         <Form.FormLabel text="Label two" />
