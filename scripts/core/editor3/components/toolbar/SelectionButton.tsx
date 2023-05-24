@@ -50,3 +50,7 @@ const mapStateToProps = (state) => ({
 });
 
 export const SelectionButton = connect(mapStateToProps, null)(SelectionButtonComponent);
+
+// We can use this version of the button for nested
+// blocks which have a different editor state
+export const SelectionButtonCustomEditorState = SelectionButtonComponent;
