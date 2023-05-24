@@ -146,7 +146,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                             <div className="other-info">
                                                 <div className="form__row">
                                                     <Switch
-                                                        label={{text: gettext('Internal'), hidden: true}}
+                                                        label={{content: gettext('Internal'), hidden: true}}
                                                         value={item.meta.internal}
                                                         onChange={(value) => {
                                                             this.updateItemMeta(index, 'internal', value);

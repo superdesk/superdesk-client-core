@@ -265,7 +265,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 <FormGroup>
                                     <FormRow>
                                         <Switch
-                                            label={{text: gettext('Enabled'), side: 'left'}}
+                                            label={{content: gettext('Enabled'), side: 'left'}}
                                             value={updates.state === SET_STATE.USABLE}
                                             onChange={this.onChange.state}
                                         />

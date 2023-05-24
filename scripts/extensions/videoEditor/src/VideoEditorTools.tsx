@@ -19,7 +19,7 @@ interface IProps {
     videoResolution: number;
 }
 
-class VideoEditorToolsComponent extends React.PureComponent<IProps> {
+export class VideoEditorTools extends React.PureComponent<IProps> {
     render() {
         const resolutions = [{label: 'Same', value: 0}].concat(
             [480, 720, 1080]
@@ -91,7 +91,3 @@ class VideoEditorToolsComponent extends React.PureComponent<IProps> {
         );
     }
 }
-
-export const VideoEditorTools = React.forwardRef((props: IProps, ref: React.Ref<HTMLDivElement>) =>
-    <VideoEditorToolsComponent wrapperRef={ref} {...props} />,
-);

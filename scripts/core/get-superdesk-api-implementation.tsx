@@ -182,7 +182,7 @@ export function getRelativeOrAbsoluteDateTime(
     datetimeString: string,
     format: string,
     relativeDuration: number = 1,
-    relativeUnit: string = 'days',
+    relativeUnit: moment.unitOfTime.Diff = 'days',
 ): string {
     const datetime = moment(datetimeString);
 

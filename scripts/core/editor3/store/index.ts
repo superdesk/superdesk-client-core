@@ -39,7 +39,7 @@ import {appConfig} from 'appConfig';
 import {
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IActiveCell, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -78,7 +78,8 @@ export interface IEditorStore {
     singleLine: any;
     tabindex: any;
     showTitle: any;
-    activeCell: any;
+    activeCell?: IActiveCell;
+    customToolbarStyle?: 'table' | 'multiLineQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;

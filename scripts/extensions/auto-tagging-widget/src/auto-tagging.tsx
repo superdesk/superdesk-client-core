@@ -479,7 +479,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 this.runAnalysis();
                                             }
                                         }}
-                                        label={{text: gettext('Run automatically')}}
+                                        label={{content: gettext('Run automatically')}}
                                     />
                                     <Switch
                                         value={showImagesPreference}
@@ -490,7 +490,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             this.setState({showImagesPreference: newValue});
                                             superdesk.preferences.set(SHOW_IMAGES_PREFERENCE, newValue);
                                         }}
-                                        label={{text: gettext('Show image suggestions')}}
+                                        label={{content: gettext('Show image suggestions')}}
                                     />
                                 </ButtonGroup>
                             </div>

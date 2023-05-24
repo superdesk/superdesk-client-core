@@ -5,6 +5,7 @@ import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
 import {ContentBlock} from 'draft-js';
 import {DragableEditor3Block} from './media/dragable-editor3-block';
+import {MultiLineQuote} from './multi-line-quote';
 
 const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
     const {block, contentState} = props;
@@ -22,7 +23,9 @@ const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
         } else if (type === 'EMBED') {
             return <EmbedBlock {...props} />;
         } else if (type === 'TABLE') {
-            return <TableBlock {...props} />;
+            return <TableBlock {...props} toolbarStyle="table" />;
+        } else if (type === 'MULTI-LINE_QUOTE') {
+            return <MultiLineQuote {...props} />;
         } else {
             return null;
         }
