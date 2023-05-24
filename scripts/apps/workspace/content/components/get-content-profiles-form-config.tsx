@@ -51,6 +51,7 @@ const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'italic',
     'bold',
     'table',
+    'multi-line quote',
 ];
 
 const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> = [
@@ -90,6 +91,7 @@ export const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     'tab as spaces',
     'undo',
     'redo',
+    'multi-line quote',
 ];
 
 export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [

@@ -321,8 +321,8 @@ export function getMultiActions(
         const selectedItems = getSelectedItems();
 
         confirmPublish(selectedItems).then(() => {
-            Promise.all(
-                selectedItems.map((item) => new Promise<void>((resolve) => {
+            Promise.all<void>(
+                selectedItems.map((item) => new Promise((resolve) => {
                     authoring.publish(item, item)
                         .then((response) => {
                             if (response.status >= 400) {

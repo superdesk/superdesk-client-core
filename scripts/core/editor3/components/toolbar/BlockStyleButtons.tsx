@@ -10,7 +10,7 @@ import {getCurrentAuthor} from '../../helpers/author';
  * @type {Object}
  * @description Maps server 'editorFormat' options to Draft styles.
  */
-const blockStyles = {
+export const blockStyles = {
     h1: 'header-one',
     h2: 'header-two',
     h3: 'header-three',
