@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
-import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
+import {IEditorComponentProps} from 'superdesk-api';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
-    uiTheme?: IAuthoringSectionTheme;
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     style?: string;
     active?: boolean;
     label?: string;

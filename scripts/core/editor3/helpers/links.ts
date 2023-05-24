@@ -1,4 +1,4 @@
-import {RichUtils} from 'draft-js';
+import {EditorState, RichUtils} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 
 /**
@@ -9,7 +9,7 @@ import * as entityUtils from '../components/links/entityUtils';
  * @return {Object} EditorState
  * @description Create a hyperlink on editorState selection
  */
-export function createLink(editorState, link) {
+export function createLink(editorState: EditorState, link): EditorState {
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {link});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();

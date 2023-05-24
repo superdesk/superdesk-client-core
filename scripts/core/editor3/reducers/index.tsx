@@ -4,6 +4,7 @@ import toolbar from './toolbar';
 import table from './table';
 import suggestions from './suggestions';
 import findReplace from './find-replace';
+import multiLineQuote from './multi-line-quote';
 
 // Returns a new reducer which chains the state and action throught the given
 // list of reducers.
@@ -18,6 +19,7 @@ const editorReducers = chainReduce(
     editor3,
     findReplace,
     suggestions,
+    multiLineQuote,
 );
 
 export default editorReducers;

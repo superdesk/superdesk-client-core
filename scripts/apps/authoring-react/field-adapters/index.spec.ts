@@ -36,6 +36,7 @@ describe('field adapters', () => {
 
                 return testVocabularies;
             },
+            getVocabularyItemLabel: (term) => term.name,
         };
 
         Object.assign(sdApi.vocabularies, vocabulariesStub);

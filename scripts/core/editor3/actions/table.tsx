@@ -72,3 +72,10 @@ export function toggleTableStyle(inlineStyle) {
         payload: inlineStyle,
     };
 }
+
+export function toggleMultiLineQuoteBlockStyle(style) {
+    return {
+        type: 'TOOLBAR_MULTI-LINE_STYLE',
+        payload: style,
+    };
+}

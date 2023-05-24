@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
+import {IEditorComponentProps} from 'superdesk-api';
 
 /**
  * @ngdoc React
@@ -13,7 +12,9 @@ interface IProps {
     onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
     tooltip: string;
     iconName: string;
-    uiTheme?: IAuthoringSectionTheme; // nullable since not present in angularjs based authoring
+
+    // nullable since not present in angularjs based authoring
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
 }
 
 export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, tooltip, uiTheme}) => (

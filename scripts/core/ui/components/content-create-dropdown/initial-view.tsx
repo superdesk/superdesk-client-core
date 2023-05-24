@@ -39,9 +39,6 @@ interface IStateLoading {
 type IState = IStateLoading | IStateLoaded;
 
 export class InitialView extends React.PureComponent<IProps, IState> {
-    private rootEl: HTMLDivElement;
-    private maxChildrenHeight: number;
-
     constructor(props: IProps) {
         super(props);
 
@@ -123,7 +120,6 @@ export class InitialView extends React.PureComponent<IProps, IState> {
             <div
                 className="content-create-dropdown"
                 data-test-id="content-create-dropdown"
-                ref={(el) => this.rootEl = el}
             >
                 {(() => {
                     if (state.mode === 'initial') {
@@ -182,9 +178,6 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                     <DropdownOption
                                         label={gettext('More templates...')}
                                         onClick={() => {
-                                            // 16 is padding specified for .content-create-dropdown
-                                            this.maxChildrenHeight = this.rootEl.offsetHeight - 16;
-
                                             const nextState: IStateLoaded = {
                                                 ...state,
                                                 mode: 'all-templates',
@@ -234,7 +227,6 @@ export class InitialView extends React.PureComponent<IProps, IState> {
 
                                     this.setState(nextState);
                                 }}
-                                height={this.maxChildrenHeight}
                             />
                         );
                     } else {
