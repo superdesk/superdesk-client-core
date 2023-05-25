@@ -38,6 +38,37 @@ export interface IPropsAuthoringSection<T> {
     item: T;
 }
 
+function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
+    const itemGroups: Array<Array<T>> = [
+        [],
+    ];
+
+    let rowWidth = 0; // percent
+
+    for (const item of items) {
+        const itemWidth = getWidth(item);
+        const fitOnThisRow = rowWidth + itemWidth <= 100;
+
+        if (fitOnThisRow) {
+            rowWidth = rowWidth + itemWidth;
+        } else {
+            itemGroups.push([]);
+        }
+
+        const lastGroup = itemGroups[itemGroups.length - 1];
+
+        lastGroup.push(item);
+
+        // if row is full after pushing - add a new one
+        if (rowWidth === 100) {
+            itemGroups.push([]);
+            rowWidth = 0;
+        }
+    }
+
+    return itemGroups;
+}
+
 /**
  * A variable is needed in order to use the same object reference
  * and allow PureComponent to skip re-renders.
@@ -62,6 +93,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const {toggledFields} = this.props;
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
+        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width);
 
         return (
             <div
@@ -69,38 +101,46 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '20px',
+                    gap: '10px',
                     padding: this.props.padding,
                 }}
             >
                 {
-                    this.props.fields.map((field) => {
-                        const canBeToggled = toggledFields[field.id] != null;
-                        const toggledOn = toggledFields[field.id];
+                    grouped.map((group, index) => (
+                        <div key={index} style={{display: 'flex', gap: '10px'}}>
+                            {
+                                group.map((field) => {
+                                    const canBeToggled = toggledFields[field.id] != null;
+                                    const toggledOn = toggledFields[field.id];
 
-                        return (
-                            <AuthoringSectionField
-                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
-                                key={field.id}
-                                field={field}
-                                fieldsData={this.props.fieldsData}
-                                onChange={this.props.onChange}
-                                readOnly={this.props.readOnly}
-                                language={this.props.language}
-                                canBeToggled={canBeToggled}
-                                toggledOn={toggledOn}
-                                toggleField={this.props.toggleField}
-                                editorPreferences={
-                                    this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
-                                }
-                                onEditorPreferencesChange={this.onEditorPreferencesChange}
-                                useHeaderLayout={this.props.useHeaderLayout}
-                                getVocabularyItems={this.props.getVocabularyItems}
-                                validationError={this.props.validationErrors[field.id]}
-                                item={this.props.item}
-                            />
-                        );
-                    }).toArray()
+                                    return (
+                                        <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
+                                            <AuthoringSectionField
+                                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
+                                                field={field}
+                                                fieldsData={this.props.fieldsData}
+                                                onChange={this.props.onChange}
+                                                readOnly={this.props.readOnly}
+                                                language={this.props.language}
+                                                canBeToggled={canBeToggled}
+                                                toggledOn={toggledOn}
+                                                toggleField={this.props.toggleField}
+                                                editorPreferences={
+                                                    this.props.userPreferencesForFields[field.id]
+                                                        ?? defaultUserPreferences
+                                                }
+                                                onEditorPreferencesChange={this.onEditorPreferencesChange}
+                                                useHeaderLayout={this.props.useHeaderLayout}
+                                                getVocabularyItems={this.props.getVocabularyItems}
+                                                validationError={this.props.validationErrors[field.id]}
+                                                item={this.props.item}
+                                            />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </div>
+                    ))
                 }
             </div>
         );
