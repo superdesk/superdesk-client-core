@@ -109,7 +109,7 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
-    if (htmlComesFromDraftjsEditor(html)) {
+    if (htmlComesFromDraftjsEditor(html, false)) {
         return 'not-handled';
     }
 
