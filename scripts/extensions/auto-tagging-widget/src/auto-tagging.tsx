@@ -378,7 +378,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this._mounted = false;
         }
         render() {
-            const {runAutomaticallyPreference, vocabularyLabels} = this.state;
+            const {runAutomaticallyPreference, vocabularyLabels, showImagesPreference} = this.state;
 
             if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
@@ -490,6 +490,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     }
                                                 }}
                                                 label={{content: gettext('Run automatically')}}
+                                            />
+
+                                            <Switch
+                                                value={showImagesPreference}
+                                                disabled={readOnly}
+                                                onChange={() => {
+                                                    const newValue = !showImagesPreference;
+
+                                                    this.setState({showImagesPreference: newValue});
+                                                    superdesk.preferences.set(SHOW_IMAGES_PREFERENCE, newValue);
+                                                }}
+                                                label={{content: gettext('Show image suggestions')}}
                                             />
                                         </ButtonGroup>
                                     </div>

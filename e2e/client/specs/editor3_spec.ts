@@ -57,6 +57,7 @@ describe('editor3', () => {
     const bodyEditor = new Editor3(editors.get(1));
     const headlineEditor = new Editor3(editors.get(0));
     const selectAll = protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.UP);
+    const tableEl = editors.get(1).element(by.className('table-block'));
 
     beforeEach(() => {
         monitoring.openMonitoring();
@@ -89,7 +90,7 @@ describe('editor3', () => {
     });
 
     it('can add tables', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+        const tableEditor = new Editor3(tableEl);
 
         bodyEditor.toolbar.table();
         tableEditor.sendKeys('foo');
@@ -100,7 +101,7 @@ describe('editor3', () => {
     });
 
     it('ctrl+z on tables mantains cursor position at the end', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
+        const tableEditor = new Editor3(tableEl);
 
         bodyEditor.toolbar.table();
         tableEditor.sendKeys('foo');

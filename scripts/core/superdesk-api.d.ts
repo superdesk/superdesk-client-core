@@ -2187,8 +2187,6 @@ declare module 'superdesk-api' {
         children?: Array<ITreeNode<T>>;
     }
 
-
-
     // EDITOR3
     export interface IEditor3AnnotationInputTab {
         label: string;
@@ -2231,7 +2229,8 @@ declare module 'superdesk-api' {
         'underline' |
         'italic' |
         'bold' |
-        'table';
+        'table' |
+        'multi-line quote';
 
     export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
@@ -2266,7 +2265,8 @@ declare module 'superdesk-api' {
         'tab' |
         'tab as spaces' |
         'undo' |
-        'redo';
+        'redo' |
+        'multi-line quote';
 
     export interface IEditor3HtmlProps {
         value: string;
@@ -2283,7 +2283,13 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
     }
 
-
+    export interface IActiveCell {
+        i: number; // row
+        j: number; // column
+        key: string;
+        currentStyle: Array<string>;
+        selection: import('draft-js').SelectionState;
+    }
 
     // DATA API
 

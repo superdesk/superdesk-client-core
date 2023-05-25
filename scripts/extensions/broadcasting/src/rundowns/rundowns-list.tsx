@@ -282,7 +282,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     rundown.matching_items && (
                                         <div style={{paddingInlineStart: 20, paddingTop: 8}}>
                                             <RundownItems
-                                                rundownReadOnly="yes"
+                                                rundownReadOnly={true}
                                                 items={rundown.matching_items}
                                                 getActions={((rundownItem) => {
                                                     const preview: IMenuItem = {
