@@ -2,14 +2,14 @@ import React from 'react';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
 import {EditorState, SelectionState} from 'draft-js';
-import {IAuthoringSectionTheme} from 'apps/authoring-react/authoring-section/authoring-section';
+import {IEditorComponentProps} from 'superdesk-api';
 
 interface IProps {
     iconName: string;
     editorState: EditorState;
     tooltip: string;
     precondition?: boolean;
-    uiTheme?: IAuthoringSectionTheme;
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     onClick: (args: {selection: SelectionState}) => void;
 }
 
@@ -57,3 +57,7 @@ const mapStateToProps = (state) => ({
 });
 
 export const SelectionButton = connect(mapStateToProps, null)(SelectionButtonComponent);
+
+// We can use this version of the button for nested
+// blocks which have a different editor state
+export const SelectionButtonCustomEditorState = SelectionButtonComponent;

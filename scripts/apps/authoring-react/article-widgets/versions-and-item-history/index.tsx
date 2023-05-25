@@ -47,7 +47,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
                                 onChange={(selectedTab: IState['selectedTab']) => {
                                     this.setState({selectedTab});
                                 }}
-                                selected={this.state.selectedTab}
+                                selectedTabId={this.state.selectedTab}
                             />
                         )}
                     />

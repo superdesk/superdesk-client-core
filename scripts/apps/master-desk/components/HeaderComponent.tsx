@@ -228,7 +228,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 <label>{gettext('Show all')}</label>
                                 <div className="pull-right">
                                     <Switch
-                                        label={{hidden: true, content: gettext('Show all')}}
+                                        label={{content: gettext('Show all'), hidden: true}}
                                         value={this.state.showAllDesks}
                                         onChange={() => this.toggleShowAll()}
                                     />
@@ -240,7 +240,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                     <label>{item.name}</label>
                                     <div className="pull-right">
                                         <Switch
-                                            label={{hidden: true, content: gettext('Toggle desk')}}
+                                            label={{content: item.name, hidden: true}}
                                             value={this.isDeskActive(item)}
                                             onChange={() => this.toggleDesk(item)}
                                         />

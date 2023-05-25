@@ -39,8 +39,6 @@ interface IStateLoading {
 type IState = IStateLoading | IStateLoaded;
 
 export class InitialView extends React.PureComponent<IProps, IState> {
-    private rootEl: HTMLDivElement;
-
     constructor(props: IProps) {
         super(props);
 
@@ -122,7 +120,6 @@ export class InitialView extends React.PureComponent<IProps, IState> {
             <div
                 className="content-create-dropdown"
                 data-test-id="content-create-dropdown"
-                ref={(el) => this.rootEl = el}
             >
                 {(() => {
                     if (state.mode === 'initial') {
