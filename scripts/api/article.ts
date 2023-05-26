@@ -6,7 +6,11 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {copyJson} from 'core/helpers/utils';
-import {IPanelError, ISendToDestination, ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
+import {
+    IPublishingError,
+    ISendToDestination,
+    ISendToDestinationDesk,
+} from 'core/interactive-article-actions-panel/interfaces';
 import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
@@ -244,7 +248,7 @@ function publishItem(
     orig: IArticle,
     item: IArticle,
     action: IArticleActionType = 'publish',
-    onError?: (error: IPanelError) => void,
+    onError?: (error: IPublishingError) => void,
 ): Promise<boolean | IArticle> {
     const scope: IScope = {};
 
@@ -275,7 +279,7 @@ function publishItem_legacy(
     item: IArticle,
     scope: IScope,
     action: string | 'publish' | 'edit' = 'publish',
-    onError?: (error: IPanelError) => void,
+    onError?: (error: IPublishingError) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
     const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
@@ -476,9 +480,10 @@ interface IArticleApi {
         action?: string,
 
         // onError is optional in this function and in `publishItem_legacy` since when you're calling
-        // it from React you want to pass only it to handle certain errors and apply them to the scope but not the whole scope
-        // but from Angular you already have access to the full scope so you won't need to pass onError
-        onError?: (error: IPanelError) => void,
+        // it from React you want to pass only it to handle certain errors and apply them to the scope
+        // but not the whole scope but from Angular you already have access to the full scope so you
+        // won't need to pass onError
+        onError?: (error: IPublishingError) => void,
     ): Promise<boolean | IArticle>;
 }
 

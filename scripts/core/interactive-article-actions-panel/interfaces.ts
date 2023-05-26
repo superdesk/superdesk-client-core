@@ -6,10 +6,10 @@ export interface IPanelAction {
     items: Array<IArticle>;
     tabs: Array<IArticleActionInteractive>;
     activeTab: IArticleActionInteractive;
-    onError?: (error: IPanelError) => void;
+    onError?: (error: IPublishingError) => void;
 }
 
-interface IPublishingError {
+export interface IPublishingError {
     kind: 'publishing-error';
     fields: {
         [fieldId: string]: string;

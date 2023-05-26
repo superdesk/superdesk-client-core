@@ -96,7 +96,12 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    sdApi.article.publishItem(cloneDeep(this.props.item), cloneDeep(itemToPublish), 'publish', this.props.onError)
+                    sdApi.article.publishItem(
+                        cloneDeep(this.props.item),
+                        cloneDeep(itemToPublish),
+                        'publish',
+                        this.props.onError,
+                    )
                         .then(() => {
                             ng.get('authoringWorkspace').close();
                             notify.success('Item published.');
