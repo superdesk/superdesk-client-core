@@ -1,11 +1,11 @@
 import React, {CSSProperties} from 'react';
-import {IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
 import {DestinationSelect} from '../subcomponents/destination-select';
-import {ISendToDestination} from '../interfaces';
+import {IPanelError, ISendToDestination} from '../interfaces';
 import {getInitialDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
@@ -27,12 +27,14 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
 
 interface IProps {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
+    onError: (error: IPanelError) => void;
 }
 
 interface IState {
@@ -94,10 +96,16 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
-                        ng.get('authoringWorkspace').close();
-                        notify.success('Item published.');
-                    });
+                    sdApi.article.publishItem(
+                        cloneDeep(this.props.item),
+                        cloneDeep(itemToPublish),
+                        'publish',
+                        this.props.onError,
+                    )
+                        .then(() => {
+                            ng.get('authoringWorkspace').close();
+                            notify.success('Item published.');
+                        });
                 });
             })
             .catch(() => {

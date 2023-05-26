@@ -66,7 +66,7 @@ export class InteractiveArticleActionsPanel
     }
 
     render() {
-        const {items, tabs, onClose} = this.props;
+        const {items, tabs, onClose, onError} = this.props;
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
@@ -113,6 +113,7 @@ export class InteractiveArticleActionsPanel
 
                         return (
                             <PublishTab
+                                onError={onError}
                                 item={item}
                                 closePublishView={onClose}
                                 markupV2={markupV2}
