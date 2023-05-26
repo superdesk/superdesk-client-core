@@ -4,7 +4,7 @@ import {appConfig, extensions} from 'appConfig';
 import {sdApi} from 'api';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 
-export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
+export type IArticleAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
 /**
  * @ngdoc service
@@ -24,7 +24,7 @@ export class AuthoringWorkspaceService {
     private $window: any;
 
     item: any;
-    action: IAuthoringAction;
+    action: IArticleAction;
     state: any;
 
     widgetVisibilityCheckerFuntions: Array<(arg) => Promise<boolean>>;
@@ -101,21 +101,14 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
-        action?: IAuthoringAction,
+        item: {
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
+        },
+        action?: IArticleAction,
     ) {
-        if (item) {
-            // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (
-                item._type === 'externalsource'
-                && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
-            ) {
-                return;
-            }
-            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
-        } else {
-            this.close();
-        }
+        return sdApi.article.edit(item, action);
     }
 
     /**
@@ -320,7 +313,7 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action: IAuthoringAction, repo?, state?) {
+    private authoringOpen(itemId, action: IArticleAction, repo?, state?) {
         return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
                 this.item = item;

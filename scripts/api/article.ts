@@ -12,12 +12,13 @@ import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {flatMap, trim} from 'lodash';
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {IArticle, IAuthoringAction, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -351,6 +352,36 @@ function publishItem_legacy(
         });
 }
 
+function edit(
+    item: {
+        _id: IArticle['_id'],
+        _type?: IArticle['_type'],
+        state?: IArticle['state']
+    },
+    action?: IArticleAction,
+): void {
+    if (item != null) {
+        // disable edit of external ingest sources
+        // that are not editable (editFeaturedImage false or not available)
+
+        if (
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+        ) {
+            return;
+        }
+
+        ng.get('authoringWorkspace').authoringOpen(
+            item._id,
+            action || 'edit',
+            item._type || null,
+            item.state === 'being_corrected',
+        );
+    } else {
+        ng.get('authoringWorkspace').close();
+    }
+}
+
 /**
  * Gets opened items from your workspace.
  */
@@ -459,6 +490,16 @@ interface IArticleApi {
     // every time to the publishItem_legacy we can use this function which
     // creates a fake scope for us.
     publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
+
+    // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
+    edit(
+        item: {
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
+        },
+        action?: IArticleAction,
+    ): void;
 }
 
 export const article: IArticleApi = {
@@ -494,4 +535,5 @@ export const article: IArticleApi = {
     showCloseAndContinue,
     publishItem_legacy,
     publishItem,
+    edit,
 };

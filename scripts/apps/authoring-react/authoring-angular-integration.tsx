@@ -29,7 +29,10 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 
+type IAction = 'edit' | string;
+
 export interface IProps {
+    action?: IAction;
     itemId: IArticle['_id'];
 }
 
@@ -38,7 +41,7 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAuthoringOptions<IArticle> {
+function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: IAction): IAuthoringOptions<IArticle> {
     const {
         item,
         hasUnsavedChanges,
@@ -244,6 +247,24 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
                             });
                         }}
                         text={gettext('P & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
+        if (action === 'view' && item._editable !== true) {
+            actions.push({
+                group: 'middle',
+                priority: 0.4,
+                component: ({entity}) => (
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state});
+                        }}
+                        text={gettext('Edit')}
                         style="filled"
                     />
                 ),
@@ -458,7 +479,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={getInlineToolbarActions}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
                     authoringStorage={authoringStorageIArticle}
                 />
             </div>
