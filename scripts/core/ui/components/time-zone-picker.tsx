@@ -1,7 +1,7 @@
 import React from 'react';
-import {SelectFilterable} from './select-filterable';
 import {sdApi} from 'api';
 import {OrderedMap} from 'immutable';
+import {SelectFilterableNoLabels} from './select-filterable-no-labels';
 
 interface IProps {
     value: string;
@@ -21,7 +21,7 @@ export class TimeZonePicker extends React.PureComponent<IProps> {
         const keys: Array<string> = this.allTimeZones.keySeq().toJS();
 
         return (
-            <SelectFilterable
+            <SelectFilterableNoLabels
                 items={keys}
                 value={this.props.value}
                 onChange={(val) => this.props.onChange(val)}

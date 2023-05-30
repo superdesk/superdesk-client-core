@@ -1,7 +1,8 @@
 import React from 'react';
 import {Button, Tag} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {SelectFilterable} from 'core/ui/components/select-filterable';
+import {Spacer} from 'core/ui/components/Spacer';
+import {SelectFilterableNoLabels} from 'core/ui/components/select-filterable-no-labels';
 
 interface IValue {
     qcode: string;
@@ -40,7 +41,7 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
 
         return (
             <div>
-                <div className="space-between" style={{gap: 10}}>
+                <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
                     <Button
                         text={gettext('Not')}
                         onClick={() => {
@@ -51,8 +52,7 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         style={this.state.allow ? 'hollow' : 'filled'}
                         type={this.state.allow ? 'default' : 'primary'}
                     />
-
-                    <SelectFilterable
+                    <SelectFilterableNoLabels
                         items={itemsExcludingSelected}
                         value={this.state.vocabulary}
                         getLabel={(vocabulary) => vocabulary?.name ?? ''}
@@ -61,7 +61,6 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         }}
                         required={this.props.required}
                     />
-
                     <Button
                         text={gettext('Add')}
                         onClick={() => {
@@ -84,8 +83,7 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         style="hollow"
                         type="primary"
                     />
-                </div>
-
+                </Spacer>
                 {
                     this.props.value.length > 0 && (
                         <div style={{paddingTop: 5}}>

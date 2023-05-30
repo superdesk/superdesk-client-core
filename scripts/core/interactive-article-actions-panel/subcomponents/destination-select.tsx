@@ -1,12 +1,12 @@
 import React from 'react';
 import {IDesk, IStage} from 'superdesk-api';
-import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
 import {FormLabel, Button} from 'superdesk-ui-framework/react';
 import {ISendToDestination} from '../interfaces';
+import {SelectFilterableNoLabels} from 'core/ui/components/select-filterable-no-labels';
 
 interface IProps {
     value: ISendToDestination;
@@ -39,7 +39,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
         return (
             <div>
                 <div style={{paddingTop: 5}}>
-                    <SelectFilterable
+                    <SelectFilterableNoLabels
                         value={(() => {
                             const dest = selectedDestination;
 
@@ -74,7 +74,6 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                             }
                         }}
                         getLabel={(destination) => destination.label}
-                        required
                     />
                 </div>
 
@@ -104,6 +103,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                                                         : 'default'
                                                 }
                                                 expand
+                                                icon={selectedDestination.stage === stage._id ? 'ok' : undefined}
                                             />
                                         </div>
                                     )).toArray()

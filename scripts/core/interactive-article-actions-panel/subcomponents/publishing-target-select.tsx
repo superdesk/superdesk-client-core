@@ -1,8 +1,7 @@
 import React from 'react';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {MultiSelect} from 'core/ui/components/MultiSelect';
-import {ToggleBox, FormLabel} from 'superdesk-ui-framework/react';
+import {ToggleBox, FormLabel, TreeSelect} from 'superdesk-ui-framework/react';
 import {ControlledVocabulariesSelect} from './controlled-vocabulary-select';
 import {IArticle} from 'superdesk-api';
 
@@ -71,13 +70,18 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
                 <FormLabel text={gettext('Target subscribers')} />
 
                 <div style={{paddingTop: 5}}>
-                    <MultiSelect
-                        items={subscribers.map(({_id, name}) => ({id: _id, label: name}))}
-                        values={this.props.value.target_subscribers.map(({_id}) => _id)}
+                    <TreeSelect
+                        allowMultiple
+                        getId={(item) => item._id}
+                        getLabel={(item) => item.name}
+                        getOptions={() => subscribers.map((x) => ({value: x}))}
+                        value={this.props.value.target_subscribers}
+                        kind="synchronous"
                         onChange={(val) => {
                             this.props.onChange({
                                 ...this.props.value,
-                                target_subscribers: subscribers.filter(({_id}) => val.includes(_id)),
+                                target_subscribers: subscribers
+                                    .filter(({_id}) => val.map(({_id}) => _id).includes(_id)),
                             });
                         }}
                     />

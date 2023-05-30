@@ -1,19 +1,9 @@
 import React from 'react';
 import {SelectWithTemplate} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
+import {IPropsFilterable} from './select-filterable';
 
-export interface IPropsFilterable<T> {
-    items: Array<T>;
-    value: T;
-    onChange(value: T): void;
-    getLabel(item: T): string;
-    required?: boolean;
-    disabled?: boolean;
-    itemTemplate?: React.ComponentType<{option: T | null}>;
-    zIndex?: number;
-}
-
-export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>> {
+export class SelectFilterableNoLabels<T> extends React.PureComponent<IPropsFilterable<T>> {
     render() {
         const {items, value, getLabel, required} = this.props;
 
@@ -23,6 +13,9 @@ export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>
 
         return (
             <SelectWithTemplate
+                fullWidth
+                inlineLabel
+                labelHidden
                 key={JSON.stringify(items)} // re-mount when items change
                 getItems={(searchString) => searchString === null
                     ? Promise.resolve(items)
@@ -41,7 +34,6 @@ export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>
                     this.props.onChange(item);
                 }}
                 disabled={this.props.disabled}
-                width="100%"
                 required={required}
                 zIndex={this.props.zIndex}
             />
