@@ -74,6 +74,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                 </div>
                 {
                     <WithPagination
+                        key={this.state.searchString}
                         getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
                             .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
