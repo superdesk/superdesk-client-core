@@ -71,17 +71,17 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
 
                 <div style={{paddingTop: 5}}>
                     <TreeSelect
+                        kind="synchronous"
                         allowMultiple
                         getId={(item) => item._id}
                         getLabel={(item) => item.name}
                         getOptions={() => subscribers.map((x) => ({value: x}))}
                         value={this.props.value.target_subscribers}
-                        kind="synchronous"
                         onChange={(val) => {
                             this.props.onChange({
                                 ...this.props.value,
                                 target_subscribers: subscribers
-                                    .filter(({_id}) => val.map(({_id}) => _id).includes(_id)),
+                                    .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
                             });
                         }}
                     />
