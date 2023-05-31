@@ -76,36 +76,33 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                         getLabel={(destination) => destination.label}
                     />
                 </div>
-
                 {
                     (selectedDestination.type === 'desk' && this.props.hideStages !== true) && (
                         <div>
                             <br />
                             <FormLabel text={gettext('Stage')} />
-                            <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 5}}>
-                                <RadioButtonGroup
-                                    onChange={
-                                        (stageId) => this.props.onChange({
-                                            ...selectedDestination,
-                                            stage: stageId,
-                                        })
-                                    }
-                                    value={selectedDestination.stage}
-                                    group={{
-                                        grid: true,
-                                        padded: false,
-                                        orientation: 'horizontal',
-                                    }}
-                                    options={
-                                        sdApi.desks.getDeskStages(selectedDestination.desk).toArray().map((stage) => ({
-                                            label: stage.name,
-                                            value: stage._id,
-                                            icon: 'ok',
-                                            disabled: (this.props.disallowedStages ?? []).includes(stage._id),
-                                        }))
-                                    }
-                                />
-                            </div>
+                            <RadioButtonGroup
+                                onChange={
+                                    (stageId) => this.props.onChange({
+                                        ...selectedDestination,
+                                        stage: stageId,
+                                    })
+                                }
+                                value={selectedDestination.stage}
+                                group={{
+                                    grid: true,
+                                    padded: false,
+                                    orientation: 'horizontal',
+                                }}
+                                options={
+                                    sdApi.desks.getDeskStages(selectedDestination.desk).toArray().map((stage) => ({
+                                        label: stage.name,
+                                        value: stage._id,
+                                        icon: 'ok',
+                                        disabled: (this.props.disallowedStages ?? []).includes(stage._id),
+                                    }))
+                                }
+                            />
                         </div>
                     )
                 }
