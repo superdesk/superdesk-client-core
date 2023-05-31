@@ -1,15 +1,9 @@
 import React from 'react';
-
 import {gettext, gettextPlural} from 'core/utils';
 import {showModal} from '@superdesk/common';
-
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {Button} from 'core/ui/components';
 import {IArticle} from 'superdesk-api';
 import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -23,11 +17,34 @@ export function confirmPublish(items: Array<IArticle>): Promise<void> {
         class ConfirmPublishModal extends React.PureComponent<IProps> {
             render() {
                 return (
-                    <Modal>
-                        <ModalHeader onClose={this.props.closeModal}>
-                            {gettext('Publishing')}
-                        </ModalHeader>
-                        <ModalBody>
+                    <Modal
+                        visible
+                        zIndex={1050}
+                        size="small"
+                        position="top"
+                        onHide={this.props.closeModal}
+                        headerTemplate={gettext('Publishing')}
+                        footerTemplate={
+                            (
+                                <ButtonGroup align="end">
+                                    <Button
+                                        text={gettext('Cancel')}
+                                        type="default"
+                                        onClick={this.props.closeModal}
+                                    />
+                                    <Button
+                                        text={gettext('Publish')}
+                                        type="primary"
+                                        onClick={() => {
+                                            resolve();
+                                            this.props.closeModal();
+                                        }}
+                                    />
+                                </ButtonGroup>
+                            )
+                        }
+                    >
+                        <div>
                             <p>
                                 <strong>
                                     {
@@ -65,21 +82,7 @@ export function confirmPublish(items: Array<IArticle>): Promise<void> {
                                     })
                                 }
                             </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="default" onClick={this.props.closeModal}>
-                                {gettext('Cancel')}
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => {
-                                    resolve();
-                                    this.props.closeModal();
-                                }}
-                            >
-                                {gettext('Publish')}
-                            </Button>
-                        </ModalFooter>
+                        </div>
                     </Modal>
                 );
             }

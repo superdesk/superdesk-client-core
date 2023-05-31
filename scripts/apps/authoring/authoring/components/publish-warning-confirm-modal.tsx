@@ -1,12 +1,8 @@
 import React from 'react';
-
 import {gettext} from 'core/utils';
 import Button from 'core/ui/components/Button';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {showModal} from '@superdesk/common';
+import {ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -20,31 +16,40 @@ export function getPublishWarningConfirmModal(
         class PublishWarningsModal extends React.PureComponent<IProps> {
             render() {
                 return (
-                    <Modal>
-                        <ModalHeader onClose={this.props.closeModal}>{gettext('Confirm Publish Warnings')}</ModalHeader>
-                        <ModalBody>
-                            <ul>
-                                {warnings.map((warning, index) => (
-                                    <li key={index}>
-                                        {warning}
-                                    </li>
-                                ))}
-                            </ul>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="default" onClick={this.props.closeModal}>
-                                {gettext('Cancel')}
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => {
-                                    publishingAction().then(resolve, reject);
-                                    this.props.closeModal();
-                                }}
-                            >
-                                {gettext('Confirm')}
-                            </Button>
-                        </ModalFooter>
+                    <Modal
+                        visible
+                        zIndex={1050}
+                        size="small"
+                        position="top"
+                        onHide={this.props.closeModal}
+                        headerTemplate={gettext('Confirm Publish Warnings')}
+                        footerTemplate={
+                            (
+                                <ButtonGroup align="end">
+                                    <Button
+                                        type="default"
+                                        text={gettext('Cancel')}
+                                        onClick={this.props.closeModal}
+                                    />
+                                    <Button
+                                        type="primary"
+                                        text={gettext('Confirm')}
+                                        onClick={() => {
+                                            publishingAction().then(resolve, reject);
+                                            this.props.closeModal();
+                                        }}
+                                    />
+                                </ButtonGroup>
+                            )
+                        }
+                    >
+                        <ul>
+                            {warnings.map((warning, index) => (
+                                <li key={index}>
+                                    {warning}
+                                </li>
+                            ))}
+                        </ul>
                     </Modal>
                 );
             }

@@ -1,17 +1,11 @@
 import * as React from 'react';
-import {Button} from 'core/ui/components';
-
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {UploadComplete} from './UploadComplete';
 import {UploadConfigModalInformation} from './UploadConfigModalInformation';
 import {DropZone} from './drop-zone';
 import {notify} from '../../../core/notify/notify';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -67,14 +61,39 @@ export function UploadConfig(updateVocabulary) {
                 or select files by clicking the button below`);
 
             return (
-                <Modal size="large">
-                    <ModalHeader onClose={this.props.closeModal}>
-                        {gettext('Upload config')}
-                    </ModalHeader>
-                    <ModalBody>
-                        <div className="sd-padding--3">
-                            <UploadConfigModalInformation label= {modalInformationLabel} />
-                            {this.state.files.length === 0 ? (
+                <Modal
+                    visible
+                    zIndex={1050}
+                    size="large"
+                    position="center"
+                    onHide={this.props.closeModal}
+                    headerTemplate={gettext('Upload config')}
+                    footerTemplate={
+                        (
+                            <ButtonGroup align="end">
+                                <Button
+                                    type="default"
+                                    text={gettext('Cancel')}
+                                    onClick={this.props.closeModal}
+                                />
+                                <Button
+                                    type="primary"
+                                    text={gettext('Apply config')}
+                                    onClick={() => {
+                                        this.uploadFile();
+                                        this.props.closeModal();
+                                    }}
+                                    disabled={this.state.files.length === 0}
+                                    data-test-id="confirm"
+                                />
+                            </ButtonGroup>
+                        )
+                    }
+                >
+                    <div className="sd-padding--3">
+                        <UploadConfigModalInformation label= {modalInformationLabel} />
+                        {this.state.files.length === 0
+                            ? (
                                 <DropZone
                                     label={dropZoneLabel}
                                     className={[
@@ -94,26 +113,12 @@ export function UploadConfig(updateVocabulary) {
                                     }}
                                     multiple={true}
                                 />
-                            ) : (
+                            )
+                            : (
                                 <UploadComplete />
-                            )}
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.props.closeModal}>
-                            {gettext('Cancel')}
-                        </Button>
-                        <Button
-                            color="primary"
-                            onClick={() => {
-                                this.uploadFile();
-                                this.props.closeModal();
-                            }}
-                            disabled={this.state.files.length === 0}
-                        >
-                            {gettext('Apply config')}
-                        </Button>
-                    </ModalFooter>
+                            )
+                        }
+                    </div>
                 </Modal>
             );
         }

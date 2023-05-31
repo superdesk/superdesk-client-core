@@ -1,14 +1,11 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
 import {showModal} from '@superdesk/common';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework/react';
 import {PreviewAuthoringItem} from '../preview-authoring-item';
 import {ViewDifference} from './view-difference';
 
@@ -112,18 +109,26 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            height: '100%',
             overflowY: 'auto',
             background: 'white',
         };
 
         return (
-            <Modal size="full-screen">
-                <ModalHeader onClose={() => this.props.closeModal()}>
-                    {gettext('Comparing "{{x}}"(primary) to "{{y}}"(secondary)', {x: entity1Label, y: entity2Label})}
-                </ModalHeader>
-
-                <ModalBody style={{background: '#e8eaed', padding: '8px'}}>
+            <Modal
+                visible
+                zIndex={1050}
+                size="x-large"
+                position="center"
+                maximized
+                maximizable
+                onHide={this.props.closeModal}
+                headerTemplate={gettext(
+                    'Comparing "{{x}}"(primary) to "{{y}}"(secondary)',
+                    {x: entity1Label, y: entity2Label},
+                )}
+                contentPadding="none"
+            >
+                <div style={{background: '#e8eaed', padding: '8px', height: '100%'}}>
                     <Spacer v gap="8" alignItems="stretch" noWrap style={{width: '100%', height: '100%'}}>
                         <Spacer h gap="8" justifyContent="start" noGrow>
                             <Button
@@ -199,7 +204,7 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                             }
                         </div>
                     </Spacer>
-                </ModalBody>
+                </div>
             </Modal>
         );
     }

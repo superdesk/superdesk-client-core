@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Spinner} from 'superdesk-ui-framework/react';
+import {Button, Modal, Spinner} from 'superdesk-ui-framework/react';
 import {showModal} from '@superdesk/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {superdesk} from '../superdesk';
@@ -9,13 +9,6 @@ import {WithShow} from './create-show';
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
 const {httpRequestJsonLocal} = superdesk;
-
-const {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} = superdesk.components;
 
 interface IProps {
     closeModal(): void;
@@ -83,55 +76,59 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
         return (
             <WithShow show={this.state.show}>
                 {(form, save) => (
-                    <Modal>
-                        <ModalHeader onClose={this.props.closeModal}>
-                            {gettext('Create new show')}
-                        </ModalHeader>
+                    <Modal
+                        visible
+                        zIndex={1050}
+                        size="small"
+                        position="top"
+                        onHide={this.props.closeModal}
+                        headerTemplate={
+                            gettext('Create new show')
+                        }
+                        footerTemplate={
+                            (
+                                <Spacer h gap="32" justifyContent="space-between" noWrap>
+                                    <div>
+                                        {
+                                            this.state.inProgress && (
+                                                <Spinner />
+                                            )
+                                        }
+                                    </div>
 
-                        <ModalBody>
-                            {form}
-                        </ModalBody>
+                                    <div>
+                                        <Spacer h gap="8" noWrap>
+                                            <Button
+                                                text={gettext('Cancel')}
+                                                onClick={this.cancel}
+                                                disabled={this.state.inProgress}
+                                            />
+                                            <Button
+                                                text={gettext('Save')}
+                                                onClick={() => {
+                                                    save().then((savedShow) => {
+                                                        this.props.closeModal();
 
-                        <ModalFooter flex>
-                            <Spacer h gap="32" justifyContent="space-between" noWrap>
-                                <div>
-                                    {
-                                        this.state.inProgress && (
-                                            <Spinner />
-                                        )
-                                    }
-                                </div>
-
-                                <div>
-                                    <Spacer h gap="8" noWrap>
-                                        <Button
-                                            text={gettext('Cancel')}
-                                            onClick={this.cancel}
-                                            disabled={this.state.inProgress}
-                                        />
-                                        <Button
-                                            text={gettext('Save')}
-                                            onClick={() => {
-                                                save().then((savedShow) => {
-                                                    this.props.closeModal();
-
-                                                    showModal(({closeModal}) => (
-                                                        <CreateShowAfterModal
-                                                            closeModal={closeModal}
-                                                            show={savedShow}
-                                                        />
-                                                    ));
-                                                }).catch(() => {
-                                                    // noop, validation failed
-                                                });
-                                            }}
-                                            type="primary"
-                                            disabled={this.state.inProgress}
-                                        />
-                                    </Spacer>
-                                </div>
-                            </Spacer>
-                        </ModalFooter>
+                                                        showModal(({closeModal}) => (
+                                                            <CreateShowAfterModal
+                                                                closeModal={closeModal}
+                                                                show={savedShow}
+                                                            />
+                                                        ));
+                                                    }).catch(() => {
+                                                        // noop, validation failed
+                                                    });
+                                                }}
+                                                type="primary"
+                                                disabled={this.state.inProgress}
+                                            />
+                                        </Spacer>
+                                    </div>
+                                </Spacer>
+                            )
+                        }
+                    >
+                        {form}
                     </Modal>
                 )}
             </WithShow>

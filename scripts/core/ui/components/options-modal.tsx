@@ -1,12 +1,9 @@
 import React from 'react';
 import {showModal} from '@superdesk/common';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import classNames from 'classnames';
 import {Loader} from './Loader';
 import {Spacer} from './Spacer';
+import {Modal} from 'superdesk-ui-framework/react';
 
 interface IOption {
     label: string;
@@ -34,40 +31,45 @@ export function showOptionsModal(title: string, message: string, options: Array<
 
         render() {
             return (
-                <Modal>
-                    <ModalHeader>{title}</ModalHeader>
+                <Modal
+                    visible
+                    zIndex={1050}
+                    size="small"
+                    position="top"
+                    headerTemplate={title}
+                    footerTemplate={
+                        (
+                            <div>
+                                {
+                                    this.state.loading && (
+                                        <Loader grow={false} />
+                                    )
+                                }
 
-                    <ModalBody>
-                        <div>{message}</div>
-                    </ModalBody>
+                                <Spacer h gap="4" justifyContent="start" noGrow>
+                                    {
+                                        options.map(({label, highlightOption, onSelect}) => (
+                                            <button
+                                                key={label}
+                                                className={classNames('btn', {'btn--primary': highlightOption})}
+                                                onClick={() => {
+                                                    this.setState({loading: true});
+                                                    const closeModalFn = () => this.props.closeModal();
 
-                    <ModalFooter flex>
-                        {
-                            this.state.loading && (
-                                <Loader grow={false} />
-                            )
-                        }
-
-                        <Spacer h gap="4" justifyContent="start" noGrow>
-                            {
-                                options.map(({label, highlightOption, onSelect}) => (
-                                    <button
-                                        key={label}
-                                        className={classNames('btn', {'btn--primary': highlightOption})}
-                                        onClick={() => {
-                                            this.setState({loading: true});
-                                            const closeModalFn = () => this.props.closeModal();
-
-                                            onSelect(closeModalFn);
-                                        }}
-                                        disabled={this.state.loading}
-                                    >
-                                        {label}
-                                    </button>
-                                ))
-                            }
-                        </Spacer>
-                    </ModalFooter>
+                                                    onSelect(closeModalFn);
+                                                }}
+                                                disabled={this.state.loading}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))
+                                    }
+                                </Spacer>
+                            </div>
+                        )
+                    }
+                >
+                    <div>{message}</div>
                 </Modal>
             );
         }

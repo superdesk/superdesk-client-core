@@ -18,7 +18,7 @@ export class Editor extends React.PureComponent<IProps> {
     render() {
         const checkbox = (
             <Switch
-                label={{text: ''}}
+                label={{content: ''}}
                 value={this.props.value != null}
                 onChange={(value) => {
                     if (value) {

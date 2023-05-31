@@ -1,14 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
-import Button from 'core/ui/components/Button';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {showModal} from '@superdesk/common';
+import {Button, Modal} from 'superdesk-ui-framework/react';
 
 function prepareAndPrint() {
     document.body.classList.add('prepare-to-print');
@@ -108,26 +103,28 @@ function getErrorsModal(
     return class ErrorsModal extends React.PureComponent<{closeModal(): void}> {
         render() {
             return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>{title}</ModalHeader>
-                    <ModalBody>
-                        {
-                            description == null ? null : (
-                                <h3>{description}</h3>
-                            )
-                        }
+                <Modal
+                    visible
+                    zIndex={1050}
+                    size="small"
+                    position="top"
+                    onHide={this.props.closeModal}
+                    headerTemplate={title}
+                    footerTemplate={
+                        <Button type="primary" text={gettext('Ok')} onClick={this.props.closeModal} />
+                    }
+                >
+                    {
+                        description == null ? null : (
+                            <h3>{description}</h3>
+                        )
+                    }
 
-                        {
-                            errors.map((message, i) => (
-                                <p key={i}>{message}</p>
-                            ))
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.props.closeModal}>
-                            {gettext('Ok')}
-                        </Button>
-                    </ModalFooter>
+                    {
+                        errors.map((message, i) => (
+                            <p key={i}>{message}</p>
+                        ))
+                    }
                 </Modal>
             );
         }

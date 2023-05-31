@@ -1,12 +1,8 @@
 import React from 'react';
-
 import {gettext} from 'core/utils';
 import {showModal} from '@superdesk/common';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {Button} from 'superdesk-ui-framework';
+import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Spacer} from 'core/ui/components/Spacer';
 
 export function authenticateIngestProvider(actions: Array<{label: string; onClick(): void}>) {
     interface IProps {
@@ -16,12 +12,23 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
     class IngestAuthenticationModal extends React.PureComponent<IProps> {
         render() {
             return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>
-                        {gettext('Connect an account')}
-                    </ModalHeader>
-
-                    <ModalBody>
+                <Modal
+                    visible
+                    zIndex={1050}
+                    size="small"
+                    position="top"
+                    onHide={this.props.closeModal}
+                    headerTemplate={gettext('Connect an account')}
+                    footerTemplate={
+                        (
+                            <Button
+                                text={gettext('Close')}
+                                onClick={this.props.closeModal}
+                            />
+                        )
+                    }
+                >
+                    <Spacer h gap="4" noGrow justifyContent="start">
                         {
                             actions.map(({label, onClick}) => (
                                 <Button
@@ -35,14 +42,7 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
                                 />
                             ))
                         }
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button
-                            text={gettext('Close')}
-                            onClick={this.props.closeModal}
-                        />
-                    </ModalFooter>
+                    </Spacer>
                 </Modal>
             );
         }

@@ -1,12 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {showModal} from '@superdesk/common';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {gettext} from 'core/utils';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {RadioGroup, CheckGroup} from 'superdesk-ui-framework/react';
+import {RadioGroup, CheckGroup, Modal, ButtonGroup, Button} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
@@ -121,9 +117,34 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
 
     render() {
         return (
-            <Modal>
-                <ModalHeader>{gettext('Character limit settings')}</ModalHeader>
-                <ModalBody>
+            <Modal
+                visible
+                zIndex={1050}
+                size="medium"
+                position="top"
+                headerTemplate={gettext('Character limit settings')}
+                footerTemplate={
+                    (
+                        <ButtonGroup align="end">
+                            <Button
+                                text={gettext('Cancel')}
+                                type="default"
+                                onClick={this.props.closeModal}
+                            />
+                            <Button
+                                text={gettext('Save')}
+                                type="primary"
+                                onClick={() => {
+                                    this.props.onChange(this.state.radioValue);
+                                    this.props.closeModal();
+                                }}
+                                disabled={false}
+                            />
+                        </ButtonGroup>
+                    )
+                }
+            >
+                <div>
                     <p>
                         {gettext(
                             'You can either completely block further writing after the character' +
@@ -146,22 +167,7 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
                             onChange={this.onRadioValueChange}
                         />
                     </CheckGroup>
-                </ModalBody>
-                <ModalFooter>
-                    <button
-                        className="btn btn--primary pull-right"
-                        onClick={() => {
-                            this.props.onChange(this.state.radioValue);
-                            this.props.closeModal();
-                        }}
-                        disabled={false}
-                    >
-                        {gettext('Save')}
-                    </button>
-                    <button className="btn pull-right" onClick={this.props.closeModal}>
-                        {gettext('Cancel')}
-                    </button>
-                </ModalFooter>
+                </div>
             </Modal>
         );
     }
