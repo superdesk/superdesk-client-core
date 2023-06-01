@@ -6,12 +6,16 @@ interface IProps<T> {
     items: Array<T>;
     value: T;
     onChange(value: T): void;
+    
+    // used for filtering
     getLabel(item: T): string;
+
+    // controls, whether a label is shown next to the field defaults to false
+    hideLabel?: boolean; 
     required?: boolean;
     disabled?: boolean;
     itemTemplate?: React.ComponentType<{option: T | null}>;
     zIndex?: number;
-    hideLabel?: boolean; // defaults to false
 }
 
 export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
