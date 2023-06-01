@@ -10,7 +10,7 @@ interface IProps<T> {
     // used for filtering
     getLabel(item: T): string;
 
-    // controls, whether a label is shown next to the field defaults to false
+    // controls whether a label is shown next to the field defaults to false
     hideLabel?: boolean; 
     required?: boolean;
     disabled?: boolean;
