@@ -11,11 +11,12 @@ export interface IPropsFilterable<T> {
     disabled?: boolean;
     itemTemplate?: React.ComponentType<{option: T | null}>;
     zIndex?: number;
+    hideLabel?: boolean; // defaults to false
 }
 
 export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>> {
     render() {
-        const {items, value, getLabel, required} = this.props;
+        const {items, value, getLabel, required, hideLabel: inlineLabel} = this.props;
 
         const defaultTemplate = ({option}) => (
             <div>{getLabel(option)}</div>
@@ -23,6 +24,9 @@ export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>
 
         return (
             <SelectWithTemplate
+                fullWidth
+                inlineLabel={inlineLabel}
+                labelHidden={inlineLabel}
                 key={JSON.stringify(items)} // re-mount when items change
                 getItems={(searchString) => searchString === null
                     ? Promise.resolve(items)
@@ -41,7 +45,6 @@ export class SelectFilterable<T> extends React.PureComponent<IPropsFilterable<T>
                     this.props.onChange(item);
                 }}
                 disabled={this.props.disabled}
-                width="100%"
                 required={required}
                 zIndex={this.props.zIndex}
             />

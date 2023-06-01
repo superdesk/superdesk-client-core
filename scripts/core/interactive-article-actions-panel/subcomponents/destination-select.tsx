@@ -4,9 +4,9 @@ import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
-import {FormLabel, Button, RadioButtonGroup} from 'superdesk-ui-framework/react';
+import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {ISendToDestination} from '../interfaces';
-import {SelectFilterableNoLabels} from 'core/ui/components/select-filterable-no-labels';
+import {SelectFilterable} from 'core/ui/components/select-filterable';
 
 interface IProps {
     value: ISendToDestination;
@@ -39,7 +39,8 @@ export class DestinationSelect extends React.PureComponent<IProps> {
         return (
             <div>
                 <div style={{paddingTop: 5}}>
-                    <SelectFilterableNoLabels
+                    <SelectFilterable
+                        hideLabel={true}
                         value={(() => {
                             const dest = selectedDestination;
 

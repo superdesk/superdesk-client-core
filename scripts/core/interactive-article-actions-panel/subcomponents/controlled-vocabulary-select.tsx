@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Tag} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer} from 'core/ui/components/Spacer';
-import {SelectFilterableNoLabels} from 'core/ui/components/select-filterable-no-labels';
+import {SelectFilterable} from 'core/ui/components/select-filterable';
 
 interface IValue {
     qcode: string;
@@ -52,7 +52,8 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         style={this.state.allow ? 'hollow' : 'filled'}
                         type={this.state.allow ? 'default' : 'primary'}
                     />
-                    <SelectFilterableNoLabels
+                    <SelectFilterable
+                        hideLabel={true}
                         items={itemsExcludingSelected}
                         value={this.state.vocabulary}
                         getLabel={(vocabulary) => vocabulary?.name ?? ''}
