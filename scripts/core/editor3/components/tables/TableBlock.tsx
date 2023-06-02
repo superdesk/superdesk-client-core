@@ -1,19 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
 import {TableCell} from '.';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
+import {IActiveCell} from 'superdesk-api';
+import {IEditorStore} from 'core/editor3/store';
 
 interface IProps {
     block: ContentBlock;
     readOnly: boolean;
     editorState: EditorState;
-    activeCell?: any;
+    activeCell?: IActiveCell;
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
+    setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
+    toolbarStyle?: IEditorStore['customToolbarStyle'];
+    className?: string;
 }
 
 /**
@@ -57,6 +61,12 @@ export class TableBlockComponent extends React.Component<IProps> {
 
         if (needUpdate) {
             parentOnChange(newEditorState, forceUpdate);
+        }
+
+        if (this.props.activeCell != null) {
+            this.props.setCustomToolbar(this.props.toolbarStyle);
+        } else {
+            this.props.setCustomToolbar(null);
         }
 
         setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
@@ -122,14 +132,20 @@ export class TableBlockComponent extends React.Component<IProps> {
     render() {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
-
-        const cx = classNames('table-inside', {
-            'table-block': true,
-            'table-header': withHeader,
-        });
+        const cx = this.props.className != null
+            ? this.props.className
+            : classNames('table-inside', {
+                'table-block': true,
+                'table-header': withHeader,
+            });
 
         return (
-            <div className={cx} onMouseDown={this.onMouseDown}>
+            <div
+                className={cx}
+                onMouseDown={(e) => {
+                    this.onMouseDown(e);
+                }}
+            >
                 <table>
                     <tbody>
                         {Array.from(new Array(numRows)).map((_, i) => (
@@ -161,6 +177,7 @@ const mapDispatchToProps = (dispatch) => ({
     setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
         actions.setActiveCell(i, j, key, currentStyle, selection),
     ),
+    setCustomToolbar: (val: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(val)),
 });
 
 const mapStateToProps = (state) => ({

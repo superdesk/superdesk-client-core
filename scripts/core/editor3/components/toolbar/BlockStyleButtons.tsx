@@ -10,7 +10,7 @@ import {getCurrentAuthor} from '../../helpers/author';
  * @type {Object}
  * @description Maps server 'editorFormat' options to Draft styles.
  */
-const blockStyles = {
+export const blockStyles = {
     h1: 'header-one',
     h2: 'header-two',
     h3: 'header-three',
@@ -72,6 +72,7 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
                         .filter((type) => editorFormat.indexOf(type) > -1)
                         .map((type) => (
                             <StyleButton
+                                uiTheme={this.props.uiTheme}
                                 key={type}
                                 active={blockStyles[type] === blockType}
                                 label={type}

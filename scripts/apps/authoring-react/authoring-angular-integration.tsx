@@ -3,7 +3,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, NavButton, Popover} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, Label, NavButton, Popover} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -27,8 +27,12 @@ import {
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {notify} from 'core/notify/notify';
+
+type IAction = 'edit' | string;
 
 export interface IProps {
+    action?: IAction;
     itemId: IArticle['_id'];
 }
 
@@ -37,7 +41,7 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAuthoringOptions<IArticle> {
+function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: IAction): IAuthoringOptions<IArticle> {
     const {
         item,
         hasUnsavedChanges,
@@ -143,11 +147,42 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         availableOffline: true,
     });
 
+    const getReadOnlyAndArchivedFrom = (): Array<ITopBarWidget<IArticle>> => {
+        const actions: Array<ITopBarWidget<IArticle>> = [];
+
+        if (item._type === 'archived') {
+            actions.push({
+                group: 'start',
+                availableOffline: false,
+                component: () => (
+                    <span>
+                        <b>{gettext('Archived from')}</b>
+                        <DeskAndStage article={item} />
+                    </span>
+                ),
+                priority: 0.2,
+            });
+        }
+
+        if (item._type !== 'archived' && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly) {
+            actions.push({
+                group: 'start',
+                availableOffline: false,
+                component: () => (
+                    <Label text={gettext('Read-only')} style="filled" type="warning" />
+                ),
+                priority: 0.3,
+            });
+        }
+
+        return actions;
+    };
+
     switch (itemState) {
     case ITEM_STATE.DRAFT:
         return {
             readOnly: false,
-            actions: [saveButton, minimizeButton],
+            actions: [saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
         };
 
     case ITEM_STATE.SUBMITTED:
@@ -159,6 +194,7 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
         const actions: Array<ITopBarWidget<IArticle>> = [
             minimizeButton,
             closeButton,
+            ...getReadOnlyAndArchivedFrom(),
         ];
 
         if (item.highlights != null) {
@@ -197,12 +233,104 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAut
             actions.push(manageDesksButton);
         }
 
-        actions.push({
-            group: 'start',
-            priority: 0.2,
-            component: ({entity}) => <DeskAndStage article={entity} />,
-            availableOffline: false,
-        });
+        if (item._type !== 'archived') {
+            actions.push({
+                group: 'start',
+                priority: 0.2,
+                component: ({entity}) => <DeskAndStage article={entity} />,
+                availableOffline: false,
+            });
+        }
+
+        if (sdApi.highlights.showHighlightExportButton(item)) {
+            actions.push({
+                group: 'end',
+                priority: 0.4,
+                component: () => (
+                    <Button
+                        type="default"
+                        onClick={() => {
+                            sdApi.highlights.exportHighlight(item._id, hasUnsavedChanges());
+                        }}
+                        text={gettext('Export')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
+        if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
+            actions.push({
+                group: 'middle',
+                priority: 0.3,
+                component: ({entity}) => (
+                    <Button
+                        type="highlight"
+                        onClick={() => {
+                            const getLatestItem = hasUnsavedChanges()
+                                ? handleUnsavedChanges()
+                                : Promise.resolve(entity);
+
+                            getLatestItem.then((article) => {
+                                sdApi.article.publishItem(article, article).then((result) => {
+                                    typeof result !== 'boolean'
+                                        ? ng.get('authoring').rewrite(result)
+                                        : notify.error(gettext('Failed to publish and continue.'));
+                                });
+                            });
+                        }}
+                        text={gettext('P & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
+        if (action === 'view' && item._editable !== true) {
+            actions.push({
+                group: 'middle',
+                priority: 0.4,
+                component: ({entity}) => (
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state});
+                        }}
+                        text={gettext('Edit')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
+
+        if (sdApi.article.showCloseAndContinue(item, hasUnsavedChanges())) {
+            actions.push({
+                group: 'middle',
+                priority: 0.4,
+                component: ({entity}) => (
+                    <Button
+                        type="highlight"
+                        onClick={() => {
+                            const getLatestItem = hasUnsavedChanges()
+                                ? handleUnsavedChanges()
+                                : Promise.resolve(entity);
+
+                            getLatestItem.then((article) => {
+                                ng.get('authoring').close().then(() => {
+                                    sdApi.article.rewrite(article);
+                                });
+                            });
+                        }}
+                        text={gettext('C & C')}
+                        style="filled"
+                    />
+                ),
+                availableOffline: false,
+            });
+        }
 
         // FINISH: ensure locking is available in generic version of authoring
         actions.push({
@@ -385,7 +513,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={getInlineToolbarActions}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
                     authoringStorage={authoringStorageIArticle}
                 />
             </div>

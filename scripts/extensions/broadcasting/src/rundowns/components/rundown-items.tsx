@@ -23,9 +23,9 @@ const {Spacer} = superdesk.components;
 interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
     /**
      * It's a rundown that's in edit mode - not rundown items.
-     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     * if true, it won't allow reordering and adding new rundown items, but it will work to edit existing ones
      */
-    rundownReadOnly: 'yes';
+    rundownReadOnly: true;
     items: Array<T>;
     getActions(item: T): JSX.Element;
     preview(item: T): void;
@@ -35,7 +35,7 @@ interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
     /**
      * It's a rundown that's in edit mode - not rundown items.
-     * if "yes", it won't allow reordering and adding new rundown items, but it should work to edit existing ones
+     * if true, it won't allow reordering and adding new rundown items, but it will work to edit existing ones
      */
     rundownReadOnly: boolean;
     items: Array<T>;
@@ -114,7 +114,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     </Spacer>
                 ),
                 center: (
-                    <span style={{cursor: 'text'}}>
+                    <span style={this.props.rundownReadOnly ? {cursor: 'text'} : undefined}>
                         {customizations.getRundownItemDisplayName?.(item) ?? item.title}
                     </span>
                 ),

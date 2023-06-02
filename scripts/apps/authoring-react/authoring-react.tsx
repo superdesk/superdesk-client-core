@@ -23,7 +23,7 @@ import {
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
-import {AuthoringSection} from './authoring-section/authoring-section';
+import {AuthoringSection, IAuthoringSectionTheme} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
@@ -48,6 +48,9 @@ import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
+import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {showModal} from '@superdesk/common';
+import ng from 'core/services/ng';
 
 export function getFieldsData<T>(
     item: T,
@@ -136,6 +139,8 @@ function getInitialState<T extends IBaseRestApiResponse>(
     storageAdapter: IStorageAdapter<T>,
     language: string,
     validationErrors: IAuthoringValidationErrors,
+    defaultTheme: ITheme,
+    proofReadingTheme: ITheme,
 ): IStateLoaded<T> {
     const allFields = profile.header.merge(profile.content);
 
@@ -187,6 +192,11 @@ function getInitialState<T extends IBaseRestApiResponse>(
         userPreferencesForFields,
         spellcheckerEnabled,
         validationErrors: validationErrors,
+        allThemes: {
+            default: defaultTheme,
+            proofreading: proofReadingTheme,
+        },
+        proofreadingEnabled: false,
     };
 
     return initialState;
@@ -202,6 +212,30 @@ function getKeyBindingsFromActions<T>(actions: Array<ITopBarWidget<T>>): IKeyBin
             };
         }, {});
 }
+
+export const getUiThemeFontSize = (value: IFontSizeOption) => {
+    if (value === 'small') {
+        return '1.4rem';
+    } else if (value === 'medium') {
+        return '1.6rem';
+    } else if (value === 'large') {
+        return '1.8rem';
+    } else {
+        assertNever(value);
+    }
+};
+
+export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
+    if (value === 'small') {
+        return '2.3rem';
+    } else if (value === 'medium') {
+        return '2.8rem';
+    } else if (value === 'large') {
+        return '3.2rem';
+    } else {
+        assertNever(value);
+    }
+};
 
 /**
  * Toggling a field "off" hides it and removes its values.
@@ -230,6 +264,8 @@ interface IStateLoaded<T> {
      * Prevents changes to state while async operation is in progress(e.g. saving).
      */
     loading: boolean;
+    allThemes: {default: ITheme, proofreading: ITheme};
+    proofreadingEnabled: boolean;
 }
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
@@ -258,6 +294,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
+        this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
+        this.onArticleChange = this.onArticleChange.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -333,6 +371,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         } else {
             return Promise.resolve();
         }
+    }
+
+    private showThemeConfigModal(state: IStateLoaded<T>) {
+        showModal(({closeModal}) => {
+            return (
+                <ProofreadingThemeModal
+                    onHide={closeModal}
+                    onThemeChange={(res) => {
+                        this.setState({
+                            ...state,
+                            allThemes: {
+                                default: res.default,
+                                proofreading: res.proofreading,
+                            },
+                        });
+                    }}
+                />
+            );
+        });
     }
 
     /**
@@ -427,6 +484,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     }
 
     componentDidMount() {
+        const authThemes = ng.get('authThemes');
+
         this._mounted = true;
 
         const {authoringStorage} = this.props;
@@ -441,9 +500,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }),
                 authoringStorage.getUserPreferences(),
+                authThemes.get('theme'),
+                authThemes.get('proofreadTheme'),
             ],
         ).then((res) => {
-            const [{item, profile}, userPreferences] = res;
+            const [{item, profile}, userPreferences, defaultTheme, proofReadingTheme] = res;
 
             const spellcheckerEnabled =
                 userPreferences[SPELLCHECKER_PREFERENCE].enabled
@@ -460,6 +521,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 this.props.storageAdapter,
                 this.props.getLanguage(item.autosaved ?? item.saved),
                 {},
+                defaultTheme,
+                proofReadingTheme,
             );
 
             this.props.onEditingStart?.(initialState.itemWithChanges);
@@ -646,6 +709,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
                         state.validationErrors,
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
                     ));
                 });
             }),
@@ -670,6 +735,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
                         state.validationErrors,
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
                     ));
                 });
             }),
@@ -808,6 +875,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     this.props.storageAdapter,
                     this.props.getLanguage(item),
                     {}, // clear validation errors
+                    state.allThemes.default,
+                    state.allThemes.proofreading,
                 );
 
                 if (this._mounted) {
@@ -974,6 +1043,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
     }
 
+    onArticleChange(state: IStateLoaded<T>, itemWithChanges: T) {
+        this.setState({
+            ...state,
+            itemWithChanges,
+        });
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1002,11 +1078,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
+            onArticleChange: (item: T) => this.onArticleChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.name,
+            sideWidget: this.props.sideWidget?.name ?? null,
             toggleSideWidget: (name) => {
                 if (name == null || this.props.sideWidget?.name === name) {
                     this.props.onSideWidgetChange(null);
@@ -1184,6 +1261,26 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ...widgetKeybindings,
         };
 
+        const activeTheme = state.proofreadingEnabled ? state.allThemes.proofreading : state.allThemes.default;
+
+        const uiTheme: IAuthoringSectionTheme = {
+            backgroundColor: activeTheme.theme,
+            backgroundColorSecondary: activeTheme.themeColorSecondary,
+            textColor: activeTheme.textColor,
+            fontFamily: activeTheme.fontFamily,
+            fieldTheme: {
+                headline: {
+                    fontSize: getUiThemeFontSizeHeading(activeTheme.headline),
+                },
+                abstract: {
+                    fontSize: getUiThemeFontSize(activeTheme.abstract),
+                },
+                body_html: {
+                    fontSize: getUiThemeFontSize(activeTheme.body),
+                },
+            },
+        };
+
         return (
             <React.Fragment>
                 {
@@ -1216,6 +1313,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     }
                                     main={(
                                         <Layout.AuthoringMain
+                                            noPaddingForContent
                                             headerCollapsed={this.props.headerCollapsed}
                                             toolBar={this.props.hideSecondaryToolbar ? undefined : (
                                                 <React.Fragment>
@@ -1241,37 +1339,44 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     </div>
 
                                                     <ButtonGroup align="end">
+
                                                         {printPreviewAction.jsxButton()}
+
+                                                        {this.props.themingEnabled === true && (
+                                                            <>
+                                                                <IconButton
+                                                                    icon="adjust"
+                                                                    ariaValue={gettext('Toggle theme')}
+                                                                    onClick={() => {
+                                                                        this.setState({
+                                                                            ...state,
+                                                                            proofreadingEnabled:
+                                                                                !state.proofreadingEnabled,
+                                                                        });
+                                                                    }}
+                                                                />
+                                                                <IconButton
+                                                                    icon="switches"
+                                                                    ariaValue={gettext('Configure themes')}
+                                                                    onClick={() => {
+                                                                        this.showThemeConfigModal(state);
+                                                                    }}
+                                                                />
+                                                            </>
+                                                        )}
+
                                                     </ButtonGroup>
+
                                                 </React.Fragment>
                                             )}
                                             authoringHeader={(
-                                                <div>
-                                                    <AuthoringSection
-                                                        fields={state.profile.header}
-                                                        fieldsData={state.fieldsDataWithChanges}
-                                                        onChange={this.handleFieldChange}
-                                                        language={getLanguage(state.itemWithChanges)}
-                                                        userPreferencesForFields={state.userPreferencesForFields}
-                                                        useHeaderLayout
-                                                        setUserPreferencesForFields={this.setUserPreferences}
-                                                        getVocabularyItems={this.getVocabularyItems}
-                                                        toggledFields={state.toggledFields}
-                                                        toggleField={this.toggleField}
-                                                        readOnly={readOnly}
-                                                        validationErrors={state.validationErrors}
-                                                        item={state.itemWithChanges}
-                                                    />
-                                                </div>
-                                            )}
-                                        >
-                                            <div>
                                                 <AuthoringSection
-                                                    fields={state.profile.content}
+                                                    fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
+                                                    useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
                                                     toggledFields={state.toggledFields}
@@ -1280,7 +1385,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
                                                 />
-                                            </div>
+                                            )}
+                                        >
+                                            <AuthoringSection
+                                                uiTheme={uiTheme}
+                                                padding="3.2rem 4rem 5.2rem 4rem"
+                                                fields={state.profile.content}
+                                                fieldsData={state.fieldsDataWithChanges}
+                                                onChange={this.handleFieldChange}
+                                                language={getLanguage(state.itemWithChanges)}
+                                                userPreferencesForFields={state.userPreferencesForFields}
+                                                setUserPreferencesForFields={this.setUserPreferences}
+                                                getVocabularyItems={this.getVocabularyItems}
+                                                toggledFields={state.toggledFields}
+                                                toggleField={this.toggleField}
+                                                readOnly={readOnly}
+                                                validationErrors={state.validationErrors}
+                                                item={state.itemWithChanges}
+                                            />
                                         </Layout.AuthoringMain>
                                     )}
                                     sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}

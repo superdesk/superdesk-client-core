@@ -2,7 +2,7 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IAuthoringAction} from './services/AuthoringWorkspaceService';
+import {IArticleAction} from './services/AuthoringWorkspaceService';
 import {dataApi} from 'core/helpers/CrudManager';
 import {CreatedInfo} from './created-info';
 import {ModifiedInfo} from './modified-info';
@@ -11,7 +11,7 @@ const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [Cr
 
 interface IProps {
     article: IArticle;
-    action: IAuthoringAction;
+    action: IArticleAction;
     onChange(article: IArticle): void;
 }
 

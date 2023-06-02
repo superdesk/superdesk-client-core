@@ -27,8 +27,6 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
-import {sdApi} from 'api';
-import {OrderedMap} from 'immutable';
 
 interface IProps {
     item: IArticle;
@@ -96,10 +94,17 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
-                        ng.get('authoringWorkspace').close();
-                        notify.success('Item published.');
-                    });
+                    ng.get('authoring').publish(
+                        cloneDeep(this.props.item),
+                        cloneDeep(itemToPublish),
+                        'publish',
+                        false,
+                        {notifyErrors: true},
+                    )
+                        .then(() => {
+                            ng.get('authoringWorkspace').close();
+                            notify.success('Item published.');
+                        });
                 });
             })
             .catch(() => {

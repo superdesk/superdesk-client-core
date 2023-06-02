@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, Modifier, ContentState, SelectionState, ContentBlock} from 'draft-js';
+import {RichUtils, EditorState, ContentState, SelectionState, convertToRaw, EntityInstance} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import * as Links from '../helpers/links';
@@ -10,6 +10,9 @@ import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
+import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
+import {processCells} from './table';
+import {ILink} from '../components/links/LinkInput';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -22,8 +25,12 @@ const toolbar = (state: IEditorStore, action) => {
         return toggleInlineStyle(state, action.payload);
     case 'TOOLBAR_APPLY_LINK':
         return applyLink(state, action.payload);
+    case 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE':
+        return applyLinkToMultiLineQuote(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
+    case 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE':
+        return removeLinkInMultiLineQuote(state);
     case 'TOOLBAR_REMOVE_FORMAT':
         return removeFormat(state);
     case 'TOOLBAR_REMOVE_ALL_FORMAT':
@@ -44,6 +51,10 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.undo(state.editorState));
     case 'REDO':
         return onChange(state, EditorState.redo(state.editorState));
+    case 'SET_CUSTOM_TOOLBAR' :
+        return setCustomToolbar(state, action.payload);
+    case 'SET_MULTI-LINE_QUOTE_POPUP' :
+        return setMultiLinePopup(state, action.payload);
     default:
         return state;
     }
@@ -112,6 +123,71 @@ const applyLink = (state, {link, entity}) => {
     }
 
     editorState = Links.createLink(editorState, link);
+    return onChange(state, editorState);
+};
+
+function applyChangesToTableCell(
+    state: IEditorStore,
+    operation: (editorState: EditorState) => EditorState,
+): IEditorStore {
+    const {activeCell, editorState: mainEditorState} = state;
+
+    if (activeCell === null) {
+        return state;
+    }
+
+    const {i, j, key, currentStyle, selection} = activeCell;
+    const contentState = mainEditorState.getCurrentContent();
+    const block = contentState.getBlockForKey(key);
+    const data = getData(contentState, block.getKey());
+    const cellEditorState = getCell(data, i, j, currentStyle, selection);
+
+    const editorStateNext = operation(cellEditorState);
+
+    const dataNew: IEditor3TableData = {
+        ...data,
+        cells: [[convertToRaw(editorStateNext.getCurrentContent())]],
+    };
+
+    const newMainState = setData(mainEditorState, block, dataNew, 'change-block-data');
+
+    return onChange(state, newMainState, true);
+}
+
+/**
+ * Applies the given URL to the current content selection in multi-line quote block.
+ * If the selection is a link, it applies the link to the entity instead.
+ */
+const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
+    applyChangesToTableCell(state, (editorState) =>
+        entity
+            ? entityUtils.replaceSelectedEntityData(editorState, {link})
+            : Links.createLink(editorState, link),
+    );
+
+/**
+ * Removes the link on the entire entity under the cursor in multi-line quote block.
+ */
+const removeLinkInMultiLineQuote = (state) => {
+    const {activeCell, editorState: mainEditorState} = state;
+
+    if (activeCell === null) {
+        return state;
+    }
+
+    const {i, j, key, currentStyle, selection} = activeCell;
+    const contentState = mainEditorState.getCurrentContent();
+    const block = contentState.getBlockForKey(key);
+    const data = getData(contentState, block.getKey());
+    const cellEditorStateWithRemovedLink =
+        Links.removeLink(getCell(data, i, j, currentStyle, selection));
+
+    const newData: IEditor3TableData = {
+        ...data.data,
+        cells: [[convertToRaw(cellEditorStateWithRemovedLink.getCurrentContent())]],
+    };
+    const editorState = setData(mainEditorState, block, newData, 'change-block-data');
+
     return onChange(state, editorState);
 };
 
@@ -261,6 +337,22 @@ const setPopup = (state: IEditorStore, {type, data}) => {
     return {...state, editorState: newEditorState, popup: {type, data}};
 };
 
+type PopupType = keyof typeof PopupTypes;
+
+const setMultiLinePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
+    processCells(
+        state,
+        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
+            const newData = {cells, numRows, numCols, withHeader};
+
+            return {
+                ...state,
+                popup: {type, data},
+                data: newData,
+            };
+        },
+    );
+
 function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {
     const getChangedText = (text: string) => {
         if (changeTo === 'uppercase') {
@@ -315,5 +407,10 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
 
     return onChange(state, EditorState.forceSelection(nextEditorState, selection));
 }
+
+const setCustomToolbar = (state: IEditorStore, style: IEditorStore['customToolbarStyle']): IEditorStore => ({
+    ...state,
+    customToolbarStyle: style,
+});
 
 export default toolbar;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
 import TableControls from './TableControls';
@@ -14,6 +13,10 @@ import * as actions from '../../actions';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
+import {MultiLineQuoteControls} from './MultiLineQuoteControls';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {IEditorStore} from 'core/editor3/store';
+import {IEditorComponentProps} from 'superdesk-api';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -24,6 +27,25 @@ interface IState {
     width: string | number;
 }
 
+interface IProps extends Partial<IEditorStore> {
+    toggleSuggestingMode(): void;
+    showPopup(type, data): void;
+    addMultiLineQuote(): void;
+    toggleInvisibles(): void;
+    removeAllFormat(): void;
+    dispatch(fn: any): void;
+    removeFormat(): void;
+    insertMedia(): void;
+    addTable(): void;
+    editorWrapperElement: any;
+    scrollContainer: string;
+    highlightsManager: any;
+    editorNode: any;
+    disabled: boolean;
+    popup: any;
+    uiTheme: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -31,7 +53,7 @@ interface IState {
  * @param {boolean} disabled Disables clicking on the toolbar, if true.
  * @description Holds the editor's toolbar.
  */
-class ToolbarComponent extends React.Component<any, IState> {
+class ToolbarComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -137,197 +159,221 @@ class ToolbarComponent extends React.Component<any, IState> {
     render() {
         const {floating} = this.state;
         const {
+            customToolbarStyle,
+            suggestingMode,
+            editorFormat,
+            invisibles,
+            activeCell,
             disabled,
             popup,
-            editorFormat,
-            activeCell,
-            addTable,
-            insertMedia,
-            suggestingMode,
             toggleSuggestingMode,
-            invisibles,
+            addMultiLineQuote,
             toggleInvisibles,
-            removeFormat,
             removeAllFormat,
+            removeFormat,
+            insertMedia,
+            addTable,
             dispatch,
+            editorState,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
         const showPopup = (type) => (data) => this.props.showPopup(type, data);
-
         const cx = classNames({
             'Editor3-controls': true,
             'floating-toolbar': floating,
             disabled: disabled && activeCell === null,
         });
 
-        return activeCell !== null ? <TableControls className={cx} /> : (
-            <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
-                {/* Styles */}
-                <BlockStyleButtons />
-                <InlineStyleButtons />
+        if (activeCell == null) {
+            return (
+                <div
+                    className={cx}
+                    style={{
+                        width: this.state.width,
+                        backgroundColor: this.props.uiTheme == null
+                            ? undefined
+                            : this.props.uiTheme.backgroundColorSecondary,
+                        color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
+                    }}
+                    ref={this.toolbarNode}
+                >
+                    {/* Styles */}
+                    <BlockStyleButtons />
+                    <InlineStyleButtons />
 
-                {/* Formatting options */}
-                {has('link') && (
-                    <SelectionButton
-                        onClick={showPopup(PopupTypes.Link)}
-                        iconName="link"
-                        tooltip={gettext('Link')}
-                    />
-                )}
-                {has('embed') && (
-                    <IconButton
-                        onClick={showPopup(PopupTypes.Embed)}
-                        iconName="code"
-                        tooltip="Embed"
-                    />
-                )}
-                {has('media') && (
-                    <IconButton
-                        onClick={insertMedia}
-                        tooltip={gettext('Media')}
-                        iconName="picture"
-                    />
-                )}
-                {has('table') && (
-                    <IconButton
-                        onClick={addTable}
-                        tooltip={gettext('Table')}
-                        iconName="table"
-                    />
-                )}
-                {has('remove format') && (
-                    <SelectionButton
-                        onClick={removeFormat}
-                        precondition={!suggestingMode}
-                        key="remove-format-button"
-                        iconName="clear-format"
-                        tooltip={gettext('Remove formatting')}
-                    />
-                )}
-                {has('remove all format') && (
-                    <IconButton
-                        onClick={removeAllFormat}
-                        precondition={!suggestingMode}
-                        key="remove-all-format-button"
-                        iconName="clear-all"
-                        tooltip={gettext('Remove all formatting')}
-                    />
-                )}
-                {has('comments') && (
-                    <SelectionButton
-                        onClick={showPopup(PopupTypes.Comment)}
-                        precondition={
-                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
-                        }
-                        key="comment-button"
-                        iconName="comment"
-                        tooltip={gettext('Comment')}
-                    />
-                )}
-                {has('annotation') && (
-                    <SelectionButton
-                        onClick={showPopup(PopupTypes.Annotation)}
-                        precondition={
-                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
-                        }
-                        key="annotation-button"
-                        iconName="edit-line"
-                        tooltip={gettext('Annotation')}
-                    />
-                )}
+                    {/* Formatting options */}
+                    {has('link') && (
+                        <SelectionButton
+                            onClick={showPopup(PopupTypes.Link)}
+                            iconName="link"
+                            tooltip={gettext('Link')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('embed') && (
+                        <IconButton
+                            onClick={showPopup(PopupTypes.Embed)}
+                            iconName="code"
+                            tooltip="Embed"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('media') && (
+                        <IconButton
+                            onClick={insertMedia}
+                            tooltip={gettext('Media')}
+                            iconName="picture"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('table') && (
+                        <IconButton
+                            onClick={addTable}
+                            tooltip={gettext('Table')}
+                            iconName="table"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('multi-line quote') && (
+                        <IconButton
+                            onClick={() => {
+                                addMultiLineQuote();
+                            }}
+                            tooltip={gettext('Multi-line quote')}
+                            iconName="text-block"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('remove format') && (
+                        <SelectionButton
+                            onClick={removeFormat}
+                            precondition={!suggestingMode}
+                            key="remove-format-button"
+                            iconName="clear-format"
+                            tooltip={gettext('Remove formatting')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {(has('remove all format') && !suggestingMode) && (
+                        <IconButton
+                            onClick={removeAllFormat}
+                            key="remove-all-format-button"
+                            iconName="clear-all"
+                            tooltip={gettext('Remove all formatting')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('comments') && (
+                        <SelectionButton
+                            onClick={showPopup(PopupTypes.Comment)}
+                            precondition={
+                                this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
+                            }
+                            key="comment-button"
+                            iconName="comment"
+                            tooltip={gettext('Comment')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('annotation') && (
+                        <SelectionButton
+                            onClick={showPopup(PopupTypes.Annotation)}
+                            precondition={
+                                this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
+                            }
+                            key="annotation-button"
+                            iconName="edit-line"
+                            tooltip={gettext('Annotation')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
 
-                {has('suggestions') && (
-                    <StyleButton
-                        active={suggestingMode}
-                        label={'suggestions'}
-                        style={'suggestions'}
-                        onToggle={toggleSuggestingMode}
+                    {has('suggestions') && (
+                        <StyleButton
+                            active={suggestingMode}
+                            label={'suggestions'}
+                            style={'suggestions'}
+                            onToggle={toggleSuggestingMode}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    {has('formatting marks') && (
+                        <StyleButton
+                            active={invisibles}
+                            label={'invisibles'}
+                            style={'invisibles'}
+                            onToggle={toggleInvisibles}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    {has('uppercase') && (
+                        <SelectionButton
+                            onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
+                            precondition={!suggestingMode}
+                            key="uppercase-button"
+                            iconName="to-uppercase"
+                            tooltip={gettext('Convert text to uppercase')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    {has('lowercase') && (
+                        <SelectionButton
+                            onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
+                            precondition={!suggestingMode}
+                            key="lowercase-button"
+                            iconName="to-lowercase"
+                            tooltip={gettext('Convert text to lowercase')}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    {has('undo') && (
+                        <IconButton
+                            onClick={() => {
+                                this.props.dispatch(undo());
+                            }}
+                            tooltip={gettext('Undo') + ' (ctrl + z)'}
+                            iconName="undo"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    {has('redo') && (
+                        <IconButton
+                            onClick={() => {
+                                this.props.dispatch(redo());
+                            }}
+                            tooltip={gettext('Redo') + ' (ctrl + y)'}
+                            iconName="redo"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+
+                    <ToolbarPopup
+                        type={popup.type}
+                        data={popup.data}
+                        editorState={this.props.editorState}
+                        highlightsManager={this.props.highlightsManager}
+                        uiTheme={this.props.uiTheme}
                     />
-                )}
 
-                {has('formatting marks') && (
-                    <StyleButton
-                        active={invisibles}
-                        label={'invisibles'}
-                        style={'invisibles'}
-                        onToggle={toggleInvisibles}
-                    />
-                )}
-
-                {has('uppercase') && (
-                    <SelectionButton
-                        onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
-                        precondition={!suggestingMode}
-                        key="uppercase-button"
-                        iconName="to-uppercase"
-                        tooltip={gettext('Convert text to uppercase')}
-                    />
-                )}
-
-                {has('lowercase') && (
-                    <SelectionButton
-                        onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
-                        precondition={!suggestingMode}
-                        key="lowercase-button"
-                        iconName="to-lowercase"
-                        tooltip={gettext('Convert text to lowercase')}
-                    />
-                )}
-
-                {has('undo') && (
-                    <IconButton
-                        onClick={() => {
-                            this.props.dispatch(undo());
-                        }}
-                        tooltip={gettext('Undo') + ' (ctrl + z)'}
-                        iconName="undo"
-                    />
-                )}
-
-                {has('redo') && (
-                    <IconButton
-                        onClick={() => {
-                            this.props.dispatch(redo());
-                        }}
-                        tooltip={gettext('Redo') + ' (ctrl + y)'}
-                        iconName="redo"
-                    />
-                )}
-
-                <ToolbarPopup
-                    type={popup.type}
-                    data={popup.data}
-                    editorState={this.props.editorState}
-                    highlightsManager={this.props.highlightsManager}
-                />
-
-                {/* LinkToolbar must be the last node. */}
-                <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
-            </div>
-        );
+                    {/* LinkToolbar must be the last node. */}
+                    <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
+                </div>
+            );
+        } else if (customToolbarStyle === 'multiLineQuote') {
+            return <MultiLineQuoteControls className={cx} />;
+        } else if (activeCell || customToolbarStyle === 'table') {
+            return <TableControls className={cx} />;
+        } else {
+            assertNever(customToolbarStyle);
+        }
     }
 }
-
-ToolbarComponent.propTypes = {
-    disabled: PropTypes.bool,
-    editorFormat: PropTypes.array,
-    activeCell: PropTypes.any,
-    suggestingMode: PropTypes.bool,
-    invisibles: PropTypes.bool,
-    addTable: PropTypes.func,
-    insertMedia: PropTypes.func,
-    showPopup: PropTypes.func,
-    toggleSuggestingMode: PropTypes.func,
-    toggleInvisibles: PropTypes.func,
-    removeFormat: PropTypes.func,
-    popup: PropTypes.object,
-    editorState: PropTypes.object,
-    editorNode: PropTypes.object,
-    scrollContainer: PropTypes.string.isRequired,
-    highlightsManager: PropTypes.object.isRequired,
-    editorWrapperElement: PropTypes.object,
-};
 
 const mapStateToProps = ({
     editorFormat,
@@ -336,6 +382,7 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
+    customToolbarStyle,
 }) => ({
     editorFormat,
     activeCell,
@@ -343,12 +390,14 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
+    customToolbarStyle,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     insertMedia: () => dispatch(actions.insertMedia()),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
+    addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

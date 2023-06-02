@@ -10,6 +10,7 @@ interface IValue {
 }
 
 interface IProps {
+    required?: boolean;
     vocabularies: Array<{qcode: string; name: string}>;
     value: Array<IValue>;
     onChange(value: Array<IValue>): void;
@@ -58,7 +59,7 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         onChange={(val) => {
                             this.setState({vocabulary: val});
                         }}
-                        required
+                        required={this.props.required}
                     />
 
                     <Button

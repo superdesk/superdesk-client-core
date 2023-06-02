@@ -2,7 +2,7 @@ import React from 'react';
 import {IAuthoringFieldV2, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
-import {IPropsAuthoringSection} from './authoring-section';
+import {IAuthoringSectionTheme, IPropsAuthoringSection} from './authoring-section';
 import {memoize} from 'core/memoize';
 
 interface IProps<T> {
@@ -19,6 +19,7 @@ interface IProps<T> {
     useHeaderLayout: IPropsAuthoringSection<T>['useHeaderLayout'];
     getVocabularyItems: IPropsAuthoringSection<T>['getVocabularyItems'];
     validationError?: string;
+    uiTheme?: IAuthoringSectionTheme;
     item: T;
 }
 
@@ -51,6 +52,13 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
         } else {
             return (
                 <FieldEditorConfig.editorComponent
+                    uiTheme={this.props.uiTheme == null ? undefined : {
+                        backgroundColor: this.props.uiTheme.backgroundColor,
+                        backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
+                        textColor: this.props.uiTheme.textColor,
+                        fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
+                        fontFamily: this.props.uiTheme.fontFamily,
+                    }}
                     key={field.id}
                     editorId={field.id}
                     container={Container}
