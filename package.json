@@ -57,7 +57,7 @@
     "classnames": "2.2.5",
     "css-loader": "0.28.10",
     "d3": "3.5.17",
-    "date-fns": "2.7.0",
+    "date-fns": "^2.7.0",
     "diff-match-patch": "1.0.0",
     "docs-soap": "github:tomaskikutis/docs-soap#convert-tables",
     "draft-js": "github:superdesk/draft-js#master",
