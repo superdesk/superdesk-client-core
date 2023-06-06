@@ -1,7 +1,7 @@
 import React from 'react';
-import {SelectFilterable} from './select-filterable';
 import {sdApi} from 'api';
 import {OrderedMap} from 'immutable';
+import {SelectFilterable} from './select-filterable';
 
 interface IProps {
     value: string;
@@ -22,6 +22,7 @@ export class TimeZonePicker extends React.PureComponent<IProps> {
 
         return (
             <SelectFilterable
+                hideLabel={true}
                 items={keys}
                 value={this.props.value}
                 onChange={(val) => this.props.onChange(val)}

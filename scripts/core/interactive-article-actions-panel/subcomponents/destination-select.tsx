@@ -1,12 +1,12 @@
 import React from 'react';
 import {IDesk, IStage} from 'superdesk-api';
-import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
-import {FormLabel, Button} from 'superdesk-ui-framework/react';
+import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {ISendToDestination} from '../interfaces';
+import {SelectFilterable} from 'core/ui/components/select-filterable';
 
 interface IProps {
     value: ISendToDestination;
@@ -40,6 +40,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
             <div>
                 <div style={{paddingTop: 5}}>
                     <SelectFilterable
+                        hideLabel={true}
                         value={(() => {
                             const dest = selectedDestination;
 
@@ -74,41 +75,35 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                             }
                         }}
                         getLabel={(destination) => destination.label}
-                        required
                     />
                 </div>
-
                 {
                     (selectedDestination.type === 'desk' && this.props.hideStages !== true) && (
                         <div>
                             <br />
-
                             <FormLabel text={gettext('Stage')} />
-
-                            <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 5}}>
-                                {
-                                    sdApi.desks.getDeskStages(selectedDestination.desk).map((stage) => (
-                                        <div key={stage._id} style={{flexBasis: 'calc((100% - 10px) / 2)'}}>
-                                            <Button
-                                                text={stage.name}
-                                                disabled={(this.props.disallowedStages ?? []).includes(stage._id)}
-                                                onClick={() => {
-                                                    this.props.onChange({
-                                                        ...selectedDestination,
-                                                        stage: stage._id,
-                                                    });
-                                                }}
-                                                type={
-                                                    selectedDestination.stage === stage._id
-                                                        ? 'primary'
-                                                        : 'default'
-                                                }
-                                                expand
-                                            />
-                                        </div>
-                                    )).toArray()
+                            <RadioButtonGroup
+                                onChange={
+                                    (stageId) => this.props.onChange({
+                                        ...selectedDestination,
+                                        stage: stageId,
+                                    })
                                 }
-                            </div>
+                                value={selectedDestination.stage}
+                                group={{
+                                    grid: true,
+                                    padded: false,
+                                    orientation: 'horizontal',
+                                }}
+                                options={
+                                    sdApi.desks.getDeskStages(selectedDestination.desk).toArray().map((stage) => ({
+                                        label: stage.name,
+                                        value: stage._id,
+                                        icon: 'ok',
+                                        disabled: (this.props.disallowedStages ?? []).includes(stage._id),
+                                    }))
+                                }
+                            />
                         </div>
                     )
                 }
