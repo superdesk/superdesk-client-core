@@ -6,7 +6,7 @@ interface IProps<T> {
     items: Array<T>;
     value: T;
     onChange(value: T): void;
-    
+
     // used for filtering
     getLabel(item: T): string;
 
