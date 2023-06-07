@@ -7,6 +7,7 @@ interface IResizeObserverDimensions {
 
 interface IPropsResizeObserverComponent {
     style?: React.CSSProperties;
+    position?: 'relative' | 'absolute';
     children: (props: IResizeObserverDimensions) => JSX.Element;
 }
 
@@ -67,7 +68,13 @@ export class ResizeObserverComponent extends React.PureComponent<IPropsResizeObs
                  * it would include its own size(which is based on the initial result from this component),
                  * including children, into calculation and would produce a wrong result.
                 */}
-                <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                <div
+                    style={
+                        this.props.position === 'absolute'
+                            ? {position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}
+                            : undefined
+                    }
+                >
                     {
                         dimensions === 'not-initialized'
                             ? null
