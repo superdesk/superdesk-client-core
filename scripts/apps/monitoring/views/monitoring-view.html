@@ -13,7 +13,7 @@
                         </div>
 
                         <!-- Filter content using content profile -->
-                        <div data-test-id="content-profile-dropdown" class="dropdown sd-flex-no-shrink" dropdown >
+                        <div data-test-id="content-profile-dropdown" class="dropdown" dropdown >
                             <button class="filter-trigger dropdown__toggle navbtn navbtn--left" dropdown-toggle title="{{ 'Apply Filters' | translate }}" aria-label="{{ 'Apply Filters' | translate }}">
                                 <i class="icon-filter-large"></i>
                             </button>
@@ -91,7 +91,7 @@
                         </div>
 
                         <!-- search not implemented for usage with custom data source -->
-                        <div ng-if="customDataSource == null" class="flat-searchbar extended monitoring-flat-searchbar">
+                        <div ng-if="customDataSource == null" class="flat-searchbar extended">
                             <div class="search-handler" ng-class="{'search-handler--left-border': !monitoring.singleGroup}">
                                 <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
                                 <input id="search-input" type="text" placeholder="{{ 'Search' | translate }}" ng-model="query"
