@@ -1,6 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
+import {TreeSelect} from 'superdesk-ui-framework/react';
 
 type IProps = IInputType<Array<string>>;
 
@@ -27,39 +27,21 @@ export class SelectMultipleValues extends React.Component<IProps> {
         }
 
         return (
-            <div
-                className={classNames(
-                    'sd-line-input',
-                    {
-                        'sd-line-input--invalid': this.props.issues.length > 0,
-                        'sd-line-input--required': this.props.formField.required === true,
-                        'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
-                    },
-                )}
-            >
-                <label className="sd-line-input__label">{this.props.formField.label}</label>
-                <select
-                    disabled={this.props.disabled || items == null || items.length < 1}
-                    value={this.props.value || []}
-                    onChange={(event) => {
-                        this.props.onChange(Array.from(event.target.selectedOptions).map((option) => option.value));
+            <div style={{marginBottom: '1.8em'}}>
+                <TreeSelect
+                    allowMultiple
+                    fullWidth
+                    kind="synchronous"
+                    getId={(item) => item}
+                    getLabel={(item) => item}
+                    getOptions={() => items?.map((item) => ({value: item.label}))}
+                    onChange={(item) => {
+                        this.props.onChange(item);
                     }}
-                    data-test-id={`gform-input--${this.props.formField.field}`}
-                    multiple
-                >
-                    {
-                        items == null
-                            ? null
-                            : items.map(({id, label}, i) => (
-                                <option key={i} value={id}>{label}</option>
-                            ))
-                    }
-                </select>
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
+                    value={this.props.value}
+                    disabled={this.props.disabled}
+                    label={this.props.formField.label}
+                />
             </div>
         );
     }
