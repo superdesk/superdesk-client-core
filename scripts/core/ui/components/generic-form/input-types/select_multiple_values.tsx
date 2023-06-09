@@ -29,6 +29,9 @@ export class SelectMultipleValues extends React.Component<IProps> {
         return (
             <div style={{marginBottom: '1.8em'}}>
                 <TreeSelect
+                    error={this.props.issues[0]}
+                    invalid={this.props.issues[0] != null}
+                    required={this.props.formField.required}
                     allowMultiple
                     fullWidth
                     kind="synchronous"
