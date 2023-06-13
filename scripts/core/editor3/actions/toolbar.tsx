@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {IEditorStore} from '../store';
 
 /**
  * @ngdoc method
@@ -42,6 +43,21 @@ export function applyLink(link, entity = null) {
         payload: {link, entity},
     };
 }
+
+/**
+ * Returns the action for applying links to multi-line quote selections.
+ */
+export function applyLinkToMuliLineQuote(link, entity = null) {
+    return {
+        type: 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE',
+        payload: {link, entity},
+    };
+}
+
+/**
+ * Returns the action for removing links from multi-line quote selections.
+ */
+export const removeLinkFromMuliLineQuote = () => ({type: 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE'});
 
 /**
  * @ngdoc method
@@ -175,3 +191,11 @@ export function redo() {
 export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
+
+export const setMultiLineQuotePopup = (type, data) => ({
+    type: 'SET_MULTI-LINE_QUOTE_POPUP', payload: {type, data},
+});
+
+export const setCustomToolbar = (style: IEditorStore['customToolbarStyle']) => ({
+    type: 'SET_CUSTOM_TOOLBAR', payload: style,
+});

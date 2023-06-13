@@ -144,7 +144,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
             } else if (
                 sanitizedValue instanceof Array &&
                 sanitizedValue.length > 0 &&
-                sanitizedValue.every((val) => typeof val === 'string')
+                (sanitizedValue as Array<any>).every((val) => typeof val === 'string')
             ) {
                 sanitizedValue = (sanitizedValue as Array<string>)
                     .map((arrayValue: string) => arrayValue.trim())

@@ -16,11 +16,11 @@
     "@types/react": "16.9.44",
     "@types/redux-logger": "^3.0.8",
     "superdesk-code-style": "1.3.0",
-    "typescript": "3.9.7"
+    "typescript": "~4.9.5"
   },
   "peerDependencies": {
     "react": "^16.9.0",
-    "superdesk-ui-framework": "^2.2.4",
+    "superdesk-ui-framework": "^3.0.8",
     "classnames": "^2.2.5",
     "lodash": "^4.17.5",
     "json-merge-patch": "0.2.3"

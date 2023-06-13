@@ -331,7 +331,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                 >
                                     <i className="icon-photo" />
                                 </a>
-                                <form className="sd-margin-l--1">
+                                <form className="sd-margin-start--1">
                                     <label>
                                         <input
                                             type="file"

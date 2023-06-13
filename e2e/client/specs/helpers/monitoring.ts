@@ -344,7 +344,6 @@ class Monitoring {
         };
 
         this.searchAction = function(search) {
-            element(by.css('.flat-searchbar .trigger-icon')).click();
             element(by.model('query')).sendKeys(search);
             browser.actions().sendKeys(protractor.Key.ENTER).perform();
         };

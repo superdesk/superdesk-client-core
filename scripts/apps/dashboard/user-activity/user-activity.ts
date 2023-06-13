@@ -17,7 +17,7 @@ angular
         'Upon selection a list of content items is shown categorized as follows:',
     )}
 </p>
-<ul class="simple-list sd-padding-l--2">
+<ul class="simple-list sd-padding-start--2">
   <li class="simple-list__item">
     ${gettext('Items created by the user')}
   </li>

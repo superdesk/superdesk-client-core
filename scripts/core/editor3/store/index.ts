@@ -36,7 +36,7 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IActiveCell, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
     CharacterLimitUiBehavior,
@@ -76,7 +76,8 @@ export interface IEditorStore {
     singleLine: any;
     tabindex: any;
     showTitle: any;
-    activeCell: any;
+    activeCell?: IActiveCell;
+    customToolbarStyle?: 'table' | 'multiLineQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;

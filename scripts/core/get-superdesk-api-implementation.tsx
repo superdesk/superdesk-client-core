@@ -133,6 +133,25 @@ export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, paylo
     );
 };
 
+export function prepareExternalImageForDroppingToEditor(
+    event: DragEvent,
+    renditions: IArticle['renditions'],
+    additionalData?: Partial<IArticle>,
+) {
+    const item: Partial<IArticle> = {
+        _fetchable: false,
+        _type: 'externalsource',
+        ...(additionalData ?? {}),
+        type: 'picture',
+        renditions: renditions,
+    };
+
+    event.dataTransfer.setData(
+        'application/superdesk.item.picture',
+        JSON.stringify(item),
+    );
+}
+
 export let applicationState: Writeable<ISuperdesk['state']> = {
     articleInEditMode: undefined,
 };
@@ -163,7 +182,7 @@ export function getRelativeOrAbsoluteDateTime(
     datetimeString: string,
     format: string,
     relativeDuration: number = 1,
-    relativeUnit: string = 'days',
+    relativeUnit: moment.unitOfTime.Diff = 'days',
 ): string {
     const datetime = moment(datetimeString);
 
@@ -302,6 +321,7 @@ export function getSuperdeskApiImplementation(
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },
+                prepareExternalImageForDroppingToEditor,
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string, title?: string) => new Promise((resolve) => {
