@@ -6,12 +6,11 @@ import {
     FORMATTING_OPTION,
     PLAINTEXT_FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
-    IContentProfile,
     ICommonFieldConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
-import {appConfig} from 'appConfig';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
@@ -337,7 +336,9 @@ export function getContentProfileFormConfig(
         required: false,
     };
 
-    fields.push(showToggle);
+    if (authoringReactViewEnabled) {
+        fields.push(showToggle);
+    }
 
     if (field?.id === 'sms') {
         const prefillSmsField: IFormField = {

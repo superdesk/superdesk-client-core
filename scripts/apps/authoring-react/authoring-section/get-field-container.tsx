@@ -16,7 +16,7 @@ export function getFieldContainer(
 ) {
     const toggle = canBeToggled && (
         <Switch
-            label={gettext('Toggle field')}
+            label={{content: gettext('Toggle field')}}
             value={toggledOn}
             onChange={() => {
                 toggleField(field.id);
