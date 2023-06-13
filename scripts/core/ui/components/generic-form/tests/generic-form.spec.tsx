@@ -64,6 +64,7 @@ describe('generic form', () => {
 
     const exceptionalClassNamesForInvalidFields = {
         [FormFieldType.duration]: '.sd-input--invalid',
+        [FormFieldType.selectMultiple]: '.sd-input--invalid',
     };
 
     getAllInputTypes()
@@ -102,6 +103,7 @@ describe('generic form', () => {
 
     const exceptionalClassNamesForRequiredFields = {
         [FormFieldType.duration]: '.sd-input--required',
+        [FormFieldType.selectMultiple]: '.sd-input--required',
     };
 
     getAllInputTypes()
