@@ -37,7 +37,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     kind="synchronous"
                     getId={(item) => item}
                     getLabel={(item) => item}
-                    getOptions={() => items?.map((item) => ({value: item.label}))}
+                    getOptions={() => items != null ? items.map((item) => ({value: item.label})) : []}
                     onChange={(item) => {
                         this.props.onChange(item);
                     }}
