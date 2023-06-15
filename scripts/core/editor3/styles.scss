@@ -986,7 +986,8 @@ $editor-styleButton-size: 			3rem;
 	.public-DraftEditor-content {
 		padding: 0;
 
-		[data-block="true"] {
+		// not selector avoids drop indicators being hidden
+		[data-block="true"]:not(.unstyled__block--over) {
 			border: 0;
 		}
 	}
