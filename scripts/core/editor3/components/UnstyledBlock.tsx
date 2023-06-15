@@ -4,7 +4,6 @@ import {omit} from 'lodash';
 import {connect} from 'react-redux';
 
 import BaseUnstyledComponent from './BaseUnstyledComponent';
-import {classnames} from '@superdesk/common';
 
 /**
  * This block is used by default for text content in editor.
