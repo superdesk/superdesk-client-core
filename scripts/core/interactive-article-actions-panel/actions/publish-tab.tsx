@@ -35,7 +35,7 @@ interface IProps {
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
     onError: (error: IPanelError) => void;
-    setSave: (item: IArticle) => void;
+    onDataChange: (item: IArticle) => void;
 }
 
 interface IState {
@@ -54,9 +54,9 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
             selectedDestination: getInitialDestination([this.props.item], false),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
-                target_subscribers: this.props.item.target_subscribers,
-                target_regions: this.props.item.target_regions,
-                target_types: this.props.item.target_regions,
+                target_subscribers: this.props.item.target_subscribers ?? [],
+                target_regions: this.props.item.target_regions ?? [],
+                target_types: this.props.item.target_regions ?? [],
             },
             subscribers: null,
         };
@@ -160,7 +160,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     <div style={style}>
                         <div>
                             {
-                                true && (
+                                publishFromEnabled && (
                                     <ToggleBox title={gettext('From')} initiallyOpen>
                                         <DestinationSelect
                                             value={this.state.selectedDestination}
@@ -171,7 +171,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                                     const dest = this.state.selectedDestination;
 
                                                     if (dest.type === 'desk') {
-                                                        this.props.setSave({
+                                                        this.props.onDataChange({
                                                             ...this.props.item,
                                                             task: {
                                                                 ...(this.props.item.task ?? {}),
@@ -202,7 +202,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState(
                                         {publishingDateOptions: val},
-                                        () => this.props.setSave({
+                                        () => this.props.onDataChange({
                                             ...this.props.item,
                                             ...getPublishingDatePatch(
                                                 this.props.item,
@@ -219,7 +219,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState(
                                         {publishingTarget: val},
-                                        () => this.props.setSave({
+                                        () => this.props.onDataChange({
                                             ...this.props.item,
                                             ...getPublishingTargetPatch(this.props.item, this.state.publishingTarget),
                                         }),

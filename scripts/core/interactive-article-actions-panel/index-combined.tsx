@@ -13,7 +13,7 @@ interface IProps {
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
     onError: (error: IPanelError) => void;
-    setSave: (item: IArticle) => void;
+    onDataChange: (item: IArticle) => void;
 }
 
 export class InteractiveArticleActionsPanelCombined extends React.PureComponent<IProps> {
@@ -27,7 +27,7 @@ export class InteractiveArticleActionsPanelCombined extends React.PureComponent<
 
                     return (
                         <InteractiveArticleActionsPanel
-                            setSave={this.props.setSave}
+                            onDataChange={this.props.onDataChange}
                             onError={this.props.onError}
                             items={state.items}
                             tabs={state.tabs}

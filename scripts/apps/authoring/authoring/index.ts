@@ -107,7 +107,7 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(InteractiveArticleActionsPanelCombined, [
             'onError',
             'handleUnsavedChanges',
-            'setSave',
+            'onDataChange',
             'location',
         ], []),
     )
