@@ -76,6 +76,9 @@ interface Window {
     module: any;
     RunTansaProofing: any;
     iframely: any;
+    translations: any;
+    language: any;
+    pluralForms: any;
 }
 
 // Allow importing json/html/svg files

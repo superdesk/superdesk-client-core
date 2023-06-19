@@ -1,7 +1,6 @@
 import 'angular-dynamic-locale';
 import moment from 'moment';
 import {gettext} from 'core/utils';
-import {loadTranslations} from 'index';
 
 /**
  * Translate module
@@ -21,18 +20,15 @@ export default angular.module('superdesk.core.translate', [
 
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
-            $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
-                loadTranslations()
-                    .then((res) => {
-                        const {translations, language} = res;
+            $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, () => {
+                const {translations, language} = window;
 
-                        gettextCatalog.setCurrentLanguage(language);
-                        gettextCatalog.setStrings(language, translations);
-                        moment.locale(language); // set locale for date/time management
+                gettextCatalog.setCurrentLanguage(language);
+                gettextCatalog.setStrings(language, translations);
+                moment.locale(language); // set locale for date/time management
 
-                        // set locale for angular-i18n
-                        tmhDynamicLocale.set(language.replace('_', '-').toLowerCase());
-                    });
+                // set locale for angular-i18n
+                tmhDynamicLocale.set(language.replace('_', '-').toLowerCase());
             });
 
             var params = $location.search();
