@@ -153,8 +153,8 @@ export function AuthoringDirective(
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
 
-            content.getTypes().then(() => {
-                $scope.content_types = content.types;
+            content.getTypes().then((result) => {
+                $scope.content_types = result;
             });
 
             /**
@@ -1045,7 +1045,10 @@ export function AuthoringDirective(
 
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
-                content.getTypes().then(() => {
+                content.getTypes().then((result) => {
+                    // Update scope with new content types
+                    $scope.content_types = result;
+
                     _.forEach($scope.content_types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
                             _.forEach(profile.schema, (schema, fieldId) => {
