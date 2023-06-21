@@ -82,15 +82,14 @@
                     <!-- IF EDITOR3 -->
                     <div class="field" ng-if="hasFormatOptions(id) && model.editor.body_html.editor3 === true">
                         <label translate>Format options</label>
-                        <div
-                            sd-formatting-options-multi-select
+                        <sd-formatting-options-tree-select
                             class="controls"
                             ng-if="model.editor.body_html.editor3"
-                            data-item="model.editor[id].formatOptions"
-                            data-list="getEditor3FormattingOptions(id)"
-                            data-change="setDirty()"
-                        >
-                        </div>
+                            data-value="model.editor[id].formatOptions"
+                            data-field-id="id"
+                            data-fields="fields"
+                            data-on-change="onChange"
+                        />
                     </div>
                     <!-- ELSE IF EDITOR2 -->
                     <div class="field" ng-if="hasFormatOptions(id) && model.editor.body_html.editor3 !== true">

@@ -11,6 +11,7 @@ import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
+import {FormattingOptionsTreeSelect} from 'apps/workspace/content/views/FormattingOptionsMultiSelect';
 
 /**
  * Gives top shadow for scroll elements
@@ -1188,86 +1189,6 @@ interface IScope {
     item: string,
 }
 
-formattingOptionsMultiSelectDirective.$inject = [];
-function formattingOptionsMultiSelectDirective() {
-    return {
-        scope: {
-            item: '=',
-            list: '&',
-            change: '&',
-            output: '@',
-            disabled: '=',
-        },
-        templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
-        link: function(scope) {
-            scope.selectedItems = [];
-
-            // use listCopy in order not to mutate the original list
-            // mutating the original list prevents passing expression as a list argument
-            // which means you can't pass a function result like so `list="getList()"`
-            scope.listCopy = Object.values(scope.list());
-            scope.activeList = false;
-
-            scope.selectItem = function(item) {
-                scope.listCopy = without(scope.listCopy, item);
-                scope.activeList = false;
-                scope.selectedTerm = '';
-                scope.selectedItems.push(item);
-
-                updateItem();
-            };
-
-            scope.removeItem = function(item) {
-                scope.listCopy.push(item);
-                scope.listCopy = sortBy(scope.listCopy);
-                scope.selectedItems = without(scope.selectedItems, item);
-
-                updateItem();
-            };
-
-            scope.$watch('item', (item) => {
-                if (!item) {
-                    return false;
-                }
-
-                scope.selectedItems = union(scope.item, scope.selectedItems);
-                scope.listCopy = sortBy(difference(scope.listCopy, scope.item));
-            });
-
-            function updateItem() {
-                const item = Object.entries(scope.list()).find(([key, val]) => val == scope.item)?.[0];
-
-                switch (scope.output) {
-                case 'string':
-                    scope.item = scope.selectedItems.join(', ');
-                    break;
-
-                default:
-                    scope.item = scope.selectedItems;
-                }
-
-                debugger;
-                const asd = Object.entries(scope.list()).find(([key, val]) => val == scope.item)?.[0];
-
-                scope.change(asd);
-            }
-
-            // Type ahead search
-            scope.searchTerms = function(term) {
-                if (!term) {
-                    scope.$applyAsync(() => {
-                        scope.activeList = false;
-                    });
-                }
-
-                scope.terms = filter(scope.listCopy, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
-
-                scope.activeList = true;
-            };
-        },
-    };
-}
-
 multiSelectDirective.$inject = [];
 function multiSelectDirective() {
     return {
@@ -1388,8 +1309,13 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdLoading', LoadingDirective)
     .directive('sdMultipleEmails', MultipleEmailsValidation)
     .directive('sdMultiSelect', multiSelectDirective)
-    .directive('sdFormattingOptionsMultiSelect', formattingOptionsMultiSelectDirective)
-
+    .component(
+        'sdFormattingOptionsTreeSelect',
+        reactToAngular1(
+            FormattingOptionsTreeSelect,
+            ['value', 'fieldId', 'fields', 'onChange'],
+        ),
+    )
 
     .component('sdVideo',
         reactToAngular1(

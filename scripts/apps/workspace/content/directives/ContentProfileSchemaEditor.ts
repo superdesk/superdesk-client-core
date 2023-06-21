@@ -1,15 +1,16 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
-import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION, ITreeNode} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Dictionary<string, string>;
+    getOptionsForTreeSelect: (fieldName: string) => any;
     model: any;
     fields: {[key: string]: IArticleField};
     form: any;
-    formattingOptions: Dictionary<string, string>;
+    formattingOptions: Dictionary<FORMATTING_OPTION, string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
     characterValidationEnabled: boolean;
@@ -18,6 +19,7 @@ interface IScope extends ng.IScope {
     label(id): string;
     remove(key: string): void;
     toggle(schema: { key: string; }, key: string, position: 'before' | 'after'): void;
+    onChange(value: Array<string>, fieldId: string): void;
     reorder(start: number, end: number, key: string): void;
     setDirty(): void;
     updateOrder(key?: any): void;
@@ -32,14 +34,14 @@ const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
 });
 
-const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+export const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     abstract: true,
     body_html: true,
     footer: true,
     body_footer: true,
 });
 
-const getFormattingOptions = (): Dictionary<string, string> => {
+const getFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
     return {
         'h1': gettext('h1'),
         'h2': gettext('h2'),
@@ -72,7 +74,7 @@ const getFormattingOptions = (): Dictionary<string, string> => {
 
 export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
-const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FORMATTING_OPTION, string> => ({
+export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FORMATTING_OPTION, string> => ({
     'uppercase': gettext('uppercase'),
     'lowercase': gettext('lowercase'),
 });
@@ -92,7 +94,7 @@ export const getFormattingOptionsUnsafeToParseFromHTML = (): Dictionary<RICH_FOR
     'table': gettext('table'),
 });
 
-const getEditor3RichFormattingOptions = (): Dictionary<RICH_FORMATTING_OPTION, string> => ({
+export const getEditor3RichFormattingOptions = (): Dictionary<RICH_FORMATTING_OPTION, string> => ({
     ...getEditor3PlainTextFormattingOptions(),
     'h1': gettext('h1'),
     'h2': gettext('h2'),
@@ -106,8 +108,8 @@ const getEditor3RichFormattingOptions = (): Dictionary<RICH_FORMATTING_OPTION, s
     'justifyFull': gettext('justifyFull'),
     'outdent': gettext('outdent'),
     'indent': gettext('indent'),
-    'unordered list': gettext('h1'),
-    'ordered list': gettext('unordered list'),
+    'unordered list': gettext('unordered list'),
+    'ordered list': gettext('ordered list'),
     'pre': gettext('pre'),
     'quote': gettext('quote'),
     'media': gettext('media'),
@@ -190,6 +192,12 @@ export function ContentProfileSchemaEditor(vocabularies) {
             scope.reorder = (start, end, key) => {
                 scope.onDrag({start, end, key});
                 scope.setDirty();
+            };
+
+            scope.onChange = (value, fieldId) => {
+                scope.model.editor[fieldId].formatOptions = value;
+                scope.setDirty();
+                scope.$applyAsync();
             };
 
             scope.setDirty = () => {
