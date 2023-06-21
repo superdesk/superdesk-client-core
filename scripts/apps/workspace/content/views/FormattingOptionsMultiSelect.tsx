@@ -19,7 +19,8 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
         const isCustomPlainTextField = typeof this.props.fields[fieldName] === 'object'
             && this.props.fields[fieldName].field_type === 'text';
 
-        const isRichOrCustomTextField = Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField;
+        const isRichOrCustomTextField =
+            Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField;
 
         return Object.entries(
             isRichOrCustomTextField
