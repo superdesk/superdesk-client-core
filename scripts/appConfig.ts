@@ -29,11 +29,8 @@ if (appConfig.features.autorefreshContent == null) {
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
+export const extensions: IExtensions = {};
 
-// We have the same function in `scripts/translations.js`
-// defined because there we can't import this one
-// FIXME: When changing one or the other
-// update both functions so they are the same
 export function getUserInterfaceLanguage() {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
     const language = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
@@ -44,5 +41,3 @@ export function getUserInterfaceLanguage() {
         return 'en';
     }
 }
-
-export const extensions: IExtensions = {};

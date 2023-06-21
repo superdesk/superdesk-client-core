@@ -1,20 +1,21 @@
 import gettextjs from 'gettext.js';
-import {getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
-import {appConfig} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
 export const i18n = gettextjs();
 
 if (window.language != null && window.translations != null) {
+    const language = window.translations['']['language'];
+
     i18n.setMessages(
         'messages',
-        window.language,
+        language,
         window.translations,
-        window.pluralForms,
+        window.translations['']['plural-forms'],
     );
 
-    i18n.setLocale(window.language);
+    i18n.setLocale(language);
 }
 
 export type IScopeApply = (fn: () => void) => void;

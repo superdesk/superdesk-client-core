@@ -21,7 +21,8 @@ export default angular.module('superdesk.core.translate', [
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, () => {
-                const {translations, language} = window;
+                const {translations} = window;
+                const language = translations['']['language'];
 
                 gettextCatalog.setCurrentLanguage(language);
                 gettextCatalog.setStrings(language, translations);
