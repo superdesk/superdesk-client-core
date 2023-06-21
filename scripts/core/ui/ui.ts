@@ -1168,27 +1168,6 @@ function LoadingDirective() {
     };
 }
 
-interface IScope {
-    option: string,
-    formatOptionsDictionary: {[key: string]: string},
-    change: any,
-    output: any,
-    disabled?: boolean,
-    selectedOptions: {[key: string]: string},
-    formatOptionsDictionaryCopy: {[key: string]: string},
-    labelsList: Array<string>,
-    activeDictionary: boolean,
-    selectItem: (item: string) => void,
-    selectedTerm: string,
-    removeItem: (item: string) => void,
-    searchTerms: (term: string) => void,
-    $watch: any,
-    selectedItems: Array<string>,
-    dictionaryCopy: Array<string>,
-    dictionary: {[key: string]: string},
-    item: string,
-}
-
 multiSelectDirective.$inject = [];
 function multiSelectDirective() {
     return {
