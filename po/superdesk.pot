@@ -102,7 +102,7 @@ msgstr ""
 msgid "(as defined for all groups)"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:158
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:150
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:199
 msgid "(disabled)"
 msgstr ""
@@ -185,7 +185,7 @@ msgstr ""
 msgid "10 years"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:135
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:129
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:195
 msgid "100MB"
 msgstr ""
@@ -194,7 +194,7 @@ msgstr ""
 msgid "108h"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:132
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:126
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:192
 msgid "10MB"
 msgstr ""
@@ -295,12 +295,12 @@ msgstr ""
 msgid "19th update"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:138
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:132
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:198
 msgid "1GB"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:130
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:124
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:190
 msgid "1MB"
 msgstr ""
@@ -350,12 +350,12 @@ msgstr ""
 msgid "24th"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:136
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:130
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:196
 msgid "250MB"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:133
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:127
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:193
 msgid "25MB"
 msgstr ""
@@ -419,17 +419,17 @@ msgstr ""
 msgid "5 years"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:137
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:131
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:197
 msgid "500MB"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:134
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:128
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:194
 msgid "50MB"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:131
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:125
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:191
 msgid "5MB"
 msgstr ""
@@ -669,10 +669,10 @@ msgstr ""
 #: scripts/apps/templates/views/templates.html:34
 #: scripts/apps/workspace/content/views/profile-settings.html:31
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:90
-#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:130
-#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:123
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:136
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:124
+#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:122
+#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:115
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:128
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:116
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:150
 msgid "Actions"
 msgstr ""
@@ -728,7 +728,7 @@ msgstr ""
 msgid "Add Abbreviation"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:143
+#: ../superdesk-planning/client/constants/planning.ts:145
 msgid "Add As Event"
 msgstr ""
 
@@ -759,7 +759,7 @@ msgstr ""
 msgid "Add Field"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:233
+#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:225
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:288
 msgid "Add File"
 msgstr ""
@@ -803,7 +803,7 @@ msgstr ""
 #: scripts/apps/vocabularies/views/vocabulary-config.html:44
 #: scripts/apps/vocabularies/views/vocabulary-config.html:8
 #: scripts/apps/workspace/content/views/profile-settings.html:15
-#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:103
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:97
 #: scripts/extensions/sams/src/components/sets/manageSetsModal.tsx:107
 msgid "Add New"
 msgstr ""
@@ -924,8 +924,8 @@ msgstr ""
 msgid "Add content slugline"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:147
-#: ../superdesk-planning/client/constants/planning.ts:150
+#: ../superdesk-planning/client/constants/planning.ts:149
+#: ../superdesk-planning/client/constants/planning.ts:152
 msgid "Add coverage"
 msgstr ""
 
@@ -1000,6 +1000,7 @@ msgstr ""
 msgid "Add rule"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/config.js:51
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:46
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:91
 msgid "Add step"
@@ -1044,7 +1045,7 @@ msgstr ""
 msgid "Add to dictionary"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:148
+#: ../superdesk-planning/client/constants/planning.ts:150
 msgid "Add to featured stories"
 msgstr ""
 
@@ -1110,7 +1111,7 @@ msgid "Advanced"
 msgstr ""
 
 #: scripts/apps/search/views/search-panel.html:8
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:148
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:142
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:232
 msgid "Advanced Search"
 msgstr ""
@@ -1201,8 +1202,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:189
 #: ../superdesk-planning/client/components/fields/editor/Agendas.tsx:42
 #: ../superdesk-planning/client/components/fields/preview/index.ts:47
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:68
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:64
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:65
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:61
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.tsx:84
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:62
 #: ../superdesk-planning/client/utils/contentProfiles.ts:197
@@ -1271,7 +1272,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:108
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:241
-#: ../superdesk-planning/client/constants/events.ts:180
+#: ../superdesk-planning/client/constants/events.ts:182
 msgid "All Events"
 msgstr ""
 
@@ -1285,8 +1286,8 @@ msgstr ""
 msgid "All Planning Items"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:168
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:203
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:160
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:195
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:210
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:268
 msgid "All Sets"
@@ -1296,7 +1297,7 @@ msgstr ""
 msgid "All authors"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:138
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:139
 msgid "All coverages cancelled:"
 msgstr ""
 
@@ -1313,7 +1314,7 @@ msgstr ""
 msgid "All good so far"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:73
+#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:67
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:55
 msgid "All item types"
 msgstr ""
@@ -1525,14 +1526,12 @@ msgstr ""
 msgid "Annotations"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
+#: scripts/extensions/annotationsLibrary/dist/src/extension.js:70
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:101
 msgid "Annotations Library"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/extension.js:47
-#: scripts/extensions/annotationsLibrary/dist/extension.js:58
-#: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
+#: scripts/extensions/annotationsLibrary/dist/src/extension.js:59
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:89
 msgid "Annotations library"
 msgstr ""
@@ -1703,8 +1702,8 @@ msgstr ""
 msgid "Are you sure you want to delete user role?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:1005
-#: ../superdesk-planning/client/actions/events/ui.ts:975
+#: ../superdesk-planning/client/actions/events/ui.ts:1018
+#: ../superdesk-planning/client/actions/events/ui.ts:985
 msgid "Are you sure you want to mark this event as complete?"
 msgstr ""
 
@@ -1915,17 +1914,17 @@ msgstr ""
 msgid "Asia/Yekaterinburg"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:127
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:119
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:130
 msgid "Asset Preview"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:410
+#: scripts/extensions/sams/dist/src/api/assets.js:407
 #: scripts/extensions/sams/src/api/assets.ts:554
 msgid "Asset deleted successfully"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:432
+#: scripts/extensions/sams/dist/src/api/assets.js:429
 #: scripts/extensions/sams/src/api/assets.ts:577
 msgid "Asset updated successfully"
 msgstr ""
@@ -1963,11 +1962,11 @@ msgstr ""
 msgid "Assign rights:"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:146
+#: ../superdesk-planning/client/constants/planning.ts:148
 msgid "Assign to agenda"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:173
+#: ../superdesk-planning/client/constants/events.ts:175
 msgid "Assign to calendar"
 msgstr ""
 
@@ -2055,7 +2054,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:62
 #: ../superdesk-planning/client/controllers/AssignmentController.tsx:45
 #: ../superdesk-planning/client/index.ts:62
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/assignments-overview/index.js:90
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/assignments-overview/index.js:87
 #: ../superdesk-planning/client/planning-extension/src/assignments-overview/index.tsx:122
 #: ../superdesk-planning/index.ts:26
 #: scripts/apps/master-desk/MasterDesk.tsx:40
@@ -2109,7 +2108,7 @@ msgstr ""
 msgid "At least one of [{{list}}] is required."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:153
+#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:147
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:172
 msgid "Attach Asset(s)"
 msgstr ""
@@ -2155,7 +2154,7 @@ msgstr ""
 msgid "Audio"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:76
+#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:70
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:58
 msgid "Audio only"
 msgstr ""
@@ -2271,7 +2270,6 @@ msgstr ""
 msgid "Back to original view"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationSelectSingleItem.js:12
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
 msgid "Back to results"
@@ -2425,7 +2423,7 @@ msgstr ""
 msgid "Byline"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:207
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:200
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:314
 msgid "Bytes"
 msgstr ""
@@ -2474,7 +2472,7 @@ msgstr ""
 msgid "Calendar List"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:903
+#: ../superdesk-planning/client/actions/events/ui.ts:913
 msgid "Calendar assigned to the event"
 msgstr ""
 
@@ -2485,8 +2483,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:134
 #: ../superdesk-planning/client/components/fields/editor/Calendars.tsx:25
 #: ../superdesk-planning/client/components/fields/preview/index.ts:55
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:67
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:69
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:64
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:66
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.tsx:73
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:70
 #: ../superdesk-planning/client/utils/contentProfiles.ts:167
@@ -2550,7 +2548,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/SubNav/SlidingToolBar.tsx:34
 #: ../superdesk-planning/client/components/UI/SubNav/SlidingToolBar.tsx:39
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/AddNewCoverages.tsx:259
-#: ../superdesk-planning/client/constants/events.ts:164
+#: ../superdesk-planning/client/constants/events.ts:166
 #: scripts/apps/archive/show-spike-dialog.tsx:64
 #: scripts/apps/archive/views/archived-kill.html:16
 #: scripts/apps/archive/views/export.html:33
@@ -2635,25 +2633,23 @@ msgstr ""
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:31
 #: scripts/core/ui/views/datepicker-wrapper.html:9
 #: scripts/core/ui/views/sd-timepicker-popup.html:27
-#: scripts/extensions/annotationsLibrary/dist/AnnotationsSelect.js:17
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:18
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:38
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:286
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:72
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:457
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:179
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:23
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:25
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:89
-#: scripts/extensions/sams/dist/src/components/assets/assetEditorPanel.js:145
-#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:152
-#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:131
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:182
+#: scripts/extensions/sams/dist/src/components/assets/assetEditorPanel.js:138
+#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:146
+#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:125
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:175
 #: scripts/extensions/sams/src/components/assets/assetEditorPanel.tsx:125
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:167
 #: scripts/extensions/sams/src/components/attachments/editAttachmentModal.tsx:125
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:237
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:10
+#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:9
 #: scripts/extensions/videoEditor/src/VideoEditorHeader.tsx:22
 msgid "Cancel"
 msgstr ""
@@ -2668,7 +2664,7 @@ msgid "Cancel Event"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:150
-#: ../superdesk-planning/client/constants/planning.ts:141
+#: ../superdesk-planning/client/constants/planning.ts:143
 msgid "Cancel Planning"
 msgstr ""
 
@@ -2682,11 +2678,11 @@ msgstr ""
 msgid "Cancel Selection"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:142
+#: ../superdesk-planning/client/constants/planning.ts:144
 msgid "Cancel all Coverage(s)"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:151
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:152
 msgid "Cancel all recurring events or just this one?"
 msgstr ""
 
@@ -2797,7 +2793,7 @@ msgstr ""
 msgid "Changes to Featuremedia"
 msgstr ""
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:32
+#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:31
 #: scripts/extensions/videoEditor/src/VideoEditorTools.tsx:76
 msgid "Changing quality is only supported for 480p and higher quality videos."
 msgstr ""
@@ -2915,7 +2911,7 @@ msgstr ""
 #: scripts/apps/dashboard/world-clock/configuration.html:39
 #: scripts/apps/legal-archive/views/legal_archive.html:95
 #: scripts/core/ui/views/sd-timezone.html:26
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:185
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:179
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:371
 msgid "Clear"
 msgstr ""
@@ -3070,9 +3066,9 @@ msgstr ""
 #: scripts/core/menu/views/about.html:37
 #: scripts/core/menu/views/about.html:5
 #: scripts/core/ui/components/Modal/ModalHeader.tsx:21
-#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:105
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:93
-#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:232
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:99
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:85
+#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:224
 #: scripts/extensions/sams/src/components/sets/manageSetsModal.tsx:127
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:106
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:283
@@ -3194,12 +3190,12 @@ msgstr ""
 msgid "Compare versions"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:154
+#: ../superdesk-planning/client/constants/assignments.ts:156
 msgid "Complete Assignment"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:66
-#: ../superdesk-planning/client/constants/assignments.ts:167
+#: ../superdesk-planning/client/constants/assignments.ts:169
 #: ../superdesk-planning/client/utils/index.ts:404
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:52
 msgid "Completed"
@@ -3246,11 +3242,10 @@ msgstr ""
 #: scripts/core/ui/components/Form/TimeInput/TimeInputPopup.tsx:140
 #: scripts/core/ui/views/datepicker-wrapper.html:8
 #: scripts/core/ui/views/sd-timepicker-popup.html:28
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:38
 msgid "Confirm"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:158
+#: ../superdesk-planning/client/constants/assignments.ts:160
 msgid "Confirm Availability"
 msgstr ""
 
@@ -3481,7 +3476,7 @@ msgstr ""
 msgid "Convert text to uppercase"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:168
+#: ../superdesk-planning/client/constants/events.ts:170
 msgid "Convert to Recurring Event"
 msgstr ""
 
@@ -3592,9 +3587,9 @@ msgstr ""
 msgid "Could not load title"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:1013
-#: ../superdesk-planning/client/actions/events/ui.ts:876
-#: ../superdesk-planning/client/actions/events/ui.ts:994
+#: ../superdesk-planning/client/actions/events/ui.ts:1007
+#: ../superdesk-planning/client/actions/events/ui.ts:1029
+#: ../superdesk-planning/client/actions/events/ui.ts:886
 msgid "Could not obtain lock on the event."
 msgstr ""
 
@@ -3602,7 +3597,7 @@ msgstr ""
 msgid "Could not obtain lock on the planning item."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1596
+#: ../superdesk-planning/client/actions/main.ts:1608
 msgid "Could not save the item."
 msgstr ""
 
@@ -3610,7 +3605,7 @@ msgstr ""
 msgid "Could not unlock the assignment."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1592
+#: ../superdesk-planning/client/actions/main.ts:1604
 msgid "Could not unlock the item."
 msgstr ""
 
@@ -3678,7 +3673,7 @@ msgstr ""
 msgid "Coverage added to workflow"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.ts:529
+#: ../superdesk-planning/client/api/planning.ts:213
 msgid "Coverage added to workflow."
 msgstr ""
 
@@ -3703,7 +3698,7 @@ msgstr ""
 msgid "Coverage cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.ts:618
+#: ../superdesk-planning/client/actions/planning/ui.ts:597
 msgid "Coverage cancelled."
 msgstr ""
 
@@ -3740,7 +3735,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Editor/bookmarks/CoveragesBookmark.tsx:119
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.tsx:54
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:193
-#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:117
+#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:123
 #: ../superdesk-planning/client/utils/contentProfiles.ts:207
 msgid "Coverages"
 msgstr ""
@@ -3760,7 +3755,7 @@ msgstr ""
 #: scripts/apps/monitoring/directives/MonitoringView.ts:183
 #: scripts/apps/templates/services/TemplatesService.ts:70
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:6
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:185
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:178
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:245
 msgid "Create"
 msgstr ""
@@ -3799,7 +3794,7 @@ msgstr ""
 msgid "Create Planning"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:162
+#: ../superdesk-planning/client/constants/events.ts:164
 msgid "Create Planning Item"
 msgstr ""
 
@@ -3817,7 +3812,7 @@ msgstr ""
 msgid "Create a new location"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:163
+#: ../superdesk-planning/client/constants/events.ts:165
 msgid "Create and Open Planning Item"
 msgstr ""
 
@@ -3907,8 +3902,8 @@ msgstr ""
 #: scripts/apps/legal-archive/tests/legal.spec.ts:76
 #: scripts/apps/search/services/SearchService.ts:70
 #: scripts/apps/users/views/list.html:37
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:140
-#: scripts/extensions/sams/dist/src/utils/ui.js:123
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:132
+#: scripts/extensions/sams/dist/src/utils/ui.js:119
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:171
 #: scripts/extensions/sams/src/utils/ui.tsx:113
 msgid "Created"
@@ -3962,12 +3957,12 @@ msgstr ""
 msgid "Created to"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:95
+#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:89
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:84
 msgid "Created {{ datetime }}"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:96
+#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:90
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:89
 msgid "Created {{ datetime }} by"
 msgstr ""
@@ -4022,7 +4017,7 @@ msgstr ""
 msgid "Cumulative time per call"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:170
+#: ../superdesk-planning/client/constants/assignments.ts:172
 msgid "Current Assignments"
 msgstr ""
 
@@ -4234,7 +4229,7 @@ msgstr ""
 msgid "Dates"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/extension.js:33
+#: scripts/extensions/datetimeField/dist/src/extension.js:51
 #: scripts/extensions/datetimeField/src/extension.tsx:64
 msgid "Datetime"
 msgstr ""
@@ -4333,7 +4328,6 @@ msgid ""
 "                                    article header. A minimal value of 200 is required."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:22
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:23
 #: scripts/extensions/predefinedTextField/dist/src/config.js:20
@@ -4347,7 +4341,7 @@ msgstr ""
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:48
 #: scripts/core/editor3/components/comments/Comment.tsx:61
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:57
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:101
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:93
 #: scripts/extensions/sams/dist/src/utils/assets.js:30
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:115
 #: scripts/extensions/sams/src/utils/assets.ts:63
@@ -4481,12 +4475,11 @@ msgstr ""
 #: scripts/core/editor3/components/embeds/EmbedBlock.tsx:185
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:67
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:158
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:101
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:160
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:112
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:149
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:201
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:121
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:95
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:154
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:141
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:194
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:113
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:203
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:262
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:129
@@ -4626,8 +4619,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:91
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:135
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:232
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:92
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:129
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:94
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:131
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:78
 msgid "Desk:"
 msgstr ""
@@ -4643,7 +4636,7 @@ msgstr ""
 #: scripts/apps/search/views/search-filters.html:31
 #: scripts/apps/templates/views/template-editor-modal.html:82
 #: scripts/apps/users/views/user-preferences.html:18
-#: scripts/extensions/sams/dist/src/components/common/DesksSelectInput.js:130
+#: scripts/extensions/sams/dist/src/components/common/DesksSelectInput.js:122
 #: scripts/extensions/sams/src/components/common/DesksSelectInput.tsx:109
 msgid "Desks"
 msgstr ""
@@ -4651,7 +4644,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:181
 #: scripts/apps/authoring/views/send-item.html:37
 #: scripts/apps/publish/views/publish-queue.html:111
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:213
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:206
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:325
 msgid "Destination"
 msgstr ""
@@ -4725,7 +4718,6 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-associateditem-view.html:45
 #: scripts/apps/archive/views/metadata-view.html:211
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:205
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:131
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:157
 msgid "Dimensions"
 msgstr ""
@@ -4759,7 +4751,7 @@ msgstr ""
 msgid "Disabled Calendars"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:77
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:71
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:83
 msgid "Disabled Sets"
 msgstr ""
@@ -4853,7 +4845,7 @@ msgstr ""
 msgid "Document"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:77
+#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:71
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:59
 msgid "Documents only"
 msgstr ""
@@ -4885,7 +4877,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:129
 #: scripts/apps/monitoring/views/aggregate-settings.html:156
 #: scripts/apps/users/views/change-avatar.html:79
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:11
+#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:10
 #: scripts/extensions/videoEditor/src/VideoEditorHeader.tsx:30
 msgid "Done"
 msgstr ""
@@ -4919,16 +4911,16 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:190
 #: ../superdesk-planning/client/utils/index.ts:343
 #: scripts/apps/search/components/fields/state.tsx:11
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:105
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:165
-#: scripts/extensions/sams/dist/src/utils/ui.js:106
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:99
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:159
+#: scripts/extensions/sams/dist/src/utils/ui.js:102
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:224
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:305
 #: scripts/extensions/sams/src/utils/ui.tsx:84
 msgid "Draft"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:75
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:69
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:61
 msgid "Draft Sets"
 msgstr ""
@@ -4939,8 +4931,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/FileInput.tsx:200
 #: scripts/core/ui/components/Form/FileInput.tsx:136
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:199
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:209
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:193
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:203
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:192
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:216
 msgid "Drag files here or"
@@ -4995,8 +4987,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:137
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:169
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:117
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:103
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:119
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:105
 msgid "Due:"
 msgstr ""
 
@@ -5004,8 +4996,8 @@ msgstr ""
 #: ../superdesk-analytics/client/utils.js:169
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:315
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:133
-#: ../superdesk-planning/client/constants/events.ts:161
-#: ../superdesk-planning/client/constants/planning.ts:140
+#: ../superdesk-planning/client/constants/events.ts:163
+#: ../superdesk-planning/client/constants/planning.ts:142
 #: scripts/apps/archive/index.tsx:166
 #: scripts/apps/archive/index.tsx:190
 #: scripts/apps/archive/index.tsx:208
@@ -5119,8 +5111,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:359
 #: ../superdesk-planning/client/components/Main/ItemEditorModal/EditorModalPanel.tsx:168
 #: ../superdesk-planning/client/components/Tooltips.tsx:10
-#: ../superdesk-planning/client/constants/events.ts:171
-#: ../superdesk-planning/client/constants/planning.ts:144
+#: ../superdesk-planning/client/constants/events.ts:173
+#: ../superdesk-planning/client/constants/planning.ts:146
 #: ../superdesk-planning/client/constants/tooltips.ts:24
 #: scripts/apps/authoring/attachments/AttachmentsList.tsx:66
 #: scripts/apps/authoring/authoring/index.ts:205
@@ -5136,14 +5128,13 @@ msgstr ""
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:43
 #: scripts/core/editor3/components/comments/Comment.tsx:56
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:56
-#: scripts/extensions/annotationsLibrary/dist/annotations-library-page.js:30
 #: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:31
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:63
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:64
 #: scripts/extensions/predefinedTextField/dist/src/config.js:47
 #: scripts/extensions/predefinedTextField/src/config.tsx:70
 #: scripts/extensions/predefinedTextField/src/config.tsx:71
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:88
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:80
 #: scripts/extensions/sams/dist/src/utils/assets.js:38
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:101
 #: scripts/extensions/sams/src/utils/assets.ts:69
@@ -5172,7 +5163,7 @@ msgid "Edit Agenda"
 msgstr ""
 
 #: scripts/apps/authoring/attachments/AttachmentsEditorModal.tsx:43
-#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:122
+#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:116
 #: scripts/extensions/sams/src/components/attachments/editAttachmentModal.tsx:102
 msgid "Edit Attachment"
 msgstr ""
@@ -5224,7 +5215,7 @@ msgstr ""
 msgid "Edit Media Metadata"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:155
+#: ../superdesk-planning/client/constants/assignments.ts:157
 msgid "Edit Priority"
 msgstr ""
 
@@ -5271,7 +5262,7 @@ msgstr ""
 msgid "Edit Unique Name"
 msgstr ""
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:485
+#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:484
 #: scripts/extensions/videoEditor/src/VideoEditor.tsx:679
 msgid "Edit Video"
 msgstr ""
@@ -5323,8 +5314,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:423
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:425
-#: ../superdesk-planning/client/constants/events.ts:172
-#: ../superdesk-planning/client/constants/planning.ts:145
+#: ../superdesk-planning/client/constants/events.ts:174
+#: ../superdesk-planning/client/constants/planning.ts:147
 #: ../superdesk-planning/client/constants/tooltips.ts:32
 msgid "Edit in popup"
 msgstr ""
@@ -5479,7 +5470,7 @@ msgid "Enable user"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.tsx:138
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:194
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:187
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:268
 msgid "Enabled"
 msgstr ""
@@ -5758,7 +5749,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:294
 #: scripts/apps/authoring/authoring/services/LockService.ts:20
-#: scripts/extensions/sams/dist/src/api/assets.js:418
+#: scripts/extensions/sams/dist/src/api/assets.js:415
 #: scripts/extensions/sams/src/api/assets.ts:562
 msgid "Error: {{message}}"
 msgstr ""
@@ -5878,7 +5869,7 @@ msgstr ""
 msgid "Event Cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:58
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:59
 msgid "Event Cancelled:"
 msgstr ""
 
@@ -5913,7 +5904,7 @@ msgstr ""
 msgid "Event Postponed"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:40
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:41
 msgid "Event Postponed:"
 msgstr ""
 
@@ -5959,7 +5950,7 @@ msgstr ""
 msgid "Event repetitions modified"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:511
+#: ../superdesk-planning/client/actions/events/ui.ts:521
 msgid "Event repetitions updated"
 msgstr ""
 
@@ -5967,7 +5958,7 @@ msgstr ""
 msgid "Event spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:496
+#: ../superdesk-planning/client/actions/events/ui.ts:506
 msgid "Event time has been updated"
 msgstr ""
 
@@ -5979,7 +5970,7 @@ msgstr ""
 msgid "Event unspiked"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:232
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:233
 msgid "Event will be changed to a multi-day event!"
 msgstr ""
 
@@ -6212,8 +6203,12 @@ msgstr ""
 msgid "Facebook Circle"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:904
+#: ../superdesk-planning/client/actions/events/ui.ts:914
 msgid "Failed to add Calendar to the Event"
+msgstr ""
+
+#: ../superdesk-planning/client/api/planning.ts:221
+msgid "Failed to add coverage to workflow"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:326
@@ -6267,7 +6262,7 @@ msgstr ""
 msgid "Failed to create/update Events and Planning view filter"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:421
+#: scripts/extensions/sams/dist/src/api/assets.js:418
 #: scripts/extensions/sams/src/api/assets.ts:564
 msgid "Failed to delete the Asset"
 msgstr ""
@@ -6329,7 +6324,7 @@ msgstr ""
 msgid "Failed to generate update: {{message}}"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:320
+#: scripts/extensions/sams/dist/src/api/assets.js:317
 #: scripts/extensions/sams/src/api/assets.ts:435
 msgid "Failed to get Assets"
 msgstr ""
@@ -6338,21 +6333,22 @@ msgstr ""
 msgid "Failed to get a lock on the item!"
 msgstr ""
 
+#: scripts/extensions/sams/dist/src/api/assets.js:290
 #: scripts/extensions/sams/src/api/assets.ts:404
 msgid "Failed to get asset \"\""
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:277
+#: scripts/extensions/sams/dist/src/api/assets.js:274
 #: scripts/extensions/sams/src/api/assets.ts:387
 msgid "Failed to get assets counts for sets"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:379
+#: scripts/extensions/sams/dist/src/api/assets.js:376
 #: scripts/extensions/sams/src/api/assets.ts:518
 msgid "Failed to get binary for asset"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:399
+#: scripts/extensions/sams/dist/src/api/assets.js:396
 #: scripts/extensions/sams/src/api/assets.ts:541
 msgid "Failed to get compressed binaries for assets"
 msgstr ""
@@ -6371,7 +6367,7 @@ msgstr ""
 msgid "Failed to get the autosave entry"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1474
+#: ../superdesk-planning/client/actions/main.ts:1482
 msgid "Failed to get the queue item"
 msgstr ""
 
@@ -6422,7 +6418,7 @@ msgstr ""
 msgid "Failed to lock item"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:458
+#: scripts/extensions/sams/dist/src/api/assets.js:455
 #: scripts/extensions/sams/src/api/assets.ts:604
 msgid "Failed to lock the Asset"
 msgstr ""
@@ -6447,7 +6443,7 @@ msgstr ""
 msgid "Failed to publish and continue."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:225
+#: scripts/extensions/sams/dist/src/api/assets.js:222
 #: scripts/extensions/sams/src/api/assets.ts:328
 msgid "Failed to query Assets"
 msgstr ""
@@ -6560,7 +6556,7 @@ msgstr ""
 msgid "Failed to unlock item"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:476
+#: scripts/extensions/sams/dist/src/api/assets.js:473
 #: scripts/extensions/sams/src/api/assets.ts:623
 msgid "Failed to unlock the Asset"
 msgstr ""
@@ -6573,11 +6569,11 @@ msgstr ""
 msgid "Failed to unpost, could not find the item type!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:515
+#: ../superdesk-planning/client/actions/events/ui.ts:525
 msgid "Failed to update Event repetitions"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:337
+#: scripts/extensions/sams/dist/src/api/assets.js:334
 #: scripts/extensions/sams/src/api/assets.ts:462
 msgid "Failed to update asset."
 msgstr ""
@@ -6586,12 +6582,12 @@ msgstr ""
 msgid "Failed to update location"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:440
+#: scripts/extensions/sams/dist/src/api/assets.js:437
 #: scripts/extensions/sams/src/api/assets.ts:585
 msgid "Failed to update the Asset"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:500
+#: ../superdesk-planning/client/actions/events/ui.ts:510
 msgid "Failed to update the Event time!"
 msgstr ""
 
@@ -6606,7 +6602,7 @@ msgid "Failed to upload file."
 msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/EventAttachments.tsx:62
-#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:208
+#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:200
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:240
 msgid "Failed to upload files"
 msgstr ""
@@ -6655,7 +6651,7 @@ msgstr ""
 msgid "Featured Stories Locked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.ts:377
+#: ../superdesk-planning/client/actions/planning/notifications.ts:375
 msgid "Featured Stories Unlocked"
 msgstr ""
 
@@ -6667,7 +6663,7 @@ msgstr ""
 msgid "Featured stories"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.ts:378
+#: ../superdesk-planning/client/actions/planning/notifications.ts:376
 msgid "Featured stories you were managing was unlocked by"
 msgstr ""
 
@@ -6784,18 +6780,17 @@ msgstr ""
 msgid "File types"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:203
+#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:195
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:230
 msgid "File uploaded successfully"
 msgid_plural "{{count}} files uploaded successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:157
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:115
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:152
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:137
-#: scripts/extensions/sams/dist/src/utils/ui.js:119
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:151
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:144
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:129
+#: scripts/extensions/sams/dist/src/utils/ui.js:115
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:252
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:134
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:168
@@ -6804,7 +6799,7 @@ msgstr[1] ""
 msgid "Filename"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:87
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:81
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:168
 msgid "Filename:"
 msgstr ""
@@ -7076,7 +7071,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:43
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.tsx:44
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:239
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:241
 #: ../superdesk-planning/client/components/fields/editor/StartDateTime.tsx:32
 #: ../superdesk-planning/client/components/fields/preview/index.ts:147
 #: scripts/apps/authoring/views/send-item.html:114
@@ -7126,11 +7121,11 @@ msgstr ""
 msgid "Function"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:176
+#: ../superdesk-planning/client/constants/assignments.ts:178
 msgid "Future Assignments"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:210
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:203
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:317
 msgid "GB"
 msgstr ""
@@ -7407,7 +7402,6 @@ msgstr ""
 msgid "Heart"
 msgstr ""
 
-#: scripts/extensions/helloWorld/dist/extension.js:6
 #: scripts/extensions/helloWorld/dist/src/extension.js:7
 #: scripts/extensions/helloWorld/src/extension.ts:6
 msgid "Hello world"
@@ -7643,7 +7637,6 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:101
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:112
 msgid "Image Preview"
 msgstr ""
@@ -7666,7 +7659,7 @@ msgstr ""
 msgid "Image suggestions are based on generated tags and can be added to article content by dragging."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:74
+#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:68
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:56
 msgid "Images only"
 msgstr ""
@@ -7688,7 +7681,7 @@ msgstr ""
 msgid "In 3 days"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:164
+#: ../superdesk-planning/client/constants/assignments.ts:166
 #: ../superdesk-planning/client/utils/index.ts:392
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:10
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:46
@@ -7886,6 +7879,7 @@ msgstr ""
 msgid "Ingested"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/config.js:21
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:18
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:20
 msgid "Initial time offset"
@@ -7923,9 +7917,9 @@ msgstr ""
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:149
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:156
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:106
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:166
-#: scripts/extensions/sams/dist/src/utils/ui.js:104
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:100
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:160
+#: scripts/extensions/sams/dist/src/utils/ui.js:100
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:229
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:308
 #: scripts/extensions/sams/src/utils/ui.tsx:76
@@ -8041,7 +8035,7 @@ msgstr ""
 msgid "Item Type"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1412
+#: ../superdesk-planning/client/actions/main.ts:1420
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:184
 #: ../superdesk-planning/client/controllers/FulfilAssignmentController.tsx:161
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:106
@@ -8075,7 +8069,7 @@ msgstr ""
 msgid "Item has been resent."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1605
+#: ../superdesk-planning/client/actions/main.ts:1617
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:591
 msgid "Item has changed since it was opened. Please close and reopen the item to continue. Regrettably, your changes cannot be saved."
 msgstr ""
@@ -8090,7 +8084,6 @@ msgstr ""
 msgid "Item is already in this package."
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:20
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:22
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:71
 msgid "Item is locked and marked user can not be changed."
@@ -8184,7 +8177,6 @@ msgstr ""
 msgid "Items Created"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:24
 #: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:20
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:25
 msgid "Items are marked for different users"
@@ -8230,7 +8222,7 @@ msgstr ""
 msgid "K"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:208
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:201
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:315
 msgid "KB"
 msgstr ""
@@ -8302,7 +8294,6 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:16
 #: scripts/apps/users/views/edit-form.html:230
 #: scripts/apps/workspace/content/constants.ts:96
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:14
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
 msgid "Language"
@@ -8582,7 +8573,7 @@ msgstr ""
 msgid "Loading preview"
 msgstr ""
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:77
+#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:76
 #: scripts/extensions/videoEditor/src/VideoEditor.tsx:131
 msgid "Loading video..."
 msgstr ""
@@ -8701,7 +8692,7 @@ msgstr ""
 msgid "MASTER"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:209
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:202
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:316
 msgid "MB"
 msgstr ""
@@ -8793,8 +8784,8 @@ msgstr ""
 msgid "Manage Search Providers"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:99
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:115
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:93
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:107
 #: scripts/extensions/sams/src/components/sets/manageSetsModal.tsx:94
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:140
 msgid "Manage Sets"
@@ -8855,11 +8846,11 @@ msgstr ""
 msgid "Mark and send"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:167
+#: ../superdesk-planning/client/constants/events.ts:169
 msgid "Mark as Postponed"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:175
+#: ../superdesk-planning/client/constants/events.ts:177
 #: ../superdesk-planning/client/utils/assignments.ts:201
 msgid "Mark as completed"
 msgstr ""
@@ -8874,15 +8865,11 @@ msgstr ""
 msgid "Mark for highlight"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:32
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:32
 msgid "Mark for other user"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:27
-#: scripts/extensions/markForUser/dist/get-article-actions.js:16
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:17
 #: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:23
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:13
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:19
@@ -8921,9 +8908,9 @@ msgstr ""
 msgid "Marked for desks"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
-#: scripts/extensions/markForUser/dist/src/extension.js:20
-#: scripts/extensions/markForUser/dist/src/extension.js:70
+#: scripts/extensions/markForUser/dist/src/extension.js:19
+#: scripts/extensions/markForUser/dist/src/extension.js:69
+#: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:100
 #: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:102
 #: scripts/extensions/markForUser/src/extension.tsx:32
 #: scripts/extensions/markForUser/src/extension.tsx:82
@@ -8953,7 +8940,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:124
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:116
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:148
 msgid "Max Asset Size"
 msgstr ""
@@ -8977,7 +8964,7 @@ msgstr ""
 msgid "Maximum 80 characters."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:204
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:197
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:301
 msgid "Maximum Asset Size"
 msgstr ""
@@ -9346,18 +9333,18 @@ msgstr ""
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:98
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:50
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:77
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:121
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:136
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:122
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:137
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:97
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:95
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:197
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:81
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:39
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:76
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:37
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:102
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:93
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:214
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:96
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:198
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:85
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:42
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:80
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:41
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:104
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:95
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:216
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:218
 #: ../superdesk-planning/client/components/fields/preview/index.ts:185
 #: ../superdesk-planning/client/components/fields/resources/common.ts:34
@@ -9373,19 +9360,17 @@ msgstr ""
 #: scripts/apps/templates/views/create-template.html:11
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:6
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:7
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:8
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:8
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:55
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:89
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:98
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:154
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:109
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:146
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:198
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:118
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:134
-#: scripts/extensions/sams/dist/src/utils/ui.js:117
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:92
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:148
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:138
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:191
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:110
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:126
+#: scripts/extensions/sams/dist/src/utils/ui.js:113
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:189
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:242
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:124
@@ -9513,7 +9498,7 @@ msgstr ""
 msgid "No Agenda Assigned."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetListPanel.js:62
+#: scripts/extensions/sams/dist/src/components/assets/assetListPanel.js:56
 #: scripts/extensions/sams/src/components/assets/assetListPanel.tsx:35
 msgid "No Assets found"
 msgstr ""
@@ -9652,12 +9637,12 @@ msgstr ""
 msgid "No dictionary available for spell checking."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:77
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:71
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:84
 msgid "No disabled sets configured"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:75
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:69
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:62
 msgid "No draft sets configured"
 msgstr ""
@@ -9710,7 +9695,6 @@ msgstr ""
 msgid "No label"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationsSelect.js:23
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:24
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:50
 msgid "No matches found in the library."
@@ -9736,7 +9720,7 @@ msgstr ""
 msgid "No recent templates."
 msgstr ""
 
-#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:51
+#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:58
 msgid "No related Planning yet"
 msgstr ""
 
@@ -9799,12 +9783,12 @@ msgstr ""
 msgid "No thumbnail"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/api/assets.js:357
+#: scripts/extensions/sams/dist/src/api/assets.js:354
 #: scripts/extensions/sams/src/api/assets.ts:481
 msgid "No usable Sets found. Enable one first"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:76
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:70
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:73
 msgid "No usable sets configured"
 msgstr ""
@@ -9818,12 +9802,12 @@ msgid "No users found"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:87
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:135
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:136
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:107
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:91
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:86
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:107
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:229
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:95
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:90
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:109
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:231
 msgid "No. of Events"
 msgstr ""
 
@@ -10039,7 +10023,7 @@ msgstr ""
 msgid "Occurrence Status"
 msgstr ""
 
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:61
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:58
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:56
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:41
 msgid "Off"
@@ -10069,7 +10053,7 @@ msgid "Old Gold"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:39
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:60
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:57
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:55
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:40
 #: scripts/apps/templates/views/template-editor-modal.html:166
@@ -10146,7 +10130,7 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:157
+#: ../superdesk-planning/client/constants/assignments.ts:159
 msgid "Open Coverage"
 msgstr ""
 
@@ -10221,8 +10205,8 @@ msgstr ""
 msgid "Operator"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:204
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:214
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:198
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:208
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:199
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:224
 msgid "Or select an existing asset"
@@ -10718,8 +10702,8 @@ msgstr ""
 msgid "Planning Cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:46
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:44
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:49
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:48
 #: ../superdesk-planning/client/components/fields/editor/PlanningDateTime.tsx:29
 #: ../superdesk-planning/client/components/fields/preview/index.ts:169
 #: ../superdesk-planning/client/utils/contentProfiles.ts:193
@@ -10745,9 +10729,9 @@ msgstr ""
 msgid "Planning Item has been cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:142
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:110
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:212
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:143
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:111
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:213
 msgid "Planning Items"
 msgstr ""
 
@@ -10773,7 +10757,7 @@ msgstr ""
 msgid "Planning cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:141
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:142
 msgid "Planning cancelled:"
 msgstr ""
 
@@ -10923,7 +10907,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:303
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:215
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:152
-#: ../superdesk-planning/client/constants/events.ts:170
+#: ../superdesk-planning/client/constants/events.ts:172
 #: scripts/apps/authoring/comments/views/comments-widget.html:38
 msgid "Post"
 msgstr ""
@@ -10940,8 +10924,8 @@ msgstr ""
 msgid "Post Event"
 msgstr ""
 
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:61
-#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:57
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:58
+#: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:54
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.tsx:60
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:51
 msgid "Post Items"
@@ -11021,8 +11005,8 @@ msgstr ""
 msgid "Preserve Published Content"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:176
-#: ../superdesk-planning/client/constants/planning.ts:151
+#: ../superdesk-planning/client/constants/events.ts:178
+#: ../superdesk-planning/client/constants/planning.ts:153
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:197
 #: scripts/apps/authoring/views/article-edit.html:702
 #: scripts/apps/authoring/views/authoring-topbar.html:171
@@ -11073,8 +11057,8 @@ msgid "Print"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:78
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:127
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:113
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:129
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:115
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:104
 #: scripts/apps/content-api/services/ContentAPISearchService.ts:31
 #: scripts/apps/legal-archive/services/LegalArchiveService.ts:29
@@ -11244,7 +11228,7 @@ msgid "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:272
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:108
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:110
 msgid "Provider:"
 msgstr ""
 
@@ -11257,9 +11241,9 @@ msgid "PubStatus"
 msgstr ""
 
 #: scripts/apps/contacts/services/ContactsService.ts:55
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:107
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:167
-#: scripts/extensions/sams/dist/src/utils/ui.js:108
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:101
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:161
+#: scripts/extensions/sams/dist/src/utils/ui.js:104
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:234
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:311
 #: scripts/extensions/sams/src/utils/ui.tsx:92
@@ -11421,7 +11405,7 @@ msgstr ""
 msgid "QCode"
 msgstr ""
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:30
+#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:29
 #: scripts/extensions/videoEditor/src/VideoEditorTools.tsx:68
 msgid "Quality:"
 msgstr ""
@@ -11534,15 +11518,15 @@ msgstr ""
 msgid "Rearrange widgets"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:160
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:161
 msgid "Reason for Event cancellation:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:81
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:82
 msgid "Reason for Event postponement:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:96
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:97
 msgid "Reason for cancelling all coverage:"
 msgstr ""
 
@@ -11550,7 +11534,7 @@ msgstr ""
 msgid "Reason for cancelling the coverage"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:97
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:98
 msgid "Reason for cancelling the planning item:"
 msgstr ""
 
@@ -11558,12 +11542,12 @@ msgstr ""
 msgid "Reason for cancelling the scheduled update"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:177
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:178
 msgid "Reason for rescheduling this event:"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:179
-#: ../superdesk-planning/client/constants/assignments.ts:153
+#: ../superdesk-planning/client/constants/assignments.ts:155
 msgid "Reassign"
 msgstr ""
 
@@ -11698,7 +11682,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AssociatedPlanningsBookmark.tsx:99
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/index.tsx:55
-#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:32
+#: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:39
 #: ../superdesk-planning/client/utils/contentProfiles.ts:191
 msgid "Related Plannings"
 msgstr ""
@@ -11754,10 +11738,10 @@ msgstr ""
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:34
 #: scripts/core/editor3/highlightsConfig.ts:33
-#: scripts/extensions/annotationsLibrary/dist/annotations-library-page.js:35
 #: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:36
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:74
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:75
+#: scripts/extensions/datetimeField/dist/src/config.js:33
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:28
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:49
 #: scripts/extensions/predefinedTextField/dist/src/config.js:52
@@ -11770,7 +11754,7 @@ msgstr ""
 msgid "Remove All Format"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:156
+#: ../superdesk-planning/client/constants/assignments.ts:158
 msgid "Remove Assignment"
 msgstr ""
 
@@ -11863,7 +11847,7 @@ msgstr ""
 msgid "Remove from Feature Stories"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:149
+#: ../superdesk-planning/client/constants/planning.ts:151
 msgid "Remove from featured stories"
 msgstr ""
 
@@ -11917,7 +11901,7 @@ msgstr ""
 msgid "Remove vocabulary"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.ts:566
+#: ../superdesk-planning/client/actions/planning/ui.ts:545
 msgid "Removed assignment from coverage."
 msgstr ""
 
@@ -12063,7 +12047,7 @@ msgid "Required {{field}} in item {{item}}"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:98
-#: ../superdesk-planning/client/constants/events.ts:166
+#: ../superdesk-planning/client/constants/events.ts:168
 msgid "Reschedule"
 msgstr ""
 
@@ -12162,7 +12146,7 @@ msgstr ""
 msgid "Revert"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:159
+#: ../superdesk-planning/client/constants/assignments.ts:161
 msgid "Revert Availability"
 msgstr ""
 
@@ -12441,13 +12425,13 @@ msgstr ""
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:340
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:285
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:450
-#: scripts/extensions/sams/dist/src/components/assets/assetEditorPanel.js:146
-#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:132
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:184
+#: scripts/extensions/sams/dist/src/components/assets/assetEditorPanel.js:139
+#: scripts/extensions/sams/dist/src/components/attachments/editAttachmentModal.js:126
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:177
 #: scripts/extensions/sams/src/components/assets/assetEditorPanel.tsx:131
 #: scripts/extensions/sams/src/components/attachments/editAttachmentModal.tsx:130
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:244
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:11
+#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:10
 #: scripts/extensions/videoEditor/src/VideoEditorHeader.tsx:25
 msgid "Save"
 msgstr ""
@@ -12543,7 +12527,7 @@ msgstr ""
 msgid "Save changes before cancelling the Event?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:936
+#: ../superdesk-planning/client/actions/events/ui.ts:946
 msgid "Save changes before creating a planning item ?"
 msgstr ""
 
@@ -12551,7 +12535,7 @@ msgstr ""
 msgid "Save changes before creating a template?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/ui.ts:968
+#: ../superdesk-planning/client/actions/events/ui.ts:978
 msgid "Save changes before marking event as complete ?"
 msgstr ""
 
@@ -12563,7 +12547,7 @@ msgstr ""
 msgid "Save changes before rescheduling the Event?"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.ts:1524
+#: ../superdesk-planning/client/actions/main.ts:1532
 msgid "Save changes before spiking ?"
 msgstr ""
 
@@ -12594,7 +12578,7 @@ msgstr ""
 msgid "Save current item"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:174
+#: ../superdesk-planning/client/constants/events.ts:176
 msgid "Save event as a template"
 msgstr ""
 
@@ -12760,7 +12744,7 @@ msgstr ""
 msgid "Scheduled for {{date}}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.ts:545
+#: ../superdesk-planning/client/actions/planning/ui.ts:524
 msgid "Scheduled update added to workflow."
 msgstr ""
 
@@ -12826,7 +12810,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:219
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:211
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:336
 msgid "Search Assets"
 msgstr ""
@@ -13011,7 +12995,7 @@ msgstr ""
 msgid "Select Article Template"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:150
+#: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:144
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:162
 msgid "Select Asset(s)"
 msgstr ""
@@ -13277,7 +13261,7 @@ msgstr ""
 msgid "Sequence Number Settings"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:109
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:111
 msgid "Series Start Date"
 msgstr ""
 
@@ -13290,21 +13274,20 @@ msgstr ""
 msgid "Sessions cleared"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:110
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:134
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:168
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:104
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:160
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:245
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:164
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:191
 msgid "Set"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:109
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:101
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:126
 msgid "Set Details"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/attachments/samsAttachmentsList.js:115
+#: scripts/extensions/sams/dist/src/components/attachments/samsAttachmentsList.js:109
 #: scripts/extensions/sams/src/components/attachments/samsAttachmentsList.tsx:127
 msgid "Set Disabled"
 msgstr ""
@@ -13354,7 +13337,7 @@ msgstr ""
 msgid "Set was updated by another user."
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:164
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:156
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:206
 msgid "Sets"
 msgstr ""
@@ -13522,10 +13505,9 @@ msgstr ""
 msgid "Single selection"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:118
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:155
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:146
-#: scripts/extensions/sams/dist/src/utils/ui.js:121
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:147
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:138
+#: scripts/extensions/sams/dist/src/utils/ui.js:117
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:139
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:173
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:177
@@ -13533,19 +13515,19 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:170
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:164
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:319
 msgid "Size From:"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:174
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:168
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:333
 msgid "Size To:"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:94
-#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:120
-#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:118
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:88
+#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:112
+#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:110
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:178
 #: scripts/extensions/sams/src/components/assets/assetGridItem.tsx:154
 #: scripts/extensions/sams/src/components/assets/assetListItem.tsx:135
@@ -13584,18 +13566,18 @@ msgstr ""
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:43
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:80
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:70
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:114
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:129
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:115
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:130
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:90
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:88
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:190
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:74
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:31
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:69
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:29
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:95
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:86
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:207
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:89
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:191
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:78
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.tsx:34
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:73
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.tsx:33
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:97
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:88
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:209
 #: ../superdesk-planning/client/components/fields/preview/index.ts:196
 #: ../superdesk-planning/client/components/fields/resources/common.ts:45
 #: ../superdesk-planning/client/utils/contentProfiles.ts:159
@@ -13616,8 +13598,8 @@ msgid "Slugline Match"
 msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:2
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:83
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:93
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:85
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:95
 msgid "Slugline:"
 msgstr ""
 
@@ -13787,7 +13769,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:74
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:108
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:185
-#: ../superdesk-planning/client/constants/events.ts:159
+#: ../superdesk-planning/client/constants/events.ts:161
 #: scripts/apps/archive/show-spike-dialog.tsx:72
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:139
 msgid "Spike"
@@ -13809,7 +13791,7 @@ msgstr ""
 msgid "Spike State"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:100
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:104
 msgid "Spike all recurring events or just this one?"
 msgstr ""
 
@@ -13821,7 +13803,7 @@ msgstr ""
 msgid "Spike item(s)"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:138
+#: ../superdesk-planning/client/constants/planning.ts:140
 msgid "Spike planning"
 msgstr ""
 
@@ -13924,7 +13906,7 @@ msgstr ""
 msgid "Start Time (inclusive)"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:152
+#: ../superdesk-planning/client/constants/assignments.ts:154
 msgid "Start Working"
 msgstr ""
 
@@ -13957,10 +13939,9 @@ msgstr ""
 #: scripts/apps/contacts/constants.ts:76
 #: scripts/apps/contacts/views/search-panel.html:68
 #: scripts/apps/content-filters/views/production-test-view.html:18
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:104
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:163
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:128
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:165
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:98
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:157
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:157
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:216
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:299
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:152
@@ -14018,26 +13999,26 @@ msgstr ""
 msgid "Stop routing"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:217
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:127
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:210
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:119
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:342
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:153
 msgid "Storage Destination"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:219
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:130
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:212
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:122
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:348
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:158
 msgid "Storage Provider"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:206
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:199
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:311
 msgid "Storage Unit"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListItem.js:97
+#: scripts/extensions/sams/dist/src/components/sets/setListItem.js:91
 #: scripts/extensions/sams/src/components/sets/setListItem.tsx:85
 msgid "Storage:"
 msgstr ""
@@ -14139,7 +14120,7 @@ msgstr ""
 #: scripts/core/editor3/components/annotations/AnnotationInput.tsx:279
 #: scripts/core/editor3/components/comments/CommentInput.tsx:97
 #: scripts/core/ui/components/Modal/ModalPrompt.tsx:57
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:186
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:180
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:376
 msgid "Submit"
 msgstr ""
@@ -14314,7 +14295,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:116
 #: ../superdesk-planning/client/components/UI/DateTime.tsx:32
 #: ../superdesk-planning/client/constants/index.ts:161
-#: ../superdesk-planning/client/utils/index.ts:918
+#: ../superdesk-planning/client/utils/index.ts:919
 #: ../superdesk-planning/client/utils/planning.ts:1147
 #: ../superdesk-planning/client/utils/planning.ts:1461
 msgid "TBC"
@@ -14361,7 +14342,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:83
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:40
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:137
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:265
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:273
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:169
@@ -14549,11 +14529,11 @@ msgstr ""
 msgid "The Event and Planning filter you were viewing is modified!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/notifications.ts:125
+#: ../superdesk-planning/client/actions/events/notifications.ts:123
 msgid "The Event was spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/notifications.ts:154
+#: ../superdesk-planning/client/actions/events/notifications.ts:152
 msgid "The Event was unspiked"
 msgstr ""
 
@@ -14589,11 +14569,11 @@ msgstr ""
 msgid "The Planning Item(s) has been unspiked."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.ts:217
+#: ../superdesk-planning/client/actions/planning/notifications.ts:215
 msgid "The Planning item was spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.ts:250
+#: ../superdesk-planning/client/actions/planning/notifications.ts:248
 msgid "The Planning item was unspiked"
 msgstr ""
 
@@ -14680,7 +14660,7 @@ msgid_plural "Some files were not uploaded"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:108
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:112
 msgid "The following Events are in use and will not be spiked:"
 msgstr ""
 
@@ -14815,23 +14795,23 @@ msgstr ""
 msgid "There are no actions available."
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:168
+#: ../superdesk-planning/client/constants/assignments.ts:170
 msgid "There are no assignments completed"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:174
+#: ../superdesk-planning/client/constants/assignments.ts:176
 msgid "There are no assignments for today"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:165
+#: ../superdesk-planning/client/constants/assignments.ts:167
 msgid "There are no assignments in progress"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:162
+#: ../superdesk-planning/client/constants/assignments.ts:164
 msgid "There are no assignments to do"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:171
+#: ../superdesk-planning/client/constants/assignments.ts:173
 msgid "There are no current assignments"
 msgstr ""
 
@@ -14839,7 +14819,7 @@ msgstr ""
 msgid "There are no events and planing view filters."
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:177
+#: ../superdesk-planning/client/constants/assignments.ts:179
 msgid "There are no future assignments"
 msgstr ""
 
@@ -15032,7 +15012,7 @@ msgstr ""
 msgid "There was an error. Template cannot be deleted."
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:259
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:260
 msgid "This Event is scheduled to occur after the end date of its recurring cycle!"
 msgstr ""
 
@@ -15057,7 +15037,7 @@ msgstr ""
 msgid "This Year"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:179
+#: ../superdesk-planning/client/constants/events.ts:181
 msgid "This and all future events"
 msgstr ""
 
@@ -15073,7 +15053,7 @@ msgstr ""
 msgid "This event is a recurring event. Post all recurring events"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:178
+#: ../superdesk-planning/client/constants/events.ts:180
 msgid "This event only"
 msgstr ""
 
@@ -15159,7 +15139,7 @@ msgstr ""
 msgid "This will also post the related event's entire recurring series"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:117
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:118
 msgid "This will also postpone the following planning items"
 msgstr ""
 
@@ -15185,15 +15165,15 @@ msgid ""
 "                                    Editor."
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:151
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:152
 msgid "This will create new events in the remote ({{timeZone}}) timezone"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:267
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:268
 msgid "This will create the new event in the remote ({{timeZone}}) timezone"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:220
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:221
 msgid "This will mark as rescheduled the following planning items"
 msgstr ""
 
@@ -15240,6 +15220,7 @@ msgstr ""
 msgid "Time Zone"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/config.js:30
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:26
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:42
 msgid "Time increment steps"
@@ -15250,6 +15231,12 @@ msgstr ""
 msgid ""
 "Time offset is configured to be {{x}} minutes for this field. When an article is created\n"
 "                based on this template, it's value will initialize to creation time + {{x}} minutes"
+msgstr ""
+
+#: scripts/extensions/datetimeField/dist/src/template-editor.js:20
+msgid ""
+"Time offset is configured to be {{x}} minutes for this field. When an article is created\n"
+"            based on this template, it's value will initialize to creation time + {{x}} minutes"
 msgstr ""
 
 #: scripts/apps/profiling/views/profiling.html:34
@@ -15308,7 +15295,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:50
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.tsx:58
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:259
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:261
 #: ../superdesk-planning/client/components/fields/editor/EndDateTime.tsx:32
 #: ../superdesk-planning/client/components/fields/preview/index.ts:72
 msgid "To"
@@ -15329,7 +15316,7 @@ msgstr ""
 msgid "To Desk"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:161
+#: ../superdesk-planning/client/constants/assignments.ts:163
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:9
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:40
 msgid "To Do"
@@ -15368,7 +15355,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/assignments.ts:173
+#: ../superdesk-planning/client/constants/assignments.ts:175
 msgid "Todays Assignments"
 msgstr ""
 
@@ -15496,7 +15483,7 @@ msgstr ""
 
 #: scripts/apps/search/views/item-sortbar.html:2
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:424
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:238
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:230
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:402
 msgid "Total:"
 msgstr ""
@@ -15522,9 +15509,15 @@ msgstr ""
 msgid "Translated from"
 msgstr ""
 
+#: scripts/apps/search/components/fields/translations.tsx:59
+#: scripts/apps/search/components/fields/translations.tsx:73
+msgid "Translation"
+msgstr ""
+
 #: scripts/apps/authoring/translations/index.ts:12
 #: scripts/apps/authoring/views/authoring-topbar.html:319
 #: scripts/apps/search/components/fields/translations.tsx:40
+#: scripts/apps/search/components/fields/translations.tsx:73
 msgid "Translations"
 msgstr ""
 
@@ -15577,8 +15570,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:207
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:201
 #: scripts/apps/workspace/content/constants.ts:110
-#: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:121
-#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:158
+#: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:150
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:144
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:178
 msgid "Type"
@@ -15598,9 +15590,9 @@ msgid "Type your comment..."
 msgstr ""
 
 #: ../superdesk-planning/client/components/fields/list/ItemType.tsx:18
-#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:91
-#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:117
-#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:116
+#: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:85
+#: scripts/extensions/sams/dist/src/components/assets/assetGridItem.js:109
+#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:108
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:174
 #: scripts/extensions/sams/src/components/assets/assetGridItem.tsx:146
 #: scripts/extensions/sams/src/components/assets/assetListItem.tsx:129
@@ -15652,7 +15644,7 @@ msgstr ""
 msgid "Un Spike"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/uploadAssetModal.js:148
+#: scripts/extensions/sams/dist/src/components/assets/uploadAssetModal.js:142
 #: scripts/extensions/sams/src/components/assets/uploadAssetModal.tsx:122
 msgid "Unable to find Asset associated with the file!"
 msgstr ""
@@ -15772,13 +15764,11 @@ msgid "Unlocked"
 msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:173
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:27
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:29
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:103
 msgid "Unmark"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:24
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:21
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:23
 msgid "Unmark user"
@@ -15841,7 +15831,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:121
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:197
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:202
-#: ../superdesk-planning/client/constants/events.ts:160
+#: ../superdesk-planning/client/constants/events.ts:162
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:86
 msgid "Unspike"
 msgstr ""
@@ -15854,7 +15844,7 @@ msgstr ""
 msgid "Unspike Planning Item"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:95
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:99
 msgid "Unspike all recurring events or just this one?"
 msgstr ""
 
@@ -15862,7 +15852,7 @@ msgstr ""
 msgid "Unspike event"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/planning.ts:139
+#: ../superdesk-planning/client/constants/planning.ts:141
 msgid "Unspike planning"
 msgstr ""
 
@@ -15936,7 +15926,7 @@ msgid "Update Event Time"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:114
-#: ../superdesk-planning/client/constants/events.ts:169
+#: ../superdesk-planning/client/constants/events.ts:171
 msgid "Update Repetitions"
 msgstr ""
 
@@ -15953,8 +15943,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:63
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:96
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:116
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:294
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:118
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:296
 msgid "Update all recurring events or just this one?"
 msgstr ""
 
@@ -15966,7 +15956,7 @@ msgstr ""
 msgid "Update subscription"
 msgstr ""
 
-#: ../superdesk-planning/client/constants/events.ts:165
+#: ../superdesk-planning/client/constants/events.ts:167
 msgid "Update time"
 msgstr ""
 
@@ -15997,8 +15987,8 @@ msgstr ""
 #: scripts/apps/search/tests/search.spec.ts:364
 #: scripts/apps/workspace/content/views/profile-settings.html:47
 #: scripts/core/itemList/views/relatedItem-list-widget.html:35
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:143
-#: scripts/extensions/sams/dist/src/utils/ui.js:125
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:135
+#: scripts/extensions/sams/dist/src/utils/ui.js:121
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:174
 #: scripts/extensions/sams/src/utils/ui.tsx:115
 msgid "Updated"
@@ -16016,16 +16006,16 @@ msgstr ""
 msgid "Updated by"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:112
-#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:98
-#: scripts/extensions/sams/dist/src/components/sets/setListItem.js:95
+#: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:104
+#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:92
+#: scripts/extensions/sams/dist/src/components/sets/setListItem.js:89
 #: scripts/extensions/sams/src/components/assets/assetListItem.tsx:122
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:100
 #: scripts/extensions/sams/src/components/sets/setListItem.tsx:80
 msgid "Updated {{ datetime }}"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:99
+#: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:93
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:105
 msgid "Updated {{ datetime }} by"
 msgstr ""
@@ -16045,7 +16035,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:203
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:217
 #: scripts/apps/search/views/multi-image-edit.html:17
-#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:234
+#: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:226
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:295
 msgid "Upload"
 msgstr ""
@@ -16062,8 +16052,8 @@ msgstr ""
 msgid "Upload Media"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/uploadAssetModal.js:185
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:226
+#: scripts/extensions/sams/dist/src/components/assets/uploadAssetModal.js:179
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:218
 #: scripts/extensions/sams/src/components/assets/uploadAssetModal.tsx:200
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:358
 msgid "Upload New Asset(s)"
@@ -16091,17 +16081,17 @@ msgstr ""
 msgid "Upload new"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetListPanel.js:62
+#: scripts/extensions/sams/dist/src/components/assets/assetListPanel.js:56
 #: scripts/extensions/sams/src/components/assets/assetListPanel.tsx:36
 msgid "Upload new Assets or change your search filters"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:179
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:173
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:348
 msgid "Uploaded From:"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:182
+#: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:176
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:357
 msgid "Uploaded To:"
 msgstr ""
@@ -16138,7 +16128,7 @@ msgstr ""
 msgid "Urgency stats"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:76
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:70
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:72
 msgid "Usable Sets"
 msgstr ""
@@ -16188,7 +16178,6 @@ msgstr ""
 msgid "Use the article GUID for testing."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:14
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:36
 msgid "Use this"
@@ -16206,7 +16195,6 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:204
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:52
 #: scripts/apps/users/views/user-privileges.html:18
-#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr ""
 
@@ -16267,7 +16255,7 @@ msgid "User was not found. The account might have been deleted."
 msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/views/item-timeline-tooltip.html:2
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:100
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:102
 msgid "User:"
 msgstr ""
 
@@ -16355,8 +16343,8 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:305
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:79
+#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:304
+#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:78
 #: scripts/extensions/videoEditor/src/VideoEditor.tsx:133
 #: scripts/extensions/videoEditor/src/VideoEditor.tsx:421
 msgid "Video is editing, please wait..."
@@ -16367,7 +16355,7 @@ msgstr ""
 msgid "Video thumbnail"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:75
+#: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:69
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:57
 msgid "Videos only"
 msgstr ""
@@ -16945,8 +16933,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/FileInput.tsx:205
 #: scripts/core/ui/components/Form/FileInput.tsx:137
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:202
-#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:212
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:196
+#: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:206
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:195
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:219
 msgid "browse"
@@ -16975,7 +16963,7 @@ msgstr ""
 msgid "by <b>{{userLookup[data.original_creator].display_name}}</b>"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:211
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:203
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:284
 msgid "cancel"
 msgstr ""
@@ -17342,7 +17330,7 @@ msgstr ""
 msgid "from highlight"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:236
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:237
 msgid "from {{from}} to {{to}}"
 msgstr ""
 
@@ -17487,7 +17475,7 @@ msgstr ""
 msgid "instagram"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/attachments/samsAttachmentsList.js:113
+#: scripts/extensions/sams/dist/src/components/attachments/samsAttachmentsList.js:107
 #: scripts/extensions/sams/src/components/attachments/samsAttachmentsList.tsx:119
 msgid "internal"
 msgstr ""
@@ -17614,6 +17602,8 @@ msgstr ""
 msgid "min"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/config.js:28
+#: scripts/extensions/datetimeField/dist/src/config.js:49
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:24
 #: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:45
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:37
@@ -17701,8 +17691,8 @@ msgstr ""
 msgid "on week days"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/extension.js:42
-#: scripts/extensions/markForUser/dist/src/extension.js:53
+#: scripts/extensions/markForUser/dist/src/extension.js:41
+#: scripts/extensions/markForUser/dist/src/extension.js:52
 #: scripts/extensions/markForUser/src/extension.tsx:54
 #: scripts/extensions/markForUser/src/extension.tsx:65
 msgid "open item"
@@ -18069,13 +18059,6 @@ msgstr ""
 msgid "to coverage assignment by"
 msgstr ""
 
-#: scripts/apps/search/components/fields/translations.tsx:59
-#: scripts/apps/search/components/fields/translations.tsx:73
-msgid "translation"
-msgid_plural "translations"
-msgstr[0] ""
-msgstr[1] ""
-
 #: scripts/apps/authoring/views/authoring-header.html:85
 msgid "translations"
 msgstr ""
@@ -18166,7 +18149,7 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:204
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:197
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:304
 msgid "value of 0 will disable this restriction"
 msgstr ""
@@ -18355,7 +18338,7 @@ msgstr ""
 msgid "{{count}} articles have been descheduled"
 msgstr ""
 
-#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:212
+#: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:204
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:287
 msgid "{{count}} item selected"
 msgid_plural "{{count}} items selected"
@@ -18484,6 +18467,7 @@ msgstr ""
 msgid "{{width}} * {{height}}"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/editor.js:75
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:75
 #: scripts/extensions/datetimeField/src/getDateTimeField.tsx:130
 msgid "{{x}} hour"
@@ -18495,6 +18479,7 @@ msgstr[1] ""
 msgid "{{x}} lines"
 msgstr ""
 
+#: scripts/extensions/datetimeField/dist/src/editor.js:78
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:78
 #: scripts/extensions/datetimeField/src/getDateTimeField.tsx:139
 msgid "{{x}} min"

@@ -56,7 +56,7 @@ export class Translations extends React.PureComponent<IProps> {
                             this.renderOriginalArticle(event.target as HTMLElement);
                         }}
                     >
-                        {gettext('translation')}
+                        {gettext('Translation')}
                     </button>
                 )}
 
@@ -70,7 +70,7 @@ export class Translations extends React.PureComponent<IProps> {
                     >
                         {'('}<b>{this.props.item.translations.length}</b>{')'}
                         {' '}
-                        {gettextPlural(this.props.item.translations.length, 'translation', 'translations')}
+                        {this.props.item.translations.length === 1 ? gettext('Translation') : gettext('Translations')}
                     </button>
                 )}
             </React.Fragment>
