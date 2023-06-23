@@ -1,8 +1,8 @@
 import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/components/get-editor-config';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
+import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/controllers/ContentProfileFields';
+import {dataApi} from 'core/helpers/CrudManager';
 import {PreviewFieldType} from './previewFieldByType';
 import {IAuthoringField} from './types';
 import {getAuthoringField} from './getAuthoringField';
@@ -40,13 +40,24 @@ export class FullPreview extends React.Component<IProps, IState> {
     componentDidMount() {
         dispatchCustomEvent('articlePreviewStart', this.props.item);
 
-        getLabelNameResolver().then((getLabel) => {
-            const customFieldVocabularies = getCustomFieldVocabularies();
-
+        Promise.all([
+            dataApi.query<IVocabulary>(
+                'vocabularies',
+                1,
+                {field: 'display_name', direction: 'ascending'},
+                {
+                    $or: [
+                        {field_type: {$exists: true, $ne: null}},
+                        {custom_field_type: {$exists: true, $ne: null}},
+                    ],
+                },
+            ),
+            getLabelNameResolver(),
+        ]).then(([res, getLabel]) => {
             this.getLabel = getLabel;
 
             this.setState({
-                customFieldVocabularies,
+                customFieldVocabularies: res._items,
                 loading: false,
             });
         });
@@ -72,6 +83,7 @@ export class FullPreview extends React.Component<IProps, IState> {
 
         const getSortedFields = (section: 'header' | 'content'): Array<IAuthoringField> => {
             return Object.keys(editor)
+                .filter((key) => editor[key] != null)
                 .filter(
                     (key) => {
                         const isHeader = editor[key].section === 'header'
@@ -89,7 +101,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                             }
                         })();
 
-                        return inSection && editor[key]?.hideOnPrint !== true;
+                        return inSection && editor[key].hideOnPrint !== true;
                     },
                 )
                 .sort((key1, key2) => editor[key1].order - editor[key2].order)
