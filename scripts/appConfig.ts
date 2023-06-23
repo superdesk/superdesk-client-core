@@ -29,6 +29,7 @@ if (appConfig.features.autorefreshContent == null) {
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
+export const extensions: IExtensions = {};
 
 export function getUserInterfaceLanguage() {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
@@ -40,9 +41,3 @@ export function getUserInterfaceLanguage() {
         return 'en';
     }
 }
-
-export const debugInfo = {
-    translationsLoaded: false,
-};
-
-export const extensions: IExtensions = {};

@@ -1,12 +1,24 @@
 import gettextjs from 'gettext.js';
-import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
-import {appConfig} from 'appConfig';
-
-export type IScopeApply = (fn: () => void) => void;
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
 export const i18n = gettextjs();
+
+if (window.language != null && window.translations != null) {
+    const language = window.translations['']['language'];
+
+    i18n.setMessages(
+        'messages',
+        language,
+        window.translations,
+        window.translations['']['plural-forms'],
+    );
+
+    i18n.setLocale(language);
+}
+
+export type IScopeApply = (fn: () => void) => void;
 
 export function stripHtmlTags(value) {
     const el = document.createElement('div');
@@ -52,13 +64,6 @@ export const gettext = (
         return '';
     }
 
-    if (debugInfo.translationsLoaded !== true) {
-        console.warn(
-            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
-            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
-        );
-    }
-
     let translated = i18n.gettext(text);
 
     Object.keys(params ?? {}).forEach((param) => {
@@ -86,13 +91,6 @@ export const gettextPlural = (
 ) => {
     if (!text) {
         return '';
-    }
-
-    if (debugInfo.translationsLoaded !== true) {
-        console.warn(
-            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
-            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
-        );
     }
 
     let translated = i18n.ngettext(text, pluralText, count);

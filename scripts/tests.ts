@@ -6,9 +6,9 @@ import 'apps';
 
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import {debugInfo} from 'appConfig';
+import {DEFAULT_ENGLISH_TRANSLATIONS} from 'translations';
 
-debugInfo.translationsLoaded = true; // don't print warnings about missing translations when running unit tests
+window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
 
 Enzyme.configure({adapter: new Adapter()});
 

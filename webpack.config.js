@@ -30,7 +30,10 @@ module.exports = function makeConfig(grunt) {
 
     return {
         entry: {
-            app: [path.join(__dirname, 'scripts', 'index')],
+            app: [
+                path.join(__dirname, 'scripts', 'translations'),
+                path.join(__dirname, 'scripts', 'index'),
+            ],
         },
 
         output: {

@@ -60,6 +60,7 @@
             "e2e/client/**/*.js",
             "build-tools/**",
             "scripts/extensions/**/node_modules/**",
+            "scripts/extensions/**/dist/**",
             "end-to-end-testing-helpers/dist/**",
             "end-to-end-testing-helpers/node_modules/**",
             "build-tools/**"
