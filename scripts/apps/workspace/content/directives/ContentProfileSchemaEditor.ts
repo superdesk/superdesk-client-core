@@ -1,12 +1,11 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
-import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION, ITreeNode} from 'superdesk-api';
+import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Dictionary<string, string>;
-    getOptionsForTreeSelect: (fieldName: string) => any;
     model: any;
     fields: {[key: string]: IArticleField};
     form: any;

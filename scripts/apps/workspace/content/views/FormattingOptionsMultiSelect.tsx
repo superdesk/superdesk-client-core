@@ -5,7 +5,7 @@ import {
     getEditor3PlainTextFormattingOptions,
     getEditor3RichFormattingOptions,
 } from '../directives/ContentProfileSchemaEditor';
-import {IArticleField, ITreeNode} from 'superdesk-api';
+import {IArticleField} from 'superdesk-api';
 
 interface IProps {
     value: Array<string>;
@@ -15,23 +15,20 @@ interface IProps {
 }
 
 export class FormattingOptionsTreeSelect extends React.Component<IProps> {
-    getFormattingOptions(fieldName: string): Array<ITreeNode<Array<string>>> {
-        const isCustomPlainTextField = typeof this.props.fields[fieldName] === 'object'
-            && this.props.fields[fieldName].field_type === 'text';
+    render(): React.ReactNode {
+        const {fields, fieldId} = this.props;
 
+        const isCustomPlainTextField = typeof fields[fieldId] === 'object' && fields[fieldId].field_type === 'text';
         const isRichOrCustomTextField =
-            Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField;
-
-        return Object.entries(
+            Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField;
+        const formattingOptions = Object.entries(
             isRichOrCustomTextField
                 ? getEditor3RichFormattingOptions()
                 : getEditor3PlainTextFormattingOptions(),
         )
             .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}));
-    }
 
-    render(): React.ReactNode {
-        const values = this.getFormattingOptions(this.props.fieldId)
+        const values = formattingOptions
             .filter((option) => this.props.value.includes(option.value[0]))
             .map((option) => option.value);
 
@@ -40,7 +37,7 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
                 kind="synchronous"
                 getId={(option) => option[0]}
                 getLabel={(option) => option[1]}
-                getOptions={() => this.getFormattingOptions(this.props.fieldId)}
+                getOptions={() => formattingOptions}
                 onChange={(newFormattingOptions) => {
                     this.props.onChange(newFormattingOptions.map((option) => option[0]), this.props.fieldId);
                 }}
