@@ -401,6 +401,12 @@ declare module 'superdesk-api' {
         // read time, character count, word count; defaults to true
         showStatistics?: boolean;
 
+        helperComponent?: React.ComponentType<{
+            onChange: (value: IEditor3ValueOperational) => void;
+            language: string;
+            readOnly: boolean;
+        }>;
+
         /**
          * Value - field ID of editor3 field.
          *
