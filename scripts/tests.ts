@@ -6,6 +6,9 @@ import 'apps';
 
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import {DEFAULT_ENGLISH_TRANSLATIONS} from 'translations';
+
+window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
 
 Enzyme.configure({adapter: new Adapter()});
 

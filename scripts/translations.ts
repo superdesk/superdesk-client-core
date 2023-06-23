@@ -1,5 +1,6 @@
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
+export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 const language = getUserInterfaceLanguage();
 const filename = `/languages/${language}.json?nocache=${Date.now()}`;
 
@@ -20,7 +21,7 @@ function requestListener() {
 }
 
 if (language === 'en') {
-    window.translations = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+    window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
 } else {
     const req = new XMLHttpRequest();
 
