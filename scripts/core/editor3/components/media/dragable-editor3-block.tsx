@@ -2,6 +2,7 @@ import React from 'react';
 import {ContentBlock} from 'draft-js';
 import {EDITOR_BLOCK_TYPE} from 'core/editor3/constants';
 import {connect} from 'react-redux';
+import {Spacer} from 'core/ui/components/SubNav/Spacer';
 
 interface IProps {
     block: ContentBlock;
@@ -20,7 +21,22 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps> {
     }
     render() {
         return (
-            <div draggable={this.props.readOnly !== true} onDragStart={this.onDragStart}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 24,
+                }}
+            >
+                <div
+                    style={{
+                        backgroundColor: 'red',
+                        height: '100px',
+                        width: '10px',
+                    }}
+                    draggable={this.props.readOnly !== true}
+                    onDragStart={this.onDragStart}
+                />
                 {this.props.children}
             </div>
         );
