@@ -41,7 +41,10 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, action?: IAction): IAuthoringOptions<IArticle> {
+function getInlineToolbarActions(
+    options: IExposedFromAuthoring<IArticle>,
+    action?: IAction,
+): IAuthoringOptions<IArticle> {
     const {
         item,
         hasUnsavedChanges,
@@ -164,7 +167,10 @@ function getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>, actio
             });
         }
 
-        if (item._type !== 'archived' && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly) {
+        if (
+            item._type !== 'archived'
+            && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly
+        ) {
             actions.push({
                 group: 'start',
                 availableOffline: false,
