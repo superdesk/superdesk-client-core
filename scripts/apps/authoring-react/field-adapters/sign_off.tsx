@@ -20,6 +20,7 @@ import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWit
 import {convertToRaw, ContentState} from 'draft-js';
 import {editor3ToOperationalFormat} from '../fields/editor3';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
     onChange: (value: IEditor3ValueOperational) => void;
@@ -45,7 +46,7 @@ class UsersDropdown extends React.Component<IProps> {
                             method: 'GET',
                             path: '/users',
                             urlParams: {
-                                where: {username: term},
+                                where: {display_name: term},
                                 max_results: 50,
                             },
                             abortSignal: abortController.signal,
@@ -76,10 +77,10 @@ class UsersDropdown extends React.Component<IProps> {
                     readOnly={this.props.readOnly}
                     optionTemplate={
                         ({item}) => (
-                            <>
+                            <Spacer h gap="8" noGrow>
                                 <UserAvatar user={item} size="small" />
-                                <span style={{justifySelf: 'left'}} >{item[appConfig.user.sign_off_mapping]}</span>
-                            </>
+                                <span>{item[appConfig.user.sign_off_mapping]}</span>
+                            </Spacer>
                         )
                     }
                     getId={(option) => option._id}
