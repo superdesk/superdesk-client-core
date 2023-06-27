@@ -11,6 +11,20 @@ function requestListener() {
         throw new Error(`Language metadata not found in "${filename}"`);
     }
 
+    applyTranslations(translations);
+}
+
+if (language === 'en') {
+    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+} else {
+    const req = new XMLHttpRequest();
+
+    req.addEventListener('load', requestListener);
+    req.open('GET', filename, false);
+    req.send();
+}
+
+function applyTranslations(translations) {
     const langOverride = appConfig.langOverride ?? {};
 
     if (langOverride[language] != null) {
@@ -18,14 +32,4 @@ function requestListener() {
     }
 
     window.translations = translations;
-}
-
-if (language === 'en') {
-    window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
-} else {
-    const req = new XMLHttpRequest();
-
-    req.addEventListener('load', requestListener);
-    req.open('GET', filename, false);
-    req.send();
 }

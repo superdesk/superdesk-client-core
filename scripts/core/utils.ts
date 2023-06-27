@@ -5,7 +5,7 @@ import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
 export const i18n = gettextjs();
 
-if (window.language != null && window.translations != null) {
+if (window.translations != null) {
     const language = window.translations['']['language'];
 
     i18n.setMessages(
@@ -66,7 +66,7 @@ export const gettext = (
 
     let translated = i18n.gettext(text);
 
-    Object.keys(params ?? {}).forEach((param) => {
+    Object.keys(params).forEach((param) => {
         translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
     });
 
