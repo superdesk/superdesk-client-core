@@ -11,7 +11,7 @@ describe('editor3.component.table-block', () => {
         const wrapper = shallow(
             <TableBlock
                 block={block}
-                setActiveCell={() => { /* no-op */ }}
+                setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={false}
@@ -27,7 +27,7 @@ describe('editor3.component.table-block', () => {
         const wrapper = mount(
             <TableBlock
                 block={block}
-                setActiveCell={() => { /* no-op */ }}
+                setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={true}
