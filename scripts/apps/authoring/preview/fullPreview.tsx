@@ -72,6 +72,7 @@ export class FullPreview extends React.Component<IProps, IState> {
 
         const getSortedFields = (section: 'header' | 'content'): Array<IAuthoringField> => {
             return Object.keys(editor)
+                .filter((key) => editor[key] != null)
                 .filter(
                     (key) => {
                         const isHeader = editor[key].section === 'header'
@@ -89,7 +90,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                             }
                         })();
 
-                        return inSection && editor[key]?.hideOnPrint !== true;
+                        return inSection && editor[key].hideOnPrint !== true;
                     },
                 )
                 .sort((key1, key2) => editor[key1].order - editor[key2].order)
