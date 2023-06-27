@@ -401,6 +401,8 @@ declare module 'superdesk-api' {
         // read time, character count, word count; defaults to true
         showStatistics?: boolean;
 
+        // allows having another component control the field value
+        // e.g. picking from a custom vocabulary with predefined values
         helperComponent?: React.ComponentType<{
             onChange: (value: IEditor3ValueOperational) => void;
             language: string;

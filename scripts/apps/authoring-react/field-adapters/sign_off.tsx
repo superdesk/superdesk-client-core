@@ -19,6 +19,7 @@ import React from 'react';
 import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {convertToRaw, ContentState} from 'draft-js';
 import {editor3ToOperationalFormat} from '../fields/editor3';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 interface IProps {
     onChange: (value: IEditor3ValueOperational) => void;
@@ -38,6 +39,8 @@ class UsersDropdown extends React.Component<IProps> {
                 <MultiSelectTreeWithTemplate
                     kind="asynchronous"
                     searchOptions={(term, callback) => {
+                        const abortController = new AbortController();
+
                         httpRequestJsonLocal<IRestApiResponse<IUser>>({
                             method: 'GET',
                             path: '/users',
@@ -45,6 +48,7 @@ class UsersDropdown extends React.Component<IProps> {
                                 where: {username: term},
                                 max_results: 50,
                             },
+                            abortSignal: abortController.signal,
                         }).then((res) => {
                             const tree: ITreeWithLookup<IUser> = {
                                 nodes: res._items.map((user) => ({value: user})),
@@ -54,7 +58,7 @@ class UsersDropdown extends React.Component<IProps> {
                             callback(tree);
                         });
 
-                        return () => null;
+                        return () => abortController.abort();
                     }}
                     values={[] as Array<IUser>}
                     onChange={(value) => {
@@ -71,10 +75,12 @@ class UsersDropdown extends React.Component<IProps> {
                     }}
                     readOnly={this.props.readOnly}
                     optionTemplate={
-                        ({item}) => <span style={{border: '1px dotted blue'}}>{item.username}</span>
-                    }
-                    valueTemplate={
-                        ({item}) => <span style={{border: '1px dotted green'}}>{item.username}</span>
+                        ({item}) => (
+                            <>
+                                <UserAvatar user={item} size="small" />
+                                <span style={{justifySelf: 'left'}} >{item[appConfig.user.sign_off_mapping]}</span>
+                            </>
+                        )
                     }
                     getId={(option) => option._id}
                     getLabel={(option) => option[appConfig.user.sign_off_mapping]}
@@ -85,7 +91,7 @@ class UsersDropdown extends React.Component<IProps> {
 }
 
 export const sign_off: IFieldAdapter<IArticle> = {
-    getFieldV2: (fieldEditor, fieldSchema) => {
+    getFieldV2: (_, fieldSchema) => {
         const allowUserDropdown = appConfig.user != null && appConfig.user.sign_off_mapping;
 
         const fieldConfig: IEditor3Config = {
