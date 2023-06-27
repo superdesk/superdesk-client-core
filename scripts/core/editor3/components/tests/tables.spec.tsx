@@ -6,6 +6,8 @@ import {TableCell} from '../tables';
 import {TableBlockComponent as TableBlock} from '../tables/TableBlock';
 
 describe('editor3.component.table-block', () => {
+    beforeEach(window.module('superdesk.apps.spellcheck'));
+
     it('should render 2 rows and 6 cells', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = shallow(
