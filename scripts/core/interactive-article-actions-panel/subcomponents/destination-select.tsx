@@ -59,11 +59,11 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                         })()}
                         items={destinations}
                         onChange={(val) => {
-                            if (val.id === PERSONAL_SPACE) {
+                            if (val != null && val.id === PERSONAL_SPACE) {
                                 this.props.onChange({
                                     type: 'personal-space',
                                 });
-                            } else {
+                            } else if (val != null) {
                                 const deskId: IDesk['_id'] = val.id;
                                 const nextStages = sdApi.desks.getDeskStages(deskId);
 

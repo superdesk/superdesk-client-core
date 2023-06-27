@@ -49,6 +49,7 @@ export interface IPropsInteractiveArticleActionsPanelStateless extends IPanelAct
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
     onClose(): void;
+    onDataChange?(item: IArticle): void;
 }
 
 interface IState {
@@ -66,7 +67,7 @@ export class InteractiveArticleActionsPanel
     }
 
     render() {
-        const {items, tabs, onClose, onError} = this.props;
+        const {items, tabs, onClose, onError, onDataChange} = this.props;
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
@@ -113,6 +114,7 @@ export class InteractiveArticleActionsPanel
 
                         return (
                             <PublishTab
+                                onDataChange={onDataChange}
                                 onError={onError}
                                 item={item}
                                 closePublishView={onClose}
