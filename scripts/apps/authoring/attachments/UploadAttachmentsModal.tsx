@@ -3,7 +3,8 @@ import {showModal} from '@superdesk/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
 import {gettext} from 'core/utils';
-import {Button, ButtonGroup, Input, Modal, Switch} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Input, Modal, Spacer, Switch} from 'superdesk-ui-framework/react';
+import {noop} from 'lodash';
 
 interface IProps {
     files: Array<File>;
@@ -119,17 +120,11 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 zIndex={1050}
                 size="x-large"
                 position="center"
-                onHide={this.state.saving ? null : this.props.closeModal}
+                onHide={this.state.saving ? noop : this.props.closeModal}
                 headerTemplate={gettext('Attach files')}
                 footerTemplate={
                     (
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: '8px',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <Spacer h gap='8' alignItems='center' justifyContent='end' noGrow>
                             <span className="pull-left">{gettext('* fields are required')}</span>
                             <ButtonGroup>
                                 <Button
@@ -145,7 +140,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                     disabled={this.disableUploadButton()}
                                 />
                             </ButtonGroup>
-                        </div>
+                        </Spacer>
                     )
                 }
             >
