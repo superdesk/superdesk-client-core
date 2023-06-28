@@ -110,7 +110,6 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
                                 title={gettext('Authors')}
                                 placement="bottom-end"
                                 triggerSelector="#more-authors-button"
-                                zIndex={1031}
                             >
                                 <table style={{lineHeight: 1.5}}>
                                     <tbody>

@@ -230,7 +230,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         const sortFilterToolbar = (
             <ResizeObserverComponent>
                 {(dimensions) => (
-                    <SubNav zIndex={4}>
+                    <SubNav>
                         {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
 
                         <SortBar
@@ -340,7 +340,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                     const header = (itemsCount: number): JSX.Element => {
                         return (
                             <div data-test-id="articles-list--toolbar">
-                                <SubNav zIndex={5}>
+                                <SubNav>
                                     <div className="space-between">
                                         <h3
                                             className="subnav__page-title sd-flex-no-grow"
