@@ -2,7 +2,7 @@ import React from 'react';
 import {gettext, gettextPlural} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {TranslationsListWrapper} from '../translations-list-wrapper';
-import {showPopup} from '';
+import {showPopup} from 'superdesk-ui-framework/react/components/ShowPopup';
 
 interface IProps {
     item: IArticle;
@@ -41,7 +41,6 @@ export class Translations extends React.PureComponent<IProps> {
                     close={closePopup}
                 />
             ),
-            100,
         );
     }
 
