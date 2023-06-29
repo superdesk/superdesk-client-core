@@ -40,16 +40,16 @@ if (language === 'en') {
 export const i18n = gettextjs();
 
 if (window.translations != null) {
-    const language = window.translations['']['language'];
+    const lang = window.translations['']['language'];
 
     i18n.setMessages(
         'messages',
-        language,
+        lang,
         window.translations,
         window.translations['']['plural-forms'],
     );
 
-    i18n.setLocale(language);
+    i18n.setLocale(lang);
 }
 
 export type IScopeApply = (fn: () => void) => void;
@@ -148,8 +148,8 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
-    const _language = language ?? getUserInterfaceLanguage();
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string) {
+    const _language = _lang ?? getUserInterfaceLanguage();
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 
