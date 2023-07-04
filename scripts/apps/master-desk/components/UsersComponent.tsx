@@ -27,7 +27,7 @@ interface IUserByRole {
 interface IState {
     roles: Array<IUserRole>;
     usersWithRole: Array<IUserByRole>;
-    usersWithoutRole: IUserByRole | null;
+    usersWithoutRole: IUserByRole | undefined;
     deskMembers: {[id: string]: Array<IUser['_id']>};
 }
 
