@@ -8,7 +8,7 @@ import {
 import {IArticleField} from 'superdesk-api';
 
 interface IProps {
-    value: Array<string>;
+    value: Array<string> | null;
     fieldId: string;
     fields: Dictionary<string, IArticleField>;
     onChange(value: Array<string>, fieldId: string): void;
@@ -28,9 +28,11 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
         )
             .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}));
 
-        const values = formattingOptions
-            .filter((option) => this.props.value.includes(option.value[0]))
-            .map((option) => option.value);
+        const values = this.props.value != null
+            ? formattingOptions
+                .filter((option) => this.props.value.includes(option.value[0]))
+                .map((option) => option.value)
+            : [];
 
         return (
             <TreeSelect
