@@ -2,13 +2,14 @@ import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
 import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
-    getEditor3FormattingOptions: (fieldName: string) => Array<string>;
+    getEditor3FormattingOptions: (fieldName: string) => Dictionary<string, string>;
     model: any;
     fields: {[key: string]: IArticleField};
     form: any;
-    formattingOptions: Array<string>;
+    formattingOptions: Dictionary<FORMATTING_OPTION, string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
     characterValidationEnabled: boolean;
@@ -17,6 +18,7 @@ interface IScope extends ng.IScope {
     label(id): string;
     remove(key: string): void;
     toggle(schema: { key: string; }, key: string, position: 'before' | 'after'): void;
+    onChange(value: Array<string>, fieldId: string): void;
     reorder(start: number, end: number, key: string): void;
     setDirty(): void;
     updateOrder(key?: any): void;
@@ -31,98 +33,105 @@ const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
 });
 
-const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+export const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     abstract: true,
     body_html: true,
     footer: true,
     body_footer: true,
 });
 
-const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'justifyLeft',
-    'justifyCenter',
-    'justifyRight',
-    'justifyFull',
-    'outdent',
-    'indent',
-    'unordered list',
-    'ordered list',
-    'pre',
-    'quote',
-    'media',
-    'link',
-    'superscript',
-    'subscript',
-    'strikethrough',
-    'underline',
-    'italic',
-    'bold',
-    'table',
-    'multi-line quote',
-];
+const getFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+    return {
+        'h1': gettext('h1'),
+        'h2': gettext('h2'),
+        'h3': gettext('h3'),
+        'h4': gettext('h4'),
+        'h5': gettext('h5'),
+        'h6': gettext('h6'),
+        'justifyLeft': gettext('justifyLeft'),
+        'justifyCenter': gettext('justifyCenter'),
+        'justifyRight': gettext('justifyRight'),
+        'justifyFull': gettext('justifyFull'),
+        'outdent': gettext('outdent'),
+        'indent': gettext('indent'),
+        'unordered list': gettext('h1'),
+        'ordered list': gettext('unordered list'),
+        'pre': gettext('pre'),
+        'quote': gettext('quote'),
+        'media': gettext('media'),
+        'link': gettext('link'),
+        'superscript': gettext('superscript'),
+        'subscript': gettext('subscript'),
+        'strikethrough': gettext('strikethrough'),
+        'underline': gettext('underline'),
+        'italic': gettext('italic'),
+        'bold': gettext('bold'),
+        'table': gettext('table'),
+        'multi-line quote': gettext('multi-line quote'),
+    };
+};
 
 export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
-const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> = [
-    'uppercase',
-    'lowercase',
-];
+export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FORMATTING_OPTION, string> => ({
+    'uppercase': gettext('uppercase'),
+    'lowercase': gettext('lowercase'),
+});
 
-export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [
+export const getFormattingOptionsUnsafeToParseFromHTML = (): Dictionary<RICH_FORMATTING_OPTION, string> => ({
     // these aren't outputted to HTML at all
-    'comments',
-    'suggestions',
+    'comments': gettext('comments'),
+    'suggestions': gettext('suggestions'),
 
     // no standard in HTML, parsing according to our output format is not implemented
-    'annotation',
+    'annotation': gettext('annotation'),
 
     // may not be parsed well
-    'pre',
-    'embed',
-    'media',
-    'table',
-];
+    'pre': gettext('pre'),
+    'embed': gettext('embed'),
+    'media': gettext('media'),
+    'table': gettext('table'),
+});
 
-const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
-    ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'ordered list',
-    'unordered list',
-    'quote',
-    'media',
-    'link',
-    'embed',
-    'underline',
-    'italic',
-    'bold',
-    'table',
-    'formatting marks',
-    'remove format',
-    'remove all format',
-    'annotation',
-    'comments',
-    'suggestions',
-    'pre',
-    'superscript',
-    'subscript',
-    'strikethrough',
-    'tab',
-    'tab as spaces',
-    'undo',
-    'redo',
-    'multi-line quote',
-];
+export const getEditor3RichFormattingOptions = (): Dictionary<RICH_FORMATTING_OPTION, string> => ({
+    ...getEditor3PlainTextFormattingOptions(),
+    'h1': gettext('h1'),
+    'h2': gettext('h2'),
+    'h3': gettext('h3'),
+    'h4': gettext('h4'),
+    'h5': gettext('h5'),
+    'h6': gettext('h6'),
+    'justifyLeft': gettext('justifyLeft'),
+    'justifyCenter': gettext('justifyCenter'),
+    'justifyRight': gettext('justifyRight'),
+    'justifyFull': gettext('justifyFull'),
+    'outdent': gettext('outdent'),
+    'indent': gettext('indent'),
+    'unordered list': gettext('unordered list'),
+    'ordered list': gettext('ordered list'),
+    'pre': gettext('pre'),
+    'quote': gettext('quote'),
+    'media': gettext('media'),
+    'link': gettext('link'),
+    'superscript': gettext('superscript'),
+    'subscript': gettext('subscript'),
+    'strikethrough': gettext('strikethrough'),
+    'underline': gettext('underline'),
+    'italic': gettext('italic'),
+    'bold': gettext('bold'),
+    'table': gettext('table'),
+    'multi-line quote': gettext('multi-line quote'),
+    'formatting marks': gettext('formatting marks'),
+    'remove format': gettext('remove format'),
+    'remove all format': gettext('remove all format'),
+    'annotation': gettext('annotation'),
+    'comments': gettext('comments'),
+    'suggestions': gettext('suggestions'),
+    'tab': gettext('tab'),
+    'tab as spaces': gettext('tab as space'),
+    'undo': gettext('undo'),
+    'redo': gettext('redo'),
+});
 
 /**
  * @ngdoc directive
@@ -150,7 +159,7 @@ export function ContentProfileSchemaEditor(vocabularies) {
             onDrag: '&',
         },
         link: function(scope: IScope, elem, attr, form) {
-            scope.formattingOptions = FORMATTING_OPTIONS;
+            scope.formattingOptions = getFormattingOptions();
             scope.characterValidationEnabled = appConfig?.disallowed_characters != null;
 
             scope.getEditor3FormattingOptions = (fieldName) => {
@@ -158,9 +167,9 @@ export function ContentProfileSchemaEditor(vocabularies) {
                     && scope.fields[fieldName].field_type === 'text';
 
                 if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField) {
-                    return EDITOR3_RICH_FORMATTING_OPTIONS;
+                    return getEditor3RichFormattingOptions();
                 } else {
-                    return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;
+                    return getEditor3PlainTextFormattingOptions();
                 }
             };
 
@@ -182,6 +191,12 @@ export function ContentProfileSchemaEditor(vocabularies) {
             scope.reorder = (start, end, key) => {
                 scope.onDrag({start, end, key});
                 scope.setDirty();
+            };
+
+            scope.onChange = (value, fieldId) => {
+                scope.model.editor[fieldId].formatOptions = value;
+                scope.setDirty();
+                scope.$applyAsync();
             };
 
             scope.setDirty = () => {

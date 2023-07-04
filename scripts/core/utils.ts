@@ -1,12 +1,58 @@
 import gettextjs from 'gettext.js';
-import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
-import {appConfig} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
-export type IScopeApply = (fn: () => void) => void;
+export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+const language = getUserInterfaceLanguage();
+const filename = `/languages/${language}.json?nocache=${Date.now()}`;
+
+function applyTranslations(translations) {
+    const langOverride = appConfig.langOverride ?? {};
+
+    if (langOverride[language] != null) {
+        Object.assign(translations, langOverride[language]);
+    }
+
+    window.translations = translations;
+}
+
+function requestListener() {
+    const translations = JSON.parse(this.responseText);
+
+    if (translations[''] == null || translations['']['language'] == null || translations['']['plural-forms'] == null) {
+        throw new Error(`Language metadata not found in "${filename}"`);
+    }
+
+    applyTranslations(translations);
+}
+
+if (language === 'en') {
+    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+} else {
+    const req = new XMLHttpRequest();
+
+    req.addEventListener('load', requestListener);
+    req.open('GET', filename, false);
+    req.send();
+}
 
 export const i18n = gettextjs();
+
+if (window.translations != null) {
+    const lang = window.translations['']['language'];
+
+    i18n.setMessages(
+        'messages',
+        lang,
+        window.translations,
+        window.translations['']['plural-forms'],
+    );
+
+    i18n.setLocale(lang);
+}
+
+export type IScopeApply = (fn: () => void) => void;
 
 export function stripHtmlTags(value) {
     const el = document.createElement('div');
@@ -52,13 +98,6 @@ export const gettext = (
         return '';
     }
 
-    if (debugInfo.translationsLoaded !== true) {
-        console.warn(
-            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
-            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
-        );
-    }
-
     let translated = i18n.gettext(text);
 
     Object.keys(params ?? {}).forEach((param) => {
@@ -88,13 +127,6 @@ export const gettextPlural = (
         return '';
     }
 
-    if (debugInfo.translationsLoaded !== true) {
-        console.warn(
-            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
-            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
-        );
-    }
-
     let translated = i18n.ngettext(text, pluralText, count);
 
     Object.keys(params ?? {}).forEach((param) => {
@@ -116,8 +148,8 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
-    const _language = language ?? getUserInterfaceLanguage();
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string) {
+    const _language = _lang ?? getUserInterfaceLanguage();
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 

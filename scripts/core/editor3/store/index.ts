@@ -37,7 +37,7 @@ import {
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
 import {IActiveCell, RICH_FORMATTING_OPTION} from 'superdesk-api';
-import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {getFormattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -315,7 +315,7 @@ export function getInitialContent(props): ContentState {
     }
 
     const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
-        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
+        (option: RICH_FORMATTING_OPTION) => Object.keys(getFormattingOptionsUnsafeToParseFromHTML()).includes(option),
     );
 
     /**
