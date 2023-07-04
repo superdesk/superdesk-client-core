@@ -6,6 +6,7 @@ import {
     getEditor3RichFormattingOptions,
 } from '../directives/ContentProfileSchemaEditor';
 import {IArticleField} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 interface IProps {
     value: Array<string>;
@@ -44,9 +45,9 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
                 value={values}
                 allowMultiple
                 fullWidth
+                label={gettext('Formatting options')}
                 labelHidden
                 inlineLabel
-                width="100%"
             />
         );
     }
