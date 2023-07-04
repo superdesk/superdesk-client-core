@@ -10,15 +10,25 @@ interface IProps {
     children: React.ReactNode;
 }
 
-class DragableEditor3BlockComponent extends React.PureComponent<IProps> {
+interface IState {
+    displayHandle: boolean;
+}
+
+class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> {
+    timeoutId: number;
     constructor(props: IProps) {
         super(props);
 
         this.onDragStart = this.onDragStart.bind(this);
+        this.state = {
+            displayHandle: false,
+        };
     }
+
     onDragStart(event) {
         event.dataTransfer.setData(EDITOR_BLOCK_TYPE, this.props.block.getKey());
     }
+
     render() {
         return (
             <div
@@ -27,10 +37,37 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps> {
                     flexDirection: 'row',
                     gap: 4,
                 }}
+                onMouseEnter={() => {
+                    this.setState({
+                        displayHandle: true,
+                    });
+                }}
+                onMouseLeave={() => {
+                    this.timeoutId = window.setTimeout(() => {
+                        this.setState({
+                            displayHandle: false,
+                        });
+                    }, 3000);
+                }}
             >
                 <div
+                    className={this.state.displayHandle ? 'draggable-block-handle' : 'draggable-block-handle-hide'}
                     draggable={this.props.readOnly !== true}
                     onDragStart={this.onDragStart}
+                    onMouseOver={() => {
+                        this.setState({
+                            displayHandle: true,
+                        }, () => {
+                            window.clearTimeout(this.timeoutId);
+                        });
+                    }}
+                    onMouseEnter={() => {
+                        this.setState({
+                            displayHandle: true,
+                        }, () => {
+                            window.clearTimeout(this.timeoutId);
+                        });
+                    }}
                 >
                     <DragHandle />
                 </div>

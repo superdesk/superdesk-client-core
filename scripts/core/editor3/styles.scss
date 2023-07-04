@@ -950,6 +950,7 @@ $editor-styleButton-size: 			3rem;
 		display: none;
 	}
 }
+
 .table-controls.Editor3-controls{
 	position: sticky;
 	top: 0;
@@ -959,3 +960,17 @@ $editor-styleButton-size: 			3rem;
 	box-shadow: 0px 1px 5px #00000066;
 	background-color: #f8f8f8;
 }
+
+
+.draggable-block-handle-hide {
+	position: absolute;
+	left: -30px;
+	visibility: hidden;
+}
+
+.draggable-block-handle {
+	position: absolute;
+	left: -30px;
+	visibility: visible;
+}
+
