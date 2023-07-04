@@ -8,6 +8,7 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {IStoreState} from 'core/data';
 import {IDesk, IUser, IUserRole} from 'superdesk-api';
 import {UserListComponent, IUserExtra} from './UserListComponent';
+import {partition} from 'lodash';
 
 interface IProps {
     desks: Array<IDesk>;
@@ -25,7 +26,7 @@ interface IUserByRole {
 
 interface IState {
     roles: Array<IUserRole>;
-    usersByRole: Array<IUserByRole>;
+    usersWithRole: Array<IUserByRole>;
     usersWithoutRole: IUserByRole | null;
     deskMembers: {[id: string]: Array<IUser['_id']>};
 }
@@ -42,7 +43,7 @@ class UsersComponent extends React.Component<IProps, IState> {
 
         this.state = {
             roles: [],
-            usersByRole: [],
+            usersWithRole: [],
             deskMembers,
             usersWithoutRole: null,
         };
@@ -60,18 +61,21 @@ class UsersComponent extends React.Component<IProps, IState> {
             dataApi.query('desks/all/overview/users', 1, {field: null, direction: 'ascending'}, {}),
         ]).then((res: any) => {
             const [roles, users] = res;
+            const [withRole, withoutRole] = partition(users._items, (item) => item.role != null);
 
             this.setState({
                 roles: roles._items,
-                usersByRole: users._items.filter((item) => item.role != null),
-                usersWithoutRole: users._items.find((item) => item.role == null),
+                usersWithRole: withRole,
+
+                // we get the first element since users without role are always grouped in one object with `null` role
+                usersWithoutRole: withoutRole[0],
             });
         });
     }
 
     getUsers(desk: IDesk, role: IUserRole): Array<IUserExtra> {
         const deskMembers = this.state.deskMembers[desk._id];
-        const roleUsers = this.state.usersByRole.find((item) => item.role === role._id);
+        const roleUsers = this.state.usersWithRole.find((item) => item.role === role._id);
         const users: Array<IUserExtra> = [];
 
         deskMembers.forEach((userId) => {
@@ -115,7 +119,7 @@ class UsersComponent extends React.Component<IProps, IState> {
                                 </div>
                                 <div className="sd-board__content sd-padding-t--1">
                                     {
-                                        usersWithoutRole.length && (
+                                        (usersWithoutRole?.length ?? 0) > 0 && (
                                             <UserListComponent
                                                 key="no-role"
                                                 desk={desk}
