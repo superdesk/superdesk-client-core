@@ -32,10 +32,6 @@ export class UserListComponent extends React.Component<IProps> {
     }
 
     render() {
-        if (this.props.users == null) {
-            return null;
-        }
-
         return (
             <>
                 <div className="sd-board__subheader">
@@ -66,14 +62,14 @@ export class UserListComponent extends React.Component<IProps> {
                                         {user.user.display_name}
                                     </span>
                                     {
-                                        (user.data?.locked ?? 0) > 0 && (
+                                        (user.data.locked ?? 0) > 0 && (
                                             <span className="sd-text-icon sd-text-icon--aligned-r user-items--locked">
                                                 <i className="icon-lock" />{user.data.locked}
                                             </span>
                                         )
                                     }
                                     {
-                                        (user.data?.assigned ?? 0) > 0 && (
+                                        (user.data.assigned ?? 0) > 0 && (
                                             <span className="sd-text-icon sd-text-icon--aligned-r user-items--assigned">
                                                 <i className="icon-pick" />{user.data.assigned}
                                             </span>
