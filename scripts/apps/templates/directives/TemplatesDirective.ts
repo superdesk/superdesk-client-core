@@ -276,6 +276,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     abstract: '',
                     byline: '',
                     body_html: '',
+                    type: 'text',
                 };
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?

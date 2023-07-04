@@ -45,7 +45,7 @@ export function AuthoringHeaderDirective(
             scope.features = features;
             scope.translationService = TranslationService;
             scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
-            scope.getArticleTypeLabel = (article: IArticle) => article.type == null ? '-' :
+            scope.getArticleTypeLabel = (article: IArticle) =>
                 gettext('Article Type: {{type}}', {type: translateArticleType(article.type)});
 
             // Allow some single-selection fields to display the multi-selection
