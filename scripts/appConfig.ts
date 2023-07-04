@@ -35,7 +35,7 @@ export function getUserInterfaceLanguage() {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
     const language = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
 
-    if (appConfig.profileLanguages.includes(language)) {
+    if (appConfig.profileLanguages?.includes(language)) {
         return language;
     } else {
         return 'en';
