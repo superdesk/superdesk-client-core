@@ -31,20 +31,5 @@ module.exports = function(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
-        apps: [
-            'superdesk-publisher',
-        ],
-        publisher: {
-            protocol: 'https',
-            tenant: '',
-            domain: 'sp-publisher.superdesk.pro',
-            base: 'api/v2',
-            wsProtocol: 'wss',
-            wsDomain: 'sp-publisher.superdesk.pro',
-            wsPath: '/ws',
-            wsPort: '80',
-            hideContentRoutesInPublishPane: false,
-            hideCustomRoutesInPublishPane: false,
-        },
     };
 };
