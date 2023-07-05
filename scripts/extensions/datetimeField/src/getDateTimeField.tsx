@@ -56,6 +56,9 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                         <Spacer type="horizontal" align="stretch" spacing="medium">
                             <DatePickerISO
+                                labelHidden
+                                inlineLabel
+                                label={gettext('Date')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
                                 value={this.props.value} // must be full datetime here to avoid timezone conversion
@@ -86,6 +89,9 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                             <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
                                 <TimePicker
+                                    labelHidden
+                                    inlineLabel
+                                    label={gettext('Time')}
                                     required // because it's a part of the date-time
                                     value={hour}
                                     onChange={(value) => {
