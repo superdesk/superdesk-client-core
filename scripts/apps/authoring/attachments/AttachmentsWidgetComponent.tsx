@@ -96,7 +96,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                     removeAttachment={this.props.removeAttachment}
                 />
 
-                {!(showUpload && this.props.isWidget === true) ? null : (
+                {showUpload && (
                     <div className="attach-indicator">
                         <div className="round-box">
                             <i className="big-icon--upload-alt icon" />
@@ -114,21 +114,6 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                             {gettext('Attach files')}
                         </button>
                     </div>
-                )}
-
-                {!(showUpload && this.props.isWidget === false) ? null : (
-                    <button
-                        className="item-association"
-                        disabled={this.props.readOnly || this.props.editable === false}
-                        onClick={this.showFileUploadModal}
-                    >
-                        <div className="subtext">
-                            <i className="icon-attachment-large" />
-                            <span>
-                                {gettext('Drag one or more files here to upload them, or just click here.')}
-                            </span>
-                        </div>
-                    </button>
                 )}
 
                 <input

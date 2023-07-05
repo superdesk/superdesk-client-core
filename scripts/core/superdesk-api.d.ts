@@ -1246,7 +1246,6 @@ declare module 'superdesk-api' {
         updateAttachment(attachment: IAttachment): void;
         updateItem?(updates: Partial<IArticle>): void;
         readOnly?: boolean;
-        isWidget: boolean;
 
         editable: boolean;
         isLocked: boolean;

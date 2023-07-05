@@ -34,7 +34,7 @@ angular.module('superdesk.apps.authoring.attachments', [
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
     .component('sdAttachmentsWidget', reactToAngular1(
         AttachmentsWidget,
-        ['item', 'readOnly', 'isWidget', 'updateItem'],
+        ['item', 'readOnly', 'updateItem'],
         [],
         'display:contents'),
     )

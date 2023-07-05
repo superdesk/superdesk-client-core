@@ -13,7 +13,6 @@ import {withAttachments} from './AttachmentsWrapper';
 interface IProps extends IAttachmentsWrapperProps {
     updateItem(updates: Partial<IArticle>): void;
     readOnly: boolean;
-    isWidget: boolean;
 }
 
 class AttachmentsWidgetWrapper extends React.PureComponent<IProps> {
