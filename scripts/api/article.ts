@@ -12,7 +12,7 @@ import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {flatMap, trim} from 'lodash';
-import {IArticle, IAuthoringAction, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';

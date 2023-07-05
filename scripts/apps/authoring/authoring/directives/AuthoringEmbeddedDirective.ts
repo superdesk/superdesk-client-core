@@ -8,7 +8,12 @@ AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(api, notify, $filter) {
     return {
         template: authoringReactViewEnabled
-            ? '<div><sd-authoring-integration-wrapper data-action="action" data-item-id="item._id"></sd-authoring-react></div>'
+            ? (
+                '<div>' +
+                    '<sd-authoring-integration-wrapper data-action="action" data-item-id="item._id">' +
+                    '</sd-authoring-react>' +
+                '</div>'
+            )
             : undefined,
         templateUrl: authoringReactViewEnabled ? undefined : 'scripts/apps/authoring/views/authoring.html',
         scope: {
