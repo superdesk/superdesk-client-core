@@ -120,6 +120,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
             <div
                 className="content-create-dropdown"
                 data-test-id="content-create-dropdown"
+                style={state.mode === 'all-templates' ? {padding: 0} : undefined}
             >
                 {(() => {
                     if (state.mode === 'initial') {

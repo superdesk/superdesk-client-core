@@ -228,7 +228,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         };
 
         const sortFilterToolbar = (
-            <ResizeObserverComponent>
+            <ResizeObserverComponent position="relative">
                 {(dimensions) => (
                     <SubNav zIndex={4}>
                         {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}

@@ -1052,7 +1052,7 @@ textarea {
         background-color: var(--color-input-bg);
         transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
         padding: 0 0.8rem;
-        height: 3.2rem;
+        min-height: 3.2rem;
         border-radius: 2px 2px 0 0;
         font-size: $baseFontSize;
         &:hover {
@@ -1095,7 +1095,7 @@ textarea {
             background-color: var(--color-input-bg);
             transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
             padding: 0 1.6rem 0 0.8rem !important;
-            height: 3.2rem;
+            min-height: 3.2rem;
             border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0 !important;
             font-size: 1.4rem;
             color: var(--color-text);

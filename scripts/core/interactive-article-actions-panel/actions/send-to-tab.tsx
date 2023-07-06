@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
-import {Button, Text, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Text, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
@@ -153,47 +153,49 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
-                    {
-                        itemToOpenAfterSending != null && (
-                            <Button
-                                text={gettext('Send and open')}
-                                onClick={() => {
-                                    this.sendItems(itemToOpenAfterSending);
-                                }}
-                                size="large"
-                                type="primary"
-                                expand
-                            />
-                        )
-                    }
+                    <ButtonGroup orientation="vertical">
+                        {
+                            itemToOpenAfterSending != null && (
+                                <Button
+                                    text={gettext('Send and open')}
+                                    onClick={() => {
+                                        this.sendItems(itemToOpenAfterSending);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                />
+                            )
+                        }
 
-                    <Button
-                        text={gettext('Send')}
-                        onClick={() => {
-                            this.sendItems();
-                        }}
-                        size="large"
-                        type="primary"
-                        expand
-                    />
+                        <Button
+                            text={gettext('Send')}
+                            onClick={() => {
+                                this.sendItems();
+                            }}
+                            size="large"
+                            type="primary"
+                            expand
+                        />
 
-                    {
-                        sendPackages && (
-                            <Button
-                                text={gettextPlural(
-                                    this.props.items.length,
-                                    'Send package and items',
-                                    'Send packages and items',
-                                )}
-                                onClick={() => {
-                                    this.sendItems(undefined, true);
-                                }}
-                                size="large"
-                                type="primary"
-                                expand
-                            />
-                        )
-                    }
+                        {
+                            sendPackages && (
+                                <Button
+                                    text={gettextPlural(
+                                        this.props.items.length,
+                                        'Send package and items',
+                                        'Send packages and items',
+                                    )}
+                                    onClick={() => {
+                                        this.sendItems(undefined, true);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                />
+                            )
+                        }
+                    </ButtonGroup>
                 </PanelFooter>
             </React.Fragment>
         );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
@@ -67,29 +67,32 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
-                    {
-                        this.props.items.length === 1 && (
-                            <Button
-                                text={gettext('Fetch and open')}
-                                onClick={() => {
-                                    this.fetchItems(true);
-                                }}
-                                size="large"
-                                type="primary"
-                                expand
-                            />
-                        )
-                    }
+                    <ButtonGroup orientation="vertical">
+                        {
+                            this.props.items.length === 1 && (
+                                <Button
+                                    text={gettext('Fetch and open')}
+                                    onClick={() => {
+                                        this.fetchItems(true);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    style="hollow"
+                                    expand
+                                />
+                            )
+                        }
 
-                    <Button
-                        text={gettext('Fetch')}
-                        onClick={() => {
-                            this.fetchItems();
-                        }}
-                        size="large"
-                        type="primary"
-                        expand
-                    />
+                        <Button
+                            text={gettext('Fetch')}
+                            onClick={() => {
+                                this.fetchItems();
+                            }}
+                            size="large"
+                            type="primary"
+                            expand
+                        />
+                    </ButtonGroup>
                 </PanelFooter>
             </React.Fragment>
         );

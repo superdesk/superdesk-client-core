@@ -51,6 +51,7 @@ import {getKeywordsAdapter} from './keywords';
 import {dateline} from './dateline';
 import {description_text} from './description_text';
 import {body_footer} from './body_footer';
+import {sign_off} from './sign_off';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -78,6 +79,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         dateline: dateline,
         description_text: description_text,
         body_footer: body_footer,
+        sign_off: sign_off,
     };
 
     return adapter;

@@ -2,6 +2,7 @@ import React from 'react';
 import {DatePicker, TimePicker, Button} from 'superdesk-ui-framework';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
+import {Spacer} from './Spacer';
 
 interface IProps {
     value: Date;
@@ -25,16 +26,19 @@ export class DateTimePicker extends React.PureComponent<IProps> {
         const {value} = this.props;
 
         return (
-            <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <Spacer h gap="8" noWrap alignItems="center" justifyContent="space-evenly" >
                 <DatePicker
+                    inlineLabel
+                    labelHidden
                     value={value}
                     onChange={(val) => {
                         this.props.onChange(val);
                     }}
                     dateFormat={appConfig.view.dateformat}
                 />
-
                 <TimePicker
+                    inlineLabel
+                    labelHidden
                     value={getTimeISO(value)}
                     onChange={(timeNext) => {
                         const [hoursStr, minutesStr] = timeNext.split(':');
@@ -47,7 +51,6 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     }}
                     required={this.props.required}
                 />
-
                 <Button
                     text={gettext('Clear')}
                     onClick={() => {
@@ -57,7 +60,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     iconOnly
                     style="hollow"
                 />
-            </div>
+            </Spacer>
         );
     }
 }
