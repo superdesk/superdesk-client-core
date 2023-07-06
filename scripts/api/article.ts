@@ -6,7 +6,11 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {copyJson} from 'core/helpers/utils';
-import {ISendToDestination, ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
+import {
+    IPublishingError,
+    ISendToDestination,
+    ISendToDestinationDesk,
+} from 'core/interactive-article-actions-panel/interfaces';
 import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
@@ -20,6 +24,7 @@ import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
+type IArticleActionType = string | 'publish' | 'edit';
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
 const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !isLockedInCurrentSession(_article);
@@ -240,10 +245,15 @@ interface IScope {
     origItem?: IArticle;
 }
 
-function publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle> {
+function publishItem(
+    orig: IArticle,
+    item: IArticle,
+    action: IArticleActionType = 'publish',
+    onError?: (error: IPublishingError) => void,
+): Promise<boolean | IArticle> {
     const scope: IScope = {};
 
-    return publishItem_legacy(orig, item, scope)
+    return publishItem_legacy(orig, item, scope, action, onError)
         .then((published) => published ? scope.item : published);
 }
 
@@ -269,7 +279,8 @@ function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
     scope: IScope,
-    action: string = 'publish',
+    action: string | 'publish' | 'edit' = 'publish',
+    onError?: (error: IPublishingError) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
     const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
@@ -327,11 +338,16 @@ function publishItem_legacy(
                     notify.error(message);
                 });
 
-                if (errors.fields) {
-                    Object.assign(scope.error, errors.fields);
+                if (issues.fields) {
+                    Object.assign(scope.error, issues.fields);
                 }
 
-                scope.$applyAsync(); // make $scope.error changes visible
+                onError?.({
+                    fields: scope.error,
+                    kind: 'publishing-error',
+                });
+
+                scope.$applyAsync?.(); // make $scope.error changes visible
 
                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                     ng.get('authoring').open(item._id, true).then((res) => {
@@ -486,11 +502,6 @@ interface IArticleApi {
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
 
-    // Instead of passing a fake scope from React
-    // every time to the publishItem_legacy we can use this function which
-    // creates a fake scope for us.
-    publishItem(orig: IArticle, item: IArticle): Promise<boolean | IArticle>;
-
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
         item: {
@@ -500,6 +511,21 @@ interface IArticleApi {
         },
         action?: IArticleAction,
     ): void;
+
+    // Instead of passing a fake scope from React
+    // every time to the publishItem_legacy we can use this function which
+    // creates a fake scope for us.
+    publishItem(
+        orig: IArticle,
+        item: IArticle,
+        action?: string,
+
+        // onError is optional in this function and in `publishItem_legacy` since when you're calling
+        // it from React you want to pass only it to handle certain errors and apply them to the scope
+        // but not the whole scope but from Angular you already have access to the full scope so you
+        // won't need to pass onError
+        onError?: (error: IPublishingError) => void,
+    ): Promise<boolean | IArticle>;
 }
 
 export const article: IArticleApi = {

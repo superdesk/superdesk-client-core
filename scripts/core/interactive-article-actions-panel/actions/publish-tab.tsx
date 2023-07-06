@@ -1,11 +1,11 @@
 import React, {CSSProperties} from 'react';
-import {IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
 import {DestinationSelect} from '../subcomponents/destination-select';
-import {ISendToDestination} from '../interfaces';
+import {IPanelError, ISendToDestination} from '../interfaces';
 import {getInitialDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
@@ -27,12 +27,15 @@ import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from '@superdesk/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
 
 interface IProps {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
+    onError: (error: IPanelError) => void;
+    onDataChange: (item: IArticle) => void;
 }
 
 interface IState {
@@ -51,9 +54,9 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
             selectedDestination: getInitialDestination([this.props.item], false),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
-                target_subscribers: [],
-                target_regions: [],
-                target_types: [],
+                target_subscribers: this.props.item.target_subscribers ?? [],
+                target_regions: this.props.item.target_regions ?? [],
+                target_types: this.props.item.target_regions ?? [],
             },
             subscribers: null,
         };
@@ -94,12 +97,11 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
                 confirmPublish([itemToPublish]).then(() => {
                     // Cloning to prevent objects from being modified by angular
-                    ng.get('authoring').publish(
+                    sdApi.article.publishItem(
                         cloneDeep(this.props.item),
                         cloneDeep(itemToPublish),
                         'publish',
-                        false,
-                        {notifyErrors: true},
+                        this.props.onError,
                     )
                         .then(() => {
                             ng.get('authoringWorkspace').close();
@@ -165,6 +167,19 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                             onChange={(value) => {
                                                 this.setState({
                                                     selectedDestination: value,
+                                                }, () => {
+                                                    const dest = this.state.selectedDestination;
+
+                                                    if (dest.type === 'desk') {
+                                                        this.props.onDataChange({
+                                                            ...this.props.item,
+                                                            task: {
+                                                                ...(this.props.item.task ?? {}),
+                                                                desk: dest.desk,
+                                                                stage: dest.stage,
+                                                            },
+                                                        });
+                                                    }
                                                 });
                                             }}
                                             includePersonalSpace={false}
@@ -185,7 +200,16 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 items={[this.props.item]}
                                 value={this.state.publishingDateOptions}
                                 onChange={(val) => {
-                                    this.setState({publishingDateOptions: val});
+                                    this.setState(
+                                        {publishingDateOptions: val},
+                                        () => this.props.onDataChange({
+                                            ...this.props.item,
+                                            ...getPublishingDatePatch(
+                                                this.props.item,
+                                                this.state.publishingDateOptions,
+                                            ),
+                                        }),
+                                    );
                                 }}
                                 allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
                             />
@@ -193,9 +217,13 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                             <PublishingTargetSelect
                                 value={this.state.publishingTarget}
                                 onChange={(val) => {
-                                    this.setState({
-                                        publishingTarget: val,
-                                    });
+                                    this.setState(
+                                        {publishingTarget: val},
+                                        () => this.props.onDataChange({
+                                            ...this.props.item,
+                                            ...getPublishingTargetPatch(this.props.item, this.state.publishingTarget),
+                                        }),
+                                    );
                                 }}
                             />
                         </div>
