@@ -1013,7 +1013,8 @@ $authoring-toolbar-spacing: 10px;
         margin-right: 3px;
         margin-bottom: 3px;
         padding: 0 12px;
-        height: 24px;
+        min-height: 24px;
+        line-height: 1.1;
         border-radius: 9999px;
         transition: color .2s ease;
         i {
