@@ -169,6 +169,8 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
                 disabled: existingTypes.has(type),
                 icon: getContentProfileIcon(type),
             }));
+
+            $scope.$applyAsync();
         });
     }
 
