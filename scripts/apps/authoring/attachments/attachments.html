@@ -1,7 +1,7 @@
 <sd-attachments-widget
     class="sd-wrap-helper"
     read-only="readOnly"
-    is-widget="widget != null"
+    is-widget="attachmentsInAuthoring === true ? false : widget != null || pinnedWidget != null"
     item="item"
     update-item="updateItem"
 ></sd-attachments-widget>
