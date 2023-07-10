@@ -14,7 +14,7 @@ const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
 });
 
-const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+export const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     abstract: true,
     body_html: true,
     footer: true,
@@ -28,7 +28,7 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-const getFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+export const getFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
     return {
         'h1': gettext('h1'),
         'h2': gettext('h2'),

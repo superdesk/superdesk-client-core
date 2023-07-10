@@ -754,6 +754,11 @@ declare module 'superdesk-api' {
         disable_entire_category_selection?: boolean;
     }
 
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
+        preview?: boolean;
+    }
+
     export type IContentProfileEditorConfig = {
         [key: string]: {
             single?: boolean;
@@ -1072,7 +1077,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericArrayListPage<T, P> extends IPropsGenericForm<T, P> {
         value: Array<T>;
         onChange(value: Array<T>): void;
-        
+
         newItemIndex?: number;
     }
 
