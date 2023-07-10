@@ -328,7 +328,7 @@
                     font-weight: 400;
                     p {
                         font-weight: 400;
-                        margin-bottom: 0; 
+                        margin-bottom: 0;
                     }
                 }
             }
@@ -337,6 +337,14 @@
                 line-height: 140%;
                 margin: 16px 0;
                 border-left: 3px solid rgba(160, 160, 160, 0.5);
+                padding: 4px 0 4px 14px;
+                font-style: italic;
+            }
+            .multi-line-quote {
+                font-size: 14px;
+                line-height: 140%;
+                margin: 16px 0;
+                border-left: 3px solid red;
                 padding: 4px 0 4px 14px;
                 font-style: italic;
             }
@@ -366,9 +374,9 @@
     .metadata-view,
     .article-versions {
         position: absolute;
-        top:0; 
-        left: 0; 
-        right: 0; 
+        top:0;
+        left: 0;
+        right: 0;
         bottom: 0;
         padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
@@ -1134,7 +1142,7 @@ $lightbox-composite-condensed : 100px;
         --toggleBorderColor: var(--sd-shadow-outline--2);
         @include header-toggle;
     }
-    
+
     .preview-header__timestamp {
         padding: 8px 16px 2px 0;
         display: flex;
@@ -1274,7 +1282,7 @@ $lightbox-composite-condensed : 100px;
               font-weight: 600;
             }
           }
-        
+
         .tag-label {
             max-width: 100%;
             font-size: 11px;
@@ -1371,4 +1379,3 @@ figure.preview-overlay-on {
     overflow: auto;
     padding: 1px; // take border of the parent into account
 }
-

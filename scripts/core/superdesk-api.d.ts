@@ -1617,6 +1617,11 @@ declare module 'superdesk-api' {
         selection: import('draft-js').SelectionState;
     }
 
+    export interface ISetActiveCellReturnType {
+        type: 'EDITOR_SET_CELL';
+        payload: IActiveCell;
+    }
+
     // DATA API
 
     export interface IDataRequestParams {
