@@ -77,6 +77,7 @@ export function cleanData<T>(data: Partial<T>): Partial<T> {
         '_latest_version',
         '_locked',
         'time_zone',
+        '_autosave',
     ].forEach((field) => {
         delete data[field];
     });

@@ -50,6 +50,8 @@ function createTemplateFromArticle(
         const data = prepareData(resultTemplate);
         const deskId = selectedDeskId || data.desk;
         const templateArticle = data.template;
+
+        // Clean the article from fields not usable for template creation
         const item: IArticle = clone(ng.get('templates').pickItemData(sourceArticle));
         const userId = ng.get('session').identity._id;
 
@@ -86,7 +88,7 @@ function createTemplateFromArticle(
 
             const requestPayload: Partial<ITemplate> = {
                 ...payload,
-                data: cleanData<IArticle>(sourceArticle),
+                data: item,
             };
 
             return (hasLinks
