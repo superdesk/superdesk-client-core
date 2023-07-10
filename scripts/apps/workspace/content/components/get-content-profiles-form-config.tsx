@@ -86,7 +86,7 @@ function hasFormattingOptions(fieldId: string, editor, customFields: Array<any>)
 function getEditor3FormattingOptions(
     fieldId: string,
     customFields: Array<any>,
-): Dictionary<FORMATTING_OPTION, string> {
+): Dictionary<FORMATTING_OPTION | PLAINTEXT_FORMATTING_OPTION, string> {
     const isCustomPlainTextField = customFields.find(({_id}) => fieldId === _id)?.field_type === 'text';
 
     if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField) {
