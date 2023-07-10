@@ -899,6 +899,11 @@ declare module 'superdesk-api' {
         selection_type?: any;
     }
 
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
+        preview?: boolean;
+    }
+
     export type IContentProfileEditorConfig = {
         [key: string]: {
             single?: boolean;
