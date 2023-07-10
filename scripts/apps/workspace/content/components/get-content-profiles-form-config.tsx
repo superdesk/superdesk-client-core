@@ -247,7 +247,7 @@ export function getContentProfileFormConfig(
                 required: false,
                 component_parameters: {
                     items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
-                        .map(([original, translated]) => ({id: original, label: translated})),
+                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
                 },
             };
 
@@ -260,7 +260,7 @@ export function getContentProfileFormConfig(
                 required: false,
                 component_parameters: {
                     items: Object.entries(getFormattingOptions())
-                        .map(([original, translated]) => ({id: original, label: translated})),
+                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
                 },
             };
 
