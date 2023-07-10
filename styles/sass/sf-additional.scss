@@ -1674,11 +1674,12 @@
     position: relative;
     text-align: center;
     font-style: italic;
+    color: var(--color-text-light);
     &:before {
         content: "_________";
         position: absolute;
         top: -6px;
-        color: #d0d0d0;
+        color: var(--sd-colour-line--medium);
         left: 50%;
         margin-left: -75px;
     }
@@ -1686,7 +1687,7 @@
         content: "_________";
         position: absolute;
         top: -6px;
-        color: #d0d0d0;
+        color: var(--sd-colour-line--medium);;
         left: 50%;
         margin-left: 15px;
     }

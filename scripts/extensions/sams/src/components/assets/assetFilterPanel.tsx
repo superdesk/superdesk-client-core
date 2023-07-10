@@ -12,7 +12,6 @@ import {
     Autocomplete,
     Button,
     DatePicker,
-    FormLabel,
     Input,
     Option,
     Select,
@@ -345,8 +344,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             </FormGroup>
                             <FormGroup>
                                 <FormItem>
-                                    <FormLabel text={gettext('Uploaded From:')} />
                                     <DatePicker
+                                        label={gettext('Uploaded From:')}
                                         value={this.state.localSearchParams.dateFrom ?? null}
                                         onChange={this.onChange.dateFrom}
                                         dateFormat={config.view.dateformat}
@@ -354,8 +353,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                     />
                                 </FormItem>
                                 <FormItem>
-                                    <FormLabel text={gettext('Uploaded To:')} />
                                     <DatePicker
+                                        label={gettext('Uploaded To:')}
                                         value={this.state.localSearchParams.dateTo ?? null}
                                         onChange={this.onChange.dateTo}
                                         dateFormat={config.view.dateformat}

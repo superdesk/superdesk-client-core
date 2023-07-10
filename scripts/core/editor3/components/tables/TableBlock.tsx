@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {TableCell} from '.';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
-import {IActiveCell} from 'superdesk-api';
+import {IActiveCell, ISetActiveCellReturnType} from 'superdesk-api';
 import {IEditorStore} from 'core/editor3/store';
 
 interface IProps {
@@ -13,7 +13,13 @@ interface IProps {
     readOnly: boolean;
     editorState: EditorState;
     activeCell?: IActiveCell;
-    setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
+    setActiveCell: (
+        row: number,
+        col: number,
+        blockKey: string,
+        currentStyle: Array<string>,
+        selection: any,
+    ) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
     setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
     toolbarStyle?: IEditorStore['customToolbarStyle'];
@@ -63,13 +69,15 @@ export class TableBlockComponent extends React.Component<IProps> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
-        if (this.props.activeCell != null) {
+        // Take the latest activeCell data in order to accurately set the customToolbarStyle.
+        // The data coming from this.props.activeCell is the previous state of the activeCell
+        const updatedActiveCell = setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
+
+        if (updatedActiveCell.payload != null) {
             this.props.setCustomToolbar(this.props.toolbarStyle);
         } else {
-            this.props.setCustomToolbar(null);
+            this.props.setCustomToolbar(undefined);
         }
-
-        setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
     }
 
     getCellEditorState(data, i, j): EditorState {
