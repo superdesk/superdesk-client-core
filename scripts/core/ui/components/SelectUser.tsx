@@ -65,8 +65,9 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         return (
             <SelectWithTemplate
-                inlineLabel={true}
-                labelHidden={true}
+                inlineLabel
+                labelHidden
+                label={gettext('Select user')}
                 getItems={(searchString) => {
                     this.abortController?.abort();
                     this.abortController = new AbortController();

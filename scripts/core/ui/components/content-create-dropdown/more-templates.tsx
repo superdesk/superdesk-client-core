@@ -70,9 +70,10 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     </Spacer>
                     <SpacerBlock v gap="4" />
                     <Input
-                        type="text"
-                        labelHidden
                         inlineLabel
+                        labelHidden
+                        label={gettext('Input')}
+                        type="text"
                         value={this.state.searchString}
                         onChange={(val) => {
                             this.setState({searchString: val});

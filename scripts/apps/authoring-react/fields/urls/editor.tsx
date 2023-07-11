@@ -39,6 +39,9 @@ export class Editor extends React.PureComponent<IProps> {
                         <Spacer h gap="16" justifyContent="space-between" noWrap key={i}>
                             <div style={{flexGrow: 1}}>
                                 <Input
+                                    inlineLabel
+                                    labelHidden
+                                    label={gettext('URL Input')}
                                     type="text"
                                     value={urlObj.url}
                                     onChange={(val) => {

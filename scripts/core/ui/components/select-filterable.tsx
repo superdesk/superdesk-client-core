@@ -28,6 +28,7 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
 
         return (
             <SelectWithTemplate
+                label={gettext('Select')}
                 fullWidth
                 inlineLabel={hideLabel}
                 labelHidden={hideLabel}

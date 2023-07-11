@@ -12,6 +12,7 @@ import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
 import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {Spacer} from 'core/ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<
     IDatelineValueOperational,
@@ -74,6 +75,7 @@ export class Editor extends React.PureComponent<IProps> {
                         getLabel={(item) => item?.city}
                     />
                     <DatePickerISO
+                        label={gettext('Date')}
                         labelHidden
                         inlineLabel
                         value={this.props.value?.date}

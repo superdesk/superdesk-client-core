@@ -1,3 +1,4 @@
+import {gettext} from 'core/utils';
 import React from 'react';
 import {ITagInputFieldConfig, ITagInputValueOperational, IPreviewComponentProps} from 'superdesk-api';
 import {TagInput} from 'superdesk-ui-framework/react';
@@ -12,6 +13,9 @@ export class Preview extends React.PureComponent<IProps> {
 
         return (
             <TagInput
+                inlineLabel
+                labelHidden
+                label={gettext('Tag input')}
                 disabled
                 value={this.props.value}
                 onChange={() => null}

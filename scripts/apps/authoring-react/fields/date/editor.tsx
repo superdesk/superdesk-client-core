@@ -6,6 +6,7 @@ import {IDateFieldConfig, IDateUserPreferences, IDateValueOperational, IEditorCo
 import {appConfig} from 'appConfig';
 import {dateToServerString} from 'core/get-superdesk-api-implementation';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
+import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<IDateValueOperational, IDateFieldConfig, IDateUserPreferences>;
 
@@ -17,6 +18,9 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DatePickerISO
+                    inlineLabel
+                    labelHidden
+                    label={gettext('Date')}
                     value={this.props.value}
                     onChange={(dateString) => {
                         if (dateString === '') {

@@ -6,6 +6,7 @@ import {
     ITimeUserPreferences,
     IEditorComponentProps,
 } from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<ITimeValueOperational, ITimeFieldConfig, ITimeUserPreferences>;
 
@@ -16,6 +17,9 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <TimePicker
+                    inlineLabel
+                    labelHidden
+                    label={gettext('Time')}
                     value={this.props.value ?? ''}
                     onChange={(val) => {
                         this.props.onChange(val === '' ? null : val);
