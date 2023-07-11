@@ -124,7 +124,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 headerTemplate={gettext('Attach files')}
                 footerTemplate={
                     (
-                        <Spacer h gap='8' alignItems='center' justifyContent='end' noGrow>
+                        <Spacer h gap="8" alignItems="center" justifyContent="end" noGrow>
                             <span className="pull-left">{gettext('* fields are required')}</span>
                             <ButtonGroup>
                                 <Button
