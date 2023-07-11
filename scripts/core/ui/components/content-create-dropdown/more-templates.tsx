@@ -161,6 +161,8 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
 
                     <Input
                         type="text"
+                        label=""
+                        inlineLabel
                         labelHidden
                         value={state.searchString}
                         onChange={(val) => {

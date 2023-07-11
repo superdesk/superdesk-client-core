@@ -3,7 +3,7 @@ import {TreeSelect} from 'superdesk-ui-framework/react';
 import {IArticleField} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {
-    getFormattingOptions,
+    getEditor3RichTextFormattingOptions,
     getEditor3PlainTextFormattingOptions,
     HAS_RICH_FORMATTING_OPTIONS,
 } from '../components/get-content-profiles-form-config';
@@ -24,7 +24,7 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
             Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField;
         const formattingOptions = Object.entries(
             isRichOrCustomTextField
-                ? getFormattingOptions()
+                ? getEditor3RichTextFormattingOptions()
                 : getEditor3PlainTextFormattingOptions(),
         )
             .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}));

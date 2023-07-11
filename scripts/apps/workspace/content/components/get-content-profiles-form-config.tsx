@@ -31,7 +31,7 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-export const getFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
     return {
         'h1': gettext('h1'),
         'h2': gettext('h2'),
@@ -93,7 +93,7 @@ function getEditor3FormattingOptions(
     const isCustomPlainTextField = customFields.find(({_id}) => fieldId === _id)?.field_type === 'text';
 
     if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField) {
-        return getFormattingOptions();
+        return getEditor3RichTextFormattingOptions();
     } else {
         return getEditor3PlainTextFormattingOptions();
     }
@@ -262,7 +262,7 @@ export function getContentProfileFormConfig(
                 field: 'formatOptions',
                 required: false,
                 component_parameters: {
-                    items: Object.entries(getFormattingOptions())
+                    items: Object.entries(getEditor3RichTextFormattingOptions())
                         .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
                 },
             };
