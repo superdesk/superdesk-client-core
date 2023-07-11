@@ -3,8 +3,8 @@ import {Checkbox} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps, IEditor3Config, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
-import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {Spacer} from 'core/ui/components/Spacer';
+import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Config>> {
     render() {
@@ -16,7 +16,10 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     <div className="form-label">{gettext('Formatting options')}</div>
 
                     <MultiSelect
-                        items={EDITOR3_RICH_FORMATTING_OPTIONS.map((label) => ({id: label, label}))}
+                        items={
+                            Object.entries(getEditor3RichTextFormattingOptions())
+                                .map(([id, label]) => ({id, label}))
+                        }
                         values={config?.editorFormat ?? []}
                         onChange={(editorFormat: Array<RICH_FORMATTING_OPTION>) => {
                             this.props.onChange({...config, editorFormat});

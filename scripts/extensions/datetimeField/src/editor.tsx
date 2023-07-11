@@ -53,6 +53,9 @@ export class Editor extends React.PureComponent<IProps> {
 
                     <Spacer h gap="8">
                         <DatePickerISO
+                            labelHidden
+                            inlineLabel
+                            label={gettext('Date')}
                             dateFormat={superdesk.instance.config.view.dateformat}
                             locale={datePickerLocale}
                             value={this.props.value} // must be full datetime here to avoid timezone conversion
@@ -83,6 +86,9 @@ export class Editor extends React.PureComponent<IProps> {
 
                         <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
                             <TimePicker
+                                labelHidden
+                                inlineLabel
+                                label={gettext('Time')}
                                 required // because it's a part of the date-time
                                 value={hour}
                                 onChange={(value) => {

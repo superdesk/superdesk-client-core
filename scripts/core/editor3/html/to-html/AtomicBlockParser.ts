@@ -200,7 +200,7 @@ export class AtomicBlockParser {
         }
 
         const {cells} = data;
-        let html = '<div className="multi-line-quote">';
+        let html = '<div class="multi-line-quote">';
         const cellContentState = cells[0]?.[0] != null
             ? convertFromRaw(cells[0][0])
             : ContentState.createFromText('');

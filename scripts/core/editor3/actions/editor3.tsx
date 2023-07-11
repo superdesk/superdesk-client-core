@@ -1,8 +1,8 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {logger} from 'core/services/logger';
-import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
-import {IArticle} from 'superdesk-api';
+import {SelectionState, convertFromRaw} from 'draft-js';
+import {IArticle, ISetActiveCellReturnType} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
 import {
     CharacterLimitUiBehavior,
@@ -134,7 +134,7 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key, currentStyle, selection) {
+export function setActiveCell(i, j, key, currentStyle, selection): ISetActiveCellReturnType {
     return {
         type: 'EDITOR_SET_CELL',
         payload: {i, j, key, currentStyle, selection},
