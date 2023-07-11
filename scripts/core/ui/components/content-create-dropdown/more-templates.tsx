@@ -48,7 +48,15 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
 
     render() {
         return (
-            <div style={{height: '100%'}}>
+            <div
+                style={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    paddingBottom: 10,
+                }}
+            >
                 <div style={{padding: 10}}>
                     <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                         <IconButton
@@ -72,8 +80,10 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     />
                     <div className="content-create-dropdown--spacer" />
                 </div>
-                {
+
+                <div style={{height: '100%', overflow: 'auto'}}>
                     <WithPagination
+                        key={this.state.searchString}
                         getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
                             .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
@@ -103,7 +113,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                             )
                         }
                     </WithPagination>
-                }
+                </div>
             </div>
         );
     }

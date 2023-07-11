@@ -99,30 +99,6 @@ $editor-styleButton-size: 			3rem;
 				display: none;
 			}
 		}
-		video, audio {
-			display: block;
-		}
-
-		img {
-			max-width: 100%;
-		}
-	}
-	.image-block__image-overlay {
-		@include image-overlay;
-	}
-	.image-block__metadata {
-		@include two-col-list;
-		margin: 1.6rem 1.6rem 0;
-	}
-	.image-block__action-bar {
-		text-align: right;
-		padding: 0.6rem 0 0;
-	}
-	.image-block__icons-block {
-		@include image-overlay_actions-block;
-	}
-	.image-block__image-action {
-        @include image-overlay_action-button;
 
 		&.read-only {
 			cursor: not-allowed;
@@ -1010,7 +986,8 @@ $editor-styleButton-size: 			3rem;
 	.public-DraftEditor-content {
 		padding: 0;
 
-		[data-block="true"] {
+		// not selector avoids drop indicators being hidden
+		[data-block="true"]:not(.unstyled__block--over) {
 			border: 0;
 		}
 	}

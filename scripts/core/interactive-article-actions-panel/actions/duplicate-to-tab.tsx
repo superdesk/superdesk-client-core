@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IDesk} from 'superdesk-api';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
@@ -71,28 +71,30 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
-                    {
-                        this.props.items.length === 1 && (
-                            <Button
-                                text={gettext('Duplicate and open')}
-                                onClick={() => {
-                                    this.duplicateItems(true);
-                                }}
-                                size="large"
-                                type="primary"
-                                expand
-                            />
-                        )
-                    }
-                    <Button
-                        text={gettext('Duplicate')}
-                        onClick={() => {
-                            this.duplicateItems();
-                        }}
-                        size="large"
-                        type="primary"
-                        expand
-                    />
+                    <ButtonGroup orientation="vertical">
+                        {
+                            this.props.items.length === 1 && (
+                                <Button
+                                    text={gettext('Duplicate and open')}
+                                    onClick={() => {
+                                        this.duplicateItems(true);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                />
+                            )
+                        }
+                        <Button
+                            text={gettext('Duplicate')}
+                            onClick={() => {
+                                this.duplicateItems();
+                            }}
+                            size="large"
+                            type="primary"
+                            expand
+                        />
+                    </ButtonGroup>
                 </PanelFooter>
             </React.Fragment>
         );

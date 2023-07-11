@@ -39,10 +39,11 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
-import {ContentState, EditorState, Modifier} from 'draft-js';
+import {ContentState, EditorState, convertToRaw} from 'draft-js';
 import {Select, Option} from 'superdesk-ui-framework/react';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
 import {SpacerBlock} from 'core/ui/components/Spacer';
+import {editor3ToOperationalFormat} from '.';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -415,8 +416,21 @@ export class Editor extends React.PureComponent<IProps, IState> {
             ? this.props.getVocabularyItems(this.props.config.vocabularyId)
             : null;
 
+        const HelperComponent = this.props.config.helperComponent;
+
         return (
             <Container miniToolbar={miniToolbar}>
+                {
+                    HelperComponent != null && (
+                        <HelperComponent
+                            language={this.props.language}
+                            readOnly={this.props.readOnly}
+                            onChange={(value) => {
+                                this.props.onChange(value);
+                            }}
+                        />
+                    )
+                }
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         {

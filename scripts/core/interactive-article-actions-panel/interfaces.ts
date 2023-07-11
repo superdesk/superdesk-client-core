@@ -6,7 +6,17 @@ export interface IPanelAction {
     items: Array<IArticle>;
     tabs: Array<IArticleActionInteractive>;
     activeTab: IArticleActionInteractive;
+    onError?: (error: IPublishingError) => void;
 }
+
+export interface IPublishingError {
+    kind: 'publishing-error';
+    fields: {
+        [fieldId: string]: string;
+    };
+}
+
+export type IPanelError = IPublishingError;
 
 export interface ISendToDestinationDesk {
     type: 'desk';

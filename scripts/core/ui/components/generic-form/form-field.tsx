@@ -14,7 +14,6 @@ import {getMacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {SelectMultipleValues} from './input-types/select_multiple_values';
-import {SelectSingleValue} from './input-types/select_single_value_static';
 import {NumberComponent} from './input-types/number';
 import {Select} from './input-types/select';
 import {DurationComponent} from './input-types/duration';

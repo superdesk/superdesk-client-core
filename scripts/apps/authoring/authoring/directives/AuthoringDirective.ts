@@ -22,6 +22,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
 import {IArticle} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 
 /**
  * @ngdoc directive
@@ -152,8 +153,8 @@ export function AuthoringDirective(
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
 
-            content.getTypes().then(() => {
-                $scope.content_types = content.types;
+            content.getTypes().then((result) => {
+                $scope.content_types = result;
             });
 
             /**
@@ -402,6 +403,12 @@ export function AuthoringDirective(
 
                 return true;
             }
+
+            $scope.onError = (error: IPanelError) => {
+                $scope.error = {};
+                Object.assign($scope.error, error.fields);
+                $scope.$applyAsync();
+            };
 
             function publishItem(orig, item): Promise<boolean> {
                 autosave.stop(item);
@@ -1010,7 +1017,10 @@ export function AuthoringDirective(
 
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
-                content.getTypes().then(() => {
+                content.getTypes().then((result) => {
+                    // Update scope with new content types
+                    $scope.content_types = result;
+
                     _.forEach($scope.content_types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
                             _.forEach(profile.schema, (schema, fieldId) => {
