@@ -40,6 +40,9 @@ export class Editor extends React.PureComponent<IProps> {
                             <div style={{flexGrow: 1}}>
                                 <Input
                                     type="text"
+                                    label=""
+                                    inlineLabel
+                                    labelHidden
                                     value={urlObj.url}
                                     onChange={(val) => {
                                         this.handleUrlUpdate(i, {...urlObj, url: val});

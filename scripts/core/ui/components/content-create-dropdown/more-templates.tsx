@@ -71,6 +71,8 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     <SpacerBlock v gap="4" />
                     <Input
                         type="text"
+                        label=""
+                        inlineLabel
                         labelHidden
                         inlineLabel
                         value={this.state.searchString}
