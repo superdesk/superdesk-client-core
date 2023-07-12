@@ -62,10 +62,6 @@ describe('generic form', () => {
     beforeEach(mockDataApi);
     beforeEach(window.module('superdesk.apps.desks'));
 
-    const exceptionalClassNamesForInvalidFields = {
-        [FormFieldType.duration]: '.sd-input--invalid',
-    };
-
     getAllInputTypes()
         .filter((type) => type !== FormFieldType.checkbox) // checkbox doesn't have error messages
         .forEach((type: FormFieldType) => {
@@ -90,7 +86,7 @@ describe('generic form', () => {
 
                 setTimeout(() => { // wait for data fetching (only used by some input types)
                     wrapper.update();
-                    const classNameSelector = exceptionalClassNamesForInvalidFields[type] ?? '.sd-line-input--invalid';
+                    const classNameSelector = '.sd-line-input--invalid';
 
                     expect(wrapper.find(classNameSelector).length).toBe(1);
                     expect(wrapper.html()).toContain(message);
