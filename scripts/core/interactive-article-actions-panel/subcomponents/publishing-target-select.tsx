@@ -71,6 +71,9 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
 
                 <div style={{paddingTop: 5}}>
                     <TreeSelect
+                        label=""
+                        inlineLabel
+                        labelHidden
                         kind="synchronous"
                         allowMultiple
                         getId={(item) => item._id}

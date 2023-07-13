@@ -74,7 +74,6 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                         label=""
                         inlineLabel
                         labelHidden
-                        inlineLabel
                         value={this.state.searchString}
                         onChange={(val) => {
                             this.setState({searchString: val});
