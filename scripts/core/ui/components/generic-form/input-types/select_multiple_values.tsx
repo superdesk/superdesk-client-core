@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {TreeSelect} from 'superdesk-ui-framework/react';
 
@@ -27,7 +28,20 @@ export class SelectMultipleValues extends React.Component<IProps> {
         }
 
         return (
-            <div style={{marginBottom: '1.8em'}}>
+            <div
+                className={
+                    classNames(
+                        'sd-line-input',
+                        {
+                            'sd-line-input--invalid': this.props.issues.length > 0,
+                            'sd-line-input--required': this.props.formField.required === true,
+                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                        },
+                    )
+                }
+            >
+                <label className="sd-line-input__label">{this.props.formField.label}</label>
+
                 <TreeSelect
                     error={this.props.issues[0]}
                     invalid={this.props.issues[0] != null}
@@ -44,7 +58,15 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     value={this.props.value}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
+                    inlineLabel
+                    labelHidden
                 />
+
+                {
+                    this.props.issues.map((str, i) => (
+                        <div key={i} className="sd-line-input__message">{str}</div>
+                    ))
+                }
             </div>
         );
     }
