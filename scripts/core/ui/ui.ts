@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {mapValues} from 'lodash';
+import _, {difference, filter, mapValues, sortBy, union, without} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
@@ -11,6 +11,7 @@ import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
+import {FormattingOptionsTreeSelect} from 'apps/workspace/content/views/FormattingOptionsMultiSelect';
 
 /**
  * Gives top shadow for scroll elements
@@ -1287,6 +1288,13 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdLoading', LoadingDirective)
     .directive('sdMultipleEmails', MultipleEmailsValidation)
     .directive('sdMultiSelect', multiSelectDirective)
+    .component(
+        'sdFormattingOptionsTreeSelect',
+        reactToAngular1(
+            FormattingOptionsTreeSelect,
+            ['value', 'fieldId', 'fields', 'onChange'],
+        ),
+    )
 
     .component('sdVideo',
         reactToAngular1(

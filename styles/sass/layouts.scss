@@ -17,18 +17,6 @@ body {
     height:100%;
 }
 
-// Links
-// -----
-
-a, .link {
-    color: $linkColor;
-    text-decoration: none;
-}
-a:hover, .link:hover {
-    color: $linkColorHover;
-    text-decoration: underline;
-}
-
 @page {
     margin-left: 0;
     margin-right: 0;

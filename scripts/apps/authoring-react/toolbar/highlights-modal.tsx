@@ -76,6 +76,9 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="16">
                     <MultiSelect
+                        label=""
+                        inlineLabel
+                        labelHidden
                         onChange={(value) => {
                             this.setState({
                                 ...state,

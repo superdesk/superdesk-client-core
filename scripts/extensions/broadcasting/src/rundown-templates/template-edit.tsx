@@ -392,7 +392,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                             }}
                                             disabled={readOnly}
                                             error={validationErrors.title ?? undefined}
-                                            invalid={validationErrors.title != null}
                                         />
 
                                         <div>
@@ -406,6 +405,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                             <Spacer h gap="16" justifyContent="start" noWrap>
                                                 <div>
                                                     <Input
+                                                        label=""
+                                                        inlineLabel
+                                                        labelHidden
                                                         type="text"
                                                         value={headline_template.prefix ?? ''}
                                                         onChange={(val: string) => {
@@ -417,14 +419,15 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                 },
                                                             });
                                                         }}
-                                                        inlineLabel
-                                                        labelHidden
                                                         disabled={readOnly}
                                                     />
                                                 </div>
 
                                                 <div style={{width: 50}}>
                                                     <Input
+                                                        label=""
+                                                        inlineLabel
+                                                        labelHidden
                                                         type="text"
                                                         value={headline_template.separator}
                                                         onChange={(val) => {
@@ -436,8 +439,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                 },
                                                             });
                                                         }}
-                                                        inlineLabel
-                                                        labelHidden
                                                         disabled={readOnly}
                                                     />
                                                 </div>
