@@ -17,6 +17,9 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <TagInput
+                    label=""
+                    inlineLabel
+                    labelHidden
                     placeholder={gettext('Input tags here')}
                     onChange={this.props.onChange}
                     value={this.props.value}

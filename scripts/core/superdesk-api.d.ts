@@ -1480,6 +1480,11 @@ declare module 'superdesk-api' {
         selection_type?: any;
     }
 
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
+        preview?: boolean;
+    }
+
     export type IContentProfileEditorConfig = {
         [key: string]: {
             single?: boolean;
@@ -2297,6 +2302,11 @@ declare module 'superdesk-api' {
         key: string;
         currentStyle: Array<string>;
         selection: import('draft-js').SelectionState;
+    }
+
+    export interface ISetActiveCellReturnType {
+        type: 'EDITOR_SET_CELL';
+        payload: IActiveCell;
     }
 
     // DATA API

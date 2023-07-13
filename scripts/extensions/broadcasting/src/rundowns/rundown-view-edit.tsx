@@ -508,7 +508,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                         size="large"
                                         boxedStyle
                                         error={validationErrors.title ?? undefined}
-                                        invalid={validationErrors.title != null}
                                     />
 
                                     <SpacerBlock v gap="16" />

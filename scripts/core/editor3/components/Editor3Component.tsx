@@ -516,6 +516,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         // eslint-disable-next-line react/no-find-dom-node
         this.editorNode.current = this.editor === null ?
             undefined :
+            // eslint-disable-next-line react/no-find-dom-node
             ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
     }
 

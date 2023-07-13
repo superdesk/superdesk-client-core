@@ -16,6 +16,9 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <TimePicker
+                    label=""
+                    labelHidden
+                    inlineLabel
                     value={this.props.value ?? ''}
                     onChange={(val) => {
                         this.props.onChange(val === '' ? null : val);

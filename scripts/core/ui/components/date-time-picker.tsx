@@ -28,6 +28,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
         return (
             <Spacer h gap="8" noWrap alignItems="center" justifyContent="space-evenly" >
                 <DatePicker
+                    label=""
                     inlineLabel
                     labelHidden
                     value={value}
@@ -37,6 +38,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     dateFormat={appConfig.view.dateformat}
                 />
                 <TimePicker
+                    label=""
                     inlineLabel
                     labelHidden
                     value={getTimeISO(value)}

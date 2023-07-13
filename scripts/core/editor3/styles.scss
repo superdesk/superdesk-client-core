@@ -246,7 +246,7 @@ $editor-styleButton-size: 			3rem;
 		}
 
 		.multi-line-quote {
-			border-left: 5px solid #999;
+			border-left: 5px solid red;
 			font-style: italic;
 		}
 
@@ -959,6 +959,7 @@ $editor-styleButton-size: 			3rem;
 		display: none;
 	}
 }
+
 .table-controls.Editor3-controls{
 	position: sticky;
 	top: 0;
@@ -992,3 +993,16 @@ $editor-styleButton-size: 			3rem;
 		}
 	}
 }
+
+.draggable-block-handle-hide {
+	position: absolute;
+	left: -30px;
+	visibility: hidden;
+}
+
+.draggable-block-handle {
+	position: absolute;
+	left: -30px;
+	visibility: visible;
+}
+
