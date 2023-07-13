@@ -50,7 +50,7 @@ export function getMarkForUserModal(options: {
                 selectedUserId: markedForUserInitial,
             };
         }
-        
+
         render() {
             return (
                 <Modal
