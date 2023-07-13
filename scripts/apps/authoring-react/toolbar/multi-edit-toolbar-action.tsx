@@ -38,6 +38,9 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <MultiSelect
+                        label=""
+                        inlineLabel
+                        labelHidden
                         zIndex={1050}
                         optionLabel={(article) => getItemLabel(article)}
                         value={this.state.selectedArticles}

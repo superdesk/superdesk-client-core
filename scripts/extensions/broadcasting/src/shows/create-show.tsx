@@ -96,7 +96,6 @@ export class WithShow<T extends IShow | Partial<IShowBase>> extends React.PureCo
                                 type="text"
                                 value={show.title ?? ''}
                                 error={validationResults.title ?? undefined}
-                                invalid={validationResults.title != null}
                                 required={true}
                                 onChange={(val) => {
                                     this.updateShowProperty({title: val});
@@ -109,7 +108,6 @@ export class WithShow<T extends IShow | Partial<IShowBase>> extends React.PureCo
                                 type="text"
                                 value={show.description ?? ''}
                                 error={validationResults.description ?? undefined}
-                                invalid={validationResults.description != null}
                                 required={false}
                                 onChange={(val) => {
                                     this.updateShowProperty({description: val});
