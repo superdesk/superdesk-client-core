@@ -6,12 +6,14 @@ import {TableCell} from '../tables';
 import {TableBlockComponent as TableBlock} from '../tables/TableBlock';
 
 describe('editor3.component.table-block', () => {
+    beforeEach(window.module('superdesk.apps.spellcheck'));
+
     it('should render 2 rows and 6 cells', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = shallow(
             <TableBlock
                 block={block}
-                setActiveCell={() => { /* no-op */ }}
+                setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={false}
@@ -27,7 +29,7 @@ describe('editor3.component.table-block', () => {
         const wrapper = mount(
             <TableBlock
                 block={block}
-                setActiveCell={() => { /* no-op */ }}
+                setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={true}

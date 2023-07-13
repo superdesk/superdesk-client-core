@@ -188,7 +188,6 @@ export class EditorTest extends React.Component<IProps, IState> {
                                             info="This is some hint message"
                                             required={false}
                                             disabled={false}
-                                            invalid={false}
                                             onChange={(value) => ({})}
                                         />
                                     </Form.FormItem>
@@ -204,7 +203,6 @@ export class EditorTest extends React.Component<IProps, IState> {
                                             info="This is some hint message"
                                             required={false}
                                             disabled={false}
-                                            invalid={false}
                                             onChange={(value) => ({})}
                                         />
                                     </Form.FormItem>
@@ -220,7 +218,6 @@ export class EditorTest extends React.Component<IProps, IState> {
                                             info="This is some hint message"
                                             required={true}
                                             disabled={false}
-                                            invalid={false}
                                             onChange={(value) => ({})}
                                         />
                                     </Form.FormItem>

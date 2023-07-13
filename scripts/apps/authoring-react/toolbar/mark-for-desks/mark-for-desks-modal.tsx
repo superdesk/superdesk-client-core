@@ -39,6 +39,9 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="8">
                     <MultiSelect
+                        label=""
+                        inlineLabel
+                        labelHidden
                         onChange={(value) => {
                             this.setState({
                                 ...this.state,
