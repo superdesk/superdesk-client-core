@@ -2042,19 +2042,6 @@ declare module 'superdesk-api' {
         fileAccept?: string;
     }
 
-    export interface IModalProps {
-        'data-test-id'?: string;
-        size?: 'large' | 'extra-large' | 'fill' | 'full-screen';
-    }
-
-    export interface IPropsModalHeader {
-        onClose?(): void;
-    }
-
-    export interface IModalFooterProps {
-        flex?: boolean;
-    }
-
     export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -2751,10 +2738,6 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType<IModalProps>;
-            ModalHeader: React.ComponentType<IPropsModalHeader>;
-            ModalBody: React.ComponentType;
-            ModalFooter: React.ComponentType<IModalFooterProps>;
             Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
