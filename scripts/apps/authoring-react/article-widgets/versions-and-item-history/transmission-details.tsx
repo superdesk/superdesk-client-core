@@ -4,11 +4,8 @@ import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IPublishQueueItem} from 'superdesk-interfaces/PublishQueueItem';
 import {gettext} from 'core/utils';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {IconButton, Modal} from 'superdesk-ui-framework/react';
 import {showModal} from '@superdesk/common';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {TimeElem} from 'apps/search/components/TimeElem';
 import {Spacer} from 'core/ui/components/Spacer';
 
@@ -114,21 +111,24 @@ export class TransmissionDetails extends React.PureComponent<IProps, IState> {
 
                             <IconButton
                                 icon="eye-open"
+                                size="small"
                                 ariaValue={gettext('View item')}
                                 onClick={() => {
                                     showModal(({closeModal}) => (
-                                        <Modal size="large">
-                                            <ModalHeader onClose={closeModal}>
-                                                {gettext('Item sent to Subscriber')}
-                                            </ModalHeader>
-
-                                            <ModalBody>
+                                        <Modal
+                                            visible
+                                            zIndex={1050}
+                                            size="large"
+                                            position="center"
+                                            onHide={closeModal}
+                                            headerTemplate={gettext('Item sent to Subscriber')}
+                                        >
+                                            <div>
                                                 {tryShowingFormattedJson(queueItem.formatted_item)}
-                                            </ModalBody>
+                                            </div>
                                         </Modal>
                                     ));
                                 }}
-                                size="small"
                             />
                         </Spacer>
                     ))

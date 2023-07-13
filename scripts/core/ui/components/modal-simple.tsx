@@ -1,9 +1,5 @@
 import React from 'react';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 export interface IModalSimpleAction {
     label: string;
@@ -20,14 +16,16 @@ interface IProps {
 export class ModalSimple extends React.PureComponent<IProps> {
     render() {
         return (
-            <Modal>
-                <ModalHeader onClose={this.props.closeModal}>{this.props.title}</ModalHeader>
-
-                <ModalBody>{this.props.children}</ModalBody>
-
-                {
+            <Modal
+                visible
+                zIndex={1050}
+                size="medium"
+                position="top"
+                onHide={() => this.props.closeModal()}
+                headerTemplate={this.props.title}
+                footerTemplate={
                     this.props.footerButtons != null && (
-                        <ModalFooter>
+                        <ButtonGroup align="end">
                             {
                                 this.props.footerButtons.map(({label, onClick, primary}) => (
                                     <Button
@@ -38,9 +36,13 @@ export class ModalSimple extends React.PureComponent<IProps> {
                                     />
                                 ))
                             }
-                        </ModalFooter>
+                        </ButtonGroup>
                     )
                 }
+            >
+                <div>
+                    {this.props.children}
+                </div>
             </Modal>
         );
     }
