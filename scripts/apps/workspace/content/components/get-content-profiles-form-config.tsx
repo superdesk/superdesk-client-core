@@ -4,7 +4,6 @@ import {
     IFormGroup,
     IContentProfileEditorConfig,
     FORMATTING_OPTION,
-    PLAINTEXT_FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
     ICommonFieldConfig,
 } from 'superdesk-api';
@@ -17,81 +16,50 @@ const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
 });
 
-const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+export const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     abstract: true,
     body_html: true,
     footer: true,
     body_footer: true,
 });
 
-const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'justifyLeft',
-    'justifyCenter',
-    'justifyRight',
-    'justifyFull',
-    'outdent',
-    'indent',
-    'unordered list',
-    'ordered list',
-    'pre',
-    'quote',
-    'media',
-    'link',
-    'superscript',
-    'subscript',
-    'strikethrough',
-    'underline',
-    'italic',
-    'bold',
-    'table',
-    'multi-line quote',
-];
+export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
-const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> = [
-    'uppercase',
-    'lowercase',
-];
+export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FORMATTING_OPTION, string> => ({
+    'uppercase': gettext('uppercase'),
+    'lowercase': gettext('lowercase'),
+});
 
-export const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
-    ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'ordered list',
-    'unordered list',
-    'quote',
-    'media',
-    'link',
-    'embed',
-    'underline',
-    'italic',
-    'bold',
-    'table',
-    'formatting marks',
-    'remove format',
-    'remove all format',
-    'annotation',
-    'comments',
-    'suggestions',
-    'pre',
-    'superscript',
-    'subscript',
-    'strikethrough',
-    'tab',
-    'tab as spaces',
-    'undo',
-    'redo',
-    'multi-line quote',
-];
+export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+    return {
+        'h1': gettext('h1'),
+        'h2': gettext('h2'),
+        'h3': gettext('h3'),
+        'h4': gettext('h4'),
+        'h5': gettext('h5'),
+        'h6': gettext('h6'),
+        'justifyLeft': gettext('justifyLeft'),
+        'justifyCenter': gettext('justifyCenter'),
+        'justifyRight': gettext('justifyRight'),
+        'justifyFull': gettext('justifyFull'),
+        'outdent': gettext('outdent'),
+        'indent': gettext('indent'),
+        'unordered list': gettext('h1'),
+        'ordered list': gettext('unordered list'),
+        'pre': gettext('pre'),
+        'quote': gettext('quote'),
+        'media': gettext('media'),
+        'link': gettext('link'),
+        'superscript': gettext('superscript'),
+        'subscript': gettext('subscript'),
+        'strikethrough': gettext('strikethrough'),
+        'underline': gettext('underline'),
+        'italic': gettext('italic'),
+        'bold': gettext('bold'),
+        'table': gettext('table'),
+        'multi-line quote': gettext('multi-line quote'),
+    };
+};
 
 export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [
     // these aren't outputted to HTML at all
@@ -117,13 +85,16 @@ function hasFormattingOptions(fieldId: string, editor, customFields: Array<any>)
         || customFields.find(({_id}) => fieldId === _id)?.field_type === 'text';
 }
 
-function getEditor3FormattingOptions(fieldId, customFields: Array<any>) {
+function getEditor3FormattingOptions(
+    fieldId: string,
+    customFields: Array<any>,
+): Dictionary<FORMATTING_OPTION | PLAINTEXT_FORMATTING_OPTION, string> {
     const isCustomPlainTextField = customFields.find(({_id}) => fieldId === _id)?.field_type === 'text';
 
     if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField) {
-        return EDITOR3_RICH_FORMATTING_OPTIONS;
+        return getEditor3RichTextFormattingOptions();
     } else {
-        return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;
+        return getEditor3PlainTextFormattingOptions();
     }
 }
 
@@ -277,8 +248,8 @@ export function getContentProfileFormConfig(
                 field: 'formatOptions',
                 required: false,
                 component_parameters: {
-                    items: getEditor3FormattingOptions(field.id, customFields)
-                        .map((option) => ({id: option, label: option})),
+                    items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
+                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
                 },
             };
 
@@ -290,7 +261,8 @@ export function getContentProfileFormConfig(
                 field: 'formatOptions',
                 required: false,
                 component_parameters: {
-                    items: FORMATTING_OPTIONS.map((option) => ({id: option, label: option})),
+                    items: Object.entries(getEditor3RichTextFormattingOptions())
+                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
                 },
             };
 

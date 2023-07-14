@@ -18,9 +18,9 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DatePickerISO
+                    label=""
                     inlineLabel
                     labelHidden
-                    label={gettext('Date')}
                     value={this.props.value}
                     onChange={(dateString) => {
                         if (dateString === '') {

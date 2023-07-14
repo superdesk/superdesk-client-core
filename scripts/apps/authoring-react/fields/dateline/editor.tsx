@@ -74,8 +74,9 @@ export class Editor extends React.PureComponent<IProps> {
                         getId={(option) => option?.city_code}
                         getLabel={(item) => item?.city}
                     />
+
                     <DatePickerISO
-                        label={gettext('Date')}
+                        label=""
                         labelHidden
                         inlineLabel
                         value={this.props.value?.date}

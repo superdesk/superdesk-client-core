@@ -28,9 +28,9 @@ export class DateTimePicker extends React.PureComponent<IProps> {
         return (
             <Spacer h gap="8" noWrap alignItems="center" justifyContent="space-evenly" >
                 <DatePicker
+                    label=""
                     inlineLabel
                     labelHidden
-                    label={gettext('Date')}
                     value={value}
                     onChange={(val) => {
                         this.props.onChange(val);
@@ -38,9 +38,9 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     dateFormat={appConfig.view.dateformat}
                 />
                 <TimePicker
+                    label=""
                     inlineLabel
                     labelHidden
-                    label={gettext('Time')}
                     value={getTimeISO(value)}
                     onChange={(timeNext) => {
                         const [hoursStr, minutesStr] = timeNext.split(':');

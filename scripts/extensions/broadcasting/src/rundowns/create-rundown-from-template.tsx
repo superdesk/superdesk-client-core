@@ -179,7 +179,6 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             }}
                                             disabled={this.state.loading}
                                             error={validationResults.rundownTitle ?? undefined}
-                                            invalid={validationResults.rundownTitle != null}
                                             ref={refs.rundownTitle}
                                         />
                                     )

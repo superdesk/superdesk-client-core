@@ -41,8 +41,8 @@ export class Editor extends React.PureComponent<IProps> {
                                 <Input
                                     inlineLabel
                                     labelHidden
-                                    label={gettext('URL Input')}
                                     type="text"
+                                    label=""
                                     value={urlObj.url}
                                     onChange={(val) => {
                                         this.handleUrlUpdate(i, {...urlObj, url: val});

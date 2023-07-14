@@ -28,10 +28,10 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
 
         return (
             <SelectWithTemplate
-                label={gettext('Select')}
                 fullWidth
-                inlineLabel={hideLabel}
-                labelHidden={hideLabel}
+                label=""
+                inlineLabel
+                labelHidden
                 key={JSON.stringify(items)} // re-mount when items change
                 getItems={(searchString) => searchString === null
                     ? Promise.resolve(items)

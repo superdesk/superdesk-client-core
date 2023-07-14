@@ -13,9 +13,9 @@ export class Preview extends React.PureComponent<IProps> {
 
         return (
             <TagInput
+                label=""
                 inlineLabel
                 labelHidden
-                label={gettext('Tag input')}
                 disabled
                 value={this.props.value}
                 onChange={() => null}
