@@ -19,24 +19,10 @@ function installWebdriverDriver() {
         } catch (_) {
             // driver not installed, installing:
 
-            let version = null;
-
-            try {
-                version = execSync('chromium-browser --product-version').toString();
-            } catch (_) {
-                // Chromium not installed
-            }
+            const  version = execSync('$CHROME_BIN --product-version').toString();;
 
             if (version == null) {
-                try {
-                    version = execSync('google-chrome --product-version --product-version').toString();
-                } catch (_) {
-                    // Google Chrome not installed
-                }
-            }
-
-            if (version == null) {
-                return reject('To launch the test server either Chromium or Google Chrome has to be installed.');
+                return reject('To launch the test server a chrome based browser has to be installed and CHROME_BIN environment variable set.');
             }
 
             console.info('Installing webdriver...', version);
