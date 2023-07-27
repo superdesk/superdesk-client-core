@@ -35,7 +35,7 @@ interface IProps {
     handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
     onError: (error: IPanelError) => void;
-    onDataChange: (item: IArticle) => void;
+    onDataChange?: (item: IArticle) => void;
 }
 
 interface IState {
@@ -171,7 +171,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                                     const dest = this.state.selectedDestination;
 
                                                     if (dest.type === 'desk') {
-                                                        this.props.onDataChange({
+                                                        this.props.onDataChange?.({
                                                             ...this.props.item,
                                                             task: {
                                                                 ...(this.props.item.task ?? {}),
@@ -202,7 +202,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState(
                                         {publishingDateOptions: val},
-                                        () => this.props.onDataChange({
+                                        () => this.props.onDataChange?.({
                                             ...this.props.item,
                                             ...getPublishingDatePatch(
                                                 this.props.item,
@@ -219,7 +219,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState(
                                         {publishingTarget: val},
-                                        () => this.props.onDataChange({
+                                        () => this.props.onDataChange?.({
                                             ...this.props.item,
                                             ...getPublishingTargetPatch(this.props.item, this.state.publishingTarget),
                                         }),

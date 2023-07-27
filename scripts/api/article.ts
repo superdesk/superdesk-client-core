@@ -24,7 +24,7 @@ import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-type IArticleActionType = string | 'publish' | 'edit';
+export type IArticleActionType = 'correct' | 'publish' | 'edit' | 'kill' | 'unpublish' | 'takedown';
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
 const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !isLockedInCurrentSession(_article);
@@ -87,6 +87,29 @@ function doSpike(item: IArticle) {
         path: `/archive/spike/${item._id}`,
         payload: {
             state: 'spiked',
+        },
+        headers: {
+            'If-Match': item._etag,
+        },
+    }).then(() => {
+        const $location = ng.get('$location');
+
+        if ($location.search()._id === item._id) {
+            $location.search('_id', null);
+        }
+
+        if (applicationState.articleInEditMode === item._id) {
+            ng.get('authoringWorkspace').close();
+        }
+    });
+}
+
+function deschedule(item: IArticle): Promise<void> {
+    return httpRequestJsonLocal<IArticle>({
+        method: 'PATCH',
+        path: `/archive/${item._id}`,
+        payload: {
+            publish_schedule: null,
         },
         headers: {
             'If-Match': item._etag,
@@ -279,7 +302,7 @@ function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
     scope: IScope,
-    action: string | 'publish' | 'edit' = 'publish',
+    action: IArticleActionType = 'publish',
     onError?: (error: IPublishingError) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
@@ -467,6 +490,8 @@ interface IArticleApi {
     doSpike(item: IArticle): Promise<void>;
     doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void>;
 
+    deschedule(item: IArticle): Promise<void>;
+
     fetchItems(
         items: Array<IArticle>,
         selectedDestination: ISendToDestinationDesk,
@@ -500,7 +525,7 @@ interface IArticleApi {
     canPublishOnDesk(deskType: string): boolean;
     showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
-    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
+    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IArticleActionType): Promise<boolean>;
 
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
@@ -518,7 +543,7 @@ interface IArticleApi {
     publishItem(
         orig: IArticle,
         item: IArticle,
-        action?: string,
+        action?: IArticleActionType,
 
         // onError is optional in this function and in `publishItem_legacy` since when you're calling
         // it from React you want to pass only it to handle certain errors and apply them to the scope
@@ -562,4 +587,5 @@ export const article: IArticleApi = {
     publishItem_legacy,
     publishItem,
     edit,
+    deschedule,
 };
