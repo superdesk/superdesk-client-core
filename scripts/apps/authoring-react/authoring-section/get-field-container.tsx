@@ -45,7 +45,10 @@ export function getFieldContainer(
                             style={{minHeight: 'auto'}}
                         >
                             <Spacer h gap="8" noGrow>
-                                <span>{field.name}</span>
+                                <span>
+                                    {field.fieldConfig.required && <span style={{color: '#e41b21', fontSize: '1.2rem'}}>* </span>}
+                                    {field.name}
+                                </span>
                                 <span>{toggle}</span>
                             </Spacer>
                         </span>

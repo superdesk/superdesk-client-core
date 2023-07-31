@@ -53,7 +53,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
 
                 <Spacer v gap="8">
                     {
-                        config.increment_steps.map((value, i) => (
+                        (config.increment_steps ?? []).map((value, i) => (
                             <Spacer h gap="8" justifyContent="start" noGrow key={i}>
                                 <IconButton
                                     icon="remove-sign"
