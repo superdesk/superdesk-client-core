@@ -51,7 +51,7 @@ export class Editor extends React.PureComponent<IProps> {
                 <Spacer h gap="8" justifyContent="start" noGrow>
                     {checkbox}
 
-                    <Spacer h gap="8">
+                    <Spacer h gap="8" noGrow>
                         <DatePickerISO
                             labelHidden
                             inlineLabel
@@ -86,9 +86,6 @@ export class Editor extends React.PureComponent<IProps> {
 
                         <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
                             <TimePicker
-                                labelHidden
-                                inlineLabel
-                                label={gettext('Time')}
                                 required // because it's a part of the date-time
                                 value={hour}
                                 onChange={(value) => {

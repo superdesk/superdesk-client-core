@@ -39,10 +39,10 @@ export class Editor extends React.PureComponent<IProps> {
                         <Spacer h gap="16" justifyContent="space-between" noWrap key={i}>
                             <div style={{flexGrow: 1}}>
                                 <Input
-                                    type="text"
-                                    label=""
                                     inlineLabel
                                     labelHidden
+                                    type="text"
+                                    label=""
                                     value={urlObj.url}
                                     onChange={(val) => {
                                         this.handleUrlUpdate(i, {...urlObj, url: val});
