@@ -3,7 +3,7 @@ import * as React from 'react';
 import set from 'date-fns/set';
 import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
-import {DatePickerISO, TimePicker, Button, Switch, Container} from 'superdesk-ui-framework/react';
+import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import {IConfig, IValueOperational} from './interfaces';
 
