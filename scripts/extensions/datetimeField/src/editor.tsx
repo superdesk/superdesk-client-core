@@ -6,6 +6,7 @@ import addMinutes from 'date-fns/addMinutes';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import {IConfig, IValueOperational} from './interfaces';
+import {getConfigWithDefaults} from './config';
 
 const {gettext, gettextPlural} = superdesk.localization;
 const {getLocaleForDatePicker} = superdesk.ui.framework;
@@ -16,6 +17,8 @@ type IProps = IEditorComponentProps<IValueOperational, IConfig, never>;
 
 export class Editor extends React.PureComponent<IProps> {
     render() {
+        const config = getConfigWithDefaults(this.props.config);
+
         const checkbox = (
             <Switch
                 label={{content: ''}}
@@ -23,7 +26,7 @@ export class Editor extends React.PureComponent<IProps> {
                 onChange={(value) => {
                     if (value) {
                         this.props.onChange(
-                            dateToServerString(addMinutes(new Date(), this.props.config.initial_offset_minutes ?? 0)),
+                            dateToServerString(addMinutes(new Date(), config.initial_offset_minutes)),
                         );
                     } else {
                         this.props.onChange(null);
@@ -43,7 +46,7 @@ export class Editor extends React.PureComponent<IProps> {
         } else {
             const date = new Date(this.props.value);
             const hour = format(date, 'HH:mm'); // ISO8601
-            const steps = this.props.config?.increment_steps ?? [];
+            const steps = config.increment_steps;
 
             // Get the DatePicker locale using the language of this item
             const language = this.props.language ?? superdesk.instance.config.default_language;

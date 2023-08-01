@@ -14,9 +14,17 @@ export const defaultConfig: IConfig = {
     increment_steps: [],
 };
 
+
+export function getConfigWithDefaults(config: IConfig | null): IConfig {
+    return {
+        ...defaultConfig,
+        ...(config ?? {}),
+    };
+}
+
 export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
-        const config: IConfig = this.props.config ?? defaultConfig;
+        const config = getConfigWithDefaults(this.props.config)
         const {onChange} = this.props;
 
         return (
@@ -53,7 +61,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
 
                 <Spacer v gap="8">
                     {
-                        (config.increment_steps ?? []).map((value, i) => (
+                        config.increment_steps.map((value, i) => (
                             <Spacer h gap="8" justifyContent="start" noGrow key={i}>
                                 <IconButton
                                     icon="remove-sign"
