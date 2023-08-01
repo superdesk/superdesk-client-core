@@ -216,6 +216,22 @@ function getInlineToolbarActions(
                 style="filled"
                 type="primary"
                 onClick={() => {
+                    sdApi.article.edit({_id: item._id, _type: item._type, state: item.state}, 'correct');
+                }}
+            />
+        ),
+        availableOffline: false,
+    });
+
+    const sendCorrectionAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text={gettext('SEND CORRECTION')}
+                style="filled"
+                type="primary"
+                onClick={() => {
                     handleUnsavedChanges()
                         .then(() => sdApi.article.publishItem(item, getLatestItem(), 'correct'))
                         .then(() => initiateClosing());
@@ -223,25 +239,24 @@ function getInlineToolbarActions(
             />
         ),
         availableOffline: false,
-    });
+    };
 
-    const killAction: ITopBarWidget<IArticle> = {
+    const killAction = (text: string = gettext('SEND KILL'), tooltip?: string): ITopBarWidget<IArticle> => ({
         group: 'end',
         priority: 0.1,
-        component: () => (
+        component: ({entity}) => (
             <Button
-                text={gettext('SEND KILL')}
+                text={text}
+                tooltip={tooltip}
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    handleUnsavedChanges()
-                        .then(() => sdApi.article.publishItem(item, getLatestItem(), 'kill'))
-                        .then(() => initiateClosing());
+                    sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state}, 'kill');
                 }}
             />
         ),
         availableOffline: false,
-    };
+    });
 
     const takedownAction: ITopBarWidget<IArticle> = {
         group: 'end',
@@ -291,6 +306,23 @@ function getInlineToolbarActions(
                 type="primary"
                 onClick={() => {
                     initiateClosing();
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const updateAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text="U"
+                tooltip={gettext('UPDATE')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    sdApi.article.rewrite(item);
                 }}
             />
         ),
@@ -557,51 +589,15 @@ function getInlineToolbarActions(
         };
 
     case ITEM_STATE.PUBLISHED:
-        return {
-            readOnly: false,
-            actions: [killAction, correctAction()],
-        };
     case ITEM_STATE.CORRECTED:
         return {
             readOnly: false,
             actions: [
-                {
-                    group: 'end',
-                    priority: 0.1,
-                    component: () => (
-                        <Button
-                            text="U"
-                            tooltip={gettext('UPDATE')}
-                            style="filled"
-                            type="primary"
-                            onClick={() => {
-                                sdApi.article.rewrite(item);
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                },
+                updateAction,
                 correctAction('C', gettext('CORRECT')),
                 takedownAction,
                 unpublishAction,
-                {
-                    group: 'end',
-                    priority: 0.1,
-                    component: () => (
-                        <Button
-                            text="K"
-                            tooltip={gettext('KILL')}
-                            style="filled"
-                            type="primary"
-                            onClick={() => {
-                                handleUnsavedChanges()
-                                    .then(() => sdApi.article.publishItem(item, getLatestItem(), 'kill'))
-                                    .then(() => initiateClosing());
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                },
+                killAction(gettext('K'), gettext('Kill')),
                 closeIconButton,
             ],
         };
@@ -609,7 +605,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.BEING_CORRECTED:
         return {
             readOnly: false,
-            actions: [closeAuthoringAction],
+            actions: [sendCorrectionAction, closeAuthoringAction],
         };
 
     case ITEM_STATE.CORRECTION:
@@ -641,26 +637,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.KILLED:
         return {
             readOnly: false,
-            actions: [
-                {
-                    group: 'end',
-                    priority: 0.1,
-                    component: () => (
-                        <Button
-                            text={gettext('PUBLISH')}
-                            style="filled"
-                            type="primary"
-                            onClick={() => {
-                                handleUnsavedChanges()
-                                    .then(() => sdApi.article.publishItem(item, getLatestItem(), 'publish'))
-                                    .then(() => initiateClosing());
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                },
-                closeIconButton,
-            ],
+            actions: [closeIconButton],
         };
 
     case ITEM_STATE.RECALLED:
