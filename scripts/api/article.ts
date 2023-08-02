@@ -15,7 +15,7 @@ import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/sub
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {flatMap, trim} from 'lodash';
+import {flatMap, keys, pick, trim, union} from 'lodash';
 import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
@@ -23,6 +23,8 @@ import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
+import _ from 'lodash';
 
 export type IArticleActionType = 'correct' | 'publish' | 'edit' | 'kill' | 'unpublish' | 'takedown';
 const isLocked = (_article: IArticle) => _article.lock_session != null;
@@ -421,6 +423,23 @@ function edit(
     }
 }
 
+function getItemPatchWithKillTemplate(item: IArticle): Promise<IArticle> {
+    const fields = union(keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated']);
+    const itemForTemplate = {template_name: 'kill', item: pick(item, fields)};
+
+    return httpRequestJsonLocal({
+        method: 'POST',
+        path: '/content_templates_apply',
+        payload: itemForTemplate,
+    }).then((result: IArticle) => {
+        return {
+            ...result,
+            operation: 'kill',
+            state: ITEM_STATE.PUBLISHED,
+        };
+    });
+}
+
 /**
  * Gets opened items from your workspace.
  */
@@ -527,6 +546,8 @@ interface IArticleApi {
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IArticleActionType): Promise<boolean>;
 
+    getItemPatchWithKillTemplate(item: IArticle): Promise<IArticle>;
+
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
         item: {
@@ -588,4 +609,5 @@ export const article: IArticleApi = {
     publishItem,
     edit,
     deschedule,
+    getItemPatchWithKillTemplate,
 };

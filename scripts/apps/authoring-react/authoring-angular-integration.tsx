@@ -3,7 +3,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, Label, NavButton, Popover} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, Label, Modal, NavButton, Popover, Spacer} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -13,14 +13,14 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import React from 'react';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
-import {authoringStorageIArticle} from './data-layer';
+import {authoringStorageIArticle, authoringStorageIArticleKill} from './data-layer';
 import {
     IStateInteractiveActionsPanelHOC,
     IActionsInteractiveActionsPanelHOC,
@@ -28,6 +28,7 @@ import {
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
+import {showModal} from '@superdesk/common';
 
 type IAction = 'edit' | string;
 
@@ -54,6 +55,7 @@ function getInlineToolbarActions(
         keepChangesAndClose,
         stealLock,
         getLatestItem,
+        authoringStorage,
     } = options;
     const itemState: ITEM_STATE = item.state;
 
@@ -206,13 +208,13 @@ function getInlineToolbarActions(
         return actions;
     };
 
-    const correctAction = (text: string = gettext('SEND CORRECTION'), tooltip?: string): ITopBarWidget<IArticle> => ({
+    const correctAction: ITopBarWidget<IArticle> = {
         group: 'end',
         priority: 0.1,
         component: () => (
             <Button
-                tooltip={tooltip}
-                text={text}
+                tooltip={gettext('CORRECT')}
+                text={gettext('C')}
                 style="filled"
                 type="primary"
                 onClick={() => {
@@ -221,20 +223,20 @@ function getInlineToolbarActions(
             />
         ),
         availableOffline: false,
-    });
+    };
 
     const sendCorrectionAction: ITopBarWidget<IArticle> = {
         group: 'end',
         priority: 0.1,
         component: () => (
             <Button
-                text={gettext('SEND CORRECTION')}
+                text={gettext('Send Correction')}
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    handleUnsavedChanges()
-                        .then(() => sdApi.article.publishItem(item, getLatestItem(), 'correct'))
-                        .then(() => initiateClosing());
+                    sdApi.article.publishItem(item, getLatestItem(), 'correct').then(() => {
+                        initiateClosing();
+                    });
                 }}
             />
         ),
@@ -244,14 +246,14 @@ function getInlineToolbarActions(
     const killAction = (text: string = gettext('SEND KILL'), tooltip?: string): ITopBarWidget<IArticle> => ({
         group: 'end',
         priority: 0.1,
-        component: ({entity}) => (
+        component: () => (
             <Button
                 text={text}
                 tooltip={tooltip}
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state}, 'kill');
+                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
                 }}
             />
         ),
@@ -287,23 +289,53 @@ function getInlineToolbarActions(
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    handleUnsavedChanges()
-                        .then(() => sdApi.article.publishItem(item, getLatestItem(), 'unpublish'))
-                        .then(() => initiateClosing());
+                    showModal(({closeModal}) => (
+                        <Modal
+                            visible
+                            size="small"
+                            position="center"
+                            onHide={closeModal}
+                            zIndex={2001}
+                            headerTemplate={gettext('Confirm Unpublishing')}
+                            footerTemplate={(
+                                <Spacer h gap="4" justifyContent="end" noGrow>
+                                    <Button
+                                        onClick={() => {
+                                            closeModal();
+                                        }}
+                                        text={gettext('Cancel')}
+                                        style="filled"
+                                        type="default"
+                                    />
+                                    <Button
+                                        onClick={() => {
+                                            closeModal();
+                                            sdApi.article.publishItem(item, getLatestItem(), 'unpublish');
+                                        }}
+                                        text={gettext('Confirm')}
+                                        style="filled"
+                                        type="primary"
+                                    />
+                                </Spacer>
+                            )}
+                        >
+                            Are you sure you want to unpublish item &quot;{getItemLabel(item)}&quot;?
+                        </Modal>
+                    ));
                 }}
             />
         ),
         availableOffline: false,
     };
 
-    const closeAuthoringAction: ITopBarWidget<IArticle> = {
+    const cancelAuthoringAction: ITopBarWidget<IArticle> = {
         group: 'end',
         priority: 0.1,
         component: () => (
             <Button
-                text={gettext('CANCEL CORRECTION')}
+                text={gettext('CANCEL')}
                 style="filled"
-                type="primary"
+                type="default"
                 onClick={() => {
                     initiateClosing();
                 }}
@@ -328,6 +360,44 @@ function getInlineToolbarActions(
         ),
         availableOffline: false,
     };
+
+    const sendKillAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: ({entity}) => {
+            return (
+                <Button
+                    text={gettext('Send kill')}
+                    style="filled"
+                    type="primary"
+                    onClick={() => {
+                        sdApi.article.get(item._id).then((originalArticle) => {
+                            handleUnsavedChanges()
+                                .then(() => {
+                                    sdApi.article.publishItem(item, {...entity, _etag: originalArticle._etag}, 'kill');
+                                })
+                                .then(() => initiateClosing());
+                        });
+                    }}
+                />
+            );
+        },
+        availableOffline: false,
+    };
+
+    if (action === 'kill') {
+        return {
+            readOnly: false,
+            actions: [sendKillAction, closeIconButton, minimizeButton],
+        };
+    }
+
+    if (action === 'correct') {
+        return {
+            readOnly: false,
+            actions: [sendCorrectionAction, cancelAuthoringAction, minimizeButton],
+        };
+    }
 
     switch (itemState) {
     case ITEM_STATE.DRAFT:
@@ -571,30 +641,33 @@ function getInlineToolbarActions(
     case ITEM_STATE.SCHEDULED:
         return {
             readOnly: false,
-            actions: [{
-                group: 'end',
-                priority: 0.1,
-                component: () => (
-                    <Button
-                        text={gettext('DESCHEDULE')}
-                        style="filled"
-                        type="primary"
-                        onClick={() => {
-                            sdApi.article.deschedule(item);
-                        }}
-                    />
-                ),
-                availableOffline: false,
-            }],
+            actions: [
+                {
+                    group: 'end',
+                    priority: 0.1,
+                    component: () => (
+                        <Button
+                            text={gettext('Deschedule')}
+                            style="filled"
+                            type="primary"
+                            onClick={() => {
+                                sdApi.article.deschedule(item);
+                            }}
+                        />
+                    ),
+                    availableOffline: false,
+                },
+                closeIconButton,
+            ],
         };
 
     case ITEM_STATE.PUBLISHED:
     case ITEM_STATE.CORRECTED:
         return {
-            readOnly: false,
+            readOnly: true,
             actions: [
                 updateAction,
-                correctAction('C', gettext('CORRECT')),
+                correctAction,
                 takedownAction,
                 unpublishAction,
                 killAction(gettext('K'), gettext('Kill')),
@@ -605,7 +678,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.BEING_CORRECTED:
         return {
             readOnly: false,
-            actions: [sendCorrectionAction, closeAuthoringAction],
+            actions: [sendCorrectionAction, cancelAuthoringAction],
         };
 
     case ITEM_STATE.CORRECTION:
@@ -630,13 +703,13 @@ function getInlineToolbarActions(
                     ),
                     availableOffline: false,
                 },
-                closeAuthoringAction,
+                cancelAuthoringAction,
             ],
         };
 
     case ITEM_STATE.KILLED:
         return {
-            readOnly: false,
+            readOnly: true,
             actions: [closeIconButton],
         };
 
@@ -729,7 +802,11 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
-                    authoringStorage={authoringStorageIArticle}
+                    authoringStorage={
+                        this.props.action === 'kill'
+                            ? authoringStorageIArticleKill
+                            : authoringStorageIArticle
+                    }
                 />
             </div>
         );

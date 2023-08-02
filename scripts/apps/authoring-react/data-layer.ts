@@ -7,7 +7,7 @@ import {
     ICommonFieldConfig,
     IAuthoringStorage,
     IFieldsAdapter,
-    IEditor3Config,
+    IAuthoringAutoSave,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -17,7 +17,7 @@ import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {AutoSaveHttp} from './auto-save-http';
-import {isObject, omit} from 'lodash';
+import {isObject, noop, omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
@@ -360,4 +360,48 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
         );
     },
     getUserPreferences: () => ng.get('preferencesService').get(),
+};
+
+class AutoSaveKill implements IAuthoringAutoSave<IArticle> {
+    get() {
+        return Promise.resolve({} as IArticle);
+    }
+
+    delete() {
+        return Promise.resolve();
+    }
+
+    schedule(
+        getItem: () => IArticle,
+        callback: (autosaved: IArticle) => void,
+    ) {
+        callback(getItem());
+    }
+
+    cancel() {
+        // noop
+    }
+
+    flush(): Promise<void> {
+        return Promise.resolve();
+    }
+}
+
+export const authoringStorageIArticleKill: IAuthoringStorage<IArticle> = {
+    ...authoringStorageIArticle,
+    autosave: new AutoSaveKill(),
+    getEntity: (id) => {
+        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
+            return sdApi.article.getItemPatchWithKillTemplate(saved).then((updated) => {
+                return {
+                    saved: {
+                        ...updated,
+                        original_creator: saved.original_creator,
+                    },
+                    autosaved: autosaved,
+                };
+            });
+        });
+    },
+    saveEntity: () => new Promise(noop),
 };

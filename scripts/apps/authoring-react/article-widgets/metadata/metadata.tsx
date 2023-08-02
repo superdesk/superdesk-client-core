@@ -91,7 +91,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             rewritten_by,
         } = article;
 
-        const {onArticleChange} = this.props;
+        const {onItemChange} = this.props;
 
         const allVocabularies = sdApi.vocabularies.getAll();
 
@@ -112,7 +112,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             <Switch
                                 label={{content: ''}} // TODO: Implement accessibility
                                 onChange={() => {
-                                    onArticleChange({
+                                    onItemChange({
                                         ...article,
                                         flags: {
                                             ...flags,
@@ -133,7 +133,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             <Switch
                                 label={{content: ''}} // TODO: Implement accessibility
                                 onChange={() => {
-                                    onArticleChange({
+                                    onItemChange({
                                         ...article,
                                         flags: {...flags, marked_for_legal: !flags.marked_for_legal},
                                     });
@@ -150,7 +150,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             type="text"
                             value={usageterms}
                             onChange={(value) => {
-                                onArticleChange({
+                                onItemChange({
                                     ...article,
                                     usageterms: value,
                                 });
@@ -164,7 +164,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             label={gettext('Language').toUpperCase()}
                             value={language}
                             onChange={(val) => {
-                                onArticleChange({
+                                onItemChange({
                                     ...article,
                                     language: val,
                                 });
@@ -429,7 +429,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             type="text"
                             value={unique_name}
                             onChange={(value) => {
-                                onArticleChange({
+                                onItemChange({
                                     ...article,
                                     unique_name: value,
                                 });

@@ -149,7 +149,7 @@ declare module 'superdesk-api' {
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
-        onArticleChange(item: T): void;
+        onItemChange(item: T): void;
         save(): Promise<T>;
         initiateClosing(): void;
         keepChangesAndClose(): void;
@@ -614,7 +614,7 @@ declare module 'superdesk-api' {
             fieldsAdapter: IFieldsAdapter<IArticle>;
             storageAdapter: IStorageAdapter<IArticle>;
 
-            onArticleChange?(article: IArticle): void;
+            onItemChange?(article: IArticle): void;
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
