@@ -47,7 +47,7 @@ export function getFieldContainer(
                             <Spacer h gap="8" noGrow>
                                 <span>
                                     {field.fieldConfig.required && (
-                                        <span style={{color: '#e41b21', fontSize: '1.2rem'}}>* </span>
+                                        <span className="sd-font-size--x-small" style={{color: 'var(--sd-colour-alert)'}}>* </span>
                                     )}
                                     {field.name}
                                 </span>
