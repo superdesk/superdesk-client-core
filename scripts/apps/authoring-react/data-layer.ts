@@ -142,9 +142,9 @@ export function getArticleContentProfile<T>(
                 }
             })();
 
-            if (editorItem.section === 'header' && fieldV2.id != 'ednote') {
+            if (editorItem.section === 'header') {
                 headerFields = headerFields.set(fieldV2.id, fieldV2);
-            } else if (editorItem.section === 'content' || fieldV2.id == 'ednote') {
+            } else if (editorItem.section === 'content') {
                 contentFields = contentFields.set(fieldV2.id, fieldV2);
             } else {
                 throw new Error('invalid section');
