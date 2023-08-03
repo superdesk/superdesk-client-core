@@ -14,7 +14,6 @@ export const defaultConfig: IConfig = {
     increment_steps: [],
 };
 
-
 export function getConfigWithDefaults(config: IConfig | null): IConfig {
     return {
         ...defaultConfig,
@@ -24,7 +23,7 @@ export function getConfigWithDefaults(config: IConfig | null): IConfig {
 
 export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
-        const config = getConfigWithDefaults(this.props.config)
+        const config = getConfigWithDefaults(this.props.config);
         const {onChange} = this.props;
 
         return (
