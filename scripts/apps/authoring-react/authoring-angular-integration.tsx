@@ -20,7 +20,11 @@ import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
-import {authoringStorageIArticle, authoringStorageIArticleKill} from './data-layer';
+import {
+    authoringStorageIArticle,
+    authoringStorageIArticleCorrect,
+    getAuthoringStorageIArticleKillOrTakedown,
+} from './data-layer';
 import {
     IStateInteractiveActionsPanelHOC,
     IActionsInteractiveActionsPanelHOC,
@@ -29,13 +33,7 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@superdesk/common';
-
-type IAction = 'edit' | string;
-
-export interface IProps {
-    action?: IAction;
-    itemId: IArticle['_id'];
-}
+import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -44,7 +42,7 @@ function onClose() {
 
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
-    action?: IAction,
+    action?: IArticleAction,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -55,7 +53,6 @@ function getInlineToolbarActions(
         keepChangesAndClose,
         stealLock,
         getLatestItem,
-        authoringStorage,
     } = options;
     const itemState: ITEM_STATE = item.state;
 
@@ -218,7 +215,11 @@ function getInlineToolbarActions(
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    sdApi.article.edit({_id: item._id, _type: item._type, state: item.state}, 'correct');
+                    if (appConfig?.corrections_workflow) {
+                        ng.get('authoring').correction(item);
+                    } else {
+                        ng.get('authoringWorkspace').authoringOpen(item._id, 'correct');
+                    }
                 }}
             />
         ),
@@ -243,13 +244,13 @@ function getInlineToolbarActions(
         availableOffline: false,
     };
 
-    const killAction = (text: string = gettext('SEND KILL'), tooltip?: string): ITopBarWidget<IArticle> => ({
+    const killAction: ITopBarWidget<IArticle> = {
         group: 'end',
         priority: 0.1,
         component: () => (
             <Button
-                text={text}
-                tooltip={tooltip}
+                text={gettext('K')}
+                tooltip={gettext('Kill')}
                 style="filled"
                 type="primary"
                 onClick={() => {
@@ -258,7 +259,7 @@ function getInlineToolbarActions(
             />
         ),
         availableOffline: false,
-    });
+    };
 
     const takedownAction: ITopBarWidget<IArticle> = {
         group: 'end',
@@ -270,9 +271,7 @@ function getInlineToolbarActions(
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    handleUnsavedChanges()
-                        .then(() => sdApi.article.publishItem(item, getLatestItem(), 'takedown'))
-                        .then(() => initiateClosing());
+                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
                 }}
             />
         ),
@@ -670,7 +669,7 @@ function getInlineToolbarActions(
                 correctAction,
                 takedownAction,
                 unpublishAction,
-                killAction(gettext('K'), gettext('Kill')),
+                killAction,
                 closeIconButton,
             ],
         };
@@ -678,7 +677,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.BEING_CORRECTED:
         return {
             readOnly: false,
-            actions: [sendCorrectionAction, cancelAuthoringAction],
+            actions: [closeIconButton, saveButton],
         };
 
     case ITEM_STATE.CORRECTION:
@@ -792,6 +791,11 @@ export function getAuthoringPrimaryToolbarWidgets(
         .concat([getPublishToolbarWidget(panelState, panelActions)]);
 }
 
+export interface IProps {
+    action?: IArticleAction;
+    itemId: IArticle['_id'];
+}
+
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
@@ -802,11 +806,15 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
-                    authoringStorage={
-                        this.props.action === 'kill'
-                            ? authoringStorageIArticleKill
-                            : authoringStorageIArticle
-                    }
+                    authoringStorage={(() => {
+                        if (this.props.action === 'kill' || this.props.action === 'takedown') {
+                            return getAuthoringStorageIArticleKillOrTakedown(this.props.action as IArticleAction);
+                        } else if (this.props.action === 'correct') {
+                            return authoringStorageIArticleCorrect;
+                        } else {
+                            return authoringStorageIArticle;
+                        }
+                    })()}
                 />
             </div>
         );

@@ -14,6 +14,7 @@ import {
     IExposedFromAuthoring,
     IKeyBindings,
     IAuthoringOptions,
+    IAuthoringSectionTheme,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -23,7 +24,7 @@ import {
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
-import {AuthoringSection, IAuthoringSectionTheme} from './authoring-section/authoring-section';
+import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';

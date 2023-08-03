@@ -24,6 +24,8 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
+import moment from 'moment';
+import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -140,9 +142,9 @@ export function getArticleContentProfile<T>(
                 }
             })();
 
-            if (editorItem.section === 'header') {
+            if (editorItem.section === 'header' && fieldV2.id != 'ednote') {
                 headerFields = headerFields.set(fieldV2.id, fieldV2);
-            } else if (editorItem.section === 'content') {
+            } else if (editorItem.section === 'content' || fieldV2.id == 'ednote') {
                 contentFields = contentFields.set(fieldV2.id, fieldV2);
             } else {
                 throw new Error('invalid section');
@@ -387,12 +389,12 @@ class AutoSaveKill implements IAuthoringAutoSave<IArticle> {
     }
 }
 
-export const authoringStorageIArticleKill: IAuthoringStorage<IArticle> = {
+export const getAuthoringStorageIArticleKillOrTakedown = (action: IArticleAction): IAuthoringStorage<IArticle> => ({
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {
         return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
-            return sdApi.article.getItemPatchWithKillTemplate(saved).then((updated) => {
+            return sdApi.article.getItemPatchWithKillOrTakedownTemplate(saved, action).then((updated) => {
                 return {
                     saved: {
                         ...updated,
@@ -401,6 +403,45 @@ export const authoringStorageIArticleKill: IAuthoringStorage<IArticle> = {
                     autosaved: autosaved,
                 };
             });
+        });
+    },
+    saveEntity: () => new Promise(noop),
+});
+
+export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
+    ...authoringStorageIArticle,
+    autosave: new AutoSaveKill(),
+    getEntity: (id) => {
+        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
+            const newItem = {...saved};
+
+            newItem.flags.marked_for_sms = false;
+            newItem.sms_message = '';
+
+            const {override_ednote_for_corrections, override_ednote_template} = appConfig;
+            const date = moment(newItem.versioncreated)
+                .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+
+            if (override_ednote_for_corrections && override_ednote_template == null) {
+                const lineBreak = '\r\n\r\n';
+                const slugline = newItem.slugline ? '"' + newItem.slugline + '"' : '';
+
+                newItem.ednote = gettext(
+                    'In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected repeat.',
+                    {slugline, date, lineBreak},
+                );
+            } else if (override_ednote_for_corrections) {
+                newItem.ednote = override_ednote_template
+                    .replace('{date}', date)
+                    .replace('{slugline}', newItem.slugline ?? '');
+            }
+
+            delete newItem.fields_meta['ednote'];
+
+            return {
+                saved: newItem,
+                autosaved: newItem,
+            };
         });
     },
     saveEntity: () => new Promise(noop),

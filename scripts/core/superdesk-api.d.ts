@@ -3317,6 +3317,22 @@ declare module 'superdesk-api' {
         value2: IValue;
     }
 
+    export interface IAuthoringSectionTheme {
+        backgroundColor: string;
+
+        // used in placed where we need to differetiate some ui components from background for example toolbars
+        backgroundColorSecondary: string;
+
+        textColor: string;
+        fontFamily: string;
+
+        fieldTheme: {
+            [fieldId: string]: {
+                fontSize: string | undefined;
+            };
+        };
+    }
+
     export interface ICommonFieldConfig {
         readOnly?: boolean;
         required?: boolean;

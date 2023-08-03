@@ -423,9 +423,11 @@ function edit(
     }
 }
 
-function getItemPatchWithKillTemplate(item: IArticle): Promise<IArticle> {
-    const fields = union(keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated']);
-    const itemForTemplate = {template_name: 'kill', item: pick(item, fields)};
+function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticleAction): Promise<IArticle> {
+    const itemForTemplate = {
+        template_name: action,
+        item: pick(item, union(keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task'])),
+    };
 
     return httpRequestJsonLocal({
         method: 'POST',
@@ -434,7 +436,7 @@ function getItemPatchWithKillTemplate(item: IArticle): Promise<IArticle> {
     }).then((result: IArticle) => {
         return {
             ...result,
-            operation: 'kill',
+            ...(action === 'kill' && {operation: 'kill'}),
             state: ITEM_STATE.PUBLISHED,
         };
     });
@@ -546,7 +548,7 @@ interface IArticleApi {
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IArticleActionType): Promise<boolean>;
 
-    getItemPatchWithKillTemplate(item: IArticle): Promise<IArticle>;
+    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticleAction): Promise<IArticle>;
 
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
@@ -609,5 +611,5 @@ export const article: IArticleApi = {
     publishItem,
     edit,
     deschedule,
-    getItemPatchWithKillTemplate,
+    getItemPatchWithKillOrTakedownTemplate,
 };
