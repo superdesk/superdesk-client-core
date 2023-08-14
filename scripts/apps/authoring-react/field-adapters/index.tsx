@@ -147,7 +147,7 @@ export function storeEditor3ValueBase(
     article: IArticle,
     value: any, // IEditor3ValueStorage
     config: IEditor3Config,
-    planeTextInMultiLineMode?: boolean,
+    plainTextInMultiLineMode?: boolean,
 )
 : {article: IArticle; stringValue: string; annotations: Array<any>} {
     const rawContentState = value.rawContentState;
@@ -156,7 +156,7 @@ export function storeEditor3ValueBase(
         rawContentState,
         config,
         article.language,
-        planeTextInMultiLineMode,
+        plainTextInMultiLineMode,
     );
 
     const articleUpdated: IArticle = {

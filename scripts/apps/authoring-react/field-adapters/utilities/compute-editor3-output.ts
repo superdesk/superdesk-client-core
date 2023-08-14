@@ -8,7 +8,9 @@ export function computeEditor3Output(
     rawContentState: RawDraftContentState,
     config: IEditor3Config,
     language: string,
-    planeTextInMultiLineMode?: boolean,
+
+    // return multi line text for fields with '\n'
+    plainTextInMultiLineMode?: boolean,
 ): IEditor3Output {
     const contentState: ContentState = createEditorStore(
         {
@@ -21,7 +23,7 @@ export function computeEditor3Output(
     ).getState().editorState.getCurrentContent();
 
     const generatedValue = (() => {
-        if (config.singleLine || planeTextInMultiLineMode) {
+        if (config.singleLine || plainTextInMultiLineMode) {
             return contentState.getPlainText();
         } else {
             return editor3StateToHtml(contentState);
