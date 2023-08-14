@@ -3,7 +3,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, Label, NavButton, Popover} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, IconButton, Label, Modal, NavButton, Popover, Spacer} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -13,14 +13,18 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import React from 'react';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
 import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
-import {authoringStorageIArticle} from './data-layer';
+import {
+    authoringStorageIArticle,
+    authoringStorageIArticleCorrect,
+    getAuthoringStorageIArticleKillOrTakedown,
+} from './data-layer';
 import {
     IStateInteractiveActionsPanelHOC,
     IActionsInteractiveActionsPanelHOC,
@@ -28,13 +32,8 @@ import {
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
-
-type IAction = 'edit' | string;
-
-export interface IProps {
-    action?: IAction;
-    itemId: IArticle['_id'];
-}
+import {showModal} from '@superdesk/common';
+import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -43,7 +42,7 @@ function onClose() {
 
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
-    action?: IAction,
+    action?: IArticleAction,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -53,6 +52,7 @@ function getInlineToolbarActions(
         initiateClosing,
         keepChangesAndClose,
         stealLock,
+        getLatestItem,
     } = options;
     const itemState: ITEM_STATE = item.state;
 
@@ -90,6 +90,27 @@ function getInlineToolbarActions(
                 onClick={() => {
                     initiateClosing();
                 }}
+            />
+        ),
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => {
+                initiateClosing();
+            },
+        },
+    };
+
+    const closeIconButton: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <IconButton
+                ariaValue="Close"
+                icon="close-small"
+                onClick={() => {
+                    initiateClosing();
+                }}
+                style="outline"
             />
         ),
         availableOffline: true,
@@ -184,6 +205,199 @@ function getInlineToolbarActions(
         return actions;
     };
 
+    const correctAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                tooltip={gettext('CORRECT')}
+                text={gettext('C')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    if (appConfig?.corrections_workflow) {
+                        ng.get('authoring').correction(item);
+                    } else {
+                        ng.get('authoringWorkspace').authoringOpen(item._id, 'correct');
+                    }
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const sendCorrectionAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text={gettext('Send Correction')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    sdApi.article.publishItem(item, getLatestItem(), 'correct').then(() => {
+                        initiateClosing();
+                    });
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const killAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text={gettext('K')}
+                tooltip={gettext('Kill')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const takedownAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text="T"
+                tooltip={gettext('Takedown')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const unpublishAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                tooltip={gettext('UNPUBLISH')}
+                text={'UP'}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    showModal(({closeModal}) => (
+                        <Modal
+                            visible
+                            size="small"
+                            position="center"
+                            onHide={closeModal}
+                            zIndex={2001}
+                            headerTemplate={gettext('Confirm Unpublishing')}
+                            footerTemplate={(
+                                <Spacer h gap="4" justifyContent="end" noGrow>
+                                    <Button
+                                        onClick={() => {
+                                            closeModal();
+                                        }}
+                                        text={gettext('Cancel')}
+                                        style="filled"
+                                        type="default"
+                                    />
+                                    <Button
+                                        onClick={() => {
+                                            closeModal();
+                                            sdApi.article.publishItem(item, getLatestItem(), 'unpublish');
+                                        }}
+                                        text={gettext('Confirm')}
+                                        style="filled"
+                                        type="primary"
+                                    />
+                                </Spacer>
+                            )}
+                        >
+                            Are you sure you want to unpublish item &quot;{getItemLabel(item)}&quot;?
+                        </Modal>
+                    ));
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const cancelAuthoringAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text={gettext('CANCEL')}
+                style="filled"
+                type="default"
+                onClick={() => {
+                    initiateClosing();
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const updateAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: () => (
+            <Button
+                text="U"
+                tooltip={gettext('UPDATE')}
+                style="filled"
+                type="primary"
+                onClick={() => {
+                    sdApi.article.rewrite(item);
+                }}
+            />
+        ),
+        availableOffline: false,
+    };
+
+    const sendKillAction: ITopBarWidget<IArticle> = {
+        group: 'end',
+        priority: 0.1,
+        component: ({entity}) => {
+            return (
+                <Button
+                    text={gettext('Send kill')}
+                    style="filled"
+                    type="primary"
+                    onClick={() => {
+                        sdApi.article.get(item._id).then((originalArticle) => {
+                            handleUnsavedChanges()
+                                .then(() => {
+                                    sdApi.article.publishItem(item, {...entity, _etag: originalArticle._etag}, 'kill');
+                                })
+                                .then(() => initiateClosing());
+                        });
+                    }}
+                />
+            );
+        },
+        availableOffline: false,
+    };
+
+    if (action === 'kill') {
+        return {
+            readOnly: false,
+            actions: [sendKillAction, closeIconButton, minimizeButton],
+        };
+    }
+
+    if (action === 'correct') {
+        return {
+            readOnly: false,
+            actions: [sendCorrectionAction, cancelAuthoringAction, minimizeButton],
+        };
+    }
+
     switch (itemState) {
     case ITEM_STATE.DRAFT:
         return {
@@ -274,11 +488,11 @@ function getInlineToolbarActions(
                     <Button
                         type="highlight"
                         onClick={() => {
-                            const getLatestItem = hasUnsavedChanges()
+                            const getLatestArticle = hasUnsavedChanges()
                                 ? handleUnsavedChanges()
                                 : Promise.resolve(entity);
 
-                            getLatestItem.then((article) => {
+                            getLatestArticle.then((article) => {
                                 sdApi.article.publishItem(article, article).then((result) => {
                                     typeof result !== 'boolean'
                                         ? ng.get('authoring').rewrite(result)
@@ -320,11 +534,11 @@ function getInlineToolbarActions(
                     <Button
                         type="highlight"
                         onClick={() => {
-                            const getLatestItem = hasUnsavedChanges()
+                            const getLatestArticle = hasUnsavedChanges()
                                 ? handleUnsavedChanges()
                                 : Promise.resolve(entity);
 
-                            getLatestItem.then((article) => {
+                            getLatestArticle.then((article) => {
                                 ng.get('authoring').close().then(() => {
                                     sdApi.article.rewrite(article);
                                 });
@@ -375,7 +589,8 @@ function getInlineToolbarActions(
                 priority: 0.2,
                 component: () => (
                     <Button
-                        text={gettext('TD')}
+                        tooltip={gettext('To Desk')}
+                        text={gettext('T D')}
                         style="filled"
                         onClick={() => {
                             handleUnsavedChanges()
@@ -401,40 +616,106 @@ function getInlineToolbarActions(
 
     case ITEM_STATE.SPIKED:
         return {
-            readOnly: true,
-            actions: [], // un-spike
+            readOnly: false,
+            actions: [
+                {
+                    group: 'end',
+                    priority: 0.1,
+                    component: () => (
+                        <Button
+                            text={gettext('UNSPIKE')}
+                            style="filled"
+                            type="primary"
+                            onClick={() => {
+                                sdApi.article.doUnspike(item, item.task.desk, item.task.stage);
+                            }}
+                        />
+                    ),
+                    availableOffline: false,
+                },
+                closeIconButton,
+            ],
         };
 
     case ITEM_STATE.SCHEDULED:
         return {
-            readOnly: true,
-            actions: [], // un-schedule
+            readOnly: false,
+            actions: [
+                {
+                    group: 'end',
+                    priority: 0.1,
+                    component: () => (
+                        <Button
+                            text={gettext('Deschedule')}
+                            style="filled"
+                            type="primary"
+                            onClick={() => {
+                                sdApi.article.deschedule(item);
+                            }}
+                        />
+                    ),
+                    availableOffline: false,
+                },
+                closeIconButton,
+            ],
         };
 
     case ITEM_STATE.PUBLISHED:
     case ITEM_STATE.CORRECTED:
         return {
             readOnly: true,
-            actions: [], // correct update kill takedown
+            actions: [
+                updateAction,
+                correctAction,
+                takedownAction,
+                unpublishAction,
+                killAction,
+                closeIconButton,
+            ],
         };
 
     case ITEM_STATE.BEING_CORRECTED:
         return {
-            readOnly: true,
-            actions: [], // cancel correction
+            readOnly: false,
+            actions: [closeIconButton, saveButton],
         };
 
     case ITEM_STATE.CORRECTION:
         return {
             readOnly: false,
-            actions: [], // cancel correction, save, publish
+            actions: [
+                saveButton,
+                {
+                    group: 'end',
+                    priority: 0.1,
+                    component: () => (
+                        <Button
+                            text={gettext('PUBLISH')}
+                            style="filled"
+                            type="primary"
+                            onClick={() => {
+                                handleUnsavedChanges()
+                                    .then(() => sdApi.article.publishItem(item, getLatestItem(), 'publish'))
+                                    .then(() => initiateClosing());
+                            }}
+                        />
+                    ),
+                    availableOffline: false,
+                },
+                cancelAuthoringAction,
+            ],
         };
 
     case ITEM_STATE.KILLED:
+        return {
+            readOnly: true,
+            actions: [closeIconButton],
+        };
+
     case ITEM_STATE.RECALLED:
         return {
             readOnly: true,
-            actions: [], // NONE
+            actions: [closeIconButton],
         };
     default:
         assertNever(itemState);
@@ -510,6 +791,11 @@ export function getAuthoringPrimaryToolbarWidgets(
         .concat([getPublishToolbarWidget(panelState, panelActions)]);
 }
 
+export interface IProps {
+    action?: IArticleAction;
+    itemId: IArticle['_id'];
+}
+
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
@@ -520,7 +806,15 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
-                    authoringStorage={authoringStorageIArticle}
+                    authoringStorage={(() => {
+                        if (this.props.action === 'kill' || this.props.action === 'takedown') {
+                            return getAuthoringStorageIArticleKillOrTakedown(this.props.action as IArticleAction);
+                        } else if (this.props.action === 'correct') {
+                            return authoringStorageIArticleCorrect;
+                        } else {
+                            return authoringStorageIArticle;
+                        }
+                    })()}
                 />
             </div>
         );

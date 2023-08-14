@@ -1,8 +1,8 @@
 import React from 'react';
-import {IAuthoringFieldV2, IFieldsData} from 'superdesk-api';
+import {IAuthoringFieldV2, IAuthoringSectionTheme, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
-import {IAuthoringSectionTheme, IPropsAuthoringSection} from './authoring-section';
+import {IPropsAuthoringSection} from './authoring-section';
 import {memoize} from 'core/memoize';
 
 interface IProps<T> {

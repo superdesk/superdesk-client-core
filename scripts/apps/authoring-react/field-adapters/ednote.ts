@@ -9,7 +9,7 @@ export const ednote: IFieldAdapter<IArticle> = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
-            singleLine: true,
+            singleLine: false,
             disallowedCharacters: [],
         };
 
@@ -35,6 +35,7 @@ export const ednote: IFieldAdapter<IArticle> = {
             item,
             value,
             config,
+            true,
         );
 
         const articleUpdated = {...result.article};

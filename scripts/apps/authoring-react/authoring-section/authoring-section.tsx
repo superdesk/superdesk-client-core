@@ -1,24 +1,8 @@
 import React from 'react';
-import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
+import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
-
-export interface IAuthoringSectionTheme {
-    backgroundColor: string;
-
-    // used in placed where we need to differetiate some ui components from background for example toolbars
-    backgroundColorSecondary: string;
-
-    textColor: string;
-    fontFamily: string;
-
-    fieldTheme: {
-        [fieldId: string]: {
-            fontSize: string | undefined;
-        };
-    };
-}
 
 export interface IPropsAuthoringSection<T> {
     language: string;
