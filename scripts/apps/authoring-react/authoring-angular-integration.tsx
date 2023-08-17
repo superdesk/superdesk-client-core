@@ -318,7 +318,10 @@ function getInlineToolbarActions(
                                 </Spacer>
                             )}
                         >
-                            {gettext('Are you sure you want to unpublish item "{{label}}"?', {label: getItemLabel(item)})}
+                            {gettext(
+                                'Are you sure you want to unpublish item "{{label}}"?', 
+                                {label: getItemLabel(item)},
+                            )}
                         </Modal>
                     ));
                 }}
@@ -372,7 +375,7 @@ function getInlineToolbarActions(
                     onClick={() => {
                         handleUnsavedChanges()
                             .then(() => {
-                                sdApi.article.publishItem(item, {...entity}, 'kill');
+                                sdApi.article.publishItem(item, entity, 'kill');
                             })
                             .then(() => initiateClosing());
                     }}
