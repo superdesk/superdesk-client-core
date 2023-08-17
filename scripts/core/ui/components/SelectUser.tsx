@@ -1,14 +1,61 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
 import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import {SelectWithTemplate} from 'superdesk-ui-framework/react';
+import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
 }
+
+const itemTemplate = (props: {option: IUser}) => {
+    const user: IUser | null = props.option;
+
+    return user == null
+        ? (
+            <div>
+                {gettext('Select a user')}
+            </div>
+        )
+        : (
+            <Spacer h gap="8" noWrap justifyContent="start">
+                <Spacer h gap="8" noWrap justifyContent="start">
+                    <div>
+                        <UserAvatar user={user} displayStatus={true} />
+                    </div>
+
+                    <Spacer v gap="4" noWrap>
+                        <div>{user.display_name}</div>
+                        <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
+                    </Spacer>
+
+                </Spacer>
+
+                <div style={{fontSize: '1.2rem'}}>{user.sign_off}</div>
+            </Spacer>
+        );
+};
+
+const valueTemplateDefault = (props: {option: IUser}) => {
+    const user: IUser | null = props.option;
+
+    return user == null
+        ? (
+            <div>
+                {gettext('Select a user')}
+            </div>
+        )
+        : (
+            <Spacer h gap="8" justifyContent="start" noGrow>
+                <UserAvatar user={user} displayStatus={true} />
+
+                {user.display_name}
+            </Spacer>
+        );
+};
 
 export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
     constructor(props: IPropsSelectUser) {
@@ -37,24 +84,26 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
     }
 
     componentDidUpdate(prevProps: IPropsSelectUser) {
-        // state.user needs to be updated if props.selectedUserId changes
-        if (this.props.selectedUserId == null && this.state.selectedUser != null) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({selectedUser: null});
-        } else if (
-            this.state.selectedUser === 'loading'
-            || this.state.selectedUser?._id !== this.props.selectedUserId
-        ) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({selectedUser: 'loading'});
-
-            this.asyncHelpers.httpRequestJsonLocal<IUser>({
-                method: 'GET',
-                path: `/users/${this.props.selectedUserId}`,
-            }).then((selectedUser) => {
+        if (prevProps.selectedUserId !== this.props.selectedUserId) {
+            // state.user needs to be updated if props.selectedUserId changes
+            if (this.props.selectedUserId == null) {
                 // eslint-disable-next-line react/no-did-update-set-state
-                this.setState({selectedUser});
-            });
+                this.setState({selectedUser: null});
+            } else if (
+                this.state.selectedUser === 'loading'
+                || this.state.selectedUser?._id !== this.props.selectedUserId
+            ) {
+                // eslint-disable-next-line react/no-did-update-set-state
+                this.setState({selectedUser: 'loading'});
+
+                this.asyncHelpers.httpRequestJsonLocal<IUser>({
+                    method: 'GET',
+                    path: `/users/${this.props.selectedUserId}`,
+                }).then((selectedUser) => {
+                    // eslint-disable-next-line react/no-did-update-set-state
+                    this.setState({selectedUser});
+                });
+            }
         }
     }
 
@@ -62,6 +111,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
         if (this.state.selectedUser === 'loading') {
             return null;
         }
+
+        const valueTemplate = this.props.valueTemplate != null ? this.props.valueTemplate : valueTemplateDefault;
 
         return (
             <SelectWithTemplate
@@ -108,27 +159,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                     this.props.onSelect(user);
                 }}
                 getLabel={(option) => option.display_name}
-                itemTemplate={
-                    (props) => {
-                        const user = props.option;
-
-                        return user == null
-                            ? (
-                                <div>
-                                    {gettext('Select a user')}
-                                </div>
-                            )
-                            : (
-                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <UserAvatar user={user} displayStatus={true} />
-                                    <div style={{marginLeft: 14, padding: '4px 0'}}>
-                                        <div>{user.display_name}</div>
-                                        <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
-                                    </div>
-                                </div>
-                            );
-                    }
-                }
+                itemTemplate={itemTemplate}
+                valueTemplate={valueTemplate}
                 areEqual={(a, b) => a._id === b._id}
                 autoFocus={this.props.autoFocus}
                 autoOpen={this.state.selectedUser == null}
@@ -137,7 +169,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 noResultsFoundMessage={gettext('No results found.')}
                 filterPlaceholder={gettext('Search...')}
                 data-test-id="select-user-dropdown"
-                required
+                required={!(this.props.clearable ?? true)}
             />
         );
     }
