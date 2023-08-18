@@ -398,7 +398,7 @@ export const getAuthoringStorageIArticleKillOrTakedown = (action: IArticleAction
                 return {
                     saved: {
                         ...updated,
-                        original_creator: saved.original_creator,
+                        ...saved, // updated is missing original_creator property so we get it from the saved article
                     },
                     autosaved: autosaved,
                 };

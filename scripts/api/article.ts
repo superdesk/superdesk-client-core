@@ -15,7 +15,7 @@ import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/sub
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {flatMap, keys, pick, trim, union} from 'lodash';
+import {flatMap, keys, pick, trim} from 'lodash';
 import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
@@ -426,7 +426,10 @@ function edit(
 function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticleAction): Promise<IArticle> {
     const itemForTemplate = {
         template_name: action,
-        item: pick(item, union(keys(CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task'])),
+        item: pick(
+            item,
+            [...(keys(CONTENT_FIELDS_DEFAULTS)), '_id', 'versioncreated', 'task'],
+        ),
     };
 
     return httpRequestJsonLocal({
@@ -436,7 +439,7 @@ function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticle
     }).then((result: IArticle) => {
         return {
             ...result,
-            ...(action === 'kill' && {operation: 'kill'}),
+            ...(action === 'kill' ? {operation: 'kill'} : {}),
             state: ITEM_STATE.PUBLISHED,
         };
     });

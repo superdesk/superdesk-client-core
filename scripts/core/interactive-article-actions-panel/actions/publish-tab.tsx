@@ -102,11 +102,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                         cloneDeep(itemToPublish),
                         'publish',
                         this.props.onError,
-                    )
-                        .then(() => {
-                            ng.get('authoringWorkspace').close();
-                            notify.success('Item published.');
-                        });
+                    );
                 });
             })
             .catch(() => {

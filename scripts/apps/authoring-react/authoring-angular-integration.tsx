@@ -210,7 +210,7 @@ function getInlineToolbarActions(
         priority: 0.1,
         component: () => (
             <Button
-                tooltip={gettext('CORRECT')}
+                tooltip={gettext('Correct')}
                 text={gettext('C')}
                 style="filled"
                 type="primary"
@@ -271,7 +271,7 @@ function getInlineToolbarActions(
                 style="filled"
                 type="primary"
                 onClick={() => {
-                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
+                    ng.get('authoringWorkspace').authoringOpen(item._id, 'takedown');
                 }}
             />
         ),
@@ -283,7 +283,7 @@ function getInlineToolbarActions(
         priority: 0.1,
         component: () => (
             <Button
-                tooltip={gettext('UNPUBLISH')}
+                tooltip={gettext('Unpublish')}
                 text={'UP'}
                 style="filled"
                 type="primary"
@@ -318,7 +318,10 @@ function getInlineToolbarActions(
                                 </Spacer>
                             )}
                         >
-                            Are you sure you want to unpublish item &quot;{getItemLabel(item)}&quot;?
+                            {gettext(
+                                'Are you sure you want to unpublish item "{{label}}"?',
+                                {label: getItemLabel(item)},
+                            )}
                         </Modal>
                     ));
                 }}
@@ -370,13 +373,11 @@ function getInlineToolbarActions(
                     style="filled"
                     type="primary"
                     onClick={() => {
-                        sdApi.article.get(item._id).then((originalArticle) => {
-                            handleUnsavedChanges()
-                                .then(() => {
-                                    sdApi.article.publishItem(item, {...entity, _etag: originalArticle._etag}, 'kill');
-                                })
-                                .then(() => initiateClosing());
-                        });
+                        handleUnsavedChanges()
+                            .then(() => {
+                                sdApi.article.publishItem(item, entity, 'kill');
+                            })
+                            .then(() => initiateClosing());
                     }}
                 />
             );
