@@ -22,19 +22,15 @@ const itemTemplate = (props: {option: IUser}) => {
         )
         : (
             <Spacer h gap="8" noWrap justifyContent="start">
-                <Spacer h gap="8" noWrap justifyContent="start">
-                    <div>
-                        <UserAvatar user={user} displayStatus={true} />
-                    </div>
+                <div>
+                    <UserAvatar user={user} displayStatus={true} />
+                </div>
 
-                    <Spacer v gap="4" noWrap>
-                        <div>{user.display_name}</div>
-                        <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
-                    </Spacer>
-
+                <Spacer v gap="4" noWrap>
+                    <div>{user.display_name}</div>
+                    <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
                 </Spacer>
 
-                <div style={{fontSize: '1.2rem'}}>{user.sign_off}</div>
             </Spacer>
         );
 };
