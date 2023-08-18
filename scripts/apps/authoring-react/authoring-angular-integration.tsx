@@ -319,7 +319,7 @@ function getInlineToolbarActions(
                             )}
                         >
                             {gettext(
-                                'Are you sure you want to unpublish item "{{label}}"?', 
+                                'Are you sure you want to unpublish item "{{label}}"?',
                                 {label: getItemLabel(item)},
                             )}
                         </Modal>
