@@ -8,11 +8,11 @@ const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
 const ISO_YEAR_FORMAT = 'YYYY';
 
-const LONG_FORMAT = appConfig.longDateFormat || 'LLL';
-const TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
-const DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
-const WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
-const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
+const LONG_FORMAT = appConfig?.longDateFormat || 'LLL';
+const TIME_FORMAT = appConfig?.shortTimeFormat || 'hh:mm';
+const DATE_FORMAT = appConfig?.shortDateFormat || 'MM/DD';
+const WEEK_FORMAT = appConfig?.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+const ARCHIVE_FORMAT = appConfig?.ArchivedDateFormat || DATE_FORMAT;
 const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 
 /**
@@ -136,7 +136,7 @@ function DateTimeService() {
      * @param {String} d iso format datetime
      * @return {String}
      */
-    this.shortFormat = function(d) {
+    this.shortFormat = function (d) {
         var m = moment(d);
         var now = moment();
 
@@ -160,7 +160,7 @@ function DateTimeHelperService() {
     * @param timestring 2016-03-01T04:45:00+0000
     * @param timezone Europe/London
     */
-    this.splitDateTime = function(timestring, timezone) {
+    this.splitDateTime = function (timestring, timezone) {
         var momentTS = moment.tz(timestring, timezone);
 
         return {
@@ -169,19 +169,19 @@ function DateTimeHelperService() {
         };
     };
 
-    this.isValidTime = function(value, format) {
+    this.isValidTime = function (value, format) {
         var timeFormat = format || appConfig.model.timeformat;
 
         return moment(value, timeFormat, true).isValid();
     };
 
-    this.isValidDate = function(value, format) {
+    this.isValidDate = function (value, format) {
         var dateFormat = format || appConfig.model.dateformat;
 
         return moment(value, dateFormat, true).isValid();
     };
 
-    this.mergeDateTime = function(dateStr, timeStr, timezone) {
+    this.mergeDateTime = function (dateStr, timeStr, timezone) {
         var tz = timezone || appConfig.default_timezone;
         var mergeStr = dateStr + ' ' + timeStr;
         var formatter = appConfig.model.dateformat + ' ' + appConfig.model.timeformat;
@@ -193,7 +193,7 @@ function DateTimeHelperService() {
     /*
     * @param timestring 2016-03-01T04:45:00+0000.
     */
-    this.greaterThanUTC = function(timestring) {
+    this.greaterThanUTC = function (timestring) {
         return moment(timestring, 'YYYY-MM-DDTHH:mm:ssZZ') > moment.utc();
     };
 
@@ -205,7 +205,7 @@ function DateTimeHelperService() {
      * @param {String} datetime
      * @return {String}
      */
-    this.removeTZ = function(datetime) {
+    this.removeTZ = function (datetime) {
         if (datetime) {
             return datetime.replace('+0000', '').replace('+00:00', '');
         }
@@ -270,7 +270,7 @@ export default angular.module('superdesk.core.datetime', [
 
     .constant('moment', moment)
 
-    .factory('weekdays', [function() {
+    .factory('weekdays', [function () {
         return Object.freeze({
             MON: gettext('Monday'),
             TUE: gettext('Tuesday'),
@@ -287,7 +287,7 @@ export default angular.module('superdesk.core.datetime', [
      *   server upon instantiaton and stores it internally for future use,
      *   avoiding the need to fetch it again every time when needed.
      */
-    .factory('tzdata', ['$resource', function($resource) {
+    .factory('tzdata', ['$resource', function ($resource) {
         const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
         /**
@@ -300,7 +300,7 @@ export default angular.module('superdesk.core.datetime', [
          * @method getTzNames
          * @return {Array} a list of time zone names
          */
-        tzResource.prototype.getTzNames = function() {
+        tzResource.prototype.getTzNames = function () {
             return _.union(
                 _.keys(this.zones),
                 _.keys(this.links),

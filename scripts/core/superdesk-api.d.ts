@@ -5,7 +5,7 @@ declare module 'superdesk-api' {
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
 
-    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
     export type DeepReadonlyObject<T> = {
         readonly [P in keyof T]: DeepReadonly<T[P]>;
@@ -13,10 +13,10 @@ declare module 'superdesk-api' {
 
     export type DeepReadonly<T> =
         T extends Function
-            ? T
-            : T extends Array<infer U>
-                ? DeepReadonlyArray<U>
-                : DeepReadonlyObject<T>;
+        ? T
+        : T extends Array<infer U>
+        ? DeepReadonlyArray<U>
+        : DeepReadonlyObject<T>;
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
@@ -284,7 +284,7 @@ declare module 'superdesk-api' {
     };
     export type IDatelineValueStorage = IDatelineValueOperational;
     export type IDatelineUserPreferences = never;
-    export interface IDatelineFieldConfig extends ICommonFieldConfig {}
+    export interface IDatelineFieldConfig extends ICommonFieldConfig { }
 
     // AUTHORING-REACT FIELD TYPES - time
 
@@ -299,7 +299,7 @@ declare module 'superdesk-api' {
 
     export type ITagInputValueOperational = Array<string> | null;
     export type ITagInputValueStorage = ITagInputValueOperational;
-    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export interface ITagInputFieldConfig extends ICommonFieldConfig { };
     export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
@@ -507,7 +507,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
-    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -1080,13 +1080,13 @@ declare module 'superdesk-api' {
             [id: string]: IArticle | IRelatedArticle;
         };
         type:
-            | 'text'
-            | 'picture'
-            | 'video'
-            | 'audio'
-            | 'preformatted'
-            | 'graphic'
-            | 'composite';
+        | 'text'
+        | 'picture'
+        | 'video'
+        | 'audio'
+        | 'preformatted'
+        | 'graphic'
+        | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
             package: string;
@@ -1450,13 +1450,13 @@ declare module 'superdesk-api' {
         };
         schema: {};
         field_type:
-            | 'text'
-            | 'media'
-            | 'date'
-            | 'embed'
-            | 'urls'
-            | 'related_content'
-            | 'custom';
+        | 'text'
+        | 'media'
+        | 'date'
+        | 'embed'
+        | 'urls'
+        | 'related_content'
+        | 'custom';
         field_options?: { // Used for related content fields
             allowed_types?: {
                 picture?: boolean;
@@ -1467,12 +1467,12 @@ declare module 'superdesk-api' {
                 in_progress?: boolean;
                 published?: boolean;
             };
-            multiple_items?: { enabled: boolean; max_items: number };
+            multiple_items?: {enabled: boolean; max_items: number};
             single?: boolean; // used for custom text fields
         };
         custom_field_type?: string;
-        custom_field_config?: { [key: string]: any };
-        date_shortcuts?: Array<{ value: number; term: string; label: string }>;
+        custom_field_config?: {[key: string]: any};
+        date_shortcuts?: Array<{value: number; term: string; label: string}>;
         init_version?: number;
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
@@ -1541,7 +1541,7 @@ declare module 'superdesk-api' {
         length: number;
     }
 
-    export interface IAttachment extends IBaseRestApiResponse{
+    export interface IAttachment extends IBaseRestApiResponse {
         title: string;
         mimetype: string;
         filename: string;
@@ -1620,7 +1620,7 @@ declare module 'superdesk-api' {
         | {$lt: any}
         | {$lte: any}
         | {$in: any};
-        // consider adding $inString for matching substrings
+    // consider adding $inString for matching substrings
 
     export type IComparison = {[field: string]: IComparisonOptions};
     export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
@@ -2773,7 +2773,7 @@ declare module 'superdesk-api' {
             InputLabel: React.ComponentType<{text: string}>;
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?: string}>;
 
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;

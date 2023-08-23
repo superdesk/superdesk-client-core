@@ -1,4 +1,8 @@
+import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
+import {authoringReactWidgetsExtension, registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
+import ng from 'core/services/ng';
+import {unregisterInternalExtension} from 'core/helpers/register-internal-extension';
 
 /* globals __SUPERDESK_CONFIG__: true */
 export const appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
@@ -47,5 +51,18 @@ export const debugInfo = {
 };
 
 //
-export const authoringReactViewEnabled = localStorage.getItem('authoring-react-enabled') != null;
+export let authoringReactViewEnabled = false;
 export const uiFrameworkAuthoringPanelTest = false;
+
+window.addEventListener('toggle-authoring', (e: CustomEvent) => {
+    if (e.detail === true) {
+        ng.get('authoringWorkspace').close();
+        registerAuthoringReactWidgets();
+        registerAuthoringReactFields();
+    } else {
+        unregisterInternalExtension(authoringReactWidgetsExtension);
+        unregisterInternalExtension('authoring-react--fields');
+    }
+
+    authoringReactViewEnabled = e.detail;
+});

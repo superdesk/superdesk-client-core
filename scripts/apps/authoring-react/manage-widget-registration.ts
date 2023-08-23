@@ -12,7 +12,7 @@ import {getMacrosWidget} from './macros/macros';
 import {getPackagesWidget} from './packages';
 import {getMetadataWidget} from './article-widgets/metadata/metadata';
 
-const authoringReactWidgetsExtension = 'authoring-react-widgets';
+export const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
 export function registerAuthoringReactWidgets() {
     const sidebarWidgets: IExtensionActivationResult['contributions']['authoringSideWidgets'] = [
