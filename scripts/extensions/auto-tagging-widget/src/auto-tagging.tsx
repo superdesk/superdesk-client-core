@@ -215,7 +215,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 changes: {analysis: resClient},
                             },
                         });
+                        console.log('Analysis result:', resClient);
                     }
+                }).catch((error) => {
+                    console.error('Error during analysis:', error);    
                 });
             });
         }
