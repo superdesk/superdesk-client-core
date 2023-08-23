@@ -3359,6 +3359,7 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
+        private?: boolean;
         /**
          * Must return `true` if not empty.
          */
