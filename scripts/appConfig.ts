@@ -54,15 +54,6 @@ export const debugInfo = {
 export let authoringReactViewEnabled = false;
 export const uiFrameworkAuthoringPanelTest = false;
 
-window.addEventListener('toggle-authoring', (e: CustomEvent) => {
-    if (e.detail === true) {
-        ng.get('authoringWorkspace').close();
-        registerAuthoringReactWidgets();
-        registerAuthoringReactFields();
-    } else {
-        unregisterInternalExtension(authoringReactWidgetsExtension);
-        unregisterInternalExtension('authoring-react--fields');
-    }
-
-    authoringReactViewEnabled = e.detail;
-});
+export function setAuthoringReact(enabled: boolean) {
+    authoringReactViewEnabled = enabled;
+}

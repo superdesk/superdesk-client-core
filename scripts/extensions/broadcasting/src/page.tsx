@@ -150,8 +150,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         events.addListener('openRundownItem', this.openRundownItemEventHandler);
         events.dispatchEvent('broadcastingPageDidLoad', true);
 
-        window.dispatchEvent(new CustomEvent('toggle-authoring', {detail: true}));
-
         this.updateFullWidthCapability();
     }
 
@@ -160,8 +158,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     }
 
     componentWillUnmount(): void {
-        window.dispatchEvent(new CustomEvent('toggle-authoring', {detail: false}));
-
         events.removeListener('openRundownItem', this.openRundownItemEventHandler);
 
         this.updateFullWidthCapability({disable: true});
