@@ -1,13 +1,9 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
-import {appConfig, extensions, setAuthoringReact} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
-import {trimStartExact} from 'core/helpers/utils';
-import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
-import {registerAuthoringReactWidgets, authoringReactWidgetsExtension} from 'apps/authoring-react/manage-widget-registration';
-import {unregisterInternalExtension} from 'core/helpers/register-internal-extension';
-import {flatMap} from 'lodash';
+import {switchAuthoring} from './authoring-switch';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -76,7 +72,7 @@ angular.module('superdesk.core.menu', [
     )
 
     // set flags for other directives
-    .directive('sdSuperdeskView', ['asset', function (asset) {
+    .directive('sdSuperdeskView', ['asset', function(asset) {
         SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
         function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
             setupFullWidthPage($scope);
@@ -162,8 +158,8 @@ angular.module('superdesk.core.menu', [
         'privileges',
         'lodash',
         'workspaceMenu',
-        'authoringWorkspace',
-        function (
+        '$location',
+        function(
             $route,
             superdesk,
             betaService,
@@ -172,12 +168,12 @@ angular.module('superdesk.core.menu', [
             privileges,
             _,
             workspaceMenu,
-            authoringWorkspace,
+            $location,
         ) {
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
-                link: function (scope, elem, attrs, ctrl) {
+                link: function(scope, elem, attrs, ctrl) {
                     let body = angular.element('body');
 
                     scope.currentRoute = null;
@@ -265,7 +261,7 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    scope.toggleTheme = function () {
+                    scope.toggleTheme = function() {
                         scope.theme = scope.theme === 'dark-ui' ? '' : 'dark-ui';
                         localStorage.setItem('theme', scope.theme);
 
@@ -274,15 +270,15 @@ angular.module('superdesk.core.menu', [
                             body.removeAttr('data-theme');
                     };
 
-                    scope.toggleMenu = function () {
+                    scope.toggleMenu = function() {
                         ctrl.flags.menu = !ctrl.flags.menu;
                     };
 
-                    scope.toggleNotifications = function () {
+                    scope.toggleNotifications = function() {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
                     };
 
-                    scope.toggleBeta = function () {
+                    scope.toggleBeta = function() {
                         betaService.toggleBeta();
                     };
 
@@ -301,37 +297,18 @@ angular.module('superdesk.core.menu', [
                         }
                     }
 
+                    switchAuthoring($location.absUrl());
+
                     /**
                      * Gets triggered after the location has been changed for the final time.
                      * Using this is consistent and assures you that `nextUrl` is the final url
                      * you'll receive for the location change.
                      */
-                    scope.$on('$locationChangeSuccess', (_, newUrl) => {
-                        const extensionUrls = flatMap(
-                            Object.values(extensions).map(({activationResult}) => activationResult),
-                            (activationResult) => activationResult.contributions?.pages ?? [],
-                        ).map((page) => page.url);
-
-                        const parsedUrl = new URL(newUrl);
-
-                        if (
-                            extensionUrls.find(
-                                (url) => url.startsWith(trimStartExact(parsedUrl.hash, '#')),
-                            ) != null
-                        ) {
-                            authoringWorkspace.close();
-                            setAuthoringReact(true);
-
-                            registerAuthoringReactWidgets();
-                            registerAuthoringReactFields();
-                        } else {
-                            setAuthoringReact(false);
-                            unregisterInternalExtension(authoringReactWidgetsExtension);
-                            unregisterInternalExtension('authoring-react--fields');
-                        }
+                    scope.$on('$locationChangeSuccess', (_, newUrl, oldRoute) => {
+                        switchAuthoring(newUrl);
                     });
 
-                    scope.$on('$locationChangeStart', () => {
+                    scope.$on('$locationChangeStart', (_, a, b) => {
                         ctrl.flags.menu = false;
                     });
 
@@ -350,19 +327,19 @@ angular.module('superdesk.core.menu', [
                         setActiveMenuItem(ctrl.currentRoute);
                     });
 
-                    scope.openAbout = function () {
+                    scope.openAbout = function() {
                         scope.aboutActive = true;
                     };
-                    scope.closeAbout = function () {
+                    scope.closeAbout = function() {
                         scope.aboutActive = false;
                     };
                 },
             };
         }])
-    .directive('sdAbout', ['asset', 'api', function (asset, api) {
+    .directive('sdAbout', ['asset', 'api', function(asset, api) {
         return {
             templateUrl: asset.templateUrl('core/menu/views/about.html'),
-            link: function (scope) {
+            link: function(scope) {
                 api.query('backend_meta', {}).then(
                     (metadata) => {
                         scope.modules = metadata.modules;

@@ -1,8 +1,4 @@
-import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
-import {authoringReactWidgetsExtension, registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
-import ng from 'core/services/ng';
-import {unregisterInternalExtension} from 'core/helpers/register-internal-extension';
 
 /* globals __SUPERDESK_CONFIG__: true */
 export const appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
@@ -50,8 +46,13 @@ export const debugInfo = {
     translationsLoaded: false,
 };
 
-//
-export let authoringReactViewEnabled = false;
+export const authoringReactEnabledUserSelection = false;
+
+/**
+ * Authoring react has to be enabled in the broadcasting
+ * module regardless of the user selection.
+ * */
+export let authoringReactViewEnabled = true;
 export const uiFrameworkAuthoringPanelTest = false;
 
 export function setAuthoringReact(enabled: boolean) {
