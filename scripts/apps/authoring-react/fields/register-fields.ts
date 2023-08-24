@@ -17,6 +17,8 @@ import {getArticlesInPackageField} from './package-items';
 import {getTagInputField} from './tag-input';
 import {getDatelineField} from './dateline';
 
+export const AUTHORING_REACT_FIELDS = 'authoring-react--fields';
+
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
         contributions: {
@@ -57,5 +59,5 @@ export function registerAuthoringReactFields() {
         },
     };
 
-    registerInternalExtension('authoring-react--fields', result);
+    registerInternalExtension(AUTHORING_REACT_FIELDS, result);
 }

@@ -3,7 +3,7 @@ import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
-import {switchAuthoring} from './authoring-switch';
+import {setupAuthoringReact} from './authoring-switch';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -297,18 +297,13 @@ angular.module('superdesk.core.menu', [
                         }
                     }
 
-                    switchAuthoring($location.absUrl());
+                    setupAuthoringReact($location.absUrl());
 
-                    /**
-                     * Gets triggered after the location has been changed for the final time.
-                     * Using this is consistent and assures you that `nextUrl` is the final url
-                     * you'll receive for the location change.
-                     */
-                    scope.$on('$locationChangeSuccess', (_, newUrl, oldRoute) => {
-                        switchAuthoring(newUrl);
+                    scope.$on('$locationChangeSuccess', (e, newUrl) => {
+                        setupAuthoringReact(newUrl);
                     });
 
-                    scope.$on('$locationChangeStart', (_, a, b) => {
+                    scope.$on('$locationChangeStart', () => {
                         ctrl.flags.menu = false;
                     });
 

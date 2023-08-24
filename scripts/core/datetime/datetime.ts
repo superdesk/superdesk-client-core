@@ -8,11 +8,11 @@ const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
 const ISO_YEAR_FORMAT = 'YYYY';
 
-const LONG_FORMAT = appConfig?.longDateFormat || 'LLL';
-const TIME_FORMAT = appConfig?.shortTimeFormat || 'hh:mm';
-const DATE_FORMAT = appConfig?.shortDateFormat || 'MM/DD';
-const WEEK_FORMAT = appConfig?.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
-const ARCHIVE_FORMAT = appConfig?.ArchivedDateFormat || DATE_FORMAT;
+const LONG_FORMAT = appConfig.longDateFormat || 'LLL';
+const TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
+const DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
+const WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
 const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 
 /**

@@ -1,12 +1,18 @@
 import {authoringReactEnabledUserSelection, extensions, setAuthoringReact} from 'appConfig';
-import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
-import {registerAuthoringReactWidgets, authoringReactWidgetsExtension} from 'apps/authoring-react/manage-widget-registration';
+import {AUTHORING_REACT_FIELDS, registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
+import {
+    registerAuthoringReactWidgets,
+    authoringReactWidgetsExtension,
+} from 'apps/authoring-react/manage-widget-registration';
 import {unregisterInternalExtension} from 'core/helpers/register-internal-extension';
 import {trimStartExact} from 'core/helpers/utils';
 import {flatMap} from 'lodash';
 import ng from 'core/services/ng';
 
-export const switchAuthoring = (url: string) => {
+/**
+ * Enable authoring react in certain conditions
+ */
+export const setupAuthoringReact = (url: string) => {
     const extensionUrls = flatMap(
         Object.values(extensions).map(({activationResult}) => activationResult),
         (activationResult) => activationResult.contributions?.pages ?? [],
@@ -14,7 +20,7 @@ export const switchAuthoring = (url: string) => {
 
     const parsedPath = new URL(url);
     const isNavigatingToAnExtensionPage = extensionUrls.find(
-        (url) => url.startsWith(trimStartExact(parsedPath.hash, '#')),
+        (extensionUrl) => extensionUrl.startsWith(trimStartExact(parsedPath.hash, '#')),
     ) != null;
 
     const action: 'register' | 'deregister' = (() => {
@@ -30,13 +36,12 @@ export const switchAuthoring = (url: string) => {
 
     if (action === 'register') {
         setAuthoringReact(true);
-
         registerAuthoringReactWidgets();
         registerAuthoringReactFields();
     } else {
         setAuthoringReact(false);
         unregisterInternalExtension(authoringReactWidgetsExtension);
-        unregisterInternalExtension('authoring-react--fields');
+        unregisterInternalExtension(AUTHORING_REACT_FIELDS);
     }
 
     if (isNavigatingToAnExtensionPage) {

@@ -85,7 +85,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                         rundownAction: {
                             ...rundownAction,
                             fullWidth: val,
-                        }
+                        },
                     });
                 },
             });
