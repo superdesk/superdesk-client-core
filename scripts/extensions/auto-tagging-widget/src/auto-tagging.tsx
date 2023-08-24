@@ -598,7 +598,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={readOnly ? undefined : gettext('Click "Run" to generate')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to tag')}
                                     />
                                 );
                             } else {
