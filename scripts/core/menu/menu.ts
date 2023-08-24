@@ -3,6 +3,7 @@ import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {setupAuthoringReact} from './authoring-switch';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -157,6 +158,7 @@ angular.module('superdesk.core.menu', [
         'privileges',
         'lodash',
         'workspaceMenu',
+        '$location',
         function(
             $route,
             superdesk,
@@ -166,6 +168,7 @@ angular.module('superdesk.core.menu', [
             privileges,
             _,
             workspaceMenu,
+            $location,
         ) {
             return {
                 require: '^sdSuperdeskView',
@@ -286,13 +289,19 @@ angular.module('superdesk.core.menu', [
 
                         _.each(scope.menu, (activity) => {
                             activity.isActive = route && route.href &&
-                                    route.href.substr(0, activity.href.length) === activity.href;
+                                route.href.substr(0, activity.href.length) === activity.href;
                         });
 
                         if (route && route.href) {
                             scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
                         }
                     }
+
+                    setupAuthoringReact($location.absUrl());
+
+                    scope.$on('$locationChangeSuccess', (e, newUrl) => {
+                        setupAuthoringReact(newUrl);
+                    });
 
                     scope.$on('$locationChangeStart', () => {
                         ctrl.flags.menu = false;

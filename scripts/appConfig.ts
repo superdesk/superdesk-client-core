@@ -46,6 +46,15 @@ export const debugInfo = {
     translationsLoaded: false,
 };
 
-//
-export const authoringReactViewEnabled = localStorage.getItem('authoring-react-enabled') != null;
+export const authoringReactEnabledUserSelection = false;
+
+/**
+ * Authoring react has to be enabled in the broadcasting
+ * module regardless of the user selection.
+ * */
+export let authoringReactViewEnabled = true;
 export const uiFrameworkAuthoringPanelTest = false;
+
+export function setAuthoringReact(enabled: boolean) {
+    authoringReactViewEnabled = enabled;
+}
