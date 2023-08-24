@@ -3360,6 +3360,10 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
+         * Allows for the field to be hidden from custom field type config
+         */
+        private?: boolean;
+        /**
          * Must return `true` if not empty.
          */
         hasValue(valueOperational: IValueOperational): boolean;
