@@ -4,7 +4,7 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/superdesk/superdesk-client-core.git"
+    "url": "https://github.com/canadianpress/superdesk-client-core.git"
   },
   "contributors": [
     "Adrian Magdas",
