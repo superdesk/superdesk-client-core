@@ -44,7 +44,12 @@ export function UserPreferencesDirective(
             const body = angular.element('body');
 
             scope.activeNavigation = null;
-            scope.activeTheme = localStorage.getItem('theme') !== '' ? localStorage.getItem('theme') : 'light-ui';
+
+            scope.activeTheme = localStorage.getItem('theme');
+
+            if (scope.activeTheme === '') {
+                scope.activeTheme = 'light-ui';
+            }
 
             scope.$watch('activeTheme', (val) => {
                 if (!val) {
