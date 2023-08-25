@@ -473,8 +473,10 @@ describe('monitoring', () => {
 
     it('can start content upload', () => {
         monitoring.openMonitoring();
-        monitoring.openCreateMenu();
-        monitoring.startUpload();
+
+        el(['authoring-create']).click();
+        el(['content-create-dropdown', 'upload-media']).click();
+
         expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();
     });
 

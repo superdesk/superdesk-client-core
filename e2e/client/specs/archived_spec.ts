@@ -3,6 +3,7 @@ import {globalSearch} from './helpers/search';
 import {authoring} from './helpers/authoring';
 import {content} from './helpers/content';
 import {monitoring} from './helpers/monitoring';
+import {element, by} from 'protractor';
 
 describe('archived', () => {
     beforeEach(() => {
@@ -31,7 +32,7 @@ describe('archived', () => {
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
         expect(authoring.edit_takedown_button.isDisplayed()).toBe(false);
-        expect(authoring.navbarMenuBtn.isPresent()).toBe(false);
+        expect(element(by.css('[data-test-id="authoring-create]')).isPresent()).toBe(false);
         expect(authoring.sendToButton.isDisplayed()).toBe(false);
         authoring.showInfo();
         expect(authoring.isPublishedState()).toBe(true);

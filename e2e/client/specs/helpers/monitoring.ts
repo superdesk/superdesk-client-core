@@ -98,7 +98,6 @@ class Monitoring {
     openSendMenu: () => void;
     publish: () => void;
     getPublishButtonText: any;
-    startUpload: () => void;
     uploadModal: ElementFinder;
     openFetchAsOptions: (group: any, item: any) => void;
     clickOnFetchButton: any;
@@ -177,7 +176,10 @@ class Monitoring {
         /**
          * Create new item using desk template
          */
-        this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
+        this.createFromDeskTemplate = () => {
+            el(['authoring-create']).click();
+            el(['content-create-dropdown', 'default-desk-template']).click();
+        };
 
         this.getGroup = function(group: number) {
             return this.getGroups().get(group);
@@ -717,7 +719,7 @@ class Monitoring {
         };
 
         this.openCreateMenu = function() {
-            element(by.className('sd-create-btn')).click();
+            element(by.css('[data-test-id="authoring-create"]')).click();
             browser.sleep(100);
         };
 
@@ -732,10 +734,6 @@ class Monitoring {
         };
 
         this.getPublishButtonText = () => element(by.css('[ng-click="publish()"]')).getText();
-
-        this.startUpload = function() {
-            element(by.id('start-upload-btn')).click();
-        };
 
         this.uploadModal = element(by.className('upload-media'));
 

@@ -18,6 +18,7 @@ const defaultButton = ({onClick}: IPropsAddContentCustomButton) => (
         shape="round"
         iconOnly={true}
         onClick={onClick}
+        data-test-id="authoring-create"
     />
 );
 

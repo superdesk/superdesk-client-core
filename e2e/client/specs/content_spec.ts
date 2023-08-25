@@ -150,8 +150,7 @@ describe('content', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
-        element(by.className('sd-create-btn')).click();
-        element(by.id('create_text_article')).click();
+        authoring.createTextItem();
 
         authoring.writeText('Words');
         authoring.save();
@@ -164,8 +163,8 @@ describe('content', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
-        element(by.className('sd-create-btn')).click();
-        element(by.id('create_package')).click();
+        el(['authoring-create']).click();
+        el(['content-create-dropdown', 'create-package']).click();
 
         element.all(by.model('item.headline')).first().sendKeys('Empty Package');
         authoring.save();

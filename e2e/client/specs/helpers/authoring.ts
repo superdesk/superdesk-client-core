@@ -3,6 +3,7 @@
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor, click} from './utils';
 import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
+import {PLAIN_TEXT_TEMPLATE_NAME} from './constants';
 
 class Authoring {
     lock: any;
@@ -20,8 +21,6 @@ class Authoring {
     edit_correct_button: any;
     edit_kill_button: any;
     edit_takedown_button: any;
-    navbarMenuBtn: any;
-    newPlainArticleLink: any;
     newEmptyPackageLink: any;
     infoIconsBox: any;
     sendToButton: any;
@@ -180,6 +179,7 @@ class Authoring {
     openCompareVersionsInnerDropdown: (index: any) => void;
     getInnerDropdownItemVersions: (index: any) => any;
     openItemVersionInBoard: (board: any, index: any) => void;
+    createPlainTextArticle: () => void;
 
     constructor() {
         this.lock = element(by.css('[ng-click="lock()"]'));
@@ -198,8 +198,6 @@ class Authoring {
         this.edit_kill_button = element(by.css('[title="Kill"]'));
         this.edit_takedown_button = element(by.css('[title="Takedown"]'));
 
-        this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
-        this.newPlainArticleLink = element(by.id('create_text_article'));
         this.newEmptyPackageLink = element(by.id('create_package'));
         this.infoIconsBox = element(by.css('.info-icons'));
 
@@ -345,10 +343,8 @@ class Authoring {
             return element(by.className('svg-icon-add-to-list')).click();
         };
 
-        this.createTextItem = function() {
-            return element(by.className('sd-create-btn'))
-                .click()
-                .then(() => element(by.id('create_text_article')).click());
+        this.createTextItem = () => {
+            this.createTextItemFromTemplate(PLAIN_TEXT_TEMPLATE_NAME);
         };
 
         /**
@@ -357,13 +353,11 @@ class Authoring {
          * @param {String} name
          */
         this.createTextItemFromTemplate = (name) => {
-            element(by.className('sd-create-btn')).click();
-            element(by.id('more_templates')).click();
-            let templates = element.all(by.repeater('template in templates track by template._id'));
-
-            templates.all(by.css('[ng-click="select({template: template})"]'))
-                .filter((elem) => elem.getText().then((text) => text.toUpperCase().indexOf(name.toUpperCase()) > -1))
-                .click();
+            el(['authoring-create']).click();
+            el(['content-create-dropdown'], by.buttonText('More templates...')).click();
+            el(['content-create-dropdown', 'search']).sendKeys(name);
+            el(['content-create-dropdown'], by.buttonText(name)).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         this.close = function() {
