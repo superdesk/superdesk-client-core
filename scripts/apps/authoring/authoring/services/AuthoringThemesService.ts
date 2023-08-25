@@ -101,5 +101,17 @@ export function AuthoringThemesService(storage, preferencesService) {
         });
     };
 
+    service.syncWithApplicationTheme = (appTheme: string) => {
+        service.get('theme').then((res) => {
+            if (res.theme === 'default' || res.theme === 'dark') {
+                let activeTheme = appTheme === 'dark-ui'
+                    ? {...res, theme: 'dark'}
+                    : {...res, theme: 'default'};
+
+                service.save('theme', activeTheme);
+            }
+        });
+    };
+
     return service;
 }
