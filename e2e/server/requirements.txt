@@ -26,9 +26,9 @@ blinker==1.4
     #   flask-mail
     #   raven
     #   superdesk-core
-boto3==1.28.30
+boto3==1.28.37
     # via superdesk-core
-botocore==1.31.30
+botocore==1.31.37
     # via
     #   boto3
     #   s3transfer
@@ -87,7 +87,7 @@ elasticsearch==7.13.4
     # via eve-elastic
 eve==1.1.2
     # via superdesk-core
-eve-elastic==7.3.1
+eve-elastic==7.3.2
     # via superdesk-core
 events==0.3
     # via eve
