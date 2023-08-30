@@ -45,12 +45,12 @@ describe('sdUserPreferences directive', () => {
             },
             'editor:theme': {
                 type: 'string',
-                theme: {
+                theme: JSON.stringify({
                     theme: 'default',
                     headline: 'medium',
                     abstract: 'medium',
                     body: 'medium',
-                },
+                }),
             },
         };
 
@@ -131,7 +131,7 @@ describe('sdUserPreferences directive', () => {
             expect(modal.confirm).not.toHaveBeenCalled();
 
             callArgs = preferencesService.update.calls.allArgs();
-            expect(callArgs.length).toEqual(2);
+            expect(callArgs.length).toEqual(1);
             callArgs = callArgs[0][0] || {}; // first arg of the first call
 
             arg = callArgs['categories:preferred'] || {};
@@ -164,7 +164,7 @@ describe('sdUserPreferences directive', () => {
 
             // check if the API was called and with what data
             callArgs = preferencesService.update.calls.allArgs();
-            expect(callArgs.length).toEqual(2);
+            expect(callArgs.length).toEqual(1);
             callArgs = callArgs[0][0] || {}; // first arg of the first call
 
             arg = callArgs['categories:preferred'] || {};
