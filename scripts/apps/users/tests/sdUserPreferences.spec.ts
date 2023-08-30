@@ -45,7 +45,12 @@ describe('sdUserPreferences directive', () => {
             },
             'editor:theme': {
                 type: 'string',
-                theme: {},
+                theme: {
+                    theme: 'default',
+                    headline: 'medium',
+                    abstract: 'medium',
+                    body: 'medium',
+                },
             },
         };
 

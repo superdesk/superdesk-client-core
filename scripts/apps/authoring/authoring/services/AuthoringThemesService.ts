@@ -101,16 +101,19 @@ export function AuthoringThemesService(storage, preferencesService) {
         });
     };
 
-    service.syncWithApplicationTheme = (appTheme: string) => {
-        service.get('theme').then((res) => {
-            if (res.theme === 'default' || res.theme === 'dark') {
-                let activeTheme = appTheme === 'dark-ui'
-                    ? {...res, theme: 'dark'}
-                    : {...res, theme: 'default'};
+    // when the user change theme of application, the theme of editor will inherit the app's
+    service.syncWithApplicationTheme = (appTheme: string, themeObject: any) => {
+        let activeThemeObject = JSON.parse(themeObject);
 
-                service.save('theme', activeTheme);
-            }
-        });
+        if (activeThemeObject.theme === 'default' || activeThemeObject.theme === 'dark') {
+            let activeTheme = appTheme === 'dark-ui'
+                ? {...activeThemeObject, theme: 'dark'}
+                : {...activeThemeObject, theme: 'default'};
+
+            return activeTheme;
+        } else {
+            return activeThemeObject;
+        }
     };
 
     return service;

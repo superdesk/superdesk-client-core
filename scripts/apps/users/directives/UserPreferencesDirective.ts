@@ -111,7 +111,6 @@ export function UserPreferencesDirective(
                             preferencesService.desktopNotification.requestPermission();
                         }
 
-                        authThemes.syncWithApplicationTheme(scope.activeTheme);
                         localStorage.setItem('theme', scope.activeTheme);
                         body.attr('data-theme', scope.activeTheme);
                         notify.success(gettext('User preferences saved'));
@@ -417,6 +416,11 @@ export function UserPreferencesDirective(
 
                     p[key] = _.extend(val, scope.preferences[key]);
                 });
+
+                if (orig['editor:theme'] != null) {
+                    p['editor:theme'] = {...orig['editor:theme'], theme: JSON.stringify(authThemes.syncWithApplicationTheme(scope.activeTheme, orig['editor:theme'].theme))};
+                }
+
                 return p;
             }
         },
