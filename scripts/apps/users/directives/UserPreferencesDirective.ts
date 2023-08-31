@@ -3,6 +3,7 @@
 import {gettext} from 'core/utils';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
+import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 
 /**
  * @ngdoc directive
@@ -418,7 +419,7 @@ export function UserPreferencesDirective(
                 });
 
                 if (orig['editor:theme'] != null) {
-                    p['editor:theme'] = {...orig['editor:theme'], theme: JSON.stringify(authThemes.syncWithApplicationTheme(scope.activeTheme, orig['editor:theme'].theme))};
+                    p['editor:theme'] = {...orig['editor:theme'], theme: JSON.stringify(authThemes.syncWithApplicationTheme(scope.activeTheme, orig['editor:theme'].theme ?? JSON.stringify(DEFAULT_EDITOR_THEME.theme)))};
                 }
 
                 return p;
