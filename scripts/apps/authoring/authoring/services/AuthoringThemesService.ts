@@ -2,17 +2,22 @@ import {ITheme} from 'apps/authoring-react/toolbar/proofreading-theme-modal';
 
 export var PREFERENCES_KEY = 'editor:theme';
 
+var THEME_DEFAULT = {
+    font: 'sans',
+    theme: 'default',
+    headline: 'medium',
+    abstract: 'medium',
+    body: 'medium',
+};
+
+export var DEFAULT_EDITOR_THEME = {
+    type: 'string',
+    theme: THEME_DEFAULT,
+};
+
 AuthoringThemesService.$inject = ['storage', 'preferencesService'];
 export function AuthoringThemesService(storage, preferencesService) {
     var service: any = {};
-
-    var THEME_DEFAULT = {
-        font: 'sans',
-        theme: 'default',
-        headline: 'medium',
-        abstract: 'medium',
-        body: 'medium',
-    };
 
     service.availableThemes = {
         fonts: [
