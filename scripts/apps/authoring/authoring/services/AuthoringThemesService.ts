@@ -101,5 +101,20 @@ export function AuthoringThemesService(storage, preferencesService) {
         });
     };
 
+    // when the user change theme of application, the theme of editor will inherit the app's
+    service.syncWithApplicationTheme = (appTheme: string, themeObject: any) => {
+        let activeThemeObject = JSON.parse(themeObject);
+
+        if (activeThemeObject.theme === 'default' || activeThemeObject.theme === 'dark') {
+            let activeTheme = appTheme === 'dark-ui'
+                ? {...activeThemeObject, theme: 'dark'}
+                : {...activeThemeObject, theme: 'default'};
+
+            return activeTheme;
+        } else {
+            return activeThemeObject;
+        }
+    };
+
     return service;
 }
