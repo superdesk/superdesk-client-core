@@ -419,7 +419,15 @@ export function UserPreferencesDirective(
                 });
 
                 if (orig['editor:theme'] != null) {
-                    p['editor:theme'] = {...orig['editor:theme'], theme: JSON.stringify(authThemes.syncWithApplicationTheme(scope.activeTheme, orig['editor:theme'].theme ?? JSON.stringify(DEFAULT_EDITOR_THEME.theme)))};
+                    p['editor:theme'] = {
+                        ...orig['editor:theme'],
+                        theme: JSON.stringify(authThemes.syncWithApplicationTheme(
+                            scope.activeTheme,
+                            orig['editor:theme'].theme.length
+                                ? orig['editor:theme'].theme
+                                : JSON.stringify(DEFAULT_EDITOR_THEME.theme),
+                        )),
+                    };
                 }
 
                 return p;
