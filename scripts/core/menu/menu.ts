@@ -4,6 +4,7 @@ import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 import {setupAuthoringReact} from './authoring-switch';
+import {AuthoringSwitch} from 'apps/authoring-react/authoring-swtich';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -69,6 +70,10 @@ angular.module('superdesk.core.menu', [
             GlobalMenuHorizontal,
             [],
         ),
+    )
+    .component(
+        'sdAuthoringSwitch',
+        reactToAngular1(AuthoringSwitch),
     )
 
     // set flags for other directives
