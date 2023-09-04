@@ -7,7 +7,6 @@ import {PLAIN_TEXT_TEMPLATE_NAME} from './constants';
 
 class Authoring {
     lock: any;
-    publish_button: any;
     correct_button: any;
     kill_button: any;
     close_button: any;
@@ -24,9 +23,7 @@ class Authoring {
     newEmptyPackageLink: any;
     infoIconsBox: any;
     sendToButton: any;
-    sendAndContinueBtn: any;
     sendAndPublishBtn: any;
-    sendBtn: any;
     moreActionsButton: any;
     multieditButton: any;
     compareVersionsMenuItem: any;
@@ -39,7 +36,6 @@ class Authoring {
     anpa_category: any;
     subject: any;
     missing_link: any;
-    publish_panel: any;
     send_panel: any;
     fetch_panel: any;
     headline: any;
@@ -66,9 +62,7 @@ class Authoring {
     ignore: () => any;
     savePublish: () => any;
     publish: (skipConfirm?: any) => void;
-    sendAndpublish: (desk: any, skipConfirm?: any) => void;
     closeSendAndPublish: () => any;
-    publishFrom: (desk: any) => void;
     schedule: (skipConfirm?: any) => void;
     correct: () => any;
     save: () => any;
@@ -183,7 +177,6 @@ class Authoring {
 
     constructor() {
         this.lock = element(by.css('[ng-click="lock()"]'));
-        this.publish_button = element(by.buttonText('publish'));
         this.correct_button = element(by.buttonText('correct'));
         this.kill_button = element(by.buttonText('kill'));
         this.close_button = element(by.buttonText('Close'));
@@ -202,9 +195,7 @@ class Authoring {
         this.infoIconsBox = element(by.css('.info-icons'));
 
         this.sendToButton = element(by.id('send-to-btn'));
-        this.sendAndContinueBtn = element(by.buttonText('send and continue'));
         this.sendAndPublishBtn = element(by.buttonText('publish from'));
-        this.sendBtn = element(by.buttonText('send'));
 
         this.moreActionsButton = element(by.id('more-actions'));
 
@@ -225,7 +216,6 @@ class Authoring {
             .all(by.css('[data-field="anpa_category"]'));
         this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
         this.missing_link = element(by.className('missing-link'));
-        this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
         this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
         this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
         this.headline = element(by.css('.headline [contenteditable]'));
@@ -291,22 +281,20 @@ class Authoring {
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
-            browser.wait(ECE.elementToBeClickable(this.send_panel));
-            this.send_panel.click();
+            el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
+            el(['authoring', 'interactive-actions-panel', 'destination-select']).click();
 
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
+            // doesn't work using full selector; TODO: update to use tree select
+            element(by.cssContainingText('option', desk)).click();
+
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(['stage-select'], by.buttonText(stage));
             }
             if (_continue) {
-                this.sendAndContinueBtn.click();
+                el(['authoring', 'interactive-actions-panel', 'send-and-open']).click();
             } else {
-                this.sendBtn.click();
+                el(['authoring', 'interactive-actions-panel', 'send']).click();
             }
         };
 
@@ -417,40 +405,8 @@ class Authoring {
         };
 
         this.publish = function(skipConfirm) {
-            browser.wait(() => this.sendToButton.isPresent(), 1000);
-            this.sendToButton.click();
-
-            browser.wait(() => this.publish_panel.isPresent(), 3000);
-
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 3000);
-
-            this.publish_panel.click();
-            this.publish_button.click();
-
-            if (!skipConfirm) {
-                var modal = element(by.className('modal__dialog'));
-
-                modal.isPresent().then((isPresent) => {
-                    if (isPresent) {
-                        modal.element(by.className('btn--primary')).click();
-                    }
-                });
-            }
-        };
-
-        this.sendAndpublish = function(desk, skipConfirm) {
-            browser.wait(() => this.sendToButton.isPresent(), 1000);
-            this.sendToButton.click();
-
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 1000);
-
-            this.publish_panel.click();
-            this.selectDeskforSendTo(desk);
-            this.sendAndPublishBtn.click();
+            el(['authoring', 'open-send-publish-pane']).click();
+            el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));
@@ -464,17 +420,7 @@ class Authoring {
         };
 
         this.closeSendAndPublish = function() {
-            var sidebar = element.all(by.css('.side-panel')).last();
-
-            return sidebar.element(by.css('[ng-click="close()"]')).click();
-        };
-
-        this.publishFrom = function(desk) {
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_panel.isPresent(), 2000);
-            this.selectDeskforSendTo(desk);
-            this.sendAndPublishBtn.click();
+            el(['authoring', 'interactive-actions-panel', 'close']).click();
         };
 
         this.schedule = function(skipConfirm) {
@@ -484,14 +430,10 @@ class Authoring {
             var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var scheduleTime = '04:00';
 
-            element(by.model('item.publish_schedule_date')).element(by.tagName('input')).sendKeys(scheduleDate);
-            element(by.model('item.publish_schedule_time')).element(by.tagName('input')).sendKeys(scheduleTime);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).sendKeys(scheduleDate);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).sendKeys(scheduleTime);
 
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 1000);
-
-            this.publish_button.click();
+            el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));

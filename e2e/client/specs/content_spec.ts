@@ -33,8 +33,8 @@ describe('content', () => {
         var embargoTime = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' +
                         (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
 
-        element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
-        element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
+        el(['authoring', 'interactive-actions-panel', 'embargo', 'date-input']).sendKeys(embargoDate);
+        el(['authoring', 'interactive-actions-panel', 'embargo', 'time-input']).sendKeys(embargoTime);
     }
 
     it('can navigate with keyboard', () => {
@@ -219,10 +219,10 @@ describe('content', () => {
 
     it('can display embargo in metadata when set', () => {
         workspace.editItem('item3', 'SPORTS');
-        authoring.sendToButton.click();
+
+        el(['open-send-publish-pane']).click();
 
         setEmbargo();
-        browser.sleep(100);
 
         authoring.closeSendAndPublish();
 
@@ -235,39 +235,5 @@ describe('content', () => {
         expect(element(by.css('[datetime="item.embargo"]')).isDisplayed()).toBe(true);
 
         content.closePreview();
-    });
-
-    it('can enable/disable send based on embargo', () => {
-        // Initial steps before proceeding, to get initial state of send buttons.
-        workspace.editItem('item3', 'SPORTS');
-        authoring.sendTo('Sports Desk', 'Incoming Stage');
-        authoring.confirmSendTo();
-
-        workspace.editItem('item3', 'SPORTS');
-        authoring.sendToButton.click().then(() => {
-            // Initial State
-            expect(authoring.sendBtn.isEnabled()).toBe(false);
-        });
-
-        var sidebar = element.all(by.css('.side-panel')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
-
-        dropdown.waitReady();
-        dropdown.click();
-        sidebar.element(by.buttonText('Sports Desk')).click();
-
-        // State after selecting different Stage in the same desk
-        sidebar.element(by.buttonText('two')).click();
-        expect(authoring.sendBtn.isEnabled()).toBe(true);
-
-        // State after setting Embargo
-        setEmbargo();
-        browser.sleep(100);
-        expect(authoring.sendBtn.isEnabled()).toBe(true);
-
-        // State after changing Desk
-        dropdown.click();
-        sidebar.element(by.buttonText('Politic Desk')).click();
-        expect(authoring.sendBtn.isEnabled()).toBe(true);
     });
 });

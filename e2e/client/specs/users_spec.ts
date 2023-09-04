@@ -247,7 +247,6 @@ describe('users', () => {
             // navigate to Workspace and create a new article
             workspace.openContent();
 
-
             authoring.createTextItem();
 
             // authoring opened, click the set category menu and see what

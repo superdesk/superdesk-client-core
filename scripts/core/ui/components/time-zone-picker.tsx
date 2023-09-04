@@ -22,7 +22,6 @@ export class TimeZonePicker extends React.PureComponent<IProps> {
 
         return (
             <SelectFilterable
-                hideLabel={true}
                 items={keys}
                 value={this.props.value}
                 onChange={(val) => this.props.onChange(val)}

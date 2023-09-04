@@ -40,7 +40,6 @@ export class DestinationSelect extends React.PureComponent<IProps> {
             <div>
                 <div style={{paddingTop: 5}}>
                     <SelectFilterable
-                        hideLabel={true}
                         value={(() => {
                             const dest = selectedDestination;
 
@@ -75,6 +74,8 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                             }
                         }}
                         getLabel={(destination) => destination.label}
+                        required
+                        data-test-id="destination-select"
                     />
                 </div>
                 {
@@ -103,6 +104,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                                         disabled: (this.props.disallowedStages ?? []).includes(stage._id),
                                     }))
                                 }
+                                data-test-id="stage-select"
                             />
                         </div>
                     )

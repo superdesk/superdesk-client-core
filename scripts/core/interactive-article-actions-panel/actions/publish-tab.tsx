@@ -95,7 +95,11 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     };
                 }
 
-                confirmPublish([itemToPublish]).then(() => {
+                const confirmed = appConfig?.features?.confirmDueDate === true
+                    ? confirmPublish([itemToPublish])
+                    : Promise.resolve();
+
+                confirmed.then(() => {
                     // Cloning to prevent objects from being modified by angular
                     sdApi.article.publishItem(
                         cloneDeep(this.props.item),
@@ -156,7 +160,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
         return (
             <React.Fragment>
-                <PanelContent markupV2={markupV2}>
+                <PanelContent markupV2={markupV2} data-test-id="publishing-section">
                     <div style={style}>
                         <div>
                             {
@@ -282,6 +286,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                         size="large"
                         type="highlight"
                         expand
+                        data-test-id="publish"
                     />
                 </PanelFooter>
             </React.Fragment>

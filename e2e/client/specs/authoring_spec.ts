@@ -64,7 +64,9 @@ describe('authoring', () => {
 
     it('authoring operations', () => {
         // allows to create a new empty package
-        monitoring.createItemAction('create_package');
+        el(['authoring-create']).click();
+        el(['content-create-dropdown', 'create-package']).click();
+
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
         authoring.close();
 

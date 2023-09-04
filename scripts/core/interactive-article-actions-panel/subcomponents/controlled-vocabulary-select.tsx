@@ -53,7 +53,6 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         type={this.state.allow ? 'default' : 'primary'}
                     />
                     <SelectFilterable
-                        hideLabel={true}
                         items={itemsExcludingSelected}
                         value={this.state.vocabulary}
                         getLabel={(vocabulary) => vocabulary?.name ?? ''}

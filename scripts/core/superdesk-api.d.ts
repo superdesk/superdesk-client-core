@@ -2153,6 +2153,8 @@ declare module 'superdesk-api' {
         style?: React.CSSProperties;
 
         children: Array<React.ReactNode>;
+
+        'data-test-id'?: string;
     }
 
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {

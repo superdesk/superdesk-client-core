@@ -95,6 +95,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                                                     publishSchedule: null,
                                                 });
                                             }}
+                                            data-test-id="embargo"
                                         />
                                     </ToggleBox>
                                 )
@@ -112,6 +113,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                                                     embargo: null,
                                                 });
                                             }}
+                                            data-test-id="publish-schedule"
                                         />
                                     </ToggleBox>
                                 )

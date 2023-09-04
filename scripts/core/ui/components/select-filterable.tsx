@@ -1,6 +1,5 @@
 import React from 'react';
-import {SelectWithTemplate} from 'superdesk-ui-framework/react';
-import {gettext} from 'core/utils';
+import {TreeSelect} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     items: Array<T>;
@@ -10,49 +9,65 @@ interface IProps<T> {
     // used for filtering
     getLabel(item: T): string;
 
-    // controls whether a label is shown next to the field; defaults to false
-    hideLabel?: boolean;
     required?: boolean;
     disabled?: boolean;
-    itemTemplate?: React.ComponentType<{option: T | null}>;
     zIndex?: number;
+
+    'data-test-id'?: string;
 }
 
-export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
+export class SelectFilterable<T> extends React.PureComponent<IProps<T>> { // TODO: use tree select when fixed
     render() {
-        const {items, value, getLabel, required, hideLabel} = this.props;
-
-        const defaultTemplate = ({option}) => (
-            <div>{getLabel(option)}</div>
-        );
+        const {items, value, getLabel, onChange, required, zIndex, disabled} = this.props;
 
         return (
-            <SelectWithTemplate
-                fullWidth
-                label=""
-                inlineLabel
-                labelHidden
-                key={JSON.stringify(items)} // re-mount when items change
-                getItems={(searchString) => searchString === null
-                    ? Promise.resolve(items)
-                    : Promise.resolve(
-                        items.filter(
-                            (item) => getLabel(item).toLocaleLowerCase().includes(searchString.toLocaleLowerCase()),
-                        ),
+            <select
+                value={value == null ? '' : getLabel(value)}
+                onChange={(event) => {
+                    const label = event.target.value;
+
+                    if (label === '') {
+                        onChange(null);
+                    } else {
+                        onChange(items.find((item) => label === getLabel(item)));
+                    }
+                }}
+                data-test-id={this.props['data-test-id']}
+            >
+                {
+                    this.props.required !== true && (
+                        <option value="" />
                     )
                 }
-                getLabel={getLabel}
-                value={value}
-                areEqual={(a, b) => getLabel(a) === getLabel(b)}
-                itemTemplate={this.props.itemTemplate ?? defaultTemplate}
-                noResultsFoundMessage={gettext('No results found')}
-                onChange={(item) => {
-                    this.props.onChange(item);
-                }}
-                disabled={this.props.disabled}
-                required={required}
-                zIndex={this.props.zIndex}
-            />
+
+                {
+                    items.map((item, i) => (
+                        <option value={getLabel(item)} key={i}>
+                            {getLabel(item)}
+                        </option>
+                    ))
+                }
+            </select>
         );
+
+        // return (
+        //     <TreeSelect
+        //         key={JSON.stringify(items)} // re-mount when items change
+        //         inlineLabel
+        //         labelHidden
+        //         kind="synchronous"
+        //         value={[value]}
+        //         getOptions={() => items.map((item) => ({value: item}))}
+        //         onChange={(val) => {
+        //             onChange(val[0] ?? null);
+        //         }}
+        //         getLabel={getLabel}
+        //         getId={getLabel}
+        //         required={required}
+        //         disabled={disabled}
+        //         zIndex={zIndex}
+        //         data-test-id={this.props['data-test-id']}
+        //     />
+        // );
     }
 }

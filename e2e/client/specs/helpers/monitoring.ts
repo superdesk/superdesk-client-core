@@ -17,7 +17,6 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
-    createItemAction: (action: any) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -159,18 +158,6 @@ class Monitoring {
          */
         this.showSearch = function() {
             el(['workspace-navigation'], by.css('[aria-label="Search"]')).click();
-        };
-
-        /**
-         * On monitoring view create a new item
-         *
-         * @param {string} action - the create item action can be: create_text_article,
-         * create_preformatted_article and create_package
-         */
-        this.createItemAction = function(action) {
-            element(by.className('icon-plus-large')).click();
-            element(by.id(action)).click();
-            browser.sleep(500);
         };
 
         /**
