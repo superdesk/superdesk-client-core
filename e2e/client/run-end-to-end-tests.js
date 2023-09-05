@@ -38,15 +38,6 @@ ensurePackageInstalled()
     .then(() => {
         const argumentsToForward = process.argv.slice(2).join(' ');
 
-        execSync(
-            `
-                echo "chrome version:" && $CHROME_BIN --version
-                echo "\n"
-                echo "webdriver-manager version:" && npx webdriver-manager version
-                echo "\n"
-            `,
-            {stdio: 'inherit'},
-        );
         execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
     })
     .catch((e) => {

@@ -1,6 +1,7 @@
 /* eslint-disable comma-dangle */
 
 var path = require('path');
+const execSync = require('child_process').execSync;
 
 function getChromeOptions() {
     var chromeOptions = {
@@ -55,6 +56,16 @@ var config = {
     chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
 
     onPrepare: function() {
+        execSync(
+            `
+                echo "chrome version:" && $CHROME_BIN --version
+                echo "\n"
+                echo "webdriver-manager version:" && npx webdriver-manager version
+                echo "\n"
+            `,
+            {stdio: 'inherit'},
+        );
+
         require('./specs/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
 
         // so it can be used without import in tests
