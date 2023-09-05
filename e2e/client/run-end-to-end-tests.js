@@ -19,7 +19,7 @@ function installWebdriverDriver() {
         } catch (_) {
             // driver not installed, installing:
 
-            const  version = execSync('$CHROME_BIN --product-version').toString();;
+            const  version = execSync('$CHROME_BIN --product-version').toString();
 
             if (version == null) {
                 return reject('To launch the test server a chrome based browser has to be installed and CHROME_BIN environment variable set.');
@@ -38,7 +38,16 @@ ensurePackageInstalled()
     .then(() => {
         const argumentsToForward = process.argv.slice(2).join(' ');
 
-        return execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
+        execSync(
+            `
+                echo "chrome version:" && $CHROME_BIN --product-version
+                echo "\n"
+                echo "webdriver-manager version:" && npx webdriver-manager version
+                echo "\n"
+            `,
+            {stdio: 'inherit'},
+        );
+        execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
     })
     .catch((e) => {
         console.error(e);
