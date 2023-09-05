@@ -12,7 +12,7 @@
     "jasmine-reporters": "2.3.0",
     "protractor": "7.0.0",
     "typescript": "4.9.3",
-    "webdriver-manager": "^12.1.8"
+    "webdriver-manager": "^12.1.9"
   },
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
