@@ -40,7 +40,7 @@ ensurePackageInstalled()
 
         execSync(
             `
-                echo "chrome version:" && $CHROME_BIN --product-version
+                echo "chrome version:" && $CHROME_BIN --version
                 echo "\n"
                 echo "webdriver-manager version:" && npx webdriver-manager version
                 echo "\n"
