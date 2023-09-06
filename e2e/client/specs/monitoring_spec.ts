@@ -474,7 +474,7 @@ describe('monitoring', () => {
     it('can start content upload', () => {
         monitoring.openMonitoring();
 
-        el(['authoring-create']).click();
+        el(['content-create']).click();
         el(['content-create-dropdown', 'upload-media']).click();
 
         expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();

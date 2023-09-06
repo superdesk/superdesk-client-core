@@ -163,7 +163,7 @@ describe('content', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
-        el(['authoring-create']).click();
+        el(['content-create']).click();
         el(['content-create-dropdown', 'create-package']).click();
 
         element.all(by.model('item.headline')).first().sendKeys('Empty Package');

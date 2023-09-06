@@ -164,7 +164,7 @@ class Monitoring {
          * Create new item using desk template
          */
         this.createFromDeskTemplate = () => {
-            el(['authoring-create']).click();
+            el(['content-create']).click();
             el(['content-create-dropdown', 'default-desk-template']).click();
         };
 
@@ -707,7 +707,7 @@ class Monitoring {
         };
 
         this.openCreateMenu = function() {
-            element(by.css('[data-test-id="authoring-create"]')).click();
+            element(by.css('[data-test-id="content-create"]')).click();
             browser.sleep(100);
         };
 

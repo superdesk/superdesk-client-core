@@ -32,7 +32,7 @@ describe('archived', () => {
         expect(authoring.edit_correct_button.isDisplayed()).toBe(false);
         expect(authoring.edit_kill_button.isDisplayed()).toBe(false);
         expect(authoring.edit_takedown_button.isDisplayed()).toBe(false);
-        expect(element(by.css('[data-test-id="authoring-create]')).isPresent()).toBe(false);
+        expect(element(by.css('[data-test-id="content-create"]')).isPresent()).toBe(false);
         expect(authoring.sendToButton.isDisplayed()).toBe(false);
         authoring.showInfo();
         expect(authoring.isPublishedState()).toBe(true);

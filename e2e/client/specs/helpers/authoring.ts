@@ -344,7 +344,7 @@ class Authoring {
          * @param {String} name
          */
         this.createTextItemFromTemplate = (name) => {
-            el(['authoring-create']).click();
+            el(['content-create']).click();
             el(['content-create-dropdown'], by.buttonText('More templates...')).click();
             el(['content-create-dropdown', 'search']).sendKeys(name);
             el(['content-create-dropdown'], by.buttonText(name)).click();
