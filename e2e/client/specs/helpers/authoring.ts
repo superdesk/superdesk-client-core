@@ -289,7 +289,10 @@ class Authoring {
             element(by.cssContainingText('option', desk)).click();
 
             if (stage) {
-                el(['stage-select'], by.buttonText(stage));
+                el(
+                    ['authoring', 'interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
             if (_continue) {
                 el(['authoring', 'interactive-actions-panel', 'send-and-open']).click();

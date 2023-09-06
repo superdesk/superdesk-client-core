@@ -59,7 +59,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: (item, stage?: string) => wdpromise.Promise<void>;
+    unspikeItem: (item, stage?: string) => void;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -507,13 +507,14 @@ class Monitoring {
         this.unspikeItem = function(item, stage?: string) {
             articleList.executeContextMenuAction(this.getSpikedItem(item), 'Unspike Item');
 
-            var sidebar = element.all(by.css('.side-panel')).last();
-
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
 
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.openItemMenu = function(group, item) {
