@@ -109,6 +109,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     )
                         .then(() => {
                             ng.get('authoringWorkspace').close();
+                            ng.get('$rootScope').$applyAsync(); // required for authoring close to take effect
                             notify.success('Item published.');
                         });
                 });
