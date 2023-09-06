@@ -84,6 +84,7 @@ var config = {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
                     browser.screenshot(result.fullName.replace(/[^\w]+/g, '-'));
+                    require('./specs/helpers/utils').printLogs();
                 }
             };
         }
