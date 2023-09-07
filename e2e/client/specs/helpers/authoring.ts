@@ -302,22 +302,21 @@ class Authoring {
         };
 
         this.duplicateTo = (desk, stage, open) => {
-            let duplicateButton = element(by.id('duplicate-btn'));
-            let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
+            el(['interactive-actions-panel', 'destination-select']).click();
 
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
+            // doesn't work using full selector; TODO: update to use tree select
+            element(by.cssContainingText('option', desk)).click();
 
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
             if (open) {
-                duplicateAndOpenButton.click();
+                el(['interactive-actions-panel', 'duplicate-and-open']).click();
             } else {
-                duplicateButton.click();
+                el(['interactive-actions-panel', 'duplicate']).click();
             }
         };
 
