@@ -46,7 +46,7 @@ export const debugInfo = {
     translationsLoaded: false,
 };
 
-export let authoringReactEnabledUserSelection = (JSON.parse(localStorage.getItem('auth-react') ?? 'true') as boolean);
+export let authoringReactEnabledUserSelection = (JSON.parse(localStorage.getItem('auth-react') ?? 'false') as boolean);
 
 export function toggleAuthoringReact(enabled: boolean) {
     localStorage.setItem('auth-react', JSON.stringify(enabled));
@@ -58,7 +58,7 @@ export function toggleAuthoringReact(enabled: boolean) {
  * Authoring react has to be enabled in the broadcasting
  * module regardless of the user selection.
  * */
-export let authoringReactViewEnabled = true;
+export let authoringReactViewEnabled = authoringReactEnabledUserSelection;
 export const uiFrameworkAuthoringPanelTest = false;
 
 export function setAuthoringReact(enabled: boolean) {
