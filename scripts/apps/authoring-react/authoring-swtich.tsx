@@ -1,8 +1,8 @@
-import {showModal} from '@superdesk/common';
 import {authoringReactEnabledUserSelection, toggleAuthoringReact} from 'appConfig';
+import {showOptionsModal} from 'core/ui/components/options-modal';
 import {gettext} from 'core/utils';
 import React from 'react';
-import {Modal, Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework/react';
 
 export class AuthoringSwitch extends React.Component {
     render(): React.ReactNode {
@@ -14,39 +14,27 @@ export class AuthoringSwitch extends React.Component {
                 size="small"
                 type="highlight"
                 text={gettext('Switch authoring')}
-                onClick={() => {
-                    showModal(({closeModal}) => {
-                        return (
-                            <Modal
-                                visible
-                                zIndex={2020}
-                                position="top"
-                                size="small"
-                                headerTemplate={gettext('Switch authoring?')}
-                                footerTemplate={(
-                                    <>
-                                        <Button
-                                            type="primary"
-                                            onClick={() => {
-                                                toggleAuthoringReact(!authoringReactEnabledUserSelection);
-                                                window.location.reload();
-                                            }}
-                                            text={gettext('Confirm')}
-                                        />
-                                        <Button
-                                            onClick={() => {
-                                                closeModal();
-                                            }}
-                                            text={gettext('Cancel')}
-                                        />
-                                    </>
-                                )}
-                            >
-                                {gettext('To switch the authoring the page needs to be reloaded, reload it now?')}
-                            </Modal>
-                        );
-                    });
-                }}
+                onClick={() => showOptionsModal(
+                    gettext('Switch authoring?'),
+                    gettext('The page needs to be reloaded in order to do that.'),
+                    [
+                        {
+                            label: gettext('Cancel'),
+                            onSelect: (closePromptFn) => {
+                                closePromptFn();
+                            },
+                        },
+                        {
+                            label: gettext('Confirm'),
+                            onSelect: (closePromptFn) => {
+                                closePromptFn();
+                                toggleAuthoringReact(!authoringReactEnabledUserSelection);
+                                window.location.reload();
+                            },
+                            highlightOption: true,
+                        },
+                    ],
+                )}
             />
         );
     }
