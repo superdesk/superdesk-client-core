@@ -42,10 +42,9 @@ export function printLogs(prefix) {
         .then((browserLog) => {
             var logs = browserLog.filter((log) => log.level.value >= 1000);
 
-            console.info(
-                (prefix ? prefix + ' ' : '') +
-                'log: ' + require('util').inspect(logs, {dept: 3}),
-            );
+            for (const log of logs) {
+                console.error(`BROWSER CONSOLE ERROR: ${log.message}`);
+            }
         });
 }
 
