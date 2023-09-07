@@ -669,7 +669,7 @@ describe('monitoring', () => {
 
         monitoring.fetchAndOpen(0, 5);
 
-        expect(authoring.save_button.isDisplayed()).toBe(true);
+        browser.wait(ECE.visibilityOf(authoring.save_button));
     });
 
     it('can display desk content in desk single view with their respective titles', () => {

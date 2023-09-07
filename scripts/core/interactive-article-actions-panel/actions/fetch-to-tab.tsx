@@ -79,6 +79,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                                     type="primary"
                                     style="hollow"
                                     expand
+                                    data-test-id="fetch-and-open"
                                 />
                             )
                         }
@@ -91,6 +92,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                             size="large"
                             type="primary"
                             expand
+                            data-test-id="fetch"
                         />
                     </ButtonGroup>
                 </PanelFooter>

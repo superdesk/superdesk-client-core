@@ -749,7 +749,7 @@ class Monitoring {
 
         this.fetchAndOpen = function(group, item) {
             this.actionOnItem('Fetch To', group, item);
-            return element(by.css('[ng-click="send(true)"]')).click();
+            el(['interactive-actions-panel', 'fetch-and-open']).click();
         };
 
         /**
