@@ -501,7 +501,7 @@ class Monitoring {
 
         this.unspikeMultipleItems = function() {
             multiAction('Unspike');
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.unspikeItem = function(item, stage?: string) {
