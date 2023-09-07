@@ -529,7 +529,7 @@ class Monitoring {
         };
 
         this.showMonitoringSettings = function() {
-            element(by.css('.icon-settings')).click();
+            el(['monitoring-settings-button']).click();
             browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
         };

@@ -249,7 +249,6 @@ describe('monitoring', () => {
     it('configure a saved search from other user', () => {
         monitoring.openMonitoring();
         workspace.createWorkspace('My Workspace');
-        browser.sleep(500);
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(3);
