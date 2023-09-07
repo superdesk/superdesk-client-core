@@ -730,7 +730,7 @@ class Monitoring {
         };
 
         this.clickOnFetchButton = function() {
-            return element(by.css('[ng-click="send()"]')).click();
+            el(['interactive-actions-panel', 'fetch']).click();
         };
 
         // Cancel button resets the multi selection
