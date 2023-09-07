@@ -20,7 +20,7 @@ describe('archived', () => {
         expect(monitoring.getPreviewTitle()).toBe(itemText);
     });
 
-    fit('open an item in authoring', () => {
+    it('open an item in authoring', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.getArchivedContent();
         globalSearch.waitForItemCount(3);
