@@ -17,15 +17,21 @@ export type ISubitemsValueOperational = Array<ISubitem>;
 export type ISubitemsValueStorage = ISubitemsValueOperational;
 export type ISubitemsFieldConfig = never;
 export type ISubitemsUserPreferences = never;
+export type ISubItemsFieldType = ICustomFieldType<
+    ISubitemsValueOperational,
+    ISubitemsValueStorage,
+    ISubitemsFieldConfig,
+    ISubitemsUserPreferences
+>;
 
-export function getSubItemsField()
-: ICustomFieldType<ISubitemsValueOperational, ISubitemsValueStorage, ISubitemsFieldConfig, ISubitemsUserPreferences> {
+export function getSubItemsField(): ISubItemsFieldType {
     const field: ReturnType<typeof getSubItemsField> = {
         id: SUBITEMS_FIELD_TYPE,
         label: gettext('Subitems'),
         editorComponent: Editor,
         previewComponent: Preview,
 
+        private: true,
         hasValue: (valueOperational) => valueOperational != null && Object.keys(valueOperational).length > 0,
         getEmptyValue: () => [],
 

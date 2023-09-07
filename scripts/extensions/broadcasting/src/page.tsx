@@ -81,10 +81,12 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                 enabled: true,
                 allowed: true,
                 onToggle: (val) => {
-                    this.setState({rundownAction: {
-                        ...rundownAction,
-                        fullWidth: val,
-                    }});
+                    this.setState({
+                        rundownAction: {
+                            ...rundownAction,
+                            fullWidth: val,
+                        },
+                    });
                 },
             });
         }

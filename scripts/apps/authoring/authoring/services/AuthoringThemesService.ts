@@ -2,17 +2,22 @@ import {ITheme} from 'apps/authoring-react/toolbar/proofreading-theme-modal';
 
 export var PREFERENCES_KEY = 'editor:theme';
 
+var THEME_DEFAULT = {
+    font: 'sans',
+    theme: 'default',
+    headline: 'medium',
+    abstract: 'medium',
+    body: 'medium',
+};
+
+export var DEFAULT_EDITOR_THEME = {
+    type: 'string',
+    theme: THEME_DEFAULT,
+};
+
 AuthoringThemesService.$inject = ['storage', 'preferencesService'];
 export function AuthoringThemesService(storage, preferencesService) {
     var service: any = {};
-
-    var THEME_DEFAULT = {
-        font: 'sans',
-        theme: 'default',
-        headline: 'medium',
-        abstract: 'medium',
-        body: 'medium',
-    };
 
     service.availableThemes = {
         fonts: [
@@ -99,6 +104,21 @@ export function AuthoringThemesService(storage, preferencesService) {
             result[PREFERENCES_KEY]['proofreadTheme'] = JSON.stringify(payload.proofreading);
             return preferencesService.update(result);
         });
+    };
+
+    // when the user change theme of application, the theme of editor will inherit the app's
+    service.syncWithApplicationTheme = (appTheme: string, themeObject: any) => {
+        let activeThemeObject = JSON.parse(themeObject);
+
+        if (activeThemeObject.theme === 'default' || activeThemeObject.theme === 'dark') {
+            let activeTheme = appTheme === 'dark-ui'
+                ? {...activeThemeObject, theme: 'dark'}
+                : {...activeThemeObject, theme: 'default'};
+
+            return activeTheme;
+        } else {
+            return activeThemeObject;
+        }
     };
 
     return service;

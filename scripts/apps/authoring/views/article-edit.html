@@ -726,30 +726,6 @@
 
 <!-- Slugline -->
 <div class="field"
-     sd-validation-error="error.slugline"
-     data-required="schema.slugline.required"
-     ng-if="schema.slugline && editor['slugline'].section === 'content'"
-     sd-width="{{editor.slugline.sdWidth}}"
-     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
-     order="{{editor.slugline.order}}">
-    <label for="slugline" class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength">
-        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
-    </span>
-    <sd-validate-characters ng-if="schema.slugline.validate_characters"
-        class="disallowed-char-error"
-        item="item.slugline"
-        field="'slugline'"></sd-validate-characters>
-    <input type="text" class="slugline"
-       id="slugline"
-       data-language="item.language"
-       ng-model="item.slugline"
-       ng-change="autosave(item)"
-       ng-disabled="!_editable || schema.slugline.readonly === true"
-       ng-trim="false"
-       tabindex="{{editor.slugline.order}}">
-</div>
-<div class="field"
      sd-width="{{editor.slugline.sdWidth|| 'full'}}"
      ng-if="schema.slugline && editor['slugline'].section === 'content'"
      order="{{editor.slugline.order}}"
