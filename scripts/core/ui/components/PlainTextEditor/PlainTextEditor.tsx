@@ -28,6 +28,8 @@ export interface IProps {
     placeholder?: string;
     onFocus?: () => void;
     disabled?: boolean;
+
+    // Defaults to false.
     multiLine?: boolean;
 }
 
