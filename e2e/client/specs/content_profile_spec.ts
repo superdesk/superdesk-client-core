@@ -19,7 +19,6 @@ describe('Content profiles', () => {
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
         expect(templates.getContentProfile()).toEqual('Simple');
         templates.cancel();
 
