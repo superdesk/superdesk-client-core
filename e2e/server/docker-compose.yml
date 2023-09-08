@@ -24,6 +24,7 @@ services:
             - e2e
         environment:
             - discovery.type=single-node
+            - action.auto_create_index=false
         tmpfs:
             - /usr/share/elasticsearch/data
 
