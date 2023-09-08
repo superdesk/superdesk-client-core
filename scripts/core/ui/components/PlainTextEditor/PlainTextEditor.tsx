@@ -28,6 +28,7 @@ export interface IProps {
     placeholder?: string;
     onFocus?: () => void;
     disabled?: boolean;
+    multiLine?: boolean;
 }
 
 interface IState {
@@ -51,15 +52,17 @@ function updateStateWithValue(value: string, editorState: EditorState) {
 }
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
-    spellcheckerTimeout?: number;
-    selection: SelectionState;
+    private spellcheckerTimeout?: number;
+    private selection: SelectionState;
+    private lastComputedValue: string;
 
     constructor(props) {
         super(props);
+        this.lastComputedValue = props.value?.toString() || '';
 
         this.state = {
             editorState: EditorState.createWithContent(
-                ContentState.createFromText(props.value?.toString() || ''),
+                ContentState.createFromText(this.lastComputedValue),
             ),
             hasFocus: false,
         };
@@ -120,7 +123,9 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
      * This version works fine and we can still handle our own selection state
      * */
     UNSAFE_componentWillReceiveProps(props: IProps) {
-        this.setState({editorState: updateStateWithValue(props.value || '', this.state.editorState)});
+        if (this.lastComputedValue !== props.value) {
+            this.setState({editorState: updateStateWithValue(props.value || '', this.state.editorState)});
+        }
     }
 
     handleEditorChange(editorState: EditorState) {
@@ -130,6 +135,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         ) {
             const value = editorState.getCurrentContent().getPlainText();
 
+            this.lastComputedValue = value;
             this.props.onChange(value, this.props.onChangeData);
         }
 
@@ -153,7 +159,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     }
 
     handleKeyCommand(command: DraftEditorCommand): DraftHandleValue {
-        if (command === 'split-block') {
+        if (command === 'split-block' && this.props.multiLine !== true) {
             return 'handled'; // disable Enter
         }
 
