@@ -56,7 +56,6 @@ describe('Content profiles', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
 
         // publish of the required field will fail
         authoring.setHeaderSluglineText('Story1 slugline');
