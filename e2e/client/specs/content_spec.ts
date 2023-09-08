@@ -141,7 +141,7 @@ describe('content', () => {
 
         browser.sleep(100);
 
-        multiAction('Multiedit');
+        multiAction('Multi-edit');
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);
     });
