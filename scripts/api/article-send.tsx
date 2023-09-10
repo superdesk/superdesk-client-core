@@ -244,6 +244,10 @@ export function sendItems(
                             delete patchFinal['_links'];
 
                             return patchFinal;
+                        }).catch((err) => {
+                            notify.error(err._message ?? gettext('Unknown error occurred'));
+
+                            throw err;
                         });
                     });
                 }),
