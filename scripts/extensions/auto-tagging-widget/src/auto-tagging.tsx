@@ -185,13 +185,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
 
-        componentDidMount() {
-            this._mounted = true;
-        }
 
-        componentWillUnmount() {
-            this._mounted = false;
-        }
 
     
         runAnalysis() {
