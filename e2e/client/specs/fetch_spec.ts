@@ -5,7 +5,7 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
-import {ECE, els} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el, els} from '@superdesk/end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -31,7 +31,7 @@ describe('fetch', () => {
     it('can fetch as', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
-        content.send();
+        el(['interactive-actions-panel', 'fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
