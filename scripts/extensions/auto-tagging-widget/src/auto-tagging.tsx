@@ -184,6 +184,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.save = this.save.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
+
+        componentDidMount() {
+            this._mounted = true;
+        }
+
+        componentWillUnmount() {
+            this._mounted = false;
+        }
+
+    
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
 
@@ -216,10 +226,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 changes: {analysis: resClient},
                             },
                         });
-                        console.log('Analysis result:', resClient);
+                        console.log('runAnalysis result:', resClient);
                     }
                 }).catch((error) => {
-                    console.error('Error during analysis:', error);    
+                    console.error('Error during analysis. We are in runAnalysis:  ', error);   
+
+                    if (this._mounted) {
+                        this.setState({
+                            data: 'not-initialized' // or you could set to a new error state
+                        });
+                    }
+                    
                 });
             });
         }
