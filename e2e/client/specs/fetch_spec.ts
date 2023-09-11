@@ -82,9 +82,9 @@ describe('fetch', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
 
-        var btnFetchAndOpen = element(by.css('[ng-disabled="disableFetchAndOpenButton()"]'));
+        var btnFetchAndOpen = element(s(['interactive-actions-panel', 'fetch-and-open']));
 
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeFalsy();
+        expect(btnFetchAndOpen.isEnabled()).toBe(true);
 
         // Adding a new desk with no member, which serves as a non-member desk when selected
         desks.openDesksSettings();
@@ -117,11 +117,12 @@ describe('fetch', () => {
         content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
 
-        var sidebar = element.all(by.css('.side-panel')).last();
-
-        expect(sidebar.element(by.buttonText('Working Stage')).isPresent()).toBeTruthy();
-        expect(sidebar.element(by.buttonText('Test Stage')).isPresent()).toBeFalsy();
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeTruthy();
+        expect(
+            element(s(['interactive-actions-panel', 'stage-select', 'item'], 'Working Stage')).isPresent(),
+        ).toBeTruthy();
+        expect(
+            element(s(['interactive-actions-panel', 'stage-select', 'item'], 'Test Stage')).isPresent(),
+        ).toBeFalsy();
     });
 
     it('can fetch multiple items', () => {

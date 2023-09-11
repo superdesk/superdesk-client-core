@@ -36,6 +36,8 @@ export class DestinationSelect extends React.PureComponent<IProps> {
             destinations.push(destinationPersonalSpace);
         }
 
+        const userDesksIds: Set<IDesk['_id']> = new Set(sdApi.desks.getCurrentUserDesks().map(({_id}) => _id));
+
         return (
             <div>
                 <div style={{paddingTop: 5}}>
@@ -97,12 +99,20 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                                     orientation: 'horizontal',
                                 }}
                                 options={
-                                    sdApi.desks.getDeskStages(selectedDestination.desk).toArray().map((stage) => ({
-                                        label: stage.name,
-                                        value: stage._id,
-                                        icon: 'ok',
-                                        disabled: (this.props.disallowedStages ?? []).includes(stage._id),
-                                    }))
+                                    sdApi.desks.getDeskStages(selectedDestination.desk).toArray()
+                                        .filter((stage) => {
+                                            if (stage.is_visible === true) {
+                                                return true;
+                                            } else {
+                                                return userDesksIds.has(selectedDestination.desk);
+                                            }
+                                        })
+                                        .map((stage) => ({
+                                            label: stage.name,
+                                            value: stage._id,
+                                            icon: 'ok',
+                                            disabled: (this.props.disallowedStages ?? []).includes(stage._id),
+                                        }))
                                 }
                                 data-test-id="stage-select"
                             />
