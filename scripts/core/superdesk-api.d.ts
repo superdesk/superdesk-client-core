@@ -2082,6 +2082,8 @@ declare module 'superdesk-api' {
         disabled?: boolean;
         autoFocus?: boolean;
         horizontalSpacing?: boolean;
+        valueTemplate?: React.ComponentType<{option: IUser}>;
+        clearable: boolean;
     }
 
     export interface IDropdownTreeGroup<T> {
