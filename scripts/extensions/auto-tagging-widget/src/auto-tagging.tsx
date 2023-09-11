@@ -73,7 +73,7 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
 
     const entities = items.filter((tag) => isEntity(tag));
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-
+    
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => iMatricsConfig.entities[key].order,
@@ -90,6 +90,7 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const others = items.filter((tag) => isEntity(tag) === false);
     const othersGrouped = others.groupBy((tag) => tag.group.value);
 
+    console.log('In getAutoTaggingData function:  ', entitiesGroupedAndSorted, othersGrouped);
     return {entitiesGroupedAndSorted, othersGrouped};
 }
 
