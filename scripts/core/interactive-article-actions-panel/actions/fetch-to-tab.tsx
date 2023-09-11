@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {Button, ButtonGroup, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
@@ -10,6 +10,7 @@ import {DestinationSelect} from '../subcomponents/destination-select';
 import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
 import {noop} from 'lodash';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IProps {
     items: Array<IArticle>;
@@ -50,6 +51,26 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
     render() {
         const {markupV2} = this.props;
 
+        const canFetch: boolean = (() => {
+            if (this.state.selectedDestination.type === 'personal-space') {
+                throw new Error('fetching to personal space is not supported');
+            } else if (this.state.selectedDestination.type === 'desk') {
+                const destinationStage = sdApi.desks.getDeskStages(
+                    this.state.selectedDestination.desk,
+                ).get(this.state.selectedDestination.stage);
+
+                if (destinationStage.is_visible) {
+                    return true;
+                } else {
+                    return sdApi.desks.getCurrentUserDesks()
+                        .map(({_id}) => _id)
+                        .includes(this.state.selectedDestination.desk);
+                }
+            } else {
+                return assertNever(this.state.selectedDestination);
+            }
+        })();
+
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
@@ -80,6 +101,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                                     style="hollow"
                                     expand
                                     data-test-id="fetch-and-open"
+                                    disabled={!canFetch}
                                 />
                             )
                         }
@@ -93,6 +115,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                             type="primary"
                             expand
                             data-test-id="fetch"
+                            disabled={!canFetch}
                         />
                     </ButtonGroup>
                 </PanelFooter>

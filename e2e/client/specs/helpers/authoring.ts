@@ -321,12 +321,9 @@ class Authoring {
         };
 
         this.selectDeskforSendTo = function(desk) {
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = element(by.css('.dropdown--boxed .dropdown__toggle'));
+            el(['interactive-actions-panel', 'destination-select']).click();
 
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
+            element(by.cssContainingText('[data-test-id="interactive-actions-panel"] option', desk)).click();
         };
 
         this.markAction = function() {

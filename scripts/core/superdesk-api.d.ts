@@ -1348,8 +1348,8 @@ declare module 'superdesk-api' {
         desk_order: number;
         desk: IDesk['_id'];
         content_expiry: number;
-        is_visible: boolean;
-        local_readonly: boolean;
+        is_visible: boolean; // public - other users can see content or send articles to that stage
+        local_readonly: boolean; // content is readonly - even for stage owners
         incoming_macro: string;
         outgoing_macro: string;
         onstage_macro: string;
