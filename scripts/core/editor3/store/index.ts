@@ -57,6 +57,7 @@ interface IProps {
     onChange?: any;
     readOnly?: any;
     singleLine?: any;
+    plainText?: any;
     tabindex?: any;
     showTitle?: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -76,6 +77,7 @@ export interface IEditorStore {
     locked: boolean;
     showToolbar: any;
     singleLine: any;
+    plainText: boolean;
     tabindex: any;
     showTitle: any;
     activeCell?: IActiveCell;
@@ -169,6 +171,7 @@ export default function createEditorStore(
             locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
             showToolbar: (props.editorFormat || []).length > 0,
             singleLine: props.singleLine,
+            plainText: props.plainText,
             tabindex: props.tabindex,
             showTitle: props.showTitle,
             activeCell: null, // currently focused table cell
