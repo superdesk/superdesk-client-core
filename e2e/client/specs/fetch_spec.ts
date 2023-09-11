@@ -139,7 +139,7 @@ describe('fetch', () => {
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
         multiAction('Fetch to');
-        content.send();
+        el(['interactive-actions-panel', 'fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
