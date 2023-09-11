@@ -292,6 +292,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                     <PlainTextEditor
                         classes="image-block__description"
                         spellcheck={true}
+                        multiLine={true}
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
                         value={data.description_text}
