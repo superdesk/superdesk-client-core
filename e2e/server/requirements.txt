@@ -4,15 +4,17 @@
 #
 #    pip-compile requirements.in
 #
-amqp==2.6.1
+amqp==5.1.1
     # via kombu
 arrow==0.13.0
     # via
     #   eve-elastic
     #   superdesk-core
+async-timeout==4.0.3
+    # via redis
 authlib==0.14.3
     # via superdesk-core
-babel==2.10.3
+babel==2.12.1
     # via flask-babel
 bcrypt==3.1.7
     # via superdesk-core
@@ -24,21 +26,21 @@ blinker==1.4
     #   flask-mail
     #   raven
     #   superdesk-core
-boto3==1.24.82
+boto3==1.28.37
     # via superdesk-core
-botocore==1.27.82
+botocore==1.31.37
     # via
     #   boto3
     #   s3transfer
-cachetools==5.2.0
+cachetools==5.3.1
     # via flask-oidc-ex
-celery[redis]==4.4.7
+celery[redis]==5.2.7
     # via superdesk-core
-cerberus==1.3.4
+cerberus==1.3.5
     # via
     #   eve
     #   superdesk-core
-certifi==2022.9.24
+certifi==2023.7.22
     # via
     #   elastic-apm
     #   elasticsearch
@@ -49,35 +51,49 @@ cffi==1.15.1
     #   cryptography
 chardet==3.0.4
     # via superdesk-core
-charset-normalizer==2.1.1
+charset-normalizer==3.2.0
     # via requests
 ciso8601==1.0.8
     # via eve-elastic
-click==7.1.2
-    # via flask
+click==8.1.7
+    # via
+    #   celery
+    #   click-didyoumean
+    #   click-plugins
+    #   click-repl
+    #   flask
+    #   superdesk-core
+click-didyoumean==0.3.0
+    # via celery
+click-plugins==1.1.1
+    # via celery
+click-repl==0.3.0
+    # via celery
 croniter==0.3.37
     # via superdesk-core
-cryptography==38.0.1
+cryptography==41.0.3
     # via
     #   authlib
     #   jwcrypto
-deprecated==1.2.13
+deprecated==1.2.14
     # via jwcrypto
 draftjs-exporter[lxml]==2.1.7
     # via superdesk-core
-elastic-apm[flask]==6.7.2
+ecs-logging==2.1.0
+    # via elastic-apm
+elastic-apm[flask]==6.18.0
     # via superdesk-core
 elasticsearch==7.13.4
     # via eve-elastic
 eve==1.1.2
     # via superdesk-core
-eve-elastic==7.3.0
+eve-elastic==7.3.2
     # via superdesk-core
 events==0.3
     # via eve
 feedparser==6.0.10
     # via superdesk-core
-flask==1.1.4
+flask==1.1.2
     # via
     #   eve
     #   flask-babel
@@ -94,17 +110,17 @@ flask-oidc-ex==0.5.5
     # via superdesk-core
 flask-script==2.0.6
     # via superdesk-core
-future==0.18.2
+future==0.18.3
     # via python-twitter
-gunicorn==20.0.4
+gunicorn==21.2.0
     # via -r requirements.in
 hachoir==3.0a3
     # via superdesk-core
 hermescache==0.10.0
     # via superdesk-core
-honcho==1.0.1
+honcho==1.1.0
     # via -r requirements.in
-httplib2==0.20.4
+httplib2==0.22.0
     # via oauth2client
 idna==3.4
     # via requests
@@ -112,19 +128,21 @@ itsdangerous==1.1.0
     # via
     #   flask
     #   flask-oidc-ex
+    #   superdesk-core
 jinja2==2.11.3
     # via
     #   flask
     #   flask-babel
+    #   superdesk-core
 jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jwcrypto==1.4.2
+jwcrypto==1.5.0
     # via
     #   flask-oidc-ex
     #   python-jwt
-kombu==4.6.11
+kombu==5.2.4
     # via
     #   celery
     #   superdesk-core
@@ -140,21 +158,25 @@ markupsafe==2.0.1
     #   superdesk-core
 mongolock==1.3.4
     # via superdesk-core
-natsort==8.2.0
+natsort==8.4.0
     # via croniter
 oauth2client==4.1.3
     # via flask-oidc-ex
-oauthlib==3.2.1
+oauthlib==3.2.2
     # via requests-oauthlib
+packaging==23.1
+    # via gunicorn
 pillow==9.2.0
     # via superdesk-core
-pyasn1==0.4.8
+prompt-toolkit==3.0.39
+    # via click-repl
+pyasn1==0.5.0
     # via
     #   ldap3
     #   oauth2client
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.2.8
+pyasn1-modules==0.3.0
     # via oauth2client
 pycparser==2.21
     # via cffi
@@ -163,7 +185,7 @@ pymongo==3.11.4
     #   eve
     #   mongolock
     #   superdesk-core
-pyparsing==3.0.9
+pyparsing==3.1.1
     # via httplib2
 python-dateutil==2.7.5
     # via
@@ -177,25 +199,24 @@ python-magic==0.4.27
     # via superdesk-core
 python-twitter==3.5
     # via superdesk-core
-pytz==2022.2.1
+pytz==2023.3
     # via
-    #   babel
     #   celery
     #   eve-elastic
     #   flask-babel
     #   superdesk-core
     #   tzlocal
-pyyaml==5.4.1
+pyyaml==6.0.1
     # via superdesk-core
 raven[flask]==6.10.0
     # via superdesk-core
-redis==3.2.1
+redis==4.5.5
     # via
     #   celery
     #   superdesk-core
 regex==2020.7.14
     # via superdesk-core
-requests==2.28.1
+requests==2.31.0
     # via
     #   python-twitter
     #   requests-oauthlib
@@ -204,11 +225,11 @@ requests-oauthlib==1.3.1
     # via python-twitter
 rsa==4.9
     # via oauth2client
-s3transfer==0.6.0
+s3transfer==0.6.2
     # via boto3
 sgmllib3k==1.0.0
     # via feedparser
-simplejson==3.17.6
+simplejson==3.19.1
     # via eve
 six==1.16.0
     # via
@@ -216,13 +237,13 @@ six==1.16.0
     #   flask-oidc-ex
     #   oauth2client
     #   python-dateutil
-superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@feat-content-profiles#egg=Superdesk-Core
+superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@develop
     # via -r requirements.in
-typing-extensions==4.3.0
+typing-extensions==4.7.1
     # via superdesk-core
 tzlocal==2.1
     # via superdesk-core
-unidecode==0.04.21
+unidecode==0.4.21
     # via superdesk-core
 urllib3==1.25.11
     # via
@@ -231,18 +252,20 @@ urllib3==1.25.11
     #   elasticsearch
     #   requests
     #   superdesk-core
-vine==1.3.0
+vine==5.0.0
     # via
     #   amqp
     #   celery
+    #   kombu
+wcwidth==0.2.6
+    # via prompt-toolkit
 websockets==10.3
     # via superdesk-core
 werkzeug==1.0.1
     # via
     #   flask
     #   superdesk-core
-wrapt==1.14.1
-    # via deprecated
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
+wrapt==1.15.0
+    # via
+    #   deprecated
+    #   elastic-apm

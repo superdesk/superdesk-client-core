@@ -44,6 +44,7 @@ class Editor3Directive {
     readOnly: any;
     findReplaceTarget: any;
     singleLine: any;
+    plainText?: boolean;
     debounce: any;
     bindToValue: any;
     tabindex: any;
@@ -182,6 +183,12 @@ class Editor3Directive {
             cleanPastedHtml: '=?',
 
             limit: '=?',
+
+            /**
+             * @type {String}
+             * @description Force the output to be plain text and not contain any html.
+             */
+            plainText: '=?',
         };
     }
 
@@ -207,6 +214,7 @@ class Editor3Directive {
                 this.findReplaceTarget =
                     typeof this.findReplaceTarget !== 'undefined';
                 this.singleLine = this.singleLine || false;
+                this.plainText = this.plainText || false;
                 this.debounce = parseInt(this.debounce || '100', 10);
                 this.bindToValue = this.bindToValue || false;
                 this.tabindex = this.tabindex || 0;
@@ -236,6 +244,7 @@ class Editor3Directive {
                                     singleLine={this.singleLine}
                                     cleanPastedHtml={this.cleanPastedHtml}
                                     autocompleteSuggestions={autocompleteSuggestions}
+                                    plainText={this.plainText}
                                 />
                             </ReactContextForEditor3.Provider>
                         </Provider>,

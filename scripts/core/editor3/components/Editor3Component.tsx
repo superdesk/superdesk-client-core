@@ -113,6 +113,7 @@ interface IProps {
     editorState?: EditorState;
     scrollContainer?: string;
     singleLine?: boolean;
+    plainText?: boolean;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     tabindex?: number;
     suggestingMode?: boolean;
@@ -685,6 +686,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
+    plainText: false,
     cleanPastedHtml: false,
     editorFormat: [],
 };

@@ -10,7 +10,7 @@ describe('highlights', () => {
         it('can mark item for highlights', inject((highlightsService, api, $q) => {
             spyOn(api, 'save').and.returnValue($q.when({}));
             highlightsService.markItem('h1', {_id: 'id', guid: 'guid'});
-            expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: 'h1', marked_item: 'id'});
+            expect(api.save).toHaveBeenCalledWith('marked_for_highlights', {highlights: ['h1'], marked_item: 'id'});
         }));
 
         it('can save highlights configuration', inject((highlightsService, api, $q) => {
