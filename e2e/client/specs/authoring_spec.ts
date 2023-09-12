@@ -324,10 +324,10 @@ describe('authoring', () => {
 
     it('toggle auto spellcheck and hold changes', () => {
         monitoring.actionOnItem('Edit', 2, 1);
-        browser.sleep(300);
+        browser.sleep(500);
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
         authoring.toggleAutoSpellCheck();
-        browser.sleep(300);
+        browser.sleep(500);
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 2);
