@@ -73,7 +73,7 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
 
     const entities = items.filter((tag) => isEntity(tag));
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-    
+
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => iMatricsConfig.entities[key].order,
@@ -90,7 +90,6 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const others = items.filter((tag) => isEntity(tag) === false);
     const othersGrouped = others.groupBy((tag) => tag.group.value);
 
-    console.log('In getAutoTaggingData function:  ', entitiesGroupedAndSorted, othersGrouped);
     return {entitiesGroupedAndSorted, othersGrouped};
 }
 
@@ -190,84 +189,51 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     
         runAnalysis() {
-            console.log('Beginning runAnalysis');
-            const dataBeforeLoading = this.props.article;
-        
-            console.log('Starting runAnalysis. Input XML:', this.state.data);
-        
-            // Function to get the access token
-            const getAccessToken = async () => {
-                console.log('Attempting to retrieve access token...');
-        
-                try {
-                    const response = await fetch('https://ca.cloud.smartlogic.com/token', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
+            const dataBeforeLoading = this.state.data;
+
+            this.setState({data: 'loading'}, () => {
+                const {guid, language, headline, body_html, abstract} = this.props.article;
+                console.log('runAnalysis POST body:', {headline, body_html, abstract});
+
+                httpRequestJsonLocal<{analysis: IServerResponse}>({
+                    method: 'POST',
+                    path: '/ai/',
+                    payload: {
+                        service: 'imatrics',
+                        item: {
+                            guid,
+                            language,
+                            headline,
+                            body_html,
+                            abstract,
                         },
-                        body: 'grant_type=apikey&key=OoP3QRRkLVCzo4sRa6iAyg==',  
-                    });
-        
-                    if (!response.ok) {
-                        console.error('Error fetching access token:', response.statusText);
-                        throw new Error('Failed to fetch access token');
-                    }
-        
-                    const data = await response.json();
-                    console.log('Access token retrieved:', data.access_token);
-        
-                    return data.access_token;  // Modify this based on your token API response structure
-                } catch (error) {
-                    console.error('Error during getAccessToken:', error);
-                    throw error;
-                }
-            };
-        
-            this.setState({ data: 'loading' }, async () => {
-                try {
-                    const accessToken = await getAccessToken();
-        
-                    const response = await fetch('/ai/', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/xml',  // Set to XML content type
-                        },
-                        body: this.props.article,  
-                    });
-        
-                    if (!response.ok) {
-                        console.error('Error during runAnalysis POST request:', response.statusText);
-                        throw new Error('Failed to make POST request in runAnalysis');
-                    }
-        
-                    const res = await response.json();
-        
+                    },
+                }).then((res) => {
                     const resClient = toClientFormat(res.analysis);
-                    console.log('Received analysis result:', resClient);
-        
+
                     if (this._mounted) {
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                    ? { analysis: OrderedMap<string, ITagUi>() }
-                                    : dataBeforeLoading.original,
-                                changes: { analysis: resClient },
+                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                    : dataBeforeLoading.original, // use previous data
+                                changes: {analysis: resClient},
                             },
                         });
+                        console.log('runAnalysis result:', resClient);
                     }
-                } catch (error) {
-                    console.error('Error during analysis. We are in runAnalysis:  ', error, error.message, error.stack);
-        
+                }).catch((error) => {
+                    console.error('Error during analysis. We are in runAnalysis:  ',error, error.message, error.stack);   
+
                     if (this._mounted) {
                         this.setState({
-                            data: 'not-initialized'
+                            data: 'not-initialized' // or you could set to a new error state
                         });
                     }
-                }
+                    
+                });
             });
         }
-
         initializeData(preload: boolean) {
             const existingTags = getExistingTags(this.props.article);
 
