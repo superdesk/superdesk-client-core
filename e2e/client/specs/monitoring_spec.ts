@@ -840,18 +840,13 @@ describe('monitoring', () => {
         authoring.duplicateTo('Sports Desk', 'one');
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
-        var dropdownSelected = monitoring.getSendToDropdown();
-
-        browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Sports Desk');
+        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
-
-        dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
 
         browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Politic Desk');
+        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Politic Desk');
     });
 
     it('can view published item as readonly when opened', () => {

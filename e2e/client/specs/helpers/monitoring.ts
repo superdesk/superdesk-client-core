@@ -121,7 +121,6 @@ class Monitoring {
     searchInput: ElementFinder;
     getCorrectionItems: (group: any) => any;
     getTakeItems: (group: any) => any;
-    getSendToDropdown: () => ElementFinder;
     getPackageItem: (index: any) => ElementFinder;
     getPackageItemActionDropdown: (index: any) => ElementFinder;
     getPackageItemLabelEntry: () => ElementFinder;
@@ -960,18 +959,6 @@ class Monitoring {
 
         this.getTakeItems = function(group) {
             return this.getGroupItems(group).all(by.className('takekey'));
-        };
-
-        /**
-         * Returns the desk dropdown in send to panel
-         *
-         */
-        this.getSendToDropdown = () => {
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-                dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
-
-            return dropdownSelected;
         };
 
         this.getPackageItem = function(index) {
