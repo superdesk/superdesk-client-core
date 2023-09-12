@@ -191,7 +191,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     
         runAnalysis() {
             console.log('Beginning runAnalysis');
-            const dataBeforeLoading = this.state.data;
+            const dataBeforeLoading = this.props.article;
         
             console.log('Starting runAnalysis. Input XML:', this.state.data);
         
@@ -233,7 +233,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/xml',  // Set to XML content type
                         },
-                        body: this.state.data,  // Using the provided XML payload
+                        body: this.props.article,  
                     });
         
                     if (!response.ok) {
