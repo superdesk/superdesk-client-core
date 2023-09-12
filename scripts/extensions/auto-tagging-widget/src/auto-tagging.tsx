@@ -189,11 +189,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
 
     
-        runAnalysis(xmlPayload) {
+        runAnalysis() {
             console.log('Beginning runAnalysis');
             const dataBeforeLoading = this.state.data;
         
-            console.log('Starting runAnalysis. Input XML:', xmlPayload);
+            console.log('Starting runAnalysis. Input XML:', this.state.data);
         
             // Function to get the access token
             const getAccessToken = async () => {
@@ -205,7 +205,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
-                        body: 'grant_type=apikey&key=YOUR_API_KEY_HERE',  // Make sure to replace with your actual API key
+                        body: 'grant_type=apikey&key=OoP3QRRkLVCzo4sRa6iAyg==',  
                     });
         
                     if (!response.ok) {
@@ -233,7 +233,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/xml',  // Set to XML content type
                         },
-                        body: xmlPayload,  // Using the provided XML payload
+                        body: this.state.data,  // Using the provided XML payload
                     });
         
                     if (!response.ok) {
