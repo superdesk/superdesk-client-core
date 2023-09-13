@@ -26,7 +26,7 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
-import {setSpellcheckerProgress, applySpellcheck} from '../actions';
+import {setSpellcheckerProgress, applySpellcheck, PopupTypes} from '../actions';
 import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
@@ -142,6 +142,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    showPopup?(type: any, data: any): void;
 }
 
 interface IState {
@@ -278,7 +279,13 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey} = e;
+        const {key, shiftKey, ctrlKey} = e;
+
+        if (key == 'k' && ctrlKey && this.props.editorFormat.includes('link')) {
+            this.props.showPopup(PopupTypes.Link, this.props.editorState.getSelection());
+            e.preventDefault();
+            return '';
+        }
 
         if (key === 'ArrowDown' || key === 'ArrowUp') {
             const autocompleteEl = document.querySelector(`.${editor3AutocompleteClassName}`) as HTMLElement | null;
