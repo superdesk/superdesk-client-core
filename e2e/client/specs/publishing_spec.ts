@@ -61,8 +61,9 @@ describe('publishing', () => {
         executeContextMenuAction(els(['article-item'], null, thirdStage).get(0), 'Edit');
 
         el(['authoring', 'open-send-publish-pane']).click();
-        el(['authoring', 'send-publish-pane', 'tab--publish']).click();
-        el(['authoring', 'send-publish-pane', 'publish']).click();
+
+        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Publish')).click();
+        el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
         assertToastMsg('error', 'SUBJECT is a required field');
         assertToastMsg('error', 'BODY HTML is a required field');
