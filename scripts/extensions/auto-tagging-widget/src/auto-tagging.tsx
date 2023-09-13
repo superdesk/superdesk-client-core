@@ -187,17 +187,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
 
 
+    
         runAnalysis() {
-            const {
-                data
-            } = this.state; // Existing data from your component state
-            const {
-                article
-            } = this.props; // Assuming article contains the required data
+        	const dataBeforeLoading = this.state.data;
+            
+            const { article } = this.props; 
         
-            // Ensure you have the necessary data from your input variable
+            
             const input = {
-                // Replace these properties with the appropriate ones from your input variable
+                
                 guid: article.guid,
                 language: article.language,
                 headline: article.headline,
@@ -215,14 +213,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             fetch("https://ca.cloud.smartlogic.com/svc/5457e590-c2cc-4219-8947-e7f74c8675be/", {
                 method: 'POST',
                 headers: headers,
-                body: JSON.stringify({
-                    service: 'imatrics',
-                    item: input
-                }),
+                body: JSON.stringify({ service: 'imatrics', item: input }),
             })
             .then((response) => response.json())
             .then((responseJson) => {
-        
+                // Handle the response here (responseJson contains the API response)
                 console.log('API response:', responseJson);
         
                 if (this._mounted) {
