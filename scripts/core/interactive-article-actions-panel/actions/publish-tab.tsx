@@ -172,19 +172,6 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                             onChange={(value) => {
                                                 this.setState({
                                                     selectedDestination: value,
-                                                }, () => {
-                                                    const dest = this.state.selectedDestination;
-
-                                                    if (dest.type === 'desk') {
-                                                        this.props.onDataChange({
-                                                            ...this.props.item,
-                                                            task: {
-                                                                ...(this.props.item.task ?? {}),
-                                                                desk: dest.desk,
-                                                                stage: dest.stage,
-                                                            },
-                                                        });
-                                                    }
                                                 });
                                             }}
                                             includePersonalSpace={false}
