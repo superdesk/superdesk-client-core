@@ -11,9 +11,8 @@ import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to
 import {nav} from './helpers/utils';
 
 function createItem(headline: string) {
-    el(['content-create']).click();
-    el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-    el(['select-template'], by.buttonText('editor3 template')).click();
+    authoring.createTextItemFromTemplate('editor3 template');
+
     browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
     el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(headline);
