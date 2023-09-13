@@ -191,11 +191,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         runAnalysis() {
         	const dataBeforeLoading = this.state.data;
             
-            const { article } = this.props; 
+            const { article } = this.props; // Assuming article contains the required data
         
             
             const input = {
-                
+                // Replace these properties with the appropriate ones from your input variable
                 guid: article.guid,
                 language: article.language,
                 headline: article.headline,
@@ -220,21 +220,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 // Handle the response here (responseJson contains the API response)
                 console.log('API response:', responseJson);
         
-                if (this._mounted) {
-                    this.setState({
-                        data: {
-                            original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                             ? {
-                                analysis: OrderedMap < string,
-                                ITagUi > ()
-                            } // initialize empty data
-                             : dataBeforeLoading.original, // use previous data
-                            changes: {
-                                analysis: resClient
-                            },
-                        },
-                    });
-                    console.log('runAnalysis result:', resClient);
+                if (this._mounted) {                    
+                    console.log('In this. Mounted');
                 }
             })
             .catch((error) => {
@@ -242,11 +229,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         
                 if (this._mounted) {
                     this.setState({
-                        data: 'not-initialized' 
+                        data: 'not-initialized' // or you could set to a new error state
                     });
                 }
             });
         }
+
         initializeData(preload: boolean) {
             const existingTags = getExistingTags(this.props.article);
 
