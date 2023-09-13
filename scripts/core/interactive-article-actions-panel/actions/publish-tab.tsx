@@ -150,7 +150,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
         const canPreview: boolean = this.state.subscribers.some(({destinations}) =>
             (destinations ?? []).some(({preview_endpoint_url}) => (preview_endpoint_url ?? '').length > 0),
         );
-        const publishFromEnabled = appConfig.ui.sendAndPublish === true;
+        const publishFromEnabled = (appConfig.ui.sendAndPublish ?? true) === true;
 
         const sectionsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.publishingSections ?? []);
