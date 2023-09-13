@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 
-const theme = 'light-ui';
+const THEME_LIGHT = 'light-ui';
 
 /**
  * @ngdoc directive
@@ -50,7 +50,7 @@ export function UserPreferencesDirective(
             scope.activeTheme = localStorage.getItem('theme');
 
             if (scope.activeTheme === '') {
-                scope.activeTheme = theme;
+                scope.activeTheme = THEME_LIGHT;
             }
 
             scope.$watch('activeTheme', (val) => {
