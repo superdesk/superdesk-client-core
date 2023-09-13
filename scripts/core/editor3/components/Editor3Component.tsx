@@ -280,9 +280,15 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
     keyBindingFn(e) {
         const {key, shiftKey, ctrlKey} = e;
+        const selectionState = this.props.editorState.getSelection();
 
-        if (key == 'k' && ctrlKey && this.props.editorFormat.includes('link')) {
-            this.props.showPopup(PopupTypes.Link, this.props.editorState.getSelection());
+        if (
+            key === 'k'
+            && ctrlKey
+            && this.props.editorFormat.includes('link')
+            && selectionState.isCollapsed() !== true
+        ) {
+            this.props.showPopup(PopupTypes.Link, selectionState);
             e.preventDefault();
             return '';
         }
@@ -308,10 +314,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         // ctrl + X
         if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
-            const {editorState} = this.props;
-            const selection = editorState.getSelection();
-
-            if (!selection.isCollapsed()) {
+            if (!selectionState.isCollapsed()) {
                 document.execCommand('copy'); // add selected text to clipboard
                 return 'delete';
             }
