@@ -189,7 +189,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     
         runAnalysis() {
-        	const dataBeforeLoading = this.state.data;
             
             const { article } = this.props; // Assuming article contains the required data
         
