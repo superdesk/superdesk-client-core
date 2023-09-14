@@ -126,7 +126,7 @@ describe('search', () => {
         authoring.sendTo('Politic Desk');
         authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
-        expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
+        expect(monitoring.getTextItem(0, 0)).toBe('From-Sports-To-Politics');
 
         // search by from desk field
         globalSearch.openGlobalSearch();
