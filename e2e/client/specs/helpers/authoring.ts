@@ -268,8 +268,8 @@ class Authoring {
             var embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var embargoTime = '04:00';
 
-            element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
-            element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
+            el(['authoring', 'interactive-actions-panel', 'embargo', 'date-input']).sendKeys(embargoDate);
+            el(['authoring', 'interactive-actions-panel', 'embargo', 'time-input']).sendKeys(embargoTime);
         };
 
         this.confirmSendTo = function() {
