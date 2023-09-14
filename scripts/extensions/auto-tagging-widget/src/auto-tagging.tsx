@@ -191,7 +191,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     
         runAnalysis() {
-            const { data } = this.state; // Existing data from your component state
+            
             const { article } = this.props; // Assuming article contains the required data
         
             // Ensure you have the necessary data from your input variable
@@ -218,17 +218,22 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             })
             .then((response) => response.text())
             .then((xmlResponse) => {
+                // Define the options for parsing XML
+                const xmlOptions: ParserOptions = {
+                    explicitArray: false, // Ensure that parsed XML objects are not wrapped in arrays
+                };
+        
                 // Parse the XML response into a JavaScript object
-                xml2js.parseString(xmlResponse, (err, result) => {
+                xml2js.parseString(xmlResponse, xmlOptions, function (err, result) {
                     if (err) {
                         console.error('Error parsing XML response:', err);
-                        // Handle the error or update the state accordingly
+                        
                     } else {
                         // Handle the parsed XML object (result) here
                         console.log('XML response:', result);
         
                         if (this._mounted) {
-        					console.log('In this. Mounted');
+                            console.log('In this. Mounted');
                         }
                     }
                 });
@@ -238,11 +243,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         
                 if (this._mounted) {
                     this.setState({
-                                data: 'not-initialized' // or you could set to a new error state
-                            });
+                        data: 'not-initialized' // or you could set to a new error state
+                    });
                 }
             });
         }
+
     
         initializeData(preload: boolean) {
             const existingTags = getExistingTags(this.props.article);
