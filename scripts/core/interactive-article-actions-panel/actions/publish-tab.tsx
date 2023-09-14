@@ -6,7 +6,7 @@ import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
 import {DestinationSelect} from '../subcomponents/destination-select';
 import {IPanelError, ISendToDestination} from '../interfaces';
-import {getInitialDestination} from '../utils/get-initial-destination';
+import {getCurrentDeskDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
@@ -51,7 +51,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
 
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
-            selectedDestination: getInitialDestination([this.props.item], false),
+            selectedDestination: getCurrentDeskDestination(),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
                 target_subscribers: this.props.item.target_subscribers ?? [],
@@ -74,44 +74,41 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
     doPublish(applyDestination?: boolean): void {
         this.props.handleUnsavedChanges()
             .then((item) => {
-                let itemToPublish: IArticle = {
-                    ...item,
-                    ...getPublishingDatePatch(item, this.state.publishingDateOptions),
-                    ...getPublishingTargetPatch(item, this.state.publishingTarget),
-                };
+                const emptyPatches: Array<Partial<IArticle>> = [{}];
 
-                if (
+                const afterSending =
                     applyDestination === true
                     && this.state.selectedDestination.type === 'desk'
                     && this.otherDeskSelected()
-                ) {
-                    itemToPublish = {
-                        ...itemToPublish,
-                        task: {
-                            ...(itemToPublish.task ?? {}),
-                            desk: this.state.selectedDestination.desk,
-                            stage: this.state.selectedDestination.stage,
-                        },
+                        ? sdApi.article.sendItems([item], this.state.selectedDestination)
+                        : Promise.resolve(emptyPatches);
+
+                afterSending.then(([patchAfterSending]) => {
+                    let itemToPublish: IArticle = {
+                        ...item,
+                        ...patchAfterSending,
+                        ...getPublishingDatePatch(item, this.state.publishingDateOptions),
+                        ...getPublishingTargetPatch(item, this.state.publishingTarget),
                     };
-                }
 
-                const confirmed = appConfig?.features?.confirmDueDate === true
-                    ? confirmPublish([itemToPublish])
-                    : Promise.resolve();
+                    const confirmed = appConfig?.features?.confirmDueDate === true
+                        ? confirmPublish([itemToPublish])
+                        : Promise.resolve();
 
-                confirmed.then(() => {
-                    // Cloning to prevent objects from being modified by angular
-                    sdApi.article.publishItem(
-                        cloneDeep(this.props.item),
-                        cloneDeep(itemToPublish),
-                        'publish',
-                        this.props.onError,
-                    )
-                        .then(() => {
-                            ng.get('authoringWorkspace').close();
-                            ng.get('$rootScope').$applyAsync(); // required for authoring close to take effect
-                            notify.success('Item published.');
-                        });
+                    confirmed.then(() => {
+                        // Cloning to prevent objects from being modified by angular
+                        sdApi.article.publishItem(
+                            cloneDeep(item),
+                            cloneDeep(itemToPublish),
+                            'publish',
+                            this.props.onError,
+                        )
+                            .then(() => {
+                                ng.get('authoringWorkspace').close();
+                                ng.get('$rootScope').$applyAsync(); // required for authoring close to take effect
+                                notify.success('Item published.');
+                            });
+                    });
                 });
             })
             .catch(() => {
@@ -261,6 +258,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 type="primary"
                                 expand
                                 style="hollow"
+                                data-test-id="publish-from"
                             />
                         )
                     }

@@ -82,9 +82,7 @@ describe('publishing', () => {
     it('can send and publish', () => {
         workspace.selectDesk('Politic Desk');
 
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        el(['select-template'], by.buttonText('testing')).click();
+        authoring.createTextItemFromTemplate('testing');
 
         const slugline = 'testing-send-and-publish';
 
@@ -92,19 +90,22 @@ describe('publishing', () => {
         el(['authoring', 'save']).click();
 
         el(['authoring', 'open-send-publish-pane']).click();
-        el(['authoring', 'send-publish-pane', 'tab--publish']).click();
 
-        el(['authoring', 'send-publish-pane', 'publish-from--options', 'desk-select--handle']).click();
-        el(
-            ['authoring', 'send-publish-pane', 'publish-from--options', 'desk-select--options'],
-            by.buttonText('Sports Desk'),
-        ).click();
 
-        el(['authoring', 'send-publish-pane', 'publish-from--submit']).click();
+        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Publish')).click();
+
+        el(['interactive-actions-panel', 'destination-select']).click();
+
+        // doesn't work using full selector; TODO: update to use tree select
+        element(by.cssContainingText('option', 'Sports Desk')).click();
+
+        el(['authoring', 'interactive-actions-panel', 'publish-from']).click();
 
         assertToastMsg('success', 'Item published.');
 
-        browser.wait(ECE.stalenessOf(element(by.cssContainingText(
+        const firstGroup = els(['monitoring-group']).get(0);
+
+        browser.wait(ECE.stalenessOf(firstGroup.element(by.cssContainingText(
             '[data-test-id="article-item"] [data-test-id="field--slugline"]',
             slugline,
         ))), MONITORING_DEBOUNCE_MAX_WAIT);
