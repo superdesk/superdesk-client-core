@@ -15,7 +15,9 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-import xml2js, { ParserOptions } from 'xml2js';
+import * as xml2js from 'xml2js';
+import { ParserOptions } from 'xml2js';
+
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
