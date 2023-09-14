@@ -7,7 +7,7 @@ import {globalSearch} from './helpers/search';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {nav, scrollToView} from './helpers/utils';
-import {ECE} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('search', () => {
     beforeEach(() => {
@@ -282,6 +282,9 @@ describe('search', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9');
         authoring.schedule(false);
+
+        browser.wait(ECE.stalenessOf(el(['notification--success'])));
+
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.toggleSearchTabs('filters');
