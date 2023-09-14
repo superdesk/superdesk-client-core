@@ -172,7 +172,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
-                        tooltip={gettext('Link')}
+                        tooltip={gettext('Link') + ' (ctrl + k)'}
                     />
                 )}
                 {has('embed') && (
