@@ -15,7 +15,7 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-import xml2js from 'xml2js';
+import xml2js, { ParserOptions } from 'xml2js';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -218,13 +218,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             .then((response) => response.text())
             .then((xmlResponse) => {
                 // Parse the XML response into a JavaScript object
-                xml2js.parseString(xmlResponse, function (err, result) {
+                xml2js.parseString(xmlResponse, (err, result) => {
                     if (err) {
                         console.error('Error parsing XML response:', err);
                     } else {
                         // Handle the parsed XML object (result) here
                         console.log('XML response:', result);
-        
+                
                         if (this._mounted) {
                             console.log('In this. Mounted');
                         }
