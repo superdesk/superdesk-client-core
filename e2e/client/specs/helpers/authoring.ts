@@ -286,7 +286,7 @@ class Authoring {
             el(['authoring', 'interactive-actions-panel', 'destination-select']).click();
 
             // doesn't work using full selector; TODO: update to use tree select
-            element(by.cssContainingText('option', desk)).click();
+            element(by.cssContainingText('[data-test-id="destination-select"] option', desk)).click();
 
             if (stage) {
                 el(
