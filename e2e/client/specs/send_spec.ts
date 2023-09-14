@@ -153,15 +153,12 @@ describe('send', () => {
         // open sendTo panel
         monitoring.openSendMenu();
 
-        var sidebar = element.all(by.css('.side-panel')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-            dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
+        expect(
+            el(['interactive-actions-panel', 'destination-select']).getAttribute('value'),
+        ).toEqual('Sports Desk');
 
-        browser.sleep(100);
-        expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered
-
-        var btnStage = sidebar.element(by.buttonText('Working Stage'));
-
-        expect(btnStage.getAttribute('class')).toContain('active'); // stage remembered
+        expect(
+            el(['interactive-actions-panel', 'stage-select']).getAttribute('data-test-value'),
+        ).toEqual('Working Stage');
     });
 });

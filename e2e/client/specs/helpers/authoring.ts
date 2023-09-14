@@ -279,23 +279,23 @@ class Authoring {
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
-            el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
+            el(['interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-            el(['authoring', 'interactive-actions-panel', 'destination-select']).click();
+            el(['interactive-actions-panel', 'destination-select']).click();
 
             // doesn't work using full selector; TODO: update to use tree select
             element(by.cssContainingText('[data-test-id="destination-select"] option', desk)).click();
 
             if (stage) {
                 el(
-                    ['authoring', 'interactive-actions-panel', 'stage-select'],
+                    ['interactive-actions-panel', 'stage-select'],
                     by.cssContainingText('[data-test-id="item"]', stage),
                 ).click();
             }
             if (_continue) {
-                el(['authoring', 'interactive-actions-panel', 'send-and-open']).click();
+                el(['interactive-actions-panel', 'send-and-open']).click();
             } else {
-                el(['authoring', 'interactive-actions-panel', 'send']).click();
+                el(['interactive-actions-panel', 'send']).click();
             }
         };
 
