@@ -1,7 +1,6 @@
 {
     "include": [
-        "src/**/*.ts",    // Include your source code files
-        "node_modules/xml2js/index.d.ts" // Include xml2js type declarations
+        "."
     ],
     "exclude": [
         "extensions"
