@@ -221,7 +221,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             .then((response) => response.text())
             .then((xmlResponse) => {
                 // Parse the XML response into a JavaScript object
-                xml2js.parseString(xmlResponse, (err, result) {
+                xml2js.parseString(xmlResponse, (err, result) => {
                     if (err) {
                         console.error('Error parsing XML response:', err);
                     } else {
