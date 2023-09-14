@@ -6,6 +6,7 @@ import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('send', () => {
     function getItemState(index) {
@@ -72,7 +73,8 @@ describe('send', () => {
         expect(monitoring.hasClass(element(by.id('main-container')), 'hideMonitoring')).toBe(true);
 
         authoring.sendToButton.click();
-        expect(authoring.sendItemContainer.isDisplayed()).toBe(true);
+
+        browser.wait(ECE.visibilityOf(el(['interactive-actions-panel'])));
     });
 
     it('can display monitoring after submitting an item to a desk using full view of authoring', () => {

@@ -29,7 +29,6 @@ class Authoring {
     compareVersionsMenuItem: any;
     setCategoryBtn: any;
     getCategoryListItems: any;
-    sendItemContainer: any;
     linkToMasterButton: any;
     marked_for_legal: any;
     sms: any;
@@ -208,7 +207,6 @@ class Authoring {
         this.getCategoryListItems = element(by.id('category-setting'))
             .all(el(['dropdown__item']).locator());
 
-        this.sendItemContainer = element(by.id('send-item-container'));
         this.linkToMasterButton = element(by.id('preview-master'));
         this.marked_for_legal = element(by.model('item.flags.marked_for_legal'));
         this.sms = element(by.model('item.flags.marked_for_sms'));
