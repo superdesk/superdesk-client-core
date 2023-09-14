@@ -208,12 +208,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 'Authorization': 'bearer -hyfXimoABbb9y7hFhrplI6VAp1ASFZWqaAIYuIBLl_iovWrUqb1kRZkbrcuYq_PK60nOJcEE2BcmOoBEny5Khn26nlCMYascKaHJovt7pLkiqleEv6KNLnbs6zzNCwDj-2VOc41IxrEMWzXYrN5Dbr_QsbCA0PJs1dMt8j3vmPVyxKKxL9zdJOea-dWXvwx8irxhZvv48aaP5vqg0RBEOJ15ozHPDTnUrXI7TFC4lVWYv3JdFkWTdOQlp8RAIWTn3GPoLHCJFHrCxdAbMAlla_5L4o3k_8ox3NjXGGwUTWoCVpDr4Lv1prGYKeYZQn_sDreZQngLDZ-j40g7Nk5c34uo1fWP2XyIgGtOIhRoKXeg1x07rlS9vH6fKHpVEt-QXL0k3MQWfBTgcGbeoxik7xFiGZDVesdbs91rPTBbHIhBVt9v28MFJC75XkSE7bD0jKy17f9CUSz6bO4vMzrZDgrzuBCaslIvl-UeFFpV_ACEFF_Bf8-Wy8RKZz-dn-Rv9LHBg3WtOhw08Hu2egwi28TuTkjxGPNA7JSmjDUB7Gv_FcQjz5EdSB19r8D_Rm12k2ojv7i4B4W_5Wlxbq4MBz7l_43fqE-iCTFh86IFgXZr3WiMKdZZVW5E3M7VzvxVR2kkFPEy3BByj0p9neqXajjfqR0lXzUbN4CPEQwItgKDyRo3oaXU7UkGJ9QABAtJi8gm07m1XLW0CdaRiGAvRXgdlCPErFoFbA_s_XpxvHBlniqLGB2Qkx4GAN-hxdZ4jpiOwDHKvYeWg1SZGZXIQK0W7O3F1LYmmfmJfgB437uuxqtdb3FCkJRQxEdpPw3',
                 'Content-Type': 'application/json', // Set the content type to JSON
             };
-        
+            
+            const requestBody = JSON.stringify(input);
+            
             // Make a POST request to the API endpoint
             fetch("https://ca.cloud.smartlogic.com/svc/5457e590-c2cc-4219-8947-e7f74c8675be/", {
                 method: 'POST',
                 headers: headers,
-                body: input
+                body: requestBody,
             })
             .then((response) => response.json())
             .then((responseJson) => {
