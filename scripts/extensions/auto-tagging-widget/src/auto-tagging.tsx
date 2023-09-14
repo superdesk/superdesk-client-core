@@ -213,7 +213,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             fetch("https://ca.cloud.smartlogic.com/svc/5457e590-c2cc-4219-8947-e7f74c8675be/", {
                 method: 'POST',
                 headers: headers,
-                body: input,
+                body: input
             })
             .then((response) => response.json())
             .then((responseJson) => {
