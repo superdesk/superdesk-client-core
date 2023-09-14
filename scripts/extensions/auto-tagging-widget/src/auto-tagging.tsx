@@ -209,13 +209,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 'Content-Type': 'application/json', // Set the content type to JSON
             };
             
-            const requestBody = JSON.stringify(input);
+            const bodyinput = JSON.stringify(input);
             
             // Make a POST request to the API endpoint
             fetch("https://ca.cloud.smartlogic.com/svc/5457e590-c2cc-4219-8947-e7f74c8675be/", {
                 method: 'POST',
                 headers: headers,
-                body: requestBody,
+                body: bodyinput,
             })
             .then((response) => response.json())
             .then((responseJson) => {
