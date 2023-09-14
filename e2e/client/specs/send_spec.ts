@@ -128,12 +128,9 @@ describe('send', () => {
         monitoring.showHideList();
         authoring.sendToButton.click();
 
-        var sidebar = element.all(by.css('.side-panel')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-            dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
+        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-        browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Politic Desk');
+        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Politic Desk');
     });
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', () => {
