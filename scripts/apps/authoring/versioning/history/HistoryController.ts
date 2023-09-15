@@ -135,31 +135,38 @@ export function getHistoryItems(item: IArticle): Promise<Array<IHistoryItem>> {
             .then((historyItems) => {
                 let historyVersion = historyItems.length && historyItems[0].version || 200;
 
-                if (!historyItems.length || historyItems[0].version > 1) {
-                    // no or partial history so get versions
-                    archiveService.getVersions(item, desks, 'operations').then((versions) => {
-                        let processedVersions = versions.map(processVersion);
+                const waitForVersions = new Promise<void>((resolveVersions) => {
+                    if (!historyItems.length || historyItems[0].version > 1) {
+                        // no or partial history so get versions
+                        archiveService.getVersions(item, desks, 'operations').then((versions) => {
+                            let processedVersions = versions.map(processVersion);
 
-                        // use versions where version number is less than the history
-                        historyItemsResult = _.filter(processedVersions, (v) => v.version < historyVersion);
+                            // use versions where version number is less than the history
+                            historyItemsResult = _.filter(processedVersions, (v) => v.version < historyVersion);
 
-                        // if there's any history items then merge them
-                        if (historyItems.length) {
-                            historyItemsResult = historyItemsResult.concat(historyItems);
-                        }
-                    });
-                } else {
-                    historyItemsResult = historyItems;
-                }
+                            // if there's any history items then merge them
+                            if (historyItems.length) {
+                                historyItemsResult = historyItemsResult.concat(historyItems);
+                            }
 
-                // Filter out item_lock and item_unlock history entries
-                if (historyItemsResult && historyItemsResult.length > 0) {
-                    historyItemsResult = historyItemsResult.filter(
-                        (entry) => !entry.operation || ['item_lock', 'item_unlock'].indexOf(entry.operation) < 0,
-                    );
-                }
+                            resolveVersions();
+                        });
+                    } else {
+                        historyItemsResult = historyItems;
+                        resolveVersions();
+                    }
+                });
 
-                resolve(historyItemsResult);
+                waitForVersions.then(() => {
+                    // Filter out item_lock and item_unlock history entries
+                    if (historyItemsResult && historyItemsResult.length > 0) {
+                        historyItemsResult = historyItemsResult.filter(
+                            (entry) => !entry.operation || ['item_lock', 'item_unlock'].indexOf(entry.operation) < 0,
+                        );
+                    }
+
+                    resolve(historyItemsResult);
+                });
             })
             .catch(() => {
                 reject(null);
