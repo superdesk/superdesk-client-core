@@ -91,7 +91,6 @@ describe('publishing', () => {
 
         el(['authoring', 'open-send-publish-pane']).click();
 
-
         el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Publish')).click();
 
         el(['interactive-actions-panel', 'destination-select']).click();
