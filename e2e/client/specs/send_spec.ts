@@ -34,14 +34,28 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('warns that there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('warns that there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
         expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
-    it('can submit item to a desk although there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('can submit item to a desk although there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -57,7 +71,14 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('can cancel submit request because there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('can cancel submit request because there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
