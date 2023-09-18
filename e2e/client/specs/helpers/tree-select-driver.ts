@@ -25,9 +25,7 @@ export class TreeSelectDriver {
     addValue(value: string): void {
         el(['open-popover'], null, this._element).click();
 
-        const dropdown = element(by.id('TREESELECT_DROPDOWN'));
-
-        dropdown.element(by.cssContainingText('[data-test-id="option"]', value)).click();
+        element(by.cssContainingText('[data-test-id="tree-select-popover"] [data-test-id="option"]', value)).click();
     }
 
     setValue(value: string) {
