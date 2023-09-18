@@ -7,6 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {metadata} from './helpers/metadata';
 import {assertToastMsg} from './helpers/utils';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {
@@ -87,12 +88,12 @@ describe('Content profiles', () => {
 
         contentProfiles.editContentFields();
 
-        const btns = element.all(by.partialButtonText(FIELD_LABEL));
+        const buttons = element.all(by.partialButtonText(FIELD_LABEL));
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(0);
+        browser.wait(ECE.hasElementCount(buttons, 0));
 
         contentProfiles.openAddFieldDropdown();
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(1);
+        browser.wait(ECE.hasElementCount(buttons, 1));
     });
 });
