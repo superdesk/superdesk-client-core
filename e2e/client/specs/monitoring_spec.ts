@@ -900,13 +900,10 @@ describe('monitoring', () => {
         browser.wait(ECE.invisibilityOf(previewPane));
     });
 
-    // disabled, because prepopulate script can't setup data
-    // for fake IDs to work, they have to be defined before usage
-    // and when template needs desk ID and desk needs template ID - there's no way to do it.
-    // TODO: reimplement when database snapshots are available
-    xit('Can create items from templates', () => {
+    it('Can create items from templates', () => {
         const slugline = 'slugline template';
         const editorsNote = 'test editor\'s note for template';
+        const newTemplateName = 'template 1234';
 
         monitoring.openMonitoring();
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
@@ -921,11 +918,16 @@ describe('monitoring', () => {
 
         el(['authoring', 'actions-button']).click();
         el(['authoring', 'actions-list']).element(by.buttonText('Save as template')).click();
+
+        el(['save-as-template', 'name-input']).clear();
+        el(['save-as-template', 'name-input']).sendKeys(newTemplateName);
+
         el(['create-template-modal--save']).click();
+
         el(['authoring', 'close']).click();
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
 
-        authoring.createTextItemFromTemplate(slugline);
+        authoring.createTextItemFromTemplate(newTemplateName);
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
