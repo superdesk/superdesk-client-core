@@ -1,11 +1,12 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor, WebElementPromise, ElementFinder} from 'protractor';
+import {element, browser, by, protractor, ElementFinder} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
+import {TreeSelectDriver} from './helpers/tree-select-driver';
 import {desks} from './helpers/desks';
 import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
@@ -839,13 +840,23 @@ describe('monitoring', () => {
         authoring.duplicateTo('Sports Desk', 'one');
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
-        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Sports Desk');
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Sports Desk']);
+
         authoring.duplicateTo('Politic Desk', 'two', true);
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.close();
 
         browser.sleep(500);
-        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Politic Desk');
+
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Politic Desk']);
     });
 
     it('can view published item as readonly when opened', () => {

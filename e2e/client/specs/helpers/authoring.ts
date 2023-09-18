@@ -4,6 +4,7 @@ import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor, click} from './utils';
 import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
 import {PLAIN_TEXT_TEMPLATE_NAME} from './constants';
+import {TreeSelectDriver} from './tree-select-driver';
 
 class Authoring {
     lock: any;
@@ -281,10 +282,9 @@ class Authoring {
         this.sendToSidebarOpened = function(desk, stage, _continue) {
             el(['interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-            el(['interactive-actions-panel', 'destination-select']).click();
-
-            // doesn't work using full selector; TODO: update to use tree select
-            element(by.cssContainingText('[data-test-id="destination-select"] option', desk)).click();
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
 
             if (stage) {
                 el(
@@ -300,10 +300,9 @@ class Authoring {
         };
 
         this.duplicateTo = (desk, stage, open) => {
-            el(['interactive-actions-panel', 'destination-select']).click();
-
-            // doesn't work using full selector; TODO: update to use tree select
-            element(by.cssContainingText('option', desk)).click();
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
 
             if (stage) {
                 el(
@@ -319,9 +318,9 @@ class Authoring {
         };
 
         this.selectDeskforSendTo = function(desk) {
-            el(['interactive-actions-panel', 'destination-select']).click();
-
-            element(by.cssContainingText('[data-test-id="interactive-actions-panel"] option', desk)).click();
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
         };
 
         this.markAction = function() {

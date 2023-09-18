@@ -7,6 +7,7 @@ import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
+import {TreeSelectDriver} from './helpers/tree-select-driver';
 
 describe('send', () => {
     function getItemState(index) {
@@ -130,7 +131,11 @@ describe('send', () => {
 
         el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-        expect(el(['interactive-actions-panel', 'destination-select']).getAttribute('value')).toEqual('Politic Desk');
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Politic Desk']);
     });
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', () => {
@@ -154,8 +159,10 @@ describe('send', () => {
         monitoring.openSendMenu();
 
         expect(
-            el(['interactive-actions-panel', 'destination-select']).getAttribute('value'),
-        ).toEqual('Sports Desk');
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Sports Desk']);
 
         expect(
             el(['interactive-actions-panel', 'stage-select']).getAttribute('data-test-value'),

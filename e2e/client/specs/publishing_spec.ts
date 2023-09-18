@@ -9,6 +9,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
 import {executeContextMenuAction} from '@superdesk/end-to-end-testing-helpers/dist/articlesList';
+import {TreeSelectDriver} from './helpers/tree-select-driver';
 
 describe('publishing', () => {
     beforeEach(monitoring.openMonitoring);
@@ -93,10 +94,9 @@ describe('publishing', () => {
 
         el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Publish')).click();
 
-        el(['interactive-actions-panel', 'destination-select']).click();
-
-        // doesn't work using full selector; TODO: update to use tree select
-        element(by.cssContainingText('option', 'Sports Desk')).click();
+        new TreeSelectDriver(
+            el(['interactive-actions-panel', 'destination-select']),
+        ).setValue('Sports Desk');
 
         el(['authoring', 'interactive-actions-panel', 'publish-from']).click();
 
