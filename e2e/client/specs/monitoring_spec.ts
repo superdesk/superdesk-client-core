@@ -405,7 +405,7 @@ describe('monitoring', () => {
         authoring.close();
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
         browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
@@ -420,7 +420,7 @@ describe('monitoring', () => {
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
         el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
         browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
