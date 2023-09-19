@@ -324,16 +324,31 @@ describe('authoring', () => {
 
     it('toggle auto spellcheck and hold changes', () => {
         monitoring.actionOnItem('Edit', 2, 1);
-        browser.sleep(500);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
-        authoring.toggleAutoSpellCheck();
-        browser.sleep(500);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
-        authoring.close();
-        monitoring.actionOnItem('Edit', 2, 2);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
-    });
 
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            'true',
+        ));
+
+        authoring.toggleAutoSpellCheck();
+
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            null,
+        ));
+
+        authoring.close();
+
+        monitoring.actionOnItem('Edit', 2, 2);
+
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            null,
+        ));
+    });
     it('related item widget', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.writeText('something');
