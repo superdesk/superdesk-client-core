@@ -149,7 +149,8 @@ class GlobalSearch {
 
             itemElem.click();
 
-            browser.wait(() => itemElem.getAttribute('class').then((classes) => classes.includes('active')), 500);
+            browser.wait(ECE.attributeContains(itemElem, 'class', 'active'));
+
             browser.sleep(350); // there is timeout on click
         };
 
