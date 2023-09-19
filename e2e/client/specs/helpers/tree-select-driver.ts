@@ -22,13 +22,22 @@ export class TreeSelectDriver {
         });
     }
 
-    addValue(value: string): void {
+    addValue(value: string | Array<string>): void {
         el(['open-popover'], null, this._element).click();
 
-        element(by.cssContainingText('[data-test-id="tree-select-popover"] [data-test-id="option"]', value)).click();
+        const values = typeof value === 'string' ? [value] : value;
+
+        for (let i = 0; i < values.length; i++) {
+            element(
+                by.cssContainingText(
+                    '[data-test-id="tree-select-popover"] [data-test-id="option"]',
+                    values[i],
+                ),
+            ).click();
+        }
     }
 
-    setValue(value: string) {
+    setValue(value: string | Array<string>) {
         const maybeClearButton = this._element.element(s(['clear-value']));
 
         maybeClearButton.isPresent().then((present) => {
