@@ -199,7 +199,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     method: 'POST',
                     path: '/ai/',
                     payload: {
-                        service: 'imatrics',
+                        service: 'semaphore',
                         item: {
                             guid,
                             language,
