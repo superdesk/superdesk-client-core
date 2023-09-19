@@ -774,7 +774,6 @@ describe('monitoring', () => {
         monitoring.saveSettings();
 
         monitoring.openMonitoring();
-        browser.sleep(3000); // wait for monitoring groups to load
 
         expect(monitoring.getTextItem(1, 2)).toBe('item6');
 
@@ -792,7 +791,8 @@ describe('monitoring', () => {
 
         monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
-        expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
+
+        browser.wait(ECE.stalenessOf(element(by.id('multi-select-count'))));
     });
 
     it('can view published duplicated item in duplicate tab of non-published original item', () => {
