@@ -175,7 +175,7 @@ class Monitoring {
             const groups = element.all(by.repeater('group in aggregate.groups'));
 
             browser.sleep(3000); // due to debouncing, loading does not start immediately
-            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 2000);
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 3000);
 
             return groups;
         };
