@@ -26,9 +26,9 @@ blinker==1.4
     #   flask-mail
     #   raven
     #   superdesk-core
-boto3==1.28.29
+boto3==1.28.50
     # via superdesk-core
-botocore==1.31.29
+botocore==1.31.50
     # via
     #   boto3
     #   s3transfer
@@ -71,7 +71,7 @@ click-repl==0.3.0
     # via celery
 croniter==0.3.37
     # via superdesk-core
-cryptography==41.0.3
+cryptography==41.0.4
     # via
     #   authlib
     #   jwcrypto
@@ -87,7 +87,7 @@ elasticsearch==7.13.4
     # via eve-elastic
 eve==1.1.2
     # via superdesk-core
-eve-elastic==7.3.1
+eve-elastic==7.3.2
     # via superdesk-core
 events==0.3
     # via eve
@@ -203,7 +203,7 @@ python-magic==0.4.27
     # via superdesk-core
 python-twitter==3.5
     # via superdesk-core
-pytz==2023.3
+pytz==2023.3.post1
     # via
     #   celery
     #   eve-elastic
@@ -245,7 +245,7 @@ six==1.16.0
     #   python-dateutil
 superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@release/2.7
     # via -r requirements.in
-typing-extensions==4.7.1
+typing-extensions==4.8.0
     # via superdesk-core
 tzlocal==2.1
     # via superdesk-core

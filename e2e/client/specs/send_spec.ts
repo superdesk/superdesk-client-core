@@ -6,6 +6,8 @@ import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
+import {TreeSelectDriver} from './helpers/tree-select-driver';
 
 describe('send', () => {
     function getItemState(index) {
@@ -32,14 +34,28 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('warns that there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('warns that there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
         expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
-    it('can submit item to a desk although there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('can submit item to a desk although there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -55,7 +71,14 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('can cancel submit request because there are spelling mistakes', () => {
+    /**
+     * Not sure if this was ever testing the intended thing.
+     * Currently it is only passing by accident
+     * since there's a modal that prompts to save unsaved changes.
+     * It isn't testing anything related to spellchecking.
+     * I'm disabling it in case we wanted to reimplement it in the future.
+     */
+    xit('can cancel submit request because there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');
@@ -72,7 +95,8 @@ describe('send', () => {
         expect(monitoring.hasClass(element(by.id('main-container')), 'hideMonitoring')).toBe(true);
 
         authoring.sendToButton.click();
-        expect(authoring.sendItemContainer.isDisplayed()).toBe(true);
+
+        browser.wait(ECE.visibilityOf(el(['interactive-actions-panel'])));
     });
 
     it('can display monitoring after submitting an item to a desk using full view of authoring', () => {
@@ -126,12 +150,13 @@ describe('send', () => {
         monitoring.showHideList();
         authoring.sendToButton.click();
 
-        var sidebar = element.all(by.css('.side-panel')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-            dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
+        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-        browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Politic Desk');
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Politic Desk']);
     });
 
     it('can remember last sent destination desk and stage on multi selection sendTo panel', () => {
@@ -154,15 +179,14 @@ describe('send', () => {
         // open sendTo panel
         monitoring.openSendMenu();
 
-        var sidebar = element.all(by.css('.side-panel')).last(),
-            dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-            dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Sports Desk']);
 
-        browser.sleep(100);
-        expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered
-
-        var btnStage = sidebar.element(by.buttonText('Working Stage'));
-
-        expect(btnStage.getAttribute('class')).toContain('active'); // stage remembered
+        expect(
+            el(['interactive-actions-panel', 'stage-select']).getAttribute('data-test-value'),
+        ).toEqual('Working Stage');
     });
 });

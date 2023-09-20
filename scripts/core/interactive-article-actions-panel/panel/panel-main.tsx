@@ -8,6 +8,7 @@ export interface IPropsSendToPanel {
      * but not when send-to panel is opened outside of authoring.
      */
     markupV2: boolean;
+    'data-test-id'?: string;
 }
 
 export class Panel extends React.PureComponent<IPropsSendToPanel> {
@@ -20,7 +21,10 @@ export class Panel extends React.PureComponent<IPropsSendToPanel> {
             );
         } else {
             return (
-                <div className="sd-overlay-panel sd-overlay-panel--open sd-overlay-panel--dark-ui">
+                <div
+                    className="sd-overlay-panel sd-overlay-panel--open sd-overlay-panel--dark-ui"
+                    data-test-id={this.props['data-test-id']}
+                >
                     <div className="side-panel side-panel--shadow-right side-panel--dark-ui" data-theme="dark-ui">
                         {this.props.children}
                     </div>

@@ -21,6 +21,7 @@ export class Spacer extends React.PureComponent<IPropsSpacer> {
                     width: noGrow === true ? undefined : '100%',
                     ...(this.props.style ?? {}),
                 }}
+                data-test-id={this.props['data-test-id']}
             >
                 {this.props.children.map((el, i) => noWrap ? el : (
                     <div

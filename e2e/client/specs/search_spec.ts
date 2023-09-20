@@ -7,7 +7,7 @@ import {globalSearch} from './helpers/search';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {nav, scrollToView} from './helpers/utils';
-import {ECE} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('search', () => {
     beforeEach(() => {
@@ -126,7 +126,7 @@ describe('search', () => {
         authoring.sendTo('Politic Desk');
         authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
-        expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
+        expect(monitoring.getTextItem(0, 0)).toBe('From-Sports-To-Politics');
 
         // search by from desk field
         globalSearch.openGlobalSearch();
@@ -274,14 +274,21 @@ describe('search', () => {
         authoring.closeSendAndPublish();
         authoring.save();
         authoring.close();
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+
+        const embargoElement = globalSearch.getItem(0).element(by.className('state_embargo'));
+
+        browser.wait(ECE.visibilityOf(embargoElement));
+
+        expect(embargoElement.getText()).toEqual('EMBARGO');
     });
 
     it('can search scheduled', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9');
         authoring.schedule(false);
+
+        browser.wait(ECE.stalenessOf(el(['notification--success'])));
+
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.toggleSearchTabs('filters');

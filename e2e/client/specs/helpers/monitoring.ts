@@ -17,7 +17,6 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
-    createItemAction: (action: any) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -60,7 +59,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: (item, stage?: string) => wdpromise.Promise<void>;
+    unspikeItem: (item, stage?: string) => void;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -98,7 +97,6 @@ class Monitoring {
     openSendMenu: () => void;
     publish: () => void;
     getPublishButtonText: any;
-    startUpload: () => void;
     uploadModal: ElementFinder;
     openFetchAsOptions: (group: any, item: any) => void;
     clickOnFetchButton: any;
@@ -123,7 +121,6 @@ class Monitoring {
     searchInput: ElementFinder;
     getCorrectionItems: (group: any) => any;
     getTakeItems: (group: any) => any;
-    getSendToDropdown: () => ElementFinder;
     getPackageItem: (index: any) => ElementFinder;
     getPackageItemActionDropdown: (index: any) => ElementFinder;
     getPackageItemLabelEntry: () => ElementFinder;
@@ -163,21 +160,12 @@ class Monitoring {
         };
 
         /**
-         * On monitoring view create a new item
-         *
-         * @param {string} action - the create item action can be: create_text_article,
-         * create_preformatted_article and create_package
-         */
-        this.createItemAction = function(action) {
-            element(by.className('icon-plus-large')).click();
-            element(by.id(action)).click();
-            browser.sleep(500);
-        };
-
-        /**
          * Create new item using desk template
          */
-        this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
+        this.createFromDeskTemplate = () => {
+            el(['content-create']).click();
+            el(['content-create-dropdown', 'default-desk-template']).click();
+        };
 
         this.getGroup = function(group: number) {
             return this.getGroups().get(group);
@@ -187,7 +175,7 @@ class Monitoring {
             const groups = element.all(by.repeater('group in aggregate.groups'));
 
             browser.sleep(3000); // due to debouncing, loading does not start immediately
-            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 2000);
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 3000);
 
             return groups;
         };
@@ -512,19 +500,20 @@ class Monitoring {
 
         this.unspikeMultipleItems = function() {
             multiAction('Unspike');
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.unspikeItem = function(item, stage?: string) {
             articleList.executeContextMenuAction(this.getSpikedItem(item), 'Unspike Item');
 
-            var sidebar = element.all(by.css('.side-panel')).last();
-
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
 
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.openItemMenu = function(group, item) {
@@ -539,7 +528,7 @@ class Monitoring {
         };
 
         this.showMonitoringSettings = function() {
-            element(by.css('.icon-settings')).click();
+            el(['monitoring-settings-button']).click();
             browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
         };
@@ -717,7 +706,7 @@ class Monitoring {
         };
 
         this.openCreateMenu = function() {
-            element(by.className('sd-create-btn')).click();
+            element(by.css('[data-test-id="content-create"]')).click();
             browser.sleep(100);
         };
 
@@ -733,10 +722,6 @@ class Monitoring {
 
         this.getPublishButtonText = () => element(by.css('[ng-click="publish()"]')).getText();
 
-        this.startUpload = function() {
-            element(by.id('start-upload-btn')).click();
-        };
-
         this.uploadModal = element(by.className('upload-media'));
 
         this.openFetchAsOptions = function(group, item) {
@@ -744,7 +729,7 @@ class Monitoring {
         };
 
         this.clickOnFetchButton = function() {
-            return element(by.css('[ng-click="send()"]')).click();
+            el(['interactive-actions-panel', 'fetch']).click();
         };
 
         // Cancel button resets the multi selection
@@ -763,7 +748,7 @@ class Monitoring {
 
         this.fetchAndOpen = function(group, item) {
             this.actionOnItem('Fetch To', group, item);
-            return element(by.css('[ng-click="send(true)"]')).click();
+            el(['interactive-actions-panel', 'fetch-and-open']).click();
         };
 
         /**
@@ -974,18 +959,6 @@ class Monitoring {
 
         this.getTakeItems = function(group) {
             return this.getGroupItems(group).all(by.className('takekey'));
-        };
-
-        /**
-         * Returns the desk dropdown in send to panel
-         *
-         */
-        this.getSendToDropdown = () => {
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-                dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
-
-            return dropdownSelected;
         };
 
         this.getPackageItem = function(index) {

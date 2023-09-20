@@ -113,7 +113,13 @@
                                     <i class="icon-repeat"></i>
                                 </button>
                             </div>
-                            <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()" aria-label="{{ 'Monitoring settings' | translate }}">
+                            <button
+                                class="navbtn strict"
+                                ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'"
+                                ng-click="aggregate.edit()"
+                                aria-label="{{ 'Monitoring settings' | translate }}"
+                                data-test-id="monitoring-settings-button"
+                            >
                                 <i class="icon-settings"></i>
                             </button>
 
@@ -173,9 +179,11 @@
                         <div sd-item-sortbar class="sortbar-container"></div>
 
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
-                            <button area-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}" 
-                                    dropdown__toggle 
-                                    class="navbtn dropdown__toggle">
+                            <button
+                                aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
+                                dropdown__toggle
+                                class="navbtn dropdown__toggle"
+                            >
                                 <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i>
                             </button>
                             <ul class="dropdown__menu">
@@ -325,7 +333,7 @@
                          data-show-history-tab="monitoring.showHistoryTab"></div>
 
             </div>
-            
+
             <sd-interactive-article-actions-panel-combined location="'list-view'"></sd-interactive-article-actions-panel-combined>
         </div>
 

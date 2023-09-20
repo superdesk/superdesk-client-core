@@ -12,6 +12,7 @@ interface IProps {
     tabs: Array<ITabListTab>;
     selectedTabId: string;
     onChange(tab: string): void;
+    'data-test-id'?: string;
 }
 
 export class TabList extends React.PureComponent<IProps> {
@@ -25,6 +26,7 @@ export class TabList extends React.PureComponent<IProps> {
                 onClick={(index) => {
                     onChange(tabs[index].id);
                 }}
+                data-test-id={this.props['data-test-id']}
             >
                 {
                     tabs.map(({label}, index) => (

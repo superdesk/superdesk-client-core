@@ -1,6 +1,5 @@
 import React from 'react';
-import {SelectWithTemplate} from 'superdesk-ui-framework/react';
-import {gettext} from 'core/utils';
+import {TreeSelect} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     items: Array<T>;
@@ -10,48 +9,34 @@ interface IProps<T> {
     // used for filtering
     getLabel(item: T): string;
 
-    // controls whether a label is shown next to the field; defaults to false
-    hideLabel?: boolean;
     required?: boolean;
     disabled?: boolean;
-    itemTemplate?: React.ComponentType<{option: T | null}>;
     zIndex?: number;
+
+    'data-test-id'?: string;
 }
 
 export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
     render() {
-        const {items, value, getLabel, required, hideLabel} = this.props;
-
-        const defaultTemplate = ({option}) => (
-            <div>{getLabel(option)}</div>
-        );
+        const {items, value, getLabel, onChange, required, zIndex, disabled} = this.props;
 
         return (
-            <SelectWithTemplate
-                fullWidth
-                label=""
+            <TreeSelect
+                key={JSON.stringify(items)} // re-mount when items change
                 inlineLabel
                 labelHidden
-                key={JSON.stringify(items)} // re-mount when items change
-                getItems={(searchString) => searchString === null
-                    ? Promise.resolve(items)
-                    : Promise.resolve(
-                        items.filter(
-                            (item) => getLabel(item).toLocaleLowerCase().includes(searchString.toLocaleLowerCase()),
-                        ),
-                    )
-                }
-                getLabel={getLabel}
-                value={value}
-                areEqual={(a, b) => getLabel(a) === getLabel(b)}
-                itemTemplate={this.props.itemTemplate ?? defaultTemplate}
-                noResultsFoundMessage={gettext('No results found')}
-                onChange={(item) => {
-                    this.props.onChange(item);
+                kind="synchronous"
+                value={[value]}
+                getOptions={() => items.map((item) => ({value: item}))}
+                onChange={(val) => {
+                    onChange(val[0] ?? null);
                 }}
-                disabled={this.props.disabled}
+                getLabel={getLabel}
+                getId={getLabel}
                 required={required}
-                zIndex={this.props.zIndex}
+                disabled={disabled}
+                zIndex={zIndex}
+                data-test-id={this.props['data-test-id']}
             />
         );
     }

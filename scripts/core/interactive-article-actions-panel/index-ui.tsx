@@ -73,7 +73,7 @@ export class InteractiveArticleActionsPanel
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
 
         return (
-            <Panel markupV2={markupV2}>
+            <Panel markupV2={markupV2} data-test-id="interactive-actions-panel">
                 <PanelHeader markupV2={markupV2}>
                     <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                         <TabList
@@ -86,6 +86,7 @@ export class InteractiveArticleActionsPanel
                                     activeTab: tab,
                                 });
                             }}
+                            data-test-id="tabs"
                         />
 
                         <Button
@@ -98,6 +99,7 @@ export class InteractiveArticleActionsPanel
                             size="small"
                             shape="round"
                             style="hollow"
+                            data-test-id="close"
                         />
                     </div>
                 </PanelHeader>

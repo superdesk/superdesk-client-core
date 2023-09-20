@@ -5,7 +5,7 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
-import {ECE, els} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el, els, s} from '@superdesk/end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -31,7 +31,7 @@ describe('fetch', () => {
     it('can fetch as', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
-        content.send();
+        el(['interactive-actions-panel', 'fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
@@ -46,9 +46,9 @@ describe('fetch', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
 
-        var btnFetchAndOpen = element(by.css('[ng-disabled="disableFetchAndOpenButton()"]'));
+        var btnFetchAndOpen = element(s(['interactive-actions-panel', 'fetch-and-open']));
 
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeFalsy();
+        expect(btnFetchAndOpen.isEnabled()).toBe(true);
 
         // Adding a new desk with no member, which serves as a non-member desk when selected
         desks.openDesksSettings();
@@ -59,21 +59,32 @@ describe('fetch', () => {
         desks.setDeskType('authoring');
         desks.setDeskDefaultContentTemplate('testing');
         desks.setDeskDefaultContentProfile('testing');
-        desks.actionDoneOnGeneralTab();
+        desks.actionSaveAndContinueOnGeneralTab(); // save desk and continue to Stages tab
+
+        desks.editStage('Working Stage');
+        desks.toggleGlobalReadFlag(); // turn OFF Global Read
+        desks.saveEditedStage();
+
+        desks.editStage('Incoming Stage');
+        desks.toggleGlobalReadFlag(); // turn OFF Global Read
+        desks.saveEditedStage();
+
+        desks.actionDoneOnStagesTab();
 
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeTruthy();
+
+        expect(btnFetchAndOpen.isEnabled()).toBe(false);
     });
 
     it('can hide stage with global read OFF if selected desk as a non-member', () => {
         workspace.openIngest();
         content.actionOnItem('Fetch To', 0);
 
-        var btnFetchAndOpen = element(by.css('[ng-disabled="disableFetchAndOpenButton()"]'));
+        var btnFetchAndOpen = element(s(['interactive-actions-panel', 'fetch-and-open']));
 
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeFalsy();
+        expect(btnFetchAndOpen.isEnabled()).toBe(true);
 
         // Adding a new desk with no member, which serves as a non-member desk when selected
         desks.openDesksSettings();
@@ -106,11 +117,12 @@ describe('fetch', () => {
         content.actionOnItem('Fetch To', 0);
         authoring.selectDeskforSendTo('Test Desk');
 
-        var sidebar = element.all(by.css('.side-panel')).last();
-
-        expect(sidebar.element(by.buttonText('Working Stage')).isPresent()).toBeTruthy();
-        expect(sidebar.element(by.buttonText('Test Stage')).isPresent()).toBeFalsy();
-        expect(btnFetchAndOpen.getAttribute('disabled')).toBeTruthy();
+        expect(
+            element(s(['interactive-actions-panel', 'stage-select', 'item'], 'Working Stage')).isPresent(),
+        ).toBeTruthy();
+        expect(
+            element(s(['interactive-actions-panel', 'stage-select', 'item'], 'Test Stage')).isPresent(),
+        ).toBeFalsy();
     });
 
     it('can fetch multiple items', () => {
@@ -127,7 +139,7 @@ describe('fetch', () => {
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
         multiAction('Fetch to');
-        content.send();
+        el(['interactive-actions-panel', 'fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });

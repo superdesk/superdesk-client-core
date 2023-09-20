@@ -103,6 +103,8 @@ export const authoringApiCommon: IAuthoringApiCommon = {
         }
     },
     closeAuthoringForce: () => {
+        ng.get('superdeskFlags').flags.hideMonitoring = false;
+
         ng.get('authoringWorkspace').close();
     },
 };

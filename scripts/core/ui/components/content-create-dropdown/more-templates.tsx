@@ -78,6 +78,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                         onChange={(val) => {
                             this.setState({searchString: val});
                         }}
+                        data-test-id="search"
                     />
                     <div className="content-create-dropdown--spacer" />
                 </div>

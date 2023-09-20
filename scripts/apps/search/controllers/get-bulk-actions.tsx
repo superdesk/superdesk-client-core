@@ -48,7 +48,7 @@ export function getBulkActions(
             label: gettext('Fetch to'),
             icon: 'icon-fetch-as',
             onTrigger: () => {
-                multiActions.sendTo();
+                multiActions.fetch(true);
                 scopeApply?.();
             },
             canAutocloseMultiActionBar: false,

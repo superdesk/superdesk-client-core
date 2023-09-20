@@ -64,7 +64,9 @@ describe('authoring', () => {
 
     it('authoring operations', () => {
         // allows to create a new empty package
-        monitoring.createItemAction('create_package');
+        el(['content-create']).click();
+        el(['content-create-dropdown', 'create-package']).click();
+
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
         authoring.close();
 
@@ -252,7 +254,13 @@ describe('authoring', () => {
         authoring.writeText('z');
         element(by.cssContainingText('label', 'Dateline')).click();
         ctrlShiftKey('s');
-        browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'), 500);
+
+        browser.wait(ECE.attributeEquals(
+            element(by.buttonText('Save')),
+            'disabled',
+            'true',
+        ));
+
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 0);
         browser.sleep(300);
@@ -322,16 +330,31 @@ describe('authoring', () => {
 
     it('toggle auto spellcheck and hold changes', () => {
         monitoring.actionOnItem('Edit', 2, 1);
-        browser.sleep(300);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
-        authoring.toggleAutoSpellCheck();
-        browser.sleep(300);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
-        authoring.close();
-        monitoring.actionOnItem('Edit', 2, 2);
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
-    });
 
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            'true',
+        ));
+
+        authoring.toggleAutoSpellCheck();
+
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            null,
+        ));
+
+        authoring.close();
+
+        monitoring.actionOnItem('Edit', 2, 2);
+
+        browser.wait(ECE.attributeEquals(
+            element(by.model('spellcheckMenu.isAuto')),
+            'checked',
+            null,
+        ));
+    });
     it('related item widget', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.writeText('something');

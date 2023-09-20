@@ -7,6 +7,7 @@ interface IProps {
     icon?: {name: string, color?: string};
     privateTag?: boolean;
     onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    'data-test-id'?: string;
 }
 
 export class DropdownOption extends React.PureComponent<IProps> {
@@ -17,6 +18,7 @@ export class DropdownOption extends React.PureComponent<IProps> {
             <button
                 className="content-create-dropdown--option"
                 onClick={onClick}
+                data-test-id={this.props['data-test-id']}
             >
                 {
                     icon != null && (
