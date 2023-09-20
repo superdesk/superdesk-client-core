@@ -182,7 +182,7 @@ class GlobalSearch {
             browser.sleep(100);
             const btn = itemElem.element(by.className('icn-btn'));
 
-            browser.wait(ECE.elementToBeClickable(btn), 1000);
+            browser.wait(ECE.elementToBeClickable(btn));
             btn.click();
 
             const menu = element(by.css('.dropdown__menu.open'));

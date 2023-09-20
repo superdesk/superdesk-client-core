@@ -274,8 +274,12 @@ describe('search', () => {
         authoring.closeSendAndPublish();
         authoring.save();
         authoring.close();
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+
+        const embargoElement = globalSearch.getItem(0).element(by.className('state_embargo'));
+
+        browser.wait(ECE.visibilityOf(embargoElement));
+
+        expect(embargoElement.getText()).toEqual('EMBARGO');
     });
 
     it('can search scheduled', () => {

@@ -254,7 +254,13 @@ describe('authoring', () => {
         authoring.writeText('z');
         element(by.cssContainingText('label', 'Dateline')).click();
         ctrlShiftKey('s');
-        browser.wait(() => element(by.buttonText('Save')).getAttribute('disabled'));
+
+        browser.wait(ECE.attributeEquals(
+            element(by.buttonText('Save')),
+            'disabled',
+            'true',
+        ));
+
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 0);
         browser.sleep(300);
