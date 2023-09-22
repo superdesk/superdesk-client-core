@@ -21,7 +21,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
         render() {
             const checkbox = this.props.hideToggle !== true ? (
                 <Switch
-                    label={{text: ''}}
+                    label={{content: ''}}
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
