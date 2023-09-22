@@ -17,7 +17,7 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
             const initialConfig = this.props?.config?.initial_offset_minutes;
             const checkbox = (
                 <Switch
-                    label={{text: ''}}
+                    label={{content: ''}}
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
