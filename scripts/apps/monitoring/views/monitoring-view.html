@@ -71,8 +71,11 @@
                         </h2>
 
                         <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader" ng-class="{'subnav__stage-group--ui-responsive': aggregate.monitoringSearch}">
-                            <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
-                            <span class="stage-group__split">/</span>
+                            <!-- There was label duplication in the case when you select a stage so I removed the elements responsible for showing the label of the desk
+                                only in the case when you select a stage, because I'm not sure if there's other cases where we need this information to be shown.
+                            -->
+                            <span ng-if="monitoring.singleGroup.type == null" class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
+                            <span ng-if="monitoring.singleGroup.type == null" class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
                                 <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
