@@ -256,17 +256,21 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             });
         }
         initializeData(preload: boolean) {
-            const existingTags = getExistingTags(this.props.article);
-
-            if (Object.keys(existingTags).length > 0) {
-                const resClient = toClientFormat(existingTags);
-
-                this.setState({
-                    data: {original: {analysis: resClient}, changes: {analysis: resClient}},
-                });
-            } else if (preload) {
-                this.runAnalysis();
+            try {
+                const existingTags = getExistingTags(this.props.article);
+    
+                if (Object.keys(existingTags).length > 0) {
+                    const resClient = toClientFormat(existingTags);
+    
+                    this.setState({
+                        data: {original: {analysis: resClient}, changes: {analysis: resClient}},
+                    });
+                } else if (preload) {
+                    this.runAnalysis();
+            } catch (error) {
+                console.error('Error in initializeData:', error);
             }
+                
         }
         updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
             const {changes} = data;
