@@ -214,9 +214,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     },
                 }).then((res) => {
                     console.log('runAnalysis getting res:', res);
-                    const resClient = toClientFormat(res.analysis);
+                    const json_response = res.analysis;
 
-                    console.log('runAnalysis getting resCLient:', resClient);
+                    console.log('runAnalysis getting json_response:', json_response);
+
+                    const tags = OrderedMap<string, ITagUi>({
+                        ...json_response.subject,
+                        ...json_response.organisation,
+                        ...json_response.person,
+                        ...json_response.event,
+                        ...json_response.place,
+                        ...json_response.object,
+                    });
+
+                    console.log('Tags:', tags);
                     
                     if (this._mounted) {
                         this.setState({
@@ -224,10 +235,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
                                     ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: resClient},
+                                changes: {analysis: tags},
                             },
                         });
-                        console.log('runAnalysis result:', resClient);
+                        console.log('runAnalysis result:', tags);
                     }
                 }).catch((error) => {
                     console.error('Error during analysis. We are in runAnalysis:  ',error, error.message, error.stack);   
