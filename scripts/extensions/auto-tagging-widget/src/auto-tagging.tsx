@@ -213,8 +213,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
+                    console.log('runAnalysis getting res:', res);
                     const resClient = toClientFormat(res.analysis);
 
+                    console.log('runAnalysis getting resCLient:', resClient);
+                    
                     if (this._mounted) {
                         this.setState({
                             data: {
