@@ -218,14 +218,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     console.log('runAnalysis getting json_response:', json_response);
 
-                    const tags = OrderedMap<string, ITagUi>({
-                        ...json_response.subject,
-                        ...json_response.organisation,
-                        ...json_response.person,
-                        ...json_response.event,
-                        ...json_response.place,
-                        ...json_response.object,
-                    });
+                    const tagEntries = [
+                        ...Object.entries(json_response.subject || {}),
+                        ...Object.entries(json_response.organisation || {}),
+                        ...Object.entries(json_response.person || {}),
+                        ...Object.entries(json_response.event || {}),
+                        ...Object.entries(json_response.place || {}),
+                        ...Object.entries(json_response.object || {}),
+                    ];
+                    
+
+                    const tags = OrderedMap<string, ITagUi>(tagEntries);
 
                     console.log('Tags:', tags);
                     
