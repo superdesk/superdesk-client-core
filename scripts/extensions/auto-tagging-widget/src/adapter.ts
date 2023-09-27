@@ -1,7 +1,6 @@
 import {ITagUi} from './types';
 import {OrderedMap} from 'immutable';
 import {ISuperdesk} from 'superdesk-api';
-import { console } from "console";
 
 
 export interface ITagBase {
