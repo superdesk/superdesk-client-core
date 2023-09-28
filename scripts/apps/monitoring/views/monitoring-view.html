@@ -77,7 +77,7 @@
                             <span ng-if="monitoring.singleGroup.type == null" class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span ng-if="monitoring.singleGroup.type == null" class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
-                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
+                                <button style="text-wrap: nowrap;" class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
                                     <li><div class="dropdown__menu-label" translate>Stages</div></li>
                                     <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
