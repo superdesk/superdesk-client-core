@@ -26,7 +26,7 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
-import {setSpellcheckerProgress, applySpellcheck} from '../actions';
+import {setSpellcheckerProgress, applySpellcheck, PopupTypes} from '../actions';
 import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
@@ -136,6 +136,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    showPopup?(type: any, data: any): void;
 }
 
 interface IState {
@@ -272,7 +273,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey} = e;
+        const {key, shiftKey, ctrlKey} = e;
+        const selectionState = this.props.editorState.getSelection();
+
+        if (
+            key === 'k'
+            && ctrlKey
+            && this.props.editorFormat.includes('link')
+            && selectionState.isCollapsed() !== true
+        ) {
+            this.props.showPopup(PopupTypes.Link, selectionState);
+            e.preventDefault();
+            return '';
+        }
 
         if (key === 'ArrowDown' || key === 'ArrowUp') {
             const autocompleteEl = document.querySelector(`.${editor3AutocompleteClassName}`) as HTMLElement | null;
@@ -295,10 +308,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         // ctrl + X
         if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
-            const {editorState} = this.props;
-            const selection = editorState.getSelection();
-
-            if (!selection.isCollapsed()) {
+            if (!selectionState.isCollapsed()) {
                 document.execCommand('copy'); // add selected text to clipboard
                 return 'delete';
             }

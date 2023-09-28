@@ -1144,12 +1144,14 @@ declare module 'superdesk-api' {
         archive_item: IArticle;
     }
 
+    export interface IUserPrivileges {
+        [privilege: string]: 1 | 0;
+    }
+
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
-        privileges?: {
-            [privilege: string]: 1 | 0;
-        };
+        privileges?: IUserPrivileges;
         author_role: string;
         editor_role: string;
     }
@@ -1224,7 +1226,7 @@ declare module 'superdesk-api' {
         avatar: string;
         avatar_renditions: {};
         role?: IUserRole['_id'];
-        privileges: {};
+        privileges: IUserPrivileges;
         user_type: 'user' | 'administrator';
         is_support: boolean;
         is_author: boolean;
