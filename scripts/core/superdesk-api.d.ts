@@ -2845,7 +2845,6 @@ declare module 'superdesk-api' {
             ): string;
         };
         privileges: {
-            getOwnPrivileges(): Promise<IUserPrivileges>;
             hasPrivilege(privilege: string): boolean;
         };
         preferences: {
