@@ -266,15 +266,6 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    scope.toggleTheme = function() {
-                        scope.theme = scope.theme === 'dark-ui' ? '' : 'dark-ui';
-                        localStorage.setItem('theme', scope.theme);
-
-                        scope.theme ?
-                            body.attr('data-theme', scope.theme) :
-                            body.removeAttr('data-theme');
-                    };
-
                     scope.toggleMenu = function() {
                         ctrl.flags.menu = !ctrl.flags.menu;
                     };

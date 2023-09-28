@@ -5,6 +5,8 @@ import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 
+const THEME_LIGHT = 'light-ui';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.users
@@ -45,6 +47,7 @@ export function UserPreferencesDirective(
             const body = angular.element('body');
 
             scope.activeNavigation = null;
+
             scope.activeTheme = localStorage.getItem('theme');
 
             /*
