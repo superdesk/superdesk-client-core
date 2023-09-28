@@ -199,17 +199,17 @@
                         </div>
                     </div>
 
-                    <h3 id="user-password" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5">Password</h3>
+                    <h3 id="user-password" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Password</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--3">
                         <div sd-info-item class="password button-group button-group--center button-group--comfort" ng-if="features.reset_user_password && user._id && !profile && user.is_enabled && _active" id="password-reset-trigger">
-                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.reset_password = !show.reset_password" ng-show="!show.reset_password">reset password</span>
+                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.reset_password = !show.reset_password" ng-show="!show.reset_password" translate>reset password</span>
                         </div>
                         <div sd-info-item class="password button-group button-group--center button-group--comfort" ng-if="features.reset_user_password && user._id && profile" id="password-change-trigger">
-                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.change_password = !show.change_password" ng-show="!show.change_password">change password</span>
+                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.change_password = !show.change_password" ng-show="!show.change_password" translate>change password</span>
                         </div>
                     </div>
 
-                    <h3  id="user-desk" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5">Default desk</h3>
+                    <h3  id="user-desk" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Default desk</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3">
                         <div sd-info-item class="form__group form__group--default form__group--mb-0 form__group--inline-label" ng-if="userDesks && userDesks.length > 0">
                             <div class="form__item">
@@ -223,7 +223,7 @@
                         </div>
                     </div>
 
-                    <h3 id="user-language" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5">Language</h3>
+                    <h3 id="user-language" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Language</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--3">
                         <div sd-info-item class="field__language form__group form__group--default form__group--mb-0 form__group--inline-label">
                             <div class="form__item">
@@ -243,7 +243,7 @@
     
                 <!-- Author content -->
                 <div class="details-info" ng-show="user.is_author" id="authorDetails">
-                    <h3 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5">Author info</h3>
+                    <h3 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Author info</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--4">
                         <div class="field__email form__group form__group--default form__group--mb-3" sd-info-item ng-if="!hideSignOff">
                             <div class="form__item">
