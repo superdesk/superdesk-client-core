@@ -233,14 +233,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     console.log('France:', france);
 
-                    console.log('Tags:', tags);
-                    console.log('4... mounted result:', this._mounted);
-                    console.log('5... Before setState - dataBeforeLoading:', dataBeforeLoading);
-                    console.log('6... Before setState - tags:', tags);
+                    
                     
                     if (this._mounted) {
-                        console.log('1... mounted result:', this._mounted);
-                        console.log('2... Before setState - dataBeforeLoading:', dataBeforeLoading);
+                       
                         console.log('3... Before setState - tags:', tags);
                         
                         this.setState({
@@ -254,7 +250,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         console.log('runAnalysis result:', tags);
                     }
                 }).catch((error) => {
-                    console.error('Error during analysis. We are in runAnalysis:  ',error, error.message, error.stack);   
+                    console.error('Error during analysis. We are in runAnalysis:  ',error);   
 
                     if (this._mounted) {
                         this.setState({
