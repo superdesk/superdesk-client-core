@@ -229,6 +229,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     
 
                     const tags = OrderedMap<string, ITagUi>(tagEntries);
+                    const france = OrderedMap<string, ITagUi>();
+
+                    console.log('France:', france);
 
                     console.log('Tags:', tags);
                     console.log('4... mounted result:', this._mounted);
@@ -243,7 +246,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                    ? {analysis: OrderedMap<string, ITagUi>(tagEntries)} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
                                 changes: {analysis: tags},
                             },
