@@ -231,8 +231,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     const tags = OrderedMap<string, ITagUi>(tagEntries);
 
                     console.log('Tags:', tags);
+                    console.log('4... mounted result:', this._mounted);
+                    console.log('5... Before setState - dataBeforeLoading:', dataBeforeLoading);
+                    console.log('6... Before setState - tags:', tags);
                     
                     if (this._mounted) {
+                        console.log('1... mounted result:', this._mounted);
+                        console.log('2... Before setState - dataBeforeLoading:', dataBeforeLoading);
+                        console.log('3... Before setState - tags:', tags);
+                        
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
