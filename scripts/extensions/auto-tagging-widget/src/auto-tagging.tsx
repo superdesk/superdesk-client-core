@@ -216,7 +216,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     const json_response = res.analysis;
                     console.log(json_response);
-                    const expected = {
+                    const expected: OrderedMap<string, ITagUi> = OrderedMap<string, ITagUi>({
                             "subject": [
                                 {
                                     "name": "IT",
@@ -269,12 +269,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "source": "imatrics",
                                 },
                             ],
-                        };
+                        });
                         
-                       
-
-                    const resClient = expected;
-             
+                                   
                     
                     if (this._mounted) {
                        
@@ -285,7 +282,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
                                     ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: resClient},
+                                changes: {analysis: expected},
                             },
                         });
                         
