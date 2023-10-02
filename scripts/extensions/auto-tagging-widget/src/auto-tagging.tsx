@@ -226,7 +226,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     },
                                     "original_source": null,
                                     "aliases": [],
-                                    "parent": null,
+                                    "parent": "parent_value",
                                 },
                                 {
                                     "name": "superdesk name",
@@ -239,7 +239,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     },
                                     "original_source": "source",
                                     "aliases": ["foo"],
-                                    "parent": null,
+                                    "parent": "parent_value",
                                 },
                                 {
                                     "name": "Service",
@@ -251,7 +251,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     },
                                     "original_source": null,
                                     "aliases": [],
-                                    "parent": null,
+                                    "parent": "parent_value",
                                 },
                             ],
                             "place": [
@@ -264,7 +264,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "altids": {
                                         "imatrics": "123",
                                     },
-                                    "parent": null,
+                                    "parent": "place",
                                     "source": "imatrics",
                                 },
                             ],
