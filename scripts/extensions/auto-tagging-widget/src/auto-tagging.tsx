@@ -68,18 +68,26 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
-    console.log('Item is ',items);
+    console.log('Item is ');
     
     const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-
+    console.log('isEntity is  ');
+    
     const entities = items.filter((tag) => isEntity(tag));
+
+    console.log('entities is  ');
+    
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
 
+    console.log('entitiesGrouped is  ');
+    
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => iMatricsConfig.entities[key].order,
             (a, b) => a - b);
 
+    console.log('entitiesGroupedSortedByConfig is  ');
+    
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
         .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
@@ -232,6 +240,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_value",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'subject',
+                                },
                             },
                             {
                                 "name": "superdesk name",
@@ -244,6 +256,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": ["foo"],
                                 "parent": "parent_value",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'subject',
+                                },
                             },
                             {
                                 "name": "Service",
@@ -256,6 +272,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_value",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'subject',
+                                },
                             },
                         ],
                         "place": [
@@ -270,6 +290,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 },
                                 "parent": "place",
                                 "source": "imatrics",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'place',
+                                },
                             },
                         ],
                         "organisation": [
@@ -284,6 +308,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_org_1",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'organisation',
+                                },
                             },
                             {
                                 "name": "Organization 2",
@@ -296,6 +324,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_org_2",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'organisation',
+                                },
                             },
                         ],
                         "person": [
@@ -310,6 +342,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_person_1",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'person',
+                                },
                             },
                             {
                                 "name": "Person 2",
@@ -322,9 +358,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "original_source": "semaphore",
                                 "aliases": [],
                                 "parent": "parent_person_2",
+                                "group": {
+                                    kind: 'scheme',
+                                    value: 'person',
+                                },
                             },
                         ],
                     });
+
 
                                    
                     
