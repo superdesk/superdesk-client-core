@@ -71,14 +71,14 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     console.log('Item is ', items);
     try{
         const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-    }.catch(error) {
+    } catch(error) {
         console.log('An error occurred for isEntity:', error);
     }
             
     console.log('isEntity is  ', isEntity);
     try{
         const entities = items.filter((tag) => isEntity(tag));
-    }.catch(error) {
+    } catch(error) {
         console.log('An error occurred for entites:', error);
     }
     const entities = items.filter((tag) => isEntity(tag));
