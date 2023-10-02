@@ -15,7 +15,7 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
+export const entityGroups = OrderedSet(['subject','place', 'person', 'organisation']);
 
 export type INewItem = Partial<ITagUi>;
 
@@ -68,8 +68,7 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
-
-    console.log("Tag is in getAutoTaggingData",tag);
+    console.log('Item is ',items);
     
     const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
 
