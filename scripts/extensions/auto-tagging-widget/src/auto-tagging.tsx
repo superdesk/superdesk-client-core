@@ -236,8 +236,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "scheme": "topics",
                                     "source": "imatrics",
                                     "altids": {
-                                        "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",
-                                        "medtop": "20000763",
+                                        "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",                                        
                                     },
                                     "original_source": "source",
                                     "aliases": ["foo"],
