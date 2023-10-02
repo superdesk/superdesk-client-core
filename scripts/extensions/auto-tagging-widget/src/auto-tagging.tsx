@@ -213,7 +213,66 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-                    const resClient = toClientFormat(res.analysis);
+
+                    const expected = {
+                            "subject": [
+                                {
+                                    "name": "IT",
+                                    "qcode": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
+                                    "scheme": "imatrics_topic",
+                                    "source": "imatrics",
+                                    "altids": {
+                                        "imatrics": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
+                                    },
+                                    "original_source": null,
+                                    "aliases": [],
+                                    "parent": null,
+                                },
+                                {
+                                    "name": "superdesk name",
+                                    "qcode": "20000763",
+                                    "scheme": "topics",
+                                    "source": "imatrics",
+                                    "altids": {
+                                        "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",
+                                        "medtop": "20000763",
+                                    },
+                                    "original_source": "source",
+                                    "aliases": ["foo"],
+                                    "parent": null,
+                                },
+                                {
+                                    "name": "Service",
+                                    "qcode": "44f52663-52f9-3836-ac45-ae862fe945a3",
+                                    "scheme": "imatrics_topic",
+                                    "source": "imatrics",
+                                    "altids": {
+                                        "imatrics": "44f52663-52f9-3836-ac45-ae862fe945a3",
+                                    },
+                                    "original_source": null,
+                                    "aliases": [],
+                                    "parent": null,
+                                },
+                            ],
+                            "place": [
+                                {
+                                    "name": "test-place",
+                                    "qcode": "123",
+                                    "scheme": "place_custom",
+                                    "original_source": null,
+                                    "aliases": [],
+                                    "altids": {
+                                        "imatrics": "123",
+                                    },
+                                    "parent": null,
+                                    "source": "imatrics",
+                                },
+                            ],
+                        };
+                        
+                       
+
+                    const resClient = toClientFormat(expected);
              
                     
                     if (this._mounted) {
