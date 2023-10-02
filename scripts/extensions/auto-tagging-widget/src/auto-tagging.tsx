@@ -273,6 +273,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     
                                    
                     const resClient = toClientFormat(expected);
+                    console.log("resClient is here", resClient);
                     if (this._mounted) {
                        
                         
@@ -282,7 +283,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
                                     ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: resClient},
+                                changes: {analysis: expected},
                             },
                         });
                         
