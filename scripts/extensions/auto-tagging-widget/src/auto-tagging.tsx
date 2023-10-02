@@ -239,7 +239,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 "scheme": "topics",
                                 "source": "imatrics",
                                 "altids": {
-                                    "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",                                        
+                                    "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",
                                 },
                                 "original_source": "semaphore",
                                 "aliases": ["foo"],
@@ -270,6 +270,58 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 },
                                 "parent": "place",
                                 "source": "imatrics",
+                            },
+                        ],
+                        "organisation": [
+                            {
+                                "name": "Organization 1",
+                                "qcode": "org-1",
+                                "scheme": "org_scheme",
+                                "source": "imatrics",
+                                "altids": {
+                                    "imatrics": "org-1",
+                                },
+                                "original_source": "semaphore",
+                                "aliases": [],
+                                "parent": "parent_org_1",
+                            },
+                            {
+                                "name": "Organization 2",
+                                "qcode": "org-2",
+                                "scheme": "org_scheme",
+                                "source": "imatrics",
+                                "altids": {
+                                    "imatrics": "org-2",
+                                },
+                                "original_source": "semaphore",
+                                "aliases": [],
+                                "parent": "parent_org_2",
+                            },
+                        ],
+                        "person": [
+                            {
+                                "name": "Person 1",
+                                "qcode": "person-1",
+                                "scheme": "person_scheme",
+                                "source": "imatrics",
+                                "altids": {
+                                    "imatrics": "person-1",
+                                },
+                                "original_source": "semaphore",
+                                "aliases": [],
+                                "parent": "parent_person_1",
+                            },
+                            {
+                                "name": "Person 2",
+                                "qcode": "person-2",
+                                "scheme": "person_scheme",
+                                "source": "imatrics",
+                                "altids": {
+                                    "imatrics": "person-2",
+                                },
+                                "original_source": "semaphore",
+                                "aliases": [],
+                                "parent": "parent_person_2",
                             },
                         ],
                     });
