@@ -215,7 +215,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 }).then((res) => {
 
                     const json_response = res.analysis;
-                    // console.log(json_response);
+                    console.log(json_response);
                    
 
                     const expected: OrderedMap<string, ITagUi> = OrderedMap<string, ITagUi>({
@@ -274,8 +274,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     });
 
                                    
-                    const resClient = toClientFormat(json_response);
-                    console.log("resClient is here", resClient);
+                    
                     if (this._mounted) {
                        
                         
