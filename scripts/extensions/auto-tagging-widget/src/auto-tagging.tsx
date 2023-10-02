@@ -216,61 +216,61 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     const json_response = res.analysis;
                     console.log(json_response);
-                    const expected: OrderedMap<string, ITagUi> = OrderedMap<string, ITagUi>({
-                            "subject": [
-                                {
-                                    "name": "IT",
-                                    "qcode": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
-                                    "scheme": "imatrics_topic",
-                                    "source": "imatrics",
-                                    "altids": {
-                                        "imatrics": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
-                                    },
-                                    "original_source": "semaphore",
-                                    "aliases": [],
-                                    "parent": "parent_value",
+                    const expected: IServerResponse = {
+                        subject: [
+                            {
+                                name: "IT",
+                                qcode: "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
+                                scheme: "imatrics_topic",
+                                source: "imatrics",
+                                altids: {
+                                    imatrics: "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
                                 },
-                                {
-                                    "name": "superdesk name",
-                                    "qcode": "20000763",
-                                    "scheme": "topics",
-                                    "source": "imatrics",
-                                    "altids": {
-                                        "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",                                        
-                                    },
-                                    "original_source": "semaphore",
-                                    "aliases": ["foo"],
-                                    "parent": "parent_value",
+                                original_source: "semaphore",
+                                aliases: ['bar'],
+                                parent: "parent_value",
+                            },
+                            {
+                                name: "superdesk name",
+                                qcode: "20000763",
+                                scheme: "topics",
+                                source: "imatrics",
+                                altids: {
+                                    imatrics: "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",
                                 },
-                                {
-                                    "name": "Service",
-                                    "qcode": "44f52663-52f9-3836-ac45-ae862fe945a3",
-                                    "scheme": "imatrics_topic",
-                                    "source": "imatrics",
-                                    "altids": {
-                                        "imatrics": "44f52663-52f9-3836-ac45-ae862fe945a3",
-                                    },
-                                    "original_source": "semaphore",
-                                    "aliases": [],
-                                    "parent": "parent_value",
+                                original_source: "semaphore",
+                                aliases: ["foo"],
+                                parent: "parent_value",
+                            },
+                            {
+                                name: "Service",
+                                qcode: "44f52663-52f9-3836-ac45-ae862fe945a3",
+                                scheme: "imatrics_topic",
+                                source: "imatrics",
+                                altids: {
+                                    imatrics: "44f52663-52f9-3836-ac45-ae862fe945a3",
                                 },
-                            ],
-                            "place": [
-                                {
-                                    "name": "test-place",
-                                    "qcode": "123",
-                                    "scheme": "place_custom",
-                                    "original_source": "semaphore",
-                                    "aliases": [],
-                                    "altids": {
-                                        "imatrics": "123",
-                                    },
-                                    "parent": "place",
-                                    "source": "imatrics",
+                                original_source: "semaphore",
+                                aliases: [],
+                                parent: "parent_value",
+                            },
+                        ],
+                        place: [
+                            {
+                                name: "test-place",
+                                qcode: "123",
+                                scheme: "place_custom",
+                                original_source: "semaphore",
+                                aliases: [],
+                                altids: {
+                                    imatrics: "123",
                                 },
-                            ],
-                        });
-                        
+                                parent: "place",
+                                source: "imatrics",
+                            },
+                        ],
+                    };
+    
                                    
                     const resClient = toClientFormat(expected);
                     if (this._mounted) {
