@@ -69,18 +69,12 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
     console.log('Item is ', items);
-    try{
-        const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-    } catch(error) {
-        console.log('An error occurred for isEntity:', error);
-    }
+   
+    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+   
             
     console.log('isEntity is  ', isEntity);
-    try{
-        const entities = items.filter((tag) => isEntity(tag));
-    } catch(error) {
-        console.log('An error occurred for entites:', error);
-    }
+    
     const entities = items.filter((tag) => isEntity(tag));
 
     console.log('entities is  ', entities);
