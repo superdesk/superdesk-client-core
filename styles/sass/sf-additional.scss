@@ -292,7 +292,6 @@
         flex-grow: 1;
         .search-handler {
             box-shadow: none !important;
-            min-width: 320px;
             input {
                 flex-grow: 1;
                 flex-shrink: 1;
@@ -326,7 +325,7 @@
             pointer-events: none;
         }
     }
-    
+
     &:focus-within {
         box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 6px var(--sd-colour-interactive--alpha-20);
         background-color: var(--sd-colour-bg__searchbar);
