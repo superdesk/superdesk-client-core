@@ -69,6 +69,8 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
 
+    console.log("Tag is in getAutoTaggingData",tag);
+    
     const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
 
     const entities = items.filter((tag) => isEntity(tag));
