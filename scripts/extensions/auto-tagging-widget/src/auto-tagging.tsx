@@ -226,7 +226,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "altids": {
                                         "imatrics": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
                                     },
-                                    "original_source": null,
+                                    "original_source": "semaphore",
                                     "aliases": [],
                                     "parent": "parent_value",
                                 },
@@ -238,7 +238,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "altids": {
                                         "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",                                        
                                     },
-                                    "original_source": "source",
+                                    "original_source": "semaphore",
                                     "aliases": ["foo"],
                                     "parent": "parent_value",
                                 },
@@ -250,7 +250,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "altids": {
                                         "imatrics": "44f52663-52f9-3836-ac45-ae862fe945a3",
                                     },
-                                    "original_source": null,
+                                    "original_source": "semaphore",
                                     "aliases": [],
                                     "parent": "parent_value",
                                 },
@@ -260,7 +260,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     "name": "test-place",
                                     "qcode": "123",
                                     "scheme": "place_custom",
-                                    "original_source": null,
+                                    "original_source": "semaphore",
                                     "aliases": [],
                                     "altids": {
                                         "imatrics": "123",
