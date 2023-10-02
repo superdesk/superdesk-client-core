@@ -273,7 +273,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         
                        
 
-                    const resClient = toClientFormat(expected);
+                    const resClient = expected;
              
                     
                     if (this._mounted) {
