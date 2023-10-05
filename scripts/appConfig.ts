@@ -46,7 +46,7 @@ export const debugInfo = {
     translationsLoaded: false,
 };
 
-export let authoringReactEnabledUserSelection = true;
+export let authoringReactEnabledUserSelection = (JSON.parse(localStorage.getItem('auth-react') ?? 'false') as boolean);
 
 export function toggleAuthoringReact(enabled: boolean) {
     localStorage.setItem('auth-react', JSON.stringify(enabled));
