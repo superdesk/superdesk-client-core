@@ -15,7 +15,7 @@ import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
-export const entityGroups = OrderedSet(['subject','place', 'person', 'organisation']);
+export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
 export type INewItem = Partial<ITagUi>;
 
@@ -68,28 +68,17 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
-    console.log('Item is ', items);
-   
-    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-   
-            
-    console.log('isEntity is  ', isEntity);
-    
-    const entities = items.filter((tag) => isEntity(tag));
 
-    console.log('entities is  ', entities);
-    
+    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+
+    const entities = items.filter((tag) => isEntity(tag));
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
 
-    console.log('entitiesGrouped is  ');
-    
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => iMatricsConfig.entities[key].order,
             (a, b) => a - b);
 
-    console.log('entitiesGroupedSortedByConfig is  ');
-    
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
         .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
         .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
@@ -195,26 +184,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.save = this.save.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
-
-
-
-    
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
-            console.log(process.env.SEMAPHORE_BASE_URL);
-            console.log(process.env.semaphore_api_key);
-            console.log(process.env.semaphore_token_endpoint);
-
 
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract} = this.props.article;
-                console.log('runAnalysis POST body:', {headline, body_html, abstract});
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
                     path: '/ai/',
                     payload: {
-                        service: 'semaphore',
+                        service: 'imatrics',
                         item: {
                             guid,
                             language,
@@ -224,194 +204,32 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
+                    const resClient = toClientFormat(res.analysis);
 
-                    const json_response = res.analysis;
-                    console.log(json_response);
-                   
-
-                    const expected: OrderedMap<string, ITagUi> = OrderedMap<string, ITagUi>({
-                        "subject": [
-                            {
-                                "name": "IT",
-                                "qcode": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
-                                "scheme": "imatrics_topic",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "e3c482c0-08a4-3b31-a7f1-e231f1ddffc4",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_value",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                            {
-                                "name": "superdesk name",
-                                "qcode": "20000763",
-                                "scheme": "topics",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "c8a83204-29e0-3a7f-9a0e-51e76d885f7f",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": ["foo"],
-                                "parent": "parent_value",
-                                "group": {
-                                   "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                            {
-                                "name": "Service",
-                                "qcode": "44f52663-52f9-3836-ac45-ae862fe945a3",
-                                "scheme": "imatrics_topic",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "44f52663-52f9-3836-ac45-ae862fe945a3",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_value",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                        ],
-                        "place": [
-                            {
-                                "name": "test-place",
-                                "qcode": "123",
-                                "scheme": "place_custom",
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "altids": {
-                                    "imatrics": "123",
-                                },
-                                "parent": "place",
-                                "source": "imatrics",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                        ],
-                        "organisation": [
-                            {
-                                "name": "Organization 1",
-                                "qcode": "org-1",
-                                "scheme": "org_scheme",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "org-1",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_org_1",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                            {
-                                "name": "Organization 2",
-                                "qcode": "org-2",
-                                "scheme": "org_scheme",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "org-2",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_org_2",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                        ],
-                        "person": [
-                            {
-                                "name": "Person 1",
-                                "qcode": "person-1",
-                                "scheme": "person_scheme",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "person-1",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_person_1",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                            {
-                                "name": "Person 2",
-                                "qcode": "person-2",
-                                "scheme": "person_scheme",
-                                "source": "imatrics",
-                                "altids": {
-                                    "imatrics": "person-2",
-                                },
-                                "original_source": "semaphore",
-                                "aliases": [],
-                                "parent": "parent_person_2",
-                                "group": {
-                                    "kind": "scheme",
-                                    "value": "subject",
-                                },
-                            },
-                        ],
-                    });
-
-
-                                   
-                    
                     if (this._mounted) {
-                       
-                        
-                        
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
                                     ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: expected},
+                                changes: {analysis: resClient},
                             },
                         });
-                        
                     }
-                }).catch((error) => {
-                    console.error('Error during analysis. We are in runAnalysis:  ',error);   
-
-                    if (this._mounted) {
-                        this.setState({
-                            data: 'not-initialized' // or you could set to a new error state
-                        });
-                    }
-                    
                 });
             });
         }
         initializeData(preload: boolean) {
-            try {
-                const existingTags = getExistingTags(this.props.article);
-        
-                if (Object.keys(existingTags).length > 0) {
-                    const resClient = toClientFormat(existingTags);
-        
-                    this.setState({
-                        data: { original: { analysis: resClient }, changes: { analysis: resClient } },
-                    });
-                } else if (preload) {
-                    this.runAnalysis();
-                }
-            } catch (error) {
-                console.error('Error in initializeData:', error);
+            const existingTags = getExistingTags(this.props.article);
+
+            if (Object.keys(existingTags).length > 0) {
+                const resClient = toClientFormat(existingTags);
+
+                this.setState({
+                    data: {original: {analysis: resClient}, changes: {analysis: resClient}},
+                });
+            } else if (preload) {
+                this.runAnalysis();
             }
         }
         updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
@@ -776,7 +594,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={readOnly ? undefined : gettext('Click "Run" to test Semaphore')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to generate')}
                                     />
                                 );
                             } else {
