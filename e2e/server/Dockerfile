@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.10
 
 ADD requirements.txt .
 RUN pip3 install -U pip wheel setuptools
