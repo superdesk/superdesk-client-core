@@ -179,10 +179,10 @@ export const gettext = (
 
     let translated = i18n.gettext(text);
 
-    const hasReactPlaceholders = Object.values(params).some((val) => typeof val === 'function');
+    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
 
     if (hasReactPlaceholders) {
-        return gettextReact(translated, params);
+        return gettextReact(translated, params ?? {});
     } else {
         Object.keys(params ?? {}).forEach((param) => {
             translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
