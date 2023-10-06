@@ -73,7 +73,6 @@ module.exports = function makeConfig(grunt) {
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            mainFields: ['browser', 'main'],
         },
 
         module: {
