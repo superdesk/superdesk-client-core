@@ -410,7 +410,7 @@ export function ArticleEditDirective(
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
-                        scope.refreshTrigger++;
+                        scope.refresh();
                     }
 
                     scope.refresh(); // reload footer editorState from HTML that was set here

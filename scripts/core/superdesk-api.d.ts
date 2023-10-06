@@ -1479,7 +1479,7 @@ declare module 'superdesk-api' {
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
         disable_entire_category_selection?: boolean;
-        selection_type?: any;
+        selection_type?: 'single selection' | 'multi selection' | 'do not show';
     }
 
     export interface IArticleField extends IVocabulary {
@@ -2845,6 +2845,7 @@ declare module 'superdesk-api' {
             ): string;
         };
         privileges: {
+            getOwnPrivileges(): Promise<IUserPrivileges>;
             hasPrivilege(privilege: string): boolean;
         };
         preferences: {
