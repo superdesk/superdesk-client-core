@@ -236,7 +236,7 @@ export function ItemCarouselDirective(notify, relationsService) {
                     const type: string = getSuperdeskType(event, false);
 
                     const jsonData = event.originalEvent.dataTransfer.getData(type);
-                    const item: IArticle = angular.fromJson(jsonData != '' ? jsonData : '{}');
+                    const item: IArticle = angular.fromJson(jsonData !== '' ? jsonData : '{}');
 
                     const isWorkflowAllowed: boolean = relationsService.itemHasAllowedStatus(item, scope.field);
 
