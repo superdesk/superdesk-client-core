@@ -19,27 +19,21 @@ interface IState {
 }
 
 export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, IState> {
-    private elem: React.RefObject<HTMLDivElement>;
     private input: React.RefObject<HTMLInputElement>;
 
     constructor(props) {
         super(props);
 
-        this.elem = React.createRef();
         this.input = React.createRef();
 
-        this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onDropOver = this.onDropOver.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
 
         this.state = {
             dragging: false,
         };
-    }
-
-    onDragStart() {
-        this.setState({dragging: true});
     }
 
     onDragEnd() {
@@ -53,25 +47,18 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
             event.preventDefault();
 
             this.props.onDrop(event);
+            this.setState({dragging: false});
         }
     }
 
     onDropOver(event) {
         event.preventDefault();
+        this.setState({dragging: true});
     }
 
-    componentDidMount() {
-        document.addEventListener('dragstart', this.onDragStart);
-        document.addEventListener('dragend', this.onDragEnd);
-        this.elem.current.addEventListener('dragover', this.onDropOver);
-        this.elem.current.addEventListener('drop', this.onDrop);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('dragstart', this.onDragStart);
-        document.removeEventListener('dragend', this.onDragEnd);
-        this.elem.current.removeEventListener('drop', this.onDrop);
-        this.elem.current.removeEventListener('dragover', this.onDropOver);
+    onDragLeave(event) {
+        event.preventDefault();
+        this.setState({dragging: false});
     }
 
     render() {
@@ -102,8 +89,20 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
 
         return (
             <div
+                onDragOver={(e) => {
+                    e.preventDefault();
+
+                    if (this.state.dragging != true) {
+                        this.setState({dragging: true});
+                    }
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault();
+                    this.setState({dragging: false});
+                }}
+                onDragEnd={this.onDragEnd}
+                onDrop={this.onDrop}
                 className={this.props.className}
-                ref={this.elem}
                 style={styles}
             >
                 {
