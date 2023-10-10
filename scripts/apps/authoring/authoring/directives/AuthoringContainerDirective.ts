@@ -35,7 +35,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
             // Needed only for authoring Angular. In authoring react we have a generic
             // event ('resource:updated') which listens to all item changes.
             scope.$on('author_approval:updated', (event) => {
-                if (event.item_id == scope.item._id) {
+                if (event.item_id === scope.item._id) {
                     scope.item.extra.publish_sign_off = event.sign_off_new_data;
                 }
             });
