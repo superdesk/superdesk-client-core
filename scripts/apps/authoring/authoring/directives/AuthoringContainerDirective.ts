@@ -32,7 +32,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
         scope: {},
         require: 'sdAuthoringContainer',
         link: function(scope, elem, attrs, ctrl) {
-            // Needed for authoring Angular. In authoring react we have a generic
+            // Needed only for authoring Angular. In authoring react we have a generic
             // event ('resource:updated') which listens to all item changes.
             scope.$on('author_approval:updated', (event) => {
                 if (event.item_id == scope.item._id) {
