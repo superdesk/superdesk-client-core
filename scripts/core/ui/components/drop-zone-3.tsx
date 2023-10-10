@@ -92,7 +92,7 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
                 onDragOver={(e) => {
                     e.preventDefault();
 
-                    if (this.state.dragging != true) {
+                    if (this.state.dragging !== true) {
                         this.setState({dragging: true});
                     }
                 }}
