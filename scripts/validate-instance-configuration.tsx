@@ -35,7 +35,6 @@ export function maybeDisplayInvalidInstanceConfigurationMessage() {
                     visible={true}
                     headerTemplate={modalHeader}
                     onHide={closeModal}
-                    zIndex={9999}
                 >
                     {issues[0]}
                 </Modal>
