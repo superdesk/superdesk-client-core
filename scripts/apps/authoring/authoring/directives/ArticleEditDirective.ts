@@ -169,10 +169,13 @@ export function ArticleEditDirective(
 
                 // Needed only for authoring Angular. In authoring react we have a generic
                 // event ('resource:updated') which listens to all item changes.
-                scope.$on('author_approval:updated', (_, extra) => {
+                scope.$on('author_approval:updated', (_event, extra) => {
                     if (extra.item_id === scope.item?._id) {
-                        scope.item.extra = {publish_sign_off: extra.new_sign_off};
+                        if (scope.item.extra == null) {
+                            scope.item.extra = {};
+                        }
 
+                        scope.item.extra.publish_sign_off = extra.new_sign_off;
                         scope.$apply();
                     }
                 });
