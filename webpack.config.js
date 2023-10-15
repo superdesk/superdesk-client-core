@@ -29,7 +29,7 @@ module.exports = function makeConfig(grunt) {
     const jQueryModule = getModuleDir('jquery');
 
     return {
-        mode: process.env.NODE_ENV || 'development',
+        mode: 'development',
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
         },
