@@ -29,10 +29,12 @@ module.exports = function makeConfig(grunt) {
     const jQueryModule = getModuleDir('jquery');
 
     return {
+        mode: 'development',
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
         },
-
+        devtool: 'source-map',
+        
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
@@ -52,9 +54,6 @@ module.exports = function makeConfig(grunt) {
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
-            }),
-            new ExtractTextPlugin({
-                filename: '[name].bundle.css',
             }),
         ],
 
@@ -119,6 +118,12 @@ module.exports = function makeConfig(grunt) {
                             },
                         }],
                         use: [
+                            {
+                                loader: 'style-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
                             {
                                 loader: 'css-loader',
                                 options: {
