@@ -125,8 +125,8 @@
     "typescript": "3.9.7",
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
-    "webpack": "3.11.0",
-    "webpack-dev-server": "2.11.1"
+    "webpack": "4.0.0",
+    "webpack-dev-server": "3.0.0"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
