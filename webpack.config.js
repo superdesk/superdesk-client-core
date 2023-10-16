@@ -29,12 +29,10 @@ module.exports = function makeConfig(grunt) {
     const jQueryModule = getModuleDir('jquery');
 
     return {
-        mode: 'development',
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
         },
-        devtool: 'source-map',
-        
+
         output: {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
@@ -55,6 +53,9 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
+            new ExtractTextPlugin({
+                filename: '[name].bundle.css',
+            }),
         ],
 
         resolve: {
@@ -65,7 +66,7 @@ module.exports = function makeConfig(grunt) {
                 'node_modules',
             ],
             alias: {
-                'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2012-2022',
+                'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-10-year-range',
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
@@ -118,12 +119,6 @@ module.exports = function makeConfig(grunt) {
                             },
                         }],
                         use: [
-                            {
-                                loader: 'style-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
                             {
                                 loader: 'css-loader',
                                 options: {
