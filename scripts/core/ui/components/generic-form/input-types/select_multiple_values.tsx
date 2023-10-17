@@ -60,6 +60,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     label={this.props.formField.label}
                     inlineLabel
                     labelHidden
+                    zIndex={1051}
                 />
 
                 {
