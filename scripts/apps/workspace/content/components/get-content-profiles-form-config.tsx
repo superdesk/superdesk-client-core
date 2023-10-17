@@ -239,35 +239,18 @@ export function getContentProfileFormConfig(
     };
 
     if (field?.id != null && hasFormattingOptions(field.id, editor, customFields)) {
-        const editor3Enabled = editor?.body_html?.editor3 === true;
+        const formattingOptionsEditor3Field: IFormField = {
+            label: gettext('Formatting options'),
+            type: FormFieldType.selectMultiple,
+            field: 'formatOptions',
+            required: false,
+            component_parameters: {
+                items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
+                    .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
+            },
+        };
 
-        if (editor3Enabled) {
-            const formattingOptionsEditor3Field: IFormField = {
-                label: gettext('Formatting options'),
-                type: FormFieldType.selectMultiple,
-                field: 'formatOptions',
-                required: false,
-                component_parameters: {
-                    items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
-                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
-                },
-            };
-
-            fields.push(formattingOptionsEditor3Field);
-        } else {
-            const formattingOptionsEditor2Field: IFormField = {
-                label: gettext('Formatting options'),
-                type: FormFieldType.selectMultiple,
-                field: 'formatOptions',
-                required: false,
-                component_parameters: {
-                    items: Object.entries(getEditor3RichTextFormattingOptions())
-                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
-                },
-            };
-
-            fields.push(formattingOptionsEditor2Field);
-        }
+        fields.push(formattingOptionsEditor3Field);
     }
 
     if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {
