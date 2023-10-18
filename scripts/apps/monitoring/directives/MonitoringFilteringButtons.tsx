@@ -139,12 +139,22 @@ class MonitoringFilteringButtonsComponent extends React.PureComponent<IProps, {b
         });
     }
     render() {
-        if (this.state.buttons == null) {
+        if ((this.state.buttons ?? []).length < 1) {
             return null;
         }
 
         return (
-            <div>
+            <div
+                style={{
+                    display: 'flex',
+                    height: '100%',
+                    alignItems: 'center',
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    borderLeft: '1px solid var(--sd-colour-line--light)',
+                    whiteSpace: 'nowrap',
+                }}
+            >
                 {this.state.buttons.map((button) => (
                     <FilterButton
                         key={button.label}
