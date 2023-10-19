@@ -29,7 +29,6 @@ module.exports = function makeConfig(grunt) {
     const jQueryModule = getModuleDir('jquery');
 
     return {
-        devtool: 'cheap-eval-source-map',
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
         },
