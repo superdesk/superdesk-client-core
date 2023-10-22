@@ -29,6 +29,7 @@ module.exports = function makeConfig(grunt) {
     const jQueryModule = getModuleDir('jquery');
 
     return {
+        // set build to development
         devtool: 'source-map',
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
@@ -147,7 +148,10 @@ module.exports = function makeConfig(grunt) {
         },
     };
 };
-
+// set build to development
+new webpack.DefinePlugin({
+  'process.env.NODE_ENV': JSON.stringify('development')
+})
 // getDefaults returns the default configuration for the app
 function getDefaults(grunt) {
     var version;
