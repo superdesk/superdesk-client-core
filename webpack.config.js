@@ -54,6 +54,8 @@ module.exports = function makeConfig(grunt) {
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
+                // set build to development
+                'process.env.NODE_ENV': JSON.stringify('development'),
             }),
             new ExtractTextPlugin({
                 filename: '[name].bundle.css',
@@ -148,10 +150,6 @@ module.exports = function makeConfig(grunt) {
         },
     };
 };
-// set build to development
-new webpack.DefinePlugin({
-  'process.env.NODE_ENV': JSON.stringify('development')
-})
 // getDefaults returns the default configuration for the app
 function getDefaults(grunt) {
     var version;
