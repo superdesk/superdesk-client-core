@@ -369,8 +369,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         render() {
             const {runAutomaticallyPreference, vocabularyLabels} = this.state;
-            
-            console.log(data);
 
             if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
@@ -381,7 +379,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 this.isDirty(data.original, data.changes);
 
             const readOnly = superdesk.entities.article.isLockedInOtherSession(this.props.article);
-
+            console.log(data);
+            
             return (
                 <React.Fragment>
                     {
