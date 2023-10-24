@@ -16,6 +16,8 @@ import {FetchToTab} from './actions/fetch-to-tab';
 import {UnspikeTab} from './actions/unspike-tab';
 import {IArticleActionInteractive, IPanelAction} from './interfaces';
 
+const singleColumnWidthRem = 40; // rem
+
 const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
 
 function getTabLabel(id: IArticleActionInteractive) {
@@ -106,7 +108,11 @@ export class InteractiveArticleActionsPanel
 
         function PanelWithHeader({columnCount = 1, children}: {columnCount?: number, children: React.ReactNode}) {
             return (
-                <Panel width={`${40 * columnCount}rem`} markupV2={markupV2} data-test-id="interactive-actions-panel">
+                <Panel
+                    width={`${singleColumnWidthRem * columnCount}rem`}
+                    markupV2={markupV2}
+                    data-test-id="interactive-actions-panel"
+                >
                     {panelHeader}
                     {children}
                 </Panel>
@@ -115,9 +121,15 @@ export class InteractiveArticleActionsPanel
 
         if (activeTab === 'publish') {
             if (items.length !== 1) {
-                logger.error(new Error('Publishing multiple items from authoring pane is not supported'));
+                // this block should never run, but I'm handling it anyway just in case
 
-                return null;
+                const error = gettext('Publishing multiple items from authoring pane is not supported');
+
+                logger.error(new Error(error));
+
+                return (
+                    <div>{error}</div>
+                );
             }
 
             const item = items[0];
@@ -140,11 +152,17 @@ export class InteractiveArticleActionsPanel
                     )}
                 </WithPublishTab>
             );
-        } if (activeTab === 'correct') {
+        } else if (activeTab === 'correct') {
             if (items.length !== 1) {
-                logger.error(new Error('Correcting multiple items from authoring pane is not supported'));
+                // this block should never run, but I'm handling it anyway just in case
 
-                return null;
+                const error = gettext('Correcting multiple items from authoring pane is not supported');
+
+                logger.error(new Error(error));
+
+                return (
+                    <div>{error}</div>
+                );
             }
 
             const item = items[0];
@@ -183,7 +201,7 @@ export class InteractiveArticleActionsPanel
                     />
                 </PanelWithHeader>
             );
-        } if (activeTab === 'duplicate_to') {
+        } else if (activeTab === 'duplicate_to') {
             return (
                 <PanelWithHeader>
                     <DuplicateToTab
@@ -193,7 +211,7 @@ export class InteractiveArticleActionsPanel
                     />
                 </PanelWithHeader>
             );
-        } if (activeTab === 'unspike') {
+        } else if (activeTab === 'unspike') {
             return (
                 <PanelWithHeader>
                     <UnspikeTab
