@@ -290,11 +290,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
     keyBindingFn(e) {
         const {key, shiftKey, ctrlKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
-        const osBasedKeyRule = this.isMacOS() ? metaKey : ctrlKey;
+        const modifierKey = this.isMacOS() ? metaKey : ctrlKey;
 
         if (
             key === 'k'
-            && osBasedKeyRule
+            && modifierKey
             && this.props.editorFormat.includes('link')
             && selectionState.isCollapsed() !== true
         ) {
