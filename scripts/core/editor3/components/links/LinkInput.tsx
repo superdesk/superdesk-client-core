@@ -109,6 +109,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
         const _applyLink = this.props.applyLink;
         const _changeLinkSuggestion = this.props.changeLinkSuggestion;
 
+        debugger;
         if (linkType === linkTypes.href) {
             const url = this.state.url;
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
@@ -188,6 +189,11 @@ export class LinkInputComponent extends React.Component<IProps, any> {
             >
                 <div style={{padding: '3.2rem 1.6rem'}}>
                     <input
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                this.onSubmit(linkTypes.href);
+                            }
+                        }}
                         type="url"
                         ref={(el) => {
                             this.inputElement = el;
