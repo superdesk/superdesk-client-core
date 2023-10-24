@@ -28,7 +28,6 @@ export function isMacOS() {
     return false;
 }
 
-
 function requestListener() {
     const translations = JSON.parse(this.responseText);
 
