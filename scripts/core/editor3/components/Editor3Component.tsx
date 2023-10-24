@@ -193,6 +193,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.onDragOver = this.onDragOver.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
+        this.isMacOS = this.isMacOS.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
