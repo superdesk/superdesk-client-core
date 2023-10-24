@@ -39,6 +39,7 @@ import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlight
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMacOS} from 'core/utils';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -193,7 +194,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.onDragOver = this.onDragOver.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
-        this.isMacOS = this.isMacOS.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
@@ -279,18 +279,10 @@ export class Editor3Component extends React.Component<IProps, IState> {
         }
     }
 
-    isMacOS() {
-        if (navigator.userAgent.toLowerCase().includes('macintosh') || navigator.userAgent.toLowerCase().includes('mac os')) {
-            return true;
-        }
-
-        return false;
-    }
-
     keyBindingFn(e) {
         const {key, shiftKey, ctrlKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
-        const modifierKey = this.isMacOS() ? metaKey : ctrlKey;
+        const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
         if (
             key === 'k'
