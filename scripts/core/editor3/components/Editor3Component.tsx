@@ -39,6 +39,7 @@ import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlight
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMacOS} from 'core/utils';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -278,12 +279,13 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey, ctrlKey} = e;
+        const {key, shiftKey, ctrlKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
+        const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
         if (
             key === 'k'
-            && ctrlKey
+            && modifierKey
             && this.props.editorFormat.includes('link')
             && selectionState.isCollapsed() !== true
         ) {

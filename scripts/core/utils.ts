@@ -4,6 +4,17 @@ import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {appConfig} from 'appConfig';
 
+export function isMacOS() {
+    if (
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 export type IScopeApply = (fn: () => void) => void;
 
 export const i18n = gettextjs();
