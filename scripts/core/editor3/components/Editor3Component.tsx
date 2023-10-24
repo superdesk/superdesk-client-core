@@ -280,7 +280,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     isMacOS() {
-        if (navigator.userAgent.indexOf('Mac') != -1) {
+        if (navigator.userAgent.toLowerCase().includes('macintosh') || navigator.userAgent.toLowerCase().includes('mac os')) {
             return true;
         }
 
