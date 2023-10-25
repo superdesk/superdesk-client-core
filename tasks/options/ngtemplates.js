@@ -50,7 +50,7 @@ module.exports = {
     index: {
         cwd: '<%= coreDir %>',
         dest: './index.html',
-        src: __filename, // hack to make ngtemplate work
+        src: src, // __filename, // hack to make ngtemplate work
         options: {
             bootstrap: () => {
                 const features = getConfig().features || {};
