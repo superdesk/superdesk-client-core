@@ -46,6 +46,17 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     response.subject?.forEach((item) => {
         const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
+        console.log(`Processing Subject Tag ${index + 1}:`);
+        console.log('Name:', name);
+        console.log('Description:', description);
+        console.log('QCode:', qcode);
+        console.log('Source:', source);
+        console.log('Altids:', altids);
+        console.log('Aliases:', aliases);
+        console.log('Original Source:', original_source);
+        console.log('Parent:', parent);
+        console.log('Scheme:', scheme);
+
         const tag: ITagUi = {
             name,
             description,
@@ -62,6 +73,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         };
 
         tags = tags.set(tag.qcode, tag);
+        console.log('Generated Tag:', tag);
     });
 
     const others: Array<{group: string; items: Array<ITagBase>}> = [];
@@ -89,6 +101,16 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     others.forEach(({group, items}) => {
         items.forEach((item) => {
             const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
+            
+            console.log(`Processing Subject Tag ${index + 1}:`);
+            console.log('Name:', name);
+            console.log('Description:', description);
+            console.log('QCode:', qcode);
+            console.log('Source:', source);
+            console.log('Altids:', altids);
+            console.log('Aliases:', aliases);
+            console.log('Original Source:', original_source);
+            console.log('Scheme:', scheme);
 
             const tag: ITagUi = {
                 name,
@@ -106,6 +128,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
             };
 
             tags = tags.set(tag.qcode, tag);
+            console.log('Generated Group Tag:', tag);
         });
     });
     console.log('Server Response:', response);
