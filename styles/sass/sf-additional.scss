@@ -216,7 +216,7 @@
         input {
             font-size: 14px;
             border: 0 !important;
-            width: auto;
+            width: 100%;
             padding: 0;
             color: var(--color-text);
             background-color: transparent;
@@ -224,7 +224,6 @@
             flex-grow: 1;
             &:focus {
                 box-shadow: none;
-                width: auto;
 
             }
             &::placeholder {

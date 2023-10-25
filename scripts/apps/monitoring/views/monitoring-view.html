@@ -126,19 +126,15 @@
                                 <i class="icon-settings"></i>
                             </button>
 
-                            <div
+                            <sd-monitoring-filtering-buttons
                                 ng-if="type === 'monitoring' && activeDeskId != null"
-                                style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
-                            >
-                                <sd-monitoring-filtering-buttons
-                                    desk-id="activeDeskId"
-                                    toggle-filter="aggregate.toggleCustomFilter"
-                                    set-filter="aggregate.setCustomFilter"
-                                    is-filter-active="aggregate.isCustomFilterActive"
-                                    active-filters="aggregate.activeFilters.customFilters"
-                                    add-resource-updated-event-listener="addResourceUpdatedEventListener"
-                                ></sd-monitoring-filtering-buttons>
-                            </div>
+                                desk-id="activeDeskId"
+                                toggle-filter="aggregate.toggleCustomFilter"
+                                set-filter="aggregate.setCustomFilter"
+                                is-filter-active="aggregate.isCustomFilterActive"
+                                active-filters="aggregate.activeFilters.customFilters"
+                                add-resource-updated-event-listener="addResourceUpdatedEventListener"
+                            ></sd-monitoring-filtering-buttons>
 
                             <div
                                 ng-if="disableMonitoringCreateItem == null"
