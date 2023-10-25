@@ -380,6 +380,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             const readOnly = superdesk.entities.article.isLockedInOtherSession(this.props.article);
             console.log('Data State:', data);
+            console.log('iMatricsFields:', this.iMatricsFields);
             
             return (
                 <React.Fragment>
