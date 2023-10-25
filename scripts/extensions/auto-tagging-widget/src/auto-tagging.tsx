@@ -595,7 +595,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={readOnly ? undefined : gettext('Click "Run" to generate')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to tag')}
                                     />
                                 );
                             } else {
@@ -733,7 +733,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     return (
                                         <Button
                                             type="primary"
-                                            text={gettext('Refresh')}
+                                            text={gettext('Refresh tags')}
                                             expand={true}
                                             disabled={readOnly}
                                             onClick={() => {
