@@ -46,7 +46,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     response.subject?.forEach((item) => {
         const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
-        console.log(`Processing Subject Tag ${index + 1}:`);
         console.log('Name:', name);
         console.log('Description:', description);
         console.log('QCode:', qcode);
@@ -55,7 +54,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         console.log('Aliases:', aliases);
         console.log('Original Source:', original_source);
         console.log('Parent:', parent);
-        console.log('Scheme:', scheme);
 
         const tag: ITagUi = {
             name,
@@ -102,7 +100,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         items.forEach((item) => {
             const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
             
-            console.log(`Processing Subject Tag ${index + 1}:`);
             console.log('Name:', name);
             console.log('Description:', description);
             console.log('QCode:', qcode);
