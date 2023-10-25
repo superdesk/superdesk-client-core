@@ -293,12 +293,22 @@ export function AuthoringHeaderDirective(
                 scope.$apply();
             };
 
-            // If correction set focus to the ednote to encourage user to fill it in
             defer(() => {
                 if (scope.action === 'correct') {
                     elem.find('#ednote').focus();
                 } else {
-                    elem.find('#slugline').focus();
+                    const sorted = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')]
+                        .map((el) => {
+                            return {
+                                input: el,
+                                order: parseInt(el.closest('[order]').getAttribute('order'), 10),
+                            };
+                        })
+                        .sort((a, b) => a.order - b.order);
+
+                    if (sorted.length > 0) {
+                        sorted[0].input.focus();
+                    }
                 }
             });
         },
