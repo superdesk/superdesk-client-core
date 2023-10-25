@@ -108,7 +108,8 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
             tags = tags.set(tag.qcode, tag);
         });
     });
-
+    console.log('Server Response:', response);
+    console.log('Generated Tags:', tags);
     return tags;
 }
 
