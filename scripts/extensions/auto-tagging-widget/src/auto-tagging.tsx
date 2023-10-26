@@ -610,8 +610,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 } = getAutoTaggingData(data, this.iMatricsFields);
 
                                 const savedTags = data.original.analysis.keySeq().toSet();
-
-                                console.log('Render 6:', data);
                                 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
