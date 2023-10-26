@@ -116,7 +116,7 @@ export class FullPreview extends React.Component<IProps, IState> {
         const rowSpacingVertical = 4;
 
         return (
-            <div className="preview-content">
+            <div className="preview-content" dir="rtl">
                 <div>
                     <div className="css-table">
                         <div className="tr">
