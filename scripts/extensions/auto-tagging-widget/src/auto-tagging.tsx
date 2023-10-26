@@ -390,16 +390,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         (() => {
                             if (data === 'loading' || data === 'not-initialized') {
                                 return null;
+                                console.log('Render 1:', data);
                             } else {
                                 const treeErrors = arrayToTree(
                                     data.changes.analysis.toArray(),
                                     (item) => item.qcode,
                                     (item) => item.parent,
+                                    console.log('Render 2:', item.qcode);
                                 ).errors;
 
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
+                                        console.log('Render 3:', dirty);
                                         <Alert
                                             type="warning"
                                             size="small"
@@ -425,6 +428,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     );
                                 } else {
                                     return null;
+                                    console.log('Render 4:');
                                 }
                             }
                         })()
@@ -602,6 +606,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     />
                                 );
                             } else {
+                                console.log('Render 5:');
                                 const {
                                     entitiesGroupedAndSorted,
                                     othersGrouped,
@@ -609,6 +614,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const savedTags = data.original.analysis.keySeq().toSet();
 
+                                console.log('Render 6:', data);
+                                
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
                                 othersGrouped.forEach((tags, groupId) => {
