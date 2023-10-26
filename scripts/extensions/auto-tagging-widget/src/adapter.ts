@@ -44,6 +44,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     console.log('Received Server Response:', response);
     let tags = OrderedMap<string, ITagUi>();
 
+    console.log('Subject Array:', response.subject);
     response.subject?.forEach((item) => {
         console.log('Subject Item:', item);
         const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
