@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';
 import {DestinationSelect} from '../subcomponents/destination-select';
-import {IPanelError, ISendToDestination} from '../interfaces';
+import {IPanelError, IPropsHocInteractivePanelTab, ISendToDestination} from '../interfaces';
 import {getCurrentDeskDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
@@ -29,7 +29,7 @@ import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 
-interface IProps {
+interface IProps extends IPropsHocInteractivePanelTab {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
@@ -45,7 +45,7 @@ interface IState {
     subscribers: Array<ISubscriber> | null;
 }
 
-export class PublishTab extends React.PureComponent<IProps, IState> {
+export class WithPublishTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -153,129 +153,139 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
             .flatMap(({activationResult}) => activationResult?.contributions?.publishingSections ?? []);
 
         const style: CSSProperties | undefined = sectionsFromExtensions.length > 0
-            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between'}
+            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: 32}
             : undefined;
 
-        return (
-            <React.Fragment>
-                <PanelContent markupV2={markupV2} data-test-id="publishing-section">
-                    <div style={style}>
-                        <div>
+        const childrenStyle: CSSProperties = {
+            flex: 1, // equal width for columns
+        };
+
+        return this.props.children({
+            columnCount: 1 + sectionsFromExtensions.length,
+            content: (
+                <React.Fragment>
+                    <PanelContent markupV2={markupV2} data-test-id="publishing-section">
+                        <div style={style}>
+                            <div style={childrenStyle}>
+                                {
+                                    publishFromEnabled && (
+                                        <ToggleBox title={gettext('From')} initiallyOpen>
+                                            <DestinationSelect
+                                                value={this.state.selectedDestination}
+                                                onChange={(value) => {
+                                                    this.setState({
+                                                        selectedDestination: value,
+                                                    });
+                                                }}
+                                                includePersonalSpace={false}
+
+                                                /**
+                                                 * Changing the destination is only used
+                                                 * to control which desk's output stage
+                                                 * the published item appears in, thus
+                                                 * choosing a stage would not have an impact
+                                                 */
+                                                hideStages={true}
+                                            />
+                                        </ToggleBox>
+                                    )
+                                }
+
+                                <PublishingDateOptions
+                                    items={[this.props.item]}
+                                    value={this.state.publishingDateOptions}
+                                    onChange={(val) => {
+                                        this.setState(
+                                            {publishingDateOptions: val},
+                                            () => this.props.onDataChange({
+                                                ...this.props.item,
+                                                ...getPublishingDatePatch(
+                                                    this.props.item,
+                                                    this.state.publishingDateOptions,
+                                                ),
+                                            }),
+                                        );
+                                    }}
+                                    allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
+                                />
+
+                                <PublishingTargetSelect
+                                    value={this.state.publishingTarget}
+                                    onChange={(val) => {
+                                        this.setState(
+                                            {publishingTarget: val},
+                                            () => this.props.onDataChange({
+                                                ...this.props.item,
+                                                ...getPublishingTargetPatch(
+                                                    this.props.item,
+                                                    this.state.publishingTarget,
+                                                ),
+                                            }),
+                                        );
+                                    }}
+                                />
+                            </div>
+
                             {
-                                publishFromEnabled && (
-                                    <ToggleBox title={gettext('From')} initiallyOpen>
-                                        <DestinationSelect
-                                            value={this.state.selectedDestination}
-                                            onChange={(value) => {
-                                                this.setState({
-                                                    selectedDestination: value,
-                                                });
-                                            }}
-                                            includePersonalSpace={false}
+                                sectionsFromExtensions.map((panel, i) => {
+                                    const Component = panel.component;
 
-                                            /**
-                                             * Changing the destination is only used
-                                             * to control which desk's output stage
-                                             * the published item appears in, thus
-                                             * choosing a stage would not have an impact
-                                             */
-                                            hideStages={true}
-                                        />
-                                    </ToggleBox>
-                                )
+                                    return (
+                                        <div style={childrenStyle} key={i}>
+                                            <Component item={this.props.item} />
+                                        </div>
+                                    );
+                                })
                             }
-
-                            <PublishingDateOptions
-                                items={[this.props.item]}
-                                value={this.state.publishingDateOptions}
-                                onChange={(val) => {
-                                    this.setState(
-                                        {publishingDateOptions: val},
-                                        () => this.props.onDataChange({
-                                            ...this.props.item,
-                                            ...getPublishingDatePatch(
-                                                this.props.item,
-                                                this.state.publishingDateOptions,
-                                            ),
-                                        }),
-                                    );
-                                }}
-                                allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
-                            />
-
-                            <PublishingTargetSelect
-                                value={this.state.publishingTarget}
-                                onChange={(val) => {
-                                    this.setState(
-                                        {publishingTarget: val},
-                                        () => this.props.onDataChange({
-                                            ...this.props.item,
-                                            ...getPublishingTargetPatch(this.props.item, this.state.publishingTarget),
-                                        }),
-                                    );
-                                }}
-                            />
                         </div>
+                    </PanelContent>
+
+                    <PanelFooter markupV2={markupV2}>
+                        {
+                            canPreview && (
+                                <Button
+                                    text={gettext('Preview')}
+                                    onClick={() => {
+                                        this.doPreview();
+                                    }}
+                                    size="large"
+                                    expand
+                                    style="hollow"
+                                />
+                            )
+                        }
 
                         {
-                            sectionsFromExtensions.map((panel, i) => {
-                                const Component = panel.component;
-
-                                return (
-                                    <div key={i}>
-                                        <Component item={this.props.item} />
-                                    </div>
-                                );
-                            })
+                            publishFromEnabled && (
+                                <Button
+                                    text={gettext('Publish from')}
+                                    onClick={() => {
+                                        this.doPublish(true);
+                                    }}
+                                    disabled={!otherDeskSelected}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                    style="hollow"
+                                    data-test-id="publish-from"
+                                />
+                            )
                         }
-                    </div>
-                </PanelContent>
 
-                <PanelFooter markupV2={markupV2}>
-                    {
-                        canPreview && (
-                            <Button
-                                text={gettext('Preview')}
-                                onClick={() => {
-                                    this.doPreview();
-                                }}
-                                size="large"
-                                expand
-                                style="hollow"
-                            />
-                        )
-                    }
-
-                    {
-                        publishFromEnabled && (
-                            <Button
-                                text={gettext('Publish from')}
-                                onClick={() => {
-                                    this.doPublish(true);
-                                }}
-                                disabled={!otherDeskSelected}
-                                size="large"
-                                type="primary"
-                                expand
-                                style="hollow"
-                                data-test-id="publish-from"
-                            />
-                        )
-                    }
-
-                    <Button
-                        text={gettext('Publish')}
-                        onClick={() => {
-                            this.doPublish();
-                        }}
-                        disabled={otherDeskSelected}
-                        size="large"
-                        type="highlight"
-                        expand
-                        data-test-id="publish"
-                    />
-                </PanelFooter>
-            </React.Fragment>
-        );
+                        <Button
+                            text={gettext('Publish')}
+                            onClick={() => {
+                                this.doPublish();
+                            }}
+                            disabled={otherDeskSelected}
+                            size="large"
+                            type="highlight"
+                            expand
+                            data-test-id="publish"
+                        />
+                    </PanelFooter>
+                </React.Fragment>
+            ),
+        });
     }
 }

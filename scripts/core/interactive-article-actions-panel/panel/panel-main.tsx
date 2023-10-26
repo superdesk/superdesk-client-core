@@ -9,13 +9,18 @@ export interface IPropsSendToPanel {
      */
     markupV2: boolean;
     'data-test-id'?: string;
+    width?: React.CSSProperties['width'];
 }
 
 export class Panel extends React.PureComponent<IPropsSendToPanel> {
     render() {
         if (this.props.markupV2) {
             return (
-                <Layout.Panel side="right" open={true} size="x-small">
+                <Layout.Panel
+                    side="right"
+                    open={true}
+                    size={this.props.width == null ? 'x-small' : {custom: this.props.width}}
+                >
                     {this.props.children}
                 </Layout.Panel>
             );
@@ -24,6 +29,7 @@ export class Panel extends React.PureComponent<IPropsSendToPanel> {
                 <div
                     className="sd-overlay-panel sd-overlay-panel--open sd-overlay-panel--dark-ui"
                     data-test-id={this.props['data-test-id']}
+                    style={this.props.width == null ? undefined : {width: this.props.width}}
                 >
                     <div className="side-panel side-panel--shadow-right side-panel--dark-ui" data-theme="dark-ui">
                         {this.props.children}
