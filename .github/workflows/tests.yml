@@ -67,3 +67,44 @@ jobs:
       if: ${{ failure() }}
       run: docker-compose logs superdesk
       working-directory: e2e/server
+
+  e2e-playwright:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+
+    - name: Start e2e server
+      run: |
+        docker-compose pull
+        docker-compose build
+        docker-compose up -d
+      working-directory: e2e/server
+
+    - name: Build client
+      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
+      working-directory: e2e/client
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: e2e/client
+
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: e2e/client
+
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: e2e/client/playwright-report/
+        retention-days: 30
+
+    - name: Server Logs
+      if: ${{ failure() }}
+      run: docker-compose logs superdesk
+      working-directory: e2e/server
