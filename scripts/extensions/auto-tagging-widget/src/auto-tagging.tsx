@@ -402,7 +402,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
-                                        console.log('Render 3:', dirty);
                                         <Alert
                                             type="warning"
                                             size="small"
