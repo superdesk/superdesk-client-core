@@ -26,7 +26,7 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
                 inlineLabel
                 labelHidden
                 kind="synchronous"
-                value={[value]}
+                value={value !== null ? [value] : null}
                 getOptions={() => items.map((item) => ({value: item}))}
                 onChange={(val) => {
                     onChange(val[0] ?? null);
@@ -37,6 +37,7 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
                 disabled={disabled}
                 zIndex={zIndex}
                 data-test-id={this.props['data-test-id']}
+                inputWidth="100%"
             />
         );
     }
