@@ -427,7 +427,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         />
                                     );
                                 } else {
-                                    console.log('Render 4:');
                                     return null;
                                 }
                             }
@@ -606,7 +605,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     />
                                 );
                             } else {
-                                console.log('Render 5:');
                                 const {
                                     entitiesGroupedAndSorted,
                                     othersGrouped,
