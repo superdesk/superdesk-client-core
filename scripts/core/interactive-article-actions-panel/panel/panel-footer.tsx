@@ -7,7 +7,9 @@ export class PanelFooter extends React.PureComponent<IPropsSendToPanel> {
         if (this.props.markupV2) {
             return (
                 <Layout.PanelFooter>
-                    {this.props.children}
+                    <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}>
+                        {this.props.children}
+                    </div>
                 </Layout.PanelFooter>
             );
         } else {
