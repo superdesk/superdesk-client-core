@@ -396,9 +396,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     data.changes.analysis.toArray(),
                                     (item) => item.qcode,
                                     (item) => item.parent,
-                                ).errors;
-                                console.log('Render 2:', item.qcode);
-
+                                ).errors
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
