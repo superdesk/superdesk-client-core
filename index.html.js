@@ -12,7 +12,7 @@ module.exports = function buildIndex(o) {
             <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
             <link rel="stylesheet" type="text/css" href="app.bundle.css">
           </head>
-          <body dir="rtl" ng-class="config.bodyClass">
+          <body ng-class="config.bodyClass">
             <div sd-superdesk-view></div>
             <script src="config.js"></script>
             <script src="app.bundle.js"></script>
