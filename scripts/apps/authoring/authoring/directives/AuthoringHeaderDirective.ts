@@ -299,11 +299,14 @@ export function AuthoringHeaderDirective(
                 } else {
                     const sorted = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')]
                         .map((el) => {
+                            const orderEl = el.closest('[order]');
+
                             return {
                                 input: el,
-                                order: parseInt(el.closest('[order]').getAttribute('order'), 10),
+                                order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
                             };
                         })
+                        .filter(({order}) => order != null)
                         .sort((a, b) => a.order - b.order);
 
                     if (sorted.length > 0) {
