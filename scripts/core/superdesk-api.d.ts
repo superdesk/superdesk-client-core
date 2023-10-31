@@ -2662,6 +2662,7 @@ declare module 'superdesk-api' {
                     additionalData?: Partial<IArticle>,
                 ): void;
             };
+            showModal: (Component: React.ComponentType<{closeModal(): void;}>, containerClass?: string) => Promise<void>;
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
             showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
