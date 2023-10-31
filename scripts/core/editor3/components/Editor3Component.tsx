@@ -40,6 +40,7 @@ import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/Char
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
+import {isMacOS} from 'core/utils';
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -274,12 +275,13 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey, ctrlKey} = e;
+        const {key, shiftKey, ctrlKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
+        const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
         if (
             key === 'k'
-            && ctrlKey
+            && modifierKey
             && this.props.editorFormat.includes('link')
             && selectionState.isCollapsed() !== true
         ) {

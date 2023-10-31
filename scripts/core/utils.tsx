@@ -19,6 +19,17 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
+export function isMacOS() {
+    if (
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 function requestListener() {
     const translations = JSON.parse(this.responseText);
 

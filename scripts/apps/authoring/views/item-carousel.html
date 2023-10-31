@@ -1,4 +1,7 @@
-<button tabindex="{{tabindex}}" class="item-association" ng-if="!carouselItems.length"
+<button
+    tabindex="{{tabindex}}"
+    class="item-association"
+    ng-if="!carouselItems.length"
     ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
     ng-click="associations.isMediaEditable() && !item[item.fieldId] && upload()"
     ng-disabled="!editable"
