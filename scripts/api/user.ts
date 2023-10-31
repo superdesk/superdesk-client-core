@@ -6,6 +6,12 @@ function hasPrivilege(privilege: string): boolean {
     return privileges.userHasPrivileges({[privilege]: 1});
 }
 
+function getCurrentUserId(): string {
+    const session = ng.get('session');
+
+    return session?.identity?._id;
+}
+
 function isLoggedIn() {
     const session = ng.get('session');
 
@@ -15,4 +21,5 @@ function isLoggedIn() {
 export const user = {
     hasPrivilege,
     isLoggedIn,
+    getCurrentUserId,
 };

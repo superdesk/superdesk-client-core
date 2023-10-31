@@ -6,6 +6,7 @@ import {IRestApiResponse, ITemplate} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {DropdownOption} from './dropdown-option';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {sdApi} from 'api';
 
 interface IProps {
     onSelect(template: ITemplate): void;
@@ -47,6 +48,9 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     render() {
+        const currentUserId = sdApi.user.getCurrentUserId();
+        const currentDeskId = sdApi.desks.getCurrentDeskId();
+
         return (
             <div
                 style={{
@@ -87,7 +91,22 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     <WithPagination
                         key={this.state.searchString}
                         getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
-                            .then((res) => ({items: res._items, itemCount: res._meta.total}))
+                            .then((res) => {
+                                /**
+                                 * The check for `template.template_desks == null` is needed
+                                 * because the pre-populated templates should be available
+                                 * on all desks. The user can't create templates with null `template_desks`.
+                                 */
+                                const templatesFiltered = res._items.filter((template) => (
+                                    (template.is_public || template.user === currentUserId)
+                                    && (template.template_desks == null || template.template_desks.includes(currentDeskId))
+                                ));
+
+                                return {
+                                    items: templatesFiltered,
+                                    itemCount: templatesFiltered.length,
+                                };
+                            })
                         }
                     >
                         {
