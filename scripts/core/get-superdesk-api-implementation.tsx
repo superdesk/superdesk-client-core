@@ -106,6 +106,7 @@ import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
 import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
+import {showModal} from '@superdesk/common';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -343,6 +344,9 @@ export function getSuperdeskApiImplementation(
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },
                 prepareExternalImageForDroppingToEditor,
+            },
+            showModal: (Component: React.ComponentType<{closeModal(): void}>, containerClass?: string) => {
+                return showModal(Component, containerClass);
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string, title?: string) => new Promise((resolve) => {
