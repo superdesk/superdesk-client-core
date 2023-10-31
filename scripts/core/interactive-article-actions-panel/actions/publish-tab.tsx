@@ -153,11 +153,13 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
             .flatMap(({activationResult}) => activationResult?.contributions?.publishingSections ?? []);
 
         const style: CSSProperties | undefined = sectionsFromExtensions.length > 0
-            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: 32}
+            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: 32, height: '100%'}
             : undefined;
 
         const childrenStyle: CSSProperties = {
             flex: 1, // equal width for columns
+            position: 'relative',
+            height: '100%',
         };
 
         return this.props.children({
@@ -237,6 +239,7 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                     );
                                 })
                             }
+
                         </div>
                     </PanelContent>
 
