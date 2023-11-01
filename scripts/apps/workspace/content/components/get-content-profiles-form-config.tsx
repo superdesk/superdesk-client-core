@@ -58,6 +58,18 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'bold': gettext('bold'),
         'table': gettext('table'),
         'multi-line quote': gettext('multi-line quote'),
+        'formatting marks': gettext('formatting marks'),
+        'remove format': gettext('remove format'),
+        'remove all format': gettext('remove all format'),
+        'annotation': gettext('annotation'),
+        'comments': gettext('comments'),
+        'suggestions': gettext('suggestions'),
+        'tab': gettext('tab'),
+        'tab as spaces': gettext('tab as space'),
+        'undo': gettext('undo'),
+        'redo': gettext('redo'),
+        'uppercase': gettext('uppercase'),
+        'lowercase': gettext('lowercase'),
     };
 };
 
