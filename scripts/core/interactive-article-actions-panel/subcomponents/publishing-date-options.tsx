@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {gettext, toServerDateFormat} from 'core/utils';
+import {fromServerDateFormat, gettext, toServerDateFormat} from 'core/utils';
 import {DateTimePicker} from 'core/ui/components/date-time-picker';
 import {appConfig} from 'appConfig';
 import {ToggleBox} from 'superdesk-ui-framework/react';
@@ -17,10 +17,10 @@ export interface IPublishingDateOptions {
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
     return {
         embargo: items.length === 1 && items[0].embargo != null
-            ? new Date(items[0].embargo) ?? null
+            ? fromServerDateFormat(items[0].embargo) ?? null
             : null,
         publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? new Date(items[0].publish_schedule) ?? null
+            ? fromServerDateFormat(items[0].publish_schedule) ?? null
             : null,
         timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
     };
