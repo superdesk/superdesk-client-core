@@ -4,6 +4,8 @@ import {gettext} from 'core/utils';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 
+const THEME_LIGHT = 'light-ui';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.users
@@ -44,7 +46,12 @@ export function UserPreferencesDirective(
             const body = angular.element('body');
 
             scope.activeNavigation = null;
+
             scope.activeTheme = localStorage.getItem('theme');
+
+            if (scope.activeTheme === '') {
+                scope.activeTheme = THEME_LIGHT;
+            }
 
             scope.$watch('activeTheme', (val) => {
                 if (!val) {

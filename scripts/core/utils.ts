@@ -17,6 +17,17 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
+export function isMacOS() {
+    if (
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 function requestListener() {
     const translations = JSON.parse(this.responseText);
 
@@ -187,6 +198,7 @@ export function getUserSearchMongoQuery(searchString: string) {
             {first_name: {$regex: searchString, $options: '-i'}},
             {last_name: {$regex: searchString, $options: '-i'}},
             {email: {$regex: searchString, $options: '-i'}},
+            {sign_off: {$regex: searchString, $options: '-i'}},
         ],
     };
 }

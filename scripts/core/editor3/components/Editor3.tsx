@@ -43,6 +43,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     onChange: (editorState: EditorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
+    showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),

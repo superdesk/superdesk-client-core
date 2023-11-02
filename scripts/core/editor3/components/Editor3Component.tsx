@@ -26,7 +26,7 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
-import {setSpellcheckerProgress, applySpellcheck} from '../actions';
+import {setSpellcheckerProgress, applySpellcheck, PopupTypes} from '../actions';
 import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
@@ -39,6 +39,7 @@ import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlight
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMacOS} from 'core/utils';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -119,6 +120,7 @@ interface IProps {
     editorState?: EditorState;
     scrollContainer?: string;
     singleLine?: boolean;
+    plainText?: boolean;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     tabindex?: number;
     suggestingMode?: boolean;
@@ -141,6 +143,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    showPopup?(type: any, data: any): void;
 }
 
 interface IState {
@@ -277,7 +280,20 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey} = e;
+        const {key, shiftKey, ctrlKey, metaKey} = e;
+        const selectionState = this.props.editorState.getSelection();
+        const modifierKey = isMacOS() ? metaKey : ctrlKey;
+
+        if (
+            key === 'k'
+            && modifierKey
+            && this.props.editorFormat.includes('link')
+            && selectionState.isCollapsed() !== true
+        ) {
+            this.props.showPopup(PopupTypes.Link, selectionState);
+            e.preventDefault();
+            return '';
+        }
 
         if (key === 'ArrowDown' || key === 'ArrowUp') {
             const autocompleteEl = document.querySelector(`.${editor3AutocompleteClassName}`) as HTMLElement | null;
@@ -300,10 +316,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         // ctrl + X
         if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
-            const {editorState} = this.props;
-            const selection = editorState.getSelection();
-
-            if (!selection.isCollapsed()) {
+            if (!selectionState.isCollapsed()) {
                 document.execCommand('copy'); // add selected text to clipboard
                 return 'delete';
             }
@@ -690,6 +703,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
+    plainText: false,
     cleanPastedHtml: false,
     editorFormat: [],
 };

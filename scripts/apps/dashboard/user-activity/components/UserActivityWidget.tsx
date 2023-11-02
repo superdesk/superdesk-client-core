@@ -346,12 +346,13 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                     >
                         <form className="search-box__content">
                             <SelectUser
-                                selectedUserId={this.props.user?._id}
+                                selectedUserId={this.props.user?._id ?? null}
                                 autoFocus={false}
                                 onSelect={(user) => {
                                     this.props.onUserChange(user);
                                 }}
                                 horizontalSpacing={true}
+                                clearable={false}
                             />
                         </form>
                     </div>

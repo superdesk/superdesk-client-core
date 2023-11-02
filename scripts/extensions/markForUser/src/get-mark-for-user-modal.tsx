@@ -78,6 +78,7 @@ export function getMarkForUserModal(options: {
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
                             autoFocus={true}
+                            clearable={false}
                         />
                     </ModalBody>
                     <ModalFooter>
