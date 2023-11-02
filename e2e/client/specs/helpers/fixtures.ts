@@ -3,10 +3,10 @@ import {backendRequest, backendRequestAuth} from './backend';
 
 export function resetApp(profile, callback) {
     backendRequest({
-        uri: '/prepopulate',
+        uri: '/restore_record',
         method: 'POST',
         timeout: 30000,
-        json: {profile: profile},
+        json: {name: 'users'},
     }, (e, r, j) => {
         browser.params.token = null;
         callback(e, r, j);
