@@ -73,14 +73,16 @@ export class InteractiveArticleActionsPanel
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
+        const item = items[0];
+        const filteredTabs = item.flags.marked_for_not_publication
+            ? tabs.filter((tab) => tab !== 'publish')
+            : tabs;
 
         const panelHeader = (
             <PanelHeader markupV2={markupV2}>
                 <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                     <TabList
-                        tabs={
-                            tabs.map((id) => ({id, label: getTabLabel(id)}))
-                        }
+                        tabs={filteredTabs.map((id) => ({id, label: getTabLabel(id)}))}
                         selectedTabId={activeTab}
                         onChange={(tab: IArticleActionInteractive) => {
                             this.setState({
@@ -132,8 +134,6 @@ export class InteractiveArticleActionsPanel
                 );
             }
 
-            const item = items[0];
-
             return (
                 <WithPublishTab
                     onDataChange={onDataChange}
@@ -164,8 +164,6 @@ export class InteractiveArticleActionsPanel
                     <div>{error}</div>
                 );
             }
-
-            const item = items[0];
 
             return (
                 <PanelWithHeader>
