@@ -9,6 +9,7 @@ import {IArticle, ISubject, IVocabularyItem} from 'superdesk-api';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
 import {sdApi} from 'api';
+import {PublishingTargetSelect} from 'core/interactive-article-actions-panel/subcomponents/publishing-target-select';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
@@ -1189,6 +1190,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 _.each(items, (item) => {
                     self.values.customSubscribers.push({_id: item._id, name: item.name});
                 });
+
+                window.dispatchEvent(new CustomEvent('metadata-loaded'));
             });
         },
         fetchSubjectcodes: function(code) {
@@ -1436,6 +1439,16 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
+    .component(
+        'sdTargetSubscribers',
+        reactToAngular1(
+            PublishingTargetSelect,
+            [
+                'value',
+                'onChange',
+            ],
+        ),
+    )
     .component(
         'sdMetaDataDropdownSingleSelectReact',
         reactToAngular1(

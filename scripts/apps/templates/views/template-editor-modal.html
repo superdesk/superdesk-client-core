@@ -128,31 +128,7 @@
 
                         <div class="form__row">
                             <label class="form-label" translate>Target Subscribers</label>
-                            <div class="term-editor"
-                                sd-meta-terms
-                                data-item="item"
-                                data-unique="_id"
-                                data-list="metadata.customSubscribers"
-                                data-field="target_subscribers"
-                                data-reload-list="true"
-                                data-header="true"
-                                ></div>
-                        </div>
-
-                        <div class="form__row">
-                            <label class="form-label" translate>Target Regions</label>
-                            <div sd-meta-target
-                                data-list="metadata.regions"
-                                data-targets="item.target_regions"
-                                ></div>
-                        </div>
-
-                        <div class="form__row">
-                            <label class="form-label" translate>Target Types</label>
-                            <div sd-meta-target
-                                data-list="metadata.subscriberTypes"
-                                data-targets="item.target_types"
-                                ></div>
+                            <sd-target-subscribers on-change="onChangeData" value="template.data"></sd-target-subscribers>
                         </div>
                     </div>
 

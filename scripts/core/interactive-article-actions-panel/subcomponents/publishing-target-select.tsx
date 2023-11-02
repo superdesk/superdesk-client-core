@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {ToggleBox, FormLabel, TreeSelect} from 'superdesk-ui-framework/react';
 import {ControlledVocabulariesSelect} from './controlled-vocabulary-select';
 import {IArticle} from 'superdesk-api';
+import {render} from 'react-dom';
 
 export type IPublishingTarget = Pick<IArticle, 'target_subscribers' | 'target_regions' | 'target_types'>;
 
@@ -58,73 +59,119 @@ interface IProps {
     onChange(value: IPublishingTarget): void;
 }
 
-export class PublishingTargetSelect extends React.PureComponent<IProps> {
-    render() {
+interface IState {
+    loading: boolean;
+    subscribers: Array<{_id: string; name: string}>;
+    regions: Array<IRegion>;
+    subscriberTypes: Array<ISubscriberType>;
+}
+
+export class PublishingTargetSelect extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            loading: true,
+            regions: [],
+            subscribers: [],
+            subscriberTypes: [],
+        };
+
+        this.setMetadataValues = this.setMetadataValues.bind(this);
+    }
+
+    setMetadataValues() {
         const metadata = ng.get('metadata');
-        const subscribers: Array<{_id: string; name: string}> = metadata.values.customSubscribers;
-        const regions: Array<IRegion> = metadata.values.geographical_restrictions ?? [];
-        const subscriberTypes: Array<ISubscriberType> = metadata.values.subscriberTypes;
 
-        return (
-            <ToggleBox title={gettext('Target')} initiallyOpen>
-                <FormLabel text={gettext('Target subscribers')} />
+        this.setState({
+            loading: false,
+            subscribers: metadata.values.customSubscribers ?? [],
+            regions: metadata.values.geographical_restrictions ?? [],
+            subscriberTypes: metadata.values.subscriberTypes ?? [],
+        });
+    }
 
-                <div style={{paddingTop: 5}}>
-                    <TreeSelect
-                        label=""
-                        inlineLabel
-                        labelHidden
-                        kind="synchronous"
-                        allowMultiple
-                        getId={(item) => item._id}
-                        getLabel={(item) => item.name}
-                        getOptions={() => subscribers.map((x) => ({value: x}))}
-                        value={this.props.value.target_subscribers}
-                        onChange={(val) => {
-                            this.props.onChange({
-                                ...this.props.value,
-                                target_subscribers: subscribers
-                                    .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
-                            });
-                        }}
-                    />
-                </div>
+    componentDidMount(): void {
+        addEventListener('metadata-loaded', this.setMetadataValues);
 
-                <div style={{paddingTop: 20}}>
-                    <FormLabel text={gettext('Target regions')} />
-                </div>
+        /**
+         * Needed because when you open this for the second time through templates
+         * without reloading the page, metadata has already been loaded so
+         * a second event won't be fired thus state values won't be set.
+         */
+        this.setMetadataValues();
+    }
 
-                <div style={{paddingTop: 5}}>
-                    <ControlledVocabulariesSelect
-                        vocabularies={regions}
-                        value={this.props.value.target_regions}
-                        onChange={(val) => {
-                            this.props.onChange({
-                                ...this.props.value,
-                                target_regions: val,
-                            });
-                        }}
-                    />
-                </div>
+    componentWillUnmount(): void {
+        removeEventListener('metadata-loaded', this.setMetadataValues);
+    }
 
-                <div style={{paddingTop: 20}}>
-                    <FormLabel text={gettext('Target types')} />
-                </div>
+    render() {
+        return this.state.loading === false && (
+            <React.Fragment key={this.state.subscribers.length}>
+                <ToggleBox title={gettext('Target')} initiallyOpen>
+                    <FormLabel text={gettext('Target subscribers')} />
 
-                <div style={{paddingTop: 5}}>
-                    <ControlledVocabulariesSelect
-                        vocabularies={subscriberTypes}
-                        value={this.props.value.target_types}
-                        onChange={(val) => {
-                            this.props.onChange({
-                                ...this.props.value,
-                                target_types: val,
-                            });
-                        }}
-                    />
-                </div>
+                    <div style={{paddingTop: 5}}>
+                        <TreeSelect
+                            zIndex={2000}
+                            label=""
+                            inlineLabel
+                            labelHidden
+                            kind="synchronous"
+                            allowMultiple
+                            getId={(item) => item._id}
+                            getLabel={(item) => item.name}
+                            getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
+                            value={this.props.value.target_subscribers}
+                            onChange={(val) => {
+                                this.props.onChange({
+                                    ...this.props.value,
+                                    target_subscribers: this.state.subscribers
+                                        .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
+                                });
+                            }}
+                        />
+                    </div>
 
-            </ToggleBox>
+                    <div style={{paddingTop: 20}}>
+                        <FormLabel text={gettext('Target regions')} />
+                    </div>
+
+                    <div style={{paddingTop: 5}}>
+                        <ControlledVocabulariesSelect
+                            zIndex={2000}
+                            vocabularies={this.state.regions}
+                            value={this.props.value.target_regions}
+                            onChange={(val) => {
+                                this.props.onChange({
+                                    ...this.props.value,
+                                    target_regions: val,
+                                });
+                            }}
+                        />
+                    </div>
+
+                    <div style={{paddingTop: 20}}>
+                        <FormLabel text={gettext('Target types')} />
+                    </div>
+
+                    <div style={{paddingTop: 5}}>
+                        <ControlledVocabulariesSelect
+                            zIndex={2000}
+                            vocabularies={this.state.subscriberTypes}
+                            value={this.props.value.target_types}
+                            onChange={(val) => {
+                                this.props.onChange({
+                                    ...this.props.value,
+                                    target_types: val,
+                                });
+                            }}
+                        />
+                    </div>
+
+                </ToggleBox>
+            </React.Fragment>
         );
     }
 }
