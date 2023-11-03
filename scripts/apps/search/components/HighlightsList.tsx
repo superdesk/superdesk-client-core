@@ -73,7 +73,7 @@ export class HighlightsList extends React.Component<IProps> {
                 <li>
                     <div className="dropdown__menu-label">{gettext('Marked For')}</div>
                     <button className="dropdown__menu-close" onClick={this.closeMenu}>
-                        <i className="icon-close-small icon--white" />
+                        <i className="icon-close-small" />
                     </button>
                 </li>
 
