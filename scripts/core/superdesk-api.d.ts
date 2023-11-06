@@ -2328,6 +2328,34 @@ declare module 'superdesk-api' {
 
     type IResponseHandler = (res: IRestApiResponse<T>) => any;
 
+    export type IAuthoringActionType =
+        'view'
+        | 'kill'
+        | 'correct'
+        | 'deschedule'
+        | 'unlinkUpdate'
+        | 'cancelCorrection'
+        | 'export'
+        | 'unspike'
+        | 'mark_item_for_desks'
+        | 'mark_item_for_highlight'
+        | 'new_take'
+        | 're_write'
+        | 'save'
+        | 'edit'
+        | 'mark_item'
+        | 'duplicate'
+        | 'duplicateTo'
+        | 'copy'
+        | 'package_item'
+        | 'multi_edit'
+        | 'send'
+        | 'create_broadcast'
+        | 'add_to_current'
+        | 'resend'
+        | 'set_label'
+        | 'takedown';
+
     export interface IDataProvider {
         update: () => void;
         stop: () => void;
@@ -2691,7 +2719,7 @@ declare module 'superdesk-api' {
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
-                itemAction(article: IArticle): {[key: string]: boolean};
+                itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;

@@ -16,7 +16,14 @@ import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {flatMap, trim} from 'lodash';
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage, onPublishMiddlewareResult} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringActionType,
+    IDangerousArticlePatchingOptions,
+    IDesk,
+    IStage,
+    onPublishMiddlewareResult,
+} from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
@@ -378,10 +385,10 @@ function get(id: IArticle['_id']): Promise<IArticle> {
     return dataApi.findOne<IArticle>('archive', id);
 }
 
-function itemAction(article: IArticle): {[key: string]: boolean} {
+function itemAction(_article: IArticle): {[key in IAuthoringActionType]: boolean} {
     const authoring = ng.get('authoring');
 
-    return authoring.itemAction(article);
+    return authoring.itemAction(_article);
 }
 
 function isEditable(_article: IArticle): boolean {
@@ -430,7 +437,7 @@ interface IArticleApi {
      */
     isPublished(article: IArticle, includeScheduled?: boolean): boolean;
 
-    itemAction(article: IArticle): {[key: string]: boolean};
+    itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
     isKilled(article: IArticle): boolean;
     isIngested(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
