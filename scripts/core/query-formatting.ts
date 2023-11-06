@@ -117,6 +117,7 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
         query?: {
             filtered: {
                 filter?: {};
+                query?: {};
             };
         };
         sort: ISuperdeskQuery['sort'];
@@ -142,13 +143,19 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
         };
     }
 
+    if (q.fullTextSearch) {
+        query.query.filtered.query = {
+            query_string: {
+                query: q.fullTextSearch,
+                lenient: true,
+                default_operator: 'AND',
+            },
+        };
+    }
+
     const result: ReturnType<typeof toElasticQuery> = {
         source: JSON.stringify(query),
     };
-
-    if (q.fullTextSearch != null) {
-        result.q = q.fullTextSearch;
-    }
 
     return result;
 }
