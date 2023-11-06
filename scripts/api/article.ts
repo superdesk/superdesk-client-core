@@ -378,7 +378,7 @@ function get(id: IArticle['_id']): Promise<IArticle> {
     return dataApi.findOne<IArticle>('archive', id);
 }
 
-function itemAction(article: IArticle): any {
+function itemAction(article: IArticle): {[key: string]: boolean} {
     const authoring = ng.get('authoring');
 
     return authoring.itemAction(article);
@@ -430,7 +430,7 @@ interface IArticleApi {
      */
     isPublished(article: IArticle, includeScheduled?: boolean): boolean;
 
-    itemAction(article: IArticle): any;
+    itemAction(article: IArticle): {[key: string]: boolean};
     isKilled(article: IArticle): boolean;
     isIngested(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;

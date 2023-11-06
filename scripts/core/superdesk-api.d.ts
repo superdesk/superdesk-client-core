@@ -2691,7 +2691,7 @@ declare module 'superdesk-api' {
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
-                itemAction(article: IArticle): any;
+                itemAction(article: IArticle): {[key: string]: boolean};
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
