@@ -151,6 +151,21 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         shouldReloadTheList={(changedFields) => {
                             // TEMPORARY FIX FOR SDESK-6157
                             return false;
+
+                            /** TODO: Have websockets transmit the diff.
+                             * The component should not update when field value changes do not affect the query -
+                             * for example, if the query is {desk: 'X'} and an update is about an item moved
+                             * from desk Y to Z.
+                             */
+
+                            const queryFields = getQueryFieldsRecursive(this.props.query.filter);
+
+                            // add sorting fields
+                            flatMap(this.props.query.sort, (option) => Object.keys(option)).forEach((sortField) => {
+                                queryFields.add(sortField);
+                            });
+
+                            return Array.from(changedFields).some((changedField) => queryFields.has(changedField));
                         }}
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
