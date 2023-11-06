@@ -29,18 +29,34 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
+        const templateDesks = nameof<ITemplate>('template_desks');
+        const currentDeskId = sdApi.desks.getCurrentDeskId();
+
+        const deskCriteria: any = [
+            {[templateDesks]: {$exists: false}},
+            {[templateDesks]: []},
+        ];
+
+        if (currentDeskId != null) {
+            deskCriteria.push({[templateDesks]: {$in: [currentDeskId]}});
+        }
+
+        const criteria = {$or: [{$or: deskCriteria}, {user: sdApi.user.getCurrentUserId()}]};
+        const templateName = nameof<ITemplate>('template_name');
+
         return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
             method: 'GET',
             path: '/content_templates',
             urlParams: {
                 max_results: pageSize,
                 page: pageToFetch,
-                sort: nameof<ITemplate>('template_name'),
-                where: this.state.searchString.length < 1 ? undefined : {
-                    [nameof<ITemplate>('template_name')]: {
+                sort: templateName,
+                where: this.state.searchString.length < 1 ? {$and: [criteria]} : {
+                    [templateName]: {
                         $regex: this.state.searchString,
                         $options: '-i',
                     },
+                    $and: [criteria],
                 },
             },
             abortSignal,
@@ -48,9 +64,6 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const currentUserId = sdApi.user.getCurrentUserId();
-        const currentDeskId = sdApi.desks.getCurrentDeskId();
-
         return (
             <div
                 style={{
@@ -91,22 +104,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     <WithPagination
                         key={this.state.searchString}
                         getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
-                            .then((res) => {
-                                /**
-                                 * The check for `template.template_desks == null` is needed
-                                 * because the pre-populated templates should be available
-                                 * on all desks. The user can't create templates with null `template_desks`.
-                                 */
-                                const templatesFiltered = res._items.filter((template) => (
-                                    (template.is_public || template.user === currentUserId)
-                                    && (template.template_desks == null || template.template_desks.includes(currentDeskId))
-                                ));
-
-                                return {
-                                    items: templatesFiltered,
-                                    itemCount: templatesFiltered.length,
-                                };
-                            })
+                            .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
                     >
                         {
