@@ -378,6 +378,12 @@ function get(id: IArticle['_id']): Promise<IArticle> {
     return dataApi.findOne<IArticle>('archive', id);
 }
 
+function itemAction(article: IArticle): any {
+    const authoring = ng.get('authoring');
+
+    return authoring.itemAction(article);
+}
+
 function isEditable(_article: IArticle): boolean {
     const itemState: ITEM_STATE = _article.state;
     const authoring = ng.get('authoring');
@@ -424,6 +430,7 @@ interface IArticleApi {
      */
     isPublished(article: IArticle, includeScheduled?: boolean): boolean;
 
+    itemAction(article: IArticle): any;
     isKilled(article: IArticle): boolean;
     isIngested(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
@@ -491,6 +498,7 @@ export const article: IArticleApi = {
     rewrite,
     isLocked,
     isEditable,
+    itemAction,
     isLockedInCurrentSession,
     isLockedInOtherSession,
     isLockedByCurrentUser,

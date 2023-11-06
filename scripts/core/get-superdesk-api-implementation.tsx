@@ -283,6 +283,7 @@ export function getSuperdeskApiImplementation(
                 patch: patchArticle,
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
+                itemAction: (article) => sdApi.article.itemAction(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
