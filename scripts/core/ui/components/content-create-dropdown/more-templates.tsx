@@ -43,6 +43,14 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
 
         const criteria = {$or: [{$or: deskCriteria}, {user: sdApi.user.getCurrentUserId()}]};
         const templateName = nameof<ITemplate>('template_name');
+        const where = {$and: [criteria]};
+
+        if (this.state.searchString.length < 1) {
+            where[templateName] = {
+                $regex: this.state.searchString,
+                $options: '-i',
+            };
+        }
 
         return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
             method: 'GET',
@@ -51,13 +59,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                 max_results: pageSize,
                 page: pageToFetch,
                 sort: templateName,
-                where: this.state.searchString.length < 1 ? {$and: [criteria]} : {
-                    [templateName]: {
-                        $regex: this.state.searchString,
-                        $options: '-i',
-                    },
-                    $and: [criteria],
-                },
+                where: where,
             },
             abortSignal,
         });
