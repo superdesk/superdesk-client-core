@@ -6,6 +6,7 @@ import {IRestApiResponse, ITemplate} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {DropdownOption} from './dropdown-option';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {sdApi} from 'api';
 
 interface IProps {
     onSelect(template: ITemplate): void;
@@ -28,19 +29,37 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
+        const templateDesks = nameof<ITemplate>('template_desks');
+        const currentDeskId = sdApi.desks.getCurrentDeskId();
+
+        const deskCriteria: any = [
+            {[templateDesks]: {$exists: false}},
+            {[templateDesks]: []},
+        ];
+
+        if (currentDeskId != null) {
+            deskCriteria.push({[templateDesks]: {$in: [currentDeskId]}});
+        }
+
+        const criteria = {$or: [{$or: deskCriteria}, {user: sdApi.user.getCurrentUserId()}]};
+        const templateName = nameof<ITemplate>('template_name');
+        const where = {$and: [criteria]};
+
+        if (this.state.searchString.length < 1) {
+            where[templateName] = {
+                $regex: this.state.searchString,
+                $options: '-i',
+            };
+        }
+
         return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
             method: 'GET',
             path: '/content_templates',
             urlParams: {
                 max_results: pageSize,
                 page: pageToFetch,
-                sort: nameof<ITemplate>('template_name'),
-                where: this.state.searchString.length < 1 ? undefined : {
-                    [nameof<ITemplate>('template_name')]: {
-                        $regex: this.state.searchString,
-                        $options: '-i',
-                    },
-                },
+                sort: templateName,
+                where: where,
             },
             abortSignal,
         });
