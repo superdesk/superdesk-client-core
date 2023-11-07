@@ -4,7 +4,7 @@ import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
-import moment from 'moment';
+import formatISO from 'date-fns/formatISO';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 const language = getUserInterfaceLanguage();
@@ -365,7 +365,7 @@ export function toQueryString(
  * Output example: "1970-01-19T22:57:38"
  */
 export function toServerDateFormat(date: Date): string {
-    return moment(date).toISOString(true).slice(0, 19);
+    return formatISO(date).slice(0, 19);
 }
 
 /**
