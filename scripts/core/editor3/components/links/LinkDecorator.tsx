@@ -76,7 +76,15 @@ class LinkComponent extends React.Component<any, any> {
 
     render() {
         if (this.link.attachment) {
-            return <a data-attachment={this.link.attachment} title={this.state.title}>{this.props.children}</a>;
+            return (
+                <a
+                    data-attachment={this.link.attachment}
+                    title={this.state.title}
+                    style={{borderBottom: '2px dotted var(--sd-colour-interactive--alpha-80)'}}
+                >
+                    {this.props.children}
+                </a>
+            );
         }
 
         return <a href={this.link.href} title={this.link.href}>{this.props.children}</a>;
