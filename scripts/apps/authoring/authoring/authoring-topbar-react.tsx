@@ -1,14 +1,13 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IAuthoringAction} from './services/AuthoringWorkspaceService';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
     article: IArticle;
-    action: IAuthoringAction;
+    action: IAuthoringActionType;
     onChange(article: IArticle): void;
 }
 
