@@ -196,17 +196,20 @@ $priority-label-color-6 : #c0c9a1;
     color: $color;
 }
 .state-label {
-    display: inline-block;
-    line-height: 1.4rem;
+    display: inline-flex;
+    line-height: 1.6rem;
+    height: 1.6rem;
     font-size: 0.9rem;
     letter-spacing: 0.125em;
     text-transform: uppercase;
-    @include border-radius(8px);
-    padding: 0 0.8rem;
+    border-radius: var(--b-radius--full);
+    padding-inline: 0.8rem;
     border: 1px solid;
+    align-items: center;
     vertical-align: middle;
+    justify-content: center;
+    font-weight: 500;
     @include state-color();
-    @include text-semibold();
 
     &.state_embargo {
         @include state-color($state-color-embargo !important);
