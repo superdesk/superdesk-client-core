@@ -79,7 +79,6 @@ export function showPrintableModal(
                         <div className="sd-full-preview--content-wrapper">
                             {
                                 contentSections.map((section, i) => {
-                                    console.log(section, contentSections);
                                     return (
                                         <div key={i}>
                                             { // always start a new article on a new page in print mode
