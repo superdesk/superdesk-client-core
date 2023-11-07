@@ -73,10 +73,17 @@ export class InteractiveArticleActionsPanel
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
-        const item = items[0];
-        const filteredTabs = item.flags.marked_for_not_publication
-            ? tabs.filter((tab) => tab !== 'publish')
-            : tabs;
+
+        const filteredTabs = tabs.filter((tab) => {
+            if (tab === 'publish') {
+                const item = items[0]; // only one item is supported in publishing tab
+                const notForPublication = item?.flags?.marked_for_not_publication ?? false;
+
+                return notForPublication !== true;
+            } else {
+                return true;
+            }
+        });
 
         const panelHeader = (
             <PanelHeader markupV2={markupV2}>
@@ -134,6 +141,8 @@ export class InteractiveArticleActionsPanel
                 );
             }
 
+            const item = items[0]; // only one item is supported in publishing tab
+
             return (
                 <WithPublishTab
                     onDataChange={onDataChange}
@@ -164,6 +173,8 @@ export class InteractiveArticleActionsPanel
                     <div>{error}</div>
                 );
             }
+
+            const item = items[0]; // only one item is supported in correction tab
 
             return (
                 <PanelWithHeader>
