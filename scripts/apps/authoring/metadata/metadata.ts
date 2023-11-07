@@ -1190,8 +1190,6 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 _.each(items, (item) => {
                     self.values.customSubscribers.push({_id: item._id, name: item.name});
                 });
-
-                window.dispatchEvent(new CustomEvent('metadata-loaded'));
             });
         },
         fetchSubjectcodes: function(code) {

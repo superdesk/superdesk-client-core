@@ -4,7 +4,6 @@ import {gettext} from 'core/utils';
 import {ToggleBox, FormLabel, TreeSelect} from 'superdesk-ui-framework/react';
 import {ControlledVocabulariesSelect} from './controlled-vocabulary-select';
 import {IArticle} from 'superdesk-api';
-import {render} from 'react-dom';
 
 export type IPublishingTarget = Pick<IArticle, 'target_subscribers' | 'target_regions' | 'target_types'>;
 
@@ -80,30 +79,25 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
         this.setMetadataValues = this.setMetadataValues.bind(this);
     }
 
-    setMetadataValues() {
-        const metadata = ng.get('metadata');
-
+    setMetadataValues(metadataService: any) {
         this.setState({
             loading: false,
-            subscribers: metadata.values.customSubscribers ?? [],
-            regions: metadata.values.geographical_restrictions ?? [],
-            subscriberTypes: metadata.values.subscriberTypes ?? [],
+            subscribers: metadataService.values.customSubscribers ?? [],
+            regions: metadataService.values.geographical_restrictions ?? [],
+            subscriberTypes: metadataService.values.subscriberTypes ?? [],
         });
     }
 
     componentDidMount(): void {
-        addEventListener('metadata-loaded', this.setMetadataValues);
+        const metadataService = ng.get('metadata');
 
-        /**
-         * Needed because when you open this for the second time through templates
-         * without reloading the page, metadata has already been loaded so
-         * a second event won't be fired thus state values won't be set.
-         */
-        this.setMetadataValues();
-    }
-
-    componentWillUnmount(): void {
-        removeEventListener('metadata-loaded', this.setMetadataValues);
+        if (metadataService.values.customSubscribers != null) {
+            this.setMetadataValues(metadataService);
+        } else {
+            metadataService.fetchSubscribers().then(() => {
+                this.setMetadataValues(metadataService);
+            });
+        }
     }
 
     render() {
@@ -142,7 +136,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
                         <ControlledVocabulariesSelect
                             zIndex={2000}
                             vocabularies={this.state.regions}
-                            value={this.props.value.target_regions}
+                            value={this.props.value.target_regions ?? []}
                             onChange={(val) => {
                                 this.props.onChange({
                                     ...this.props.value,
@@ -160,7 +154,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
                         <ControlledVocabulariesSelect
                             zIndex={2000}
                             vocabularies={this.state.subscriberTypes}
-                            value={this.props.value.target_types}
+                            value={this.props.value.target_types ?? []}
                             onChange={(val) => {
                                 this.props.onChange({
                                     ...this.props.value,
