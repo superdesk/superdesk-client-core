@@ -78,17 +78,20 @@ export function showPrintableModal(
 
                         <div className="sd-full-preview--content-wrapper">
                             {
-                                contentSections.map((section, i) => (
-                                    <div key={i}>
-                                        { // always start a new article on a new page in print mode
-                                            i > 0 && pageBreak
-                                        }
+                                contentSections.map((section, i) => {
+                                    console.log(section, contentSections);
+                                    return (
+                                        <div key={i}>
+                                            { // always start a new article on a new page in print mode
+                                                i > 0 && pageBreak
+                                            }
 
-                                        <div className="sd-full-preview--content">
-                                            {section}
+                                            <div className="sd-full-preview--content">
+                                                {section}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))
+                                    );
+                                })
                             }
                         </div>
                     </div>
