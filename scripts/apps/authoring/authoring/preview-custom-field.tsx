@@ -19,7 +19,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
         const FieldType = getField(field.custom_field_type);
         const label = getLabelForFieldId(field._id, [field]);
 
-        if (FieldType == null || isEmpty(value)) {
+        if (FieldType == null || (typeof value !== 'boolean' && isEmpty(value))) {
             return null;
         }
 
