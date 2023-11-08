@@ -74,13 +74,22 @@ export class InteractiveArticleActionsPanel
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
 
+        const filteredTabs = tabs.filter((tab) => {
+            if (tab === 'publish') {
+                const item = items[0]; // only one item is supported in publishing tab
+                const notForPublication = item?.flags?.marked_for_not_publication ?? false;
+
+                return notForPublication !== true;
+            } else {
+                return true;
+            }
+        });
+
         const panelHeader = (
             <PanelHeader markupV2={markupV2}>
                 <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                     <TabList
-                        tabs={
-                            tabs.map((id) => ({id, label: getTabLabel(id)}))
-                        }
+                        tabs={filteredTabs.map((id) => ({id, label: getTabLabel(id)}))}
                         selectedTabId={activeTab}
                         onChange={(tab: IArticleActionInteractive) => {
                             this.setState({
@@ -132,7 +141,7 @@ export class InteractiveArticleActionsPanel
                 );
             }
 
-            const item = items[0];
+            const item = items[0]; // only one item is supported in publishing tab
 
             return (
                 <WithPublishTab
@@ -165,7 +174,7 @@ export class InteractiveArticleActionsPanel
                 );
             }
 
-            const item = items[0];
+            const item = items[0]; // only one item is supported in correction tab
 
             return (
                 <PanelWithHeader>
