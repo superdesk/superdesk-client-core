@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {ITemplate} from 'superdesk-api';
 
 export function TemplateEditorModal() {
     return {
@@ -17,6 +18,12 @@ export function TemplateEditorModal() {
                 _isDirty = true;
 
                 scope.$apply();
+            };
+
+            scope.onChangeData = (item: ITemplate['data']) => {
+                scope.template.data = item;
+
+                scope.setDirtyFromReact();
             };
 
             scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
