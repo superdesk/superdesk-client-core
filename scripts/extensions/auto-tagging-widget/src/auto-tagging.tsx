@@ -184,17 +184,26 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.save = this.save.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
+
+
+
+    
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
+            console.log(process.env.SEMAPHORE_BASE_URL);
+            console.log(process.env.semaphore_api_key);
+            console.log(process.env.semaphore_token_endpoint);
+
 
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract} = this.props.article;
+                console.log('runAnalysis POST body:', {headline, body_html, abstract});
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
                     path: '/ai/',
                     payload: {
-                        service: 'imatrics',
+                        service: 'semaphore',
                         item: {
                             guid,
                             language,
@@ -204,32 +213,69 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-                    const resClient = toClientFormat(res.analysis);
+                    console.log('runAnalysis getting res:', res);
+                    const json_response = res.analysis;
 
+                    console.log('runAnalysis getting json_response:', json_response);
+
+                    const tagEntries = [
+                        ...Object.entries(json_response.subject || {}),
+                        ...Object.entries(json_response.organisation || {}),
+                        ...Object.entries(json_response.person || {}),
+                        ...Object.entries(json_response.event || {}),
+                        ...Object.entries(json_response.place || {}),
+                        ...Object.entries(json_response.object || {}),
+                    ];
+                    
+
+                    const tags = OrderedMap<string, ITagUi>(tagEntries);
+                    const france = OrderedMap<string, ITagUi>();
+
+                    console.log('France:', france);
+
+                    
+                    
                     if (this._mounted) {
+                       
+                        console.log('3... Before setState - tags:', tags);
+                        
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                    ? {analysis: OrderedMap<string, ITagUi>(tagEntries)} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: resClient},
+                                changes: {analysis: tags},
                             },
                         });
+                        console.log('runAnalysis result:', tags);
                     }
+                }).catch((error) => {
+                    console.error('Error during analysis. We are in runAnalysis:  ',error);   
+
+                    if (this._mounted) {
+                        this.setState({
+                            data: 'not-initialized' // or you could set to a new error state
+                        });
+                    }
+                    
                 });
             });
         }
         initializeData(preload: boolean) {
-            const existingTags = getExistingTags(this.props.article);
-
-            if (Object.keys(existingTags).length > 0) {
-                const resClient = toClientFormat(existingTags);
-
-                this.setState({
-                    data: {original: {analysis: resClient}, changes: {analysis: resClient}},
-                });
-            } else if (preload) {
-                this.runAnalysis();
+            try {
+                const existingTags = getExistingTags(this.props.article);
+        
+                if (Object.keys(existingTags).length > 0) {
+                    const resClient = toClientFormat(existingTags);
+        
+                    this.setState({
+                        data: { original: { analysis: resClient }, changes: { analysis: resClient } },
+                    });
+                } else if (preload) {
+                    this.runAnalysis();
+                }
+            } catch (error) {
+                console.error('Error in initializeData:', error);
             }
         }
         updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
@@ -594,7 +640,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={readOnly ? undefined : gettext('Click "Run" to generate')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to test Semaphore')}
                                     />
                                 );
                             } else {
