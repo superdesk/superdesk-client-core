@@ -30,7 +30,7 @@
     <ul>
         <li ng-if="!disabled" class="pull-left"
             ng-repeat="t in item[field]"
-            ng-click="removeTerm(t)">{{ t.name }} ({{ t.country_code }}) <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{ t.name }} {{ t.country_code && '('+ t.country_code +')' }} <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
             ng-repeat="t in item[field]">{{ t.name }}</li>
     </ul>
