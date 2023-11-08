@@ -6,7 +6,7 @@ export function resetApp(profile, callback) {
         uri: '/restore_record',
         method: 'POST',
         timeout: 30000,
-        json: {name: 'users'},
+        json: {name: 'test'},
     }, (e, r, j) => {
         browser.params.token = null;
         callback(e, r, j);
