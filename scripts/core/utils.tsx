@@ -4,6 +4,7 @@ import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
+import formatISO from 'date-fns/formatISO';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 const language = getUserInterfaceLanguage();
@@ -364,7 +365,14 @@ export function toQueryString(
  * Output example: "1970-01-19T22:57:38"
  */
 export function toServerDateFormat(date: Date): string {
-    return date.toJSON().slice(0, 19);
+    return formatISO(date).slice(0, 19);
+}
+
+/**
+ * Parse server date without timezone so it won't convert it to local timezone.
+ */
+export function fromServerDateFormat(date: string): Date {
+    return new Date(date.slice(0, 19));
 }
 
 export function getItemLabel(item: IArticle): string {
