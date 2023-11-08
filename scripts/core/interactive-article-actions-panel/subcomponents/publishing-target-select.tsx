@@ -102,70 +102,68 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
     render() {
         return this.state.loading === false && (
-            <React.Fragment key={this.state.subscribers.length}>
-                <ToggleBox title={gettext('Target')} initiallyOpen>
-                    <FormLabel text={gettext('Target subscribers')} />
+            <ToggleBox title={gettext('Target')} initiallyOpen>
+                <FormLabel text={gettext('Target subscribers')} />
 
-                    <div style={{paddingTop: 5}}>
-                        <TreeSelect
-                            zIndex={2000}
-                            label=""
-                            inlineLabel
-                            labelHidden
-                            kind="synchronous"
-                            allowMultiple
-                            getId={(item) => item._id}
-                            getLabel={(item) => item.name}
-                            getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
-                            value={this.props.value.target_subscribers}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_subscribers: this.state.subscribers
-                                        .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
-                                });
-                            }}
-                        />
-                    </div>
+                <div style={{paddingTop: 5}}>
+                    <TreeSelect
+                        zIndex={2000}
+                        label=""
+                        inlineLabel
+                        labelHidden
+                        kind="synchronous"
+                        allowMultiple
+                        getId={(item) => item._id}
+                        getLabel={(item) => item.name}
+                        getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
+                        value={this.props.value.target_subscribers}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_subscribers: this.state.subscribers
+                                    .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
+                            });
+                        }}
+                    />
+                </div>
 
-                    <div style={{paddingTop: 20}}>
-                        <FormLabel text={gettext('Target regions')} />
-                    </div>
+                <div style={{paddingTop: 20}}>
+                    <FormLabel text={gettext('Target regions')} />
+                </div>
 
-                    <div style={{paddingTop: 5}}>
-                        <ControlledVocabulariesSelect
-                            zIndex={2000}
-                            vocabularies={this.state.regions}
-                            value={this.props.value.target_regions ?? []}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_regions: val,
-                                });
-                            }}
-                        />
-                    </div>
+                <div style={{paddingTop: 5}}>
+                    <ControlledVocabulariesSelect
+                        zIndex={2000}
+                        vocabularies={this.state.regions}
+                        value={this.props.value.target_regions ?? []}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_regions: val,
+                            });
+                        }}
+                    />
+                </div>
 
-                    <div style={{paddingTop: 20}}>
-                        <FormLabel text={gettext('Target types')} />
-                    </div>
+                <div style={{paddingTop: 20}}>
+                    <FormLabel text={gettext('Target types')} />
+                </div>
 
-                    <div style={{paddingTop: 5}}>
-                        <ControlledVocabulariesSelect
-                            zIndex={2000}
-                            vocabularies={this.state.subscriberTypes}
-                            value={this.props.value.target_types ?? []}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_types: val,
-                                });
-                            }}
-                        />
-                    </div>
+                <div style={{paddingTop: 5}}>
+                    <ControlledVocabulariesSelect
+                        zIndex={2000}
+                        vocabularies={this.state.subscriberTypes}
+                        value={this.props.value.target_types ?? []}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_types: val,
+                            });
+                        }}
+                    />
+                </div>
 
-                </ToggleBox>
-            </React.Fragment>
+            </ToggleBox>
         );
     }
 }
