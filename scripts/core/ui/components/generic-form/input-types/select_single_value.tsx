@@ -100,7 +100,7 @@ export function getSelectSingleValue(
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <select
                         disabled={this.props.disabled || this.state.items == null || this.state.items.length < 1}
-                        value={this.props.value || ''}
+                        value={this.props.value || this.state.items[0].id}
                         className="sd-line-input__select"
                         onChange={(event) => {
                             this.props.onChange(event.target.value);
