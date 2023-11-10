@@ -48,7 +48,7 @@ export function AuthoringTopbarDirective(
                 dispatchInternalEvent('interactiveArticleActionStart', {
                     items: [scope.item],
                     tabs: ['send_to', 'publish'],
-                    activeTab: scope.item.flags.marked_for_not_publication ? 'send_to' : 'publish',
+                    activeTab: scope.item.flags?.marked_for_not_publication ? 'send_to' : 'publish',
                 });
             };
 
