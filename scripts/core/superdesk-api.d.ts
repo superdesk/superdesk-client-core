@@ -1920,6 +1920,7 @@ declare module 'superdesk-api' {
     export interface ICrudManagerState<Entity> extends ICrudManagerData<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
+        itemsById: {[_id: string]: Entity};
     }
 
     export interface ICrudManagerMethods<Entity> {

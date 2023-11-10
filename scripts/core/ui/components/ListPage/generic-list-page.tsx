@@ -4,7 +4,6 @@
 import React from 'react';
 import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
-import classNames from 'classnames';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
@@ -27,7 +26,6 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {SubNav} from 'superdesk-ui-framework';
 import {
     IPropsGenericForm,
     IGenericListPageComponent,
@@ -449,6 +447,9 @@ export class GenericListPageComponent<T, P>
         };
 
         const showPagination = this.props.crudManager._meta.total > this.props.crudManager._items.length;
+        const editItem = this.state.editItemId ? this.props.crudManager.itemsById[this.state.editItemId] : null;
+        const previewItem = this.state.previewItemId ?
+            this.props.crudManager.itemsById[this.state.previewItemId] : null;
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
@@ -677,7 +678,7 @@ export class GenericListPageComponent<T, P>
                                     labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
-                        ) : this.state.editItemId != null ? (
+                        ) : editItem ? (
                             <PageContainerItem data-test-id="list-page--view-edit">
                                 <GenericListPageItemViewEdit
                                     key={'edit' + this.state.editItemId}
@@ -690,16 +691,14 @@ export class GenericListPageComponent<T, P>
                                             editItemId: null,
                                         }));
                                     }}
-                                    item={this.props.crudManager._items.find(
-                                        (item) => this.props.getId(item) === this.state.editItemId,
-                                    )}
+                                    item={editItem}
                                     getFormConfig={getFormConfig}
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
                                     labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
-                        ) : this.state.previewItemId != null ? (
+                        ) : previewItem ? (
                             <PageContainerItem data-test-id="list-page--view-edit">
                                 <GenericListPageItemViewEdit
                                     key={'preview' + this.state.previewItemId}
@@ -712,9 +711,7 @@ export class GenericListPageComponent<T, P>
                                             editItemId: prevState.previewItemId,
                                         }));
                                     }}
-                                    item={this.props.crudManager._items.find(
-                                        (item) => this.props.getId(item) === this.state.previewItemId,
-                                    )}
+                                    item={previewItem}
                                     getFormConfig={getFormConfig}
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}

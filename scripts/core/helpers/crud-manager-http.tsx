@@ -34,6 +34,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 _meta: null,
                 activeSortOption: defaultSortOption ?? null,
                 activeFilters: {},
+                itemsById: {},
             };
 
             this.create = this.create.bind(this);
@@ -59,6 +60,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
+            updatedItemId?: Entity['_id'],
         ): Promise<IRestApiResponse<Entity>> {
             return dataApi.query(
                 endpoint,
@@ -68,11 +70,28 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 undefined,
                 formatFiltersForServer,
             )
-                .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
+                .then((res: IRestApiResponse<Entity>) => {
+                    const itemsById: ICrudManagerState<Entity>['itemsById'] = {};
+
+                    res._items.forEach((item) => {
+                        itemsById[item._id] = item;
+                    });
+
+                    if (updatedItemId != null && res._items.some((item) => item._id === updatedItemId) === false) {
+                        // updated item is no longer in the list (eg. due to filtering), so fetch it separately
+                        return dataApi.findOne<Entity>(endpoint, updatedItemId).then((updatedItem) => {
+                            itemsById[updatedItemId] = updatedItem;
+                            return {res, itemsById};
+                        });
+                    }
+
+                    return {res, itemsById};
+                }).then(({res, itemsById}) => new Promise((resolve) => {
                     this.setState({
                         ...res,
                         activeSortOption: sortOption,
                         activeFilters: filterValues,
+                        itemsById: itemsById,
                     }, () => {
                         resolve(res);
                     });
@@ -80,15 +99,16 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
         }
 
         update(nextItem: Entity): Promise<Entity> {
-            const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
+            const currentItem = this.state.itemsById[nextItem._id];
 
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
-                .then((res) => this.refresh().then(() => {
+            return dataApi.patch<Entity>(endpoint, currentItem, nextItem).then(
+                (res) => this.refresh(nextItem._id).then(() => {
                     notify.success(gettext('The item has been updated.'));
 
                     return res;
-                }));
+                }),
+            );
         }
 
         delete(item: Entity): Promise<void> {
@@ -100,8 +120,13 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 });
         }
 
-        refresh(): Promise<IRestApiResponse<Entity>> {
-            return this.read(this.state._meta.page, this.state.activeSortOption, this.state.activeFilters);
+        refresh(updateItemId?: Entity['_id']): Promise<IRestApiResponse<Entity>> {
+            return this.read(
+                this.state._meta.page,
+                this.state.activeSortOption,
+                this.state.activeFilters,
+                updateItemId,
+            );
         }
 
         sort(sortOption: ISortOption): Promise<IRestApiResponse<Entity>> {

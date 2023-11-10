@@ -137,6 +137,10 @@ export class GenericArrayListPageComponent<T, P>
                     activeSortOption: this.props.defaultSortOption,
                     _items: this.props.value,
                     _meta: computeMeta(this.props.value),
+                    itemsById: this.props.value.reduce((itemsById, item) => {
+                        itemsById[this.props.getId(item)] = item;
+                        return itemsById;
+                    }, {}),
                 }}
             />
         );
