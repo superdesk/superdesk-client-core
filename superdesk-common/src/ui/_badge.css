@@ -1,0 +1,74 @@
+.badge {
+  display: inline-block;
+  min-width: 1.8em;
+  padding: 0.4em 0.5em 0.3em;
+  border-radius: var(--b-radius--full);
+  font-size: 1rem;
+  line-height: 1.1em;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 400;
+  --sd-badge-bg: var(--sd-colour-bg--08);
+  background-color: var(--sd-badge-bg);
+  color: var(--color-text--inverse);
+}
+
+.badge--square {
+  border-radius: var(--b-radius--x-small);
+}
+
+.badge.badge--primary {
+  --sd-badge-bg: var(--sd-colour-primary);
+}
+
+.badge.badge--success {
+  --sd-badge-bg: var(--sd-colour-success);
+}
+
+.badge.badge--warning {
+  --sd-badge-bg: var(--sd-colour-warning);
+}
+
+.badge.badge--alert {
+  --sd-badge-bg: var(--sd-colour-alert);
+}
+
+.badge.badge--highlight {
+  --sd-badge-bg: var(--sd-colour-highlight);
+}
+
+.badge.badge--sd-green {
+  --sd-badge-bg: var(--sd-colour-superdesk);
+}
+
+.badge.badge--secondary {
+  --sd-btn-bg: var(--sd-colour-secondary);
+}
+
+.badge.badge--light {
+  background-color: var(--sd-colour-bg-translucent--08);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.element-with-badge {
+  display: inline-block;
+  position: relative;
+}
+
+.element-with-badge .badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.8rem;
+}
+
+.element-with-badge+.element-with-badge,
+.element-with-badge+.btn {
+  margin-left: 1.2rem;
+  vertical-align: top;
+}
+
+.btn+.element-with-badge {
+  margin-left: 1.2rem;
+  vertical-align: top;
+}

@@ -1,7 +1,7 @@
 {
     "extends": "superdesk-code-style/tsconfig-strict",
     "compilerOptions": {
-        "target": "ES5",
+        "target": "ES2015",
         "declaration": true,
         "outDir": "./dist",
     }
