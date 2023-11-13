@@ -41,7 +41,12 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
             deskCriteria.push({[templateDesks]: {$in: [currentDeskId]}});
         }
 
-        const criteria = {$or: [{$or: deskCriteria}, {user: sdApi.user.getCurrentUserId()}]};
+        const criteria = {
+            $or: [
+                {$or: deskCriteria},
+                {$and: [{user: sdApi.user.getCurrentUserId()}, {$or: deskCriteria}]},
+            ],
+        };
         const templateName = nameof<ITemplate>('template_name');
         const where = {$and: [criteria]};
 
