@@ -1621,13 +1621,17 @@ declare module 'superdesk-api' {
         | {$gte: any}
         | {$lt: any}
         | {$lte: any}
-        | {$in: any};
-        // consider adding $inString for matching substrings
+        | {$in: any}
+        | {$exists: any} // not null
+        | {$notExists: any} // is null
+        | {$stringContains: any}; // options for the future
 
     export type IComparison = {[field: string]: IComparisonOptions};
     export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
     export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
     export type ILogicalOperator = IAndOperator | IOrOperator;
+    export type ISortOption = 'asc' | 'desc';
+    export type ISortOptions = Array<{[field: string]: ISortOption}>;
 
     /**
      * Universal query format that works with both - Elasticsearch and pyeve endpoints
@@ -1635,7 +1639,7 @@ declare module 'superdesk-api' {
     export interface ISuperdeskQuery {
         filter: ILogicalOperator;
         fullTextSearch?: string;
-        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        sort: ISortOptions;
         page: number;
         max_results: number;
     }
@@ -1644,7 +1648,7 @@ declare module 'superdesk-api' {
         endpoint: string,
         filter: ILogicalOperator;
         fullTextSearch?: string;
-        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        sort: ISortOptions;
     }
 
 

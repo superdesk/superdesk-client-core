@@ -2,11 +2,19 @@ import React from 'react';
 import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
-import {IRestApiResponse, ITemplate} from 'superdesk-api';
+import {
+    IComparison,
+    ILogicalOperator,
+    IRestApiResponse,
+    ISortOptions,
+    ISuperdeskQuery,
+    ITemplate,
+} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {DropdownOption} from './dropdown-option';
 import {nameof} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
+import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 
 interface IProps {
     onSelect(template: ITemplate): void;
@@ -29,44 +37,55 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
     }
 
     fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
-        const templateDesks = nameof<ITemplate>('template_desks');
+        const template_desks = nameof<ITemplate>('template_desks');
         const currentDeskId = sdApi.desks.getCurrentDeskId();
 
-        const deskCriteria: any = [
-            {[templateDesks]: {$exists: false}},
-            {[templateDesks]: []},
+        const templateDesks: Array<IComparison | ILogicalOperator> = [
+            {[template_desks]: {$exists: false}},
+            {[template_desks]: {$eq: []}},
         ];
 
-        if (currentDeskId != null) {
-            deskCriteria.push({[templateDesks]: {$in: [currentDeskId]}});
-        }
-
-        const criteria = {
+        const criteria: ILogicalOperator = {
             $or: [
-                {$or: deskCriteria},
-                {$and: [{user: sdApi.user.getCurrentUserId()}, {$or: deskCriteria}]},
+                {
+                    $and: [
+                        {is_public: {$eq: false}},
+                        {user: {$eq: sdApi.user.getCurrentUserId()}},
+                    ],
+                },
+                {
+                    $and: [
+                        {is_public: {$eq: true}},
+                        {$or: templateDesks},
+                    ],
+                },
             ],
         };
-        const templateName = nameof<ITemplate>('template_name');
-        const where = {$and: [criteria]};
 
-        if (this.state.searchString.length < 1) {
-            where[templateName] = {
-                $regex: this.state.searchString,
-                $options: '-i',
-            };
+        if (currentDeskId != null) {
+            templateDesks.push({$and: [{[template_desks]: {$in: [currentDeskId]}}, {is_public: {$eq: true}}]});
         }
 
+        const templateName = nameof<ITemplate>('template_name');
+        const sort: ISortOptions = [{[templateName]: 'desc'}];
+        const filtered: ILogicalOperator = {
+            $and: [
+                criteria,
+                {[templateName]: {$stringContains: {val: this.state.searchString, options: null}}},
+            ],
+        };
+        const maybeFiltered: ILogicalOperator = this.state.searchString.length < 1 ? criteria : filtered;
+
+        const query: ISuperdeskQuery = {
+            filter: maybeFiltered,
+            page: pageToFetch,
+            max_results: pageSize,
+            sort: sort,
+        };
+
         return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
-            method: 'GET',
-            path: '/content_templates',
-            urlParams: {
-                max_results: pageSize,
-                page: pageToFetch,
-                sort: templateName,
-                where: where,
-            },
-            abortSignal,
+            ...prepareSuperdeskQuery('/content_templates', query),
+            abortSignal: abortSignal,
         });
     }
 
