@@ -39,9 +39,9 @@ function toElasticFilter(q: ILogicalOperator | IComparison) {
             case '$in':
                 return {terms: {[field]: value}};
             case '$exists':
-                return {terms: {exists: {[field]: value}}};
+                return {query: {exists: {field: field}}};
             case '$notExists':
-                return {terms: {must_not: {exists: {[field]: value}}}};
+                return {query: {bool: {must_not: [{exists: {field: field}}]}}};
             case '$stringContains':
                 return {query: {simple_query_string: {query: value.val, fields: [field]}}};
             }
@@ -86,9 +86,9 @@ function toPyEveFilter(q: ILogicalOperator | IComparison) {
             case '$in':
                 return {[field]: {$in: value}};
             case '$exists':
-                return {[field]: {$exists: value}};
+                return {[field]: {$exists: true}};
             case '$notExists':
-                return {[field]: {$exists: value}};
+                return {[field]: {$exists: false}};
             case '$stringContains':
                 return {[field]: {
                     $regex: value.val,
