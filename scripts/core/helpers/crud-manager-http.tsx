@@ -99,7 +99,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                     notify.success(gettext('The item has been deleted.'));
                 })
                 .catch((reason) => {
-                    if (reason != null && reason.message != null) {
+                    if (reason?.message != null) {
                         notify.error(reason.message);
                         return;
                     }
