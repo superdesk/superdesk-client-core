@@ -38,6 +38,12 @@ function toElasticFilter(q: ILogicalOperator | IComparison) {
                 return {range: {[field]: {'lte': value}}};
             case '$in':
                 return {terms: {[field]: value}};
+            case '$exists':
+                return {query: {exists: {field: field}}};
+            case '$notExists':
+                return {query: {bool: {must_not: [{exists: {field: field}}]}}};
+            case '$stringContains':
+                return {query: {simple_query_string: {query: value.val, fields: [field]}}};
             }
 
             throw new Error(`Conversion for operator ${operator} is not defined.`);
@@ -79,6 +85,15 @@ function toPyEveFilter(q: ILogicalOperator | IComparison) {
                 return {[field]: {$lte: value}};
             case '$in':
                 return {[field]: {$in: value}};
+            case '$exists':
+                return {[field]: {$exists: true}};
+            case '$notExists':
+                return {[field]: {$exists: false}};
+            case '$stringContains':
+                return {[field]: {
+                    $regex: value.val,
+                    $options: '-i',
+                }};
             }
 
             throw new Error(`Conversion for operator ${operator} is not defined.`);
@@ -138,9 +153,7 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
     }
 
     if (Object.keys(filtered).length > 0) {
-        query['query'] = {
-            filtered: filtered,
-        };
+        query['query'] = {filtered: filtered};
     }
 
     if (q.fullTextSearch) {
@@ -172,7 +185,10 @@ function objectToTuple<T>(obj: {[key: string]: T}): [string, T] {
     return [key, obj[key]];
 }
 
-export function toPyEveQuery(filter: ISuperdeskQuery['filter'], sort: ISuperdeskQuery['sort']): IPyEveQuery {
+export function toPyEveQuery(
+    filter: ISuperdeskQuery['filter'],
+    sort: ISuperdeskQuery['sort'],
+): IPyEveQuery {
     const result: IPyEveQuery = {
         sort: `[${
             sort.map((sortOption) => {
