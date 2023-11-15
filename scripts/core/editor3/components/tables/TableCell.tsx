@@ -187,7 +187,7 @@ export class TableCell extends React.Component<IProps, IState> {
         const {readOnly} = this.props;
 
         return (
-            <td onClick={(event) => event.stopPropagation()}>
+            <td style={{width: '100%'}} onClick={(event) => event.stopPropagation()}>
                 <Editor
                     onFocus={this.onFocus}
                     editorState={editorState}

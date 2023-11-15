@@ -147,17 +147,20 @@ export class TableBlockComponent extends React.Component<IProps> {
                 'table-header': withHeader,
             });
 
+        const fullWidth = {width: '100%'};
+
         return (
             <div
+                style={fullWidth}
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
                 }}
             >
-                <table>
-                    <tbody>
+                <table style={fullWidth}>
+                    <tbody style={fullWidth}>
                         {Array.from(new Array(numRows)).map((_, i) => (
-                            <tr key={`col-${i}-${numRows}-${numCols}`}>
+                            <tr style={fullWidth} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
