@@ -1630,8 +1630,8 @@ declare module 'superdesk-api' {
     export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
     export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
     export type ILogicalOperator = IAndOperator | IOrOperator;
-    export type ISortOption = 'asc' | 'desc';
-    export type ISortOptions = Array<{[field: string]: ISortOption}>;
+    export type ISortDirection = 'asc' | 'desc';
+    export type ISortOptions = Array<{[field: string]: ISortDirection}>;
 
     /**
      * Universal query format that works with both - Elasticsearch and pyeve endpoints
