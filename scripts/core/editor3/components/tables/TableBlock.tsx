@@ -7,6 +7,7 @@ import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
 import {IActiveCell, ISetActiveCellReturnType} from 'superdesk-api';
 import {IEditorStore} from 'core/editor3/store';
+import {MULTI_LINE_QUOTE_CLASS} from '../multi-line-quote/MultiLineQuote';
 
 interface IProps {
     block: ContentBlock;
@@ -147,7 +148,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                 'table-header': withHeader,
             });
 
-        const fullWidth = {width: '100%'};
+        const fullWidth = this.props.className != MULTI_LINE_QUOTE_CLASS ? {} : {width: '100%'};
 
         return (
             <div
@@ -163,6 +164,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                             <tr style={fullWidth} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
+                                        fullWidth={fullWidth}
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}

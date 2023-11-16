@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Editor, RichUtils, getDefaultKeyBinding, DraftHandleValue, SelectionState, EditorState} from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {customStyleMap} from '../customStyleMap';
@@ -11,6 +10,7 @@ interface IProps {
     onUndo: () => void;
     onRedo: () => void;
     onFocus: (styles: Array<string>, selection: SelectionState) => void;
+    fullWidth: {width?: string | undefined};
 }
 
 interface IState {
@@ -187,7 +187,7 @@ export class TableCell extends React.Component<IProps, IState> {
         const {readOnly} = this.props;
 
         return (
-            <td style={{width: '100%'}} onClick={(event) => event.stopPropagation()}>
+            <td style={this.props.fullWidth} onClick={(event) => event.stopPropagation()}>
                 <Editor
                     onFocus={this.onFocus}
                     editorState={editorState}
