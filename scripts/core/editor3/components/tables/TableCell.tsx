@@ -10,7 +10,7 @@ interface IProps {
     onUndo: () => void;
     onRedo: () => void;
     onFocus: (styles: Array<string>, selection: SelectionState) => void;
-    fullWidth: {width?: string | undefined};
+    fullWidth?: boolean;
 }
 
 interface IState {
@@ -185,6 +185,7 @@ export class TableCell extends React.Component<IProps, IState> {
     render() {
         const {editorState} = this.state;
         const {readOnly} = this.props;
+        const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
 
         return (
             <td
@@ -192,7 +193,7 @@ export class TableCell extends React.Component<IProps, IState> {
                 onDragStart={(e) => {
                     e.preventDefault();
                 }}
-                style={this.props.fullWidth}
+                style={fullWidthStyle}
                 onClick={(event) => event.stopPropagation()}
             >
                 <Editor

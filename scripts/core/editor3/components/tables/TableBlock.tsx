@@ -164,7 +164,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                             <tr style={fullWidthStyle} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
-                                        fullWidth={fullWidthStyle}
+                                        fullWidth={Object.keys(fullWidthStyle).length > 0}
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
