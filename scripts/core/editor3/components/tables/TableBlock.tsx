@@ -24,6 +24,7 @@ interface IProps {
     setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
     toolbarStyle?: IEditorStore['customToolbarStyle'];
     className?: string;
+    fullWidth?: boolean;
 }
 
 /**
@@ -147,19 +148,23 @@ export class TableBlockComponent extends React.Component<IProps> {
                 'table-header': withHeader,
             });
 
+        const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
+
         return (
             <div
+                style={fullWidthStyle}
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
                 }}
             >
-                <table>
-                    <tbody>
+                <table style={fullWidthStyle}>
+                    <tbody style={fullWidthStyle}>
                         {Array.from(new Array(numRows)).map((_, i) => (
-                            <tr key={`col-${i}-${numRows}-${numCols}`}>
+                            <tr style={fullWidthStyle} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
+                                        fullWidth={Object.keys(fullWidthStyle).length > 0}
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
