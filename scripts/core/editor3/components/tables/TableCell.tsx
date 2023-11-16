@@ -187,7 +187,14 @@ export class TableCell extends React.Component<IProps, IState> {
         const {readOnly} = this.props;
 
         return (
-            <td style={this.props.fullWidth} onClick={(event) => event.stopPropagation()}>
+            <td
+                // Disabling to prevent misbehavior and bugs when dragging & dropping text
+                onDragStart={(e) => {
+                    e.preventDefault();
+                }}
+                style={this.props.fullWidth}
+                onClick={(event) => event.stopPropagation()}
+            >
                 <Editor
                     onFocus={this.onFocus}
                     editorState={editorState}
