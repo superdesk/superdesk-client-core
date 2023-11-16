@@ -53,7 +53,6 @@ describe('editor3.component.table-cell', () => {
     it('should render', () => {
         const wrapper = shallow(
             <TableCell
-                fullWidth
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
                 onChange={() => { /* no-op */ }}
                 readOnly={false}

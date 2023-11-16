@@ -5,8 +5,6 @@ import {EditorState, ContentBlock} from 'draft-js';
 import {TableBlock} from '../tables/TableBlock';
 import {IActiveCell} from 'superdesk-api';
 
-export const MULTI_LINE_QUOTE_CLASS = 'multi-line-quote';
-
 interface IProps {
     block: ContentBlock;
     readOnly: boolean;
@@ -26,8 +24,7 @@ export class MultiLineQuoteComponent extends React.Component<IProps> {
     render() {
         return (
             <TableBlock
-                fullWidth
-                className={MULTI_LINE_QUOTE_CLASS}
+                className="multi-line-quote"
                 toolbarStyle="multiLineQuote"
                 block={this.props.block}
                 readOnly={this.props.readOnly}

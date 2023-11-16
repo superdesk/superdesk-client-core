@@ -3,7 +3,6 @@ import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuW
 import {logger} from 'core/services/logger';
 import {editor3StateToHtml} from './editor3StateToHtml';
 import {getData, IEditor3TableData} from 'core/editor3/helpers/table';
-import {MULTI_LINE_QUOTE_CLASS} from 'core/editor3/components/multi-line-quote/MultiLineQuote';
 
 /**
  * @ngdoc class
@@ -201,7 +200,7 @@ export class AtomicBlockParser {
         }
 
         const {cells} = data;
-        let html = `<div class="${MULTI_LINE_QUOTE_CLASS}">`;
+        let html = '<div class="multi-line-quote">';
         const cellContentState = cells[0]?.[0] != null
             ? convertFromRaw(cells[0][0])
             : ContentState.createFromText('');
