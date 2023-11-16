@@ -26,6 +26,7 @@ export class MultiLineQuoteComponent extends React.Component<IProps> {
     render() {
         return (
             <TableBlock
+                fullWidth
                 className={MULTI_LINE_QUOTE_CLASS}
                 toolbarStyle="multiLineQuote"
                 block={this.props.block}

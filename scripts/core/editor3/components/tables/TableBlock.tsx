@@ -7,7 +7,6 @@ import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
 import {IActiveCell, ISetActiveCellReturnType} from 'superdesk-api';
 import {IEditorStore} from 'core/editor3/store';
-import {MULTI_LINE_QUOTE_CLASS} from '../multi-line-quote/MultiLineQuote';
 
 interface IProps {
     block: ContentBlock;
@@ -25,6 +24,7 @@ interface IProps {
     setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
     toolbarStyle?: IEditorStore['customToolbarStyle'];
     className?: string;
+    fullWidth?: boolean;
 }
 
 /**
@@ -148,23 +148,23 @@ export class TableBlockComponent extends React.Component<IProps> {
                 'table-header': withHeader,
             });
 
-        const fullWidth = this.props.className != MULTI_LINE_QUOTE_CLASS ? {} : {width: '100%'};
+        const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
 
         return (
             <div
-                style={fullWidth}
+                style={fullWidthStyle}
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
                 }}
             >
-                <table style={fullWidth}>
-                    <tbody style={fullWidth}>
+                <table style={fullWidthStyle}>
+                    <tbody style={fullWidthStyle}>
                         {Array.from(new Array(numRows)).map((_, i) => (
-                            <tr style={fullWidth} key={`col-${i}-${numRows}-${numCols}`}>
+                            <tr style={fullWidthStyle} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
-                                        fullWidth={fullWidth}
+                                        fullWidth={fullWidthStyle}
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
