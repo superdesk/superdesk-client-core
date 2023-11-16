@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {throttle} from 'lodash';
 import {createPopper, Instance as PopperInstance, Placement} from '@popperjs/core/';
 import maxSize from 'popper-max-size-modifier';
-import {applyMaxSize} from './AutoCompleteSuggestions';
+import {applyMaxSize, flipCustomModifier} from 'core/popper-utils';
 
 export interface IPropsPositioner {
     referenceElement: HTMLElement;
@@ -81,6 +81,7 @@ export class PopupPositioner extends React.PureComponent<IPropsPositioner> {
                         modifiers: [
                             maxSize,
                             applyMaxSize,
+                            flipCustomModifier,
                         ],
                     },
                 );
