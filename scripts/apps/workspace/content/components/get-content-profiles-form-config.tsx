@@ -58,7 +58,6 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'annotation': gettext('annotation'),
         'comments': gettext('comments'),
         'suggestions': gettext('suggestions'),
-        'embed': gettext('embed'),
         'tab': gettext('tab'),
         'tab as spaces': gettext('tab as space'),
         'undo': gettext('undo'),
