@@ -41,7 +41,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
         const currentDeskId = sdApi.desks.getCurrentDeskId();
 
         const templateDesks: Array<IComparison | ILogicalOperator> = [
-            {[template_desks]: {$exists: false}},
+            {[template_desks]: {$notExists: false}},
             {[template_desks]: {$eq: []}},
         ];
 
