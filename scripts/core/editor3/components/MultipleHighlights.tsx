@@ -9,6 +9,20 @@ export class MultipleHighlights extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
+    constructor(props: any) {
+        super(props);
+
+        this.state = {
+            reload: true,
+        };
+    }
+
+    componentDidCatch(): void {
+        this.setState({
+            reload: false,
+        });
+    }
+
     addHighlight(highlightType, highlightData) {
         const editorState = Highlights.addHighlight(this.props.editorState, highlightType, highlightData);
 

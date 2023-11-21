@@ -11,6 +11,18 @@ export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
+    constructor(props: any) {
+        super(props);
+
+        this.state = {
+            reload: true,
+        };
+    }
+
+    componentDidCatch() {
+        this.setState({reload: false});
+    }
+
     render() {
         return (
             <MultipleHighlights {...this.props}>

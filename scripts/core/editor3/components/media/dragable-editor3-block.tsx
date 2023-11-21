@@ -19,14 +19,13 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> 
     constructor(props: IProps) {
         super(props);
 
-        this.onDragStart = this.onDragStart.bind(this);
         this.state = {
             displayHandle: false,
         };
     }
 
-    onDragStart(event) {
-        event.dataTransfer.setData(EDITOR_BLOCK_TYPE, this.props.block.getKey());
+    componentWillUnmount(): void {
+        clearTimeout(this.timeoutId);
     }
 
     render() {
@@ -53,7 +52,9 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> 
                 <div
                     className={this.state.displayHandle ? 'draggable-block-handle' : 'draggable-block-handle-hide'}
                     draggable={this.props.readOnly !== true}
-                    onDragStart={this.onDragStart}
+                    onDragStart={(e) => {
+                        e.dataTransfer.setData(EDITOR_BLOCK_TYPE, this.props.block.getKey());
+                    }}
                     onMouseOver={() => {
                         this.setState({
                             displayHandle: true,

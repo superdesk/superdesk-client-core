@@ -27,6 +27,8 @@ interface IState {
  * @description Handles a cell in the table, as well as the containing editor.
  */
 export class TableCell extends React.Component<IProps, IState> {
+    private cell: Editor;
+
     constructor(props) {
         super(props);
 
@@ -195,8 +197,14 @@ export class TableCell extends React.Component<IProps, IState> {
                 }}
                 style={fullWidthStyle}
                 onClick={(event) => event.stopPropagation()}
+                onMouseDown={() => {
+                    this.cell.focus();
+                }}
             >
                 <Editor
+                    ref={(e) => {
+                        this.cell = e;
+                    }}
                     onFocus={this.onFocus}
                     editorState={editorState}
                     customStyleMap={customStyleMap}
