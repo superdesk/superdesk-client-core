@@ -914,45 +914,6 @@ $editor-styleButton-size: 			3rem;
 
 // Style overrides for Custom fields in the article header
 
-.authoring-header__input-editor3 {
-	.Editor3-editor .public-DraftEditorPlaceholder-root,
-	.Editor3-editor .public-DraftEditor-content {
-		padding: 3px 0 2px;
-	}
-	.Editor3-root {
-		border: none !important;
-	}
-	.DraftEditor-root {
-		border-bottom: 1px solid var(--color-input-border);
-		background-color: var(--color-input-bg);
-		transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-		min-height: 32px;
-		padding: 0.4rem 0.8rem 0;
-		&:hover {
-			border-color: var(--color-input-border-hover);
-            background-color: var(--color-input-bg--hover);
-		}
-		&:focus-within {
-			background-color: var(--color-input-bg--focus);
-            box-shadow: 0 1px 0 0 #5ea9c8;
-            border-color: #5ea9c8;
-		}
-	}
-	.Editor3-editor {
-		font-family: "Roboto", Helvetica, Arial, sans-serif;
-		font-weight: 400;
-		font-size: 13px;
-
-		&.no-toolbar {
-			padding-top: 0;
-		}
-	}
-
-	.Editor3-editor .public-DraftEditor-content [data-block="true"] {
-		border-bottom: none;
-	}
-}
-
 .Editor3-editor {
 	q::before, q::after, blockquote::before, blockquote::after {
 		content: "";
