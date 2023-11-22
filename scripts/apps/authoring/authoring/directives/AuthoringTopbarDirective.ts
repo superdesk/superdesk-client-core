@@ -5,6 +5,7 @@ import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 
 /**
  * @ngdoc directive
@@ -36,7 +37,7 @@ export function AuthoringTopbarDirective(
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
             scope.isCorrection = (item) => appConfig?.corrections_workflow
-                && item.state === ITEM_STATE.CORRECTION && scope.action === 'correct';
+                && item.state === ITEM_STATE.CORRECTION && scope.action === 'edit';
 
             scope.handleArticleChange = (article) => {
                 Object.assign(scope.item, article);
@@ -45,12 +46,32 @@ export function AuthoringTopbarDirective(
             };
 
             scope.openPublishOrSendToPane = () => {
+                const activeTab = determineActiveTab(scope.item);
+
                 dispatchInternalEvent('interactiveArticleActionStart', {
                     items: [scope.item],
-                    tabs: ['send_to', 'publish'],
-                    activeTab: scope.item.flags?.marked_for_not_publication ? 'send_to' : 'publish',
+                    tabs: getTabsArray(activeTab),
+                    activeTab: activeTab,
                 });
             };
+
+            function determineActiveTab(item) {
+                if (item.flags?.marked_for_not_publication) {
+                    return 'send_to';
+                } else if (scope.isCorrection(scope.item)) {
+                    return 'correct';
+                } else {
+                    return 'publish';
+                }
+            }
+
+            function getTabsArray(activeTab: IArticleActionInteractive): Array<IArticleActionInteractive> {
+                if (activeTab === 'correct') {
+                    return ['send_to', 'correct'];
+                } else {
+                    return ['send_to', 'publish'];
+                }
+            }
 
             /*
              * Save item
