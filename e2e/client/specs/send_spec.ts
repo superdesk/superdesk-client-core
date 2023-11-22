@@ -32,7 +32,9 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    it('warns that there are spelling mistakes', () => {
+    // disabling the test, it wasn't really testing any spellcheck warning
+    // the popup there was related to saving unsaved changes
+    xit('warns that there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');
         authoring.sendTo('Sports Desk');

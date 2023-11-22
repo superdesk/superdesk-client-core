@@ -100,10 +100,17 @@ class Content {
         this.openItemMenu = function(item) {
             const itemElem = this.getItem(item);
 
+            // move mouse out of the item
             browser.actions()
-                .mouseMove(itemElem, {x: -50, y: -50}) // first move out
+                .mouseMove(itemElem, {x: -50, y: -50})
+                .perform();
+
+            // move mouse on the item
+            browser.actions()
                 .mouseMove(itemElem) // now it can mouseover for sure
                 .perform();
+
+            browser.sleep(100);
 
             el(['context-menu-button'], null, itemElem).click();
 
