@@ -46,30 +46,30 @@ export function AuthoringTopbarDirective(
             };
 
             scope.openPublishOrSendToPane = () => {
-                const activeTab = determineActiveTab(scope.item);
+                const activeTab = getActiveTab(scope.item);
 
                 dispatchInternalEvent('interactiveArticleActionStart', {
                     items: [scope.item],
-                    tabs: getTabsArray(activeTab),
+                    tabs: getAvailableTabs(activeTab),
                     activeTab: activeTab,
                 });
             };
 
-            function determineActiveTab(item) {
+            function getAvailableTabs(activeTab: IArticleActionInteractive): Array<IArticleActionInteractive> {
+                if (activeTab === 'correct') {
+                    return ['send_to', 'correct'];
+                } else {
+                    return ['send_to', 'publish'];
+                }
+            }
+
+            function getActiveTab(item) {
                 if (item.flags?.marked_for_not_publication) {
                     return 'send_to';
                 } else if (scope.isCorrection(scope.item)) {
                     return 'correct';
                 } else {
                     return 'publish';
-                }
-            }
-
-            function getTabsArray(activeTab: IArticleActionInteractive): Array<IArticleActionInteractive> {
-                if (activeTab === 'correct') {
-                    return ['send_to', 'correct'];
-                } else {
-                    return ['send_to', 'publish'];
                 }
             }
 
