@@ -59,10 +59,10 @@ export function AuthoringTopbarDirective(
             function getAvailableTabs(): Array<IArticleActionInteractive> {
                 if (scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
-                } else if (!scope.item.flags?.marked_for_not_publication) {
-                    return ['send_to', 'publish'];
-                } else {
+                } else if (scope.item.flags?.marked_for_not_publication === true) {
                     return ['send_to'];
+                } else {
+                    return ['send_to', 'publish'];
                 }
             }
 
