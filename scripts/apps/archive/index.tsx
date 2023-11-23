@@ -61,8 +61,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdPackageItemLabelsDropdown', directive.PackageItemLabelsDropdown)
     .directive('sdAssignmentIcon', directive.AssignmentIcon)
     .directive('sdRelatedItemsPreview', directive.RelatedItemsPreview)
-    .service('familyService', svc.FamilyService)
-    .service('dragitem', svc.DragItemService);
+    .service('familyService', svc.FamilyService);
 
 /**
  * @ngdoc module
