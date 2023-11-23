@@ -59,15 +59,17 @@ export function AuthoringTopbarDirective(
             function getAvailableTabs(): Array<IArticleActionInteractive> {
                 if (scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
-                } else {
+                } else if (!scope.item.flags?.marked_for_not_publication) {
                     return ['send_to', 'publish'];
+                } else {
+                    return ['send_to'];
                 }
             }
 
             function getActiveTab(availableTabs: Array<IArticleActionInteractive>): IArticleActionInteractive {
                 if (availableTabs.includes('correct')) {
                     return 'correct';
-                } else if (availableTabs.includes('publish') && !scope.item.flags?.marked_for_not_publication) {
+                } else if (availableTabs.includes('publish')) {
                     return 'publish';
                 } else {
                     return availableTabs[0];
