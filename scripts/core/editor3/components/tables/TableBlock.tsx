@@ -152,7 +152,7 @@ export class TableBlockComponent extends React.Component<IProps> {
 
         return (
             <div
-                style={{width: '100%'}}
+                style={fullWidthStyle}
                 className={cx}
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
