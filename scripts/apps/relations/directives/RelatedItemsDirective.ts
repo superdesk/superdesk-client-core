@@ -1,4 +1,3 @@
-import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle, IVocabulary, IRendition} from 'superdesk-api';
@@ -6,6 +5,7 @@ import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 import {getThumbnailForItem} from 'core/helpers/item';
 import {RelatedItemCreateNewButton} from './related-items-create-new-button';
+import {getSuperdeskType} from 'utils/dragging';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);

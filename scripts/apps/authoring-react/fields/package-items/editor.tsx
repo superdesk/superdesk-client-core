@@ -9,13 +9,14 @@ import {
     IPackageItemsValueOperational,
 } from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
-import {getDroppedItem, gettext} from 'core/utils';
+import {gettext} from 'core/utils';
 import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {DragHandle} from 'core/ui/components/drag-handle';
 import {arrayMove, WithSortable} from '@superdesk/common';
 import {WithArticles} from 'core/with-articles';
+import {getDroppedItem} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<IPackageItemsValueOperational, IPackageItemsConfig, IPackageItemsUserPreferences>;
 

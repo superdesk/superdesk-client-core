@@ -1,3 +1,5 @@
+import {IArticle} from 'superdesk-api';
+
 /**
  * NOTICE:
  * if you want to test drag image in chrome, make sure to close dev tools first,
@@ -26,7 +28,7 @@ const getThumbnailPlaceholder = () => {
 };
 
 export function dragStart(event, item) {
-    const dt = event.dataTransfer || event.originalEvent.dataTransfer;
+    const dataTransfer = event.dataTransfer || event.originalEvent.dataTransfer;
     const mimeTypes = ['application/superdesk.item.' + item.type];
 
     // search providers can specify custom mimetype
@@ -36,10 +38,10 @@ export function dragStart(event, item) {
     }
 
     mimeTypes.forEach((mimetype) => {
-        dt.setData(mimetype, angular.toJson(item));
+        dataTransfer.setData(mimetype, angular.toJson(item));
     });
 
-    dt.effectAllowed = 'link';
+    dataTransfer.effectAllowed = 'link';
 
     // // DOESN'T WORK ON CHROME 106
     // if (item.renditions && item.renditions.thumbnail) {
@@ -51,4 +53,31 @@ export function dragStart(event, item) {
     //     div.appendChild(img);
     //     dt.setDragImage(div, 5, 5);
     // }
+}
+
+/**
+ * Get superdesk supported type for data transfer if any
+ *
+ * @param {Event} event
+ * @param {Boolean} supportExternalFiles
+ * @return {string}
+ */
+export const getSuperdeskType = (event, supportExternalFiles = true) => {
+    const evt = event.originalEvent ?? event;
+
+    return evt.dataTransfer.types.find((name) =>
+        name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
+    );
+};
+
+export function getDroppedItem(event): IArticle | null {
+    const superdeskType = getSuperdeskType(event);
+
+    if (superdeskType == null || superdeskType === 'Files') {
+        return null;
+    }
+
+    const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
+
+    return __item;
 }

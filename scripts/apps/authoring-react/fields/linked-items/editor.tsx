@@ -9,7 +9,7 @@ import {
     ILinkedItemsUserPreferences,
 } from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
-import {getDroppedItem, gettext} from 'core/utils';
+import {gettext} from 'core/utils';
 import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {openArticle, applicationState} from 'core/get-superdesk-api-implementation';
@@ -19,6 +19,7 @@ import {WithArticles} from 'core/with-articles';
 import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
 import {RelatedItemCreateNewButton} from 'apps/relations/directives/related-items-create-new-button';
 import {sdApi} from 'api';
+import {getDroppedItem} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<ILinkedItemsValueOperational, ILinkedItemsConfig, ILinkedItemsUserPreferences>;
 
