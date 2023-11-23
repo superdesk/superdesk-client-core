@@ -11,17 +11,12 @@ export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            reload: true,
-        };
+    componentDidCatch(error: Error) {
+        if (error.message.toLowerCase().includes('node.removechild')) {
+            this.forceUpdate();
+        }
     }
 
-    componentDidCatch() {
-        this.setState({reload: false});
-    }
 
     render() {
         return (

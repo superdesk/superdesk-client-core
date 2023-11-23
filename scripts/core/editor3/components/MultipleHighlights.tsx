@@ -9,18 +9,10 @@ export class MultipleHighlights extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            reload: true,
-        };
-    }
-
-    componentDidCatch(): void {
-        this.setState({
-            reload: false,
-        });
+    componentDidCatch(error) {
+        if (error.message.toLowerCase().includes('node.removechild')) {
+            this.forceUpdate();
+        }
     }
 
     addHighlight(highlightType, highlightData) {
