@@ -37,8 +37,9 @@ angular.module('superdesk.core.ui.autoheight', []).directive('sdAutoHeight', ['$
 
             var $win = angular.element($window),
                 mirrorStyle,
-                mirrorStyleBasic = 
-                    'position: absolute; insetBlockStart: -999px; insetInlineEnd: auto; insetBlockEnd: auto; insetInlineStart: 0 ;' +
+                mirrorStyleBasic =
+                    'position: absolute; insetBlockStart: -999px;' +
+                    'insetInlineEnd: auto; insetBlockEnd: auto; insetInlineStart: 0 ;' +
                     'overflow: hidden; -webkit-box-sizing: content-box;' +
                     '-moz-box-sizing: content-box; box-sizing: content-box;' +
                     'min-height: 0 !important; height: 0 !important; padding: 0;' +
