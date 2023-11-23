@@ -19,7 +19,7 @@ export class CarouselAsd extends React.PureComponent<any, IState> {
 
     componentDidMount(): void {
         this.setState({
-            height: this.el?.clientWidth,
+            height: this.el?.clientHeight,
         });
     }
 
@@ -44,7 +44,7 @@ export class CarouselAsd extends React.PureComponent<any, IState> {
         return (
             <div
                 style={{
-                    width: this.state.height,
+                    height: this.state.height,
                 }}
                 ref={(element) => {
                     this.el = element as HTMLDivElement;
