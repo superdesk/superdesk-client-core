@@ -161,11 +161,11 @@ export function translateArticleType(type: IArticle['type']) {
 export function getUserSearchMongoQuery(searchString: string) {
     return {
         $or: [
-            {username: {$regex: searchString, $options: '-i'}},
-            {display_name: {$regex: searchString, $options: '-i'}},
-            {first_name: {$regex: searchString, $options: '-i'}},
-            {last_name: {$regex: searchString, $options: '-i'}},
-            {email: {$regex: searchString, $options: '-i'}},
+            {username: {$regex: searchString, $options: 'i'}},
+            {display_name: {$regex: searchString, $options: 'i'}},
+            {first_name: {$regex: searchString, $options: 'i'}},
+            {last_name: {$regex: searchString, $options: 'i'}},
+            {email: {$regex: searchString, $options: 'i'}},
         ],
     };
 }

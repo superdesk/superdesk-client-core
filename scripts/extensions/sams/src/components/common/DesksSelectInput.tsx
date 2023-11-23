@@ -55,7 +55,7 @@ export class DesksSelectInput extends React.Component<IProps, IState> {
 
         searchDesks({
             $and: [
-                {name: {$regex: searchString, $options: '-i'}},
+                {name: {$regex: searchString, $options: 'i'}},
                 {_id: {$nin: selectedDeskIds}},
             ],
         })

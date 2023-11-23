@@ -23,7 +23,7 @@ export const StageSingleValue = getSelectSingleValueAutoComplete({
                                 {
                                     name: {
                                         $regex: searchString,
-                                        $options: '-i',
+                                        $options: 'i',
                                     },
                                 },
                             ],
