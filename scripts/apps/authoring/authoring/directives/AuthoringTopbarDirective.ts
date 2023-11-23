@@ -65,9 +65,9 @@ export function AuthoringTopbarDirective(
             }
 
             function getActiveTab(availableTabs: Array<IArticleActionInteractive>): IArticleActionInteractive {
-                if (availableTabs.includes('correct') && scope.isCorrection(scope.item)) {
+                if (availableTabs.includes('correct')) {
                     return 'correct';
-                } else if (availableTabs.includes('publish')) {
+                } else if (availableTabs.includes('publish') && !scope.item.flags?.marked_for_not_publication) {
                     return 'publish';
                 } else {
                     return availableTabs[0];
