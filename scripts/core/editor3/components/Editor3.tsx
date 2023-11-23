@@ -12,7 +12,7 @@ export class Editor3Base extends React.Component<any, any> {
     static defaultProps: any;
 
     componentDidCatch(error: Error) {
-        if (error.message.toLowerCase().includes('node.removechild')) {
+        if (error.message.includes('Node.removeChild')) {
             this.forceUpdate();
         }
     }

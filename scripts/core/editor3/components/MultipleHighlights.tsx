@@ -10,7 +10,7 @@ export class MultipleHighlights extends React.Component<any, any> {
     static defaultProps: any;
 
     componentDidCatch(error) {
-        if (error.message.toLowerCase().includes('node.removechild')) {
+        if (error.message.includes('Node.removeChild')) {
             this.forceUpdate();
         }
     }
