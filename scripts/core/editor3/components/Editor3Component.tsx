@@ -617,7 +617,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 // it's handled there separately
                 onDragEnd={this.onDragEnd}
                 onFocus={() => {
-                    this.editor?.focus();
                     this.setState({contentChangesAfterLastFocus: 0});
                 }}
                 style={
@@ -650,10 +649,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 />
                 <div
                     className="focus-screen"
-                    onMouseDown={() => {
-                        this.editor?.focus();
-                        this.focus();
-                    }}
+                    onMouseDown={this.focus}
                     style={
                         this.props.uiTheme == null
                             ? {}
