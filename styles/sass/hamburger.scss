@@ -44,8 +44,8 @@ $hamburger-active-hover-opacity: $hamburger-hover-opacity !default;
   
   .hamburger__inner {
     display: block;
-    top: 50%;
-    margin-top: $hamburger-layer-height / -2;
+    inset-block-start: 50%;
+    margin-block-start: $hamburger-layer-height / -2;
   
     &,
     &::before,
@@ -67,11 +67,11 @@ $hamburger-active-hover-opacity: $hamburger-hover-opacity !default;
     }
   
     &::before {
-      top: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
+      inset-block-start: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
     }
   
     &::after {
-      bottom: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
+      inset-block-end: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
     }
   }
   
@@ -103,14 +103,14 @@ $hamburger-active-hover-opacity: $hamburger-hover-opacity !default;
             transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 
             &::before {
-            top: 0;
+            inset-block-start: 0;
             opacity: 0;
             transition: top 0.1s ease-out,
                         opacity 0.1s 0.12s ease-out;
             }
 
             &::after {
-            bottom: 0;
+            inset-block-end: 0;
             transform: rotate(-90deg);
             transition: bottom 0.1s ease-out,
                         transform 0.22s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -143,14 +143,14 @@ $hamburger-active-hover-opacity: $hamburger-hover-opacity !default;
             transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 
             &::before {
-                top: 0;
+                inset-block-start: 0;
                 opacity: 0;
                 transition: top 0.075s ease,
                             opacity 0.075s 0.12s ease;
             }
 
             &::after {
-                bottom: 0;
+                inset-block-end: 0;
                 transform: rotate(-90deg);
                 transition: bottom 0.075s ease,
                             transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);

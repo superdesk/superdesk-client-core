@@ -9,7 +9,7 @@ export class SmallTags extends React.PureComponent<IProps> {
         return (
             <div style={{display: 'flex'}}>
                 {this.props.tags.map((tag) => (
-                    <span key={tag.id} className="small-tag" style={{marginRight: 4}}>{tag.label}</span>
+                    <span key={tag.id} className="small-tag" style={{marginInlineEnd: 4}}>{tag.label}</span>
                 ))}
             </div>
         );

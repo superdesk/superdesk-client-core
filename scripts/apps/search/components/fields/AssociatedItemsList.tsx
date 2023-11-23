@@ -64,7 +64,7 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
             ));
 
         return icons.length ? (
-            <span style={{marginLeft: 'auto'}}> {/* push it right */}
+            <span style={{marginInlineStart: 'auto'}}> {/* push it right */}
                 {icons}
             </span>
         ) : null;

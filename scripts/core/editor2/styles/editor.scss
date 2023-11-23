@@ -77,7 +77,7 @@
         .text-editor {
             padding: 0;
             // leave the space for the `add-embed` when the toolbar is shown
-            margin-top: 6px;
+            margin-block-start: 6px;
             &.medium-editor-dragover, & .medium-editor-dragover {
                 background: $sd-hover;
                 border: 2px dashed $sd-blue;
@@ -100,8 +100,8 @@
     }
     &__actions {
         position: absolute;
-        right: -38px;
-        top: 0;
+        inset-inline-end: -38px;
+        inset-block-start: 0;
         cursor: pointer;
         opacity: .1;
         i {
@@ -145,8 +145,8 @@
     }
     &__actions {
         position: relative;
-        top: 10px;
-        left: 50px;
+        inset-block-start: 10px;
+        inset-inline-start: 50px;
         &.ng-hide:not(.ng-hide-animate) {
             display: block !important;
             position: absolute;
@@ -187,17 +187,17 @@
     }
     &__input {
         // leave place for action buttons on the sides
-        margin-right: 100px;
+        margin-inline-end: 100px;
     }
     // action buttons
     &__actions {
         // align right
         position: absolute;
-        top: 0;
-        right: 0;
+        inset-block-start: 0;
+        inset-inline-end: 0;
         // centers icons
         i {
-            left: 2px;
+            inset-inline-start: 2px;
             position: relative;
         }
     }
@@ -214,9 +214,9 @@
         &:before {
             content: '';
             position: absolute;
-            top: 50%;
+            inset-block-start: 50%;
             transform: translateY(-50%);
-            left: 0;
+            inset-inline-start: 0;
             @include spinner-big;
         }
     }
@@ -239,7 +239,7 @@
         &__title {
             font-size: 1.75em;
             line-height: 1.25em;
-            margin-bottom: .50em;
+            margin-block-end: .50em;
         }
     }
 }

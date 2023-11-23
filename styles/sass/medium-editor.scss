@@ -51,12 +51,12 @@
 .medium-editor-anchor-preview {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
-  left: 0;
+  inset-inline-start: 0;
   line-height: 1.4;
   max-width: 280px;
   position: absolute;
   text-align: center;
-  top: 0;
+  inset-block-start: 0;
   word-break: break-all;
   word-wrap: break-word;
   visibility: hidden;
@@ -86,9 +86,9 @@
   .medium-editor-placeholder:after {
     content: attr(data-placeholder) !important;
     font-style: italic;
-    left: 0;
+    inset-inline-start: 0;
     position: absolute;
-    top: 0;
+    inset-block-start: 0;
     white-space: pre;
     padding: inherit;
     margin: inherit; }
@@ -98,8 +98,8 @@
   content: '';
   display: block;
   height: 0;
-  left: 50%;
-  margin-left: -8px;
+  inset-inline-start: 50%;
+  margin-inline-start: -8px;
   position: absolute;
   width: 0; }
 
@@ -108,21 +108,21 @@
 
 .medium-toolbar-arrow-over:before {
   border-width: 0 8px 8px 8px;
-  top: -8px; }
+  inset-block-start: -8px; }
 
 .medium-editor-toolbar {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
-  left: 0;
+  inset-inline-start: 0;
   position: absolute;
-  top: 0;
+  inset-block-start: 0;
   visibility: hidden;
   z-index: 9999; }
   .medium-editor-toolbar ul {
     margin: 0;
     padding: 0; }
   .medium-editor-toolbar li {
-    float: left;
+    float: inline-start;
     list-style: none;
     margin: 0;
     padding: 0; }
@@ -150,7 +150,7 @@
 
 .medium-editor-sticky-toolbar {
   position: fixed;
-  top: 1px; }
+  inset-block-start: 1px; }
 
 .medium-editor-relative-toolbar {
   position: relative; }
@@ -172,8 +172,8 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
   .medium-editor-toolbar-form .medium-editor-toolbar-form-row {
     line-height: 14px;
-    margin-left: 5px;
-    padding-bottom: 5px; }
+    margin-inline-start: 5px;
+    padding-block-end: 5px; }
   .medium-editor-toolbar-form .medium-editor-toolbar-input,
   .medium-editor-toolbar-form label {
     border: none;
@@ -230,7 +230,7 @@ background-color: $sd-blue; }
     min-width: 60px;
     height: 60px;
     border: none;
-    border-right: 1px solid $sd-background;
+    border-inline-end: 1px solid $sd-background;
     background-color: transparent;
     color: $white;
     -webkit-transition: background-color .2s ease-in, color .2s ease-in;
@@ -242,7 +242,7 @@ background-color: $sd-blue; }
     background-color: darken($sd-blue, 30%);
     color: $white; }
   .medium-editor-toolbar li .medium-editor-button-last {
-    border-right: none; }
+    border-inline-end: none; }
 
 .medium-editor-toolbar-form .medium-editor-toolbar-input {
 height: 60px;

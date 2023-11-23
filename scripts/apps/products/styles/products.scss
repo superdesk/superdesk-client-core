@@ -27,12 +27,12 @@
 }
 
 .product-search {
- 	float: left;
+ 	float: inline-start;
    	max-width: 650px;
-   	margin-left: 10px;
+   	margin-inline-start: 10px;
    	input {
    		width: 505px;
-   		float: left;
+   		float: inline-start;
    	}
    	select {
    		width: 100px;

@@ -2,15 +2,15 @@
 @import '~superdesk-ui-framework/app/styles/_variables.scss';
 
 .select-tag__popup {
-    margin-top: 1px;
+    margin-block-start: 1px;
 
     &-list {
         li {
             margin: 5px 0;
         }
     	span, i {
-            float: left;
-            text-align: left;
+            float: inline-start;
+            text-align: start;
         }
 		overflow-y: scroll;
 		overflow-x: hidden;

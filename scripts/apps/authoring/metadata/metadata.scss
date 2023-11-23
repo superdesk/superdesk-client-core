@@ -22,14 +22,14 @@
 
 
 .basic-list {
-    margin-bottom: 20px;
+    margin-block-end: 20px;
     &--dotted {
         .basic-list__item {
-            border-bottom: 1px dotted var(--sd-colour-line--medium);
+            border-block-end: 1px dotted var(--sd-colour-line--medium);
         }
     }
     &--no-margin {
-        margin-bottom: 0;
+        margin-block-end: 0;
     }
     .basic-list__item {
         padding: 1rem 0 0.8rem;
@@ -40,13 +40,13 @@
             flex-direction: column;
             align-items: stretch;
             .basic-list__item-label {
-                padding-bottom: 0.5rem;
+                padding-block-end: 0.5rem;
             }
             .basic-list__item-data {
-                text-align: left;
+                text-align: start;
                 .basic-input {
                     max-width: auto;
-                    text-align: left;
+                    text-align: start;
                 }
             }
         }
@@ -55,7 +55,7 @@
         flex-grow: 0;
         font-size: 11px;
         text-transform: uppercase;
-        padding-right: 1rem;
+        padding-inline-end: 1rem;
         margin: 0;
         color: $sd-text-lighter;
         min-width: 6rem;
@@ -63,17 +63,17 @@
     }
     .basic-list__item-data {
         flex-grow: 1;
-        margin-bottom: 2px;
-        text-align: right;
+        margin-block-end: 2px;
+        text-align: end;
         .basic-input {
             max-width: 160px;
-            text-align: right;
+            text-align: end;
         }
     }
     .state-label {
-        margin-right: 0;
+        margin-inline-end: 0;
         + .state-label {
-            margin-left: 0.5rem;
+            margin-inline-start: 0.5rem;
         }
     }
 }

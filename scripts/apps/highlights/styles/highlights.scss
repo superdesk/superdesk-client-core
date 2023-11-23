@@ -11,9 +11,9 @@
 
 .highlights-config-popup {
     .multi-select {
-        margin-top: 10px;
+        margin-block-start: 10px;
         li {
-            margin-bottom: 5px;
+            margin-block-end: 5px;
             .text {
                 &:hover {
                     cursor: pointer;
@@ -23,7 +23,7 @@
     }
 
     .pills-list {
-        margin-top: 15px;
+        margin-block-start: 15px;
         h6 {
             text-transform: none !important;
         }
@@ -46,7 +46,7 @@
     position: relative;
     .tooltip-inner {
         width: 150px;
-        text-align: left;
+        text-align: start;
         h5 {
             font-size: 11px;
             margin: 0 0 8px;
@@ -54,13 +54,13 @@
         }
         button {
             position: absolute;
-            right: 7px;
+            inset-inline-end: 7px;
             color: #656565;
         }
         li {
             height: 1%;
             overflow: hidden;
-            padding-right: 45px;
+            padding-inline-end: 45px;
         }
     }
     &:hover {

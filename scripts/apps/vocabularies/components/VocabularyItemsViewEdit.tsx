@@ -479,7 +479,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
                                                         {
                                                             field.key === 'name' && (
-                                                                <div style={{paddingTop: 20}}>
+                                                                <div style={{paddingBlockStart: 20}}>
                                                                     <ManageVocabularyItemTranslations
                                                                         item={item}
                                                                         update={(_field, value) => {

@@ -18,10 +18,10 @@
     }
     tbody tr {
         td:not(:first-child):last-child {
-            text-align: right;
+            text-align: end;
         }
         td:first-child {
-            padding-left: 0;
+            padding-inline-start: 0;
         }
     }
     thead tr {
@@ -29,17 +29,17 @@
             font-weight: 500;
             padding: 0.8rem 0.8rem;
             label {
-                margin-bottom: 0;
+                margin-block-end: 0;
             }
             &:first-child {
-                padding-left: 0;
+                padding-inline-start: 0;
             }
         }
     }
 
     tr.add-border-top td {
         padding: 20px;
-        border-top: 2px solid rgba(0, 0, 0, 0.15);
+        border-block-start: 2px solid rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -49,7 +49,7 @@
     label {
         width: 140px;
         display: inline-block;
-        padding-left: 6px;
+        padding-inline-start: 6px;
     }
     input {
         width: 140px;
@@ -65,9 +65,9 @@
 }
 
 .vocabularyStatus {
-    top: 5px;
+    inset-block-start: 5px;
     &.sd-toggle {
-        margin-top: 2px !important;
+        margin-block-start: 2px !important;
     }
 }
 
@@ -89,7 +89,7 @@
     width: 100%;
     box-sizing: border-box;
     padding: 0px 20px;
-    border-bottom: 1px solid #e4e4e4;
+    border-block-end: 1px solid #e4e4e4;
     .long-name {
             width: 310px;
     }
@@ -97,7 +97,7 @@
 .vocabulary-items__wrapper {
     margin: 1rem 0 0;
     h3 {
-        margin-bottom: 0.6rem;
+        margin-block-end: 0.6rem;
         font-size: 1.6rem;
         line-height: 100%;
     }
@@ -111,7 +111,7 @@
     table {
         th {
             position: sticky;
-            top: -20px;
+            inset-block-start: -20px;
             background: #f8f8f8;
             z-index: 1;
         }
@@ -120,7 +120,7 @@
 
 
 .date_shortcuts {
-    margin-top: 2em;
+    margin-block-start: 2em;
     .sd-line-input.date_shortcuts--smaller {
         width: 5%;
     }

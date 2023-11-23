@@ -581,7 +581,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             />
                                         </div>
 
-                                        <div style={{marginLeft: 10, marginTop: 14}}>
+                                        <div style={{marginInlineStart: 10, marginBlockStart: 14}}>
                                             <Button
                                                 type="primary"
                                                 icon="plus-large"

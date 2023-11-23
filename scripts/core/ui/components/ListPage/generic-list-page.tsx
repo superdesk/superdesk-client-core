@@ -514,7 +514,7 @@ export class GenericListPageComponent<T>
                         <div style={{margin: 20}}>
                             {
                                 this.props.disallowPagination || this.props.crudManager._items.length === 0 ? null : (
-                                    <div style={{textAlign: 'center', marginTop: -20}}>
+                                    <div style={{textAlign: 'center', marginBlockStart: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
                                             nextLabel={gettext('next')}
@@ -537,7 +537,7 @@ export class GenericListPageComponent<T>
                                 Object.keys(activeFilters).length < 1 ? null : (
                                     <div
                                         className="subnav"
-                                        style={{background: 'transparent', boxShadow: 'none', marginTop: -20}}
+                                        style={{background: 'transparent', boxShadow: 'none', marginBlockStart: -20}}
                                         data-test-id="list-page--filters-active"
                                     >
                                         {

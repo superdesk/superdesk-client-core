@@ -42,7 +42,7 @@ export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
             />
             {
                 articleDisplayWidgets.length < 1 ? null : (
-                    <div style={{marginTop: 12, display: 'flex'}} className="sibling-spacer-10">
+                    <div style={{marginBlockStart: 12, display: 'flex'}} className="sibling-spacer-10">
                         {
                             articleDisplayWidgets.map((Component, i) =>
                                 <Component key={i} article={item} />,
