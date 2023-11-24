@@ -3,7 +3,7 @@ import {Carousel} from '@superdesk/primereact/carousel';
 // import '../../src/ui/thumb-carousel.css';
 
 interface IState {
-    height?: number
+    height?: number;
 }
 
 export class CarouselAsd extends React.PureComponent<any, IState> {
