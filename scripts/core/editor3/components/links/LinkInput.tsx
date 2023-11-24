@@ -190,6 +190,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                     <input
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
+                                e.preventDefault();
                                 this.onSubmit(linkTypes.href);
                             }
                         }}
