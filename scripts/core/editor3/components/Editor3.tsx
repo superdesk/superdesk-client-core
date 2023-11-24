@@ -17,7 +17,6 @@ export class Editor3Base extends React.Component<any, any> {
         }
     }
 
-
     render() {
         return (
             <MultipleHighlights {...this.props}>
