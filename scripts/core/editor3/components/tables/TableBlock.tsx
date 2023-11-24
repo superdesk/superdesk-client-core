@@ -171,7 +171,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                                         onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onRedo={this.onRedo.bind(this)}
-                                        onFocus={this.onFocus.bind(this, i, j)}
+                                        onFocus={(styles, selection) => this.onFocus(i, j, styles, selection)}
                                     />
                                 ),
                                 )}

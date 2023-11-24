@@ -11,6 +11,12 @@ export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
+    componentDidCatch(error: Error) {
+        if (error.message.includes('Node.removeChild')) {
+            this.forceUpdate();
+        }
+    }
+
     render() {
         return (
             <MultipleHighlights {...this.props}>
