@@ -1,12 +1,15 @@
 import * as React from 'react';
-import {Carousel} from '@superdesk/primereact/carousel';
-// import '../../src/ui/thumb-carousel.css';
+import {Carousel as PRCarousel} from '@superdesk/primereact/carousel';
 
 interface IState {
     height?: number;
 }
 
-export class CarouselAsd extends React.PureComponent<any, IState> {
+interface IProps {
+    images: Array<{src: string, alt?: string}>;
+}
+
+export class Carousel extends React.PureComponent<IProps, IState> {
     private el?: HTMLDivElement;
 
     constructor(props: any) {
@@ -50,7 +53,7 @@ export class CarouselAsd extends React.PureComponent<any, IState> {
                     this.el = element as HTMLDivElement;
                 }}
             >
-                <Carousel
+                <PRCarousel
                     numScroll={1}
                     numVisible={1}
                     orientation="horizontal"
