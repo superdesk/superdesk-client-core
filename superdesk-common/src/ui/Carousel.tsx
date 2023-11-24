@@ -4,15 +4,16 @@ import {Carousel as PRCarousel} from '@superdesk/primereact/carousel';
 interface IState {
     height?: number;
 }
+type IImage = {src: string, alt?: string};
 
 interface IProps {
-    images: Array<{src: string, alt?: string}>;
+    images: Array<IImage>;
 }
 
 export class Carousel extends React.PureComponent<IProps, IState> {
     private el?: HTMLDivElement;
 
-    constructor(props: any) {
+    constructor(props: IProps) {
         super(props);
 
         this.state = {
@@ -27,7 +28,7 @@ export class Carousel extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const productTemplate = (image: any) => {
+        const imageTemplate = (image: IImage) => {
             return (
                 <div
                     className="sd-thumb-carousel__item"
@@ -58,7 +59,7 @@ export class Carousel extends React.PureComponent<IProps, IState> {
                     numVisible={1}
                     orientation="horizontal"
                     indicatorsContentClassName="sd-thumb-carousel__indicators"
-                    itemTemplate={productTemplate}
+                    itemTemplate={imageTemplate}
                     value={this.props.images}
                 />
             </div>

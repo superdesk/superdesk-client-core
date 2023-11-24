@@ -256,6 +256,9 @@
 	pointer-events: none;
 }
 
+/* 51px is the size of the button,
+this is set to prevent the buttons from going
+over the images */
 .sd-thumb-carousel__btn--prev,
 .p-carousel-prev {
 	margin-right: -51px;
