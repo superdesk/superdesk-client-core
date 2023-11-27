@@ -18,7 +18,6 @@
     "prepublish": "rm -rf dist && npm run build && npm run test"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
     "@types/enzyme-adapter-react-16": "1.0.6",
     "@types/mocha": "9.1.1",
     "@types/react": "16.8.23",
