@@ -47,7 +47,10 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
                     fetchedItems: res?._items ?? this.state.fetchedItems,
                     loading: false,
                 });
+                console.log('fetched items', this.state.fetchedItems)
             }
+        }).catch((err) => {
+            console.log('error fetching items', err)
         });
     }
 
@@ -63,15 +66,18 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
 
     fetchSelected() {
         if (this.props.selected != null) {
+            console.log('fetching selected item')
             this.props.queryById(this.props.selected).then((selectedItem) => {
                 this.setState({selectedItem, loading: false});
+                console.log('selected item fetched', selectedItem)
             });
         }
     }
 
     render() {
+        // The keyBy is transforming an array of objects into an object, where the key for each value in the resulting object is based on the _id property of each object in the array.
         const keyedItems: {[key: string]: T} = keyBy(this.state.fetchedItems, (item) => item._id);
-
+        console.log('keyedItems', keyedItems)
         return (
             <Select2
                 autoFocus={this.props.autoFocus}

@@ -41,8 +41,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
     const result: IServerResponse = {};
 
     getServerResponseKeys().forEach((key) => {
-        const values = (article[key] ?? []).filter((tag) => tag.source === SOURCE_IMATRICS);
-
+        const values = article[key] ?? [];
+        console.log('Values:', values);
         if (key === 'subject') {
             if (values.length > 0) {
                 result[key] = values.map((subjectItem) => {

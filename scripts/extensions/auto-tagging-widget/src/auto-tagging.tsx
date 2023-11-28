@@ -13,7 +13,6 @@ import {SOURCE_IMATRICS} from './constants';
 import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
-import {noop} from 'lodash';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -54,6 +53,7 @@ interface IState {
     data: 'not-initialized' | 'loading' | IEditableData;
     newItem: INewItem | null;
     vocabularyLabels: Map<string, string> | null;
+    tentativeTagName: string;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -69,7 +69,7 @@ export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
 
-    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+    const isEntity = (tag: ITagUi) => tag.group && entityGroups.has(tag.group.value);
 
     const entities = items.filter((tag) => isEntity(tag));
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
@@ -172,6 +172,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 newItem: null,
                 runAutomaticallyPreference: 'loading',
                 vocabularyLabels: null,
+                tentativeTagName: '',
             };
 
             this._mounted = false;
@@ -196,8 +197,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
 
             this.setState({data: 'loading'}, () => {
-                const {guid, language, headline, body_html, abstract} = this.props.article;
-                console.log('runAnalysis POST body:', {headline, body_html, abstract});
+                const {guid, language, headline, body_html, abstract, slugline} = this.props.article;
+                console.log('runAnalysis POST body:', {headline, body_html, abstract, slugline});
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
@@ -207,6 +208,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         item: {
                             guid,
                             language,
+                            slugline,
                             headline,
                             body_html,
                             abstract,
@@ -217,37 +219,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     const json_response = res.analysis;
 
                     console.log('runAnalysis getting json_response:', json_response);
-
-                    const tagEntries = [
-                        ...Object.entries(json_response.subject || {}),
-                        ...Object.entries(json_response.organisation || {}),
-                        ...Object.entries(json_response.person || {}),
-                        ...Object.entries(json_response.event || {}),
-                        ...Object.entries(json_response.place || {}),
-                        ...Object.entries(json_response.object || {}),
-                    ];
-                    
-
-                    const tags = OrderedMap<string, ITagUi>(tagEntries);
-                    const france = OrderedMap<string, ITagUi>();
-
-                    console.log('France:', france);
-
-                    
-                    
-                    if (this._mounted) {
-                       
-                        console.log('3... Before setState - tags:', tags);
+                    const resClient = toClientFormat(res.analysis);
+                        
+                    if (this._mounted) {                        
                         
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                    ? {analysis: OrderedMap<string, ITagUi>(tagEntries)} // initialize empty data
+                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: tags},
+                                changes: {analysis: resClient},
                             },
                         });
-                        console.log('runAnalysis result:', tags);
                     }
                 }).catch((error) => {
                     console.error('Error during analysis. We are in runAnalysis:  ',error);   
@@ -267,7 +250,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
-        
                     this.setState({
                         data: { original: { analysis: resClient }, changes: { analysis: resClient } },
                     });
@@ -522,15 +504,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                             {
                                 data === 'loading' || data === 'not-initialized' ? null : (
-                                    <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
-                                        <div style={{flexGrow: 1}}>
-                                            <Autocomplete
-                                                value={''}
-                                                keyValue="keyValue"
-                                                items={[]}
-                                                search={(searchString, callback) => {
-                                                    let cancelled = false;
-
+                                    <>
+                                        <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
+                                            <div style={{flexGrow: 1}}>
+                                                <Autocomplete
+                                                    value={this.state.tentativeTagName}
+                                                    keyValue="keyValue"
+                                                    items={[]}
+                                                    search={(searchString, callback) => {
+                                                        let cancelled = false;
+                                                        // Assume searchString is the term you want to search for and is already defined.
+                                                        
                                                     httpRequestJsonLocal<IAutoTaggingSearchResult>({
                                                         method: 'POST',
                                                         path: '/ai_data_op/',
@@ -544,87 +528,99 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             const result = toClientFormat(res.result.tags).toArray();
 
                                                             const withoutExistingTags = result.filter(
-                                                                (searchTag) => tagAlreadyExists(
-                                                                    data,
-                                                                    searchTag.qcode,
-                                                                ) !== true,
+                                                              (searchTag) => !tagAlreadyExists(data, searchTag.qcode)
                                                             );
+                                                            
+                                                            const withResponse = withoutExistingTags.map((tag) => ({
+                                                              keyValue: tag.name, // required for Autocomplete component
+                                                              tag,
+                                                              entireResponse: data, // required to get all parents when an item is selected
+                                                            }));
+                                                        
+                                                            callback(withResponse); // Assuming 'callback' is a function that takes the processed data
+                                                          }
+                                                        })
+                                                        .catch(error => {
+                                                          console.error('Error during fetch request:', error);
+                                                          // Handle the error, for example, by calling an error callback
+                                                        });
 
-                                                            const withResponse = withoutExistingTags.map(
-                                                                (tag) => ({
-                                                                    // required for Autocomplete component
-                                                                    keyValue: tag.name,
 
-                                                                    tag,
+                                                        return {
+                                                            cancel: () => {
+                                                                cancelled = true;
+                                                            },
+                                                        };
+                                                    }}
+                                                    listItemTemplate={(__item: any) => {
+                                                        const _item: ITagUi = __item.tag;
 
-                                                                    // required to be able to
-                                                                    // get all parents when an item is selected
-                                                                    entireResponse: res,
-                                                                }),
-                                                            );
+                                                        return (
+                                                            <div className="auto-tagging-widget__autocomplete-item">
+                                                                <b>{_item.name}</b>
 
-                                                            callback(withResponse);
-                                                        }
-                                                    });
+                                                                {
+                                                                    _item?.group?.value == null ? null : (
+                                                                        <p>{_item.group.value}</p>
+                                                                    )
+                                                                }
 
-                                                    return {
-                                                        cancel: () => {
-                                                            cancelled = true;
-                                                        },
-                                                    };
-                                                }}
-                                                listItemTemplate={(__item: any) => {
-                                                    const _item: ITagUi = __item.tag;
+                                                                {
+                                                                    _item?.description == null ? null : (
+                                                                        <p>{_item.description}</p>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        );
+                                                    }}
+                                                    onSelect={(_value: any) => {
+                                                        const tag: ITagUi = _value.tag;
+                                                        const entireResponse: IAutoTaggingSearchResult =
+                                                            _value.entireResponse;
 
-                                                    return (
-                                                        <div className="auto-tagging-widget__autocomplete-item">
-                                                            <b>{_item.name}</b>
+                                                        this.insertTagFromSearch(tag, data, entireResponse);
+                                                        // TODO: clear autocomplete?
+                                                    }}
+                                                    onChange={(value) => this.setState({ tentativeTagName: value })}
+                                                />
+                                            </div>
 
-                                                            {
-                                                                _item?.group?.value == null ? null : (
-                                                                    <p>{_item.group.value}</p>
-                                                                )
-                                                            }
-
-                                                            {
-                                                                _item?.description == null ? null : (
-                                                                    <p>{_item.description}</p>
-                                                                )
-                                                            }
-                                                        </div>
-                                                    );
-                                                }}
-                                                onSelect={(_value: any) => {
-                                                    const tag: ITagUi = _value.tag;
-                                                    const entireResponse: IAutoTaggingSearchResult =
-                                                        _value.entireResponse;
-
-                                                    this.insertTagFromSearch(tag, data, entireResponse);
-                                                    // TODO: clear autocomplete?
-                                                }}
-                                                onChange={noop}
-                                            />
+                                            {/* <div style={{marginLeft: 10, marginTop: 14}}>
+                                                <Button
+                                                    type="primary"
+                                                    icon="plus-large"
+                                                    size="small"
+                                                    shape="round"
+                                                    text={gettext('Add')}
+                                                    iconOnly={true}
+                                                    disabled={readOnly}
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            newItem: {
+                                                                name: '',
+                                                            },
+                                                        });
+                                                    }}
+                                                />
+                                            </div> */}
                                         </div>
-
-                                        <div style={{marginLeft: 10, marginTop: 14}}>
+                                        <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <Button
                                                 type="primary"
-                                                icon="plus-large"
                                                 size="small"
                                                 shape="round"
-                                                text={gettext('Add')}
-                                                iconOnly={true}
+                                                text={gettext('Add a new tag')}
                                                 disabled={readOnly}
                                                 onClick={() => {
                                                     this.setState({
                                                         newItem: {
-                                                            name: '',
+                                                            name: this.state.tentativeTagName,
                                                         },
+                                                        tentativeTagName: '', // Clear the input field after setting the newItem
                                                     });
-                                                }}
-                                            />
+                                                }}/>
                                         </div>
-                                    </div>
+                                    </>
                                 )
                             }
                         </div>

@@ -114,7 +114,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 doSearch();
             }
         };
-
+        // throttle is used to prevent multiple requests when user types fast
         this.search = throttle(searchFn, 300, {leading: false});
 
         this.handleClosing = (e: Event) => {
@@ -135,6 +135,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     componentWillUnmount() {
         window.removeEventListener('scroll', this.handleClosing, true);
     }
+
+    handleCustomAction = () => {
+        // Define what should happen when the button is clicked
+        console.log('Custom action triggered');
+    };
 
     render() {
         return (
@@ -184,15 +189,27 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 ? {display: 'none'}
                                 : {};
 
+                        let menuContent;
+                        const hasItems = items && items.length > 0;
+                        const noItemsMatch = this.state.search && !hasItems;
+                    
+                        if (this.props.loading) {
+                            menuContent = <div style={{ padding: 10 }}>{gettext('Loading...')}</div>;
+                        } else if (noItemsMatch) {
+                            // Render custom div with button when no items match the search
+                            menuContent = (
+                                <div style={{ padding: 10 }}>
+                                    {gettext('No matching items.')}
+                                    <button onClick={this.handleCustomAction}>Custom Action</button>
+                                </div>
+                            );
+                        } else {
+                            menuContent = items.length < 1 ? <div style={{ padding: 10 }}>{gettext('No items found.')}</div> : items;
+                        }
+                    
                         return (
-                            <div style={{...style, ...menuStyle, ...hideOptions, maxHeight: this.state.maxHeight}}>
-                                {
-                                    this.props.loading === true
-                                        ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
-                                        : items.length < 1
-                                        ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
-                                        : items
-                                }
+                            <div style={{ ...style, ...menuStyle, ...hideOptions, maxHeight: this.state.maxHeight }}>
+                                {menuContent}
                             </div>
                         );
                     }}

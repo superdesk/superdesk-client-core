@@ -27,6 +27,15 @@ export interface IServerResponse {
     object?: Array<ITagBase>;
 }
 
+export interface IServerAlterResponse {
+    name: string;
+    id: string;
+    classes: Array<string>;
+    facets: Array<Object>;
+    values: Array<Object>;
+
+}
+
 export function getServerResponseKeys(): Array<keyof IServerResponse> {
     var obj: Required<IServerResponse> = {
         subject: [],
@@ -39,7 +48,63 @@ export function getServerResponseKeys(): Array<keyof IServerResponse> {
 
     return Object.keys(obj) as Array<keyof IServerResponse>;
 }
+// export function toClientFormat2(data: IServerAlterResponse): OrderedMap<string, ITagUi> {
+//     console.log('Received Server Response:', response);
+//     let tags = OrderedMap<string, ITagUi>();
+    
+//     data.forEach((item) => {
+//         if (item == null) {
+//             throw new Error('Can not be nulish.');
+//         }
 
+//         const tag: ITagUi = {
+//             name,
+//             description,
+//             qcode,
+//             source,
+//             altids,
+//             aliases,
+//             original_source,
+//             scheme,
+//             group: {
+//                 kind: 'visual',
+//                 value: group,
+//             },
+//         };
+//         if (tags.has(tag.name)) {
+//             console.log('Tags already has a tag with same name:', tag);
+//         }else {
+//             tags = tags.set(tag.name, tag);
+//             console.log('Generated Group Tag:', tag);
+//         }
+
+//         const {name, id, classes, facets, values} = item;
+//         const others: Array<{group: string; items: Array<ITagBase>}> = [];
+
+//         if (response.organisation != null) {
+//             others.push({group: 'organisation', items: response.organisation});
+//         }
+    
+//         if (response.person != null) {
+//             others.push({group: 'person', items: response.person});
+//         }
+    
+//         if (response.event != null) {
+//             others.push({group: 'event', items: response.event});
+//         }
+    
+//         if (response.place != null) {
+//             others.push({group: 'place', items: response.place});
+//         }
+    
+//         if (response.object != null) {
+//             others.push({group: 'object', items: response.object});
+//         }
+    
+//     })
+//     console.log('Generated Tags:', tags);
+//     return tags;  
+// }
 export function toClientFormat(response: IServerResponse): OrderedMap<string, ITagUi> {
     console.log('Received Server Response:', response);
     let tags = OrderedMap<string, ITagUi>();
@@ -49,14 +114,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         console.log('Subject Item:', item);
         const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
-        console.log('Name:', name);
-        console.log('Description:', description);
-        console.log('QCode:', qcode);
-        console.log('Source:', source);
-        console.log('Altids:', altids);
-        console.log('Aliases:', aliases);
-        console.log('Original Source:', original_source);
-        console.log('Parent:', parent);
 
         const tag: ITagUi = {
             name,
@@ -103,14 +160,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         items.forEach((item) => {
             const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
             
-            console.log('Name:', name);
-            console.log('Description:', description);
-            console.log('QCode:', qcode);
-            console.log('Source:', source);
-            console.log('Altids:', altids);
-            console.log('Aliases:', aliases);
-            console.log('Original Source:', original_source);
-            console.log('Scheme:', scheme);
 
             const tag: ITagUi = {
                 name,
@@ -126,12 +175,14 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
                     value: group,
                 },
             };
-
-            tags = tags.set(tag.qcode, tag);
-            console.log('Generated Group Tag:', tag);
+            if (tags.has(tag.name)) {
+                console.log('Tags already has a tag with same name:', tag);
+            }else {
+                tags = tags.set(tag.name, tag);
+                console.log('Generated Group Tag:', tag);
+            }
         });
     });
-    console.log('Server Response:', response);
     console.log('Generated Tags:', tags);
     return tags;
 }
