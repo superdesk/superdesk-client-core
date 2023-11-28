@@ -1,3 +1,4 @@
+import {CustomEditor3Entity} from 'core/editor3/constants';
 import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
@@ -57,7 +58,7 @@ describe('editor3.reducers', () => {
         const entityKey = contentState.getLastCreatedEntityKey();
         const entity = contentState.getEntity(entityKey);
 
-        expect(entity.getType()).toBe('MEDIA');
+        expect(entity.getType()).toBe(CustomEditor3Entity.MEDIA);
         expect(entity.getMutability()).toBe('MUTABLE');
         expect(entity.getData()).toEqual({media: {a: 1}});
     });

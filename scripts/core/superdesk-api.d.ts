@@ -1988,9 +1988,11 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsCard {
+        width?: import('react').CSSProperties['width'];
         background?: import('react').CSSProperties['background'];
         padding?: import('react').CSSProperties['padding'];
         borderRadius?: import('react').CSSProperties['borderRadius'];
+        heading?: React.ReactNode;
     }
 
     export interface IPropsListItemColumn {

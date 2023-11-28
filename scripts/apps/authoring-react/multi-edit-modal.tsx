@@ -1,6 +1,6 @@
 import {sdApi} from 'api';
 import {Spacer} from 'core/ui/components/Spacer';
-import {getItemLabel, gettext} from 'core/utils';
+import {getArticleLabel, gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
 import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework/react';
@@ -73,7 +73,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                         availableArticles.map((article) => {
                             const leaf: IMenuItem = {
                                 onClick: () => this.switchTo(item._id, article._id),
-                                label: getItemLabel(article),
+                                label: getArticleLabel(article),
                             };
 
                             return leaf;
@@ -256,7 +256,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                     items={availableArticles.map((a) => {
                                         const leaf: IMenuItem = {
                                             onClick: () => this.add(a._id),
-                                            label: getItemLabel(a),
+                                            label: getArticleLabel(a),
                                         };
 
                                         return leaf;

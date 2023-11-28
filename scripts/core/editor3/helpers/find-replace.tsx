@@ -1,6 +1,7 @@
 import {Modifier, EditorState, EditorChangeType, SelectionState, ContentState} from 'draft-js';
 import {getData, setDataForContent, getCell, setCell} from './table';
 import {escapeRegExp} from 'core/utils';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @name clearHighlights
@@ -59,7 +60,7 @@ export const forEachBlock = (content, cb) => {
 
         let blockIndex = -1;
 
-        if (entity != null && entity.getType() === 'TABLE') {
+        if (entity != null && entity.getType() === CustomEditor3Entity.TABLE) {
             ({newContent, blockIndex} = forEachBlockInTable(newContent, block, blockIndex, cb));
         } else {
             newContent = cb(++blockIndex, block, newContent);

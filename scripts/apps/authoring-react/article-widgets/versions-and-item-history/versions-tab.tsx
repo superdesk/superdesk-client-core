@@ -7,7 +7,7 @@ import {
     IDesk,
     IStage,
 } from 'superdesk-api';
-import {gettext, getItemLabel} from 'core/utils';
+import {gettext, getArticleLabel} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Card} from 'core/ui/components/Card';
 import {TimeElem} from 'apps/search/components';
@@ -218,7 +218,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                 <SpacerBlock v gap="8" />
 
                                 <div>
-                                    <strong>{getItemLabel(item)}</strong>
+                                    <strong>{getArticleLabel(item)}</strong>
                                 </div>
 
                                 <SpacerBlock v gap="8" />

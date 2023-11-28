@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {Editor3Component} from './Editor3Component';
@@ -8,7 +7,6 @@ import * as actions from '../actions';
 import {EditorState} from 'draft-js';
 
 export class Editor3Base extends React.Component<any, any> {
-    static propTypes: any;
     static defaultProps: any;
 
     render() {
@@ -19,10 +17,6 @@ export class Editor3Base extends React.Component<any, any> {
         );
     }
 }
-
-Editor3Base.propTypes = Editor3Component.propTypes = {
-    onChange: PropTypes.func,
-};
 
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,

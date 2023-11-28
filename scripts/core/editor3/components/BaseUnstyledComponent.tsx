@@ -1,11 +1,15 @@
 import React from 'react';
 
-import {getValidMediaType, canDropMedia, dragEventShouldShowDropZone} from './Editor3Component';
+import {
+    getValidMediaType,
+    canDropMedia,
+    dragEventShouldShowDropZone,
+} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
-import {EDITOR_BLOCK_TYPE} from '../constants';
+import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
@@ -69,12 +73,17 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
         let handled = false;
         const block = getEditorBlock(event);
 
-        if (typeof block === 'string' && block.length > 0) {
+        const {dataTransfer} = event.originalEvent;
+
+        if (dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
+            // handle article embeds
+            this.props.dispatch(dragDrop(dataTransfer, MIME_TYPE_SUPERDESK_TEXT_ITEM, this.getDropBlockKey()));
+            handled = true;
+        } else if (typeof block === 'string' && block.length > 0) {
             // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
             handled = true;
         } else {
-            const {dataTransfer} = event.originalEvent;
             const mediaType = getValidMediaType(event.originalEvent);
             const blockKey = this.getDropBlockKey();
             const link = event.originalEvent.dataTransfer.getData('URL');

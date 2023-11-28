@@ -12,6 +12,7 @@ import {
 } from 'draft-js';
 
 import insertAtomicBlockWithoutEmptyLines from '../../helpers/insertAtomicBlockWithoutEmptyLines';
+import {CustomEditor3Entity} from 'core/editor3/constants';
 
 /**
  * @name mockStore
@@ -69,7 +70,7 @@ export function stateWithLink() {
  * @returns {Object} Keys 'block' and 'contentState'
  */
 export function imageBlockAndContent() {
-    return createBlockAndContent('MEDIA', {
+    return createBlockAndContent(CustomEditor3Entity.MEDIA, {
         media: {
             _type: 'archive', // make sure edit icon is visible
             renditions: {original: {href: 'image_href'}},
@@ -88,7 +89,7 @@ export function imageBlockAndContent() {
  * @param {Object} data Entity data
  * @returns {Object} Keys 'block' and 'contentState'
  */
-export function createBlockAndContent(type, data) {
+export function createBlockAndContent(type: CustomEditor3Entity, data) {
     const cs = ContentState.createFromText('here is an image:');
     const contentState = cs.createEntity(type, 'MUTABLE', data);
     const entityKey = contentState.getLastCreatedEntityKey();
@@ -105,7 +106,7 @@ export function createBlockAndContent(type, data) {
  * @returns {Object} Keys 'block' and 'contentState'
  */
 export function embedBlockAndContent() {
-    return createBlockAndContent('EMBED', {
+    return createBlockAndContent(CustomEditor3Entity.EMBED, {
         data: {
             html: '<h1>Embed Title</h1>',
         },
@@ -149,7 +150,7 @@ export function blocksWithText(list) {
 export function tableBlockAndContent(cells?) {
     const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
 
-    return createBlockAndContent('TABLE', {
+    return createBlockAndContent(CustomEditor3Entity.TABLE, {
         data: {
             numCols: 3,
             numRows: 2,

@@ -2,6 +2,7 @@ import {RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {getCell, setCell, getData, setData, IEditor3TableData} from '../helpers/table';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @description Contains the list of table related reducers.
@@ -37,7 +38,7 @@ const table = (state = {}, action) => {
  */
 const addTable = (state, data) => {
     const contentState = state.editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('TABLE', 'MUTABLE', {data});
+    const contentStateWithEntity = contentState.createEntity(CustomEditor3Entity.TABLE, 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     const {editorState} = insertAtomicBlockWithoutEmptyLines(

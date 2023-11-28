@@ -32,7 +32,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE} from '../constants';
+import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
@@ -46,6 +46,7 @@ const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
+    MIME_TYPE_SUPERDESK_TEXT_ITEM,
 ];
 
 const VALID_MEDIA_TYPES = [

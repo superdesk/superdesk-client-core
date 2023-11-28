@@ -10,7 +10,7 @@ import {
 } from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {notify} from 'core/notify/notify';
-import {gettext, getItemLabel} from 'core/utils';
+import {gettext, getArticleLabel} from 'core/utils';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {toElasticQuery} from 'core/query-formatting';
 import {showModal} from '@superdesk/common';
@@ -114,7 +114,7 @@ function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
                                                             'The package "{{name}}" contains the following '
                                                             + 'published items that can not be sent:',
                                                             {
-                                                                name: getItemLabel(_package),
+                                                                name: getArticleLabel(_package),
                                                             },
                                                         )
                                                     }
@@ -122,7 +122,7 @@ function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
 
                                                 <UnorderedList
                                                     items={withPublishedItems[0].publishedPackageItems.map(
-                                                        (item) => getItemLabel(item),
+                                                        (item) => getArticleLabel(item),
                                                     )}
                                                 />
                                             </div>
@@ -144,11 +144,11 @@ function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
                                                 {
                                                     withPublishedItems.map(({_package, publishedPackageItems}) => (
                                                         <div key={_package._id}>
-                                                            <h3>{getItemLabel(_package)}</h3>
+                                                            <h3>{getArticleLabel(_package)}</h3>
 
                                                             <UnorderedList
                                                                 items={publishedPackageItems.map(
-                                                                    (item) => getItemLabel(item),
+                                                                    (item) => getArticleLabel(item),
                                                                 )}
                                                             />
                                                         </div>

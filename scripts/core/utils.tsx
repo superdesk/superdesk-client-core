@@ -348,7 +348,7 @@ export function fromServerDateFormat(date: string): Date {
     return new Date(date.slice(0, 19));
 }
 
-export function getItemLabel(item: IArticle): string {
+export function getArticleLabel(item: IArticle): string {
     const headlineTrimmed = item.headline?.trim();
     const sluglineTrimmed = item.slugline?.trim();
 

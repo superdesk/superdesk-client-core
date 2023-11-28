@@ -8,6 +8,7 @@ import {AtomicBlockParser} from '../to-html';
 import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
 import {getInitialContent} from 'core/editor3/store';
 import {editor3StateToHtml} from '../to-html/editor3StateToHtml';
+import {CustomEditor3Entity} from 'core/editor3/constants';
 
 describe('core.editor3.html.to-html snapshots', () => {
     it('converts a sentence without formatting', () => {
@@ -340,7 +341,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
     });
 
     it('should correctly parse images without alt and description', () => {
-        const {block, contentState} = testUtils.createBlockAndContent('MEDIA', {
+        const {block, contentState} = testUtils.createBlockAndContent(CustomEditor3Entity.MEDIA, {
             media: {renditions: {original: {href: 'image_href'}}},
         });
 
@@ -357,7 +358,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
     it('should correctly parse tables', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
-        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+        const {contentState, block} = testUtils.createBlockAndContent(CustomEditor3Entity.TABLE, {
             data: {
                 numCols: 3,
                 numRows: 2,
@@ -376,7 +377,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
     it('should correctly parse single row tables', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
-        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+        const {contentState, block} = testUtils.createBlockAndContent(CustomEditor3Entity.TABLE, {
             data: {
                 numCols: 3,
                 numRows: 1,
@@ -391,7 +392,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
     it('should correctly parse tables with headers', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
-        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+        const {contentState, block} = testUtils.createBlockAndContent(CustomEditor3Entity.TABLE, {
             data: {
                 numCols: 3,
                 numRows: 3,
@@ -413,7 +414,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
     it('should correctly parse single row tables with headers', () => {
         const cs = (txt) => convertToRaw(ContentState.createFromText(txt));
-        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+        const {contentState, block} = testUtils.createBlockAndContent(CustomEditor3Entity.TABLE, {
             data: {
                 numCols: 3,
                 numRows: 1,
@@ -428,7 +429,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
     });
 
     it('should correctly parse empty tables', () => {
-        const {contentState, block} = testUtils.createBlockAndContent('TABLE', {
+        const {contentState, block} = testUtils.createBlockAndContent(CustomEditor3Entity.TABLE, {
             data: {
                 numCols: 3,
                 numRows: 2,
