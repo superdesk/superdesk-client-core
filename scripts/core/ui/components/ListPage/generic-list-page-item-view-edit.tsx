@@ -68,12 +68,15 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
     }
+
     componentDidMount() {
         this._mounted = true;
     }
+
     componentWillUnmount() {
         this._mounted = false;
     }
+
     enableEditMode() {
         this.setState({
             nextItem: this.props.item,
@@ -81,6 +84,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             this.props.onEditModeChange(true);
         });
     }
+
     handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
         this.setState((prevState) => ({
@@ -91,6 +95,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             },
         }));
     }
+
     handleCancel() {
         const cancelFn = typeof this.props.onCancel === 'function'
             ? this.props.onCancel
@@ -109,9 +114,11 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             // do nothing
             });
     }
+
     isFormDirty() {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
+
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
@@ -159,7 +166,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                 this.setState({
                     issues: {},
                 }, () => {
-                    this.props.onEditModeChange(false);
+                    this.props.onEditModeChange(true);
                 });
             }
         })
