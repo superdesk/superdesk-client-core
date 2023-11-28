@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Carousel as PRCarousel} from '@superdesk/primereact/carousel';
+import {Carousel as PRCarousel} from 'primereact/carousel';
 
 interface IState {
     height?: number;
