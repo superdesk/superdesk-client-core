@@ -26,7 +26,7 @@ function bundle(): Promise<void> {
     ).then((result) => {
         const bundledStr: string = result.map(({file, contents}) => `/** ${file} */\n${contents}`).join('\n\n\n');
 
-        fs.writeFileSync('./dist/index.css', bundledStr, 'utf-8');
+        fs.writeFileSync('./dist/src/index.css', bundledStr, 'utf-8');
 
         console.info('CSS bundling finished\n');
     });
