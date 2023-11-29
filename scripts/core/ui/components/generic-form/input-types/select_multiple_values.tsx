@@ -55,7 +55,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     onChange={(item) => {
                         this.props.onChange(item.map(({id}) => id));
                     }}
-                    value={items.filter(({id}) => this.props.value.includes(id))}
+                    value={items.filter(({id}) => this.props.value?.includes(id) ?? [])}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
                     inlineLabel
