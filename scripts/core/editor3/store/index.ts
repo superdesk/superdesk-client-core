@@ -38,7 +38,7 @@ import {appConfig} from 'appConfig';
 import {
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {RICH_FORMATTING_OPTION, IActiveCell, IArticle} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IActiveCell, IArticle, IDesk} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -61,6 +61,7 @@ interface IProps {
     tabindex?: any;
     showTitle?: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    allowEmbedsFromDesks?: Array<IDesk['_id']>;
     item?: any;
     svc?: any;
     trim?: any;
@@ -83,6 +84,7 @@ export interface IEditorStore {
     activeCell?: IActiveCell;
     customToolbarStyle?: 'table' | 'multiLineQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
+    allowEmbedsFromDesks: Array<IDesk['_id']>;
     onChangeValue: any;
     item: any;
     spellchecking: {
@@ -213,6 +215,7 @@ export default function createEditorStore(
             showTitle: props.showTitle,
             activeCell: null, // currently focused table cell
             editorFormat: props.editorFormat || [],
+            allowEmbedsFromDesks: props.allowEmbedsFromDesks,
             onChangeValue: onChangeValue,
             item: props.item,
             spellchecking: getInitialSpellcheckerData(spellcheck, props.language),

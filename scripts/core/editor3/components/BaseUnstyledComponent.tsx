@@ -10,6 +10,9 @@ import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {IArticle} from 'superdesk-api';
+import {notify} from 'core/notify/notify';
+import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
@@ -76,8 +79,15 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
         const {dataTransfer} = event.originalEvent;
 
         if (dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
-            // handle article embeds
-            this.props.dispatch(dragDrop(dataTransfer, MIME_TYPE_SUPERDESK_TEXT_ITEM, this.getDropBlockKey()));
+            const item: IArticle = JSON.parse(dataTransfer.getData(MIME_TYPE_SUPERDESK_TEXT_ITEM));
+            const validation = canAddArticleEmbed(item, this.props.editorProps);
+
+            if (validation.ok === true) {
+                this.props.dispatch(dragDrop(dataTransfer, MIME_TYPE_SUPERDESK_TEXT_ITEM, this.getDropBlockKey()));
+            } else {
+                notify.error(validation.error);
+            }
+
             handled = true;
         } else if (typeof block === 'string' && block.length > 0) {
             // existing media item dropped to another place

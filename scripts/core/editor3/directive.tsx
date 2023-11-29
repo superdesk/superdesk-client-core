@@ -12,7 +12,7 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IDesk, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
@@ -58,6 +58,7 @@ class Editor3Directive {
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    allowEmbedsFromDesks?: Array<IDesk['_id']>;
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
 
@@ -95,6 +96,8 @@ class Editor3Directive {
              * in the toolbar.
              */
             editorFormat: '=?',
+
+            allowEmbedsFromDesks: '=?',
 
             /**
              * @type {Object}

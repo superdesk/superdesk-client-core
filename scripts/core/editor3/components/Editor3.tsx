@@ -24,6 +24,7 @@ const mapStateToProps = (state) => ({
     editorState: state.editorState,
     locked: state.locked,
     editorFormat: state.editorFormat,
+    allowEmbedsFromDesks: state.allowEmbedsFromDesks,
     tabindex: state.tabindex,
     suggestingMode: state.suggestingMode,
     spellchecking: state.spellchecking,

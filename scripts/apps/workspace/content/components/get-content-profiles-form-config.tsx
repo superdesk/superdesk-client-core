@@ -11,6 +11,7 @@ import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {sdApi} from 'api';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
@@ -30,7 +31,7 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
         'h1': gettext('h1'),
         'h2': gettext('h2'),
@@ -59,6 +60,7 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'comments': gettext('comments'),
         'suggestions': gettext('suggestions'),
         'embed': gettext('embed'),
+        'embed articles': gettext('embed articles'),
         'tab': gettext('tab'),
         'tab as spaces': gettext('tab as space'),
         'undo': gettext('undo'),
@@ -258,6 +260,22 @@ export function getContentProfileFormConfig(
         };
 
         fields.push(formattingOptionsEditor3Field);
+
+        const embedArticlesFormattingOption: RICH_FORMATTING_OPTION = 'embed articles';
+
+        if ((editor[field.id]?.formatOptions ?? []).includes(embedArticlesFormattingOption)) {
+            const allowEmbedsFromDesksField: IFormField = {
+                label: gettext('Allow embeds from desks'),
+                type: FormFieldType.selectMultiple,
+                field: nameof<IContentProfileEditorConfig[0]>('allowEmbedsFromDesks'),
+                required: false,
+                component_parameters: {
+                    items: sdApi.desks.getAllDesks().toArray().map(({_id, name}) => ({id: _id, label: name})),
+                },
+            };
+
+            fields.push(allowEmbedsFromDesksField);
+        }
     }
 
     if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {

@@ -33,7 +33,7 @@ import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IDesk, IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
@@ -107,7 +107,7 @@ export function canDropMedia(e, editorConfig): undefined | boolean {
     }
 }
 
-interface IProps {
+export interface IPropsEditor3Component {
     readOnly?: boolean;
     locked?: boolean;
     loading?: boolean;
@@ -117,6 +117,7 @@ interface IProps {
     singleLine?: boolean;
     plainText?: boolean;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    allowEmbedsFromDesks?: Array<IDesk['_id']>;
     tabindex?: number;
     suggestingMode?: boolean;
     svc?: any;
@@ -164,7 +165,7 @@ interface IState {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps, IState> {
+export class Editor3Component extends React.Component<IPropsEditor3Component, IState> {
     static propTypes: any;
     static defaultProps: any;
 

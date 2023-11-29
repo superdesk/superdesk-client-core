@@ -22,6 +22,7 @@ describe('editor3.store', () => {
                 item: {},
                 limitBehavior: 'highlight',
                 limit: 42,
+                allowEmbedsFromDesks: [],
             },
             spellcheck,
         );
