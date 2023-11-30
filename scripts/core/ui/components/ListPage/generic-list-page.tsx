@@ -444,7 +444,11 @@ export class GenericListPageComponent<T, P>
                                         key={this.props.getId(item)}
                                         item={item}
                                         page={page}
-                                        inEditMode={this.state.editItem == null ? false : this.props.getId(this.state.editItem) === this.props.getId(item)}
+                                        inEditMode={
+                                            this.state.editItem == null
+                                                ? false
+                                                : this.props.getId(this.state.editItem) === this.props.getId(item)
+                                        }
                                         index={i}
                                         getId={this.props.getId}
                                         additionalProps={additionalProps}
