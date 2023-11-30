@@ -79,9 +79,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 }));
         }
 
-        update(nextItem: Entity): Promise<Entity> {
-            const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
-
+        update(currentItem: Entity, nextItem: Entity): Promise<Entity> {
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
             return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
                 .then((res) => this.refresh().then(() => {

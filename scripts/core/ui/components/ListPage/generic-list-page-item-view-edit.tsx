@@ -166,7 +166,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                 this.setState({
                     issues: {},
                 }, () => {
-                    this.props.onEditModeChange(true);
+                    this.props.onEditModeChange(false);
                 });
             }
         })

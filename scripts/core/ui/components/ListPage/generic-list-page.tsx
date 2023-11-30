@@ -92,6 +92,7 @@ export class GenericListPageComponent<T, P>
     modal: any;
     notify: any;
     $rootScope: any;
+    _mounted: boolean;
 
     constructor(props: IPropsGenericForm<T, P> & IPropsConnected<T>) {
         super(props);
@@ -305,35 +306,14 @@ export class GenericListPageComponent<T, P>
     }
 
     refetchDataUsingCurrentFilters() {
-        const execute = () => {
-            const {filterValues} = this.state;
-            const filtersValidated = this.validateFilters(filterValues);
+        const {filterValues} = this.state;
+        const filtersValidated = this.validateFilters(filterValues);
 
-            this.props.crudManager.read(
-                1,
-                this.props.crudManager.activeSortOption,
-                filtersValidated,
-            );
-        };
-
-        if (this.state.editItem != null) {
-            /*  If refetch is requested while an item is being edited,
-                schedule that update until after the editing view is closed.
-
-                A warning used to be shown at this point but produced incorrect results
-                because after a user presses "save", editing view can't be closed immediately.
-                It needs to wait for a success response from the server. This code executes sooner
-                than the editing view checks the response code and closes itself.
-            */
-
-            this.setState({refetchDataScheduled: true});
-        } else if (this.state.previewItem != null) {
-            this.setState({
-                previewItem: null,
-            }, execute);
-        } else {
-            execute();
-        }
+        this.props.crudManager.read(
+            1,
+            this.props.crudManager.activeSortOption,
+            filtersValidated,
+        );
     }
 
     closeNewItemForm() {
@@ -388,7 +368,7 @@ export class GenericListPageComponent<T, P>
     }
 
     componentDidUpdate() {
-        if (this.state.refetchDataScheduled && this.state.editItem == null) {
+        if (this.state.refetchDataScheduled) {
             this.refetchDataUsingCurrentFilters();
         }
     }
@@ -698,6 +678,7 @@ export class GenericListPageComponent<T, P>
                                             setTimeout(() => {
                                                 this.closeNewItemForm();
                                                 this.openPreview(this.props.getId(res));
+                                                this.refetchDataUsingCurrentFilters();
                                             });
                                         });
                                     }}
@@ -723,14 +704,16 @@ export class GenericListPageComponent<T, P>
                                     }}
                                     item={this.state.editItem}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => {
-                                        this.setState({
-                                            editItem: null,
-                                            previewItem: nextItem,
-                                        });
-
-                                        return this.props.crudManager.update(nextItem);
-                                    }}
+                                    onSave={(nextItem) =>
+                                        this.props.crudManager.update(this.state.editItem, nextItem)
+                                            .then((updatedItem) => {
+                                                this.setState((prevState) => ({
+                                                    ...prevState,
+                                                    editItem: null,
+                                                    previewItem: updatedItem,
+                                                }));
+                                            })
+                                    }
                                     onClose={this.closePreview}
                                     labelForSaveButton={labelForSaveButton}
                                 />
@@ -743,22 +726,25 @@ export class GenericListPageComponent<T, P>
                                     editMode={false}
                                     hiddenFields={this.props.hiddenFields ?? []}
                                     onEditModeChange={(nextValue) => {
-                                        if (nextValue === false) {
-                                            this.setState((prevState) => ({
-                                                ...prevState,
-                                                previewItem: null,
-                                            }));
-                                        } else {
+                                        if (nextValue === true) {
                                             this.setState((prevState) => ({
                                                 ...prevState,
                                                 previewItem: null,
                                                 editItem: prevState.previewItem,
                                             }));
+                                        } else {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItem: null,
+                                                previewItem: prevState.editItem,
+                                            }));
                                         }
                                     }}
                                     item={this.state.previewItem}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
+                                    onSave={() => {
+                                        throw new Error('Can\'t edit in preview mode!');
+                                    }}
                                     onClose={this.closePreview}
                                     labelForSaveButton={labelForSaveButton}
                                 />
