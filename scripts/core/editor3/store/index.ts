@@ -192,8 +192,6 @@ export default function createEditorStore(
     );
 
     if (spellcheck != null) {
-        // after we have the dictionary, force update the editor to highlight typos
-        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
         spellcheck.getAbbreviationsDict().then((abbreviations) => {
             store.dispatch(setAbbreviations(abbreviations || {}));
         });
