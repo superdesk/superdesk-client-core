@@ -11,22 +11,6 @@ interface IProps {
 }
 
 export class Carousel extends React.PureComponent<IProps, IState> {
-    private el?: HTMLDivElement;
-
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {
-            height: undefined,
-        };
-    }
-
-    componentDidMount(): void {
-        this.setState({
-            height: this.el?.clientHeight,
-        });
-    }
-
     render() {
         const imageTemplate = (image: IImage) => {
             return (
@@ -46,14 +30,7 @@ export class Carousel extends React.PureComponent<IProps, IState> {
         };
 
         return (
-            <div
-                style={{
-                    height: this.state.height,
-                }}
-                ref={(element) => {
-                    this.el = element as HTMLDivElement;
-                }}
-            >
+            <div>
                 <PRCarousel
                     numScroll={1}
                     numVisible={1}
