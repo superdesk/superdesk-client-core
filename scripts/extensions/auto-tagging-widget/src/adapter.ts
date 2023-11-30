@@ -113,25 +113,26 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     response.subject?.forEach((item) => {
         console.log('Subject Item:', item);
         const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
+        // Checking if the item has original_source to filter auto tagger tags
+        if (original_source != null) {
+            const tag: ITagUi = {
+                name,
+                description,
+                qcode,
+                source,
+                original_source,
+                aliases,
+                altids,
+                parent,
+                group: {
+                    kind: 'scheme',
+                    value: item.scheme || '',
+                },
+            };
 
-
-        const tag: ITagUi = {
-            name,
-            description,
-            qcode,
-            source,
-            original_source,
-            aliases,
-            altids,
-            parent,
-            group: {
-                kind: 'scheme',
-                value: item.scheme || '',
-            },
-        };
-
-        tags = tags.set(tag.qcode, tag);
-        console.log('Generated Tag:', tag);
+            tags = tags.set(tag.qcode, tag);
+            console.log('Generated Tag:', tag);
+        }
     });
 
     const others: Array<{group: string; items: Array<ITagBase>}> = [];

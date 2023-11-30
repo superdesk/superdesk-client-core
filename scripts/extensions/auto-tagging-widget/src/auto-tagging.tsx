@@ -65,7 +65,7 @@ function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
 export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
 }
-
+// Runs when clicking the "Run" button. Returns the tags from the iMatrics service
 export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const items = data.changes.analysis;
 
@@ -340,6 +340,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.initializeData(false);
         }
+        // Saves the tags to the article
         save() {
             const {data} = this.state;
 
@@ -676,7 +677,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         );
                                     }
                                 });
-
+                                //  renders the tags in the entities group in the widget window
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
                                         <ToggleBoxNext

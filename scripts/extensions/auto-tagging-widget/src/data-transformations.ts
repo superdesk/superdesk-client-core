@@ -42,7 +42,6 @@ export function getExistingTags(article: IArticle): IServerResponse {
 
     getServerResponseKeys().forEach((key) => {
         const values = article[key] ?? [];
-        console.log('Values:', values);
         if (key === 'subject') {
             if (values.length > 0) {
                 result[key] = values.map((subjectItem) => {
