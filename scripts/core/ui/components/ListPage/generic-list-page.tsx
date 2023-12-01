@@ -27,7 +27,6 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {SubNav} from 'superdesk-ui-framework';
 import {
     IPropsGenericForm,
     IGenericListPageComponent,
@@ -42,8 +41,8 @@ import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
 interface IState<T> {
-    previewItemId: string | null;
-    editItemId: string | null;
+    previewItem: T | null;
+    editItem: T | null;
     newItem: Partial<T> | null;
     filtersOpen: boolean;
     filterValues: Partial<T>;
@@ -93,6 +92,7 @@ export class GenericListPageComponent<T, P>
     modal: any;
     notify: any;
     $rootScope: any;
+    _mounted: boolean;
 
     constructor(props: IPropsGenericForm<T, P> & IPropsConnected<T>) {
         super(props);
@@ -103,8 +103,8 @@ export class GenericListPageComponent<T, P>
         // saving/cancelling the edit either.
 
         this.state = {
-            previewItemId: null,
-            editItemId: null,
+            previewItem: null,
+            editItem: null,
             newItem: null,
             filtersOpen: false,
             filterValues: props.defaultFilters ? props.defaultFilters : {},
@@ -133,8 +133,9 @@ export class GenericListPageComponent<T, P>
         this.notify = ng.get('notify');
         this.$rootScope = ng.get('$rootScope');
     }
-    openPreview(id) {
-        if (this.state.editItemId != null) {
+
+    openPreview(id: string) {
+        if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -148,16 +149,20 @@ export class GenericListPageComponent<T, P>
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else if (this.props.crudManager._items.find((item) => this.props.getId(item) === id) != null) {
-            // set previewItemId only if item with id is available in the props.items._items
+        } else if (this.props.crudManager._items.find((value) => this.props.getId(value) === id) != null) {
+            const newPreviewItem = this.props.crudManager._items.find((value) => this.props.getId(value) === id);
+            // set previewItem only if item with id is available in the props.items._items
+
             this.setState({
-                previewItemId: id,
+                previewItem: newPreviewItem,
             });
         }
     }
+
     getActiveFilters() {
         return this.state.filterValues;
     }
+
     removeFilter(fieldName: string) {
         if (this.props.fieldForSearch != null && this.props.fieldForSearch.field === fieldName) {
             this.searchBarRef.resetSearchValue();
@@ -186,24 +191,25 @@ export class GenericListPageComponent<T, P>
 
         this.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
-                if (this.state.editItemId != null) {
+                if (this.state.editItem != null) {
                     this.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
                             'Edit mode must closed before you can delete an item.',
                         ),
                     });
-                } else if (this.state.previewItemId != null) {
+                } else if (this.state.previewItem != null) {
                     this.setState({
-                        previewItemId: null,
+                        previewItem: null,
                     }, doDelete);
                 } else {
                     doDelete();
                 }
             });
     }
+
     startEditing(id: string) {
-        if (this.state.editItemId != null) {
+        if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -211,19 +217,36 @@ export class GenericListPageComponent<T, P>
                 ),
             });
         } else {
+            const previewItem = (() => {
+                if (this.state.previewItem != null && this.props.getId(this.state.previewItem) === id) {
+                    return this.state.previewItem;
+                }
+
+                return null;
+            })();
+
+            const editItem = (() => {
+                if (this.state.editItem != null) {
+                    return this.state.editItem;
+                } else {
+                    return this.props.crudManager._items.find((item) => this.props.getId(item) === id);
+                }
+            })();
+
             this.setState({
-                // reset preview if item in preview mode is different from that
-                // editing is being initiated for
-                previewItemId: this.state.previewItemId === id ? id : null,
-                editItemId: id,
+                // reset preview if item in preview mode is different from that editing is being initiated for
+                previewItem: previewItem,
+                editItem: editItem,
             });
         }
     }
+
     closePreview() {
         this.setState({
-            previewItemId: null,
+            previewItem: null,
         });
     }
+
     handleFilterFieldChange(field, nextValue, callback = noop) {
         this.setState((prevState) => {
             if (nextValue == null) {
@@ -246,6 +269,7 @@ export class GenericListPageComponent<T, P>
             }
         }, callback);
     }
+
     validateFilters(filterValues) {
         return Object.keys(filterValues).reduce((accumulator, key) => {
             const value = filterValues[key];
@@ -267,8 +291,9 @@ export class GenericListPageComponent<T, P>
             }
         }, {});
     }
+
     filter() {
-        if (this.state.editItemId != null) {
+        if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -279,45 +304,28 @@ export class GenericListPageComponent<T, P>
             this.refetchDataUsingCurrentFilters();
         }
     }
+
     refetchDataUsingCurrentFilters() {
-        const execute = () => {
-            const {filterValues} = this.state;
-            const filtersValidated = this.validateFilters(filterValues);
+        const {filterValues} = this.state;
+        const filtersValidated = this.validateFilters(filterValues);
 
-            this.props.crudManager.read(
-                1,
-                this.props.crudManager.activeSortOption,
-                filtersValidated,
-            );
-        };
-
-        if (this.state.editItemId != null) {
-            /*  If refetch is requested while an item is being edited,
-                schedule that update until after the editing view is closed.
-
-                A warning used to be shown at this point but produced incorrect results
-                because after a user presses "save", editing view can't be closed immediately.
-                It needs to wait for a success response from the server. This code executes sooner
-                than the editing view checks the response code and closes itself.
-            */
-
-            this.setState({refetchDataScheduled: true});
-        } else if (this.state.previewItemId != null) {
-            this.setState({
-                previewItemId: null,
-            }, execute);
-        } else {
-            execute();
-        }
+        this.props.crudManager.read(
+            1,
+            this.props.crudManager.activeSortOption,
+            filtersValidated,
+        );
     }
+
     closeNewItemForm() {
         this.setState({newItem: null});
     }
+
     setFiltersVisibility(nextValue: boolean) {
         this.setState({filtersOpen: nextValue});
     }
+
     openNewItemForm(initialValues?: {[key: string]: any}) {
-        if (this.state.editItemId != null || this.state.newItem != null) {
+        if (this.state.editItem != null || this.state.newItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -331,10 +339,11 @@ export class GenericListPageComponent<T, P>
                     ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                     ...(initialValues ?? {}),
                 },
-                previewItemId: null,
+                previewItem: null,
             });
         }
     }
+
     componentDidMount() {
         const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
 
@@ -351,7 +360,7 @@ export class GenericListPageComponent<T, P>
     }
 
     itemIsBeingEdited() {
-        return this.state.editItemId != null;
+        return this.state.editItem != null;
     }
 
     itemIsBeingCreated() {
@@ -359,7 +368,7 @@ export class GenericListPageComponent<T, P>
     }
 
     componentDidUpdate() {
-        if (this.state.refetchDataScheduled && this.state.editItemId == null) {
+        if (this.state.refetchDataScheduled) {
             this.refetchDataUsingCurrentFilters();
         }
     }
@@ -400,8 +409,8 @@ export class GenericListPageComponent<T, P>
             getActiveFilters: this.getActiveFilters,
             removeFilter: this.removeFilter,
             getItemsCount: this.getItemsCount,
-            itemIsBeingEdited: () => this.state.editItemId != null,
-            itemIsBeingCreated: () => this.state.newItem != null,
+            itemIsBeingEdited: this.itemIsBeingEdited,
+            itemIsBeingCreated: this.itemIsBeingCreated,
         };
 
         const labelForSaveButton = this.props.labelForItemSaveButton ?? gettext('Save');
@@ -435,7 +444,11 @@ export class GenericListPageComponent<T, P>
                                         key={this.props.getId(item)}
                                         item={item}
                                         page={page}
-                                        inEditMode={this.state.editItemId === this.props.getId(item)}
+                                        inEditMode={
+                                            this.state.editItem == null
+                                                ? false
+                                                : this.props.getId(this.state.editItem) === this.props.getId(item)
+                                        }
                                         index={i}
                                         getId={this.props.getId}
                                         additionalProps={additionalProps}
@@ -669,6 +682,7 @@ export class GenericListPageComponent<T, P>
                                             setTimeout(() => {
                                                 this.closeNewItemForm();
                                                 this.openPreview(this.props.getId(res));
+                                                this.refetchDataUsingCurrentFilters();
                                             });
                                         });
                                     }}
@@ -677,46 +691,64 @@ export class GenericListPageComponent<T, P>
                                     labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
-                        ) : this.state.editItemId != null ? (
+                        ) : this.state.editItem != null ? (
                             <PageContainerItem data-test-id="list-page--view-edit">
                                 <GenericListPageItemViewEdit
-                                    key={'edit' + this.state.editItemId}
+                                    key={'edit' + this.props.getId(this.state.editItem)}
                                     operation="editing"
                                     editMode={true}
                                     hiddenFields={this.props.hiddenFields ?? []}
-                                    onEditModeChange={() => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItemId: null,
-                                        }));
+                                    onEditModeChange={(nextValue) => {
+                                        if (nextValue === false) {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItem: null,
+                                            }));
+                                        }
                                     }}
-                                    item={this.props.crudManager._items.find(
-                                        (item) => this.props.getId(item) === this.state.editItemId,
-                                    )}
+                                    item={this.state.editItem}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
+                                    onSave={(nextItem) =>
+                                        this.props.crudManager.update(this.state.editItem, nextItem)
+                                            .then((updatedItem) => {
+                                                this.setState((prevState) => ({
+                                                    ...prevState,
+                                                    editItem: null,
+                                                    previewItem: updatedItem,
+                                                }));
+                                            })
+                                    }
                                     onClose={this.closePreview}
                                     labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
-                        ) : this.state.previewItemId != null ? (
+                        ) : this.state.previewItem != null ? (
                             <PageContainerItem data-test-id="list-page--view-edit">
                                 <GenericListPageItemViewEdit
-                                    key={'preview' + this.state.previewItemId}
+                                    key={'preview' + this.props.getId(this.state.previewItem)}
                                     operation="editing"
                                     editMode={false}
                                     hiddenFields={this.props.hiddenFields ?? []}
-                                    onEditModeChange={() => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItemId: prevState.previewItemId,
-                                        }));
+                                    onEditModeChange={(nextValue) => {
+                                        if (nextValue === true) {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                previewItem: null,
+                                                editItem: prevState.previewItem,
+                                            }));
+                                        } else {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItem: null,
+                                                previewItem: prevState.editItem,
+                                            }));
+                                        }
                                     }}
-                                    item={this.props.crudManager._items.find(
-                                        (item) => this.props.getId(item) === this.state.previewItemId,
-                                    )}
+                                    item={this.state.previewItem}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
+                                    onSave={() => {
+                                        throw new Error('Can\'t edit in preview mode!');
+                                    }}
                                     onClose={this.closePreview}
                                     labelForSaveButton={labelForSaveButton}
                                 />

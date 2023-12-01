@@ -1932,7 +1932,7 @@ declare module 'superdesk-api' {
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
         ): Promise<ICrudManagerData<Entity>>;
-        update(item: Entity): Promise<Entity>;
+        update(currentItem: Entity, item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
         refresh(): Promise<ICrudManagerData<Entity>>;
