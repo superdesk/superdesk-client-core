@@ -2741,6 +2741,15 @@ declare module 'superdesk-api' {
             users: {
                 getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
             };
+            templates: {
+                getUserTemplates(
+                    pageToFetch: number,
+                    pageSize: number,
+                    type: string,
+                    searchString?: string,
+                    abortSignal?: AbortSignal,
+                ): Promise<IRestApiResponse<ITemplate>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;

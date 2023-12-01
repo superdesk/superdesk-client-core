@@ -1,3 +1,4 @@
+import {sdApi} from 'api';
 import {
     applyMiddleware,
     canEdit,
@@ -6,9 +7,20 @@ import {
     willCreateNew,
 } from 'apps/authoring-react/toolbar/template-helpers';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {nameof} from 'core/helpers/typescript-helpers';
+import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 import ng from 'core/services/ng';
 import {clone} from 'lodash';
-import {IArticle, IDesk, ITemplate} from 'superdesk-api';
+import {
+    IArticle,
+    IComparison,
+    IDesk,
+    ILogicalOperator,
+    IRestApiResponse,
+    ISortOptions,
+    ISuperdeskQuery,
+    ITemplate,
+} from 'superdesk-api';
 
 function getById(id: ITemplate['_id']): Promise<ITemplate> {
     return httpRequestJsonLocal<ITemplate>({
@@ -31,6 +43,66 @@ function updateTemplate(payload, template: ITemplate) {
         path: `/content_templates/${template._id}`,
         payload,
         headers: {'If-Match': template._etag},
+    });
+}
+
+function getUserTemplates(
+    pageToFetch: number,
+    pageSize: number,
+    type: string,
+    searchString?: string,
+    abortSignal?: AbortSignal,
+): Promise<IRestApiResponse<ITemplate>> {
+    const template_desks = nameof<ITemplate>('template_desks');
+    const currentDeskId = sdApi.desks.getCurrentDeskId();
+
+    const templateDesks: Array<IComparison | ILogicalOperator> = [
+        {[template_desks]: {$notExists: false}},
+        {[template_desks]: {$eq: []}},
+    ];
+
+    const criteria: ILogicalOperator = {
+        $or: [
+            {
+                $and: [
+                    {is_public: {$eq: false}},
+                    {user: {$eq: sdApi.user.getCurrentUserId()}},
+                ],
+            },
+            {
+                $and: [
+                    {is_public: {$eq: true}},
+                    {$or: templateDesks},
+                ],
+            },
+        ],
+        $and: [{[nameof<ITemplate>('template_type')]: {$eq: type}}],
+    };
+
+    if (currentDeskId != null) {
+        templateDesks.push({$and: [{[template_desks]: {$in: [currentDeskId]}}, {is_public: {$eq: true}}]});
+    }
+
+    const templateName = nameof<ITemplate>('template_name');
+    const sort: ISortOptions = [{[templateName]: 'desc'}];
+    const filtered: ILogicalOperator = {
+        $and: [
+            criteria,
+            {[templateName]: {$stringContains: {val: searchString, options: null}}},
+        ],
+    };
+    const maybeFiltered: ILogicalOperator = (searchString?.length ?? 0) < 1 ? criteria : filtered;
+
+    const query: ISuperdeskQuery = {
+        filter: maybeFiltered,
+        page: pageToFetch,
+        max_results: pageSize,
+        sort: sort,
+    };
+
+    return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
+        ...prepareSuperdeskQuery('/content_templates', query),
+        abortSignal: abortSignal,
     });
 }
 
@@ -108,4 +180,5 @@ export const templates = {
     getById,
     createTemplateFromArticle,
     prepareData,
+    getUserTemplates,
 };
