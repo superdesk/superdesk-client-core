@@ -3,18 +3,10 @@ import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
 import {
-    IComparison,
-    ILogicalOperator,
-    IRestApiResponse,
-    ISortOptions,
-    ISuperdeskQuery,
     ITemplate,
 } from 'superdesk-api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {DropdownOption} from './dropdown-option';
-import {nameof} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
-import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 
 interface IProps {
     onSelect(template: ITemplate): void;
