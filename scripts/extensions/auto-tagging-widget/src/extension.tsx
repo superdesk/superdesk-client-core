@@ -6,7 +6,7 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
-        const label = gettext('Semaphore tagging');
+        const label = gettext('Autotagger');
 
         const result: IExtensionActivationResult = {
             contributions: {
@@ -23,7 +23,7 @@ const extension: IExtension = {
                 authoringHeaderComponents: [
                     {
                         _id: 'imatrics-header-component',
-                        label: gettext('Semaphore'),
+                        label: gettext('Tags'),
                         order: 40,
                         component: getHeaderAutoTaggingComponent(superdesk),
                     },
