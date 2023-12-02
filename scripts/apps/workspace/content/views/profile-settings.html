@@ -164,6 +164,12 @@
                     </div>
                 </div>
 
+                <div class="form__row form__row--flex sd-padding-x--2">
+                    <div class="form__row-item">
+                        <span ng-model="editing.form.embeddable" sd-switch></span><label>{{:: 'Embeddable' | translate }}</label>
+                    </div>
+                </div>
+
                 <div class="form__row sd-padding-b--0" ng-if="editing">
                     <sd-content-profile-fields-config
                         profile="editing.form"
