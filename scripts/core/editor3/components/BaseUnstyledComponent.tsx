@@ -3,16 +3,17 @@ import React from 'react';
 import {
     getValidMediaType,
     canDropMedia,
-    dragEventShouldShowDropZone,
+    EVENT_TYPES_TRIGGER_DROP_ZONE,
+    IPropsEditor3Component,
 } from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {IArticle} from 'superdesk-api';
+import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {notify} from 'core/notify/notify';
-import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
+import {articleEmbedsConfigured, canAddArticleEmbed} from './article-embed/can-add-article-embed';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
@@ -41,6 +42,17 @@ function isHtmlTextAndShouldCreateEmbed(event, mediaType, editorProps): boolean 
     const html = event.originalEvent.dataTransfer.getData(mediaType);
 
     return embedShouldBeCreated(html, editorProps);
+}
+
+export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Component) {
+    if (event.dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
+        return articleEmbedsConfigured(editorProps);
+    }
+
+    const mediaFormattingOption: RICH_FORMATTING_OPTION = 'media';
+    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
+
+    return editorProps.editorFormat.includes(mediaFormattingOption) && intersection.length > 0;
 }
 
 interface IProps {
@@ -127,7 +139,7 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
     }
 
     onDragOver(event) {
-        if (!dragEventShouldShowDropZone(event.originalEvent)) {
+        if (!dragEventShouldShowDropZone(event.originalEvent, this.props.editorProps)) {
             return;
         }
 
@@ -142,7 +154,7 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
     }
 
     onDragLeave(event) {
-        if (!dragEventShouldShowDropZone(event.originalEvent)) {
+        if (!dragEventShouldShowDropZone(event.originalEvent, this.props.editorProps)) {
             return;
         }
 

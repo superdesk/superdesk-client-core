@@ -42,7 +42,7 @@ import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 import {isMacOS} from 'core/utils';
 
-const EVENT_TYPES_TRIGGER_DROP_ZONE = [
+export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
@@ -69,12 +69,6 @@ const editor3AutocompleteClassName = 'editor3-autocomplete';
  */
 export function getValidMediaType(event) {
     return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
-}
-
-export function dragEventShouldShowDropZone(event) {
-    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
-
-    return intersection.length > 0;
 }
 
 // caret position isn't displayed if a boolean is returned while dragging text
@@ -579,10 +573,19 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.includes('media');
+        /**
+         * INFO: I can't remember exactly, but I think this was done for performance reasons
+         * so if nothing can be dropped(based on config), we don't even replace rendering of unstyled blocks
+         * to listen for drop events.
+         * I've briefly looked at the component we're supplying for replacement and it doesn't look like it would
+         * add much performance overhead if it was replaced unconditionally, but I don't want to break it
+         * nor spend time on testing so I'm keeping it as is for now.
+         */
+        const dropAreaEnabled =
+            this.props.editorFormat.includes('media') || this.props.editorFormat.includes('embed articles');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
-            mediaEnabled ? {
+            dropAreaEnabled ? {
                 unstyled: {
                     element: UnstyledBlock,
                     aliasedElements: ['p'],
