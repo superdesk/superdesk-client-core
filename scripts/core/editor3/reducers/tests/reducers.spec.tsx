@@ -2,6 +2,7 @@ import {CustomEditor3Entity} from 'core/editor3/constants';
 import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
+import {IEditorDragDropPayload} from '../editor3';
 
 /**
  * @description Creates a new store state that contains the editorState and searchTerm.
@@ -42,16 +43,20 @@ describe('editor3.reducers', () => {
     });
 
     it('EDITOR_DRAG_DROP', () => {
-        const data = {a: 1};
-
         const startState = {
             editorState: EditorState.createEmpty(),
             onChangeValue: () => ({}),
         };
 
+        const payload: IEditorDragDropPayload = {
+            data: {a: 1},
+            contentType: 'media',
+            blockKey: null,
+        };
+
         const {editorState} = reducer(startState, {
             type: 'EDITOR_DRAG_DROP',
-            payload: {data: data, blockKey: null},
+            payload,
         });
 
         const contentState = editorState.getCurrentContent();
