@@ -11,7 +11,6 @@ import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
-import {sdApi} from 'api';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,

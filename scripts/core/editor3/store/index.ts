@@ -5,7 +5,6 @@ import {
     convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator,
 } from 'draft-js';
 import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
@@ -364,7 +363,7 @@ export function getInitialContent(props): ContentState {
     );
 
     /**
-     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * To avoid synchronization issues between html/plaintext values and draftjs object,
      * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
      */
     if (hasUnsafeFormattingOptions) {

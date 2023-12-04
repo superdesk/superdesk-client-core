@@ -1,7 +1,7 @@
 export const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
 /**
- * used embedding articles - see TGA-66
+ * used for embedding articles - see TGA-66
  */
 export const MIME_TYPE_SUPERDESK_TEXT_ITEM = 'application/superdesk.item.text';
 

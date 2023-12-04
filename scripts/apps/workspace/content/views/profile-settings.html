@@ -165,8 +165,10 @@
                 </div>
 
                 <div class="form__row form__row--flex sd-padding-x--2">
-                    <div class="form__row-item">
-                        <span ng-model="editing.form.embeddable" sd-switch></span><label>{{:: 'Embeddable' | translate }}</label>
+                    <div class="form__row-item" style="display: flex; align-items: center; gap: 8px;">
+                        <span ng-model="editing.form.embeddable" sd-switch></span>
+                        <label style="margin: 0">{{:: 'Can be embedded' | translate }}</label>
+                        <i class="icon-info-sign" title="{{:: 'If enabled, it will be possible to embed articles using this content profile into other articles that accept embeds (configurable in content profile field settings)' | translate }}"></i>
                     </div>
                 </div>
 

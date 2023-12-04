@@ -12,7 +12,7 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {IDesk, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
