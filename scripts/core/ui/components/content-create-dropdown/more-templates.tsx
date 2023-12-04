@@ -3,18 +3,10 @@ import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
 import {
-    IComparison,
-    ILogicalOperator,
-    IRestApiResponse,
-    ISortOptions,
-    ISuperdeskQuery,
     ITemplate,
 } from 'superdesk-api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {DropdownOption} from './dropdown-option';
-import {nameof} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
-import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 
 interface IProps {
     onSelect(template: ITemplate): void;
@@ -32,61 +24,6 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
         this.state = {
             searchString: '',
         };
-
-        this.fetchData = this.fetchData.bind(this);
-    }
-
-    fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
-        const template_desks = nameof<ITemplate>('template_desks');
-        const currentDeskId = sdApi.desks.getCurrentDeskId();
-
-        const templateDesks: Array<IComparison | ILogicalOperator> = [
-            {[template_desks]: {$notExists: false}},
-            {[template_desks]: {$eq: []}},
-        ];
-
-        const criteria: ILogicalOperator = {
-            $or: [
-                {
-                    $and: [
-                        {is_public: {$eq: false}},
-                        {user: {$eq: sdApi.user.getCurrentUserId()}},
-                    ],
-                },
-                {
-                    $and: [
-                        {is_public: {$eq: true}},
-                        {$or: templateDesks},
-                    ],
-                },
-            ],
-        };
-
-        if (currentDeskId != null) {
-            templateDesks.push({$and: [{[template_desks]: {$in: [currentDeskId]}}, {is_public: {$eq: true}}]});
-        }
-
-        const templateName = nameof<ITemplate>('template_name');
-        const sort: ISortOptions = [{[templateName]: 'desc'}];
-        const filtered: ILogicalOperator = {
-            $and: [
-                criteria,
-                {[templateName]: {$stringContains: {val: this.state.searchString, options: null}}},
-            ],
-        };
-        const maybeFiltered: ILogicalOperator = this.state.searchString.length < 1 ? criteria : filtered;
-
-        const query: ISuperdeskQuery = {
-            filter: maybeFiltered,
-            page: pageToFetch,
-            max_results: pageSize,
-            sort: sort,
-        };
-
-        return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
-            ...prepareSuperdeskQuery('/content_templates', query),
-            abortSignal: abortSignal,
-        });
     }
 
     render() {
@@ -129,8 +66,15 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                 <div style={{height: '100%', overflow: 'auto'}}>
                     <WithPagination
                         key={this.state.searchString}
-                        getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
-                            .then((res) => ({items: res._items, itemCount: res._meta.total}))
+                        getItems={(pageNo, pageSize, signal) =>
+                            sdApi.templates.getUserTemplates(
+                                pageNo,
+                                pageSize,
+                                'create',
+                                this.state.searchString,
+                                signal,
+                            )
+                                .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
                     >
                         {

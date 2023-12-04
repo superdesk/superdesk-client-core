@@ -328,6 +328,9 @@ export function getSuperdeskApiImplementation(
                         .then((response) => response._items)
                 ),
             },
+            templates: {
+                getUserTemplates: sdApi.templates.getUserTemplates,
+            },
         },
         state: applicationState,
         instance: {
