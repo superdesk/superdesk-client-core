@@ -663,6 +663,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     savedTags={savedTags}
                                                     tags={tags.toMap()}
                                                     readOnly={readOnly}
+                                                    // array of qcodes are ids of tags to remove
                                                     onRemove={(ids) => {
                                                         this.updateTags(
                                                             ids.reduce(

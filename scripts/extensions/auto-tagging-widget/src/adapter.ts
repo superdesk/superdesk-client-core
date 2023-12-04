@@ -179,7 +179,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
             if (tags.has(tag.name)) {
                 console.log('Tags already has a tag with same name:', tag);
             }else {
-                tags = tags.set(tag.name, tag);
+                tags = tags.set(tag.qcode, tag);
                 console.log('Generated Group Tag:', tag);
             }
         });

@@ -3,7 +3,7 @@ import {Set, OrderedMap} from 'immutable';
 import {ISuperdesk, ITreeNode} from 'superdesk-api';
 import {ITagUi} from './types';
 import {Tag} from 'superdesk-ui-framework/react';
-import {noop} from 'lodash';
+// import {noop} from 'lodash';
 import {TagPopover} from './tag-popover';
 
 interface IProps {
@@ -30,9 +30,10 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             ).result;
 
             const tagListItem = (node: ITreeNode<ITagUi>) => {
+                // use this to debug the node
                 const isRootNodeWithChildren = node.parent == null && node.children != null;
                 const item = node.value;
-
+                console.log("tagListItem:",item, readOnly);
                 return (
                     <TagPopover
                         tag={item}
@@ -51,11 +52,21 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                                 (isRootNodeWithChildren ? 'darker' : 'light')}
                             onClick={
                                 readOnly
-                                    ? noop
+                                    ? () => {
+                                        console.log("readOnly is true");
+                                    }
                                     : () => {
-                                        onRemove(
-                                            treeToArray([node]).map(({qcode}) => qcode),
-                                        );
+                                        if (node?.parent === undefined || node?.parent === null) {
+                                            console.log("parent is undefined");
+                                            // Call onRemove with the qcode of the current node.
+                                            onRemove([node.value.qcode]);
+                                        } else {
+                                            console.log("has parent");
+                                            console.log("node:", node);
+                                            onRemove(
+                                                treeToArray([node]).map(({qcode}) => qcode),
+                                            );
+                                        }
                                     }
                             }
                         />
