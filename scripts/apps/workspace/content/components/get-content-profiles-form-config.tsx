@@ -80,6 +80,7 @@ export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTIO
     // may not be parsed well
     'pre',
     'embed',
+    'embed articles',
     'media',
     'table',
 ];
