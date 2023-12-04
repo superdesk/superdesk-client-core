@@ -59,7 +59,6 @@ class Editor3Directive {
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
-    allowEmbedsFromDesks?: Array<IDesk['_id']>;
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
 
@@ -97,8 +96,6 @@ class Editor3Directive {
              * in the toolbar.
              */
             editorFormat: '=?',
-
-            allowEmbedsFromDesks: '=?',
 
             /**
              * @type {Object}

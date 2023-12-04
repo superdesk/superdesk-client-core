@@ -1505,7 +1505,6 @@ declare module 'superdesk-api' {
             cleanPastedHTML?: boolean;
             validate_characters?: boolean;
             formatOptions?: Array<string>;
-            allowEmbedsFromDesks?: Array<IDesk['_id']>;
             showCrops?: boolean;
             imageTitle?: boolean;
             sourceField?: string;

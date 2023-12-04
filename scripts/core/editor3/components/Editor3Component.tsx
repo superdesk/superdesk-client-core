@@ -112,7 +112,6 @@ export interface IPropsEditor3Component {
     singleLine?: boolean;
     plainText?: boolean;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
-    allowEmbedsFromDesks?: Array<IDesk['_id']>;
     tabindex?: number;
     suggestingMode?: boolean;
     svc?: any;

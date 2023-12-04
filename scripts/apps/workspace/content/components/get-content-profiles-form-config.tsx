@@ -260,22 +260,6 @@ export function getContentProfileFormConfig(
         };
 
         fields.push(formattingOptionsEditor3Field);
-
-        const embedArticlesFormattingOption: RICH_FORMATTING_OPTION = 'embed articles';
-
-        if ((editor[field.id]?.formatOptions ?? []).includes(embedArticlesFormattingOption)) {
-            const allowEmbedsFromDesksField: IFormField = {
-                label: gettext('Allow embeds from desks'),
-                type: FormFieldType.selectMultiple,
-                field: nameof<IContentProfileEditorConfig[0]>('allowEmbedsFromDesks'),
-                required: false,
-                component_parameters: {
-                    items: sdApi.desks.getAllDesks().toArray().map(({_id, name}) => ({id: _id, label: name})),
-                },
-            };
-
-            fields.push(allowEmbedsFromDesksField);
-        }
     }
 
     if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {

@@ -35,7 +35,6 @@
          sd-editor3
          data-path-to-value="'headline'"
          data-editor-format="editor.headline.formatOptions"
-         data-allow-embeds-from-desks="editor.headline.allowEmbedsFromDesks"
          data-single-line="true"
          data-bind-to-value="compareView"
          data-scroll-container=".page-content-container--scrollable"
@@ -149,7 +148,6 @@
          sd-editor3
          data-path-to-value="'abstract'"
          data-editor-format="editor.abstract.formatOptions"
-         data-allow-embeds-from-desks="editor.abstract.allowEmbedsFromDesks"
          data-scroll-container=".page-content-container--scrollable"
          data-bind-to-value="compareView"
          data-language="item.language"
@@ -271,7 +269,6 @@
          data-bind-to-value="compareView"
          data-scroll-container=".page-content-container--scrollable"
          data-editor-format="editor.body_html.formatOptions"
-         data-allow-embeds-from-desks="editor.body_html.allowEmbedsFromDesks"
          data-value="item.body_html"
          data-read-only="!_editable || schema.body_html.readonly === true"
          data-on-change="autosave(item, 500)"
@@ -375,7 +372,6 @@
          sd-editor3
          data-path-to-value="'description_text'"
          data-editor-format="editor.description_text.formatOptions"
-         data-allow-embeds-from-desks="editor.description_text.allowEmbedsFromDesks"
          data-scroll-container=".page-content-container--scrollable"
          data-bind-to-value="compareView"
          data-value="item.description_text"
@@ -426,7 +422,6 @@
          data-path-to-value="'body_footer'"
          data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
-         data-allow-embeds-from-desks="editor.body_footer.allowEmbedsFromDesks"
          data-scroll-container=".page-content-container--scrollable"
          data-value="item.body_footer"
          data-read-only="!_editable || schema.body_footer.readonly === true"
@@ -537,7 +532,6 @@
         data-on-change="autosave(item)"
         data-read-only="!_editable || schema[field._id].readonly === true"
         data-editor-format="editor[field._id].formatOptions"
-        data-allow-embeds-from-desks="editor[field._id].allowEmbedsFromDesks"
         data-item="item"
         data-refresh-trigger="refreshTrigger"
         data-tabindex="editor[field._id].order"

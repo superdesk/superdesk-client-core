@@ -87,7 +87,6 @@ export class Editor3Standalone extends React.Component<IProps> {
                 tabindex: tabindex,
                 showTitle: showTitle,
                 editorFormat: editorFormat,
-                allowEmbedsFromDesks: [],
                 editorState: this.props.rawDraftContentState,
                 onChange: this.onChangeInterceptor,
             },
