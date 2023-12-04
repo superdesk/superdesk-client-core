@@ -1,6 +1,7 @@
 import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IPropsEditor3Component} from '../Editor3Component';
+import {sdApi} from 'api';
 
 export function articleEmbedsConfigured(props: IPropsEditor3Component): boolean {
     const embedArticlesFormattingOption: RICH_FORMATTING_OPTION = 'embed articles';
@@ -8,27 +9,37 @@ export function articleEmbedsConfigured(props: IPropsEditor3Component): boolean 
     return props.editorFormat.includes(embedArticlesFormattingOption);
 }
 
+/**
+ * source item is to be embedded into destination item
+ */
 export function canAddArticleEmbed(
-    embeddingCandidate: IArticle,
-    props: IPropsEditor3Component,
-): {ok: true} | {ok: false; error: string} {
-    if (!articleEmbedsConfigured(props)) {
-        return {
-            ok: false,
-            error: gettext('Embedding articles is not configured for this content profile field'),
-        };
-    } else if (
-        (props?.allowEmbedsFromDesks ?? [])
-            .includes(embeddingCandidate?.task?.desk) !== true
-    ) {
-        return {
-            ok: false,
-            error: gettext(
-                'Content profile field configuration does not allow embedding this item'
-                + ' because it is not located in any of permitted desks',
-            ),
-        };
-    } else {
-        return {ok: true};
-    }
+    srcId: IArticle['_id'],
+    destId: IArticle['_id'],
+): Promise<{ok: true; src: IArticle} | {ok: false; error: string}> {
+    return Promise.all([
+        sdApi.article.get(srcId),
+        sdApi.article.get(destId),
+    ]).then(([src, dest]) => {
+        return Promise.all([
+            sdApi.contentProfiles.get(src.profile),
+            sdApi.contentProfiles.get(dest.profile),
+        ]).then(([srcProfile, destProfile]) => {
+            if (srcProfile.embeddable !== true) {
+                return {
+                    ok: false,
+                    error: gettext('Item content profile is not configured to allow embedding.'),
+                };
+            } else if (srcProfile.embeddable === true && destProfile.embeddable === true) {
+                return {
+                    ok: false,
+                    error: gettext('Can not embed to item which itself can be embedded.'),
+                };
+            } else {
+                return {
+                    ok: true,
+                    src,
+                };
+            }
+        });
+    });
 }

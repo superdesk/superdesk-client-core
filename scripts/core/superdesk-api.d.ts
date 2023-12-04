@@ -1527,6 +1527,7 @@ declare module 'superdesk-api' {
         description: string;
         schema: Object;
         editor: IContentProfileEditorConfig;
+        embeddable: boolean;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;

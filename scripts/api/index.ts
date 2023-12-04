@@ -10,6 +10,7 @@ import {templates} from './templates';
 import {time} from './time';
 import {user} from './user';
 import {vocabularies} from './vocabularies';
+import {contentProfiles} from './content-profiles';
 
 /**
  * This is core API, not extensions API.
@@ -29,4 +30,5 @@ export const sdApi = {
     user,
     vocabularies,
     highlights,
+    contentProfiles,
 };

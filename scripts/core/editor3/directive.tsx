@@ -18,6 +18,7 @@ import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/Char
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
+import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
 
 /**
  * @ngdoc directive
@@ -248,6 +249,7 @@ class Editor3Directive {
                                     cleanPastedHtml={this.cleanPastedHtml}
                                     autocompleteSuggestions={autocompleteSuggestions}
                                     plainText={this.plainText}
+                                    canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
                                 />
                             </ReactContextForEditor3.Provider>
                         </Provider>,

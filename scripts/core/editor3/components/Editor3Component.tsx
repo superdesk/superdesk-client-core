@@ -41,6 +41,7 @@ import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 import {isMacOS} from 'core/utils';
+import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -133,6 +134,7 @@ export interface IPropsEditor3Component {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    canAddArticleEmbed?: (srcId: string) => Promise<typeof canAddArticleEmbed>;
     uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     showPopup?(type: any, data: any): void;
 }

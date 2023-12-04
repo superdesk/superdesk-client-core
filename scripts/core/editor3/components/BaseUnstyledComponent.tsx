@@ -11,9 +11,10 @@ import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {notify} from 'core/notify/notify';
-import {articleEmbedsConfigured, canAddArticleEmbed} from './article-embed/can-add-article-embed';
+import {articleEmbedsConfigured} from './article-embed/can-add-article-embed';
+import {gettext} from 'core/utils';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
@@ -91,13 +92,15 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
         const {dataTransfer} = event.originalEvent;
 
         if (dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
-            const item: IArticle = JSON.parse(dataTransfer.getData(MIME_TYPE_SUPERDESK_TEXT_ITEM));
-            const validation = canAddArticleEmbed(item, this.props.editorProps);
-
-            if (validation.ok === true) {
-                this.props.dispatch(dragDrop(dataTransfer, MIME_TYPE_SUPERDESK_TEXT_ITEM, this.getDropBlockKey()));
+            if (articleEmbedsConfigured(this.props.editorProps)) {
+                this.props.dispatch(dragDrop(
+                    dataTransfer,
+                    MIME_TYPE_SUPERDESK_TEXT_ITEM,
+                    this.getDropBlockKey(),
+                    this.props.editorProps.canAddArticleEmbed,
+                ));
             } else {
-                notify.error(validation.error);
+                notify.error(gettext('Embedding articles is not configured for this content profile field'));
             }
 
             handled = true;

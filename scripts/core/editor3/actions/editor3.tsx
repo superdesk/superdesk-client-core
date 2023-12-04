@@ -10,9 +10,10 @@ import {
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {IEditorStore} from '../store';
 import {IEditorDragDropPayload} from '../reducers/editor3';
-import {sdApi} from 'api';
 import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {getArticleLabel} from 'core/utils';
+import {getArticleLabel, gettext} from 'core/utils';
+import {notify} from 'core/notify/notify';
+import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
 
 /**
  * @ngdoc method
@@ -68,7 +69,17 @@ export function handleEditorTab(e) {
     };
 }
 
-export function dragDrop(dataTransfer: DataTransfer, type: string, blockKey: string | null = null) {
+const canAddArticleEmbedDefault: ReturnType<typeof canAddArticleEmbed> = Promise.resolve({
+    ok: false,
+    error: gettext('Embedding is not allowed for this editor'),
+});
+
+export function dragDrop(
+    dataTransfer: DataTransfer,
+    type: string,
+    blockKey: string | null,
+    _canAddArticleEmbed?: (srcId: string) => ReturnType<typeof canAddArticleEmbed>,
+) {
     if (type === 'Files') {
         return insertMedia(dataTransfer.files);
     } else if (type === MIME_TYPE_SUPERDESK_TEXT_ITEM) {
@@ -77,23 +88,29 @@ export function dragDrop(dataTransfer: DataTransfer, type: string, blockKey: str
         return (dispatch) => {
             dispatch({type: 'EDITOR_LOADING', payload: true});
 
-            return sdApi.article.get(partialArticle._id).then((fullArticle) => {
-                const payload: IEditorDragDropPayload = {
-                    data: {
-                        id: fullArticle._id,
-                        name: getArticleLabel(fullArticle),
-                        html: fullArticle.body_html ?? '',
-                    },
-                    blockKey,
-                    contentType: 'article-embed',
-                };
+            const canEmbedArticle = _canAddArticleEmbed ?? (() => canAddArticleEmbedDefault);
 
-                const action = {
-                    type: 'EDITOR_DRAG_DROP',
-                    payload: payload,
-                };
+            return canEmbedArticle(partialArticle._id).then((res) => {
+                if (res.ok === true) {
+                    const payload: IEditorDragDropPayload = {
+                        data: {
+                            id: res.src._id,
+                            name: getArticleLabel(res.src),
+                            html: res.src.body_html ?? '',
+                        },
+                        blockKey,
+                        contentType: 'article-embed',
+                    };
 
-                dispatch(action);
+                    const action = {
+                        type: 'EDITOR_DRAG_DROP',
+                        payload: payload,
+                    };
+
+                    dispatch(action);
+                } else {
+                    notify.error(res.error);
+                }
             }).finally(() => {
                 dispatch({type: 'EDITOR_LOADING', payload: false});
             });
