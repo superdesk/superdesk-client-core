@@ -292,11 +292,11 @@
         flex-grow: 1;
         .search-handler {
             box-shadow: none !important;
-            min-width: 320px;
+            min-width: 0;
             input {
                 flex-grow: 1;
                 flex-shrink: 1;
-
+                width: 100%;
                 font-size: 1.4rem;
                 padding: 0;
                 padding-right: 0px;
@@ -2500,3 +2500,15 @@ sd-multi-image-edit {
         padding-inline-end: $sd-base-increment * 5;
     }
 }
+
+.sd-flex--nowrap {
+    flex-wrap: nowrap !important;
+}
+// .flat-searchbar.extended {
+//     .search-handler {
+//         min-width: 0;
+//         input {
+//             width: 100%;
+//         }
+//     }
+// }
