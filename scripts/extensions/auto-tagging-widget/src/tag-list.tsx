@@ -32,6 +32,8 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             const tagListItem = (node: ITreeNode<ITagUi>) => {
                 // use this to debug the node
                 const isRootNodeWithChildren = node.parent == null && node.children != null;
+                // Entites don't have children and parent
+                const isNodeEntity = node.parent == null && node.children == null;
                 const item = node.value;
                 console.log("tagListItem:",item, readOnly);
                 return (
@@ -56,9 +58,8 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                                         console.log("readOnly is true");
                                     }
                                     : () => {
-                                        if (node?.parent === undefined || node?.parent === null) {
-                                            console.log("parent is undefined");
-                                            // Call onRemove with the qcode of the current node.
+                                        if (isNodeEntity) {
+                                            console.log("parent and children is null");
                                             onRemove([node.value.qcode]);
                                         } else {
                                             console.log("has parent");
@@ -75,6 +76,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             };
 
             function renderTreeNode(treeNodes: Array<ITreeNode<ITagUi>>, level: number = 0): JSX.Element {
+
                 const treeNodesMap = treeNodes.map((node) => (
                     <React.Fragment key={node.value.qcode}>
                         {
