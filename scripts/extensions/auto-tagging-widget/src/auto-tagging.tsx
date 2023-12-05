@@ -14,7 +14,7 @@ import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 
-export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
+export const entityGroups = OrderedSet(['place', 'person', 'organisation', 'event']);
 
 export type INewItem = Partial<ITagUi>;
 
@@ -93,7 +93,7 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     return {entitiesGroupedAndSorted, othersGrouped};
 }
 
-function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
+function showAutoTaggerServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
     const {showModal} = superdesk.ui;
     const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
@@ -101,7 +101,7 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
     showModal(({closeModal}) => (
         <Modal>
             <ModalHeader onClose={closeModal}>
-                {gettext('iMatrics service error')}
+                {gettext('Autotagger service error')}
             </ModalHeader>
 
             <ModalBody>
@@ -110,7 +110,7 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
                 <p>
                     {
                         gettext(
-                            'iMatrics service has returned tags referencing parents that do not exist in the response.',
+                            'Autotagger service has returned tags referencing parents that do not exist in the response.',
                         )
                     }
                 </p>
@@ -421,14 +421,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     (item) => item.qcode,
                                     (item) => item.parent,
                                 ).errors;
-
+                                console.log('treeErrors:', treeErrors);
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
                                         <Alert
                                             type="warning"
                                             size="small"
-                                            title={gettext('iMatrics service error')}
+                                            title={gettext('Autotagger service error')}
                                             message={
                                                 gettextPlural(
                                                     treeErrors.length,
@@ -441,7 +441,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 {
                                                     label: gettext('details'),
                                                     onClick: () => {
-                                                        showImatricsServiceErrorModal(superdesk, treeErrors);
+                                                        showAutoTaggerServiceErrorModal(superdesk, treeErrors);
                                                     },
                                                     icon: 'info-sign',
                                                 },
@@ -514,15 +514,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     items={[]}
                                                     search={(searchString, callback) => {
                                                         let cancelled = false;
-                                                        // Assume searchString is the term you want to search for and is already defined.
                                                         
                                                     httpRequestJsonLocal<IAutoTaggingSearchResult>({
                                                         method: 'POST',
-                                                        path: '/ai_data_op/',
+                                                        path: '/ai/',
                                                         payload: {
-                                                            service: 'imatrics',
-                                                            operation: 'search',
-                                                            data: {term: searchString},
+                                                            service: 'semaphore',
+                                                            item: {
+                                                                searchString
+                                                            },
                                                         },
                                                     }).then((res) => {
                                                         if (cancelled !== true) {
@@ -637,7 +637,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={readOnly ? undefined : gettext('Click "Run" to test Semaphore')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to test Autotagger')}
                                     />
                                 );
                             } else {

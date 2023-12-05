@@ -39,7 +39,7 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
                                 savedTags={savedTags}
                                 tags={tags.toMap()}
                                 readOnly={true}
-                                inline={true}
+                                inline={false}
                                 onRemove={() => true}
                             />
                         </div>,
