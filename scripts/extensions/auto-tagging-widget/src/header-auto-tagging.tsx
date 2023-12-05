@@ -79,8 +79,8 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
             const allGroupedAndSortedNotInConfig = allGrouped
                 .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
 
-            const allGroupedAndSorted = allGroupedAndSortedByConfig
-                .concat(allGroupedAndSortedNotInConfig);
+            const allGroupedAndSorted = allGroupedAndSortedNotInConfig
+                .concat(allGroupedAndSortedByConfig);
 
             return (
                 allGroupedAndSorted.map((item) => item).toArray()
