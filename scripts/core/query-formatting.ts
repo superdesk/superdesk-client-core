@@ -160,7 +160,7 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
         if (query.query == null) {
             query.query = {filtered: {}};
         }
-        
+
         query.query.filtered.query = {
             query_string: {
                 query: q.fullTextSearch,
