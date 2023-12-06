@@ -526,7 +526,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         },
                                                     }).then((res) => {
                                                         if (cancelled !== true) {
-                                                            const result = toClientFormat(res.result.tags).toArray();
+                                                            const result = toClientFormat(res.result.analysis).toArray();
 
                                                             const withoutExistingTags = result.filter(
                                                               (searchTag) => !tagAlreadyExists(data, searchTag.qcode)
@@ -691,7 +691,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 <div key={key}>
                                                     <div
                                                         className="form-label"
-                                                        style={{display: 'block'}}
+                                                        style={{display: 'block', marginBottom: '5px', marginTop: '10px' }}
                                                     >
                                                         {groupLabels.get(key).plural}
                                                     </div>

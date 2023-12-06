@@ -54,7 +54,7 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
                             <div key={key}>
                                 <div
                                     className="form-label"
-                                    style={{display: 'block'}}
+                                    style={{display: 'block', marginBottom: '5px', marginTop: '10px' }}
                                 >
                                     {groupLabels.get(key).plural}
                                 </div>
