@@ -515,36 +515,41 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     search={(searchString, callback) => {
                                                         let cancelled = false;
                                                         
-                                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
-                                                        method: 'POST',
-                                                        path: '/ai/',
-                                                        payload: {
-                                                            service: 'semaphore',
-                                                            item: {
-                                                                searchString
+                                                        httpRequestJsonLocal<{analysis: IServerResponse}>({
+                                                            method: 'POST',
+                                                            path: '/ai/',
+                                                            payload: {
+                                                                service: 'semaphore',
+                                                                item: {
+                                                                    searchString
+                                                                },
                                                             },
-                                                        },
-                                                    }).then((res) => {
-                                                        if (cancelled !== true) {
-                                                            const result = toClientFormat(res.result.analysis).toArray();
-
-                                                            const withoutExistingTags = result.filter(
-                                                              (searchTag) => !tagAlreadyExists(data, searchTag.qcode)
-                                                            );
+                                                        }).then((res) => {
+                                                            if (cancelled !== true) {
+                                                                console.log('runAnalysis getting res:', res);
+                                                                const json_response = res.analysis;
+                                            
+                                                                console.log('runAnalysis getting json_response:', json_response);
+                                                                const result = toClientFormat(json_response).toArray();
+    
+                                                                const withoutExistingTags = result.filter(
+                                                                  (searchTag) => !tagAlreadyExists(data, searchTag.qcode)
+                                                                );
+                                                                
+                                                                const withResponse = withoutExistingTags.map((tag) => ({
+                                                                  keyValue: tag.name, // required for Autocomplete component
+                                                                  tag,
+                                                                  entireResponse: data, // required to get all parents when an item is selected
+                                                                }));
                                                             
-                                                            const withResponse = withoutExistingTags.map((tag) => ({
-                                                              keyValue: tag.name, // required for Autocomplete component
-                                                              tag,
-                                                              entireResponse: data, // required to get all parents when an item is selected
-                                                            }));
-                                                        
-                                                            callback(withResponse); // Assuming 'callback' is a function that takes the processed data
-                                                          }
-                                                        })
-                                                        .catch(error => {
-                                                          console.error('Error during fetch request:', error);
-                                                          // Handle the error, for example, by calling an error callback
-                                                        });
+                                                                callback(withResponse); // Assuming 'callback' is a function that takes the processed data
+                                                              }
+                                                            })
+                                                            .catch(error => {
+                                                              console.error('Error during fetch request:', error);
+                                                              // Handle the error, for example, by calling an error callback
+                                                            });
+    
 
 
                                                         return {
