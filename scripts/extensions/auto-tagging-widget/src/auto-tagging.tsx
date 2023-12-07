@@ -512,6 +512,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     value={this.state.tentativeTagName}
                                                     keyValue="keyValue"
                                                     items={[]}
+                                                    placeholder="Search for an entity or subject"
                                                     search={(searchString, callback) => {
                                                         let cancelled = false;
                                                         
@@ -615,7 +616,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 type="primary"
                                                 size="small"
                                                 shape="round"
-                                                text={gettext('Add a new tag')}
+                                                text={gettext('Add a new entity')}
                                                 disabled={readOnly}
                                                 onClick={() => {
                                                     this.setState({

@@ -2947,7 +2947,7 @@ msgid "Click Run to test Autotagger"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:618
-msgid "Add a new tag"
+msgid "Add a new entity"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:111
