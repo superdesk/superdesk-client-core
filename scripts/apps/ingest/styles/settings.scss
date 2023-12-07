@@ -30,15 +30,15 @@
         }
     }
     .credentials {
-        margin-top: 20px;
+        margin-block-start: 20px;
         label {
             font-size: 16px;
         }
         input {
-            float: left;
+            float: inline-start;
             width: 49%;
             &.first {
-                margin-right: 2%;
+                margin-inline-end: 2%;
             }
         }
     }
@@ -48,39 +48,39 @@
     .modal-body {
         flex: 1 1 auto !important;
         .popup-subnav {
-            padding-left: 10px;
+            padding-inline-start: 10px;
             label {
                 color: $sd-text-light;
             }
             .TabContent {
-                margin-bottom: 20px;
+                margin-block-end: 20px;
             }
             .field {
-                padding-left: 10px;
-                float: left;
+                padding-inline-start: 10px;
+                float: inline-start;
                 .field {
-                    padding-left: 0 !important;
+                    padding-inline-start: 0 !important;
                 }
             }
         }
         .article-type {
-            margin-bottom: 30px !important;
+            margin-block-end: 30px !important;
         }
         .rss-config {
             .empty {
                 width: 64px;
             }
             .btn-remove {
-                padding-right: 14px;
+                padding-inline-end: 14px;
             }
             .multiple .field {
-                padding-right: 10px;
+                padding-inline-end: 10px;
             }
         }
 
         .field {
             .helper-text--padded {
-                padding-left: 0;
+                padding-inline-start: 0;
             }
         }
     }
@@ -103,14 +103,14 @@
             position: relative;
             .order {
                 position: absolute;
-                left: 0;
-                top: 0;
+                inset-inline-start: 0;
+                inset-block-start: 0;
                 line-height: 28px;
                 color: #aaa;
             }
             .actions {
                 position: absolute;
-                right: 0; top: 0;
+                inset-inline-end: 0; inset-block-start: 0;
                 button {
                     border: 0;
                     background: none;
@@ -119,10 +119,10 @@
             fieldset {
                 padding: 0 40px;
                 .field:first-child {
-                    padding-right: 3%;
+                    padding-inline-end: 3%;
                 }
                 .field:last-child {
-                    padding-left: 3%;
+                    padding-inline-start: 3%;
                 }
             }
         }
@@ -144,9 +144,9 @@
             content: "";
             width: 6px;
             transition: opacity ease-in-out 0.2s;
-            top: 4px;
-            bottom: 4px;
-            left: 3px;
+            inset-block-start: 4px;
+            inset-block-end: 4px;
+            inset-inline-start: 3px;
             border: 2px dotted currentColor;
             border-width: 0 2px;
             opacity: 0.1;

@@ -89,7 +89,7 @@ body, html {
     flex-direction: row;
     align-items: center;
     .icn-btn {
-        margin-left: 3px;
+        margin-inline-start: 3px;
     }
     .proofread-toggle {
         &:hover {
@@ -113,7 +113,7 @@ body, html {
         .dropdown__toggle {
             position: relative;
             i {
-                margin-bottom: 1px;
+                margin-block-end: 1px;
             }
             &:hover {
                 background-color: rgba(152, 152, 152, 0.3);
@@ -128,37 +128,37 @@ body, html {
         .dropdown__menu {
             min-width: 424px;
             padding: 10px;
-            right: -9px;
+            inset-inline-end: -9px;
             .theme-status {
                 position: absolute;
                 width: 8px;
                 height: 8px;
                 border-radius: 8px;
-                margin-top: 4px;
-                margin-left: 0px;
+                margin-block-start: 4px;
+                margin-inline-start: 0px;
                 background-color: #ccc;
                 &.active {
                     background-color: #107401;
                 }
             }
             .dropdown__menu-label {
-                padding-left: 13px;
-                margin-bottom: 6px;
+                padding-inline-start: 13px;
+                margin-block-end: 6px;
             }
             > ul {
-                float: left;
+                float: inline-start;
                 vertical-align: top;
                 width: 50%;
-                padding-left: 9px;
+                padding-inline-start: 9px;
                 @include box-sizing(border-box);
                 &.normal-theme-list {
-                    padding-right: 9px;
-                    padding-left: 0;
-                    border-right: 1px solid #e5e5e5;
+                    padding-inline-end: 9px;
+                    padding-inline-start: 0;
+                    border-inline-end: 1px solid #e5e5e5;
                 }
             }
             .btn-group {
-                margin-bottom: 20px;
+                margin-block-end: 20px;
                 display: flex;
                 justify-content: space-between;
                 .toggle-button {
@@ -167,11 +167,11 @@ body, html {
             }
             .theme-btn {
                 @include border-radius(2px);
-                margin-bottom: 6px;
+                margin-block-end: 6px;
                 border: 1px solid #e9e9e9;
                 position: relative;
-                padding-right: 20px;
-                padding-left: 12px;
+                padding-inline-end: 20px;
+                padding-inline-start: 12px;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 min-width: auto !important;
@@ -180,8 +180,8 @@ body, html {
                 i {
                     margin: 0;
                     position: absolute;
-                    top:10px;
-                    right: 0px;
+                    inset-block-start:10px;
+                    inset-inline-end: 0px;
                     color: inherit !important;
                 }
                 &.dark-theme {
@@ -227,7 +227,7 @@ body, html {
     min-height:100%;
     .field {
         max-width: 100%;
-        margin-bottom: 20px;
+        margin-block-end: 20px;
         .full-preview {
             display: inline-block;
         }
@@ -252,9 +252,9 @@ body, html {
                 flex: 1 1 auto;
                 font-size: 1.4rem;
                 line-height: 2.7rem;
-                padding-right: 2rem;
+                padding-inline-end: 2rem;
                 input {
-                    padding-left: $sd-base-increment * 1.5;
+                    padding-inline-start: $sd-base-increment * 1.5;
                 }
                 .term-editor {
                     flex: 1 1 auto;
@@ -268,7 +268,7 @@ body, html {
                 #datelineMonth {
                     flex: 1 1 auto;
                     width: auto;
-                    margin-right: 0.6rem;
+                    margin-inline-end: 0.6rem;
                 }
                 #datelineDay {
                     text-align: center;
@@ -291,7 +291,7 @@ body, html {
             color: $white;
             display: inline-block;
             padding: 2px 8px 1px;
-            margin-bottom: 15px;
+            margin-block-end: 15px;
             font-size: 11px;
             font-family: "Roboto", sans-serif;
             line-height: 16px;
@@ -342,7 +342,7 @@ body, html {
         h1, h2, h3, h4, h5, h6 {
             font-size: 16px;
             line-height: 18px;
-            margin-bottom: 9px;
+            margin-block-end: 9px;
         }
     }
     .field__select {
@@ -386,8 +386,8 @@ body, html {
         font-size: 11px;
         font-style: italic;
         color: inherit;
-        margin-left: 5px;
-        float: right;
+        margin-inline-start: 5px;
+        float: inline-end;
         @include opacity(0);
         @include transition(all ease 0.2s);
         &.error {
@@ -448,8 +448,8 @@ body, html {
     color: var(--sd-editor-colour__txt);
     .text-editor, .headline, .abstract {
         color: var(--sd-editor-colour__txt);
-        padding-left: 0;
-        padding-right: 0;
+        padding-inline-start: 0;
+        padding-inline-end: 0;
     }
     .keyword {
         text-transform: uppercase;
@@ -458,9 +458,9 @@ body, html {
     .byline {
         font-size: 16px;
         text-transform: none;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        padding-left: $sd-base-increment * 1.5;
+        padding-block-start: 2px;
+        padding-block-end: 2px;
+        padding-inline-start: $sd-base-increment * 1.5;
         background-color: transparent;
         line-height: 150%;
         .text-editor {
@@ -492,7 +492,7 @@ body, html {
         .text-editor {
             min-height: 26px;
             padding: 0 !important;
-            margin-bottom: 10px !important;
+            margin-block-end: 10px !important;
             font-size:16px !important;
             line-height: 1.5 !important;
             font-weight: 300;
@@ -525,21 +525,21 @@ body, html {
 .text-editor, .preview-editor {
     p {
         padding: 0;
-        margin-bottom: 10px;
+        margin-block-end: 10px;
         line-height: 1.5;
         font-weight: 300;
     }
     p:last-of-type {
-        margin-bottom: 0 !important;
+        margin-block-end: 0 !important;
     }
     h2 {font-size: 1.5em;}
     h3 {font-size: 1.25em;}
     &.clone {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        margin-top: 0;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        margin-block-start: 0;
         z-index: -1;
         opacity: 0.5;
         color: rgba(0, 0, 0, 0) !important;
@@ -557,7 +557,7 @@ body, html {
         @include text-light();
     }
     ol, ul {
-        padding-left: 30px;
+        padding-inline-start: 30px;
         margin: 10px 0;
     }
     ul {
@@ -579,7 +579,7 @@ body, html {
         }
         th {
             font-weight: 500;
-            text-align: left;
+            text-align: start;
             background-color:rgba(195, 195, 195, 0.2);
         }
     }
@@ -587,7 +587,7 @@ body, html {
         font-size: 16px;
         line-height: 150%;
         margin: 20px 0;
-        border-left: 3px solid rgba(160, 160, 160, 0.5);
+        border-inline-start: 3px solid rgba(160, 160, 160, 0.5);
         padding: 4px 0 4px 16px;
         font-style: italic;
     }

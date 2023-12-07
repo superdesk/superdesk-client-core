@@ -6,10 +6,10 @@
 
 .settings-page {
     position: absolute;
-    top: $topspace;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    inset-block-start: $topspace;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     background: #fff;
     .tabbable.outer {
         height: 100%;
@@ -18,12 +18,12 @@
             width: 180px;
             position: absolute;
             padding: 0;
-            bottom: 0; top:0;
-            left:0;
+            inset-block-end: 0; inset-block-start:0;
+            inset-inline-start:0;
             margin: 0;
             flex-direction: column;
             background: $sd-background;
-            border-right: 1px solid #ddd;
+            border-inline-end: 1px solid #ddd;
             @include box-shadow(inset -3px 0 8px -3px rgba(0,0,0,0.1));
             overflow-y: auto;
             > li {
@@ -57,23 +57,23 @@
         //main tab content
         .tab-content.outer {
             position: absolute;
-            bottom: 0;
-            top:0;
-            left:200px;
-            right: 0;
+            inset-block-end: 0;
+            inset-block-start:0;
+            inset-inline-start:200px;
+            inset-inline-end: 0;
             display: block;
             width: auto;
             .tab-pane.outer {
                 display: block;
                 .split-content {
                     > .nav, > .header, > header, > form .header {
-                        border-bottom: 1px solid #dedede;
+                        border-block-end: 1px solid #dedede;
                         padding: 10px 20px;
                         h2 {
                             font-size: 16px;
                             color: $sd-text;
                             @include text-semibold();
-                            float: left;
+                            float: inline-start;
                             line-height: $nav-height - 20;
                         }
                     }
@@ -81,7 +81,7 @@
                         padding: 0 0 0 10px;
                     }
                     .content {
-                        padding-bottom: 20px;
+                        padding-block-end: 20px;
                     }
                 }
             }
@@ -125,15 +125,15 @@
         }
     }
     .credentials {
-        margin-top: 20px;
+        margin-block-start: 20px;
         label {
             font-size: 16px;
         }
         input {
-            float: left;
+            float: inline-start;
             width: 49%;
             &.first {
-                margin-right: 2%;
+                margin-inline-end: 2%;
             }
         }
     }
@@ -152,14 +152,14 @@
             position: relative;
             .order {
                 position: absolute;
-                left: 0;
-                top: 0;
+                inset-inline-start: 0;
+                inset-block-start: 0;
                 line-height: 28px;
                 color: #aaa;
             }
             .actions {
                 position: absolute;
-                right: 0; top: 0;
+                inset-inline-end: 0; inset-block-start: 0;
                 button {
                     border: 0;
                     background: none;
@@ -168,10 +168,10 @@
             fieldset {
                 padding: 0 40px;
                 .field:first-child {
-                    padding-right: 3%;
+                    padding-inline-end: 3%;
                 }
                 .field:last-child {
-                    padding-left: 3%;
+                    padding-inline-start: 3%;
                 }
             }
         }
@@ -180,11 +180,11 @@
 
 .day-filter-box {
     .sd-check__wrapper {
-        margin-left: 0;
+        margin-inline-start: 0;
     }
     .sd-checkbox {
-        margin-bottom: 5px;
-        margin-right: 4px;
+        margin-block-end: 5px;
+        margin-inline-end: 4px;
     }
 }
 
@@ -195,7 +195,7 @@
         box-shadow: none;
     }
     .flat-searchbar {
-        margin-left: -20px; 
-        margin-right: 20px;
+        margin-inline-start: -20px; 
+        margin-inline-end: 20px;
     }
 }

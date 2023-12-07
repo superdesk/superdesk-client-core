@@ -36,7 +36,7 @@ div {
     .content {
         .active {
             background-color: #eff7fa !important;
-            border-right: 2px solid rgba(94,169,200,0.75) !important;
+            border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;
@@ -68,7 +68,7 @@ div {
 .content-filter-modal {    
     .content {
         .field {
-            margin-bottom: 10px;
+            margin-block-end: 10px;
             textarea {
                 height: 22px;
             }
@@ -77,7 +77,7 @@ div {
 
     .modal__body {
         .filter-tags {
-            margin-bottom: 10px;
+            margin-block-end: 10px;
             overflow: hidden;
             padding: 12px;
             border: 1px solid var(--sd-colour-line--light);
@@ -96,23 +96,23 @@ div {
     position: absolute;
     .content {
         .field {
-            margin-bottom: 10px;
+            margin-block-end: 10px;
             textarea {
                 height: 22px;
             }
         }
     }
     .add {
-        margin-top: -3px;
+        margin-block-start: -3px;
         position: absolute;
         padding: 0;
-        margin-left: 20px;
+        margin-inline-start: 20px;
         height: 22px;
         width: 22px;
         @include border-radius(50%);
         line-height: 20px;
         i {
-            margin-left: 2px;
+            margin-inline-start: 2px;
         }
     }
 }

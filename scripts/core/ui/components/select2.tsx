@@ -40,8 +40,8 @@ interface IState {
 
 const arrowDownStyles = {
     display: 'inline-block',
-    marginLeft: 8,
-    marginRight: 8,
+    marginInlineStart: 8,
+    marginInlineEnd: 8,
     width: 0,
     height: 0,
     verticalAlign: 'middle',
@@ -287,7 +287,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         <div
                                             style={{
                                                 ...arrowDownStyles,
-                                                ...(this.props.horizontalSpacing === true ? {} : {marginRight: 8}),
+                                                ...(this.props.horizontalSpacing === true ? {} : {marginInlineEnd: 8}),
                                             }}
                                         />
                                     </button>
@@ -302,7 +302,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                                     this.props.onSelect(null);
                                                 }}
                                                 className="icn-btn icn-btn--small sd-line-input__custom-clear"
-                                                style={{marginLeft: 20}}
+                                                style={{marginInlineStart: 20}}
                                             >
                                                 <i className="icon-remove-sign" />
                                             </button>
@@ -318,7 +318,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         const commonStyles: React.CSSProperties = {
                             display: 'block',
                             width: '100%',
-                            textAlign: 'left',
+                            textAlign: 'start',
                             padding: 0,
                             color: 'var(--color-dropdown-menu-text)',
                             background: 'transparent',

@@ -36,7 +36,7 @@ fieldset {
     &.separated {
         border:1px solid var(--sd-colour-line--light);
         border-width: 1px 0;
-        padding-bottom: 10px;
+        padding-block-end: 10px;
     }
 }
 
@@ -44,7 +44,7 @@ fieldset {
 legend {
     display: block;
     padding: 0 6px 0 0;
-    margin-bottom: 10px;
+    margin-block-end: 10px;
     font-size: 12px;
     line-height: 31px;
     color: $sd-text-light;
@@ -54,7 +54,7 @@ legend {
     background-color: transparent;
     // Small legend
     &.small {
-        margin-bottom: 10px;
+        margin-block-end: 10px;
     }
 
     //small text
@@ -84,7 +84,7 @@ textarea {
 // Identify controls by their labels
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-block-end: 5px;
 }
 
 // Inputs, Textareas, Selects
@@ -96,7 +96,7 @@ select,
     width: 210px;
     min-height: $baseLineHeight;
     padding: 4px;
-    margin-bottom: 9px;
+    margin-block-end: 9px;
     font-size: $baseFontSize;
     line-height: $baseLineHeight;
     border: 1px solid $inputBorder;
@@ -169,7 +169,7 @@ select {
 }
 input[type="file"] {
     height: 28px;
-    padding-top: 4px;
+    padding-block-start: 4px;
     font-size: 13px;
 }
 
@@ -221,18 +221,18 @@ input[type="hidden"] {
 // Indent the labels to position radios/checkboxes as hanging
 .radio,
 .checkbox {
-    padding-left: 18px;
+    padding-inline-start: 18px;
 }
 .radio input[type="radio"],
 .checkbox input[type="checkbox"] {
-    float: left;
-    margin-left: -18px;
+    float: inline-start;
+    margin-inline-start: -18px;
 }
 
 // Move the options list down to align with labels
 .controls > .radio:first-child,
 .controls > .checkbox:first-child {
-    padding-top: 5px; // has to be padding because margin collaspes
+    padding-block-start: 5px; // has to be padding because margin collaspes
 }
 
 // Radios and checkboxes on same line
@@ -240,32 +240,32 @@ input[type="hidden"] {
 .radio.inline,
 .checkbox.inline {
     display: inline-block;
-    padding-top: 5px;
-    margin-bottom: 0;
+    padding-block-start: 5px;
+    margin-block-end: 0;
     vertical-align: middle;
 }
 .radio.inline + .radio.inline,
 .checkbox.inline + .checkbox.inline {
-    margin-left: 10px; // space out consecutive inline controls
+    margin-inline-start: 10px; // space out consecutive inline controls
 }
 
 // Custom radio button
 .sd-radio {
     position: relative;
-    padding-left: 3px;
+    padding-inline-start: 3px;
     input[type="radio"] {
         visibility: hidden;
         + .check {
             display: inline-block;
             position: absolute;
-            top: 0;
-            left: 0;
+            inset-block-start: 0;
+            inset-inline-start: 0;
             width: 11px;
             height: 11px;
             @include border-radius(50%);
             border: 2px solid $inputBorder;
             vertical-align: middle;
-            margin-left: 0px;
+            margin-inline-start: 0px;
         }
         &:checked {
             + .check {
@@ -377,19 +377,19 @@ textarea[readonly] {
         content: '*';
         vertical-align: top;
         font-size: 12px;
-        padding-left: 3px;
+        padding-inline-start: 3px;
     }
     .sd-required {
         font-size: 11px;
         font-style: italic;
-        padding-left: 5px;
+        padding-inline-start: 5px;
         color: $grayDark;
     }
     .sd-invalid-text {
         display: none;
         font-size: 11px;
         font-style: italic;
-        padding-left: 5px;
+        padding-inline-start: 5px;
         color: $red;
     }
     &.sd-invalid {
@@ -399,14 +399,14 @@ textarea[readonly] {
         input, textarea, .text-editor, .line-input,
         input:focus, textarea:focus, .text-editor:focus,
             input:hover, textarea:hover, text-editor:hover {
-            border-bottom: 1px solid red !important;
+            border-block-end: 1px solid red !important;
             border-bottom-color: red !important;
             @include box-shadow(none !important);
         }
         &.field label {
             background-color: red;
             span {
-                border-bottom: 0 !important;
+                border-block-end: 0 !important;
                 color: $white;
             }
         }
@@ -419,7 +419,7 @@ textarea[readonly] {
     }
     &.field {
         label span {
-            border-bottom: 0 !important;
+            border-block-end: 0 !important;
         }
     }
 }
@@ -429,10 +429,10 @@ textarea[readonly] {
 
 .form-actions {
     padding: ($baseLineHeight - 1) 20px $baseLineHeight;
-    margin-top: $baseLineHeight;
-    margin-bottom: $baseLineHeight;
+    margin-block-start: $baseLineHeight;
+    margin-block-end: $baseLineHeight;
     background-color: $grayLighter;
-    border-top: 1px solid #ddd;
+    border-block-start: 1px solid #ddd;
     @include clearfix(); // Adding clearfix to allow for .pull-right button containers
 }
 
@@ -455,11 +455,11 @@ textarea[readonly] {
 // Allow us to put symbols and text within the input field for a cleaner look
 .input-prepend,
 .input-append {
-    margin-bottom: 5px;
+    margin-block-end: 5px;
     input,
     select,
     .uneditable-input {
-        *margin-left: 0;
+        *margin-inline-start: 0;
         @include border-radius(0 3px 3px 0);
         &:focus {
             position: relative;
@@ -496,7 +496,7 @@ textarea[readonly] {
 .input-prepend {
     .add-on,
     .btn {
-        margin-right: -1px;
+        margin-inline-end: -1px;
     }
 }
 .input-append {
@@ -504,15 +504,15 @@ textarea[readonly] {
     select
     .uneditable-input {
         @include border-radius(3px 0 0 3px);
-        margin-bottom:0;
+        margin-block-end:0;
     }
     .uneditable-input {
         border-left-color: #eee;
         border-right-color: #ccc;
     }
     .add-on {
-        padding-bottom: 3px !important;
-        margin-left: -4px;
+        padding-block-end: 3px !important;
+        margin-inline-start: -4px;
         @include border-radius(0 3px 3px 0);
     }
 }
@@ -525,12 +525,12 @@ textarea[readonly] {
     }
     .add-on:first-child,
         .btn:first-child {
-        margin-right: -1px;
+        margin-inline-end: -1px;
         @include border-radius(3px 0 0 3px);
     }
     .add-on:last-child,
         .btn:last-child {
-        margin-left: -1px;
+        margin-inline-start: -1px;
         @include border-radius(0 3px 3px 0);
     }
 }
@@ -553,7 +553,7 @@ textarea[readonly] {
     .input-prepend,
     .input-append {
         display: inline-block;
-        margin-bottom: 0;
+        margin-block-end: 0;
     }
     // Re-hide hidden elements due to specifity
     .hide {
@@ -567,21 +567,21 @@ textarea[readonly] {
 // Remove margin for input-prepend/-append
 .form-inline .input-append,
 .form-inline .input-prepend {
-    margin-bottom: 0;
+    margin-block-end: 0;
 }
 // Inline checkbox/radio labels (remove padding on left)
 .form-inline .radio,
 .form-inline .checkbox {
-    padding-left: 0;
-    margin-bottom: 0;
+    padding-inline-start: 0;
+    margin-block-end: 0;
     vertical-align: middle;
 }
 // Remove float and margin, set to inline-block
 .form-inline .radio input[type="radio"],
 .form-inline .checkbox input[type="checkbox"] {
-    float: left;
-    margin-left: 0;
-    margin-right: 3px;
+    float: inline-start;
+    margin-inline-start: 0;
+    margin-inline-end: 3px;
 }
 
 select {
@@ -612,11 +612,11 @@ form, ng-form {
     fieldset, .fieldset {
         @include clearfix();
         .field {
-            margin-bottom: 24px;
+            margin-block-end: 24px;
             width: 100%;
             > .inline-label {
-                margin-left: 20px;
-                margin-right: -10px;
+                margin-inline-start: 20px;
+                margin-inline-end: -10px;
             }
             input[type="text"], select, textarea {
                 color: var(--color-text);
@@ -638,12 +638,12 @@ form, ng-form {
             display: flex;
             .field, .flex-field {
                 flex: 1 1 auto;
-                margin-bottom: 0;
+                margin-block-end: 0;
                 &:not(.btn) {
-                    padding-right: 20px;
+                    padding-inline-end: 20px;
                 }
                 &:last-child:not(.btn) {
-                    padding-right: 0;
+                    padding-inline-end: 0;
                 }
                 &.no-grow {
                     flex: 0 1 auto;
@@ -657,33 +657,33 @@ form, ng-form {
             }
         }
         + legend {
-            margin-top: 20px;
+            margin-block-start: 20px;
         }
         + fieldset, + .fieldset {
-            margin-top: 16px;
+            margin-block-start: 16px;
         }
     }
     &.form-horizontal {
         .field {
             > label {
                 width: 150px;
-                padding-right: 20px;
-                text-align: right;
-                float: left;
+                padding-inline-end: 20px;
+                text-align: end;
+                float: inline-start;
             }
             .control {
-                margin-left: 170px;
+                margin-inline-start: 170px;
             }
         }
     }
 }
 
 .field {
-    margin-bottom: 24px;
+    margin-block-end: 24px;
     width: 100%;
     > .inline-label {
-        margin-left: 20px;
-        margin-right: -10px;
+        margin-inline-start: 20px;
+        margin-inline-end: -10px;
     }
 
     label:not(.sd-checkbox) {
@@ -699,7 +699,7 @@ form, ng-form {
             font-size: 13px;
             line-height: 18px;
             display: inline-block;
-            margin-right: 20px;
+            margin-inline-end: 20px;
             font-weight: 400;
             letter-spacing: normal;
         }
@@ -727,11 +727,11 @@ form.flat, .form-flat {
         display: none;
         font-size: 11px;
         color: #999;
-        float: right;
+        float: inline-end;
     }
 
     fieldset, .fieldset {
-        margin-bottom: 20px;
+        margin-block-end: 20px;
         position: relative;
 
         legend, .legend {
@@ -741,7 +741,7 @@ form.flat, .form-flat {
             text-transform: uppercase;
             @include text-semibold();
             padding: 10px 0;
-            margin-top: 20px;
+            margin-block-start: 20px;
         }
 
         .item {
@@ -758,13 +758,13 @@ form.flat, .form-flat {
                 font-size: 12px;
                 color: #999;
                 position: absolute;
-                right: 10px;
-                top: 8px;
+                inset-inline-end: 10px;
+                inset-block-start: 8px;
             }
             label {
                 color: $sd-text;
                 min-width: 100px;
-                margin-right: 10px;
+                margin-inline-end: 10px;
                 display: inline-block;
             }
             a {
@@ -774,11 +774,11 @@ form.flat, .form-flat {
                 display: inline-block;
                 vertical-align: middle;
                 .sdselect-btn {
-                    float: left;
+                    float: inline-start;
                     color: $sd-text;
                     width: auto;
                     .caret {
-                        margin-left: 5px;
+                        margin-inline-start: 5px;
                     }
                 }
             }
@@ -805,11 +805,11 @@ form.flat, .form-flat {
                 border-radius: 0px !important;
                 font-size: 13px;
                 text-overflow: ellipsis;
-                margin-left: -6px;
+                margin-inline-start: -6px;
                 background-color: transparent;
                 color: #000 !important;
                 box-sizing: border-box;
-                margin-top: 0;
+                margin-block-start: 0;
                 transition: 0.3s;
                 &:hover {
                     border-color: rgba(0,0,0,0.25) !important;
@@ -827,7 +827,7 @@ form.flat, .form-flat {
                 width: 100%;
                 max-width: 100%;
                 line-height: 18px;
-                margin-left: 0;
+                margin-inline-start: 0;
             }
             select.info-editable {
                 padding: 0 !important;
@@ -851,18 +851,18 @@ form.flat, .form-flat {
 
 // sdSlider
 [sd-slider].ui-slider {
-    margin-left: 10px;
-    border-top: 2px solid $sd-blue;
+    margin-inline-start: 10px;
+    border-block-start: 2px solid $sd-blue;
     .ui-slider-range {
         @include transition(width .1s);
-        margin-top: -2px;
-        border-top: 2px solid $inputBorder;
+        margin-block-start: -2px;
+        border-block-start: 2px solid $inputBorder;
     }
     .ui-slider-handle {
         width: 12px;
         height: 12px;
-        top: -7px;
-        margin-left: -6px;
+        inset-block-start: -7px;
+        margin-inline-start: -6px;
         @include transition(left .1s);
         @include border-radius(50%);
         background-color: $sd-blue;
@@ -873,8 +873,8 @@ form.flat, .form-flat {
         color: white;
 
         position: absolute;
-        margin-left: -27px;
-        top: -50px;
+        margin-inline-start: -27px;
+        inset-block-start: -50px;
         width: 50px;
         height: 50px;
         line-height: 50px;
@@ -886,11 +886,11 @@ form.flat, .form-flat {
         &:after {
             position: absolute;
             content: '';
-            left: 0;
+            inset-inline-start: 0;
             border-radius: 28px;
-            top: 35px;
-            border-left: 25px solid transparent;
-            border-right: 25px solid transparent;
+            inset-block-start: 35px;
+            border-inline-start: 25px solid transparent;
+            border-inline-end: 25px solid transparent;
             border-top-width: 28px;
             border-top-style: solid;
             border-top-color: $sd-blue;
@@ -904,26 +904,26 @@ form.flat, .form-flat {
     .ui-slider-label {
         font-size: 8px;
         color: #c0c0c0;
-        margin-top: -18px;
+        margin-block-start: -18px;
         text-transform: uppercase;
         &.left {
-            float: left;
+            float: inline-start;
         }
         &.right {
-            float: right;
+            float: inline-end;
         }
     }
     .ui-slider-indicator {
         font-size: 0;
         line-height: 0;
-        padding-top: 7px;
+        padding-block-start: 7px;
         span {
             display: inline-block;
             height: 5px;
             box-sizing: border-box;
-            border-left: 1px solid #d1d1d1;
+            border-inline-start: 1px solid #d1d1d1;
             &:last-of-type {
-                border-right: 1px solid #d1d1d1;
+                border-inline-end: 1px solid #d1d1d1;
             }
         }
     }
@@ -932,7 +932,7 @@ form.flat, .form-flat {
 .flex-header {
     display: flex;
     height: 20px;
-    margin-bottom: 8px;
+    margin-block-end: 8px;
     .line {
         height: 1px;
         margin: auto 4px auto 0;
@@ -996,7 +996,7 @@ input, textarea, .dropdown__toggle {
         width: 100%;
         border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0 !important;
         border: 0 !important;
-        border-bottom: 1px solid var(--color-input-border) !important;
+        border-block-end: 1px solid var(--color-input-border) !important;
         background-color: var(--color-input-bg);
         padding: 0 0.8rem;
         height: 32px;
@@ -1015,7 +1015,7 @@ input, textarea, .dropdown__toggle {
 }
 textarea {
     &.line-input {
-        padding-top: 6px;
+        padding-block-start: 6px;
     }
 }
 
@@ -1048,7 +1048,7 @@ textarea {
 @mixin boxedInputBase () {
         width: 100%;
         border: 0;
-        border-bottom: 1px solid var(--color-input-border) !important;
+        border-block-end: 1px solid var(--color-input-border) !important;
         background-color: var(--color-input-bg);
         transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
         padding: 0 0.8rem;
@@ -1073,7 +1073,7 @@ input, textarea, .dropdown__toggle, [sd-meta-place] {
 }
 textarea {
     &.boxed-input {
-        padding-top: 6px;
+        padding-block-start: 6px;
     }
 }
 .boxed-input[sd-meta-terms] {
@@ -1091,7 +1091,7 @@ textarea {
         &.line-input {
             width: 100%;
             border: 0;
-            border-bottom: 1px solid var(--color-input-border);
+            border-block-end: 1px solid var(--color-input-border);
             background-color: var(--color-input-bg);
             transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
             padding: 0 1.6rem 0 0.8rem !important;
@@ -1115,7 +1115,7 @@ textarea {
         }
     }
     .dropdown__menu {
-        margin-top: 1px !important;
+        margin-block-start: 1px !important;
         width: 100%;
     }
     .dropdown.open {
@@ -1135,7 +1135,7 @@ textarea {
         position: relative;
         padding: 0 15px 0 0 !important;
         line-height: 24px;
-        text-align: left;
+        text-align: start;
     }
 }
 
@@ -1149,14 +1149,14 @@ textarea {
         z-index: 2;
         padding: 0 15px 0 0 !important;
         line-height: 24px;
-        text-align: left;
+        text-align: start;
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
         width: 100%;
         border-radius: 0 !important;
         border: 0 !important;
-        border-bottom: 1px solid rgba(0,0,0,0.15)!important;
+        border-block-end: 1px solid rgba(0,0,0,0.15)!important;
         background-color: transparent;
         padding: 0;
         height:24px;
@@ -1172,16 +1172,16 @@ textarea {
     }
     &::after {
         position: absolute;
-        top: 12px;
-        right: 4px;
+        inset-block-start: 12px;
+        inset-inline-end: 4px;
         display: inline-block;
         width: 0;
         height: 0;
         vertical-align: middle;
-        margin-top: -2px;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-top: 4px solid #000;
+        margin-block-start: -2px;
+        border-inline-start: 4px solid transparent;
+        border-inline-end: 4px solid transparent;
+        border-block-start: 4px solid #000;
         opacity: 0.3;
         filter: alpha(opacity=30);
         content: "";
@@ -1230,7 +1230,7 @@ input {
 }
 
 .helper-text--after-icon {
-    padding-left: 0.5rem;
+    padding-inline-start: 0.5rem;
     vertical-align: top;
     font-weight: 300;
 }
@@ -1245,12 +1245,12 @@ input {
     display: inline-block;
     font-size: 13px;
     font-weight: 400;
-    margin-bottom: 0;
+    margin-block-end: 0;
     vertical-align: top;
 }
 
 .input-group {
-    padding-top: 6px;
+    padding-block-start: 6px;
 }
 
 
@@ -1260,7 +1260,7 @@ input {
     padding: 3px 0;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.15);
+    border-block-end: 1px solid rgba(0,0,0,0.15);
     line-height: 16px;
     &:hover {
         border-color: rgba(0,0,0,0.3);
@@ -1299,7 +1299,7 @@ input {
 
 .char-count {
     display: inline-block;
-    margin-left: 5px;
+    margin-inline-start: 5px;
     &.error {
         color: $red;
     }
@@ -1312,9 +1312,9 @@ input {
     padding: 1rem 0;
 }
 .list-row--dotted {
-    border-bottom: 1px dotted var(--sd-colour-line--strong);
+    border-block-end: 1px dotted var(--sd-colour-line--strong);
     &:first-child {
-        border-top: 1px dotted var(--sd-colour-line--strong);
+        border-block-start: 1px dotted var(--sd-colour-line--strong);
     }
 }
 .list-row--flex {
@@ -1349,7 +1349,7 @@ input {
     clear: both;
 }
 .column--mb24 {
-    margin-bottom: 2.4rem;
+    margin-block-end: 2.4rem;
 }
 
 .basic-input {
@@ -1366,7 +1366,7 @@ input {
     }
 
     > * + * {
-        margin-left: 1.2rem!important;  // line_input has margin-left: 0
+        margin-inline-start: 1.2rem!important;  // line_input has margin-inline-start: 0
     }
 }
 
@@ -1379,7 +1379,7 @@ input {
     background-color: var(--color-input-bg);
     border: none;
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-    border-bottom: 1px solid var(--color-input-border);
+    border-block-end: 1px solid var(--color-input-border);
     border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
     padding: 0 0.8rem;
     &:hover {
@@ -1396,8 +1396,8 @@ input {
 
 .sd-line-input__custom-clear {
     position: absolute;
-    top: 22px;
-    right: 22px;
+    inset-block-start: 22px;
+    inset-inline-end: 22px;
     z-index: 2;
     opacity: 0.4 !important;
     transition: opacity 0.2s ease;
@@ -1412,8 +1412,8 @@ input {
 [class^="gform-input--"] {
     border: 1px solid var(--sd-colour-line--light);
     border-radius: 3px;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-inline-end: 5px;
+    padding-inline-start: 5px;
     transition: all 0.2s ease;
     color: var(--color-text);
     background-color: var(--sd-colour-bg__searchbar);

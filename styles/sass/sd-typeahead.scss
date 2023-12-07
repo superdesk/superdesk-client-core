@@ -16,11 +16,11 @@
         box-shadow: var(--sd-shadow__dropdown);
         border-radius: 0 0 3px 3px;
         position: absolute;
-        top: 28px;
+        inset-block-start: 28px;
         li {
             width: 100%;
             font-size: 1.3rem;
-            margin-bottom: 0.4rem;
+            margin-block-end: 0.4rem;
             font-family: $baseFontFamily;
             &:hover {
                 cursor: pointer;

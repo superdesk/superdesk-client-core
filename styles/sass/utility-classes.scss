@@ -8,17 +8,17 @@
 
 // Quick floats
 .pull-right {
-    float: right;
+    float: inline-end;
 }
 .pull-left {
-    float: left;
+    float: inline-start;
 }
 .pull-left-10x {
-    float: left;
+    float: inline-start;
     padding: 10px;
 }
 .pull-right-10x {
-    float: right;
+    float: inline-end;
     padding: 10px;
 }
 
@@ -120,13 +120,13 @@ ul.list-view.list-without-items {
 
 .sibling-spacer-4 {
     > * + * {
-        margin-left: 4px;
+        margin-inline-start: 4px;
     }
 }
 
 .sibling-spacer-10 {
     > * + * {
-        margin-left: 10px;
+        margin-inline-start: 10px;
     }
 }
 
@@ -173,11 +173,11 @@ ul.list-view.list-without-items {
 
 // spacing
 .sd-spacer--horizontal-medium > * + * {
-    margin-left: 10px;
+    margin-inline-start: 10px;
 }
 
 .sd-spacer--vertical-medium > * + * {
-    margin-top: 10px;
+    margin-block-start: 10px;
 }
 
 .css-table {

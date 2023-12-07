@@ -17,7 +17,7 @@ export class AnnotationSelectList extends React.Component<IProps> {
 
         return (
             <div>
-                <div style={{maxHeight: '20rem', overflow: 'auto', paddingTop: 15}}>
+                <div style={{maxHeight: '20rem', overflow: 'auto', paddingBlockStart: 15}}>
                     {this.props.items.map((item, i) => (
                         <Item key={i} onClick={() => this.props.onSelect(item)}>
                             <Column grow>

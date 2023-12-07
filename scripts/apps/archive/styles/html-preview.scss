@@ -2,7 +2,7 @@
 
 .html-preview {
     .annotation-text {
-        border-bottom: 1px dotted;
+        border-block-end: 1px dotted;
     }
 }
 
@@ -11,7 +11,7 @@ sup.annotation-id {
 }
 
 .annotations {
-    margin-top: 1em;
+    margin-block-start: 1em;
     .annotation-body {
         p {
             display: inline;
