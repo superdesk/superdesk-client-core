@@ -14,6 +14,7 @@ interface IProps {
 }
 
 export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
+    const {gettext} = superdesk.localization;
     const TagListComponent = getTagsListComponent(superdesk);
     const groupLabels = getGroups(superdesk);
 
@@ -35,6 +36,12 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
                 if (tags != null && groupId != null) {
                     allGrouped = allGrouped.set(groupId,
                         <div>
+                            <div
+                                className="form-label"
+                                style={{display: 'block', marginBottom: '5px', marginTop: '10px' }}
+                                >
+                                    {gettext('Subjects')}
+                            </div>
                             <TagListComponent
                                 savedTags={savedTags}
                                 tags={tags.toMap()}

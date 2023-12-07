@@ -2974,7 +2974,7 @@ msgstr "Rensa sessioner"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:349
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:597
-msgid "Click \"Run\" to generate"
+msgid "Click Run to test Autotagger"
 msgstr "Klicka \"Kör\" för att skapa"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:111
@@ -17426,27 +17426,27 @@ msgstr "hrs"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:24
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:26
-msgid "iMatrics"
-msgstr "iMatrics"
+msgid "Autotagger"
+msgstr "Autotagger"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:260
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:48
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:104
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:402
-msgid "iMatrics service error"
-msgstr "iMatrics service-fel"
+msgid "Autotagger service error"
+msgstr "Autotagger service-fel"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:51
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:112
 msgid ""
-"iMatrics service has returned tags referencing parents that do not exist in "
+"Autotagger service has returned tags referencing parents that do not exist in "
 "the response."
-msgstr "iMatrics-tjänsten har returnerat taggar med överordnade värden som inte finns med i svaret."
+msgstr "Autotagger-tjänsten har returnerat taggar med överordnade värden som inte finns med i svaret."
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:9
-msgid "iMatrics tagging"
-msgstr "iMatrics-märkning"
+msgid "Autotagger tagging"
+msgstr "Autotagger-märkning"
 
 #: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195

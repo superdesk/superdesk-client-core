@@ -2978,7 +2978,7 @@ msgstr "Borrar sesiones"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:349
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:597
-msgid "Click \"Run\" to generate"
+msgid "Click Run to test Autotagger"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:111
@@ -17437,26 +17437,26 @@ msgstr "hs"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:24
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:26
-msgid "iMatrics"
+msgid "Autotagger"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:260
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:48
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:104
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:402
-msgid "iMatrics service error"
+msgid "Autotagger service error"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:51
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:112
 msgid ""
-"iMatrics service has returned tags referencing parents that do not exist in "
+"Autotagger service has returned tags referencing parents that do not exist in "
 "the response."
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:9
-msgid "iMatrics tagging"
+msgid "Autotagger tagging"
 msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:336

@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # AlbertFR <albert.bruc.ab@gmail.com>, 2015
 # Amy Logan <Amy.logan@thecanadianpress.com>, 2020
@@ -13,13 +13,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2015-05-07 07:31+0000\n"
-"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>, 2020-2021,2023\n"
-"Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2023-12-06 15:10-0500\n"
+"Last-Translator: Charles-Philippe Giroux <charles-philippe."
+"giroux@lapressecanadienne.com>, 2020-2021,2023\n"
+"Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/"
+"superdesk/language/fr_CA/)\n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_CA\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
@@ -39,9 +45,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:74
 msgid ""
-"'' is currently managing featured stories. This feature can only be accessed"
-" by one user at a time."
-msgstr "'' gère actuellement les articles à la une. Cette fonctionnalité n'est accessible qu'à un seul utilisateur à la fois."
+"'' is currently managing featured stories. This feature can only be accessed "
+"by one user at a time."
+msgstr ""
+"'' gère actuellement les articles à la une. Cette fonctionnalité n'est "
+"accessible qu'à un seul utilisateur à la fois."
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'ABSTRACT is a required field'"
@@ -421,7 +429,8 @@ msgstr "3e mise à jour"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "412: Can't publish as item state is draft"
-msgstr "412: Publication impossible parce que l'élément est à l'état de brouillon"
+msgstr ""
+"412: Publication impossible parce que l'élément est à l'état de brouillon"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:20
 msgid "48 Hours"
@@ -532,8 +541,12 @@ msgstr "h 00 PM"
 #: ../superdesk-analytics/client/planning_usage_report/views/planning-usage-report-parameters.html:1
 msgid ""
 "<p>Generate a report showing usage of the Planning module.<br></p>\n"
-"    <p>This provides a statistics on who is and who isn't creating items in the Planning module</p>"
-msgstr "<p>Générer un rapport sur l'utilisation du module de planification.<br></p>\n   <p>Ceci fournit des statistiques sur les utilisateurs qui créent et ne créent pas d'éléments dans le module de planification</p>"
+"    <p>This provides a statistics on who is and who isn't creating items in "
+"the Planning module</p>"
+msgstr ""
+"<p>Générer un rapport sur l'utilisation du module de planification.<br></p>\n"
+"   <p>Ceci fournit des statistiques sur les utilisateurs qui créent et ne "
+"créent pas d'éléments dans le module de planification</p>"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:111
 msgid "A content profile with this name already exists."
@@ -547,7 +560,9 @@ msgstr "Un pupitre est requis"
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr "Un lien a été envoyé à l'adresse électronique spécifiée. Veuillez l'utiliser pour réinitialiser votre mot de passe. Il est valide pour une durée limitée."
+msgstr ""
+"Un lien a été envoyé à l'adresse électronique spécifiée. Veuillez l'utiliser "
+"pour réinitialiser votre mot de passe. Il est valide pour une durée limitée."
 
 #: ../superdesk-planning/client/api/locations.ts:30
 msgid "A location matching this one already exists"
@@ -875,9 +890,10 @@ msgstr "Ajouter un nouveau gabarit"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid ""
-"Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} "
-"Dictionary"
-msgstr "Ajouter nouveau dictionnaire {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} "
+"Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary"
+msgstr ""
+"Ajouter nouveau dictionnaire {{(isAbbreviations() ? 'Abbreviations' : '') | "
+"translate}} "
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AddPlanningBookmark.tsx:33
 msgid "Add Planning Item"
@@ -1465,7 +1481,9 @@ msgstr "Amériques/Winnipeg"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:407
 msgid "An Item can't have both Embargo and Publish Schedule."
-msgstr "Un élément ne peut pas à la fois être sous embargo et avoir une publication programmée. "
+msgstr ""
+"Un élément ne peut pas à la fois être sous embargo et avoir une publication "
+"programmée."
 
 #: ../superdesk-planning/client/actions/agenda.ts:42
 msgid "An agenda with this name already exists"
@@ -1477,7 +1495,9 @@ msgstr "Une erreur s'est produite lors du test de la configuration."
 
 #: scripts/apps/authoring/authoring/previewModal.tsx:48
 msgid "An error occured while trying to preview the item."
-msgstr "Une erreur s'est produite lors de la tentative de prévisualisation de l'élément."
+msgstr ""
+"Une erreur s'est produite lors de la tentative de prévisualisation de "
+"l'élément."
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:46
 msgid "An error occured, please try again."
@@ -1489,13 +1509,17 @@ msgstr "Une mise à jour ne peut pas être effectuée"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:83
 msgid "An update can not be created for an item which is not published yet."
-msgstr "Une mise à jour ne peut pas être effectuée pour un élément qui n'a pas encore été publié."
+msgstr ""
+"Une mise à jour ne peut pas être effectuée pour un élément qui n'a pas "
+"encore été publié."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:72
 msgid ""
 "An update for this version of the item already exists. To create another "
 "update, find the latest version of the item."
-msgstr "Une mise à jour de cette version de l'élément existe déjà. Pour créer une nouvelle mise à jour, trouvez la version la plus récente de l'élément. "
+msgstr ""
+"Une mise à jour de cette version de l'élément existe déjà. Pour créer une "
+"nouvelle mise à jour, trouvez la version la plus récente de l'élément. "
 
 #: ../superdesk-analytics/client/index.js:94
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:34
@@ -1712,7 +1736,9 @@ msgstr "Êtes-vous certain de vouloir placer ces éléments dans la corbeille?"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:44
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
-msgstr "Êtes-vous certain de vouloir annuler la publication de l'élément \"{{headline}}\"? "
+msgstr ""
+"Êtes-vous certain de vouloir annuler la publication de l'élément "
+"\"{{headline}}\"? "
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:96
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:236
@@ -1764,7 +1790,9 @@ msgstr "Type d'article: {{type}}"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:716
 msgid ""
 "Article cannot be published. Please accept or reject all suggestions first."
-msgstr "L'article ne peut pas être publié. Veuillez d'abord accepter ou rejeter toutes les suggestions."
+msgstr ""
+"L'article ne peut pas être publié. Veuillez d'abord accepter ou rejeter "
+"toutes les suggestions."
 
 #: scripts/apps/search/components/fields/scheduledDateTime.tsx:28
 msgid "Article is scheduled for {{schedule}}"
@@ -2043,8 +2071,7 @@ msgstr "Affectation retirée."
 #: ../superdesk-planning/client/controllers/AssignmentController.tsx:43
 #: ../superdesk-planning/client/index.ts:62
 #: ../superdesk-planning/client/planning-extension/src/assignments-overview/index.tsx:122
-#: ../superdesk-planning/index.ts:26
-#: scripts/apps/master-desk/MasterDesk.tsx:40
+#: ../superdesk-planning/index.ts:26 scripts/apps/master-desk/MasterDesk.tsx:40
 msgid "Assignments"
 msgstr "Affectations"
 
@@ -2189,7 +2216,10 @@ msgid ""
 "Authoring desks are for content creation, and items within it are protected "
 "from accidental publication. Publishing is only permitted  from production "
 "desks."
-msgstr "Les pupitres de création servent à la création de contenu et leurs éléments sont protégés contre toute publication accidentelle. La publication n'est autorisée qu'à partir des pupitres de production."
+msgstr ""
+"Les pupitres de création servent à la création de contenu et leurs éléments "
+"sont protégés contre toute publication accidentelle. La publication n'est "
+"autorisée qu'à partir des pupitres de production."
 
 #: scripts/apps/search/components/fields/authors.tsx:110
 #: scripts/apps/workspace/content/constants.ts:75
@@ -2285,7 +2315,9 @@ msgstr "Soyez le premier à commenter..."
 msgid ""
 "Before you start using your new newsroom, please tell us a little about "
 "yourself:"
-msgstr "Avant de commencer à utiliser votre nouvelle salle de rédaction, parlez-nous un peu de vous:"
+msgstr ""
+"Avant de commencer à utiliser votre nouvelle salle de rédaction, parlez-nous "
+"un peu de vous:"
 
 #: scripts/apps/search/components/fields/state.tsx:22
 msgid "Being Corrected"
@@ -2400,13 +2432,18 @@ msgid ""
 "By selecting the categories you are interested in, the system will only "
 "display these in a menu for setting the content item's categories (along "
 "with any of its existing categories)."
-msgstr "Les catégories que vous choisissez seront les seules à apparaître dans le menu permettant de définir les catégories du contenu sur lequel vous travaillez (en plus des catégories déjà existantes de ce contenu). "
+msgstr ""
+"Les catégories que vous choisissez seront les seules à apparaître dans le "
+"menu permettant de définir les catégories du contenu sur lequel vous "
+"travaillez (en plus des catégories déjà existantes de ce contenu). "
 
 #: scripts/apps/users/views/user-preferences.html:135
 msgid ""
 "By selecting the desks as your preferred desks, they appear first in the "
 "order when sending or publishing items."
-msgstr "En sélectionnant des pupitres comme pupitres préférés, ils apparaissent en premier dans l'ordre lors de l'envoi ou de la publication d'éléments."
+msgstr ""
+"En sélectionnant des pupitres comme pupitres préférés, ils apparaissent en "
+"premier dans l'ordre lors de l'envoi ou de la publication d'éléments."
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:155
 #: scripts/apps/master-desk/components/FilterPanelComponent.tsx:156
@@ -2499,11 +2536,15 @@ msgstr "Impossible de mettre à jour une version \"bulletin\" de l'article."
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:276
 msgid "Can't add a new item, because another item is in edit mode."
-msgstr "Impossible d'ajouter un nouvel élément parce qu'un autre élément est en mode édition."
+msgstr ""
+"Impossible d'ajouter un nouvel élément parce qu'un autre élément est en mode "
+"édition."
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:162
 msgid "Can't edit this item, because another item is in edit mode."
-msgstr "Impossible de modifier cet élément parce qu'un autre élément est en mode édition. "
+msgstr ""
+"Impossible de modifier cet élément parce qu'un autre élément est en mode "
+"édition. "
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:105
 msgid "Can't open a preview while in create mode"
@@ -2711,15 +2752,20 @@ msgstr "Ne peut pas se terminer par «.»"
 
 #: ../superdesk-planning/client/actions/main.ts:845
 msgid "Cannot load more data as filter type is not selected."
-msgstr "Impossible de charger plus de données car le type de filtre n'est pas sélectionné."
+msgstr ""
+"Impossible de charger plus de données car le type de filtre n'est pas "
+"sélectionné."
 
 #: ../superdesk-planning/client/actions/main.ts:866
 msgid "Cannot load more data. Failed to run the query."
-msgstr "Impossible de charger plus de données. Impossible d'exécuter la requête."
+msgstr ""
+"Impossible de charger plus de données. Impossible d'exécuter la requête."
 
 #: ../superdesk-planning/client/actions/main.ts:887
 msgid "Cannot search as filter type is not selected."
-msgstr "Impossible de faire une recherche car le type de filtre n'est pas sélectionné."
+msgstr ""
+"Impossible de faire une recherche car le type de filtre n'est pas "
+"sélectionné."
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:7
 #: scripts/core/editor3/components/media/MediaBlock.tsx:295
@@ -2795,19 +2841,27 @@ msgstr "Le canal est étrangement tranquille."
 
 #: scripts/apps/desks/views/desk-config-modal.html:192
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr "La limite de caractères est dépassée, le pupitre ne peut pas être créé ou mis à jour."
+msgstr ""
+"La limite de caractères est dépassée, le pupitre ne peut pas être créé ou "
+"mis à jour."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:45
 msgid "Character limit exceeded, dictionary can not be created/updated."
-msgstr "La limite de caractères est dépassée, le dictionnaire ne peut pas être créé ou mis à jour."
+msgstr ""
+"La limite de caractères est dépassée, le dictionnaire ne peut pas être créé "
+"ou mis à jour."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:14
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr "La limite de caractères a été dépassée. L'élément de budget ne peut pas être créé/mis à jour."
+msgstr ""
+"La limite de caractères a été dépassée. L'élément de budget ne peut pas être "
+"créé/mis à jour."
 
 #: scripts/apps/desks/views/desk-config-modal.html:277
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr "La limite de caractères est dépassée, l'étape ne peut pas être créée ou mise à jour."
+msgstr ""
+"La limite de caractères est dépassée, l'étape ne peut pas être créée ou mise "
+"à jour."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:129
 msgid "Character limit settings"
@@ -2875,10 +2929,16 @@ msgstr "Choisir toute la catégorie"
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:79
 msgid ""
 "Choose existing labels or create new\n"
-"                                    ones by typing. The labels are only used to organize the controlled vocabularies\n"
-"                                    in the list. The CVs are grouped under each label. You can choose only one\n"
+"                                    ones by typing. The labels are only used "
+"to organize the controlled vocabularies\n"
+"                                    in the list. The CVs are grouped under "
+"each label. You can choose only one\n"
 "                                    label."
-msgstr "Choisissez des étiquettes existantes ou créez-en de nouvelles en tapant. Les étiquettes ne sont utilisées que pour organiser les index contrôlés dans la liste. Les vocabulaires contrôlés sont regroupés dans chaque étiquette. Vous ne pouvez choisir qu'une seule étiquette."
+msgstr ""
+"Choisissez des étiquettes existantes ou créez-en de nouvelles en tapant. Les "
+"étiquettes ne sont utilisées que pour organiser les index contrôlés dans la "
+"liste. Les vocabulaires contrôlés sont regroupés dans chaque étiquette. Vous "
+"ne pouvez choisir qu'une seule étiquette."
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
@@ -2982,17 +3042,25 @@ msgstr "Fermer les séances"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:349
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:597
-msgid "Click \"Run\" to generate"
-msgstr ""
+msgid "Click Run to test Autotagger"
+msgstr "Cliquez sur Exécuter pour tester l'Étiquetage automatique"
+
+
+#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:618
+msgid "Add a new tag"
+msgstr "Ajouter une nouvelle étiquette"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:111
 msgid "Click on a Scheme rules on the left to view details."
-msgstr "Cliquez sur l'une des règles du schéma à gauche pour afficher les détails."
+msgstr ""
+"Cliquez sur l'une des règles du schéma à gauche pour afficher les détails."
 
 #: scripts/apps/users/views/change-avatar.html:36
 msgid ""
 "Click to capture using camera. Be sure that you allow camera accessibility."
-msgstr "Cliquez pour capturer en utilisant la caméra. Assurez-vous d'autoriser l'accès à la caméra."
+msgstr ""
+"Cliquez pour capturer en utilisant la caméra. Assurez-vous d'autoriser "
+"l'accès à la caméra."
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:97
 msgid "Click to replace thumbnail"
@@ -3201,7 +3269,9 @@ msgstr "Configuration supprimée."
 msgid ""
 "Configuration has changed. {{message}} Would you like to save the story to "
 "your workspace?"
-msgstr "La configuration a changé. {{message}} Voulez-vous enregistrer l'article dans votre espace de travail?"
+msgstr ""
+"La configuration a changé. {{message}} Voulez-vous enregistrer l'article "
+"dans votre espace de travail?"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:11
 msgid "Configuration name"
@@ -3306,7 +3376,9 @@ msgstr "Contenu"
 msgid ""
 "Content\n"
 "                                Type"
-msgstr "Contenu\n                                Type"
+msgstr ""
+"Contenu\n"
+"                                Type"
 
 #: scripts/apps/publish/views/subscribers.html:218
 msgid "Content API"
@@ -3991,7 +4063,9 @@ msgstr "Recadrer"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:177
 msgid "Crop coordinates are not defined for {{cropName}} picture crop."
-msgstr "Les coordonnées de recadrage ne sont pas définies pour le recadrage de la photo {{cropName}}."
+msgstr ""
+"Les coordonnées de recadrage ne sont pas définies pour le recadrage de la "
+"photo {{cropName}}."
 
 #: scripts/apps/profiling/views/profiling.html:35
 msgid "Cumulative time"
@@ -4297,8 +4371,11 @@ msgstr "Affichage par défaut"
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:93
 msgid ""
 "Defines the width of the pop-up in the\n"
-"                                    artcle header. A minimal value of 200 is required."
-msgstr "Définit la largeur de la fenêtre surgissante dans l'en-tête de l'article. Une valeur minimale de 200 est requise. "
+"                                    artcle header. A minimal value of 200 is "
+"required."
+msgstr ""
+"Définit la largeur de la fenêtre surgissante dans l'en-tête de l'article. "
+"Une valeur minimale de 200 est requise. "
 
 #: scripts/extensions/annotationsLibrary/dist/GetFields.js:22
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
@@ -4744,7 +4821,9 @@ msgstr "Déconnecté du serveur de notifications!"
 msgid ""
 "Displaying news ingest statistics. You can switch color themes or graph "
 "sources."
-msgstr "Affichage des statistiques d’ingestion de nouvelles. Vous pouvez changer de couleur de thème ou de sources graphiques. "
+msgstr ""
+"Affichage des statistiques d’ingestion de nouvelles. Vous pouvez changer de "
+"couleur de thème ou de sources graphiques. "
 
 #: scripts/core/keyboard/keyboard.ts:383 scripts/core/keyboard/keyboard.ts:392
 msgid "Displays active keyboard shortcuts"
@@ -4808,7 +4887,9 @@ msgstr "Voulez-vous retirer l'abréviation?"
 
 #: scripts/apps/users/views/edit-form.html:291
 msgid "Do you want to reset the password for user {{user.full_name}} ?"
-msgstr "Voulez-vous réinitialiser le mot de passe pour l'utilisateur {{user.full_name}}?"
+msgstr ""
+"Voulez-vous réinitialiser le mot de passe pour l'utilisateur {{user."
+"full_name}}?"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:121
 msgid "Do you want to spike  item(s) ?"
@@ -4924,12 +5005,16 @@ msgstr ""
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:128
 msgid "Drag one or more files here to upload them, or just click here."
-msgstr "Glissez un ou plusieurs fichiers ici pour les téléverser, ou cliquez simplement ici."
+msgstr ""
+"Glissez un ou plusieurs fichiers ici pour les téléverser, ou cliquez "
+"simplement ici."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:106
 msgid ""
 "Drag one or more files here to upload them, or just click the button below."
-msgstr "Glissez un ou plusieurs fichiers pour les téléverser, ou cliquez simplement sur le bouton ci-dessous."
+msgstr ""
+"Glissez un ou plusieurs fichiers pour les téléverser, ou cliquez simplement "
+"sur le bouton ci-dessous."
 
 #: scripts/apps/users/views/change-avatar.html:27
 msgid "Drop it here"
@@ -5073,8 +5158,12 @@ msgid "EXTERNAL LINK {{ index }} cannot end with \".\""
 msgstr "Le LIEN EXTERNE {{index}} ne peut pas se terminer par \".\""
 
 #: ../superdesk-planning/client/validators/events.ts:276
-msgid "EXTERNAL LINK {{ index }} must start with \"http://\", \"https://\" or \"www.\""
-msgstr "Le LIEN EXTERNE {{index}} doit commencer par \"http: //\", \"https: //\" ou \"www.\""
+msgid ""
+"EXTERNAL LINK {{ index }} must start with \"http://\", \"https://\" or \"www."
+"\""
+msgstr ""
+"Le LIEN EXTERNE {{index}} doit commencer par \"http: //\", \"https: //\" ou "
+"\"www.\""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:118
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.tsx:111
@@ -5373,7 +5462,9 @@ msgstr "Modifier l'index"
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid ""
 "Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary"
-msgstr "Modifier le dictionnaire {{(isAbbreviations() ? 'Abbreviations' : '') | translate}}"
+msgstr ""
+"Modifier le dictionnaire {{(isAbbreviations() ? 'Abbreviations' : '') | "
+"translate}}"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:27
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:31
@@ -5446,7 +5537,8 @@ msgstr "Autoriser l'utilisation des fonctionnalités à venir"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:204
 msgid "Enable if config can't be tested on REST server."
-msgstr "Activer si la configuration ne peut pas être testée sur le serveur REST."
+msgstr ""
+"Activer si la configuration ne peut pas être testée sur le serveur REST."
 
 #: scripts/apps/users/config.ts:108
 msgid "Enable user"
@@ -5490,7 +5582,9 @@ msgstr ""
 msgid ""
 "Ensure correct preview endpoint is configured or contact endpoint "
 "maintainers."
-msgstr "Assurez-vous que le bon point de terminaison de prévisualisation est configuré ou contactez les mainteneurs des points de terminaison."
+msgstr ""
+"Assurez-vous que le bon point de terminaison de prévisualisation est "
+"configuré ou contactez les mainteneurs des points de terminaison."
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:535
@@ -5514,6 +5608,10 @@ msgstr "Entrer l'adresse URL"
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:58
 msgid "Entity"
 msgstr "Entité"
+
+#: scripts/extensions/auto-tagging-widget/src/new-item.tsx:690
+msgid "Entities"
+msgstr "Entités"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:60
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:135
@@ -5582,7 +5680,9 @@ msgstr "Erreur. Le rapport sur l'activité du pupitre n'a pas pu être généré
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:223
 msgid "Error. The Planning Usage Report could not be generated!"
-msgstr "Erreur. Le rapport sur l'utilisation de la planification n'a pas pu être généré!"
+msgstr ""
+"Erreur. Le rapport sur l'utilisation de la planification n'a pas pu être "
+"généré!"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:240
 msgid "Error. The Production Time report could not be generated!"
@@ -5659,7 +5759,8 @@ msgstr "Erreur: Échec de la suppression du produit."
 
 #: scripts/apps/content-filters/controllers/ProductionTestController.ts:119
 msgid "Error: Failed to fetch production test results."
-msgstr "Erreur: Les résultats du test de production n'ont pas pu être extraits."
+msgstr ""
+"Erreur: Les résultats du test de production n'ont pas pu être extraits."
 
 #: scripts/apps/publish/controllers/PublishQueueController.ts:183
 msgid "Error: Failed to re-schedule"
@@ -5956,7 +6057,8 @@ msgstr "Événement retiré de la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:231
 msgid "Event will be changed to a multi-day event!"
-msgstr "L'événement va être modifié pour devenir un événement de plusieurs jours!"
+msgstr ""
+"L'événement va être modifié pour devenir un événement de plusieurs jours!"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:75
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:21
@@ -6111,8 +6213,7 @@ msgstr "Date d'expiration:"
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:227
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:157
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:97
-#: scripts/apps/archive/index.tsx:336
-#: scripts/apps/archive/views/export.html:32
+#: scripts/apps/archive/index.tsx:336 scripts/apps/archive/views/export.html:32
 #: scripts/apps/archive/views/export.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:182
 #: scripts/apps/authoring/views/authoring-topbar.html:283
@@ -6243,7 +6344,8 @@ msgstr "L'endroit n'a pas pu être créé"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:196
 msgid "Failed to create/update Events and Planning view filter"
-msgstr "Le filtre d'événements et de planification n'a pas pu être créé ou mis à jour"
+msgstr ""
+"Le filtre d'événements et de planification n'a pas pu être créé ou mis à jour"
 
 #: scripts/extensions/sams/dist/src/api/assets.js:459
 #: scripts/extensions/sams/src/api/assets.ts:576
@@ -6383,7 +6485,8 @@ msgstr "Le rapport enregistré n'a pas pu être chargé!"
 
 #: ../superdesk-planning/client/actions/autosave.ts:32
 msgid "Failed to load {{ itemType }} autosaves."
-msgstr "Les enregistrements automatiques {{ itemType }} n'ont pas pu être chargés."
+msgstr ""
+"Les enregistrements automatiques {{ itemType }} n'ont pas pu être chargés."
 
 #: ../superdesk-planning/client/actions/planning/api.ts:565
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:277
@@ -6398,7 +6501,9 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/locks.ts:121
 msgid "Failed to lock the item, could not determine item type!"
-msgstr "Le verrouillage de l'élément n'a pas pu avoir lieu; il était impossible de déterminer le type d'élément!"
+msgstr ""
+"Le verrouillage de l'élément n'a pas pu avoir lieu; il était impossible de "
+"déterminer le type d'élément!"
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:241
 msgid "Failed to lock the item."
@@ -6410,7 +6515,9 @@ msgstr "Le {{ itemType }} n'a pu être affiché"
 
 #: ../superdesk-planning/client/actions/main.ts:401
 msgid "Failed to post, could not find the item type!"
-msgstr "L'affichage n'a pas pu avoir lieu; il était impossible de trouver le type d'élément!"
+msgstr ""
+"L'affichage n'a pas pu avoir lieu; il était impossible de trouver le type "
+"d'élément!"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:154
 msgid "Failed to postpone the Event!"
@@ -6490,12 +6597,15 @@ msgstr "La zone d'intérêt n'a pas pu être enregistrée:"
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:94
 msgid "Failed to save the area of interest: Failed to call picture_crop."
-msgstr "La zone d'intérêt n'a pas pu être enregistrée: Échec du recadrage de la photo. "
+msgstr ""
+"La zone d'intérêt n'a pas pu être enregistrée: Échec du recadrage de la "
+"photo. "
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:128
-msgid ""
-"Failed to save the area of interest: Failed to call picture_renditions."
-msgstr "La zone d'intérêt n'a pas pu être enregistrée: les dimensions de la photo n'ont pas pu être trouvées."
+msgid "Failed to save the area of interest: Failed to call picture_renditions."
+msgstr ""
+"La zone d'intérêt n'a pas pu être enregistrée: les dimensions de la photo "
+"n'ont pas pu être trouvées."
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:422
 msgid "Failed to save the assignment."
@@ -6515,7 +6625,8 @@ msgstr "Le {{ itemType}} n'a pas pu être enregistré!"
 
 #: ../superdesk-planning/client/actions/main.ts:247
 msgid "Failed to save, could not find the item {{itemType}}!"
-msgstr "Échec de l'enregistrement, impossible de trouver l'élément {{itemType}}!"
+msgstr ""
+"Échec de l'enregistrement, impossible de trouver l'élément {{itemType}}!"
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:653
 msgid "Failed to send and publish."
@@ -6553,7 +6664,8 @@ msgstr "L'affichage de {{itemType}} n'a pas pu être annulé"
 
 #: ../superdesk-planning/client/actions/main.ts:339
 msgid "Failed to unpost, could not find the item type!"
-msgstr "L'affichage n'a pas pu être annulé, le type d'élément n'a pas été trouvé!"
+msgstr ""
+"L'affichage n'a pas pu être annulé, le type d'élément n'a pas été trouvé!"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:515
 msgid "Failed to update Event repetitions"
@@ -6730,7 +6842,9 @@ msgstr "Champ"
 msgid ""
 "Field\n"
 "                                    type"
-msgstr "Champ\n                                    type"
+msgstr ""
+"Champ\n"
+"                                    type"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:111
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:140
@@ -6987,7 +7101,8 @@ msgstr "Bas de page"
 
 #: scripts/apps/publish/views/subscribers.html:182
 msgid "For Content API only subscriber destinations are not required."
-msgstr "Pour l'API de contenu, seules les destinations d'abonné ne sont pas requises."
+msgstr ""
+"Pour l'API de contenu, seules les destinations d'abonné ne sont pas requises."
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:21
 msgid "For Publication"
@@ -7146,7 +7261,9 @@ msgstr "Générer un rapport montrant l'activité d'un pupitre."
 msgid ""
 "Generate a report showing average and maximum time it took to produce "
 "content per desk."
-msgstr "Générer un rapport montrant les temps moyen et maximum pris pour produire du contenu par pupitre."
+msgstr ""
+"Générer un rapport montrant les temps moyen et maximum pris pour produire du "
+"contenu par pupitre."
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:1
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-parameters.html:1
@@ -7157,13 +7274,17 @@ msgstr "Générer un rapport montrant des statistiques sur le contenu publié."
 msgid ""
 "Generate a report showing the time between original publish and update "
 "publish."
-msgstr "Générer un rapport montrant le temps écoulé entre la publication originale et la publication de la mise à jour"
+msgstr ""
+"Générer un rapport montrant le temps écoulé entre la publication originale "
+"et la publication de la mise à jour"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-report-parameters.html:1
 msgid ""
 "Generate a report showing updates to featuremedia items after initial "
 "publish."
-msgstr "Générer un rapport montrant les mises à jour aux éléments multimédia après la publication initiale."
+msgstr ""
+"Générer un rapport montrant les mises à jour aux éléments multimédia après "
+"la publication initiale."
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-parameters.html:1
 msgid "Generate a report showing user activity."
@@ -7418,7 +7539,9 @@ msgstr "Aidez-nous à traduire Superdesk"
 msgid ""
 "Helper\n"
 "                                    text"
-msgstr "Aide\n                                    texte"
+msgstr ""
+"Aide\n"
+"                                    texte"
 
 #: scripts/apps/authoring/views/article-edit.html:495
 msgid "Helplines/Contact Information"
@@ -7550,11 +7673,15 @@ msgstr "Désolé, une erreur s'est produite lors de l'enregistrement du statut."
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:188
 msgid "I'm sorry but there was an error when saving the routing scheme."
-msgstr "Désolé, une erreur s'est produite lors de l'enregistrement du schéma de routage."
+msgstr ""
+"Désolé, une erreur s'est produite lors de l'enregistrement du schéma de "
+"routage."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:37
 msgid "I'm sorry but there was an error when saving the rule set."
-msgstr "Désolé, une erreur s'est produite lors de l'enregistrement de l'ensemble de règles."
+msgstr ""
+"Désolé, une erreur s'est produite lors de l'enregistrement de l'ensemble de "
+"règles."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:25
 msgid "ID"
@@ -7563,14 +7690,20 @@ msgstr "Identifiant"
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:32
 msgid ""
 "ID\n"
-"                                must contain only letters, digits and characters -, _."
-msgstr "Identifiant\n                                ne doit contenir que des lettres, des chiffres et les caractères -, _."
+"                                must contain only letters, digits and "
+"characters -, _."
+msgstr ""
+"Identifiant\n"
+"                                ne doit contenir que des lettres, des "
+"chiffres et les caractères -, _."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:30
 msgid ""
 "ID conflicts\n"
 "                                with system field."
-msgstr "Conflits d'identifiants\n                                 avec le champ du système."
+msgstr ""
+"Conflits d'identifiants\n"
+"                                 avec le champ du système."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:28
 msgid "ID must be unique."
@@ -7603,9 +7736,16 @@ msgstr "Si vous collez un code d'intégration, il sera utilisé \"tel quel\"."
 #: scripts/apps/users/views/settings-roles.html:54
 msgid ""
 "If you select a default role for content creation or editing,\n"
-"                        Superdesk will prefill the Authors field with user's name and the role.\n"
-"                        The roles are managed in <b>Author roles</b> controlled vocabulary in the Metadata section."
-msgstr "Si vous sélectionnez un statut par défaut pour la création ou la modification de contenu, Superdesk pré-remplira le champ Auteur avec le nom de l'utilisateur et son statut. \nLes statuts sont gérés dans l'index contrôlé par <b>les statuts d'auteur</b> dans la section Métadonnées."
+"                        Superdesk will prefill the Authors field with user's "
+"name and the role.\n"
+"                        The roles are managed in <b>Author roles</b> "
+"controlled vocabulary in the Metadata section."
+msgstr ""
+"Si vous sélectionnez un statut par défaut pour la création ou la "
+"modification de contenu, Superdesk pré-remplira le champ Auteur avec le nom "
+"de l'utilisateur et son statut. \n"
+"Les statuts sont gérés dans l'index contrôlé par <b>les statuts d'auteur</b> "
+"dans la section Métadonnées."
 
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.tsx:85
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:93
@@ -7648,7 +7788,9 @@ msgstr "Largeur de la photo"
 #: scripts/core/upload/crop-directive.ts:41
 msgid ""
 "Image is bigger than {{maxFileSize}}MB, upload file size may be limited!"
-msgstr "La photo est plus grande que {{maxFileSize}} MB. La taille du fichier téléversé peut être limitée!"
+msgstr ""
+"La photo est plus grande que {{maxFileSize}} MB. La taille du fichier "
+"téléversé peut être limitée!"
 
 #: scripts/apps/authoring/views/change-image.html:218
 msgid "Image size"
@@ -7691,9 +7833,11 @@ msgstr "Pour prévisualiser l'élément, enregistrez d'abord les modifications."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.ts:31
 msgid ""
-"In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected"
-" repeat."
-msgstr "Dans l'article {{slugline}} publié à: {{date}}.{{lineBreak}} Ceci est une répétition corrigée."
+"In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected "
+"repeat."
+msgstr ""
+"Dans l'article {{slugline}} publié à: {{date}}.{{lineBreak}} Ceci est une "
+"répétition corrigée."
 
 #: ../superdesk-planning/client/utils/index.ts:337
 #: scripts/apps/contacts/components/ContactInfo.tsx:32
@@ -7812,7 +7956,9 @@ msgstr "Tableau de bord d'ingestion"
 
 #: scripts/apps/ingest/controllers/IngestDashboardController.ts:36
 msgid "Ingest Dashboard preferences could not be saved."
-msgstr "Les préférences du tableau de bord d'ingestion n'ont pas pu être enregistrées."
+msgstr ""
+"Les préférences du tableau de bord d'ingestion n'ont pas pu être "
+"enregistrées."
 
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:84
@@ -7902,7 +8048,9 @@ msgstr "Version installée:"
 
 #: scripts/apps/authoring/authoring/index.ts:440
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
-msgstr "Vérification orthographique instantanée, lorsque la vérification orthographique automatique est désactivée"
+msgstr ""
+"Vérification orthographique instantanée, lorsque la vérification "
+"orthographique automatique est désactivée"
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:155
 #: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:181
@@ -8068,7 +8216,10 @@ msgstr "L'élément a été renvoyé."
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
-msgstr "L'élément a changé depuis son ouverture. S'il vous plaît fermer et rouvrir l'élément pour continuer. Malheureusement, vos modifications ne peuvent pas être enregistrées."
+msgstr ""
+"L'élément a changé depuis son ouverture. S'il vous plaît fermer et rouvrir "
+"l'élément pour continuer. Malheureusement, vos modifications ne peuvent pas "
+"être enregistrées."
 
 #: scripts/apps/authoring/versioning/views/versioning.html:6
 #: scripts/apps/legal-archive/views/legal_archive.html:127
@@ -8084,7 +8235,8 @@ msgstr "L'élément est déjà dans cet assemblage."
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:22
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:71
 msgid "Item is locked and marked user can not be changed."
-msgstr "L'élément est verrouillé et l'utilisateur signalé ne peut pas être changé."
+msgstr ""
+"L'élément est verrouillé et l'utilisateur signalé ne peut pas être changé."
 
 #: scripts/apps/authoring/authoring/controllers/AssociationController.ts:265
 msgid "Item is locked. Cannot associate media item."
@@ -8147,9 +8299,14 @@ msgstr "Élément mis à jour."
 msgid "Item was not added. Only 1 item is allowed for this field."
 msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
-msgstr[0] "L'élément n'a pas été ajouté. Un seul élément peut se trouver dans ce champ. "
-msgstr[1] "L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se trouver dans ce champ. "
-msgstr[2] "L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se trouver dans ce champ. "
+msgstr[0] ""
+"L'élément n'a pas été ajouté. Un seul élément peut se trouver dans ce champ. "
+msgstr[1] ""
+"L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se "
+"trouver dans ce champ. "
+msgstr[2] ""
+"L'élément n'a pas été ajouté. Seulement {{number}} éléments peuvent se "
+"trouver dans ce champ. "
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:488
 msgid "Item was unpublished successfully."
@@ -8424,10 +8581,15 @@ msgstr "Latitude"
 msgid ""
 "Learn more about Superdesk at <a href=\"https://www.superdesk.org/\" "
 "title=\"Superdesk\" target=\"_blank\">www.superdesk.org</a>. For help and "
-"support, join the discussion on <a "
+"support, join the discussion on <a href=\"https://forum.sourcefabric.org/"
+"categories/superdesk-dev\" title=\"Superdesk forum\" "
+"target=\"_blank\">Superdesk forums</a>."
+msgstr ""
+"Pour en savoir plus sur Superdesk allez sur <a href=\"https://www.superdesk."
+"org/\" title=\"Superdesk\" target=\"_blank\">www.superdesk.org</a>. Pour "
+"obtenir de l'aide et du soutien, rejoignez la discussion sur les <a "
 "href=\"https://forum.sourcefabric.org/categories/superdesk-dev\" "
-"title=\"Superdesk forum\" target=\"_blank\">Superdesk forums</a>."
-msgstr "Pour en savoir plus sur Superdesk allez sur <a href=\"https://www.superdesk.org/\" title=\"Superdesk\" target=\"_blank\">www.superdesk.org</a>. Pour obtenir de l'aide et du soutien, rejoignez la discussion sur les <a href=\"https://forum.sourcefabric.org/categories/superdesk-dev\" title=\"Superdesk forum\" target=\"_blank\">forums de Superdesk</a>."
+"title=\"Superdesk forum\" target=\"_blank\">forums de Superdesk</a>."
 
 #: scripts/apps/archive/views/item-preview.html:10
 #: scripts/apps/archive/views/metadata-view.html:193
@@ -9043,7 +9205,8 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:47
 msgid "Min length shouldn't be bigger than max length."
-msgstr "La longueur minimale ne devrait pas être supérieure à la longueur maximale."
+msgstr ""
+"La longueur minimale ne devrait pas être supérieure à la longueur maximale."
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:412
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:413
@@ -9069,7 +9232,8 @@ msgstr "La taille minimum permise pour la photo est {{minWidth}}x{{minHeight}}"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:127
 msgid "Minimum height and width should be greater than or equal to 200"
-msgstr "La hauteur et la largeur minimales doivent être supérieures ou égales à 200"
+msgstr ""
+"La hauteur et la largeur minimales doivent être supérieures ou égales à 200"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:127
 msgid "Minus Sign"
@@ -9261,9 +9425,11 @@ msgstr "Doit être inférieur à {{ maximum }}"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:46
 msgid ""
-"Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4"
-" of the following:"
-msgstr "Doit contenir au moins {{MIN_LENGTH}} caractères et au moins {{MIN_STRENGTH}} des 4 éléments suivants:"
+"Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 "
+"of the following:"
+msgstr ""
+"Doit contenir au moins {{MIN_LENGTH}} caractères et au moins "
+"{{MIN_STRENGTH}} des 4 éléments suivants:"
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.tsx:96
 msgid "Must contain at least one character"
@@ -9390,7 +9556,9 @@ msgstr ""
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:132
 msgid ""
 "Name field should only have alphanumeric characters, dashes and underscores"
-msgstr "Le champ du nom ne devrait contenir que des caractères alphanumériques, des tirets et des traits de soulignement."
+msgstr ""
+"Le champ du nom ne devrait contenir que des caractères alphanumériques, des "
+"tirets et des traits de soulignement."
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:79
 msgid "Name is not unique."
@@ -9660,9 +9828,10 @@ msgstr "Aucune option d'extraction ou de publication définie"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:1188
 msgid ""
-"No formatters found for {{formats}} while publishing item having unique "
-"name."
-msgstr "Aucun formateur trouvé pour {{formats}} lors de la publication d'un élément ayant un identifiant unique."
+"No formatters found for {{formats}} while publishing item having unique name."
+msgstr ""
+"Aucun formateur trouvé pour {{formats}} lors de la publication d'un élément "
+"ayant un identifiant unique."
 
 #: scripts/apps/users/views/change-avatar.html:14
 msgid "No image"
@@ -9720,7 +9889,9 @@ msgstr ""
 msgid ""
 "No preferred categories selected. Should you choose to proceed with your "
 "choice. A default set of categories will be selected for you."
-msgstr "Aucune catégorie préférée sélectionnée. Si vous choisissez de procéder avec votre choix, un ensemble de catégories par défaut sera sélectionné pour vous."
+msgstr ""
+"Aucune catégorie préférée sélectionnée. Si vous choisissez de procéder avec "
+"votre choix, un ensemble de catégories par défaut sera sélectionné pour vous."
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:34
 msgid "No recent templates."
@@ -9780,7 +9951,8 @@ msgid "No suggestions have been resolved"
 msgstr "Aucune suggestion n'a été résolue"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:349
-#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:596
+#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:644
+#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:645
 msgid "No tags yet"
 msgstr "Pas encore d'étiquette"
 
@@ -10090,7 +10262,9 @@ msgstr "Seulement les éléments publiés"
 msgid ""
 "Only allow content with the\n"
 "                                following status:"
-msgstr "Seulement autoriser le contenu avec le \n                                 statut suivant:"
+msgstr ""
+"Seulement autoriser le contenu avec le \n"
+"                                 statut suivant:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:281
 msgid "Only one XMP files are accepted"
@@ -10118,7 +10292,8 @@ msgstr "Oops! L'authentification a été refusée."
 
 #: scripts/core/auth/login-modal.html:43
 msgid "Oops! Invalid Username or Password.<br>Please try again."
-msgstr "Oops! Nom d'utilisateur ou mot de passe invalide. <br>Veuillez réessayer."
+msgstr ""
+"Oops! Nom d'utilisateur ou mot de passe invalide. <br>Veuillez réessayer."
 
 #: scripts/core/auth/reset-password.html:27
 msgid "Oops! Invalid user Email.<br>Please try again."
@@ -10275,15 +10450,19 @@ msgstr "Original"
 
 #: scripts/apps/authoring/views/article-edit.html:384
 msgid ""
-"Original ({{item.renditions.original.width}} x "
-"{{item.renditions.original.height}} px)"
-msgstr "Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)"
+"Original ({{item.renditions.original.width}} x {{item.renditions.original."
+"height}} px)"
+msgstr ""
+"Original ({{item.renditions.original.width}} x {{item.renditions.original."
+"height}} px)"
 
 #: ../superdesk-analytics/client/views/renditions-preview.html:33
 msgid ""
 "Original ({{preview.item.update.update.renditions.original.width}} x "
 "{{preview.item.update.update.renditions.original.height}} px)"
-msgstr "Original ({{preview.item.update.update.renditions.original.width}} x {{preview.item.update.update.renditions.original.height}} px)"
+msgstr ""
+"Original ({{preview.item.update.update.renditions.original.width}} x "
+"{{preview.item.update.update.renditions.original.height}} px)"
 
 #: scripts/apps/search/components/fields/translations.tsx:26
 msgid "Original Article"
@@ -10311,7 +10490,9 @@ msgstr "Auteur original"
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:428
 #: scripts/apps/authoring/tests/changeImage.spec.ts:56
 msgid "Original size cannot be less than the required crop sizes."
-msgstr "La taille originale ne peut pas être inférieure à la taille de recadrage requise."
+msgstr ""
+"La taille originale ne peut pas être inférieure à la taille de recadrage "
+"requise."
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:60
 msgid "Original source"
@@ -10514,7 +10695,9 @@ msgstr "Le mot de passe est trop simple."
 
 #: scripts/core/auth/auth.ts:79
 msgid "Password was changed. You can login using your new password."
-msgstr "Le mot de passe à été changé. Vous pouvez vous connecter avec votre nouveau mot de passe."
+msgstr ""
+"Le mot de passe à été changé. Vous pouvez vous connecter avec votre nouveau "
+"mot de passe."
 
 #: ../superdesk-planning/client/utils/events.ts:558
 #: ../superdesk-planning/client/utils/events.ts:572
@@ -10612,7 +10795,9 @@ msgstr "Espace sécurisé"
 msgid ""
 "Personal dictionary for language \"{{dictionary.language_id}}\" already "
 "exists."
-msgstr "Le dictionnaire personnel pour la langue \"{{dictionary.language_id}}\" existe déjà."
+msgstr ""
+"Le dictionnaire personnel pour la langue \"{{dictionary.language_id}}\" "
+"existe déjà."
 
 #: scripts/apps/users/views/edit.html:20
 msgid "Personal preferences"
@@ -10818,11 +11003,15 @@ msgstr "Veuillez d'abord modifier les gabarits par défaut."
 
 #: scripts/core/auth/secure-login.html:14
 msgid "Please check that the following id is the same as on your device:"
-msgstr "Veuillez vérifier que l'identifiant suivant est le même que sur votre appareil:"
+msgstr ""
+"Veuillez vérifier que l'identifiant suivant est le même que sur votre "
+"appareil:"
 
 #: scripts/apps/users/config.ts:95
 msgid "Please confirm that you want to delete all the sessions for this user."
-msgstr "Veuillez confirmer que vous voulez supprimer toutes les sessions de cet utilisateur."
+msgstr ""
+"Veuillez confirmer que vous voulez supprimer toutes les sessions de cet "
+"utilisateur."
 
 #: scripts/apps/users/config.ts:78
 msgid "Please confirm that you want to disable a user."
@@ -10841,9 +11030,10 @@ msgid "Please confirm you want to delete the vocabulary."
 msgstr "Veuillez confirmer que vous souhaitez supprimer l'index."
 
 #: scripts/apps/search/views/saved-search-subscribe.html:12
-msgid ""
-"Please define the frequency and time of your email notifications below."
-msgstr "Veuillez définir la fréquence et l'heure de vos notifications par courriel ci-dessous."
+msgid "Please define the frequency and time of your email notifications below."
+msgstr ""
+"Veuillez définir la fréquence et l'heure de vos notifications par courriel "
+"ci-dessous."
 
 #: scripts/core/auth/login-modal.html:4
 msgid "Please log in again."
@@ -11048,7 +11238,9 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:438
 msgid "Preview formatted article, when previewFormats feature configured"
-msgstr "Prévisualisation de l'article mis en forme, lorsque la fonctionnalité de prévisualisation de mise en forme est configurée"
+msgstr ""
+"Prévisualisation de l'article mis en forme, lorsque la fonctionnalité de "
+"prévisualisation de mise en forme est configurée"
 
 #: scripts/apps/authoring/views/authoring-header.html:74
 msgid "Preview master story"
@@ -11060,7 +11252,9 @@ msgstr "Précédent"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:604
 msgid "Previous scheduled update is not linked to a news item yet."
-msgstr "La mise à jour planifiée précédente n'est pas encore liée à un élément de nouvelles."
+msgstr ""
+"La mise à jour planifiée précédente n'est pas encore liée à un élément de "
+"nouvelles."
 
 #: scripts/apps/users/config.ts:157
 msgid "Previous user"
@@ -11217,9 +11411,11 @@ msgstr "Thème de révision"
 
 #: scripts/core/auth/reset-password.html:11
 msgid ""
-"Provide your email in order to get 'Reset Token'. Once you get it, use it to"
-" reset your password."
-msgstr "Fournissez votre courriel afin d'obtenir un jeton de réinitialisation. Une fois que vous l'aurez, utilisez-le pour réinitialiser votre mot de passe. "
+"Provide your email in order to get 'Reset Token'. Once you get it, use it to "
+"reset your password."
+msgstr ""
+"Fournissez votre courriel afin d'obtenir un jeton de réinitialisation. Une "
+"fois que vous l'aurez, utilisez-le pour réinitialiser votre mot de passe. "
 
 #: scripts/apps/users/views/change-avatar.html:43
 msgid "Provided image URL is not valid."
@@ -11249,7 +11445,9 @@ msgstr "Séquence de fournisseur"
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid ""
 "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
-msgstr "Le fournisseur {{name}} est étrangement silencieux. Sa dernière activité a eu lieu le {{last}}"
+msgstr ""
+"Le fournisseur {{name}} est étrangement silencieux. Sa dernière activité a "
+"eu lieu le {{last}}"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:272
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:107
@@ -11482,7 +11680,8 @@ msgstr "Le nombre de répétitions récurrentes doit être supérieur à 1"
 
 #: ../superdesk-planning/client/validators/events.ts:119
 msgid "RECURRING REPEAT COUNT must be less than {{ maximum }}"
-msgstr "Le nombre de répétitions récurrentes doit être inférieur à {{maximum}}."
+msgstr ""
+"Le nombre de répétitions récurrentes doit être inférieur à {{maximum}}."
 
 #: ../superdesk-planning/client/validators/events.ts:100
 msgid "RECURRING REPEAT ON is a required field"
@@ -11733,7 +11932,9 @@ msgstr "L'élément associé n'est pas disponible"
 msgid ""
 "Related item was not added, because the field reached the limit of related "
 "items allowed."
-msgstr "L'élément associé n'a pas été ajouté, car le champ a atteint la limite permise du nombre d'éléments associés."
+msgstr ""
+"L'élément associé n'a pas été ajouté, car le champ a atteint la limite "
+"permise du nombre d'éléments associés."
 
 #: scripts/apps/vocabularies/constants.ts:11
 msgid "Related items"
@@ -12313,7 +12514,7 @@ msgstr "Ensemble de règles"
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:393
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:723
 msgid "Run"
-msgstr ""
+msgstr "Exécuter"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:18
 msgid "Run Report"
@@ -12321,9 +12522,9 @@ msgstr "Produire le rapport"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:341
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:289
-#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:472
+#: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:501
 msgid "Run automatically"
-msgstr "Ouvrir automatiquement"
+msgstr "Exécution automatique"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:115
 msgid "SA"
@@ -12572,7 +12773,8 @@ msgstr "Enregistrer les modifications avant de créer un gabarit?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:967
 msgid "Save changes before marking event as complete ?"
-msgstr "Enregistrer les modifications avant de signaler cet événement comme complet?"
+msgstr ""
+"Enregistrer les modifications avant de signaler cet événement comme complet?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:248
 msgid "Save changes before postponing the Event?"
@@ -12588,11 +12790,14 @@ msgstr "Enregistrer les changements avant de placer dans la corbeille?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:306
 msgid "Save changes before updating Event Repetitions?"
-msgstr "Enregistrer les modifications avant de mettre à jour les répétitions de l'événement?"
+msgstr ""
+"Enregistrer les modifications avant de mettre à jour les répétitions de "
+"l'événement?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:201
 msgid "Save changes before updating the Event's time?"
-msgstr "Enregistrer les modifications avant de mettre à jour l'heure de l'événement?"
+msgstr ""
+"Enregistrer les modifications avant de mettre à jour l'heure de l'événement?"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:403
 msgid "Save changes without re-posting?"
@@ -12650,7 +12855,10 @@ msgstr "Rapport enregistré"
 msgid ""
 "Saved Report has changed since it was opened. Please re-select the Saved "
 "Report to continue. Regrettably, your changes cannot be saved."
-msgstr "Le rapport enregistré a été modifié depuis son ouverture. Veuillez sélectionner de nouveau le rapport enregistré pour continuer. Malheureusement, vos modifications ne peuvent pas être enregistrées."
+msgstr ""
+"Le rapport enregistré a été modifié depuis son ouverture. Veuillez "
+"sélectionner de nouveau le rapport enregistré pour continuer. "
+"Malheureusement, vos modifications ne peuvent pas être enregistrées."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:62
 msgid "Saved Searches"
@@ -12753,7 +12961,9 @@ msgstr "Heure(s) programmée(s)"
 
 #: ../superdesk-planning/client/validators/planning.ts:193
 msgid "Scheduled Upates have to be after the previous updates."
-msgstr "Les mises à jour planifiées doivent survenir après les mises à jour précédentes. "
+msgstr ""
+"Les mises à jour planifiées doivent survenir après les mises à jour "
+"précédentes. "
 
 #: ../superdesk-planning/client/validators/planning.ts:197
 msgid "Scheduled Upates should have a date/time."
@@ -13060,16 +13270,24 @@ msgstr "Sélectionner un espace de travail"
 
 #: scripts/apps/desks/views/desk-config-modal.html:170
 msgid ""
-"Select a default content profile which is used for articles fetched from ingest. If you don't see any, create one\n"
-"                                   <a href=\"#/settings/content-profiles\">here</a>"
-msgstr "Sélectionnez un profil de contenu par défaut utilisé pour les articles extraits de la source d'ingestion. S'il n'y en a pas, créez-en un <a href=\"#/settings/content-profiles\">ici</a>"
+"Select a default content profile which is used for articles fetched from "
+"ingest. If you don't see any, create one\n"
+"                                   <a href=\"#/settings/content-"
+"profiles\">here</a>"
+msgstr ""
+"Sélectionnez un profil de contenu par défaut utilisé pour les articles "
+"extraits de la source d'ingestion. S'il n'y en a pas, créez-en un <a "
+"href=\"#/settings/content-profiles\">ici</a>"
 
 #: scripts/apps/desks/views/desk-config-modal.html:147
 msgid ""
-"Select a default template for new articles. If you don't see any, first make"
-" sure that there is at least one content profile. Each time a profile is "
+"Select a default template for new articles. If you don't see any, first make "
+"sure that there is at least one content profile. Each time a profile is "
 "created, Superdesk creates a template with the same name."
-msgstr "Sélectionnez un gabarit par défaut pour les nouveaux articles. S'il n'y en a pas, assurez-vous d'abord qu'il y a au moins un profil de contenu. Chaque fois qu'un profil est créé, Superdesk crée un gabarit avec le même nom. "
+msgstr ""
+"Sélectionnez un gabarit par défaut pour les nouveaux articles. S'il n'y en a "
+"pas, assurez-vous d'abord qu'il y a au moins un profil de contenu. Chaque "
+"fois qu'un profil est créé, Superdesk crée un gabarit avec le même nom. "
 
 #: scripts/core/ui/components/generic-form/input-types/desk_single_value.tsx:40
 msgid "Select a desk"
@@ -13357,16 +13575,24 @@ msgstr "Définir l'étiquette de l'assemblage actuel"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:130
 msgid "Set maximum items per stages and saved searches for view"
-msgstr "Définir le nombre maximal d'éléments par étape et de recherches enregistrées pour l'affichage"
+msgstr ""
+"Définir le nombre maximal d'éléments par étape et de recherches enregistrées "
+"pour l'affichage"
 
 #: scripts/apps/monitoring/aggregate-widget/aggregate.ts:17
 msgid ""
 "Set up different monitors to follow any topics from ingest or production, "
 "desk outputs or any part of the workflow. All you need is to give it a "
-"sensible name, select a saved search or desk or its workflow stages. Monitor"
-" anything, anywhere, anytime. You can have as many Monitor widgets as you "
+"sensible name, select a saved search or desk or its workflow stages. Monitor "
+"anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr "Configurez différents moniteurs pour suivre un sujet depuis son ingestion ou sa production, sa publication dans un pupitre, ou n'importe quelle étape du flux de travail. Il suffit de lui donner un nom approprié, puis de sélectionner une recherche enregistrée, un pupitre ou une étape du flux de travail. Il est possible de suivre n'importe quoi, n'importe où à n'importe quel moment. Il n'y a pas de limite quant au nombre de moniteurs."
+msgstr ""
+"Configurez différents moniteurs pour suivre un sujet depuis son ingestion ou "
+"sa production, sa publication dans un pupitre, ou n'importe quelle étape du "
+"flux de travail. Il suffit de lui donner un nom approprié, puis de "
+"sélectionner une recherche enregistrée, un pupitre ou une étape du flux de "
+"travail. Il est possible de suivre n'importe quoi, n'importe où à n'importe "
+"quel moment. Il n'y a pas de limite quant au nombre de moniteurs."
 
 #: scripts/extensions/sams/dist/src/api/sets.js:57
 #: scripts/extensions/sams/src/api/sets.ts:76
@@ -13413,7 +13639,8 @@ msgstr "Raccourcis"
 #: ../superdesk-planning/client/validators/planning.ts:178
 #: ../superdesk-planning/client/validators/planning.ts:180
 msgid "Should be after the previous scheduled update/coverage"
-msgstr "Devrait être postérieur à la mise à jour/couverture planifiée précédente"
+msgstr ""
+"Devrait être postérieur à la mise à jour/couverture planifiée précédente"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:212
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:56
@@ -13464,7 +13691,9 @@ msgstr "Afficher sur la carte"
 
 #: scripts/apps/workspace/content/components/WidgetsConfig.tsx:57
 msgid "Show or hide the widgets in the right toolbar in the editor workspace."
-msgstr "Afficher ou masquer les widgets dans la barre d'outils de droite dans l'espace de travail de l'éditeur."
+msgstr ""
+"Afficher ou masquer les widgets dans la barre d'outils de droite dans "
+"l'espace de travail de l'éditeur."
 
 #: scripts/apps/search/components/fields/nested-link.tsx:28
 msgid "Show previous items"
@@ -13653,9 +13882,11 @@ msgstr "Certains éléments sont liés à une couverture planifiée en progrès.
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:459
 msgid ""
-"Some selected items have not yet been posted. All selections must be visible"
-" to subscribers."
-msgstr "Certains éléments sélectionnés n'ont pas encore été publiés. Toutes les sélections doivent être visibles pour les abonnés."
+"Some selected items have not yet been posted. All selections must be visible "
+"to subscribers."
+msgstr ""
+"Certains éléments sélectionnés n'ont pas encore été publiés. Toutes les "
+"sélections doivent être visibles pour les abonnés."
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:50
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:108
@@ -13671,14 +13902,16 @@ msgstr "Désolé, l'avatar doit avoir une taille minimale de 200x200 pixels."
 #: scripts/core/auth/reset-password.html:77
 #: scripts/core/auth/secure-login.html:30
 msgid "Sorry, but can't reach the server now.<br>Please try again later."
-msgstr "Désolé, le serveur ne répond pas maintenant.<br>Veuillez réessayer plus tard."
+msgstr ""
+"Désolé, le serveur ne répond pas maintenant.<br>Veuillez réessayer plus tard."
 
 #: scripts/core/upload/image-crop-directive.ts:251
 msgid "Sorry, but image must be at least {{width}}x{{height}}."
 msgstr "Désolé, mais la photo doit être au moins {{width}} x {{height}}."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidget.tsx:76
-msgid "Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})"
+msgid ""
+"Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})"
 msgstr ""
 
 #: scripts/apps/templates/views/create-template.html:14
@@ -13827,7 +14060,9 @@ msgstr "Corbeille: "
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:100
 msgid "Spike all recurring events or just this one?"
-msgstr "Souhaitez-vous placer dans la corbeille tous les événements récurrents ou seulement celui-ci?"
+msgstr ""
+"Souhaitez-vous placer dans la corbeille tous les événements récurrents ou "
+"seulement celui-ci?"
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:7
 msgid "Spike event"
@@ -14238,9 +14473,10 @@ msgid "Suggestions"
 msgstr "Suggestions"
 
 #: scripts/apps/authoring/suggest/SuggestView.html:8
-msgid ""
-"Suggestions will appear here once the article's body starts changing..."
-msgstr "Des suggestions apparaîtront ici lorsque le corps de l'article commencera à être modifié..."
+msgid "Suggestions will appear here once the article's body starts changing..."
+msgstr ""
+"Des suggestions apparaîtront ici lorsque le corps de l'article commencera à "
+"être modifié..."
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:278
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:29
@@ -14438,9 +14674,9 @@ msgid "Takes Package"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:692
-msgid ""
-"Tansa is not responding. You can continue editing or publish the story."
-msgstr "Tansa ne répond pas. Vous pouvez continuer à éditer ou publier le récit."
+msgid "Tansa is not responding. You can continue editing or publish the story."
+msgstr ""
+"Tansa ne répond pas. Vous pouvez continuer à éditer ou publier le récit."
 
 #: scripts/apps/authoring/views/send-item.html:169
 msgid "Target"
@@ -14564,11 +14800,13 @@ msgstr "L'affectation que vous visualisiez a été supprimée."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.ts:39
 msgid "The Event and Planning filter you were viewing is deleted!"
-msgstr "Le filtre d'événements et de couvertures que vous visualisiez est supprimé!"
+msgstr ""
+"Le filtre d'événements et de couvertures que vous visualisiez est supprimé!"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.ts:16
 msgid "The Event and Planning filter you were viewing is modified!"
-msgstr "Le filtre d'événements et de couvertures que vous visualisiez est modifié!"
+msgstr ""
+"Le filtre d'événements et de couvertures que vous visualisiez est modifié!"
 
 #: ../superdesk-planning/client/actions/events/notifications.ts:118
 msgid "The Event was spiked"
@@ -14592,15 +14830,19 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:213
 msgid "The Events and Planning view filter is deleted."
-msgstr "Le filtre de visualisation d'événements et de couvertures est supprimé."
+msgstr ""
+"Le filtre de visualisation d'événements et de couvertures est supprimé."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:186
 msgid "The Events and Planning view filter is {{action}}."
-msgstr "Le filtre de visualisation d'événements et de couvertures est {{action}}."
+msgstr ""
+"Le filtre de visualisation d'événements et de couvertures est {{action}}."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:195
 msgid "The Events and Planning view filter with this name already exists"
-msgstr "Un filtre de visualisation d'événements et de couvertures avec ce nom existe déjà"
+msgstr ""
+"Un filtre de visualisation d'événements et de couvertures avec ce nom existe "
+"déjà"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:33
 msgid "The Planning Item(s) has been spiked."
@@ -14633,7 +14875,9 @@ msgstr ""
 #: scripts/apps/products/views/products-config-modal.html:31
 msgid ""
 "The Product ID can be copied and used as Superdesk Newshub product query."
-msgstr "L'identifiant de produit peut être copié et utilisé comme requête pour le produit Superdesk Newshub."
+msgstr ""
+"L'identifiant de produit peut être copié et utilisé comme requête pour le "
+"produit Superdesk Newshub."
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
@@ -14641,17 +14885,22 @@ msgstr "Le rapport enregistré que vous utilisez a été supprimé!"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:270
 msgid ""
-"The Saved Report you are using was updated! Please re-select the Saved "
-"Report"
-msgstr "Le rapport enregistré que vous utilisez a été mis à jour! Veuillez sélectionner de nouveau le rapport enregistré"
+"The Saved Report you are using was updated! Please re-select the Saved Report"
+msgstr ""
+"Le rapport enregistré que vous utilisez a été mis à jour! Veuillez "
+"sélectionner de nouveau le rapport enregistré"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:52
 msgid ""
-"The Superdesk project is developed and maintained on <a "
-"href=\"https://github.com/superdesk\" title=\"Superdesk GitHub\" "
-"target=\"_blank\">GitHub</a> by <a href=\"https://www.sourcefabric.org/\" "
-"title=\"Sourcefabric\" target=\"_blank\">Sourcefabric</a>."
-msgstr "Le projet Superdesk est développé et maintenu sur <a href=\"https://github.com/superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</a> par <a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" target=\"_blank\">Sourcefabric</a>."
+"The Superdesk project is developed and maintained on <a href=\"https://"
+"github.com/superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</"
+"a> by <a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" "
+"target=\"_blank\">Sourcefabric</a>."
+msgstr ""
+"Le projet Superdesk est développé et maintenu sur <a href=\"https://github."
+"com/superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</a> par "
+"<a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" "
+"target=\"_blank\">Sourcefabric</a>."
 
 #: scripts/core/auth/reset-password.html:75
 msgid "The activation token is not valid."
@@ -14707,7 +14956,9 @@ msgstr[2] "Certains fichiers n'ont pas été téléversés"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:108
 msgid "The following Events are in use and will not be spiked:"
-msgstr "Les événements suivants sont en cours d'utilisation et ne seront pas placés dans la corbeille:"
+msgstr ""
+"Les événements suivants sont en cours d'utilisation et ne seront pas placés "
+"dans la corbeille:"
 
 #: scripts/extensions/predefinedTextField/dist/src/config.js:60
 #: scripts/extensions/predefinedTextField/src/config.tsx:103
@@ -14736,7 +14987,9 @@ msgstr "L'élément a été mis à jour."
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:227
 msgid "The item in edit mode must be closed before you can filter."
-msgstr "L'élément en mode édition doit être fermé avant de pouvoir utiliser un filtre."
+msgstr ""
+"L'élément en mode édition doit être fermé avant de pouvoir utiliser un "
+"filtre."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:61
 msgid "The item is read-only."
@@ -14766,7 +15019,8 @@ msgstr "Nom d'un canal Slack associé à ce pupitre. Le # n'est pas requis."
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:678
 msgid "The package contains published items which can't be moved."
-msgstr "L'assemblage contient des éléments publiés qui ne peuvent pas être déplacés."
+msgstr ""
+"L'assemblage contient des éléments publiés qui ne peuvent pas être déplacés."
 
 #: scripts/apps/users/directives/UserEditDirective.ts:136
 msgid "The page needs to be reloaded to change the language"
@@ -14795,16 +15049,21 @@ msgstr "La taille de {{filename}} est {{width}}x{{height}}"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:39
 msgid ""
-"The use of Highcharts is provided under a license with the following "
-"details:"
-msgstr "L'utilisation de Highcharts est permise en vertu d'une licence avec les détails suivants: "
+"The use of Highcharts is provided under a license with the following details:"
+msgstr ""
+"L'utilisation de Highcharts est permise en vertu d'une licence avec les "
+"détails suivants: "
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:14
 msgid ""
-"The user activity widget provides information about user activity. Using the"
-" widget, editors can search and select a user. Upon selection a list of "
+"The user activity widget provides information about user activity. Using the "
+"widget, editors can search and select a user. Upon selection a list of "
 "content items is shown categorized as follows:"
-msgstr "Le widget d'activité d'utilisateur fournit de l'information au sujet de l'activité. En utilisant ce widget, les réviseurs peuvent rechercher et sélectionner un utilisateur. Lors de la sélection, une liste d'éléments de contenu est catégorisée comme suit: "
+msgstr ""
+"Le widget d'activité d'utilisateur fournit de l'information au sujet de "
+"l'activité. En utilisant ce widget, les réviseurs peuvent rechercher et "
+"sélectionner un utilisateur. Lors de la sélection, une liste d'éléments de "
+"contenu est catégorisée comme suit: "
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:140
 msgid "The values should be unique for {{uniqueField}}"
@@ -14838,7 +15097,8 @@ msgstr "Il n'y a pas d'éléments pour l'instant."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:342
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr "Certains éléments sont verrouillés ou non publiés. Voulez-vous continuer?"
+msgstr ""
+"Certains éléments sont verrouillés ou non publiés. Voulez-vous continuer?"
 
 #: ../superdesk-planning/client/components/ItemActionsMenu/ActionsMenuPopup.tsx:78
 msgid "There are no actions available."
@@ -14866,7 +15126,8 @@ msgstr "Il n'y a pas d'affectation actuelle"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FiltersList.tsx:51
 msgid "There are no events and planing view filters."
-msgstr "Il n'y a pas de filtre de visualisation d'événements et de planification."
+msgstr ""
+"Il n'y a pas de filtre de visualisation d'événements et de planification."
 
 #: ../superdesk-planning/client/constants/assignments.ts:174
 msgid "There are no future assignments"
@@ -14888,7 +15149,9 @@ msgstr "Aucun fournisseur n'est disponible."
 msgid ""
 "There are no public attachments yet. Upload some first using Attachments "
 "widget."
-msgstr "Il n'y a pas de pièces jointes publiques pour l'instant. Téléversez-en en utilisant le widget de pièces jointes. "
+msgstr ""
+"Il n'y a pas de pièces jointes publiques pour l'instant. Téléversez-en en "
+"utilisant le widget de pièces jointes. "
 
 #: scripts/apps/master-desk/components/UsersComponent.tsx:109
 msgid "There are no users assigned to this desk"
@@ -14903,29 +15166,40 @@ msgid "There are no {{ status }} agendas"
 msgstr "Il n'y a pas d'agenda {{ status }}"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:58
-msgid ""
-"There are some unsaved changes, do you want to save and publish it now?"
-msgstr "Certaines modifications n'ont pas été enregistrées. Voulez-vous enregistrer et publier maintenant?"
+msgid "There are some unsaved changes, do you want to save and publish it now?"
+msgstr ""
+"Certaines modifications n'ont pas été enregistrées. Voulez-vous enregistrer "
+"et publier maintenant?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:70
 msgid "There are some unsaved changes, do you want to save and send it now?"
-msgstr "Certains changements n'ont pas été enregistrés, voulez-vous les enregistrer et envoyer maintenant?"
+msgstr ""
+"Certains changements n'ont pas été enregistrés, voulez-vous les enregistrer "
+"et envoyer maintenant?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:45
 msgid "There are some unsaved changes, do you want to save it now?"
-msgstr "Certains changements n'ont pas été enregistrés, voulez-vous les enregistrer maintenant?"
+msgstr ""
+"Certains changements n'ont pas été enregistrés, voulez-vous les enregistrer "
+"maintenant?"
 
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:19
 msgid "There are some unsaved changes, go to the article to save changes?"
-msgstr "Certains changements n'ont pas été enregistrés, voulez-vous aller à l'article pour enregistrer les changements?"
+msgstr ""
+"Certains changements n'ont pas été enregistrés, voulez-vous aller à "
+"l'article pour enregistrer les changements?"
 
 #: scripts/core/auth/auth.ts:206
 msgid "There are some unsaved changes. Please save them before signing out."
-msgstr "Certaines modifications n'ont pas été enregistrées. Veuillez les enregistrer avant de vous déconnecter."
+msgstr ""
+"Certaines modifications n'ont pas été enregistrées. Veuillez les enregistrer "
+"avant de vous déconnecter."
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:93
 msgid "There are unsaved changes which will be discarded. Continue?"
-msgstr "Certains changements qui n'ont pas été enregistrés vont être perdus. Voulez-vous continuer?"
+msgstr ""
+"Certains changements qui n'ont pas été enregistrés vont être perdus. Voulez-"
+"vous continuer?"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:154
 msgid "There are unsaved changes, but the form is invalid"
@@ -14941,12 +15215,16 @@ msgstr ""
 msgid ""
 "There are unsaved changes. Are you sure you want to exit Manging Featured "
 "Stories?"
-msgstr "Certains changements n'ont pas été enregistrés. Êtes-vous certain de vouloir quitter la gestion des articles à la une?"
+msgstr ""
+"Certains changements n'ont pas été enregistrés. Êtes-vous certain de vouloir "
+"quitter la gestion des articles à la une?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:28
 msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
-msgstr "Il y a des modifications non enregistrées. Si vous sortez de la navigation, vos modifications seront perdues."
+msgstr ""
+"Il y a des modifications non enregistrées. Si vous sortez de la navigation, "
+"vos modifications seront perdues."
 
 #: ../superdesk-planning/client/actions/assignments/notifications.ts:318
 msgid "There is a {{ type }} assignment '{{ slugline }}' {{ state }}"
@@ -14966,7 +15244,9 @@ msgstr "Il n'y a pas de jeton pour l'abonné."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:60
 msgid "There was a problem while saving highlights configuration"
-msgstr "Un problème est survenu lors de la sauvegarde de la configuration des éléments de budget"
+msgstr ""
+"Un problème est survenu lors de la sauvegarde de la configuration des "
+"éléments de budget"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:51
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:63
@@ -14975,11 +15255,13 @@ msgstr "Un problème est survenu avec le téléversement"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:38
 msgid "There was a problem, Planning item not spiked!"
-msgstr "Un problème est survenu, la couverture n'a pas été placée dans la corbeille!"
+msgstr ""
+"Un problème est survenu, la couverture n'a pas été placée dans la corbeille!"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:59
 msgid "There was a problem, Planning item not unspiked!"
-msgstr "Un problème est survenu, la couverture n'a pas été sortie de la corbeille!"
+msgstr ""
+"Un problème est survenu, la couverture n'a pas été sortie de la corbeille!"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:61
 msgid "There was a problem, desk not created/updated."
@@ -14987,11 +15269,14 @@ msgstr "Un problème est survenu, le pupitre n'a pas été créé ou mis à jour
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:106
 msgid "There was a problem, desk not saved. Refresh Desks."
-msgstr "Un problème est survenu, le pupitre n'a pas été enregistré. Rafraîchir les pupitres."
+msgstr ""
+"Un problème est survenu, le pupitre n'a pas été enregistré. Rafraîchir les "
+"pupitres."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:46
 msgid "There was a problem, dictionary not created/updated."
-msgstr "Un problème est survenu, le dictionnaire n'a pas été créé ou mis à jour."
+msgstr ""
+"Un problème est survenu, le dictionnaire n'a pas été créé ou mis à jour."
 
 #: scripts/apps/search/directives/ItemGlobalSearch.ts:59
 #: scripts/apps/search/directives/ItemGlobalSearch.ts:91
@@ -15000,7 +15285,9 @@ msgstr "Un problème est survenu, l'élément ne peut pas s'ouvrir."
 
 #: scripts/apps/desks/directives/DeskeditPeople.ts:66
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr "Un problème est survenu, les membres n'ont pas été enregistrés. Rafraîchir les pupitres."
+msgstr ""
+"Un problème est survenu, les membres n'ont pas été enregistrés. Rafraîchir "
+"les pupitres."
 
 #: scripts/apps/desks/views/desk-config-modal.html:278
 msgid "There was a problem, stage not created/updated."
@@ -15024,15 +15311,19 @@ msgstr "Une erreur s'est produite lors de l'enregistrement du contact."
 
 #: scripts/apps/users/directives/UserEditDirective.ts:173
 msgid "There was an error when saving the user account."
-msgstr "Une erreur s'est produite lors de l'enregistrement du compte d'utilisateur."
+msgstr ""
+"Une erreur s'est produite lors de l'enregistrement du compte d'utilisateur."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:218
 msgid "There was an error, could not delete Events and Planning view filter."
-msgstr "Une erreur est survenue, il n'a pas été possible de supprimer le filtre d'événements et de couvertures. "
+msgstr ""
+"Une erreur est survenue, il n'a pas été possible de supprimer le filtre "
+"d'événements et de couvertures. "
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:92
 msgid "There was an error. Content filter cannot be deleted."
-msgstr "Une erreur est survenue. Le filtre de contenu n'a pas pu être supprimé."
+msgstr ""
+"Une erreur est survenue. Le filtre de contenu n'a pas pu être supprimé."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:258
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:475
@@ -15045,11 +15336,13 @@ msgstr "Une erreur est survenue. Impossible de retirer le lien."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:459
 msgid "There was an error. Failed to save the area of interest."
-msgstr "Une erreur est survenue. Échec de l'enregistrement de la zone d'intérêt."
+msgstr ""
+"Une erreur est survenue. Échec de l'enregistrement de la zone d'intérêt."
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:128
 msgid "There was an error. Filter condition cannot be deleted."
-msgstr "Une erreur est survenue. La condition du filtre ne peut pas être supprimée."
+msgstr ""
+"Une erreur est survenue. La condition du filtre ne peut pas être supprimée."
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:68
 msgid "There was an error. Role cannot be deleted."
@@ -15057,11 +15350,13 @@ msgstr "Une erreur est survenue. Le statut ne peut pas être supprimé."
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:55
 msgid "There was an error. Routing scheme cannot be deleted."
-msgstr "Une erreur est survenue. Le schéma de routage ne peut pas être supprimé."
+msgstr ""
+"Une erreur est survenue. Le schéma de routage ne peut pas être supprimé."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:54
 msgid "There was an error. Rule set cannot be deleted."
-msgstr "Une erreur est survenue. L'ensemble de règles ne peut pas être supprimé."
+msgstr ""
+"Une erreur est survenue. L'ensemble de règles ne peut pas être supprimé."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:364
 msgid "There was an error. Template cannot be deleted."
@@ -15070,7 +15365,9 @@ msgstr "Une erreur est survenue. Le modèle n'a pas pu être supprimé."
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:258
 msgid ""
 "This Event is scheduled to occur after the end date of its recurring cycle!"
-msgstr "Cet événement est planifié pour avoir lieu après la date de fin de son cycle récurrent!"
+msgstr ""
+"Cet événement est planifié pour avoir lieu après la date de fin de son cycle "
+"récurrent!"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:28
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:21
@@ -15101,7 +15398,10 @@ msgstr "Ceci et tous les événements futurs"
 msgid ""
 "This article contains unresolved comments.Click on Cancel to go back to "
 "editing toresolve those comments or OK to ignore and proceed with publishing"
-msgstr "Cet article contient des commentaires non résolus. Cliquez sur Annuler pour revenir à l'édition pour résoudre ces commentaires ou sur OK pour ignorer et poursuivre la publication. "
+msgstr ""
+"Cet article contient des commentaires non résolus. Cliquez sur Annuler pour "
+"revenir à l'édition pour résoudre ces commentaires ou sur OK pour ignorer et "
+"poursuivre la publication. "
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:25
 msgid "This event is a recurring event!"
@@ -15109,7 +15409,9 @@ msgstr "Cet événement est un événement récurrent!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:84
 msgid "This event is a recurring event. Post all recurring events"
-msgstr "Cet événement est un événement récurrent. Publier tous les événements récurrents"
+msgstr ""
+"Cet événement est un événement récurrent. Publier tous les événements "
+"récurrents"
 
 #: ../superdesk-planning/client/constants/events.ts:178
 msgid "This event only"
@@ -15147,7 +15449,8 @@ msgstr "Ce champ est obligatoire."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:351
 msgid "This is a default template of the following desk(s): {{deskNames}}."
-msgstr "Ceci est un gabarit par défaut du(des) pupitre(s) suivant(s): {{deskNames}}."
+msgstr ""
+"Ceci est un gabarit par défaut du(des) pupitre(s) suivant(s): {{deskNames}}."
 
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89
@@ -15190,13 +15493,19 @@ msgstr "Cette semaine"
 #: scripts/core/lang/missing-translations-strings.ts:46
 msgid ""
 "This widget allows you to create literally any content view you may need in "
-"Superdesk, be it production or ingest. All you need is to select a desk, its"
-" stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr "Ce widget vous permet de créer n'importe quel affichage de contenu dont vous pourriez avoir besoin dans Superdesk, que ce soit en production ou en ingestion. Tout ce dont vous avez besoin est de sélectionner un pupitre, ses étapes ou une recherche enregistrée. Donnez un nom à votre affichage lorsque vous avez terminé."
+"Superdesk, be it production or ingest. All you need is to select a desk, its "
+"stages or a saved search. Name your view once you are done. Enjoy!"
+msgstr ""
+"Ce widget vous permet de créer n'importe quel affichage de contenu dont vous "
+"pourriez avoir besoin dans Superdesk, que ce soit en production ou en "
+"ingestion. Tout ce dont vous avez besoin est de sélectionner un pupitre, ses "
+"étapes ou une recherche enregistrée. Donnez un nom à votre affichage lorsque "
+"vous avez terminé."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
-msgstr "Ceci va également publier toute les séries récurrentes de l'événement associé"
+msgstr ""
+"Ceci va également publier toute les séries récurrentes de l'événement associé"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:115
 msgid "This will also postpone the following planning items"
@@ -15210,7 +15519,9 @@ msgstr ""
 msgid ""
 "This will also remove other linked assignments (if any, for story updates). "
 "Are you sure?"
-msgstr "Ceci va également retirer les autres affectations liées (s'il y en a, pour les mises à jour de l'article). Êtes-vous certain?"
+msgstr ""
+"Ceci va également retirer les autres affectations liées (s'il y en a, pour "
+"les mises à jour de l'article). Êtes-vous certain?"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:51
 msgid "This will also {{action}} the following events"
@@ -15228,7 +15539,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:146
 msgid "This will create new events in the remote ({{timeZone}}) timezone"
-msgstr "Ceci créera de nouveaux événements dans le fuseau horaire ({{timeZone}})."
+msgstr ""
+"Ceci créera de nouveaux événements dans le fuseau horaire ({{timeZone}})."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:266
 msgid "This will create the new event in the remote ({{timeZone}}) timezone"
@@ -15240,9 +15552,9 @@ msgstr "Ceci marquera comme replanifiées les couvertures suivantes"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:501
 msgid ""
-"This will unlink the text item associated with the assignment. Are you sure "
-"?"
-msgstr "Ceci va délier l'élément de texte associé à l'affectation. Êtes-vous certain?"
+"This will unlink the text item associated with the assignment. Are you sure ?"
+msgstr ""
+"Ceci va délier l'élément de texte associé à l'affectation. Êtes-vous certain?"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:111
 msgid "Thu"
@@ -15291,8 +15603,10 @@ msgstr ""
 #: scripts/extensions/datetimeField/dist/src/getToggleTemplateDateTimeField.js:20
 #: scripts/extensions/datetimeField/src/getToggleTemplateDateTimeField.tsx:30
 msgid ""
-"Time offset is configured to be {{x}} minutes for this field. When an article is created\n"
-"                based on this template, it's value will initialize to creation time + {{x}} minutes"
+"Time offset is configured to be {{x}} minutes for this field. When an "
+"article is created\n"
+"                based on this template, it's value will initialize to "
+"creation time + {{x}} minutes"
 msgstr ""
 
 #: scripts/apps/profiling/views/profiling.html:34
@@ -15749,7 +16063,9 @@ msgstr "ID unique"
 
 #: scripts/core/ui/constants.ts:5
 msgid "Unknow error occured. Try repeating the action or reloading the page."
-msgstr "Une erreur inconnue s'est produite. Essayez de répéter l'action ou de recharger la page."
+msgstr ""
+"Une erreur inconnue s'est produite. Essayez de répéter l'action ou de "
+"recharger la page."
 
 #: scripts/apps/search/services/TagService.ts:198
 msgid "Unknown"
@@ -15769,7 +16085,8 @@ msgstr "Erreur inconnue: Élément non publié."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:69
 msgid "Unknown Error: There was a problem, desk was not deleted."
-msgstr "Erreur inconnue: Un problème a eu lieu, le pupitre n'a pas été supprimé."
+msgstr ""
+"Erreur inconnue: Un problème a eu lieu, le pupitre n'a pas été supprimé."
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:350
 msgid "Unknown error occured, Try descheduling again."
@@ -15778,7 +16095,9 @@ msgstr ""
 #: scripts/apps/search/controllers/get-multi-actions.tsx:287
 msgid ""
 "Unknown error occured. Try publishing the item from the article edit view."
-msgstr "Une erreur inconnue est survenue. Tentez de publier l'élément depuis l'affichage d'édition d'article. "
+msgstr ""
+"Une erreur inconnue est survenue. Tentez de publier l'élément depuis "
+"l'affichage d'édition d'article. "
 
 #: ../superdesk-analytics/client/utils.js:161
 msgid "Unlink"
@@ -15852,7 +16171,9 @@ msgstr "Annuler la publication"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:78
 msgid "Unpost all recurring events or just this one?"
-msgstr "Annuler la publication de tous les événements récurrents ou de seulement celui-ci?"
+msgstr ""
+"Annuler la publication de tous les événements récurrents ou de seulement "
+"celui-ci?"
 
 #: scripts/apps/authoring/authoring/index.ts:400
 #: scripts/apps/authoring/views/authoring-topbar.html:132
@@ -15903,7 +16224,8 @@ msgstr "Sortir la couverture de la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:95
 msgid "Unspike all recurring events or just this one?"
-msgstr "Sortir de la corbeille tous les événements récurrents ou seulement celui-ci?"
+msgstr ""
+"Sortir de la corbeille tous les événements récurrents ou seulement celui-ci?"
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:8
 msgid "Unspike event"
@@ -16003,7 +16325,8 @@ msgstr "Mise à jour de l'heure"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:114
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:293
 msgid "Update all recurring events or just this one?"
-msgstr "Mise à jour de tous les événements récurrents ou de seulement celui-ci?"
+msgstr ""
+"Mise à jour de tous les événements récurrents ou de seulement celui-ci?"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Update every"
@@ -16087,9 +16410,10 @@ msgstr "Mises à jour"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:65
 msgid ""
-"Updates can only be created for text items. The type of this item is "
-"{{type}}"
-msgstr "Les mises à jour ne peuvent être créées que pour des éléments de texte. Cet élément est de type {{type}}"
+"Updates can only be created for text items. The type of this item is {{type}}"
+msgstr ""
+"Les mises à jour ne peuvent être créées que pour des éléments de texte. Cet "
+"élément est de type {{type}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:203
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:212
@@ -16565,7 +16889,11 @@ msgid ""
 "address you have provided. Your data will be kept secure and it won't be "
 "used for any other purpose. You may opt-out of receiving further email "
 "communications at any time."
-msgstr "Nous enverrons des mises à jour occasionnelles sur les développements de Superdesk à l'adresse courriel que vous avez fournie. Vos données seront sécurisées et ne seront pas utilisées à d'autre fin. Vous pouvez choisir de cesser de recevoir d'autres communications par courriel à tout moment."
+msgstr ""
+"Nous enverrons des mises à jour occasionnelles sur les développements de "
+"Superdesk à l'adresse courriel que vous avez fournie. Vos données seront "
+"sécurisées et ne seront pas utilisées à d'autre fin. Vous pouvez choisir de "
+"cesser de recevoir d'autres communications par courriel à tout moment."
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:38
 msgid "Weak"
@@ -16633,8 +16961,11 @@ msgid "Widget settings"
 msgstr "Paramètres du widget"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
-msgid "Widget settings <span translate>for \"{{currentDesk.name}}\" Desk</span>"
-msgstr "Paramètres du widget <span translate>pour le pupitre \"{{currentDesk.name}}\"</span>"
+msgid ""
+"Widget settings <span translate>for \"{{currentDesk.name}}\" Desk</span>"
+msgstr ""
+"Paramètres du widget <span translate>pour le pupitre \"{{currentDesk."
+"name}}\"</span>"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:140
 msgid "Widgets"
@@ -16766,7 +17097,8 @@ msgstr "Vous n'êtes pas autorisé à créer un article ici."
 
 #: scripts/apps/workspace/content/services/ContentService.ts:70
 msgid "You are not allowed to create article on readonly stage."
-msgstr "Vous n'êtes pas autorisé à créer un article dans une étape en lecture seule."
+msgstr ""
+"Vous n'êtes pas autorisé à créer un article dans une étape en lecture seule."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:267
 msgid "You can associate only one XMP file"
@@ -16777,13 +17109,19 @@ msgid ""
 "You can choose the default content view of your desk. Use only if you want "
 "to override individual users' monitoring view preferences. Select \"none\" "
 "if you want to let users decide."
-msgstr "Vous pouvez choisir l'affichage par défaut du contenu de votre pupitre. N'utilisez que si vous souhaitez écraser les préférences d'affichage de chaque utilisateur. Sélectionnez «aucun» si vous voulez laisser les utilisateurs décider."
+msgstr ""
+"Vous pouvez choisir l'affichage par défaut du contenu de votre pupitre. "
+"N'utilisez que si vous souhaitez écraser les préférences d'affichage de "
+"chaque utilisateur. Sélectionnez «aucun» si vous voulez laisser les "
+"utilisateurs décider."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:132
 msgid ""
 "You can either completely block further writing after the characterlimit is "
 "reached or highlight exceeding characters in red."
-msgstr "Vous pouvez choisir de surligner en rouge les caractères excédentaires ou d'empêcher de taper au-delà de la limite de caractères. "
+msgstr ""
+"Vous pouvez choisir de surligner en rouge les caractères excédentaires ou "
+"d'empêcher de taper au-delà de la limite de caractères. "
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:44
 msgid "You don't have the privileges to perform any action"
@@ -16796,11 +17134,14 @@ msgstr "Vous avez choisi de vous abonner à"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:320
 #: scripts/apps/search/MultiImageEdit.ts:173
 msgid "You have unsaved changes, do you want to continue?"
-msgstr "Certaines modifications n'ont pas été enregistrées, voulez-vous continuer?"
+msgstr ""
+"Certaines modifications n'ont pas été enregistrées, voulez-vous continuer?"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:93
 msgid "You have unsaved changes. Do you want to save them now?"
-msgstr "Certaines modifications n'ont pas été enregistrées. Voulez-vous les enregistrer maintenant?"
+msgstr ""
+"Certaines modifications n'ont pas été enregistrées. Voulez-vous les "
+"enregistrer maintenant?"
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
@@ -16816,7 +17157,8 @@ msgstr "Votre horloge"
 
 #: scripts/core/auth/login-modal.html:69
 msgid "Your password has expired. Please change your password."
-msgstr "Votre mot de passe a expiré. S'il vous plaît changez votre mot de passe."
+msgstr ""
+"Votre mot de passe a expiré. S'il vous plaît changez votre mot de passe."
 
 #: scripts/core/auth/login-modal.html:4
 msgid "Your session has expired."
@@ -17033,7 +17375,9 @@ msgstr "Changer d'avatar"
 msgid ""
 "changed the following original item. Please make sure to update the "
 "corresponding translated item accordingly"
-msgstr "l'élément original suivant a été modifié. Veuillez vous assurer de mettre à jour l'élément traduit correspondant conséquemment"
+msgstr ""
+"l'élément original suivant a été modifié. Veuillez vous assurer de mettre à "
+"jour l'élément traduit correspondant conséquemment"
 
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:29
 #: scripts/apps/authoring/authoring/directives/CharacterCount.ts:13
@@ -17117,7 +17461,9 @@ msgstr "créé par"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
-msgstr "créé la nouvelle version {{version}} pour l'élément {{type}} à propos de \"{{subject}}\""
+msgstr ""
+"créé la nouvelle version {{version}} pour l'élément {{type}} à propos de "
+"\"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "created user {{user}}"
@@ -17221,11 +17567,13 @@ msgstr "par exemple. Rhodes, CDB"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:489
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
-msgstr "par exemple. cityofsydney à partir de https://www.facebook.com/cityofsydney"
+msgstr ""
+"par exemple. cityofsydney à partir de https://www.facebook.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:513
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
-msgstr "par exemple. cityofsydney à partir de https://www.instagram.com/cityofsydney"
+msgstr ""
+"par exemple. cityofsydney à partir de https://www.instagram.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:447
 msgid "e.g. http://www.website.com"
@@ -17441,27 +17789,29 @@ msgstr "h"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:24
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:26
-msgid "iMatrics"
-msgstr ""
+msgid "Autotagger"
+msgstr "Étiquetage automatique"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:260
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:48
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:104
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:402
-msgid "iMatrics service error"
-msgstr ""
+msgid "Autotagger service error"
+msgstr "Erreur du service d'étiquetage automatique"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:51
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:112
 msgid ""
-"iMatrics service has returned tags referencing parents that do not exist in "
-"the response."
+"Autotagger service has returned tags referencing parents that do not exist "
+"in the response."
 msgstr ""
+"Le service d'étiquetage automatique a renvoyé des étiquettes faisant "
+"référence à des parents qui n'existent pas dans la réponse."
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:9
-msgid "iMatrics tagging"
-msgstr ""
+msgid "Autotagger tagging"
+msgstr "Étiquetage automatique"
 
 #: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195
@@ -17829,7 +18179,10 @@ msgstr "Veuillez fournir une adresse courriel valide"
 msgid ""
 "please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores "
 "(_), apostrophes (') and periods (.)"
-msgstr "Veuillez utiliser uniquement des lettres (a-z), des chiffres (0-9), des tirets (& mdash;), des traits de soulignement (_), des apostrophes (') et des points (.)"
+msgstr ""
+"Veuillez utiliser uniquement des lettres (a-z), des chiffres (0-9), des "
+"tirets (& mdash;), des traits de soulignement (_), des apostrophes (') et "
+"des points (.)"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:121
 msgid "post"
@@ -17952,7 +18305,9 @@ msgstr "identifiant de réécriture"
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "role {{role}} is granted new privileges: Please re-login."
-msgstr "De nouveaux privilèges ont été accordés au statut {{role}}: Veuillez vous reconnecter."
+msgstr ""
+"De nouveaux privilèges ont été accordés au statut {{role}}: Veuillez vous "
+"reconnecter."
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "routed"
@@ -18190,15 +18545,21 @@ msgstr "utilisateur enregistré."
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
-msgstr "L'utilisateur {{user}} a été ajouté au pupitre {{desk}}. Veuillez vous reconnecter."
+msgstr ""
+"L'utilisateur {{user}} a été ajouté au pupitre {{desk}}. Veuillez vous "
+"reconnecter."
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "user {{user}} is granted new privileges: Please re-login."
-msgstr "De nouveaux privilèges ont été accordés à l'utilisateur {{user}}. Veuillez vous reconnecter."
+msgstr ""
+"De nouveaux privilèges ont été accordés à l'utilisateur {{user}}. Veuillez "
+"vous reconnecter."
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "user {{user}} is updated to administrator: Please re-login."
-msgstr "L'utilisateur {{user}} a été mis à jour pour l'administrateur. Veuillez vous reconnecter."
+msgstr ""
+"L'utilisateur {{user}} a été mis à jour pour l'administrateur. Veuillez vous "
+"reconnecter."
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:3
 #: scripts/apps/users/import/views/import-user.html:14
@@ -18252,9 +18613,10 @@ msgstr "tout voir"
 
 #: scripts/core/notification/notification.ts:215
 msgid ""
-"vocabulary has been updated. Please re-login to see updated vocabulary "
-"values"
-msgstr "l'index a été mis à jour. Veuillez vous reconnecter pour voir les valeurs mises à jour de l'index."
+"vocabulary has been updated. Please re-login to see updated vocabulary values"
+msgstr ""
+"l'index a été mis à jour. Veuillez vous reconnecter pour voir les valeurs "
+"mises à jour de l'index."
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:448
 msgid "website"

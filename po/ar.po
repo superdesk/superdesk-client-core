@@ -2392,7 +2392,7 @@ msgid "Clear sessions"
 msgstr "مسح الجلسات "
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:217
-msgid "Click \"Run\" to generate"
+msgid "Click Run to test Autotagger"
 msgstr "انقر فوق \"تشغيل\" للإنشاء"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:90
@@ -14733,8 +14733,8 @@ msgid "hrs"
 msgstr "س"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
-msgid "iMatrics tagging"
-msgstr "علامات iMatrics"
+msgid "Autotagger tagging"
+msgstr "علامات Autotagger"
 
 #: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195

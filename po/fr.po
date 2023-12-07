@@ -2382,7 +2382,7 @@ msgid "Clear sessions"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:217
-msgid "Click \"Run\" to generate"
+msgid "Click Run to test Autotagger"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:90
@@ -14699,7 +14699,7 @@ msgid "hrs"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
-msgid "iMatrics tagging"
+msgid "Autotagger tagging"
 msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:336

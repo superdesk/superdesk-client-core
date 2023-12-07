@@ -660,7 +660,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         allGrouped = allGrouped.set(groupId,
                                             <ToggleBoxNext
                                                 key={groupId}
-                                                title={this.getGroupName(groupId, vocabularyLabels)}
+                                                title={gettext('Subjects')}
                                                 style="circle"
                                                 isOpen={true}
                                             >
@@ -687,7 +687,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
                                         <ToggleBoxNext
-                                            title={this.getGroupName('entities', vocabularyLabels)}
+                                            title={gettext('Entities')}
                                             style="circle"
                                             isOpen={true}
                                             key="entities"
