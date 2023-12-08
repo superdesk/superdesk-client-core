@@ -138,6 +138,7 @@ function showAutoTaggerServiceErrorModal(superdesk: ISuperdesk, errors: Array<IT
 
             <ModalFooter>
                 <Button
+                    aria-label="close"
                     text={gettext('close')}
                     onClick={() => {
                         closeModal();
@@ -463,6 +464,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             data === 'loading' || data === 'not-initialized' || !dirty ? null : (
                                 <div>
                                     <button
+                                        aria-label="save"
                                         className="btn btn--primary"
                                         onClick={this.save}
                                     >
@@ -470,6 +472,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     </button>
 
                                     <button
+                                        aria-label="cancel"
                                         className="btn"
                                         onClick={this.reload}
                                     >
@@ -498,6 +501,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 this.runAnalysis();
                                             }
                                         }}
+                                        aria-label="Run automatically"
                                         label={{text: gettext('Run automatically')}}
                                     />
                                 </ButtonGroup>
@@ -516,7 +520,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     search={(searchString, callback) => {
                                                         let cancelled = false;
                                                         
-                                                        httpRequestJsonLocal<{analysis: IServerResponse}>({
+                                                        httpRequestJsonLocal<{analysis: IAutoTaggingSearchResult}>({
                                                             method: 'POST',
                                                             path: '/ai/',
                                                             payload: {
@@ -527,10 +531,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             },
                                                         }).then((res) => {
                                                             if (cancelled !== true) {
-                                                                console.log('runAnalysis getting res:', res);
-                                                                const json_response = res.analysis;
+                                                                const json_response = res.analysis.result.tags;
+                                                                const result_data = res.analysis;
                                             
-                                                                console.log('runAnalysis getting json_response:', json_response);
                                                                 const result = toClientFormat(json_response).toArray();
     
                                                                 const withoutExistingTags = result.filter(
@@ -540,7 +543,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                                 const withResponse = withoutExistingTags.map((tag) => ({
                                                                   keyValue: tag.name, // required for Autocomplete component
                                                                   tag,
-                                                                  entireResponse: data, // required to get all parents when an item is selected
+                                                                  entireResponse: result_data, // required to get all parents when an item is selected
                                                                 }));
                                                             
                                                                 callback(withResponse); // Assuming 'callback' is a function that takes the processed data
@@ -586,7 +589,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             _value.entireResponse;
 
                                                         this.insertTagFromSearch(tag, data, entireResponse);
-                                                        // TODO: clear autocomplete?
                                                     }}
                                                     onChange={(value) => this.setState({ tentativeTagName: value })}
                                                 />
@@ -613,10 +615,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         </div>
                                         <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <Button
+                                                aria-label="Add an entity"
                                                 type="primary"
                                                 size="small"
                                                 shape="round"
-                                                text={gettext('Add a new entity')}
+                                                text={gettext('Add an entity')}
                                                 disabled={readOnly}
                                                 onClick={() => {
                                                     this.setState({
@@ -769,6 +772,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 } else if (data === 'not-initialized') {
                                     return (
                                         <Button
+                                            aria-label="Run"
                                             type="primary"
                                             text={gettext('Run')}
                                             expand={true}
@@ -781,6 +785,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 } else {
                                     return (
                                         <Button
+                                            aria-label="Refresh"
                                             type="primary"
                                             text={gettext('Refresh')}
                                             expand={true}
