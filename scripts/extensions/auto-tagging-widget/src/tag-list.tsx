@@ -35,7 +35,6 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                 // Entites don't have children and parent
                 const isNodeEntity = node.parent == null && node.children == null;
                 const item = node.value;
-                console.log("tagListItem:",item, readOnly);
                 return (
                     <TagPopover
                         tag={item}
@@ -78,15 +77,10 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             function renderTreeNode(treeNodes: Array<ITreeNode<ITagUi>>, level: number = 0): JSX.Element {
 
                 const treeNodesMap = treeNodes.map((node) => (
-                    <React.Fragment key={node.value.qcode}>
-                        {
-                            tagListItem(node)
-                        }
-
-                        {
-                            node.children != null && renderTreeNode(node.children, level + 1)
-                        }
-                    </React.Fragment>
+                    <div key={node.value.qcode} style={{paddingLeft: level === 0 || inline ? 0 : 14}}>
+                        {tagListItem(node)}
+                        {node.children != null && renderTreeNode(node.children, level + 1)}
+                    </div>
                 ));
 
                 return (
