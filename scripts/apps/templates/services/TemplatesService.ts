@@ -88,7 +88,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         if (templateName) {
-            criteria.template_name = {$regex: templateName, $options: '-i'};
+            criteria.template_name = {$regex: templateName, $options: 'i'};
         }
 
         return $q.when(criteria)
@@ -150,7 +150,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         if (templateName) {
-            criteria.template_name = {$regex: templateName, $options: '-i'};
+            criteria.template_name = {$regex: templateName, $options: 'i'};
         }
 
         if (!_.isEmpty(criteria)) {

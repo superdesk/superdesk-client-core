@@ -134,7 +134,7 @@ describe('templates', () => {
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
                 '{"template_desks":[]}]},' +
                 '{"user":"foo"}],' +
-                '"template_name":{"$regex":"keyword","$options":"-i"}}]}',
+                '"template_name":{"$regex":"keyword","$options":"i"}}]}',
             });
         }));
         it('can fetch templates by id', inject((api, templates) => {
@@ -230,7 +230,7 @@ describe('templates', () => {
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
                     sort: 'template_name',
-                    where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
+                    where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"i"}}]}',
                     manage: true,
                 });
             }));
