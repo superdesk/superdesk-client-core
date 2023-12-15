@@ -2187,20 +2187,6 @@ declare module 'superdesk-api' {
                 };
             }
         };
-        iMatricsFields: {
-            entities: {
-                [key: string]: {
-                    name: string;
-                    order: number;
-                };
-            },
-            others: {
-                [key: string]: {
-                    name: string;
-                    order: number;
-                };
-            }
-        };
 
         media: {
             renditions: {
