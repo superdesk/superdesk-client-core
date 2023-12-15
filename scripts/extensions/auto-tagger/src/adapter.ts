@@ -41,40 +41,50 @@ export function getServerResponseKeys(): Array<keyof IServerResponse> {
 }
 
 export function toClientFormat(response: IServerResponse): OrderedMap<string, ITagUi> {
-    console.log('Received Server Response:', response);
     let tags = OrderedMap<string, ITagUi>();
 
-    console.log('Subject Array:', response.subject);
     response.subject?.forEach((item) => {
-        console.log('Subject Item:', item);
-        const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
+        const {name, description, qcode, source, altids, aliases, original_source, parent, scheme} = item;
+        // Checking if the item has original_source to filter auto tagger tags
+        if (original_source != null) {
+            if(scheme == "http://cv.iptc.org/newscodes/mediatopic/")
+            {
+                const tag: ITagUi = {
+                    name,
+                    description,
+                    qcode,
+                    source,
+                    original_source,
+                    aliases,
+                    altids,
+                    parent,
+                    group: {
+                        kind: 'scheme',
+                        value: "subject" || '',
+                    },
+                };
+    
+                tags = tags.set(tag.qcode, tag);
+            }else {
+                const tag: ITagUi = {
+                    name,
+                    description,
+                    qcode,
+                    source,
+                    original_source,
+                    aliases,
+                    altids,
+                    parent,
+                    group: {
+                        kind: 'scheme',
+                        value: item.scheme || '',
+                    },
+                };
+    
+                tags = tags.set(tag.qcode, tag);
+            }
 
-        console.log('Name:', name);
-        console.log('Description:', description);
-        console.log('QCode:', qcode);
-        console.log('Source:', source);
-        console.log('Altids:', altids);
-        console.log('Aliases:', aliases);
-        console.log('Original Source:', original_source);
-        console.log('Parent:', parent);
-
-        const tag: ITagUi = {
-            name,
-            description,
-            qcode,
-            source,
-            original_source,
-            aliases,
-            altids,
-            parent,
-            group: {
-                kind: 'scheme',
-                value: item.scheme || '',
-            },
-        };
-
-        tags = tags.set(tag.qcode, tag);
-        console.log('Generated Tag:', tag);
+        }
     });
 
     const others: Array<{group: string; items: Array<ITagBase>}> = [];
@@ -102,15 +112,6 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     others.forEach(({group, items}) => {
         items.forEach((item) => {
             const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
-            
-            console.log('Name:', name);
-            console.log('Description:', description);
-            console.log('QCode:', qcode);
-            console.log('Source:', source);
-            console.log('Altids:', altids);
-            console.log('Aliases:', aliases);
-            console.log('Original Source:', original_source);
-            console.log('Scheme:', scheme);
 
             const tag: ITagUi = {
                 name,
@@ -126,13 +127,12 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
                     value: group,
                 },
             };
-
-            tags = tags.set(tag.qcode, tag);
-            console.log('Generated Group Tag:', tag);
+            if (tags.has(tag.name)) {
+            }else {
+                tags = tags.set(tag.qcode, tag);
+            }
         });
     });
-    console.log('Server Response:', response);
-    console.log('Generated Tags:', tags);
     return tags;
 }
 

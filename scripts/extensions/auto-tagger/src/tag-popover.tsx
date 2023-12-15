@@ -13,7 +13,7 @@ export class TagPopover extends React.PureComponent<IProps> {
     render() {
         const {tag, children, gettext} = this.props;
 
-        const overlay = (
+        const overlay = () => (
             <div className="sd-popover" style={{zIndex: 999, opacity: 1}}>
                 <div className="sd-popover__header">
                     <h4 className="sd-popover__title">{tag.name}</h4>

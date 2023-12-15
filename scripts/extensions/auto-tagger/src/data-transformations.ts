@@ -2,7 +2,6 @@ import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
 import {OrderedMap} from 'immutable';
 import {ITagUi} from './types';
 import {getServerResponseKeys, toServerFormat, ITagBase, ISubjectTag, IServerResponse} from './adapter';
-import {SOURCE_IMATRICS} from './constants';
 
 export function createTagsPatch(
     article: IArticle,
@@ -17,10 +16,14 @@ export function createTagsPatch(
         const newValues = serverFormat[key];
         let newValuesMap = OrderedMap<string, ISubject>();
 
-        const wasRemoved = (tag: ISubject) =>
-            tag.source === SOURCE_IMATRICS
-            && oldValues.has(tag.qcode)
-            && !newValuesMap.has(tag.qcode);
+        const wasRemoved = (tag: ISubject) => {
+            if(oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
         newValues?.forEach((tag) => {
             newValuesMap = newValuesMap.set(tag.qcode, tag);
@@ -33,7 +36,6 @@ export function createTagsPatch(
             .filter((tag) => wasRemoved(tag) !== true)
             .toArray();
     });
-
     return patch;
 }
 
@@ -41,8 +43,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
     const result: IServerResponse = {};
 
     getServerResponseKeys().forEach((key) => {
-        const values = (article[key] ?? []).filter((tag) => tag.source === SOURCE_IMATRICS);
-
+        const values = article[key] ?? [];
         if (key === 'subject') {
             if (values.length > 0) {
                 result[key] = values.map((subjectItem) => {
@@ -59,7 +60,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     } = subjectItem;
 
                     if (scheme == null) {
-                        throw new Error('Scheme must be defined for all imatrics tags stored in subject field.');
+                        throw new Error('Scheme must be defined for all semaphore tags stored in subject field.');
                     }
 
                     const subjectTag: ISubjectTag = {
@@ -73,12 +74,11 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         aliases,
                         original_source,
                     };
-
                     return subjectTag;
                 });
             }
         } else if (values.length > 0) {
-            result[key] = values.map((subjectItem) => {
+            result[key] = values.map((entityItem) => {
                 const {
                     name,
                     description,
@@ -89,9 +89,9 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     aliases,
                     original_source,
                     parent,
-                } = subjectItem;
+                } = entityItem;
 
-                const subjectTag: ITagBase = {
+                const entityTag: ITagBase = {
                     name,
                     description,
                     qcode,
@@ -103,7 +103,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     original_source,
                 };
 
-                return subjectTag;
+                return entityTag;
             });
         }
     });

@@ -3,7 +3,7 @@ import {Set, OrderedMap} from 'immutable';
 import {ISuperdesk, ITreeNode} from 'superdesk-api';
 import {ITagUi} from './types';
 import {Tag} from 'superdesk-ui-framework/react';
-import {noop} from 'lodash';
+// import {noop} from 'lodash';
 import {TagPopover} from './tag-popover';
 
 interface IProps {
@@ -30,9 +30,11 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             ).result;
 
             const tagListItem = (node: ITreeNode<ITagUi>) => {
+                // use this to debug the node
                 const isRootNodeWithChildren = node.parent == null && node.children != null;
+                // Entites don't have children and parent
+                const isNodeEntity = node.parent == null && node.children == null;
                 const item = node.value;
-
                 return (
                     <TagPopover
                         tag={item}
@@ -51,11 +53,16 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                                 (isRootNodeWithChildren ? 'darker' : 'light')}
                             onClick={
                                 readOnly
-                                    ? noop
+                                    ? () => {
+                                    }
                                     : () => {
-                                        onRemove(
-                                            treeToArray([node]).map(({qcode}) => qcode),
-                                        );
+                                        if (isNodeEntity) {
+                                            onRemove([node.value.qcode]);
+                                        } else {
+                                            onRemove(
+                                                treeToArray([node]).map(({qcode}) => qcode),
+                                            );
+                                        }
                                     }
                             }
                         />
@@ -64,16 +71,12 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             };
 
             function renderTreeNode(treeNodes: Array<ITreeNode<ITagUi>>, level: number = 0): JSX.Element {
-                const treeNodesMap = treeNodes.map((node) => (
-                    <React.Fragment key={node.value.qcode}>
-                        {
-                            tagListItem(node)
-                        }
 
-                        {
-                            node.children != null && renderTreeNode(node.children, level + 1)
-                        }
-                    </React.Fragment>
+                const treeNodesMap = treeNodes.map((node) => (
+                    <div key={node.value.qcode} style={{paddingLeft: level === 0 || inline ? 0 : 14}}>
+                        {tagListItem(node)}
+                        {node.children != null && renderTreeNode(node.children, level + 1)}
+                    </div>
                 ));
 
                 return (
