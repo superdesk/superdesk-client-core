@@ -208,10 +208,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-                    const json_response = res.analysis;
 
                     const resClient = toClientFormat(res.analysis);
-                    const existingTags = getExistingTags(this.props.article);              
+                    // Use the line below to get the existing tags from the article
+                    // const existingTags = getExistingTags(this.props.article);                         
                         
                     if (this._mounted) {                        
 
