@@ -36,7 +36,6 @@ export function createTagsPatch(
             .filter((tag) => wasRemoved(tag) !== true)
             .toArray();
     });
-
     return patch;
 }
 
@@ -46,7 +45,6 @@ export function getExistingTags(article: IArticle): IServerResponse {
     getServerResponseKeys().forEach((key) => {
         const values = article[key] ?? [];
         if (key === 'subject') {
-            console.log('Subject values:', values);
             if (values.length > 0) {
                 result[key] = values.map((subjectItem) => {
                     const {
@@ -62,7 +60,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     } = subjectItem;
 
                     if (scheme == null) {
-                        throw new Error('Scheme must be defined for all imatrics tags stored in subject field.');
+                        throw new Error('Scheme must be defined for all semaphore tags stored in subject field.');
                     }
 
                     const subjectTag: ISubjectTag = {
@@ -76,13 +74,11 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         aliases,
                         original_source,
                     };
-
                     return subjectTag;
                 });
             }
         } else if (values.length > 0) {
-            console.log('Entity Values:', values);
-            result[key] = values.map((subjectItem) => {
+            result[key] = values.map((entityItem) => {
                 const {
                     name,
                     description,
@@ -93,9 +89,9 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     aliases,
                     original_source,
                     parent,
-                } = subjectItem;
+                } = entityItem;
 
-                const subjectTag: ITagBase = {
+                const entityTag: ITagBase = {
                     name,
                     description,
                     qcode,
@@ -107,7 +103,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     original_source,
                 };
 
-                return subjectTag;
+                return entityTag;
             });
         }
     });

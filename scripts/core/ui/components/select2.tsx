@@ -136,10 +136,6 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         window.removeEventListener('scroll', this.handleClosing, true);
     }
 
-    handleCustomAction = () => {
-        // Define what should happen when the button is clicked
-        console.log('Custom action triggered');
-    };
 
     render() {
         return (
@@ -195,14 +191,6 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     
                         if (this.props.loading) {
                             menuContent = <div style={{ padding: 10 }}>{gettext('Loading...')}</div>;
-                        } else if (noItemsMatch) {
-                            // Render custom div with button when no items match the search
-                            menuContent = (
-                                <div style={{ padding: 10 }}>
-                                    {gettext('No matching items.')}
-                                    <button onClick={this.handleCustomAction}>Custom Action</button>
-                                </div>
-                            );
                         } else {
                             menuContent = items.length < 1 ? <div style={{ padding: 10 }}>{gettext('No items found.')}</div> : items;
                         }

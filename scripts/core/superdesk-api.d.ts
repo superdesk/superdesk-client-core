@@ -2173,7 +2173,7 @@ declare module 'superdesk-api' {
 
         userOnlineMinutes: number;
 
-        iMatricsFields: {
+        semaphoreFields: {
             entities: {
                 [key: string]: {
                     name: string;

@@ -5,14 +5,13 @@ import {getHeaderAutoTaggingComponent} from './header-auto-tagging';
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
-
         const label = gettext('Autotagger');
 
         const result: IExtensionActivationResult = {
             contributions: {
                 authoringSideWidgets: [
                     {
-                        _id: 'imatrics-auto-tagging-widget',
+                        _id: 'auto-tagging-widget',
                         label: label,
                         icon: 'tag',
                         order: 1,
@@ -22,7 +21,7 @@ const extension: IExtension = {
                 ],
                 authoringHeaderComponents: [
                     {
-                        _id: 'imatrics-header-component',
+                        _id: 'header-component',
                         label: gettext('Tags'),
                         order: 40,
                         component: getHeaderAutoTaggingComponent(superdesk),

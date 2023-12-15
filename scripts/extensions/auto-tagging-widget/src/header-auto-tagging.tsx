@@ -19,14 +19,14 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
     const groupLabels = getGroups(superdesk);
 
     return class HeaderAutoTagging extends React.PureComponent<IProps> {
-        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
+        private semaphoreFields = superdesk.instance.config.semaphoreFields ?? {entities: {}, others: {}};
 
         render() {
             const existingTags = getExistingTags(this.props.article);
             const resClient = toClientFormat(existingTags);
             const data = {original: {analysis: resClient}, changes: {analysis: resClient}};
 
-            const {entitiesGroupedAndSorted, othersGrouped} = getAutoTaggingData(data, this.iMatricsFields);
+            const {entitiesGroupedAndSorted, othersGrouped} = getAutoTaggingData(data, this.semaphoreFields);
 
             const savedTags = data.original.analysis.keySeq().toSet();
 
@@ -79,12 +79,12 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
             }
 
             const allGroupedAndSortedByConfig = allGrouped
-                .filter((_, key) => hasConfig(key, this.iMatricsFields.others))
-                .sortBy((_, key) => this.iMatricsFields.others[key].order,
+                .filter((_, key) => hasConfig(key, this.semaphoreFields.others))
+                .sortBy((_, key) => this.semaphoreFields.others[key].order,
                     (a, b) => a - b);
 
             const allGroupedAndSortedNotInConfig = allGrouped
-                .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
+                .filter((_, key) => !hasConfig(key, this.semaphoreFields.others));
 
             const allGroupedAndSorted = allGroupedAndSortedNotInConfig
                 .concat(allGroupedAndSortedByConfig);

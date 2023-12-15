@@ -9,7 +9,6 @@ import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
 import {toClientFormat, IServerResponse, toServerFormat} from './adapter';
-import {SOURCE_IMATRICS} from './constants';
 import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
@@ -39,7 +38,7 @@ interface IProps {
     article: IArticle;
 }
 
-interface IIMatricsFields {
+interface ISemaphoreFields {
     [key: string]: {
         name: string;
         order: number;
@@ -62,11 +61,11 @@ function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
     return data.changes.analysis.has(qcode);
 }
 
-export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
-    return iMatricsFields[key] != null;
+export function hasConfig(key: string, semaphoreFields: ISemaphoreFields) {
+    return semaphoreFields[key] != null;
 }
-// Runs when clicking the "Run" button. Returns the tags from the iMatrics service
-export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
+// Runs when clicking the "Run" button. Returns the tags from the semaphore service
+export function getAutoTaggingData(data: IEditableData, semaphoreConfig: any) {
     const items = data.changes.analysis;
 
     const isEntity = (tag: ITagUi) => tag.group && entityGroups.has(tag.group.value);
@@ -75,15 +74,13 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
 
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
-        .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
-        .sortBy((_, key) => iMatricsConfig.entities[key].order,
+        .filter((_, key) => hasConfig(key, semaphoreConfig.entities))
+        .sortBy((_, key) => semaphoreConfig.entities[key].order,
             (a, b) => a - b);
-
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
-        .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
+        .filter((_, key) => !hasConfig(key, semaphoreConfig.entities))
         .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
             (a, b) => a.localeCompare(b));
-
     const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
         .concat(entitiesGroupedAndSortedNotInConfig);
 
@@ -163,7 +160,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
-        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
+        private semaphoreFields = superdesk.instance.config.semaphoreFields ?? {entities: {}, others: {}};
 
         constructor(props: IProps) {
             super(props);
@@ -192,14 +189,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
-            console.log(process.env.SEMAPHORE_BASE_URL);
-            console.log(process.env.semaphore_api_key);
-            console.log(process.env.semaphore_token_endpoint);
-
 
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract, slugline} = this.props.article;
-                console.log('runAnalysis POST body:', {headline, body_html, abstract, slugline});
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
@@ -216,14 +208,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-                    console.log('runAnalysis getting res:', res);
                     const json_response = res.analysis;
 
-                    console.log('runAnalysis getting json_response:', json_response);
                     const resClient = toClientFormat(res.analysis);
+                    const existingTags = getExistingTags(this.props.article);              
                         
                     if (this._mounted) {                        
-                        
+
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
@@ -248,7 +239,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         initializeData(preload: boolean) {
             try {
                 const existingTags = getExistingTags(this.props.article);
-        
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
                     this.setState({
@@ -285,7 +275,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 qcode: Math.random().toString(),
                 name: _title,
                 description: newItem.description,
-                source: SOURCE_IMATRICS,
+                source: 'manual',
                 altids: {},
                 group: newItem.group,
             };
@@ -334,17 +324,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             );
         }
         getGroupName(group: string, vocabularyLabels: Map<string, string>) {
-            return this.iMatricsFields.others[group]?.name ?? vocabularyLabels?.get(group) ?? group;
+            return this.semaphoreFields.others[group]?.name ?? vocabularyLabels?.get(group) ?? group;
         }
         reload() {
             this.setState({data: 'not-initialized'});
-
             this.initializeData(false);
         }
         // Saves the tags to the article
         save() {
             const {data} = this.state;
-
             if (data === 'loading' || data === 'not-initialized') {
                 return;
             }
@@ -385,6 +373,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             Promise.all([
                 getAutoTaggingVocabularyLabels(superdesk),
                 preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
+                // Need to remove false from the line below to run the analysis automatically
             ]).then(([vocabularyLabels, runAutomatically = false]) => {
                 this.setState({
                     vocabularyLabels,
@@ -422,7 +411,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     (item) => item.qcode,
                                     (item) => item.parent,
                                 ).errors;
-                                console.log('treeErrors:', treeErrors);
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
@@ -485,7 +473,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     <div className="widget-content sd-padding-all--2">
                         <div>
-                            <div className="form__row form__row--flex sd-padding-b--1">
+                            {/* Run automatically button is hidden for the next release */}
+                            <div className="form__row form__row--flex sd-padding-b--1" style={{ display: 'none' }}>
                                 <ButtonGroup align="start">
                                     <Switch
                                         value={runAutomaticallyPreference}
@@ -589,6 +578,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             _value.entireResponse;
 
                                                         this.insertTagFromSearch(tag, data, entireResponse);
+                                                        // this.setState({ tentativeTagName: '' });
                                                     }}
                                                     onChange={(value) => this.setState({ tentativeTagName: value })}
                                                 />
@@ -653,7 +643,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const {
                                     entitiesGroupedAndSorted,
                                     othersGrouped,
-                                } = getAutoTaggingData(data, this.iMatricsFields);
+                                } = getAutoTaggingData(data, this.semaphoreFields);
 
                                 const savedTags = data.original.analysis.keySeq().toSet();
 
@@ -725,12 +715,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 }
 
                                 const allGroupedAndSortedByConfig = allGrouped
-                                    .filter((_, key) => hasConfig(key, this.iMatricsFields.others))
-                                    .sortBy((_, key) => this.iMatricsFields.others[key].order,
+                                    .filter((_, key) => hasConfig(key, this.semaphoreFields.others))
+                                    .sortBy((_, key) => this.semaphoreFields.others[key].order,
                                         (a, b) => a - b);
 
                                 const allGroupedAndSortedNotInConfig = allGrouped
-                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
+                                    .filter((_, key) => !hasConfig(key, this.semaphoreFields.others));
 
                                 const allGroupedAndSorted = allGroupedAndSortedByConfig
                                     .concat(allGroupedAndSortedNotInConfig);

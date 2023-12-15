@@ -54,15 +54,11 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                             onClick={
                                 readOnly
                                     ? () => {
-                                        console.log("readOnly is true");
                                     }
                                     : () => {
                                         if (isNodeEntity) {
-                                            console.log("parent and children is null");
                                             onRemove([node.value.qcode]);
                                         } else {
-                                            console.log("has parent");
-                                            console.log("node:", node);
                                             onRemove(
                                                 treeToArray([node]).map(({qcode}) => qcode),
                                             );
