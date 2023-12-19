@@ -14,6 +14,7 @@ import {
     IExposedFromAuthoring,
     IKeyBindings,
     IAuthoringOptions,
+    IStoreValueIncomplete,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -94,6 +95,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
     userPreferencesForFields: {[key: string]: unknown},
     fieldsAdapter: IFieldsAdapter<T>,
     storageAdapter: IStorageAdapter<T>,
+    preferIncomplete: IStoreValueIncomplete,
 ): T {
     let result: T = item;
 
@@ -113,7 +115,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
         })();
 
         if (fieldsAdapter[field.id]?.storeValue != null) {
-            result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
+            result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig, preferIncomplete);
         } else {
             result = storageAdapter.storeValue(storageValue, field.id, result, field.fieldConfig, field.fieldType);
         }
@@ -396,7 +398,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
      */
-    computeLatestEntity(): T {
+    computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): T {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -412,6 +414,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             state.userPreferencesForFields,
             this.props.fieldsAdapter,
             this.props.storageAdapter,
+            options?.preferIncomplete ?? false,
         );
 
         return itemWithFieldsApplied;
@@ -775,7 +778,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 if (this.hasUnsavedChanges()) {
                     authoringStorage.autosave.schedule(
                         () => {
-                            return this.computeLatestEntity();
+                            return this.computeLatestEntity({preferIncomplete: true});
                         },
                         (autosaved) => {
                             this.setState({
