@@ -5,6 +5,7 @@ import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superd
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
+import {IScope} from 'angular';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 const language = getUserInterfaceLanguage();
@@ -121,6 +122,18 @@ export function getDroppedItem(event): IArticle | null {
     const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
 
     return __item;
+}
+
+export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
+    let current = scope.$parent;
+
+    while (current != null) {
+        if (predicate(current) === true) {
+            return current;
+        } else {
+            current = current.$parent;
+        }
+    }
 }
 
 /**

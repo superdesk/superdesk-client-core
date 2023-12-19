@@ -161,18 +161,21 @@
         ng-click="saveTopbar()"
         ng-show="_editable"
         ng-if = "itemActions.save && (action === 'edit' || isCorrection(item))"
-        ng-disabled="!save_enabled() || saveDisabled"
+        ng-disabled="!save_enabled() || saveTopbarLoading"
         sd-hotkey="ctrl+shift+s"
         sd-hotkey-options="{global: true}"
         translate
         data-test-id="save"
-      >Save</button>
+      >
+        <sd-spinner ng-if="saveTopbarLoading" data-size="'mini'"></sd-spinner>
+        <span translate>Save</span>
+      </button>
 
       <button class="btn btn--primary" type="submit"
         ng-click="previewFormattedItem()"
         ng-show="_editable"
         ng-if = "itemActions.save && previewFormattedEnabled() && action === 'edit'"
-        ng-disabled="save_enabled() && !saveDisabled"
+        ng-disabled="save_enabled() && !saveTopbarLoading"
         sd-hotkey="ctrl+shift+l"
         sd-hotkey-options="{global: true}"
         translate>Preview</button>

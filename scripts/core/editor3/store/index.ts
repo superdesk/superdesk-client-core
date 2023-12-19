@@ -2,10 +2,8 @@
 import {
     EditorState,
     convertFromRaw,
-    convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator,
 } from 'draft-js';
 import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
@@ -16,7 +14,6 @@ import {
 } from '../actions';
 import {
     fieldsMetaKeys,
-    setFieldMetadata,
     getFieldMetadata,
     FIELD_KEY_SEPARATOR,
 } from '../helpers/fieldsMeta';
@@ -276,62 +273,8 @@ export function prepareEditor3StateForExport(contentState: ContentState): Conten
     ).getCurrentContent();
 }
 
-/**
- * @name onChange
- * @params {ContentState} contentState New editor content state.
- * @params {Boolean} plainText If this is true, the editor content will be text instead of html
- * @description Triggered whenever the state of the editor changes. It takes the
- * current content states and updates the values of the host controller. This function
- * is bound to the controller, so 'this' points to controller attributes.
- */
-export function onChange(contentState, {plainText = false} = {}) {
-    const pathToValue = this.pathToValue;
-
-    if (pathToValue == null || pathToValue.length < 1) {
-        throw new Error('pathToValue is required');
-    }
-
-    const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
-    const rawState = convertToRaw(contentStatePreparedForExport);
-
-    setFieldMetadata(
-        this.item,
-        pathToValue,
-        fieldsMetaKeys.draftjsState,
-        rawState,
-    );
-
-    if (pathToValue === 'body_html') {
-        syncAssociations(this.item, rawState);
-    }
-
-    // example: "extra.customField"
-    const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
-
-    let objectToUpdate =
-        pathToValueArray.length < 2
-            ? this.item
-            : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
-                if (obj[pathSegment] == null) {
-                    obj[pathSegment] = {};
-                }
-
-                return obj[pathSegment];
-            }, this.item);
-
-    const fieldName = pathToValueArray[pathToValueArray.length - 1];
-
-    if (plainText) {
-        objectToUpdate[
-            fieldName
-        ] = contentStatePreparedForExport.getPlainText();
-    } else {
-        objectToUpdate[fieldName] = editor3StateToHtml(
-            contentStatePreparedForExport,
-        );
-        generateAnnotations(this.item);
-    }
-
+// `this` points to Editor3Directive
+export function onChange() {
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
         this.onChange();
@@ -397,11 +340,8 @@ export function getInitialContent(props): ContentState {
 
 /**
  * Sync editor embeds in item.associations
- *
- * @param {Object} item
- * @param {RawDraftContentState} rawState
  */
-function syncAssociations(item, rawState) {
+export function syncAssociations(item: IArticle, rawState: RawDraftContentState): void {
     const associations = Object.assign({}, item.associations);
 
     Object.keys(associations).forEach((key) => {

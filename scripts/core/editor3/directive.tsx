@@ -2,22 +2,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {EditorState} from 'draft-js';
-import {Store} from 'redux';
+import {convertToRaw, EditorState} from 'draft-js';
+import {AnyAction, Store} from 'redux';
 
 import {Editor3} from './components';
-import createEditorStore from './store';
+import createEditorStore, {
+    generateAnnotations,
+    IEditorStore,
+    prepareEditor3StateForExport,
+    syncAssociations,
+} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
+import {fieldsMetaKeys, FIELD_KEY_SEPARATOR, setFieldMetadata} from './helpers/fieldsMeta';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
+import {findParentScope} from '../utils';
+import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 
 /**
  * @ngdoc directive
@@ -33,6 +40,63 @@ export const sdEditor3 = () => new Editor3Directive();
 
 // used in HighlightsPopup
 export const ReactContextForEditor3 = React.createContext<Store>(null);
+
+function generateHtml(
+    store: Store<IEditorStore, AnyAction>,
+    item: IArticle,
+    pathToValue: string,
+) {
+    const state = store.getState();
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    if (pathToValue == null || pathToValue.length < 1) {
+        throw new Error('pathToValue is required');
+    }
+
+    const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
+    const rawState = convertToRaw(contentStatePreparedForExport);
+
+    setFieldMetadata(
+        item,
+        pathToValue,
+        fieldsMetaKeys.draftjsState,
+        rawState,
+    );
+
+    if (pathToValue === 'body_html') {
+        syncAssociations(item, rawState);
+    }
+
+    // example: "extra.customField"
+    const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
+
+    let objectToUpdate =
+        pathToValueArray.length < 2
+            ? item
+            : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
+                if (obj[pathSegment] == null) {
+                    obj[pathSegment] = {};
+                }
+
+                return obj[pathSegment];
+            }, item);
+
+    const fieldName = pathToValueArray[pathToValueArray.length - 1];
+
+    const plainText = state.plainText === true || state.singleLine === true;
+
+    if (plainText) {
+        objectToUpdate[
+            fieldName
+        ] = contentStatePreparedForExport.getPlainText();
+    } else {
+        objectToUpdate[fieldName] = editor3StateToHtml(
+            contentStatePreparedForExport,
+        );
+        generateAnnotations(item);
+    }
+}
 
 class Editor3Directive {
     scope: any;
@@ -387,6 +451,13 @@ class Editor3Directive {
                 ng.waitForServicesToBeAvailable().then(() => {
                     renderEditor3();
                 });
+
+                (findParentScope(
+                    $scope,
+                    (_scope) => _scope['requestEditor3DirectivesToGenerateHtml'] != null,
+                ) as any)?.requestEditor3DirectivesToGenerateHtml?.push(
+                    () => generateHtml(store, this.item, this.pathToValue),
+                );
             });
     }
 }
