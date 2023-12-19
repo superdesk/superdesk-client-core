@@ -99,25 +99,36 @@ export interface IEditorStore {
 let editor3Stores = [];
 
 export const getDecorators = (
+    spellcheckEnabled?: boolean,
     language?: string,
     spellcheckWarnings?: ISpellcheckWarningsByBlock,
     limitConfig?: EditorLimit,
-) => {
+): {decorator: CompositeDecoratorCustom; mustReApplyDecorators: boolean} => {
+    // improve performance by not replacing decorators when possible.
+    let mustReApplyDecorators = false;
+
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellcheckWarnings != null && language != null) {
+    if (spellcheckEnabled === true && spellcheckWarnings != null && language != null) {
+        mustReApplyDecorators = true;
+
         decorators.push(
             getSpellcheckingDecorator(language, spellcheckWarnings),
         );
     }
 
     if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+        mustReApplyDecorators = true;
+
         decorators.push(
             getTextLimitHighlightDecorator(limitConfig.chars),
         );
     }
 
-    return new CompositeDecoratorCustom(decorators);
+    return {
+        decorator: new CompositeDecoratorCustom(decorators),
+        mustReApplyDecorators,
+    };
 };
 
 /**
@@ -192,7 +203,7 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators(),
+        getDecorators().decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
