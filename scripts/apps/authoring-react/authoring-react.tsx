@@ -298,6 +298,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onArticleChange = this.onArticleChange.bind(this);
+        this.setLoadingState = this.setLoadingState.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -353,6 +354,27 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void> {
+        return new Promise<void>((resolve) => {
+            this.setState({
+                ...state,
+                loading,
+            }, () => {
+                setTimeout(() => {
+                    /**
+                     * Timeout is used to wait until the view re-renders with a loading indicator.
+                     * This is a workaround for rare scenarios where a field has a lot of data
+                     * and takes a long time to synchronously serialize to storage format causing
+                     * the browser to lock up for some time.
+                     *
+                     * Without the timeout, loading indicator would only get shown AFTER the long task had finished.
+                     */
+                    resolve();
+                });
+            });
+        });
     }
 
     initiateUnmounting(): Promise<void> {
@@ -858,37 +880,34 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         }
 
-        return this.cancelAutosave().then(() => {
-            this.setState({
-                ...state,
-                loading: true,
+        return this.setLoadingState(state, true)
+            .then(() => this.cancelAutosave())
+            .then(() => {
+                return authoringStorage.saveEntity(
+                    this.computeLatestEntity(),
+                    state.itemOriginal,
+                ).then((item: T) => {
+                    const nextState = getInitialState(
+                        {saved: item, autosaved: item},
+                        state.profile,
+                        state.userPreferencesForFields,
+                        state.spellcheckerEnabled,
+                        this.props.fieldsAdapter,
+                        this.props.authoringStorage,
+                        this.props.storageAdapter,
+                        this.props.getLanguage(item),
+                        {}, // clear validation errors
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
+                    );
+
+                    if (this._mounted) {
+                        this.setState(nextState);
+                    }
+
+                    return item;
+                });
             });
-
-            return authoringStorage.saveEntity(
-                this.computeLatestEntity(),
-                state.itemOriginal,
-            ).then((item: T) => {
-                const nextState = getInitialState(
-                    {saved: item, autosaved: item},
-                    state.profile,
-                    state.userPreferencesForFields,
-                    state.spellcheckerEnabled,
-                    this.props.fieldsAdapter,
-                    this.props.authoringStorage,
-                    this.props.storageAdapter,
-                    this.props.getLanguage(item),
-                    {}, // clear validation errors
-                    state.allThemes.default,
-                    state.allThemes.proofreading,
-                );
-
-                if (this._mounted) {
-                    this.setState(nextState);
-                }
-
-                return item;
-            });
-        });
     }
 
     /**
@@ -921,7 +940,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * Closing is initiated, the logic to handle unsaved changes runs
      * and unless closing is cancelled by user action in the UI this.props.onClose is called.
      */
-    initiateClosing(state: IStateLoaded<T>) {
+    initiateClosing(state: IStateLoaded<T>): void {
         if (this.hasUnsavedChanges() !== true) {
             this.props.onClose();
             return;
@@ -929,31 +948,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const {authoringStorage} = this.props;
 
-        this.setState({
-            ...state,
-            loading: true,
-        });
+        this.setLoadingState(state, true).then(() => {
+            authoringStorage.closeAuthoring(
+                this.computeLatestEntity(),
+                state.itemOriginal,
+                () => {
+                    authoringStorage.autosave.cancel();
 
-        authoringStorage.closeAuthoring(
-            this.computeLatestEntity(),
-            state.itemOriginal,
-            () => {
-                authoringStorage.autosave.cancel();
-
-                return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
-            },
-            () => this.props.onClose(),
-        ).then(() => {
-            /**
-             * The promise will also resolve
-             * if user decides to cancel closing.
-             */
-            if (this._mounted) {
-                this.setState({
-                    ...state,
-                    loading: false,
-                });
-            }
+                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+                },
+                () => this.props.onClose(),
+            ).then(() => {
+                /**
+                 * The promise will also resolve
+                 * if user decides to cancel closing.
+                 */
+                if (this._mounted) {
+                    this.setLoadingState(state, false);
+                }
+            });
         });
     }
 
