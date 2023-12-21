@@ -197,7 +197,7 @@ describe('templates', () => {
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
                     sort: 'template_name',
-                    where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
+                    where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"i"}}]}',
                     manage: true,
                 });
             }));

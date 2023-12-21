@@ -25,8 +25,8 @@
         }
         .card-list__controls {
             position: absolute;
-            top: 7px;
-            right: 1px;
+            inset-block-start: 7px;
+            inset-inline-end: 1px;
         }
         .header {
             height: 110px;
@@ -35,7 +35,7 @@
             color: $white;
             border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
             .title {
-                padding-bottom: 6px;
+                padding-block-end: 6px;
                 font-weight: 500;
             }
             .sub-title {
@@ -62,13 +62,13 @@
                 background: #970000;
             }
             .uppercase {
-                padding-right: .3em;
+                padding-inline-end: .3em;
             }
         }
         .ingested-count {
             padding: 10px 16px;
             text-align: center;
-            border-bottom: 1px  solid var(--sd-colour-line--light);
+            border-block-end: 1px  solid var(--sd-colour-line--light);
             .count {
                 font-size: 30px;
                 line-height: 34px;
@@ -81,9 +81,9 @@
         }
         .update-time {
             padding: 0 15px 10px 15px;
-            border-bottom: 1px  solid var(--sd-colour-line--light);
+            border-block-end: 1px  solid var(--sd-colour-line--light);
             .text {
-                margin-top: 10px;
+                margin-block-start: 10px;
                 font-size: 12px;
                 text-transform: uppercase;
                 color: var(--color-text-light);

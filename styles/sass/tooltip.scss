@@ -10,10 +10,10 @@
   font-size: 11px;
   @include opacity(0);
   &.in     { @include opacity(90); }
-  &.top    { margin-top:  -2px; }
-  &.right  { margin-left:  2px; }
-  &.bottom { margin-top:   2px; }
-  &.left   { margin-left: -2px; }
+  &.top    { margin-block-start:  -2px; }
+  &.right  { margin-inline-start:  2px; }
+  &.bottom { margin-block-start:   2px; }
+  &.left   { margin-inline-start: -2px; }
   // &.top .tooltip-arrow    { #popoverArrow > .top(); }
   // &.left .tooltip-arrow   { #popoverArrow > .left(); }
   // &.bottom .tooltip-arrow { #popoverArrow > .bottom(); }

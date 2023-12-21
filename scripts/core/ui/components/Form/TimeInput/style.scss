@@ -22,22 +22,22 @@
 //     }
 
 //     &__select-area {
-//         margin-top: 15px;
-//         border-top: 1px solid #ddd;
+//         margin-block-start: 15px;
+//         border-block-start: 1px solid #ddd;
 //         .header {
-//             margin-top: -10px;
-//             float: left;
+//             margin-block-start: -10px;
+//             float: inline-start;
 //             background: $white;
 //             text-transform: uppercase;
 //             color: #adadad;
 //             font-size: 11px;
-//             padding-right: 10px;
+//             padding-inline-end: 10px;
 //         }
 //         ul {
-//             padding-top: 15px;
+//             padding-block-start: 15px;
 //             @include clearfix();
 //             > li {
-//                 float: left;
+//                 float: inline-start;
 //                 @include border-box();
 //                 width: 28px;
 //                 height: 28px;
@@ -73,22 +73,22 @@
     }
 
     &__select-area {
-        margin-top: 15px;
-        border-top: 1px solid var(--sd-colour-line--light) !important;
+        margin-block-start: 15px;
+        border-block-start: 1px solid var(--sd-colour-line--light) !important;
         .header {
-            margin-top: -10px;
-            float: left;
+            margin-block-start: -10px;
+            float: inline-start;
             background: var(--color-dropdown-menu-Bg) !important;
             text-transform: uppercase;
             color: var(--color-text-lighter) !important;
             font-size: 11px;
-            padding-right: 10px;
+            padding-inline-end: 10px;
         }
         ul {
-            padding-top: 15px;
+            padding-block-start: 15px;
             @include clearfix();
             > li {
-                float: left;
+                float: inline-start;
                 width: 28px;
                 height: 28px;
                 line-height: 28px;

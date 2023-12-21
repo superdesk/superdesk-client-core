@@ -4,6 +4,8 @@ import {cursorAtEndPosition, cursorAtPosition} from './utils';
 import {insertContentInState, createHtmlFromText} from '../handlePastedText';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
+import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
+import HTML_WITH_TABLE from './pastedHtmlWithTable.html';
 
 describe('editor3.handlePastedText', () => {
     it('should insert text without selection', () => {
@@ -110,5 +112,22 @@ describe('editor3.handlePastedText', () => {
         const contentState = getContentStateFromHtml(createHtmlFromText(text));
 
         expect(contentState.getPlainText('\n')).toEqual(text);
+    });
+
+    it('should handle table blocks', () => {
+        const contentState = getContentStateFromHtml(HTML_WITH_TABLE);
+        const blocks = contentState.getBlocksAsArray();
+
+        expect(htmlComesFromDraftjsEditor(HTML_WITH_TABLE, false)).toBe(false);
+
+        expect(blocks.length).toBe(2);
+        expect(blocks[0].getType()).toBe("atomic");
+
+        const entity = contentState.getEntity(blocks[0].getEntityAt(0));
+        expect(entity.getType()).toBe("TABLE");
+
+        const tableData = entity.getData().data;
+        expect(tableData.numRows).toBe(6);
+        expect(tableData.numCols).toBe(4);
     });
 });

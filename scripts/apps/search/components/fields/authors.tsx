@@ -12,7 +12,7 @@ import {IRelatedEntitiesToFetch} from '.';
 const endpointUsers = '/users';
 const endpointVocabularies = '/vocabularies';
 
-const SEPARATOR = <span style={{opacity: 0.5, marginLeft: 4, marginRight: 4}}>/</span>;
+const SEPARATOR = <span style={{opacity: 0.5, marginInlineStart: 4, marginInlineEnd: 4}}>/</span>;
 const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
 
 export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
@@ -83,7 +83,7 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
 
         return (
             <React.Fragment>
-                <span className="container" style={{marginRight: 0}}>
+                <span className="container" style={{marginInlineEnd: 0}}>
                     {
                         authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
                             <span key={userId}>
@@ -120,7 +120,7 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
                                         {
                                             authors.map(({userId, roleId}) => (
                                                 <tr key={userId}>
-                                                    <td style={{paddingRight: 4, opacity: 0.6}}>
+                                                    <td style={{paddingInlineEnd: 4, opacity: 0.6}}>
                                                         {renderAuthorRole(roleId)}
                                                     </td>
                                                     <td>{renderUser(userId)}</td>
@@ -134,7 +134,7 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
                     )
                 }
 
-                <span style={{marginRight: '1.2rem'}} />
+                <span style={{marginInlineEnd: '1.2rem'}} />
             </React.Fragment>
         );
     }

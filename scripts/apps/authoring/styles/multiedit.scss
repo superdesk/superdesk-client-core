@@ -9,7 +9,7 @@ $top-offset: 48px;
 
 .close-multiedit {
     position: absolute;
-    top: 14px; right: 14px;
+    inset-block-start: 14px; inset-inline-end: 14px;
     @include opacity(60);
     background: none;
     border: 0;
@@ -23,16 +23,16 @@ $top-offset: 48px;
 
     .boards-list {
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: $create-board-pane;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inset-block-end: 0;
+        inset-inline-end: $create-board-pane;
     }
     .boards-create {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
+        inset-block-start: 0;
+        inset-block-end: 0;
+        inset-inline-end: 0;
         width: $create-board-pane;
         display: flex;
         align-items: center;
@@ -53,10 +53,10 @@ $top-offset: 48px;
         .multiedit-float {
             .dropdown__menu {
                 position: fixed;
-                left: auto;
-                right: auto;
-                top: auto;
-                bottom: auto;
+                inset-inline-start: auto;
+                inset-inline-end: auto;
+                inset-block-start: auto;
+                inset-block-end: auto;
                 max-width: 270px;
                 li button {
                     max-width: 250px !important;
@@ -70,7 +70,7 @@ $top-offset: 48px;
         flex: 1 1 0;
         .board {
             background: $white;
-            //float: left;
+            //float: inline-start;
             height: 100%;
             border: 1px solid #cacaca;
             border-width: 0 1px;
@@ -84,7 +84,7 @@ $top-offset: 48px;
                     padding: 0;
                     height: calc(100vh - 96px);
                     &.locked {
-                        border-left: 4px solid $state-border--locked;
+                        border-inline-start: 4px solid $state-border--locked;
                     }
 
                     .main-article__editbar {
@@ -101,7 +101,7 @@ $top-offset: 48px;
                         box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
                         .main-article__editbar-button {
                             visibility: hidden;
-                            margin-left: 0.8rem;
+                            margin-inline-start: 0.8rem;
                         }
 
                     }
@@ -117,7 +117,7 @@ $top-offset: 48px;
             }
             .multiedit-screen__selection {
                 position: absolute;
-                top: 0;
+                inset-block-start: 0;
                 opacity: 1;
             }
             &:hover {
@@ -135,8 +135,8 @@ $top-offset: 48px;
 }
 .multiedit-screen__selection {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
     border: none;
     z-index: 2;
     opacity: 0.8;
@@ -153,7 +153,7 @@ $top-offset: 48px;
 }
 
 .subnav--multiedit-screen {
-    top: 0;
+    inset-block-start: 0;
 }
 
 #workspace-container .main-article .owl-stage-outer.owl-height{

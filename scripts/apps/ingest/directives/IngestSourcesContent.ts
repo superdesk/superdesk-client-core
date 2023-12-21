@@ -166,7 +166,7 @@ export function IngestSourcesContent(ingestSources, api, $location,
                         andTerms.push({
                             name: {
                                 $regex: $scope.searchQuery,
-                                $options: '-i',
+                                $options: 'i',
                             },
                         });
                     }

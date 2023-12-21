@@ -53,7 +53,7 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
 
         return (
             <div>
-                <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginTop: 20}}>
+                <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginBlockStart: 20}}>
                     {gettext('Show or hide the widgets in the right toolbar in the editor workspace.')}
                 </div>
                 <ul className="sd-list-item-group sd-shadow--z2">

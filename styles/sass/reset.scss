@@ -67,10 +67,10 @@ sup {
   vertical-align: baseline;
 }
 sup {
-  top: -0.5em;
+  inset-block-start: -0.5em;
 }
 sub {
-  bottom: -0.25em;
+  inset-block-end: -0.25em;
 }
 
 // Img border in a's and image quality

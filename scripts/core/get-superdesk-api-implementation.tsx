@@ -65,7 +65,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
-import {httpRequestJsonLocal, httpRequestRawLocal} from './helpers/network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -272,6 +272,7 @@ export function getSuperdeskApiImplementation(
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
+        httpRequestVoidLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {

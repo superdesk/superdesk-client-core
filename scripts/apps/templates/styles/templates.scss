@@ -47,21 +47,21 @@
     .template-metadata {
 
         .field {
-            margin-bottom: 15px;
+            margin-block-end: 15px;
             &--margin-double {
-                margin-bottom: 30px;
+                margin-block-end: 30px;
             }
         }
 
         .sd-toggle {
-            margin-top: 4px;
+            margin-block-start: 4px;
         }
 
         .toggle-box__label {
             color: $sd-text;
         }
         .multi-select {
-            margin-bottom: 20px;            
+            margin-block-end: 20px;            
             ul {
                 li {
                     display: inline-block;
@@ -108,7 +108,7 @@
     }
 
     .template-editor {
-        border-top: 1px solid var(--sd-colour-line--medium);
+        border-block-start: 1px solid var(--sd-colour-line--medium);
         .authoring-header__general-info {
             display: none;
         }
@@ -137,7 +137,7 @@
             vertical-align: top;
             width: 48%;
             &:first-of-type {
-                margin-right: 2%;
+                margin-inline-end: 2%;
             }
         }
     }
@@ -150,13 +150,13 @@
     }
     .terms {
         @include user-select(none);
-        padding-top: 10px;
+        padding-block-start: 10px;
         @include clearfix();
         li {
             position: relative;
             background: #e8e8e8;
             line-height: 26px;
-            float: left;
+            float: inline-start;
             height: 26px;
             padding: 0 6px;
             @include border-radius(3px);
@@ -165,8 +165,8 @@
             i:not(.alt) {
                 position: absolute;
                 display: none;
-                right: 5px;
-                top: 6px;
+                inset-inline-end: 5px;
+                inset-block-start: 6px;
                 opacity: 0;
                 transition: all .5s ease;
             }

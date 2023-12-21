@@ -11,22 +11,22 @@
     box-shadow: $block-shadow-depth-2;
     padding: 10px;
     position: relative;
-    border-left: 4px solid #fff;
+    border-inline-start: 4px solid #fff;
     display: flex;
-    margin-bottom: 10px;
+    margin-block-end: 10px;
     transition: all 0.2s;
     &__icon-holder {
         margin: 0 12px 0 0 !important;
         opacity:0.5;
         max-width: 24px;
         min-width: 24px;
-        padding-right: 10px;
+        padding-inline-end: 10px;
     }
     &__drag-handle {
         position: absolute;
-        top:3px;
-        bottom: 3px;
-        left:2px;
+        inset-block-start:3px;
+        inset-block-end: 3px;
+        inset-inline-start:2px;
         background: url(~images/draggable-bg.png) repeat 0 0;
         width: 6px;
         opacity:0;
@@ -34,8 +34,8 @@
     }
     &__open-item {
         position: absolute;
-        right: 8px;
-        top: 8px;
+        inset-inline-end: 8px;
+        inset-block-start: 8px;
         opacity: 0;
         cursor: pointer;
     }
@@ -55,8 +55,8 @@
         overflow: hidden;
         height: 80px;
         background: #f0f0f0;
-        float: left;
-        margin-right: 16px;
+        float: inline-start;
+        margin-inline-end: 16px;
         img {
             margin: 0 !important;
         }
@@ -79,7 +79,7 @@
         flex-direction: column;
     }
     &__item-headline {
-        padding-right: 64px;
+        padding-inline-end: 64px;
         max-height: 74px;
         overflow: hidden;
         font-size: 1.4rem;
@@ -88,7 +88,7 @@
         font-weight: bold;
     }
     &__item-abstract {
-        margin-top: 5px;
+        margin-block-start: 5px;
         img {
             max-width: 100%;
         }
@@ -98,8 +98,8 @@
     }
     &__action-menu {
         position: absolute;
-        top: 6px;
-        right: 6px;
+        inset-block-start: 6px;
+        inset-inline-end: 6px;
         .more-activity-toggle {
             width: 16px;
             height: 16px !important;
@@ -130,7 +130,7 @@
 .sort-item {
     .package-item:hover {
         box-shadow: 0 0 1px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.4);
-        padding-left: 16px;
+        padding-inline-start: 16px;
         cursor: move;
         .package-item__drag-handle {
             opacity: 0.5;
@@ -160,7 +160,7 @@
         }
 
         .package-header {
-            margin-bottom: 30px;
+            margin-block-end: 30px;
             position: relative;
             min-height: 52px;
 
@@ -208,11 +208,11 @@
             &:before {
                 content: " ";
                 position: absolute;
-                border-bottom: 1px solid #dcdcdc;
+                border-block-end: 1px solid #dcdcdc;
                 height: 1px;
-                top: 9px;
-                left: 20px;
-                right: 0px;
+                inset-block-start: 9px;
+                inset-inline-start: 20px;
+                inset-inline-end: 0px;
             }
             h6 {
                 background: #fcfcfc;
@@ -234,9 +234,9 @@
         }
         > li:not(.placeholder):not(.fake):first-child {
             .item-container {
-                margin-top: 30px;
+                margin-block-start: 30px;
             }
-            margin-top: -15px;
+            margin-block-start: -15px;
         }
         > li.fake:first-child {
             div {
@@ -250,8 +250,8 @@
             position: relative;
             .remove {
                 position: absolute;
-                right: 38px;
-                top: 6px;
+                inset-inline-end: 38px;
+                inset-block-start: 6px;
                 opacity: 0;
             }
 

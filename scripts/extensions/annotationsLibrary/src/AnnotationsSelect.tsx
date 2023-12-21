@@ -29,7 +29,7 @@ export class AnnotationsSelect extends React.Component<IProps, IState> {
         const {gettext} = this.props.superdesk.localization;
 
         const backButton = (
-            <div className="space-between" style={{marginTop: 15}}>
+            <div className="space-between" style={{marginBlockStart: 15}}>
                 <span />
                 <button
                     onClick={this.props.onCancel}
@@ -47,7 +47,7 @@ export class AnnotationsSelect extends React.Component<IProps, IState> {
         if (this.props.conceptItems._meta.total < 1) {
             return (
                 <div>
-                    <p style={{marginTop: 20}}>{gettext('No matches found in the library.')}</p>
+                    <p style={{marginBlockStart: 20}}>{gettext('No matches found in the library.')}</p>
                     {backButton}
                 </div>
             );

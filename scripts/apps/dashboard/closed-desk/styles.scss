@@ -1,10 +1,10 @@
 
 .close-desk-widget-content {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    bottom: 8px;
-    left: 8px;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+    inset-block-end: 8px;
+    inset-inline-start: 8px;
     display: flex;
     flex-direction: column;
     overflow: auto;

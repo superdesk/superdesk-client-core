@@ -8,7 +8,7 @@
 @mixin generic-upload-progress($height:2px) {
     position: absolute;
     height: $height;
-    top: 0; left: 0; right: 0;
+    inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0;
     z-index: 1;
     background: var(--sd-item__main-Bg);
     .bar {
@@ -32,7 +32,7 @@ user avatar uploader
         flex-direction: column;
 
         .split-popup__nav-item {
-            border-bottom: 1px solid var(--sd-colour-line--x-light);
+            border-block-end: 1px solid var(--sd-colour-line--x-light);
             padding-inline-start: 16px;
             padding-inline-end: 12px;
             display: flex;
@@ -45,7 +45,7 @@ user avatar uploader
                 text-decoration: none;
             }
             [class^="icon-"] {
-                margin-right: $sd-base-increment;
+                margin-inline-end: $sd-base-increment;
                 opacity: 0.75;
                 color: inherit;
             }
@@ -64,9 +64,9 @@ user avatar uploader
                 }
             }
             &.remove-avatar {
-                margin-top: auto;
-                border-top: 1px solid var(--sd-colour-line--x-light);
-                border-bottom: none;
+                margin-block-start: auto;
+                border-block-start: 1px solid var(--sd-colour-line--x-light);
+                border-block-end: none;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -115,7 +115,7 @@ user avatar uploader
                       visibility: hidden;
                     }
                     input[type="file"] {
-                        padding-top: 4px;
+                        padding-block-start: 4px;
                         font-size: 13px;
                         background-color: transparent;
                         height: 32px;
@@ -165,11 +165,11 @@ user avatar uploader
         .preview {
             .crop-area {
                 position: absolute;
-                top: 50px;
-                left: 20px; right: 20px; bottom: 20px;
+                inset-block-start: 50px;
+                inset-inline-start: 20px; inset-inline-end: 20px; inset-block-end: 20px;
                 .original {
                     position: absolute;
-                    left: 0; top:0; bottom: 0;
+                    inset-inline-start: 0; inset-block-start:0; inset-block-end: 0;
                     width: $avatar-crop-area-width;
                     img {
                         width: 100%;
@@ -177,8 +177,8 @@ user avatar uploader
                 }
                 .preview {
                     position: absolute;
-                    right: 0; top:0; bottom: 0;
-                    left: $avatar-crop-area-width;
+                    inset-inline-end: 0; inset-block-start:0; inset-block-end: 0;
+                    inset-inline-start: $avatar-crop-area-width;
                     .preview-large {
                         width:120px;
                         height: 120px;
@@ -190,42 +190,42 @@ user avatar uploader
                         height: 225px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-large-4-3-medium {
                         width:400px;
                         height: 300px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-large-4-3-large {
                         width:800px;
                         height: 600px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-large-16-9-small {
                         width:300px;
                         height: 169px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-large-16-9-medium {
                         width:400px;
                         height: 225px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-large-16-9-large {
                         width:1280px;
                         height: 720px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
-                        float:right;
+                        float: inline-end;
                     }
                     .preview-round {
                         width:60px;
@@ -236,7 +236,7 @@ user avatar uploader
                     }
                 }
                 &.image {
-                    top: 200px;
+                    inset-block-start: 200px;
                     .loading {
                         background: url('~images/loading-large.gif') no-repeat center;
                     }
@@ -270,10 +270,10 @@ media uploader
     }
     .drag-area { //start screen on modal show
         position: absolute;
-        top:0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        inset-block-start:0;
+        inset-inline-start: 0;
+        inset-block-end: 0;
+        inset-inline-end: 0;
         overflow-y: auto;
         border: none !important;
         @include user-select(none);
@@ -286,7 +286,7 @@ media uploader
         overflow-y: auto;
         position: relative;
         &.error {
-            top: 40px;
+            inset-block-start: 40px;
         }
 
         .upload-thumbs {
@@ -303,10 +303,10 @@ media uploader
                         line-height: 205px;
                         i {
                             position: absolute;
-                            top: 50%;
-                            margin-top: -25px;
-                            left: 50%;
-                            margin-left: -30px;
+                            inset-block-start: 50%;
+                            margin-block-start: -25px;
+                            inset-inline-start: 50%;
+                            margin-inline-start: -30px;
                             opacity: 0.2;
                             z-index: 1;
                         }
@@ -319,7 +319,7 @@ media uploader
                         }
                         .failed {
                             position: absolute;
-                            left: 0; right: 0; top:0 ; bottom:0;
+                            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:0 ; inset-block-end:0;
                             z-index: 2;
                             background: rgba(255,255,255,0.7) url('~images/icon_upload_error_big.png') no-repeat center center;
                         }
@@ -327,7 +327,7 @@ media uploader
 
                     .remove {
                         position: absolute;
-                        top: 0px; right: 0px;
+                        inset-block-start: 0px; inset-inline-end: 0px;
                         height: 20px;
                         width: 20px;
                         background: #fff;
@@ -346,21 +346,21 @@ media uploader
                 }
                 .info {
                     position: relative;
-                    padding-top: 2px;
-                    padding-bottom: 3px;
-                    border-top: 1px solid var(--sd-colour-line--medium);
+                    padding-block-start: 2px;
+                    padding-block-end: 3px;
+                    border-block-start: 1px solid var(--sd-colour-line--medium);
                     border-radius: 0 0 3px 3px;
 
                     .upload-progress {
                         @include generic-upload-progress();
-                        top:-1px;
+                        inset-block-start:-1px;
                     }
 
                     input[type="text"] {
                         width: 100%;
                         color: var(--color-text);
                         border: 0;
-                        border-bottom: 1px solid var(--color-input-border);
+                        border-block-end: 1px solid var(--color-input-border);
                         font-size: 1.4rem;
                         background-color: var(--color-input-bg);
                         transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
@@ -386,8 +386,8 @@ media uploader
 
                     .btn--mini {
                         position: absolute;
-                        right: 4px;
-                        top: 4px;
+                        inset-inline-end: 4px;
+                        inset-block-start: 4px;
                         border: 0;
                         background: none;
                         display: none;
@@ -439,10 +439,10 @@ edit image modal
         &:after {
             content: '';
             position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset-block-start: 0;
+            inset-block-end: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
             background-color: rgba(255,255,255, .8);
             z-index: 999;
         }
@@ -457,7 +457,7 @@ edit image modal
     }
     &-bottom {
         background-color: #dedede;
-        border-top: 1px solid #d5d5d5;
+        border-block-start: 1px solid #d5d5d5;
         padding: 15px 8px 0 8px;
         @include box-sizing(border-box);
         flex: 0 0 auto;
@@ -472,34 +472,34 @@ edit image modal
             span.size {
                 color: black;
                 font-weight: 500;
-                margin-left: 10px;
+                margin-inline-start: 10px;
             }
         }
         button {
-            margin-top: 10px;
-            margin-right: 8px;
+            margin-block-start: 10px;
+            margin-inline-end: 8px;
         }
     }
     &-sidebar {
         width: 335px;
         overflow-y: auto;
         background-color: #f0f0f0;
-        border-left: 1px solid #dfdfdf;
+        border-inline-start: 1px solid #dfdfdf;
         @include box-sizing(border-box);
         padding: 15px;
     }
     &-loader:before {
         content: '';
         position: absolute;
-        top: 100px;
-        left: 100px;
+        inset-block-start: 100px;
+        inset-inline-start: 100px;
         transform: translateY(-50%);
         background-position: left !important;
         @include spinner-big;
     }
     &-metadata {
         > div {
-            margin-bottom: 25px;
+            margin-block-end: 25px;
         }
         label {
             font-size: 11px;
@@ -551,16 +551,16 @@ edit image modal
 .image-point {
     &__poi {
         position: absolute;
-        top: 0;
-        left: 0;
+        inset-block-start: 0;
+        inset-inline-start: 0;
         z-index: 1;
         display: inline-block;
         &__overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            inset-block-end: 0;
             z-index: 3;
             &:hover {
                 cursor: crosshair;
@@ -582,11 +582,11 @@ edit image modal
         }
         &__cross-left, &__cross-right {
             height: 2px;
-            left: 0;
+            inset-inline-start: 0;
         }
         &__cross-top, &__cross-bottom {
             width: 2px;
-            top: 0;
+            inset-block-start: 0;
         }
     }
 }
@@ -594,8 +594,8 @@ edit image modal
 .crop-box {
     background: transparent;
     position: absolute;
-    top: 0;
-    left: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
     border-color: rgba(0,0,0,.5);
     border-style: solid;
     box-sizing: border-box;
