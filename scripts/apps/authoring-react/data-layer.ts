@@ -8,6 +8,7 @@ import {
     IAuthoringStorage,
     IFieldsAdapter,
     IAuthoringAutoSave,
+    IAuthoringActionType,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -25,7 +26,6 @@ import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
 import moment from 'moment';
-import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -389,7 +389,9 @@ class AutoSaveKill implements IAuthoringAutoSave<IArticle> {
     }
 }
 
-export const getAuthoringStorageIArticleKillOrTakedown = (action: IArticleAction): IAuthoringStorage<IArticle> => ({
+export const getAuthoringStorageIArticleKillOrTakedown = (
+    action: IAuthoringActionType,
+): IAuthoringStorage<IArticle> => ({
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {

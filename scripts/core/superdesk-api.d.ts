@@ -2345,6 +2345,8 @@ declare module 'superdesk-api' {
         | 'add_to_current'
         | 'resend'
         | 'set_label'
+        | 'publish'
+        | 'unpublish'
         | 'takedown';
 
     export interface IDataProvider {

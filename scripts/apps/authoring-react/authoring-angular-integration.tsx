@@ -9,6 +9,7 @@ import {
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringOptions,
+    IAuthoringActionType,
 } from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -33,7 +34,6 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@superdesk/common';
-import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -42,7 +42,7 @@ function onClose() {
 
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
-    action?: IArticleAction,
+    action?: IAuthoringActionType,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -793,7 +793,7 @@ export function getAuthoringPrimaryToolbarWidgets(
 }
 
 export interface IProps {
-    action?: IArticleAction;
+    action?: IAuthoringActionType;
     itemId: IArticle['_id'];
 }
 
@@ -809,7 +809,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
                     authoringStorage={(() => {
                         if (this.props.action === 'kill' || this.props.action === 'takedown') {
-                            return getAuthoringStorageIArticleKillOrTakedown(this.props.action as IArticleAction);
+                            return getAuthoringStorageIArticleKillOrTakedown(this.props.action);
                         } else if (this.props.action === 'correct') {
                             return authoringStorageIArticleCorrect;
                         } else {

@@ -29,11 +29,9 @@ import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
-import {IArticleAction} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 
-export type IArticleActionType = 'correct' | 'publish' | 'edit' | 'kill' | 'unpublish' | 'takedown';
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
 const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !isLockedInCurrentSession(_article);
@@ -280,7 +278,7 @@ interface IScope {
 function publishItem(
     orig: IArticle,
     item: IArticle,
-    action: IArticleActionType = 'publish',
+    action: IAuthoringActionType = 'publish',
     onError?: (error: IPublishingError) => void,
 ): Promise<boolean | IArticle> {
     const scope: IScope = {};
@@ -311,7 +309,7 @@ function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
     scope: IScope,
-    action: IArticleActionType = 'publish',
+    action: IAuthoringActionType = 'publish',
     onError?: (error: IPublishingError) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
@@ -406,7 +404,7 @@ function edit(
         _type?: IArticle['_type'],
         state?: IArticle['state']
     },
-    action?: IArticleAction,
+    action?: IAuthoringActionType,
 ): void {
     if (item != null) {
         // disable edit of external ingest sources
@@ -430,7 +428,7 @@ function edit(
     }
 }
 
-function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticleAction): Promise<IArticle> {
+function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle> {
     const itemForTemplate = {
         template_name: action,
         item: pick(
@@ -563,9 +561,9 @@ interface IArticleApi {
     canPublishOnDesk(deskType: string): boolean;
     showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
-    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IArticleActionType): Promise<boolean>;
+    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IAuthoringActionType): Promise<boolean>;
 
-    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IArticleAction): Promise<IArticle>;
+    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle>;
 
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
@@ -574,7 +572,7 @@ interface IArticleApi {
             _type?: IArticle['_type'],
             state?: IArticle['state']
         },
-        action?: IArticleAction,
+        action?: IAuthoringActionType,
     ): void;
 
     // Instead of passing a fake scope from React
@@ -583,7 +581,7 @@ interface IArticleApi {
     publishItem(
         orig: IArticle,
         item: IArticle,
-        action?: IArticleActionType,
+        action?: IAuthoringActionType,
 
         // onError is optional in this function and in `publishItem_legacy` since when you're calling
         // it from React you want to pass only it to handle certain errors and apply them to the scope
