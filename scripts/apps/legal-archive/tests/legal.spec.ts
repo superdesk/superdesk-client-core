@@ -39,14 +39,14 @@ describe('legal archive service', () => {
         $rootScope.$digest();
         var criteria = legal.getCriteria();
 
-        expect(criteria.where).toBe('{"$and":[{"headline":{"$regex":"test","$options":"-i"}}]}');
+        expect(criteria.where).toBe('{"$and":[{"headline":{"$regex":"test","$options":"i"}}]}');
 
         legal.updateSearchQuery({_id: '123', headline: 'test'});
         $rootScope.$digest();
         criteria = legal.getCriteria();
         expect(criteria.where).toBe(angular.toJson({$and: [
             {_id: '123'},
-            {headline: {$regex: 'test', $options: '-i'}},
+            {headline: {$regex: 'test', $options: 'i'}},
         ]}));
 
         legal.updateSearchQuery({published_after: '06/16/2015'});
@@ -65,7 +65,7 @@ describe('legal archive service', () => {
         /* jshint multistr: true */
         expect(criteria.where).toBe('{"$and":[' + [
             '{"_id":"123"}',
-            '{"headline":{"$regex":"test","$options":"-i"}}',
+            '{"headline":{"$regex":"test","$options":"i"}}',
             '{"versioncreated":{"$gte":"2015-06-16T00:00:00+0000"}}',
         ].join(',') + ']}');
     }));

@@ -78,7 +78,7 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
                     if (scope.keyword && scope.searchKey) {
                         var search = {};
 
-                        search[scope.searchKey] = {$regex: scope.keyword, $options: '-i'};
+                        search[scope.searchKey] = {$regex: scope.keyword, $options: 'i'};
                         criteria.where = JSON.stringify({$or: [search]});
                     }
                     api[scope.endpoint].query(_.assign({}, criteria, {

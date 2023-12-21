@@ -59,21 +59,21 @@
   .form-horizontal .control-group > label {
     float: none;
     width: auto;
-    padding-top: 0;
-    text-align: left;
+    padding-block-start: 0;
+    text-align: start;
   }
   // Move over all input controls and content
   .form-horizontal .controls {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
   // Move the options list down to align with labels
   .form-horizontal .control-list {
-    padding-top: 0; // has to be padding because margin collaspes
+    padding-block-start: 0; // has to be padding because margin collaspes
   }
   // Move over buttons in .form-actions to align with .controls
   .form-horizontal .form-actions {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-inline-start: 10px;
+    padding-inline-end: 10px;
   }
 
 
@@ -89,11 +89,11 @@
 @media screen and (max-width: 320px) { 
   #main-container {
     &.menu {
-      left: 260px !important;
-      right: -260px !important;
+      inset-inline-start: 260px !important;
+      inset-inline-end: -260px !important;
       .subnav {
-        left: 260px !important;
-        right: -260px !important;
+        inset-inline-start: 260px !important;
+        inset-inline-end: -260px !important;
       }
     }
   }
@@ -163,9 +163,9 @@
 @media screen and (max-width: 1180px) {
   #main-container {
     &.menu {
-      right: -$sf-main-menu-width !important;
+      inset-inline-end: -$sf-main-menu-width !important;
       .subnav {
-        right: -$sf-main-menu-width !important;
+        inset-inline-end: -$sf-main-menu-width !important;
       }
     }
   }

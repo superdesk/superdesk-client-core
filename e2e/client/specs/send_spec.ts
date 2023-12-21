@@ -34,13 +34,8 @@ describe('send', () => {
         expect(getItemState(0)).toBe('SUBMITTED');
     });
 
-    /**
-     * Not sure if this was ever testing the intended thing.
-     * Currently it is only passing by accident
-     * since there's a modal that prompts to save unsaved changes.
-     * It isn't testing anything related to spellchecking.
-     * I'm disabling it in case we wanted to reimplement it in the future.
-     */
+    // disabling the test, it wasn't really testing any spellcheck warning
+    // the popup there was related to saving unsaved changes
     xit('warns that there are spelling mistakes', () => {
         workspace.editItem(1);
         authoring.writeText('mispeled word');

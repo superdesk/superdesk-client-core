@@ -259,7 +259,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         );
 
         const annotationInputComponent = (
-            <div style={{paddingTop: 20}}>
+            <div style={{paddingBlockStart: 20}}>
                 {annotationTypeSelect}
                 <div className="sd-line-input">
                     <label className="sd-line-input__label">{gettext('Annotation Body')}</label>

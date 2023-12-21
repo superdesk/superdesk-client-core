@@ -2665,6 +2665,7 @@ declare module 'superdesk-api' {
         elasticsearch: IElasticSearchApi;
         httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response>;
+        httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise<void>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };

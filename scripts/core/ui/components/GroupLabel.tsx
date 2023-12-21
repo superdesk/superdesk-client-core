@@ -10,8 +10,8 @@ export class GroupLabel extends React.PureComponent {
                     textTransform: 'uppercase',
                     letterSpacing: 0.08,
                     color: '#5D9BC0',
-                    paddingTop: 16,
-                    paddingBottom: 10,
+                    paddingBlockStart: 16,
+                    paddingBlockEnd: 10,
                 }}
             >
                 {this.props.children}

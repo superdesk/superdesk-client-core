@@ -11,15 +11,15 @@
   border-collapse: collapse;
   border-spacing: 0;
   background-color: $tableBackground;
-  margin-bottom: $baseLineHeight;
+  margin-block-end: $baseLineHeight;
   // Cells
   th,
   td {
     padding: 8px;
     line-height: $baseLineHeight;
-    text-align: left;
+    text-align: start;
     vertical-align: top;
-    border-top: 1px solid $tableBorder;
+    border-block-start: 1px solid $tableBorder;
   }
   th {
     font-weight: bold;
@@ -33,11 +33,11 @@
   colgroup + thead tr:first-child td,
   thead:first-child tr:first-child th,
   thead:first-child tr:first-child td {
-    border-top: 0;
+    border-block-start: 0;
   }
   // Account for multiple tbody instances
   tbody + tbody {
-    border-top: 2px solid $tableBorder;
+    border-block-start: 2px solid $tableBorder;
   }
   // LAST FIELD BLANK, FULL WIDTH
   .blank-field { 
@@ -63,19 +63,19 @@
 
 .table-bordered {
   border: 1px solid $tableBorder;
-  border-left: 0;
+  border-inline-start: 0;
   border-collapse: separate; // Done so we can round those corners!
   *border-collapse: collapsed; // IE7 can't round corners anyway
   @include border-radius(4px);
   th,
   td {
-    border-left: 1px solid $tableBorder;
+    border-inline-start: 1px solid $tableBorder;
   }
   // Prevent a double border
   thead:first-child tr:first-child th,
   tbody:first-child tr:first-child th,
   tbody:first-child tr:first-child td {
-    border-top: 0;
+    border-block-start: 0;
   }
   // For first th or td in the first row in the first thead or tbody
   thead:first-child tr:first-child th:first-child,
@@ -126,12 +126,12 @@
 // STYLED TABLE
 // ------------
 .table.styled-table {
-    border-top: 2px solid var(--sd-colour-line--medium);
+    border-block-start: 2px solid var(--sd-colour-line--medium);
     th, td {
         vertical-align: middle;
         background: var(--sd-item__main-Bg);
         &.align-right {
-            text-align: right;
+            text-align: end;
         }
     }
     th {
@@ -147,7 +147,7 @@
 .table--fixed-header {
   thead th {
     position: sticky;
-    top: 0;
+    inset-block-start: 0;
   }
   tbody {
       max-height: calc(100vh - 250px);

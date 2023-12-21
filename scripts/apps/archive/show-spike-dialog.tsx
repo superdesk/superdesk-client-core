@@ -52,7 +52,7 @@ export function showSpikeDialog<T>(
                                 <div>{promptForConfirmationMessage}</div>
                                 {
                                     warnings.length < 1 ? null : (
-                                        <ul style={{listStyle: 'initial', paddingLeft: 40}}>
+                                        <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
                                             {
                                                 warnings.map(({text}, i) => <li key={i}>{text}</li>)
                                             }

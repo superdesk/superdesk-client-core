@@ -17,8 +17,8 @@ TASK PAGE
 }
 
 .task-label , .task-labels > li {
-    float: left;
-    margin-right: 4px;
+    float: inline-start;
+    margin-inline-end: 4px;
     background: #eee;
     @include border-radius(3px);
     height: 18px;
@@ -60,8 +60,8 @@ TASK PAGE
         background: none;
     }
     .switch-view {
-        float: left;
-        margin-right: 30px;
+        float: inline-start;
+        margin-inline-end: 30px;
         button {
             display: inline-block;
             @include border-radius(3px);
@@ -84,7 +84,7 @@ TASK PAGE
         }
     }
     .status-tabs {
-        float: left;
+        float: inline-start;
         margin: -10px 0;
 
         li {
@@ -94,8 +94,8 @@ TASK PAGE
             }
             &.active {
                 button {
-                    border-bottom: 3px solid $gray;
-                    padding-bottom: 6px;
+                    border-block-end: 3px solid $gray;
+                    padding-block-end: 6px;
                     &.todo {
                         border-bottom-color: $todo-color;
                     }
@@ -125,7 +125,7 @@ TASK PAGE
         .marker {
             width: 4px;
             position: absolute;
-            left: 0; top: 0; bottom: 0;
+            inset-inline-start: 0; inset-block-start: 0; inset-block-end: 0;
             @include border-radius(2px 0 0 2px);
             &.todo {
                 background: $todo-color;
@@ -145,14 +145,14 @@ TASK PAGE
     }
     .board {
         min-height: 500px;
-        margin-right: 20px;
+        margin-inline-end: 20px;
         header {
             text-transform: uppercase;
             font-size: 11px;
             color: $sd-text;
             line-height: 24px;
             @include text-semibold();
-            border-bottom: 4px solid $gray;
+            border-block-end: 4px solid $gray;
             &.todo {
                 border-bottom-color: $todo-color;
             }
@@ -165,7 +165,7 @@ TASK PAGE
         }
         .card-list {
             > li {
-                margin-top: 5px;
+                margin-block-start: 5px;
                 background: #fff;
 
                 padding: 5px;
@@ -213,7 +213,7 @@ TASK PAGE
 //                 border: 0;
 //                 background: 0;
 //                 padding: 14px;
-//                 float: left;
+//                 float: inline-start;
 //             }
 //         }
 //         header {
@@ -249,7 +249,7 @@ TASK PAGE
 
 //         .description {
 //             font-size: 14px;
-//             margin-bottom: 15px;
+//             margin-block-end: 15px;
 //             line-height: 22px;
 //             color:$sd-text;
 //         }
@@ -258,23 +258,23 @@ TASK PAGE
 //             background: #eee;
 //             padding: 10px;
 //             @include border-radius(3px);
-//             margin-bottom: 10px;
+//             margin-block-end: 10px;
 //             @include clearfix();
 //             .assignee-name {
 //                 margin: 0;
 //                 line-height: 30px;
-//                 float: left;
+//                 float: inline-start;
 //             }
 //         }
 
 //         .assignee-box {
-//             margin-bottom: 10px;
+//             margin-block-end: 10px;
 //         }
 
 
 //         .task-labels {
-//             margin-top: 0;
-//             margin-bottom: 15px;
+//             margin-block-start: 0;
+//             margin-block-end: 15px;
 
 //             .icon-desk-time {
 //                 vertical-align: middle;
@@ -282,18 +282,18 @@ TASK PAGE
 //         }
 
 //         .time-edit {
-//             margin-top: 5px;
-//             margin-bottom: 10px;
+//             margin-block-start: 5px;
+//             margin-block-end: 10px;
 //             @include clearfix();
 //             .field {
-//                 float: left;
+//                 float: inline-start;
 //                 width: 50%;
 //                 @include border-box();
 //                 &:first-child {
-//                     padding-right: 5px;
+//                     padding-inline-end: 5px;
 //                 }
 //                 &:last-child {
-//                     padding-left: 5px;
+//                     padding-inline-start: 5px;
 //                 }
 //             }
 //             input {
@@ -314,7 +314,7 @@ TASK PAGE
 
         .title {
             border: 0 !important;
-            border-bottom: 1px solid var(--sd-colour-line--light) !important;
+            border-block-end: 1px solid var(--sd-colour-line--light) !important;
             padding: 5px 20px;
             @include text-normal();
             height: 40px;
@@ -338,7 +338,7 @@ TASK PAGE
                     margin: 10px 15px 0;
                 }
                 label {
-                    float: left;
+                    float: inline-start;
                     background: $sd-background;
                     padding: 0 10px 0 0;
                     margin: -10px 15px 10px;
@@ -352,7 +352,7 @@ TASK PAGE
                         clear: left;
                     }
                     width: 50%;
-                    float: left;
+                    float: inline-start;
                     padding: 0 15px;
                 }
             }
@@ -362,13 +362,13 @@ TASK PAGE
             height: 28px;
             padding: 5px;
             border: 1px solid #dfdfdf !important;
-            margin-bottom: 15px;
+            margin-block-end: 15px;
             &:focus {
                 border-color: #ccc !important;
             }
         }
         .assignee-box {
-            margin-bottom: 15px;
+            margin-block-end: 15px;
         }
     }
 
@@ -379,7 +379,7 @@ TASK PAGE
 
 .stages-list {
     float: none;
-    margin-top: 3px;
+    margin-block-start: 3px;
 }
 
 .stage-label {
@@ -396,7 +396,7 @@ TASK PAGE
         a {
             background: #505050 !important;
             border-color: #505050 !important;
-            border-top: 0 !important;
+            border-block-start: 0 !important;
             color: #fff !important;
             @include box-shadow(inset 0 2px 0px darken(#505050, 10%) !important);
             &:hover {
@@ -419,8 +419,8 @@ TASK PAGE
     border: 1px solid #e1e1e1;
     padding: 10px;
     @include border-radius(5px);
-    margin-bottom: 15px;
-    text-align: right;
+    margin-block-end: 15px;
+    text-align: end;
 
     textarea {
         width: 100%;
@@ -436,12 +436,12 @@ TASK PAGE
         @include box-shadow(inset 0px 3px 6px -3px #a8a8a8);
         font-size: 14px;
         color: #444;
-        text-align: left;
+        text-align: start;
     }
 
     .btn {
-        margin-left: 5px;
-        margin-top: 10px;
+        margin-inline-start: 5px;
+        margin-block-start: 10px;
         display: none;
     }
 
@@ -458,14 +458,14 @@ TASK PAGE
     margin: 0;
     padding: 0;
     li {
-        padding-bottom: 15px;
-        margin-bottom: 8px;
+        padding-block-end: 15px;
+        margin-block-end: 8px;
         position: relative;
         .comment-info {
             figure {
                 border: 1px solid #b9b9b9;
-                float: left;
-                margin-right: 10px;
+                float: inline-start;
+                margin-inline-end: 10px;
                     img {
                         width: 30px;
                         height: 30px;
@@ -487,8 +487,8 @@ TASK PAGE
             font-size: 13px;
             color: #303030;
             line-height: 18px;
-            border-top: 1px solid #ddd;
-            padding-top: 5px;
+            border-block-start: 1px solid #ddd;
+            padding-block-start: 5px;
             margin: 10px 0 3px 42px;
             position: relative;
             &:before {
@@ -497,8 +497,8 @@ TASK PAGE
                 height: 9px;
                 position: absolute;
                 background: url(~images/comment-ballon.png) no-repeat 0 0;
-                top: -9px;
-                left:15px;
+                inset-block-start: -9px;
+                inset-inline-start:15px;
             }
         }
         .action-menu {

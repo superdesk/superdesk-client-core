@@ -2,7 +2,7 @@
 @import '~superdesk-ui-framework/app/styles/_mixins.scss';
 
 time.Datetime {
-    padding-left: 0;
+    padding-inline-start: 0;
 }
 
 .link {
@@ -16,7 +16,7 @@ time.Datetime {
 .sd-line-input {
     &--no-border-bottom {
         .sd-line-input__input {
-            border-bottom: none !important;
+            border-block-end: none !important;
         }
     }
 
@@ -49,7 +49,7 @@ time.Datetime {
 }
 
 .sd-list-item__row--padding-b5 {
-    padding-bottom: 5px !important;
+    padding-block-end: 5px !important;
 }
 
 .sd-collapse-box--invalid {

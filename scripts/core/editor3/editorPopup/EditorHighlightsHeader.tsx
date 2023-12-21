@@ -29,7 +29,7 @@ export class EditorHighlightsHeader extends React.Component<IProps, IState> {
             position: 'absolute',
             width: 'auto',
             padding: '1rem 0',
-            marginBottom: 12, // so the last item doesn't look like it's shaddow is cut off
+            marginBlockEnd: 12, // so the last item doesn't look like it's shaddow is cut off
         };
 
         return (

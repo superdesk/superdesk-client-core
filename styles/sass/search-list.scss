@@ -9,18 +9,18 @@
         background-color: $white;
         border: 0;
         border-radius: 2px !important;
-        text-align: left;
+        text-align: start;
         .caret {
             position: absolute;
-            top: 12px;
-            right: 10px;
+            inset-block-start: 12px;
+            inset-inline-end: 10px;
         }
     }
 
     .search-list-content {
         position: absolute;
         z-index: $zindexDropdown;
-        top: 100%;
+        inset-block-start: 100%;
         width: 100%;
         margin: 0px;
         padding: 4px;
@@ -31,8 +31,8 @@
 
         .close-list {
             position: absolute;
-            right: 5px;
-            top: 5px;
+            inset-inline-end: 5px;
+            inset-block-start: 5px;
             border: 0;
             background: none;
             border-radius: 2px;
@@ -41,22 +41,22 @@
         }
 
         .selected-list {
-            margin-right: 2px;
-            border-bottom: 1px solid #d0d0d0;
+            margin-inline-end: 2px;
+            border-block-end: 1px solid #d0d0d0;
             width:98%;
             box-sizing: border-box;
             .selected-helper {
-                margin-left: 40px;
+                margin-inline-start: 40px;
             }
         }
 
         .unselected-list {
             input {
-                margin-left: 20px;
+                margin-inline-start: 20px;
                 width: 200px;
-                left: 0;
-                right: 0;
-                top: 0;
+                inset-inline-start: 0;
+                inset-inline-end: 0;
+                inset-block-start: 0;
                 height: 28px;
                 border: 1px solid #dcdcdc !important;
                 box-sizing: border-box;
@@ -65,27 +65,27 @@
                 button {
                     border: 0;
                     color: $black;
-                    left: 0;
-                    right: 0;
-                    top: 0;
+                    inset-inline-start: 0;
+                    inset-inline-end: 0;
+                    inset-block-start: 0;
                     border-radius: 2px;
                     line-height: 15px;
                     height: 15px;
                 }
             }
             .page-info {
-                margin-right: 2px;
-                border-bottom: 1px solid #d0d0d0;
+                margin-inline-end: 2px;
+                border-block-end: 1px solid #d0d0d0;
                 box-sizing: border-box;
                 width:98%;
             }
         }
         .select-button {
             padding: 4px;
-            margin-left: 10px;
+            margin-inline-start: 10px;
             background-color: $white;
             border: 0;
-            text-align: left;
+            text-align: start;
             width:97%;
             &:hover {
                 background-color: #f0f0f0;

@@ -10,9 +10,9 @@ $notif-holder-w : 340px;
     position: fixed;
     z-index: 9050;
     width: $notif-holder-w;
-    top: -5px;
-    left: 50%;
-    margin-left: -$notif-holder-w/2;
+    inset-block-start: -5px;
+    inset-inline-start: 50%;
+    margin-inline-start: -$notif-holder-w/2;
     overflow: hidden;
     padding: 0 10px 10px;
     .alert {

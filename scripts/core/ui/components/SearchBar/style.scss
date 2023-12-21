@@ -5,7 +5,7 @@
 .SearchBar.extended {
     .search-handler {
         display: flex;
-        border-left: 1px solid var(--sd-colour-line--light) !important;
+        border-inline-start: 1px solid var(--sd-colour-line--light) !important;
         input {
             flex-grow: 1;
         }

@@ -7,7 +7,7 @@
 .sd-widget.activity {
     .activity-holder {
         position: absolute;
-        left: 0; right: 0; top: 0; bottom: 0;
+        inset-inline-start: 0; inset-inline-end: 0; inset-block-start: 0; inset-block-end: 0;
         background-color: var(--sd-colour__dashboard-widget-Bg);
         .shadow-list-holder {
             padding: 0 10px;
@@ -15,10 +15,10 @@
     }
     .activity-log {
         li.with-date {
-            margin-top: 25px;
+            margin-block-start: 25px;
             .date {
-                border-top:0;
-                top:-15px;
+                border-block-start:0;
+                inset-block-start:-15px;
                 span {
                     float: none;
                     padding: 3px 5px;

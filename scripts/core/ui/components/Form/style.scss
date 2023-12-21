@@ -4,7 +4,7 @@
 // so that the trash icon is still visible
 .file-input {
     .sd-line-input__input {
-        padding-right: 25px !important;
+        padding-inline-end: 25px !important;
     }
 
     &--hidden {
@@ -14,7 +14,7 @@
 
 .link-input {
     .sd-line-input__input {
-        padding-right: 35px !important;
+        padding-inline-end: 35px !important;
     }
 }
 
@@ -29,8 +29,8 @@
 .sd-line-input {
     .sd-line-input__icon-bottom-right {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        inset-block-end: 0;
+        inset-inline-end: 0;
         cursor: pointer;
     }
 
@@ -41,7 +41,7 @@
     }
 
     .sd-line-input__input--padding-right-60 {
-        padding-right: 60px !important;
+        padding-inline-end: 60px !important;
     }
 }
 
@@ -49,6 +49,6 @@
     color: $red;
 
     .sd-line-input__icon-bottom-right {
-        bottom: 18px;
+        inset-block-end: 18px;
     }
 }

@@ -12,20 +12,20 @@ div {
 }
 
 .profiling-data {
-    top: $subnav-height;
+    inset-block-start: $subnav-height;
     header {
         .refresh-box {
             span {
                 font-style: italic;
                 padding: 16px 0;
                 line-height: 16px;
-                margin-right: 20px;
+                margin-inline-end: 20px;
             }
             button {
                 background: none;
                 border: 0;
                 padding: 15px 16px;
-                border-left: 1px solid #dfdfdf;
+                border-inline-start: 1px solid #dfdfdf;
                 @include opacity(60);
                 &:hover {
                     @include opacity(80);

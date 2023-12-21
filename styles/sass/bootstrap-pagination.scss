@@ -1,6 +1,6 @@
 .bs-pagination {
   display: inline-block;
-  padding-left: 0;
+  padding-inline-start: 0;
   margin: 16px 0 12px;
 }
 .bs-pagination a:hover {
@@ -12,7 +12,7 @@
 .bs-pagination > li > a,
 .bs-pagination > li > span {
   position: relative;
-  float: left;
+  float: inline-start;
   font-weight: 500;
   padding: 6px 10px;
   line-height: 1.2;
