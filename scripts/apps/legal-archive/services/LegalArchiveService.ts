@@ -88,7 +88,7 @@ export function LegalArchiveService(api, $location, moment, sortService) {
                     clause._id = val;
                     hasId = true;
                 } else {
-                    clause[key] = {$regex: val, $options: '-i'};
+                    clause[key] = {$regex: val, $options: 'i'};
                 }
                 where.push(clause);
             }

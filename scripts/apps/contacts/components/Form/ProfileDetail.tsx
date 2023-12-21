@@ -335,6 +335,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             field="organisation"
                             label={gettext('Organisation')}
                             value={this.state.orgValue}
+                            initValue
                             onChange={this.handleOrgChange}
                             querySearch={true}
                             onQuerySearch={((text) => this.getSearchResult('organisation', text))}

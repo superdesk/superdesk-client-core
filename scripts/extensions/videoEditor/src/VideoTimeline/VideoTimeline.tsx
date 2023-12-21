@@ -272,7 +272,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     </div>
                     <div
                         className={`${getClass('controlbars__wrapper-out')}`}
-                        style={{left: left, right: right}}
+                        style={{left: left, insetInlineEnd: right}}
                     >
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--left')}`}

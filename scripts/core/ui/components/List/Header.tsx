@@ -16,6 +16,6 @@ export const Header: React.StatelessComponent<any> = ({children, title, marginTo
 
 Header.propTypes = {
     title: PropTypes.string,
-    marginTop: PropTypes.bool,
+    marginBlockStart: PropTypes.bool,
     children: PropTypes.node,
 };

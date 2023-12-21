@@ -12,7 +12,7 @@ interface IProps {
 export class TranslationsListWrapper extends React.PureComponent<IProps> {
     render() {
         return (
-            <ul className="highlights-list-menu">
+            <ul data-theme="dark-ui" className="highlights-list-menu">
                 <li>
                     <div className="dropdown__menu-label">{this.props.label}</div>
                     <button
@@ -21,7 +21,7 @@ export class TranslationsListWrapper extends React.PureComponent<IProps> {
                             this.props.close();
                         }}
                     >
-                        <i className="icon-close-small icon--white" />
+                        <i className="icon-close-small" />
                     </button>
                 </li>
 

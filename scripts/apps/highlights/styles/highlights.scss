@@ -11,9 +11,9 @@
 
 .highlights-config-popup {
     .multi-select {
-        margin-top: 10px;
+        margin-block-start: 10px;
         li {
-            margin-bottom: 5px;
+            margin-block-end: 5px;
             .text {
                 &:hover {
                     cursor: pointer;
@@ -23,7 +23,7 @@
     }
 
     .pills-list {
-        margin-top: 15px;
+        margin-block-start: 15px;
         h6 {
             text-transform: none !important;
         }
@@ -46,7 +46,7 @@
     position: relative;
     .tooltip-inner {
         width: 150px;
-        text-align: left;
+        text-align: start;
         h5 {
             font-size: 11px;
             margin: 0 0 8px;
@@ -54,13 +54,13 @@
         }
         button {
             position: absolute;
-            right: 7px;
+            inset-inline-end: 7px;
             color: #656565;
         }
         li {
             height: 1%;
             overflow: hidden;
-            padding-right: 45px;
+            padding-inline-end: 45px;
         }
     }
     &:hover {
@@ -80,28 +80,28 @@
 .highlights-list-menu {
     padding: 5px 0;
     margin: 6px 0 0 0;
-    background-color: $black !important;
-    border-radius: 4px;
+    background-color: var(--color-dropdown-menu-Bg) !important;
+    border-radius: var(--b-radius--medium);
     max-width: 700px;
     min-width: 180px;
     overflow-y: auto;
     &:before {
         display: none;
     }
-
+    &:not(.dropdown__menu) {
+        box-shadow: var(--sd-shadow__dropdown);
+    }
     li {
         position: relative;
-        color: $white;
+        color: var(--color-text);
         padding: 0.4rem 1.2rem;
         width: 100%;
         display: flex;
         flex-direction: row; 
         align-items: center;
         justify-content: space-between;
-
         .dropdown__menu-label {
-            font-size: 11px;
-            padding-left: 0;
+            padding-inline-start: 0;
             color: var(--color-text-lighter);
             overflow: hidden;
             white-space: nowrap;
@@ -110,40 +110,41 @@
         }
         .dropdown__menu-close {
             position: absolute;
-            top: 4px; 
-            right: 8px;
+            inset-block-start: 4px; 
+            inset-inline-end: 8px;
             padding: 0; 
             margin: 0;
             border: 0; 
             width: auto;
-            @include opacity(50);
+            opacity: 0.5;
             background-color: transparent;
             i { 
-                margin-right: 0;
+                margin-inline-end: 0;
             }
             &:hover, &:focus {
                 background-color: transparent;
-                @include opacity(100);
+                opacity: 1;
             }
         }
         .btn {
             flex-shrink: 0;
         }
         & span {
-            color: $white;
+            color: var(--color-text);
             margin: 0;
             padding: 0;
         }
     }
+
 }
 
 .highlights-dropdown {
     .dropdown__menu {
         .dropdown__menu-label {
-            text-align: left;
-            line-height: 16px;
+            text-align: start;
+            line-height: 1.5;
             padding: 0 16px;
-            margin-bottom: 5px;
+            margin-block-end: 4px;
         }
         button {
             max-width: 250px;

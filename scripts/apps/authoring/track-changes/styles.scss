@@ -9,8 +9,20 @@
         .item {
             padding: 1rem;
 
+            .commented-text {
+                margin-block-end: 1rem;
+                color: var(--color-text-light);
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                .text {
+                    font-weight: bold;
+                }
+            }
+
             .accepted {
-                margin-left: 1rem;
+                margin-inline-start: 1rem;
             }
         }
     }

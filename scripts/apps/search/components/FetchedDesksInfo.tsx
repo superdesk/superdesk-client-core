@@ -72,7 +72,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         return (
             <div>
                 <dl>
-                    <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
+                    <dt style={{paddingInlineEnd: '5px'}}>{gettext('fetched in')}</dt>
                     <dd>
                         {
                             desk.isUserDeskMember

@@ -7,7 +7,7 @@
 // ----------
 
 .nav {
-    margin-left: 0;
+    margin-inline-start: 0;
     list-style: none;
 }
 
@@ -25,9 +25,9 @@
 // --------
 
 .nav-list {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: 0;
+    padding-inline-start: 15px;
+    padding-inline-end: 15px;
+    margin-block-end: 0;
 }
 .nav-list > li > button {
     border: 0;
@@ -35,8 +35,8 @@
 }
 .nav-list > li > a,
 .nav-list > li > button {
-    margin-left:  -15px;
-    margin-right: -15px;
+    margin-inline-start:  -15px;
+    margin-inline-end: -15px;
 }
 
 .nav-list > li > a, .nav-list > li > button {
@@ -49,7 +49,7 @@
     background-color: $linkColor;
 }
 .nav-list [class^="icon-"] {
-    margin-right: 2px;
+    margin-inline-end: 2px;
 }
 // Dividers (basically an hr) within the dropdown
 .nav-list .divider {
@@ -65,7 +65,7 @@
 .nav-tabs {
     height: $nav-height;
     > li {
-        margin-bottom: -1px;
+        margin-block-end: -1px;
     }
 }
 
@@ -80,7 +80,7 @@
     background: none;
     color: $sd-text-light;
     border:0;
-    border-bottom: 3px solid transparent;
+    border-block-end: 3px solid transparent;
     &:hover {
         border-bottom-color: var(--sd-colour-line--strong);
         background: none;
@@ -105,10 +105,10 @@
 
 // Links rendered as pills
 .nav-pills > li > a {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    padding-block-start: 8px;
+    padding-block-end: 8px;
+    margin-block-start: 2px;
+    margin-block-end: 2px;
     border-radius: 5px;
 }
 
@@ -129,12 +129,12 @@
     float: none;
 }
 .nav-stacked > li > a {
-    margin-right: 0; // no need for the gap between nav items
+    margin-inline-end: 0; // no need for the gap between nav items
 }
 
 // Tabs
 .nav-tabs.nav-stacked {
-    border-bottom: 0;
+    border-block-end: 0;
     height: auto;
 }
 .nav-tabs.nav-stacked > li {
@@ -160,10 +160,10 @@
 
 // Pills
 .nav-pills.nav-stacked > li > a {
-    margin-bottom: 3px;
+    margin-block-end: 3px;
 }
 .nav-pills.nav-stacked > li:last-child > a {
-    margin-bottom: 1px; // decrease margin to match sizing of stacked tabs
+    margin-block-end: 1px; // decrease margin to match sizing of stacked tabs
 }
 
 
@@ -174,7 +174,7 @@
 // Position the menu
 .nav-tabs .dropdown__menu,
 .nav-pills .dropdown__menu {
-    margin-top: 1px;
+    margin-block-start: 1px;
     border-width: 1px;
 }
 .nav-pills .dropdown__menu {
@@ -188,7 +188,7 @@
 .nav-pills .dropdown__toggle .dropdown__caret {
     border-top-color: $linkColor;
     border-bottom-color: $linkColor;
-    margin-top: 6px;
+    margin-block-start: 6px;
 }
 .nav-tabs .dropdown__toggle:hover .dropdown__caret,
 .nav-pills .dropdown__toggle:hover .dropdown__caret {
@@ -255,7 +255,7 @@
 .tabs-below .nav-tabs,
 .tabs-right .nav-tabs,
 .tabs-left .nav-tabs {
-    border-bottom: 0;
+    border-block-end: 0;
 }
 
 // Show/hide tabbable areas
@@ -278,18 +278,18 @@
 }
 .tabs-left .nav-tabs > li > a{
     min-width: 74px;
-    margin-right: 0;
-    margin-bottom: 3px;
+    margin-inline-end: 0;
+    margin-block-end: 3px;
 }
 
 // Tabs on the left
 .tabs-left .nav-tabs {
-    float: left;
-    margin-right: 19px;
-    border-right: 1px solid #ddd;
+    float: inline-start;
+    margin-inline-end: 19px;
+    border-inline-end: 1px solid #ddd;
 }
 .tabs-left .nav-tabs > li > a {
-    margin-right: -1px;
+    margin-inline-end: -1px;
     @include border-radius(4px 0 0 4px);
 }
 .tabs-left .nav-tabs > li > a:hover {
@@ -314,13 +314,13 @@
 
 .subnav--absolute {
     position: absolute;
-    top:48px;
-    left:0;
-    right:0;
+    inset-block-start:48px;
+    inset-inline-start:0;
+    inset-inline-end:0;
     z-index: 10;
 }
 .subnav--top {
-    top: 48px;
+    inset-block-start: 48px;
 }
 .subnav__page-title,
 .page-nav-title {
@@ -360,8 +360,8 @@
 .subnav.level2 {
     position: absolute;
     background: #f5f5f5;
-    top:0;
-    left: 0 !important;
+    inset-block-start:0;
+    inset-inline-start: 0 !important;
     height: $subnav-height;
     z-index: 2;
     @include box-shadow(none);
@@ -369,7 +369,7 @@
 .monitoring{
     .subnav {
         .page-nav-title {
-            padding-left: 20px;
+            padding-inline-start: 20px;
         }
     }
 }
@@ -378,24 +378,24 @@
     height:$subnav-height !important;
     position: relative;
     margin: 0 20px 0 0;
-    float: left;
+    float: inline-start;
     > .btn {
-        margin-left: 20px;
-        margin-top: 10px;
+        margin-inline-start: 20px;
+        margin-block-start: 10px;
     }
     &.right-stack {
-        float: right;
+        float: inline-end;
         margin: 0 0 0 5px;
         .navbtn {
-            border-left: 1px solid rgba(0,0,0,0.1) !important;
-            border-right: 0 !important;
+            border-inline-start: 1px solid rgba(0,0,0,0.1) !important;
+            border-inline-end: 0 !important;
             .dropdown__toggle {
                 width: 100%;
             }
         }
         > .btn {
-            margin-right: 12px;
-            margin-left: 0;
+            margin-inline-end: 12px;
+            margin-inline-start: 0;
         }
     }
     .dropdown {

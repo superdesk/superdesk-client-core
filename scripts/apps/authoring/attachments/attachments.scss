@@ -12,23 +12,23 @@
 
 		.attachments-list {
 			position: absolute;
-			top: 12px;
-			right: 12px;
-			bottom: 212px;
-			left: 12px;
+			inset-block-start: 12px;
+			inset-inline-end: 12px;
+			inset-block-end: 212px;
+			inset-inline-start: 12px;
 			overflow-y: scroll;
 		}
 
 		.attach-indicator {
 			position: absolute;
-			bottom: 12px;
-			left: 50%;
-			margin-left: -125px;
+			inset-block-end: 12px;
+			inset-inline-start: 50%;
+			margin-inline-start: -125px;
 			width: 250px;
 			text-align: center;
 
 			&.empty {
-				bottom: 50%;
+				inset-block-end: 50%;
 
 				.round-box i.icon {
 					color: $sd-blue;
@@ -38,7 +38,7 @@
 			.round-box {
 				display: block;
 				box-sizing: border-box;
-				padding-top: 16px;
+				padding-block-start: 16px;
 				height: 90px;
 				width: 90px;
 				background-color: var(--sd-item__main-Bg);

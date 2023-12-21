@@ -7,9 +7,9 @@
 
 .archive-sidebar {
     position:absolute;
-    top:0px;
-    bottom:0px;
-    left:0;
+    inset-block-start:0px;
+    inset-block-end:0px;
+    inset-inline-start:0;
     width:$archive-sidebar-width;
     background-color: $archive-sidebar-bg;
     box-shadow: inset -1px 0px 6px 0px rgba(0,0,0,.1);
@@ -25,17 +25,17 @@
         .icon {
             width: 48px;
             height: $nav-height;
-            float: left;
+            float: inline-start;
             text-align: center;
             line-height: 54px;
             cursor: pointer;
             opacity: 0.8;
         }
         ul {
-            float: left;
-            padding-left: 5px;
+            float: inline-start;
+            padding-inline-start: 5px;
             li {
-                float: left;
+                float: inline-start;
                 height: 48px;
                 margin: 0 15px;
                 line-height: 48px;
@@ -43,20 +43,20 @@
                 opacity: 0.7;
                 &:hover {
                     cursor: pointer;
-                    border-bottom: 3px solid var(--sd-colour-line--medium);
+                    border-block-end: 3px solid var(--sd-colour-line--medium);
                 }
                 &.active {
-                    border-bottom: 3px solid var(--sd-colour-interactive);
+                    border-block-end: 3px solid var(--sd-colour-interactive);
                     opacity: 1;
                 }
             }
         }
         .doopen {
             position: absolute;
-            top: 16px;
-            right: 8px;
-            padding-left: 10px;
-            padding-right: 10px;
+            inset-block-start: 16px;
+            inset-inline-end: 8px;
+            padding-inline-start: 10px;
+            padding-inline-end: 10px;
             opacity: 0.4;
             &:hover {
                 cursor: pointer;
@@ -68,33 +68,33 @@
 
     .content {
         position: absolute;
-        top: $nav-height;
-        left: 0px;
-        bottom: 0px;
-        right: 0px;
+        inset-block-start: $nav-height;
+        inset-inline-start: 0px;
+        inset-block-end: 0px;
+        inset-inline-end: 0px;
         padding: 20px;
         overflow: auto;
-        padding-bottom: $bottom-view-padding + 3.2rem;
+        padding-block-end: $bottom-view-padding + 3.2rem;
         &.pull { 
-            bottom: 60px; 
+            inset-block-end: 60px; 
         }
         &.pull-heigher { 
-            bottom: 120px; 
+            inset-block-end: 120px; 
         }
         .sd-check__wrapper {
-            margin-left: 0;
+            margin-inline-start: 0;
         }
         .superdeskRepos {
-            margin-bottom: 2rem;
+            margin-block-end: 2rem;
         }
     }
     
     .tab-box {
         margin: 0 -20px 0 -20px;
         position: sticky;
-        top: -20px;
+        inset-block-start: -20px;
         background-color: $archive-sidebar-bg;
-        padding-bottom: 0.4rem;
+        padding-block-end: 0.4rem;
         z-index: 3;
     }
 
@@ -120,9 +120,9 @@
     //     .terms {
     //         @include user-select(none);
     //         clear: both;
-    //         float: right;
-    //         padding-top: 10px;
-    //         margin-bottom: 15px;
+    //         float: inline-end;
+    //         padding-block-start: 10px;
+    //         margin-block-end: 15px;
     //         @include clearfix();
     //         li {
     //             background: rgba(0,0,0,0.06);
@@ -131,10 +131,10 @@
     //             padding: 0 6px;
     //             @include border-radius(3px);
     //             margin: 0 5px 5px 0;
-    //             float: left;
+    //             float: inline-start;
     //             i {
     //                 vertical-align: sub;
-    //                 margin-left: 5px;
+    //                 margin-inline-start: 5px;
     //                 @include opacity(40);
     //             }
     //             &:hover {
@@ -170,11 +170,11 @@
         input {
             height: $nav-height;
             border-width: 0 0 1px 0 !important;
-            padding-left: 15px;
+            padding-inline-start: 15px;
         }
         button {
             position: absolute;
-            top: 0; right: 0;
+            inset-block-start: 0; inset-inline-end: 0;
             height: $nav-height;
             width: $nav-height - 15px;
             border: 0;
@@ -182,7 +182,7 @@
             i {
                 width: 18px;
                   background-repeat: no-repeat;
-                  margin-top: 5px;
+                  margin-block-start: 5px;
             }
         }
     }
@@ -194,8 +194,8 @@
         input {
             height: $nav-height;
             border-width: 0;
-            border-bottom: 1px solid var(--sd-colour-line--light);
-            padding-left: 42px;
+            border-block-end: 1px solid var(--sd-colour-line--light);
+            padding-inline-start: 42px;
             background-color: var(--sd-colour-bg__searchbar);
             box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.1);
             color: $sd-text;
@@ -207,7 +207,7 @@
         }
         button {
             position: absolute;
-            top: 0; right: 0;
+            inset-block-start: 0; inset-inline-end: 0;
             height: $nav-height;
             width: $nav-height - 15px;
             border: 0;
@@ -215,7 +215,7 @@
             i {
                 width: 18px;
                   background-repeat: no-repeat;
-                  margin-top: 5px;
+                  margin-block-start: 5px;
             }
         }
         &::after {
@@ -226,8 +226,8 @@
             width: 1.6rem;
             color: $sd-text-lighter;
             position: absolute;
-            top: 14px;
-            left: 16px;
+            inset-block-start: 14px;
+            inset-inline-start: 16px;
             opacity: 0.5;
             z-index: 1;
             pointer-events: none;
@@ -240,16 +240,16 @@
             padding: 10px;
         }
         .list {
-            top: $nav-height;
+            inset-block-start: $nav-height;
             position: absolute;
-            left: 0; right: 0;
+            inset-inline-start: 0; inset-inline-end: 0;
             overflow: auto;
             ul {
                 > li {
                     display: block;
                     box-sizing: border-box;
                     padding: 10px 15px 10px 20px;
-                    border-bottom: 1px solid var(--sd-colour-line--light);
+                    border-block-end: 1px solid var(--sd-colour-line--light);
                     overflow: hidden;
                     position: relative;
                     .search-item {
@@ -268,8 +268,8 @@
                     }
                     .search-button {
                         position: absolute;
-                        right:6px;
-                        top:8px;
+                        inset-inline-end:6px;
+                        inset-block-start:8px;
                     }
                     .delete, .edit {
                         border: 0;
@@ -291,7 +291,7 @@
                         background: var(--sd-item__main-Bg--activated);
                     }
                     &:first-child {
-                        border-top: 1px solid var(--sd-colour-line--light);
+                        border-block-start: 1px solid var(--sd-colour-line--light);
                     }
                 }
 
@@ -299,7 +299,7 @@
         }
         .edit-saved-searches {
             position: absolute;
-            margin-left: 0px;
+            margin-inline-start: 0px;
             .content {
                 position: static;
                 padding: 0;
@@ -312,7 +312,7 @@
     .predefined-dates {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 15px;
+        margin-block-end: 15px;
         > div {
             flex: 1 1 auto;
             padding: 4px;
@@ -324,10 +324,10 @@
         .btn--mini, .toggle-button {
             min-height: 20px;
             height: auto;
-            margin-right: 4px;
+            margin-inline-end: 4px;
             flex-grow: 1;
             &:last-child {
-                margin-right: 0;
+                margin-inline-end: 0;
             }
         }
         .toggle-button {
@@ -343,7 +343,7 @@
     fieldset {
         .multiple {
             .field {
-                padding-right: 10px;
+                padding-inline-end: 10px;
                 &:last-child {
                     padding: 0;
                 }
@@ -355,7 +355,7 @@
 .filter-box {
     .filter-box__item {
         display: flex;
-        margin-bottom: 2px;
+        margin-block-end: 2px;
         border-radius: 2px;
         padding: 4px 4px 4px 5px;
         line-height: 100%;
@@ -368,7 +368,7 @@
             width: 100%;
             padding: 0;
             color: $sd-text-light;
-            text-align: left;
+            text-align: start;
             height: 22px;
             line-height: 22px;
             font-size: 12px;
@@ -380,7 +380,7 @@
             flex-shrink: 0;
             flex-grow: 0;
             position: relative;
-            margin-right: 0.8rem;
+            margin-inline-end: 0.8rem;
             &:hover {
                 i[class*="filetype-icon-"] {
                     visibility: hidden;
@@ -391,8 +391,8 @@
             }
             .sd-checkbox {
                 position: absolute;
-                left: 0;
-                top: 0;
+                inset-inline-start: 0;
+                inset-block-start: 0;
                 visibility: hidden;
             }
         }
@@ -436,7 +436,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
             i {
-                margin-left: 10px;
+                margin-inline-start: 10px;
                 font-style: italic;
                 color: var(--color-text-light);
                 font-weight: 300;
@@ -444,14 +444,14 @@
     }
     .filter-box__check {
         flex-grow: 0;
-        margin-right: 8px;
+        margin-inline-end: 8px;
 
     }
 }
 
 .backlink-toolbar {
     padding: 16px 20px 0;
-    margin-bottom: 20px;
+    margin-block-end: 20px;
     @include border-box();
     height: $nav-height;
     background: var(--sd-item__main-Bg);
@@ -477,7 +477,7 @@
 
 .sidebar-open {
     .archive-content {
-        left: $archive-sidebar-width !important;
+        inset-inline-start: $archive-sidebar-width !important;
     }
 }
 
@@ -485,16 +485,16 @@
 .float-search-btn,
 .save-search-panel {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     z-index: 3;
     background-color: var(--sd-colour-panel-bg--200);
     padding: 16px 24px;
-    text-align: right;
+    text-align: end;
     box-shadow:0 -1px 0 0 var(--sd-colour-line--medium), 0 -1px 2px 0 rgba(0, 0, 0, 0.12);
     .search {
-        margin-bottom: 5px;
+        margin-block-end: 5px;
     }
     .save-search__button-split {
         display: flex;
@@ -503,15 +503,15 @@
             flex-basis: auto;
             flex-grow: 1;
             & + .btn {
-                margin-left: 5px;
+                margin-inline-start: 5px;
             }
         }
     }
 }
 .save-search-panel {
-    text-align: left;
+    text-align: start;
     input {
-        margin-bottom: 10px;
+        margin-block-end: 10px;
     }
 }
 .save-search-panel__title {
@@ -519,12 +519,12 @@
     font-size: 13px;
     font-weight: 500;
     color: $sd-text-light;
-    margin-bottom: 20px;
+    margin-block-end: 20px;
 }
 
 .save-search__link {
     display: inline-block;
-    margin-right: 32px;
+    margin-inline-end: 32px;
     cursor: pointer;
     font-size: 14px;
     &:hover {
@@ -533,8 +533,8 @@
 }
 .float-search-btn {
     background-color: var(--sd-colour-panel-bg--100);
-    .search { margin-bottom: 0; }
+    .search { margin-block-end: 0; }
 }
 .float-search-btn--shift {
-    bottom: 64px;
+    inset-block-end: 64px;
 }

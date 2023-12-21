@@ -25,12 +25,12 @@ Row.propTypes = {
     children: PropTypes.node.isRequired,
     classes: PropTypes.string,
     margin: PropTypes.bool,
-    marginTop: PropTypes.bool,
-    paddingBottom: PropTypes.bool,
+    marginBlockStart: PropTypes.bool,
+    paddingBlockEnd: PropTypes.bool,
 };
 
 Row.defaultProps = {
     classes: '',
     margin: true,
-    marginTop: false,
+    marginBlockStart: false,
 };

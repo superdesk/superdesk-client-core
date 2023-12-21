@@ -23,7 +23,7 @@
         }
 
         &--tools {
-            margin-top: 5px;
+            margin-block-start: 5px;
             .btn {
                 background: none;
                 &:hover, &:focus {
@@ -59,7 +59,7 @@
             }
             tbody {
                 tr:first-child td {
-                    padding-top: 5px;
+                    padding-block-start: 5px;
                 }
                 td {
                     padding: 0 2px;

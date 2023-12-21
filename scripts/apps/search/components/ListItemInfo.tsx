@@ -72,7 +72,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {listItems}
                 {
                     articleDisplayWidgets.length < 1 ? null : (
-                        <div style={{marginLeft: 10, display: 'flex'}} className="sibling-spacer-10">
+                        <div style={{marginInlineStart: 10, display: 'flex'}} className="sibling-spacer-10">
                             {
                                 articleDisplayWidgets.map((Component, i) =>
                                     <Component key={i} article={this.props.item} />,

@@ -12,7 +12,7 @@
             overflow: hidden;
             display: flex;
             > div:first-child .clock-box:first-child {
-                border-left: 0 !important;
+                border-inline-start: 0 !important;
             }
         }
         .clock-item {
@@ -20,7 +20,7 @@
         }
         .clock-box {
             min-height: 185px;
-            border-left: 1px solid var(--sd-colour-line--medium);
+            border-inline-start: 1px solid var(--sd-colour-line--medium);
             min-width: 106px;
             text-align: center;
             flex: 1 1 auto;
@@ -40,7 +40,7 @@
                 display: block;
                 font-size: 12px;
                 color: $sd-text;
-                margin-top: 4px;
+                margin-block-start: 4px;
                 text-align: center;
             }
             .date {
@@ -57,8 +57,8 @@
                 header { color: var(--sd-colour-bg--99); }
 
                 time {
-                    padding-top: 27px;
-                    margin-bottom: 15px;
+                    padding-block-start: 27px;
+                    margin-block-end: 15px;
                     font-size: 34px;
                     height: 45px;
                     vertical-align: middle;
@@ -69,13 +69,13 @@
     }
     &.widget-config {
         .nav-tabs {
-            border-bottom: 1px solid var(--sd-colour-line--medium);
+            border-block-end: 1px solid var(--sd-colour-line--medium);
         }
         .tab-content {
             padding: 20px;
             position: absolute;
-            left: 0; right: 0; bottom: 0;
-            top: $nav-height;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
+            inset-block-start: $nav-height;
             margin: 0;
             padding: 20px;
             display: block;
@@ -87,11 +87,11 @@
             overflow: auto;
             &::-webkit-scrollbar {
                 width:10px;
-                border-left: 3px solid var(--color-modal-Bg);
+                border-inline-start: 3px solid var(--color-modal-Bg);
             }
             &::-webkit-scrollbar-thumb {
                 border-radius: 2px;
-                border-left: 3px solid var(--color-modal-Bg);
+                border-inline-start: 3px solid var(--color-modal-Bg);
                 background: var(--sd-colour-line--medium);
             }
         }

@@ -15,7 +15,7 @@
     @include clearfix();
     padding: 10px 0 0 0;
     li {
-        float: left;
+        float: inline-start;
         .inline-tag {
             font-size: 1.4rem;
             line-height: 1;
@@ -26,7 +26,7 @@
             background-color: var(--sd-colour__tag-label-Bg--1);
             color: var(--color-text);
             margin: 0 4px 4px 0;
-            float: left;
+            float: inline-start;
             position: relative;
             text-align: center;
             font-weight: 400;
@@ -40,7 +40,7 @@
             }
             span {
                 font-weight: 500;
-                margin-right: 4px;
+                margin-inline-end: 4px;
                 text-transform: uppercase;
                 color: var(--color-text-light);
                 opacity: 0.8;
@@ -63,14 +63,14 @@
                 color: var(--color-text);
                 cursor: pointer;
                 transition: background-color .2s ease-out, color .1s ease-out, opacity .1s ease-out;
-                margin-right: -1rem;
-                margin-left:  0.8rem;
+                margin-inline-end: -1rem;
+                margin-inline-start:  0.8rem;
                 [class^="icon-"], [class*=" icon-"] {
                     color: var(--color-text-light);
                     font-size: 1.6rem;
                     flex-grow: 0;
                     flex-shrink: 0;
-                    margin-left: 1px;
+                    margin-inline-start: 1px;
                     opacity: 0.4;
                     transition: color .1s ease-out, opacity .1s ease-out;
                 }
@@ -198,17 +198,20 @@ $priority-label-color-6 : #c0c9a1;
     color: $color;
 }
 .state-label {
-    display: inline-block;
-    line-height: 1.4rem;
+    display: inline-flex;
+    line-height: 1.6rem;
+    height: 1.6rem;
     font-size: 0.9rem;
     letter-spacing: 0.125em;
     text-transform: uppercase;
-    @include border-radius(8px);
-    padding: 0 0.8rem;
+    border-radius: var(--b-radius--full);
+    padding-inline: 0.8rem;
     border: 1px solid;
+    align-items: center;
     vertical-align: middle;
+    justify-content: center;
+    font-weight: 500;
     @include state-color();
-    @include text-semibold();
 
     &.state_embargo {
         @include state-color($state-color-embargo !important);
@@ -275,8 +278,8 @@ $priority-label-color-6 : #c0c9a1;
         color: $white;
     }
     &--right {
-        margin-right: 0;
-        margin-left: 0.8rem;
+        margin-inline-end: 0;
+        margin-inline-start: 0.8rem;
     }
 }
 

@@ -7,19 +7,19 @@
 .sd-widget.packages {
 
     .packages-content {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-inline-start: 10px;
+        padding-inline-end: 10px;
         background: $sd-background;
         .package-preview {
-            margin-top: 5px;
-            margin-bottom: 5px;
+            margin-block-start: 5px;
+            margin-block-end: 5px;
             border-radius: 5px;
             border: 1px solid #efefef;
             background: #fafafa;
             padding: 5px;
             .title {
-                padding-left: 5px;
-                padding-right: 5px;
+                padding-inline-start: 5px;
+                padding-inline-end: 5px;
                 .a {
                     @include text-semibold();
                     font-size: 14px;

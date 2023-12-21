@@ -15,11 +15,11 @@
     //     .versions-list {
     //         padding: 12px;
     //         .item {
-    //             margin-bottom: 12px;
+    //             margin-block-end: 12px;
     //             .header {
     //                 font-size: 12px;
     //                 .user {
-    //                     float: right;
+    //                     float: inline-end;
     //                     color: $sd-text-light;
     //                 }
     //             }
@@ -35,7 +35,7 @@
     //                 }
     //                 .state-label {
     //                     float: none;
-    //                     margin-left: 10px;
+    //                     margin-inline-start: 10px;
     //                 }
     //             }
     //             h6 {
@@ -76,7 +76,7 @@
     //             }
 
     //             .close {
-    //                 margin-left: 5px;
+    //                 margin-inline-start: 5px;
     //             }
     //         }
     //     }

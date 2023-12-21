@@ -16,7 +16,7 @@ div {
     .content {
         .active {
             background-color: #eff7fa !important;
-            border-right: 2px solid rgba(94,169,200,0.75) !important;
+            border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;
@@ -45,7 +45,7 @@ div {
 // Publish Queue
 .multi-action-bar {
     .btn.btn--primary {
-        margin-top: 10px !important;
+        margin-block-start: 10px !important;
     }
 }
 
@@ -56,13 +56,13 @@ div {
 }
 
 .publish-queue {
-    top: $subnav-height;
+    inset-block-start: $subnav-height;
     header {
         .refresh-box {
             span {
                 font-style: italic;
                 padding: 16px 0;
-                margin-right: 20px;
+                margin-inline-end: 20px;
             }
         }
     }
@@ -70,20 +70,20 @@ div {
         .list-pane {
             >.content {
                 overflow: auto;
-                right: 400px;
+                inset-inline-end: 400px;
             }
         }
         &.closed {
             .list-pane {
                 >.content {
-                    right: 0;
+                    inset-inline-end: 0;
                 }
             }
         }
         // .list-pane header {
-        //     right: $sidepreview-width + 160;
+        //     inset-inline-end: $sidepreview-width + 160;
         //     @media only screen and (max-width : 1430px) {
-        //         right: $sidepreview-width - 40;
+        //         inset-inline-end: $sidepreview-width - 40;
         //     }
         //     height: 48px;
         // }
@@ -104,7 +104,7 @@ div {
 .products-content, .subscribers-content {
     .sortbar {
         span {
-            margin-left: 5px;
+            margin-inline-start: 5px;
         }
     }
 }

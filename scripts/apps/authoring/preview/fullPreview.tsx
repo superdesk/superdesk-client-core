@@ -109,13 +109,13 @@ export class FullPreview extends React.Component<IProps, IState> {
                 <div>
                     <div className="css-table">
                         <div className="tr">
-                            <div className="td" style={{paddingBottom: rowSpacingVertical}}>
+                            <div className="td" style={{paddingBlockEnd: rowSpacingVertical}}>
                                 <span className="form-label">{gettext('Last modified')}</span>
                             </div>
 
                             <div
                                 className="td"
-                                style={{paddingLeft: 30, paddingBottom: rowSpacingVertical}}
+                                style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}
                             >
                                 {formatDate(new Date(item.versioncreated))}
                             </div>
@@ -126,13 +126,13 @@ export class FullPreview extends React.Component<IProps, IState> {
                                 .map((field) => {
                                     return (
                                         <div key={field.id} className="tr">
-                                            <div className="td" style={{paddingBottom: rowSpacingVertical}}>
+                                            <div className="td" style={{paddingBlockEnd: rowSpacingVertical}}>
                                                 <span className="form-label">{this.getLabel(field.id)}</span>
                                             </div>
 
                                             <div
                                                 className="td"
-                                                style={{paddingLeft: 30, paddingBottom: rowSpacingVertical}}
+                                                style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}
                                             >
                                                 <PreviewFieldType field={field} language={item.language} />
                                             </div>
@@ -168,7 +168,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                                     <div key={field.id}>
                                         {
                                             appConfig?.authoring?.preview?.hideContentLabels === true ? <br /> : (
-                                                <h3 style={{marginTop: 20, marginBottom: 10}}>
+                                                <h3 style={{marginBlockStart: 20, marginBlockEnd: 10}}>
                                                     {this.getLabel(field.id)}
                                                 </h3>
                                             )
