@@ -41,7 +41,7 @@ export function SubscribersService(api, $q, $filter) {
         },
 
         fetchSubscribersByKeyword: function(keyword) {
-            return this.fetchSubscribers({$or: [{name: {$regex: keyword, $options: '-i'}}]});
+            return this.fetchSubscribers({$or: [{name: {$regex: keyword, $options: 'i'}}]});
         },
 
         fetchSubscribersByIds: function(ids) {

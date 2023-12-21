@@ -10,7 +10,7 @@
             padding: 1rem;
 
             .commented-text {
-                margin-bottom: 1rem;
+                margin-block-end: 1rem;
                 color: var(--color-text-light);
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -22,7 +22,7 @@
             }
 
             .accepted {
-                margin-left: 1rem;
+                margin-inline-start: 1rem;
             }
         }
     }

@@ -4,6 +4,7 @@ import {assertNever} from './helpers/typescript-helpers';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+
 const language = getUserInterfaceLanguage();
 const filename = `/languages/${language}.json?nocache=${Date.now()}`;
 
@@ -15,6 +16,17 @@ function applyTranslations(translations) {
     }
 
     window.translations = translations;
+}
+
+export function isMacOS() {
+    if (
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 function requestListener() {
@@ -206,12 +218,12 @@ export function translateArticleType(type: IArticle['type']) {
 export function getUserSearchMongoQuery(searchString: string) {
     return {
         $or: [
-            {username: {$regex: searchString, $options: '-i'}},
-            {display_name: {$regex: searchString, $options: '-i'}},
-            {first_name: {$regex: searchString, $options: '-i'}},
-            {last_name: {$regex: searchString, $options: '-i'}},
-            {email: {$regex: searchString, $options: '-i'}},
-            {sign_off: {$regex: searchString, $options: '-i'}},
+            {username: {$regex: searchString, $options: 'i'}},
+            {display_name: {$regex: searchString, $options: 'i'}},
+            {first_name: {$regex: searchString, $options: 'i'}},
+            {last_name: {$regex: searchString, $options: 'i'}},
+            {email: {$regex: searchString, $options: 'i'}},
+            {sign_off: {$regex: searchString, $options: 'i'}},
         ],
     };
 }

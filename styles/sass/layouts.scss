@@ -18,10 +18,10 @@ body {
 }
 
 @page {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 1.5cm;
-    margin-bottom: 1.5cm;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    margin-block-start: 1.5cm;
+    margin-block-end: 1.5cm;
 }
 
 // Layouts
@@ -33,16 +33,16 @@ body {
     }
 
     .monitoring {
-        top: 0;
+        inset-block-start: 0;
     }
 
     .subnav--authoring {
-        top: 0;
+        inset-block-start: 0;
     }
 
     .main-section {
         // excludes $subnav-height
-        top: $topspace;
+        inset-block-start: $topspace;
     }
 }
 
@@ -50,29 +50,29 @@ body {
 // ------------------------------------
 #main-container {
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    padding-top: $topspace;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inset-inline-start: 0;
+    inset-block-end: 0;
+    padding-block-start: $topspace;
     @include box-sizing(border-box);
     background: $background-main;
     overflow: hidden;
     @include transition(all 0.3s ease);
 
     &.menu {
-        left: $sf-main-menu-width;
+        inset-inline-start: $sf-main-menu-width;
     }
 
     &.authoring {
         #workspace-container {
             box-shadow: 2px 0 10px 0 rgba(0,0,0,0.3);
-            right: 44%;
+            inset-inline-end: 44%;
             z-index:100;
-            border-right: 3px solid var(--sd-colour__splitter);
+            border-inline-end: 3px solid var(--sd-colour__splitter);
             @include transition(all .5s);
             @media only screen and (max-width : 1430px) {
-                right: 54%;
+                inset-inline-end: 54%;
             }
             &.ui-resizable-resizing {
                 @include transition(none);
@@ -82,8 +82,8 @@ body {
                 display: block;
                 &:hover {
                     background-color: var(--sd-colour-interactive);
-                    margin-left: 2px;
-                    margin-right: 2px;
+                    margin-inline-start: 2px;
+                    margin-inline-end: 2px;
                     width: 3px;
                     box-shadow: 2px 0 0 0 var(--sd-colour-interactive--alpha-20), -2px 0 0 0 var(--sd-colour-interactive--alpha-20);
                 }
@@ -108,8 +108,8 @@ body {
     }
     &.hideMonitoring {
         #workspace-container {
-            right: 100%;
-            margin-left: -100%;
+            inset-inline-end: 100%;
+            margin-inline-start: -100%;
         }
         #authoring-container {
             width: calc(100% - #{$sidebar-width}) !important;
@@ -123,19 +123,19 @@ body {
 // authoring sidebar container
 #workspace-container {
     position: absolute;
-    top: 0;
-    right: 0;
+    inset-block-start: 0;
+    inset-inline-end: 0;
     @include box-sizing(border-box);
-    bottom: $authoring-opened-articles;
-    left: $sidebar-width;
+    inset-block-end: $authoring-opened-articles;
+    inset-inline-start: $sidebar-width;
     background-color: $sd-background;
 }
 
 #authoring-container {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inset-block-end: 0;
     @include box-sizing(border-box);
 }
 
@@ -144,8 +144,8 @@ body {
 
 .main-section {
     position:absolute;
-    top: $subnav-height+$topspace;
-    bottom:0; left:0; right:0;
+    inset-block-start: $subnav-height+$topspace;
+    inset-block-end:0; inset-inline-start:0; inset-inline-end:0;
     margin:0;
     padding:0;
     z-index:1;
@@ -158,15 +158,15 @@ body {
                     height: 28px;
                 }
                 .user-details-pane {
-                    top: 40px;
+                    inset-block-start: 40px;
                 }
             }
         }
     }
 }
 .main-section.filter {
-    top: $subnav-height+$topspace;
-    bottom:0; left:0; right:0;
+    inset-block-start: $subnav-height+$topspace;
+    inset-block-end:0; inset-inline-start:0; inset-inline-end:0;
     margin:0;
     padding:0;
     z-index:1;
@@ -179,32 +179,32 @@ body {
                     height: 28px;
                 }
                 .user-details-pane {
-                    top: 40px;
+                    inset-block-start: 40px;
                 }
             }
         }
     }
 }
 .main-section.search {
-    top: $topspace;
+    inset-block-start: $topspace;
     .archive-sidebar {
-        top:48px;
+        inset-block-start:48px;
     }
 }
 .search-label {
-    margin-bottom: -2px;
-    margin-top: 10px;
+    margin-block-end: -2px;
+    margin-block-start: 10px;
 }
 
 .main-section.users {
     .preview-layout {
         .list-pane > .content {
-            right: 400px;
+            inset-inline-end: 400px;
             transition: all ease-in-out 0.2s;
         }
         &.closed {
             .list-pane > .content {
-                right: 0;
+                inset-inline-end: 0;
             }
         }
     }
@@ -213,12 +213,12 @@ body {
 .main-section.contacts-section {
     .preview-layout {
         .content {
-            right: 560px;
+            inset-inline-end: 560px;
             transition: all ease-in-out 0.2s;
         }
         &.closed {
             .content {
-                right: 0;
+                inset-inline-end: 0;
                 transition: all ease-in-out 0.2s;
             }
         }
@@ -229,53 +229,53 @@ body {
 // ------------------------------------
 .action-bar { //overhidding the header of preview layout
     position: absolute;
-    top: -96px;
-    left: 0; right: 0;
+    inset-block-start: -96px;
+    inset-inline-start: 0; inset-inline-end: 0;
     height: 48px;
     background: transparent;
     z-index: 1;
     padding: $sd-base-increment $sd-base-increment * 1.5;
     transition: all ease 0.35s;
-    border-bottom: 1px solid var(--sd-colour-line--light);
+    border-block-end: 1px solid var(--sd-colour-line--light);
     display: flex;
     align-items: center;
     &.show {
-        top: -48px;
+        inset-block-start: -48px;
     }
 }
 
 .preview-layout {
     position: absolute;
-    top: 0; right: 0;
-    left: 0; bottom: 0;
+    inset-block-start: 0; inset-inline-end: 0;
+    inset-inline-start: 0; inset-block-end: 0;
     @include transition(right ease 0.2s);
     .list-pane, .preview-pane {
         > header {
             height: $nav-height;
             position: absolute;
-            left: 0; right: 0; top: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start: 0;
             box-shadow: 0 1px 0 0 var(--sd-colour-line--x-light);
             z-index: 1;
-            padding-right: 3.6rem;
+            padding-inline-end: 3.6rem;
             .nav-tabs {
                 box-shadow: none;
             }
         }
         > .content {
             position: absolute;
-            top: $nav-height;
-            left: 0;
-            bottom: 0;
-            right: 0;
+            inset-block-start: $nav-height;
+            inset-inline-start: 0;
+            inset-block-end: 0;
+            inset-inline-end: 0;
         }
     }
     .list-pane {
         position:absolute;
         background: $background-main;
-        top: 0;
-        right: 0;
-        left: 0; bottom:0;
-        border-right: 1px solid hsl(0, 0%, 0%);
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inset-inline-start: 0; inset-block-end:0;
+        border-inline-end: 1px solid hsl(0, 0%, 0%);
         z-index: 1;
         @include transition(right ease 0.2s);
         .shadow-list-holder {
@@ -291,8 +291,8 @@ body {
     .preview-pane {
         position: absolute;
         width: $sidepreview-width;
-        top: 48px;
-        right: 0; bottom: 0;
+        inset-block-start: 48px;
+        inset-inline-end: 0; inset-block-end: 0;
         background: var(--sd-colour-panel-bg--000);
         overflow-y: auto;
         @include transition(right ease 0.2s);
@@ -304,7 +304,7 @@ body {
             align-items: center;
             .close-preview {
                 position: absolute;
-                top: 10px; right: 8px;
+                inset-block-start: 10px; inset-inline-end: 8px;
                 opacity: 0.5;
                 &:hover {
                     opacity: 1;
@@ -314,7 +314,7 @@ body {
         }
         > .content {
             .additional-info {
-                border-bottom: 1px solid var(--sd-colour-line--light);
+                border-block-end: 1px solid var(--sd-colour-line--light);
                 padding: 10px 20px;
             }
             .action-menu {
@@ -340,12 +340,12 @@ body {
 
 .ingest-container {
     .list-pane {
-        top:-$nav-height;
+        inset-block-start:-$nav-height;
     }
 }
 .archive-container {
     .archive-sidebar {
-        top:$nav-height;
+        inset-block-start:$nav-height;
     }
 }
 
@@ -358,8 +358,8 @@ body {
 
 .workspace .main-section {
     .sd-overlay-panel {
-        top: 0;
-        bottom: 0;
+        inset-block-start: 0;
+        inset-block-end: 0;
         width: 56rem;
     }
 }
@@ -372,7 +372,7 @@ body {
 .workspace .main-section {
     .archive-content {
         .sd-overlay-panel {
-            top: 4.8rem;
+            inset-block-start: 4.8rem;
         }
     }
 }
@@ -383,8 +383,8 @@ $slide-pane-width: 400px;
 
 .slide-pane {
     position: absolute;
-    top: 1px; bottom: 0;
-    right: -$slide-pane-width;
+    inset-block-start: 1px; inset-block-end: 0;
+    inset-inline-end: -$slide-pane-width;
 
     width: $slide-pane-width;
     background-color: $white;
@@ -394,39 +394,39 @@ $slide-pane-width: 400px;
     flex-direction: column;
 
     &.slide-pane--inset {
-        top: $nav-height * 2;
-        bottom: 30px;
+        inset-block-start: $nav-height * 2;
+        inset-block-end: 30px;
     }
-    &.open { right: 0; }
+    &.open { inset-inline-end: 0; }
 
     > .slide-pane__header {
         height: $nav-height;
-        border-bottom: 1px solid #424242;
+        border-block-end: 1px solid #424242;
         h3 {
             font-size: 20px;
             line-height: $nav-height;
             color: $black;
             @include text-light();
-            float: left;
+            float: inline-start;
         }
         .close {
-            margin-top: 14px;
+            margin-block-start: 14px;
             position: absolute;
-            top: 0;
-            right: 12px;
+            inset-block-start: 0;
+            inset-inline-end: 12px;
         }
     }
 
     > .slide-pane__content {
         flex-grow: 1;
         width: 100%;
-        top: $nav-height;
+        inset-block-start: $nav-height;
         overflow: auto;
         padding: 20px 15px 0 20px;
         @include border-box();
 
         .dropdown {
-            margin-bottom: 20px;
+            margin-block-end: 20px;
             .dropdown__toggle, .dropdown__menu {
                 width: 100%;
                 &.focus, &:focus {
@@ -439,14 +439,14 @@ $slide-pane-width: 400px;
     > .slide-pane__footer {
         width: 100%;
         padding: 15px 15px 0 15px;
-        border-top: 1px solid #424242;
+        border-block-start: 1px solid #424242;
         @include border-box();
 
         button {
-            margin-bottom: 15px;
+            margin-block-end: 15px;
         }
 
-        .btn-list li { padding-bottom: 0; }
+        .btn-list li { padding-block-end: 0; }
     }
 
 
@@ -468,9 +468,9 @@ $slide-pane-width: 400px;
     overflow: hidden;
     overflow-x: auto;
     flex-wrap: wrap;
-    margin-left: -0.4rem;
-    margin-right: -0.4rem;
-    margin-bottom: 0.6rem;
+    margin-inline-start: -0.4rem;
+    margin-inline-end: -0.4rem;
+    margin-block-end: 0.6rem;
 
     li {
         flex: 0 0 calc(50% - 0.8rem);
@@ -494,20 +494,20 @@ $slide-pane-width: 400px;
 // ------------------------------------
 .split-content {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
     > .nav, > .header, > header {
         position: absolute;
-        top: 0; left: 0; right: 0;
+        inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0;
         height: $nav-height;
-        border-bottom: 1px solid #f0f0f0;
+        border-block-end: 1px solid #f0f0f0;
         @include border-box();
     }
     > .content {
         position: absolute;
-        top: $nav-height;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset-block-start: $nav-height;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        inset-block-end: 0;
         overflow: auto;
         overflow-x: hidden;
         padding: 20px;
@@ -523,18 +523,18 @@ $slide-pane-width: 400px;
     @include transition( all 0.3s ease);
     width:$tablist-width;
     position:absolute;
-    top:0;
-    bottom:0;
+    inset-block-start:0;
+    inset-block-end:0;
     z-index:20;
     background: $tablist-background;
     overflow:hidden;
     &.left-tablist {
-        left:0;
+        inset-inline-start:0;
                 overflow: visible;
         @include box-shadow(inset -8px 0 7px -6px #888);
     }
     &.right-tablist {
-        right:0;
+        inset-inline-end:0;
                 overflow: visible;
         @include box-shadow(inset 8px 0 7px -6px #888);
     }
@@ -566,13 +566,13 @@ $slide-pane-width: 400px;
                 }
                 .helper-icon, .main-icon {
                   position: absolute;
-                  top: 10px;
-                  left: 10px;
+                  inset-block-start: 10px;
+                  inset-inline-start: 10px;
                 }
                 .helper-icon {
                   opacity: 0;
                   margin: 0;
-                  left: 12px;
+                  inset-inline-start: 12px;
                   width: 24px;
                   height: 24px;
                   font-size: 24px;
@@ -587,8 +587,8 @@ $slide-pane-width: 400px;
             }
             .label--info {
                 position: absolute;
-                top: 3px;
-                right: 3px;
+                inset-block-start: 3px;
+                inset-inline-end: 3px;
                 text-shadow: none;
                 z-index: 2;
             }
@@ -606,8 +606,8 @@ $slide-pane-width: 400px;
                     opacity: 0;
                     height:8px;
                     width:8px;
-                    top: 20px;
-                    left: 20px;
+                    inset-block-start: 20px;
+                    inset-inline-start: 20px;
                     background-size: 100%;
                   }
                 }
@@ -619,37 +619,37 @@ $slide-pane-width: 400px;
 .tabpane {
     position:absolute;
     width:$tabpane-width;
-    top:0;
-    bottom:0;
+    inset-block-start:0;
+    inset-block-end:0;
     background: var(--sd-colour-panel-bg--100);
     border-color:$tabpane-border;
     border-style: solid;
     z-index:15;
     transition: all 0.3s ease;
     &.left-tabpane {
-        left:-$tabpane-width;
+        inset-inline-start:-$tabpane-width;
         border-width: 0 3px 0 0;
         box-shadow: 2px 0px 8px 0px rgba(50,50,50,.35);
 
         &.open-tabpane {
-            left:$tablist-width;
+            inset-inline-start:$tablist-width;
         }
     }
     &.right-tabpane {
-        right:-$tabpane-width;
+        inset-inline-end:-$tabpane-width;
         border-width: 0 0 0 3px;
         box-shadow:-2px 0px 8px 0px rgba(40,50,50,.35);
         &.open-tabpane {
-            right:$tablist-width;
+            inset-inline-end:$tablist-width;
         }
     }
     .tabcontent {
         padding: $tabcontent-padding;
         position: absolute;
-        bottom: 0;
-        top: 0;
-        left:1px;
-        right:1px;
+        inset-block-end: 0;
+        inset-block-start: 0;
+        inset-inline-start:1px;
+        inset-inline-end:1px;
         overflow: hidden;
     }
 }
@@ -664,9 +664,9 @@ $slide-pane-width: 400px;
     grid-template-rows: auto 1fr auto;
     position: fixed;
     color: var(--color-text);
-    top: $nav-height;
-    bottom: 32px;
-    right: -$notification-pane-width - 16px;
+    inset-block-start: $nav-height;
+    inset-block-end: 32px;
+    inset-inline-end: -$notification-pane-width - 16px;
     width: $notification-pane-width;
     background: hsla(214, 13%, 12, 0.82);
     backdrop-filter: blur(6px);
@@ -676,24 +676,24 @@ $slide-pane-width: 400px;
     border-radius: var(--b-radius--x-large);
     margin: 12px 0;
     &.show {
-        right: 12px;
+        inset-inline-end: 12px;
     }
     .notification-pane__header {
         grid-row: 1 / 2;
         grid-column: 1 / 2;
         height: 48px;
         width: 100%;
-        border-bottom: 1px solid var(--sd-colour-line--light);
-        padding-left: 10px;
-        padding-right: 10px;
+        border-block-end: 1px solid var(--sd-colour-line--light);
+        padding-inline-start: 10px;
+        padding-inline-end: 10px;
         display: flex;
         flex-direction: row;
         align-items: center;
 
         .user-info {
             height: 40px;
-            padding-top: 12px;
-            padding-bottom: 2px;
+            padding-block-start: 12px;
+            padding-block-end: 2px;
             .name {
                 color: var(--color-text-light);
                 font-size: 12px;
@@ -705,7 +705,7 @@ $slide-pane-width: 400px;
                 color: var(--color-text-light);
                 display: block;
                 line-height: 12px;
-                margin-top: 2px;
+                margin-block-start: 2px;
             }
         }
         .icn-btn {
@@ -722,8 +722,8 @@ $slide-pane-width: 400px;
                 text-decoration: none;
                 text-transform: uppercase;
                 line-height: 20px;
-                padding-right:16px;
-                padding-left: 0;
+                padding-inline-end:16px;
+                padding-inline-start: 0;
                 display: inline-block;
                 margin: 0 !important;
                 &:last-child {
@@ -741,7 +741,7 @@ $slide-pane-width: 400px;
         color: var(--color-text);
         padding: 10px;
         font-weight: 300;
-        margin-right: auto;
+        margin-inline-end: auto;
     }
     .notification-pane__content {
         grid-row: 2 / 2;
@@ -749,7 +749,7 @@ $slide-pane-width: 400px;
         overflow-y: auto;
         position: relative;
         .module {
-            margin-top: 20px;
+            margin-block-start: 20px;
             .title {
                 font-size: 16px;
                 color:var(--color-text);
@@ -796,18 +796,18 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
         &::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
             height: 8px;
             background-color: rgba(0,0,0,.2);
             border-radius: 4px 4px 0 0;
         }
         .dropdown {
-            float: right;
-            margin-top: 8px;
+            float: inline-end;
+            margin-block-start: 8px;
             .dropdown__menu {
-                margin-top: 0;
+                margin-block-start: 0;
             }
             .dropdown__toggle {
                 border: none;
@@ -844,7 +844,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             i {
                 color: $white;
                 opacity: 0.7;
-                padding-right: 10px;
+                padding-inline-end: 10px;
             }
         }
     }
@@ -879,7 +879,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
                 padding: 9px 0 3px 0;
             }
             > input {
-                margin-top: 6px;
+                margin-block-start: 6px;
             }
         }
     }
@@ -898,7 +898,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
     .card-box__btn-group {
         margin: 14px 6px 0 0;
         &--right {
-            float: right;
+            float: inline-end;
         }
         .btn {
             background: transparent;
@@ -916,7 +916,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
         }
     }
     .card-box__thumbnail {
-        padding-top: 8px;
+        padding-block-start: 8px;
         line-height: 0;
         & + .heading {
             background-color: var(--sd-colour-panel-bg--200);
@@ -934,12 +934,12 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             font-size: 11px;
             color: $sd-text-light;
             letter-spacing: 0.04em;
-            margin-bottom: 4px;
+            margin-block-end: 4px;
             &.with-value {
-                margin-bottom: 0;
+                margin-block-end: 0;
             }
             .label {
-                float: right;
+                float: inline-end;
                 box-sizing: border-box;
                 height: 15px;
                 margin: auto 0;
@@ -953,7 +953,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
                 font-weight: 400;
             }
             .value-label {
-                float: right;
+                float: inline-end;
                 font-size: 13px;
                 color: $sd-text;
                 font-weight: 400;
@@ -994,13 +994,13 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
 
         li, .card-box__content-list-item {
             padding: 16px;
-            border-bottom: 1px solid var(--sd-colour-line--light);
+            border-block-end: 1px solid var(--sd-colour-line--light);
             &--inline {
                 display: flex;
                 h4 { flex: 1 1; }
                 span {
                     flex: 1 1;
-                    text-align: right;
+                    text-align: end;
                 }
             }
             .card-box__content-list-inline-span {
@@ -1011,7 +1011,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             }
             &--border-bottom {
                 &:last-child {
-                    border-bottom: 1px solid var(--sd-colour-line--light);
+                    border-block-end: 1px solid var(--sd-colour-line--light);
                 }
             }
             &--small {
@@ -1028,11 +1028,11 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             i {
                 display: inline-block;
                 opacity: 0.5;
-                margin-top: -2px;
+                margin-block-start: -2px;
             }
         }
         .button__view-all {
-            border-bottom: 1px dotted #5598B4;
+            border-block-end: 1px dotted #5598B4;
             color: #5598B4;
             cursor: pointer;
         }
@@ -1052,13 +1052,13 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
 
     .cardbox__close {
         position: absolute;
-        top: 12px;
-        right: 6px;
+        inset-block-start: 12px;
+        inset-inline-end: 6px;
         z-index: 3;
     }
     .card-box__footer {
         padding: 14px 16px;
-        border-top: 1px solid var(--sd-colour-line--medium);
+        border-block-start: 1px solid var(--sd-colour-line--medium);
         background-color: var(--sd-item__main-Bg);
         border-radius: 0 0 4px 4px;
         &--light {
@@ -1067,10 +1067,10 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
     }
     .card-box__full-click {
         position: absolute;
-        top:0;
-        bottom:0;
-        right:0;
-        left:0;
+        inset-block-start:0;
+        inset-block-end:0;
+        inset-inline-end:0;
+        inset-inline-start:0;
         z-index: 2;
     }
 }
@@ -1441,8 +1441,8 @@ $flex-grid-gap:          16px; // space between items is $flex-grid-gap*2
 
 // PREPARE MODAL FOR PRINT
 body.prepare-print {
-    margin-left: 1.5cm;
-    margin-right: 1.5cm;
+    margin-inline-start: 1.5cm;
+    margin-inline-end: 1.5cm;
 
     background: none! important;
     overflow: visible !important;
@@ -1460,12 +1460,12 @@ body.prepare-print {
             display: block !important;
         }
         .association {
-            margin-bottom: 16px !important;
+            margin-block-end: 16px !important;
         }
         p {
             font-size: 9pt !important;
             line-height: 140% !important;
-            margin-bottom: 12px !important;
+            margin-block-end: 12px !important;
         }
         h2 {
             font-size: 13pt !important;
@@ -1475,7 +1475,7 @@ body.prepare-print {
         }
         .headline {
             font-size: 16pt !important;
-            margin-bottom: 16px !important;
+            margin-block-end: 16px !important;
         }
         .modal__body {
             display: block !important;
@@ -1488,7 +1488,7 @@ body.prepare-print {
             }
             .byline {
                 font-size: 10pt !important;
-                margin-bottom: 20px !important;
+                margin-block-end: 20px !important;
             }
             > .modal-body {
                 display: block !important;
@@ -1498,10 +1498,10 @@ body.prepare-print {
                 max-width: 100% !important;
             }
             .metadata {
-                margin-top: 0 !important;
-                margin-bottom: 15px !important;
+                margin-block-start: 0 !important;
+                margin-block-end: 15px !important;
                 > div {
-                    margin-bottom: 0 !important;
+                    margin-block-end: 0 !important;
                 }
                 .preview-label label {
                     color: black;
@@ -1509,9 +1509,9 @@ body.prepare-print {
                 .preview-data span {
                     border-radius: 0 !important;
                     background-color: transparent !important;
-                    border-right: 1px solid black;
+                    border-inline-end: 1px solid black;
                     &:last-of-type {
-                        border-right: 0 !important;
+                        border-inline-end: 0 !important;
                     }
                 }
             }
@@ -1521,8 +1521,8 @@ body.prepare-print {
 
 .loading-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
 
     &.active {
         width: 100%;
@@ -1535,7 +1535,7 @@ body.prepare-print {
 
 .tab-box {
     display: flex;
-    padding-bottom: 20px;
+    padding-block-end: 20px;
 
     &__item {
         flex: 1;
@@ -1547,17 +1547,17 @@ body.prepare-print {
         color: $sd-text-light;
         background-color: transparent;
         border: 0;
-        border-bottom: 1px solid var(--sd-colour-line--medium);
-        border-right: 1px solid var(--sd-colour-line--medium);
+        border-block-end: 1px solid var(--sd-colour-line--medium);
+        border-inline-end: 1px solid var(--sd-colour-line--medium);
 
         &:last-of-type {
-            border-right: 0;
+            border-inline-end: 0;
         }
 
         &--active {
             color: var(--sd-colour-interactive);
-            border-top: 1px solid var(--sd-colour-line--medium);
-            border-bottom: 0;
+            border-block-start: 1px solid var(--sd-colour-line--medium);
+            border-block-end: 0;
         }
     }
 }
@@ -1587,9 +1587,9 @@ body.prepare-print {
 // Things for masterdesk, should be moved to ui-framework
 .sd-main-content-grid__preview {
     .search-box {
-        margin-top: -10px;
-        margin-left: -10px;
-        margin-right: -10px;
+        margin-block-start: -10px;
+        margin-inline-start: -10px;
+        margin-inline-end: -10px;
     }
     .content-list-holder {
         display: contents;

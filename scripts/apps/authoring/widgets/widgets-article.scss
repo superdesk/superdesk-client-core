@@ -6,35 +6,35 @@
 
 .widget-wrapper {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    inset-block-end: 0;
     overflow: hidden;
     &.active-left {
         .page-content-container {
-            left: $tablist-width + $tabpane-width + $article-tabpane-padding;
+            inset-inline-start: $tablist-width + $tabpane-width + $article-tabpane-padding;
         }
         &.left-extended {
             .page-content-container {
-                left: $tablist-width + $tabpane-extended-width + $article-tabpane-padding;
+                inset-inline-start: $tablist-width + $tabpane-extended-width + $article-tabpane-padding;
             }
         }
     }
     &.active-right {
         .page-content-container {
-            right: $tablist-width + $tabpane-width + $article-tabpane-padding;
+            inset-inline-end: $tablist-width + $tabpane-width + $article-tabpane-padding;
         }
         &.right-extended {
             .page-content-container {
-                right: $tablist-width + $tabpane-extended-width + $article-tabpane-padding;
+                inset-inline-end: $tablist-width + $tabpane-extended-width + $article-tabpane-padding;
             }
         }
     }
 }
 
 .workqueue .widget-wrapper .right-tabpane {
-    bottom: 30px;
+    inset-block-end: 30px;
 }
 
 .tabpane, .pinned-tab__wrapper {
@@ -68,17 +68,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-left: auto;
+            margin-inline-start: auto;
         }
         .widget-settings {
-            top: 8px;
-            right: 35px;
+            inset-block-start: 8px;
+            inset-inline-end: 35px;
         }
         .widget-content {
             background-color: var(--sd-colour-panel-bg--100);
-            margin-top: 0;
+            margin-block-start: 0;
             overflow: auto;
-            bottom: 0;
+            inset-block-end: 0;
             display: grid;
             grid-template-rows: auto 1fr auto;
             grid-template-columns: 1fr;
@@ -88,7 +88,7 @@
                     padding: 0;
                 }
                 .btn-group.pull-left {
-                    margin-left: 0;
+                    margin-inline-start: 0;
                 }
             }
             span.chevron {
@@ -114,8 +114,8 @@
             }
             .widget-header__action {
                 position: fixed;
-                top: 106px;
-                right: 61px;
+                inset-block-start: 106px;
+                inset-inline-end: 61px;
                 z-index: 999;
             }
         }
@@ -139,13 +139,13 @@
 
     .tabcontent-actions {
         position: absolute;
-        top: 8px;
-        right: 0;
+        inset-block-start: 8px;
+        inset-inline-end: 0;
         z-index: 100;
 
         .icn-btn {
-            margin-left: auto;
-            margin-right: 5px;
+            margin-inline-start: auto;
+            margin-inline-end: 5px;
             transition: all .2s ease-in-out;
 
             &.active {
@@ -183,11 +183,11 @@
 
 .sd-widget.macros {
     .macro-option {
-        margin-bottom: 20px;
+        margin-block-end: 20px;
     }
     .link-list .btn {
         display: block;
         width: 100%;
-        margin-bottom: 10px;
+        margin-block-end: 10px;
     }
 }

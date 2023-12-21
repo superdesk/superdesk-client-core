@@ -614,7 +614,7 @@ export class GenericListPageComponent<T, P>
                                 Object.keys(activeFilters).length < 1 ? null : (
                                     <div
                                         className="subnav"
-                                        style={{background: 'transparent', boxShadow: 'none', marginTop: -20}}
+                                        style={{background: 'transparent', boxShadow: 'none', marginBlockStart: -20}}
                                         data-test-id="list-page--filters-active"
                                     >
                                         {

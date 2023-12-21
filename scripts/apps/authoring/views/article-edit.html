@@ -321,7 +321,7 @@
     </div>
 </div>
 
-<div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; top: -1000px; left: -1000px; height: 150px; width: 500px; display: block;"></div>
+<div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; inset-block-start: -1000px; inset-inline-start: -1000px; height: 150px; width: 500px; display: block;"></div>
 
 <div class="field body"
      ng-if="schema.body_html && (features.onlyEditor3 || editor.body_html.editor3)"
@@ -417,7 +417,7 @@
 
             <div class="media-container__action-bar" ng-if="_editable">
                 <div class="flex-grid flex-grid--medium-3">
-                    <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                    <div class="flex-grid__item sd-text__left" style="text-align: start;">
                         <sd-video-thumbnail-editor data-item="item" data-on-change="autosave"></sd-video-thumbnail-editor>
                     </div>
                     <div class="flex-grid__item">

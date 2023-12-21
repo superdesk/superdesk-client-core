@@ -78,7 +78,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
 
                 return (
                     !inline ? (
-                        <div style={{paddingLeft: level === 0 || inline ? 0 : 14}}>
+                        <div style={{paddingInlineStart: level === 0 || inline ? 0 : 14}}>
                             { treeNodesMap }
                         </div>
                     ) : (

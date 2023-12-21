@@ -19,20 +19,20 @@
 }
 
 .controlbars__mask--left {
-  left: 0;
+  inset-inline-start: 0;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
 .controlbars__mask--right {
-  right: 0;
+  inset-inline-end: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
 .controlbars__progress-output {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 0;
   bottom: 0;
   transform: translate(-50%, 0);
@@ -63,13 +63,13 @@
   position: absolute;
   top: inherit;
   bottom: inherit;
-  left: 50%;
+  inset-inline-start: 50%;
 }
 
 .controlbars__wrapper-out {
   position: absolute;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   top: 0;
   bottom: 0;
   border: solid 1px #00e0ff;
@@ -95,7 +95,7 @@
   content: "•\A•\A•";
   position: absolute;
   top: 50%;
-  left: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
   font-size: 12px;
   margin-top: 0;
@@ -108,14 +108,14 @@
   position: absolute;
   font-size: 12px;
   color: #00e0ff;
-  left: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, 0);
   font-weight: 400;
   bottom: -35px;
 }
 
 .controlbars__wrapper--right {
-  right: 0;
+  inset-inline-end: 0;
   transform: translateX(50%);
 }
 

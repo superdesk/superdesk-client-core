@@ -52,7 +52,7 @@ export class SortBar extends React.Component<IProps, any> {
                             {item.label}
                         </button>
                     )}
-                    wrapperStyles={{paddingTop: 10, paddingBottom: 10}}
+                    wrapperStyles={{paddingBlockStart: 10, paddingBlockEnd: 10}}
                 />
                 {
                     this.props.selected.direction === 'ascending'

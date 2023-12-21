@@ -106,7 +106,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                     display: 'block',
                                     width: '100%',
                                     padding: 0,
-                                    textAlign: 'left',
+                                    textAlign: 'start',
                                     whiteSpace: 'nowrap',
                                 }}
                                 onClick={() => {
@@ -123,7 +123,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                         padding: '10px',
                                     }}
                                 >
-                                    <i className={item.icon} style={{marginRight: 10}} />
+                                    <i className={item.icon} style={{marginInlineEnd: 10}} />
                                     <span>{item.label}</span>
                                 </span>
                             </button>
@@ -173,7 +173,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                                 display: 'block',
                                                 width: '100%',
                                                 padding: 0,
-                                                textAlign: 'left',
+                                                textAlign: 'start',
                                                 whiteSpace: 'nowrap',
                                             }}
                                             onClick={() => {
@@ -190,7 +190,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                                     padding: '10px',
                                                 }}
                                             >
-                                                <i className={item.icon} style={{marginRight: 10}} />
+                                                <i className={item.icon} style={{marginInlineEnd: 10}} />
                                                 <span>{item.label}</span>
                                             </span>
                                         </button>

@@ -188,6 +188,11 @@ export class LinkInputComponent extends React.Component<IProps, any> {
             >
                 <div style={{padding: '3.2rem 1.6rem'}}>
                     <input
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                this.onSubmit(linkTypes.href);
+                            }
+                        }}
                         type="url"
                         ref={(el) => {
                             this.inputElement = el;

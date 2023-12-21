@@ -6,7 +6,7 @@
 
 .close-compare-versions {
     position: absolute;
-    top: 14px; right: 14px;
+    inset-block-start: 14px; inset-inline-end: 14px;
     @include opacity(60);
     background: none;
     border: 0;
@@ -22,21 +22,21 @@
 
     .boards-list {
         position: absolute;
-        top: 0; left: 0; bottom: 0; right: 0;
+        inset-block-start: 0; inset-inline-start: 0; inset-block-end: 0; inset-inline-end: 0;
     }
     .boards-create {
         position: absolute;
-        top: 0; bottom: 0; right: 0; width: 0;
+        inset-block-start: 0; inset-block-end: 0; inset-inline-end: 0; width: 0;
         @include border-box();
         i {
             font-size: 48px;
             line-height: 100px;
 
             position: absolute;
-            top: 50%;
-            margin-top: -50px;
-            left: 50%;
-            margin-left: -20px;
+            inset-block-start: 50%;
+            margin-block-start: -50px;
+            inset-inline-start: 50%;
+            margin-inline-start: -20px;
         }
         &:hover {
             cursor: pointer;
@@ -45,10 +45,10 @@
         .compare-versions-float {
             .dropdown__menu {
                 position: fixed;
-                left: auto;
-                right: auto;
-                top: auto;
-                bottom: auto;
+                inset-inline-start: auto;
+                inset-inline-end: auto;
+                inset-block-start: auto;
+                inset-block-end: auto;
                 max-width: 270px;
                 li button {
                     max-width: 250px !important;
@@ -59,15 +59,15 @@
     .boards-list {
         .board {
             background: $white;
-            float: left;
+            float: inline-start;
             height: 100%;
             border: 1px solid #cacaca;
             border-width: 0 1px;
             position: relative;
 
             > .dropdown {
-                left: 8px;
-                top: 5px;
+                inset-inline-start: 8px;
+                inset-block-start: 5px;
                 border: 0;
                 position: absolute;
                 z-index: 2;
@@ -79,7 +79,7 @@
                     }
                 }
                 .dropdown__menu {
-                    margin-top: -4px;
+                    margin-block-start: -4px;
                 }
                 &:hover {
                     .dropdown__toggle {
@@ -98,7 +98,7 @@
                     padding: 2.4rem 2.4rem $bottom-view-padding + 2.4rem;
 
                     &.locked {
-                        border-left: 4px solid $state-border--locked;
+                        border-inline-start: 4px solid $state-border--locked;
                     }
 
                     .editbar {
@@ -110,7 +110,7 @@
                         margin: 0 0 2.4rem 3.2rem;
                         &__metadata {
                             display: inline-block;
-                            margin-right: .6rem;
+                            margin-inline-end: .6rem;
                             font-size: 12px;
                             font-weight: 500;
                             color: $grayDark;
@@ -120,7 +120,7 @@
                                 color: $gray;
                             }
                             &-content {
-                                margin-right: 5px;
+                                margin-inline-end: 5px;
                             }
                         }
                     }
