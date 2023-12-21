@@ -4,8 +4,10 @@ import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
+import formatISO from 'date-fns/formatISO';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+
 const language = getUserInterfaceLanguage();
 const filename = `/languages/${language}.json?nocache=${Date.now()}`;
 
@@ -17,6 +19,17 @@ function applyTranslations(translations) {
     }
 
     window.translations = translations;
+}
+
+export function isMacOS() {
+    if (
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 function requestListener() {
@@ -179,10 +192,10 @@ export const gettext = (
 
     let translated = i18n.gettext(text);
 
-    const hasReactPlaceholders = Object.values(params).some((val) => typeof val === 'function');
+    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
 
     if (hasReactPlaceholders) {
-        return gettextReact(translated, params);
+        return gettextReact(translated, params ?? {});
     } else {
         Object.keys(params ?? {}).forEach((param) => {
             translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
@@ -267,11 +280,12 @@ export function translateArticleType(type: IArticle['type']) {
 export function getUserSearchMongoQuery(searchString: string) {
     return {
         $or: [
-            {username: {$regex: searchString, $options: '-i'}},
-            {display_name: {$regex: searchString, $options: '-i'}},
-            {first_name: {$regex: searchString, $options: '-i'}},
-            {last_name: {$regex: searchString, $options: '-i'}},
-            {email: {$regex: searchString, $options: '-i'}},
+            {username: {$regex: searchString, $options: 'i'}},
+            {display_name: {$regex: searchString, $options: 'i'}},
+            {first_name: {$regex: searchString, $options: 'i'}},
+            {last_name: {$regex: searchString, $options: 'i'}},
+            {email: {$regex: searchString, $options: 'i'}},
+            {sign_off: {$regex: searchString, $options: 'i'}},
         ],
     };
 }
@@ -352,7 +366,14 @@ export function toQueryString(
  * Output example: "1970-01-19T22:57:38"
  */
 export function toServerDateFormat(date: Date): string {
-    return date.toJSON().slice(0, 19);
+    return formatISO(date).slice(0, 19);
+}
+
+/**
+ * Parse server date without timezone so it won't convert it to local timezone.
+ */
+export function fromServerDateFormat(date: string): Date {
+    return new Date(date.slice(0, 19));
 }
 
 export function getItemLabel(item: IArticle): string {

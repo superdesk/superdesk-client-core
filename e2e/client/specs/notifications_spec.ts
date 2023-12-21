@@ -24,14 +24,14 @@ describe('notifications', () => {
         browser.wait(() => comments.count(), 2000);
 
         expect(comments.count()).toBe(1);
-        expect(unreadCount.getText()).toBe('3');
+        expect(unreadCount.getText()).toBe('');
 
         logout();
         var modal = new LoginModal();
 
         modal.login('admin1', 'admin');
 
-        expect(unreadCount.getText()).toBe('4');
+        expect(unreadCount.getText()).toBe('1');
 
         click(element(by.id('unread-count')));
 

@@ -39,7 +39,7 @@ export class MediaPreview extends React.Component<IProps> {
                         })()}
                         {
                             item.description_text?.trim().length < 1 ? null : (
-                                <p style={{paddingTop: 10}}>{item.description_text}</p>
+                                <p style={{paddingBlockStart: 10}}>{item.description_text}</p>
                             )
                         }
                     </div>

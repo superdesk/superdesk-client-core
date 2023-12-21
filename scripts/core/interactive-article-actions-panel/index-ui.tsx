@@ -9,12 +9,14 @@ import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
 import {DuplicateToTab} from './actions/duplicate-to-tab';
-import {PublishTab} from './actions/publish-tab';
+import {WithPublishTab} from './actions/publish-tab';
 import {logger} from 'core/services/logger';
 import {SendCorrectionTab} from './actions/send-correction-tab';
 import {FetchToTab} from './actions/fetch-to-tab';
 import {UnspikeTab} from './actions/unspike-tab';
 import {IArticleActionInteractive, IPanelAction} from './interfaces';
+
+const singleColumnWidthRem = 40; // rem
 
 const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
 
@@ -72,116 +74,164 @@ export class InteractiveArticleActionsPanel
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
 
-        return (
-            <Panel markupV2={markupV2}>
-                <PanelHeader markupV2={markupV2}>
-                    <div className="space-between" style={{width: '100%', paddingRight: 10}}>
-                        <TabList
-                            tabs={
-                                tabs.map((id) => ({id, label: getTabLabel(id)}))
-                            }
-                            selectedTabId={activeTab}
-                            onChange={(tab: IArticleActionInteractive) => {
-                                this.setState({
-                                    activeTab: tab,
-                                });
-                            }}
-                        />
+        const filteredTabs = tabs.filter((tab) => {
+            if (tab === 'publish') {
+                const item = items[0]; // only one item is supported in publishing tab
+                const notForPublication = item?.flags?.marked_for_not_publication ?? false;
 
-                        <Button
-                            text={gettext('Close')}
-                            onClick={() => {
-                                onClose();
-                            }}
-                            iconOnly
-                            icon="close-small"
-                            size="small"
-                            shape="round"
-                            style="hollow"
-                        />
-                    </div>
-                </PanelHeader>
+                return notForPublication !== true;
+            } else {
+                return true;
+            }
+        });
 
-                {(() => {
-                    if (activeTab === 'publish') {
-                        if (items.length !== 1) {
-                            logger.error(new Error('Publishing multiple items from authoring pane is not supported'));
+        const panelHeader = (
+            <PanelHeader markupV2={markupV2}>
+                <div className="space-between" style={{width: '100%', paddingRight: 10}}>
+                    <TabList
+                        tabs={filteredTabs.map((id) => ({id, label: getTabLabel(id)}))}
+                        selectedTabId={activeTab}
+                        onChange={(tab: IArticleActionInteractive) => {
+                            this.setState({
+                                activeTab: tab,
+                            });
+                        }}
+                        data-test-id="tabs"
+                    />
 
-                            return null;
-                        }
-
-                        const item = items[0];
-
-                        return (
-                            <PublishTab
-                                onDataChange={onDataChange}
-                                onError={onError}
-                                item={item}
-                                closePublishView={onClose}
-                                markupV2={markupV2}
-                                handleUnsavedChanges={
-                                    () => handleUnsavedChanges([item]).then((res) => res[0])
-                                }
-                            />
-                        );
-                    } if (activeTab === 'correct') {
-                        if (items.length !== 1) {
-                            logger.error(new Error('Correcting multiple items from authoring pane is not supported'));
-
-                            return null;
-                        }
-
-                        const item = items[0];
-
-                        return (
-                            <SendCorrectionTab
-                                item={item}
-                                closePublishView={onClose}
-                                markupV2={markupV2}
-                                handleUnsavedChanges={
-                                    () => handleUnsavedChanges([item]).then((res) => res[0])
-                                }
-                            />
-                        );
-                    } else if (activeTab === 'send_to') {
-                        return (
-                            <SendToTab
-                                items={items}
-                                closeSendToView={onClose}
-                                handleUnsavedChanges={handleUnsavedChanges}
-                                markupV2={markupV2}
-                            />
-                        );
-                    } else if (activeTab === 'fetch_to') {
-                        return (
-                            <FetchToTab
-                                items={items}
-                                closeFetchToView={onClose}
-                                handleUnsavedChanges={handleUnsavedChanges}
-                                markupV2={markupV2}
-                            />
-                        );
-                    } if (activeTab === 'duplicate_to') {
-                        return (
-                            <DuplicateToTab
-                                items={items}
-                                closeDuplicateToView={onClose}
-                                markupV2={markupV2}
-                            />
-                        );
-                    } if (activeTab === 'unspike') {
-                        return (
-                            <UnspikeTab
-                                items={items}
-                                closeUnspikeView={onClose}
-                                markupV2={markupV2}
-                            />
-                        );
-                    } else {
-                        return assertNever(activeTab);
-                    }
-                })()}
-            </Panel>
+                    <Button
+                        text={gettext('Close')}
+                        onClick={() => {
+                            onClose();
+                        }}
+                        iconOnly
+                        icon="close-small"
+                        size="small"
+                        shape="round"
+                        style="hollow"
+                        data-test-id="close"
+                    />
+                </div>
+            </PanelHeader>
         );
+
+        function PanelWithHeader({columnCount = 1, children}: {columnCount?: number, children: React.ReactNode}) {
+            return (
+                <Panel
+                    width={`${singleColumnWidthRem * columnCount}rem`}
+                    markupV2={markupV2}
+                    data-test-id="interactive-actions-panel"
+                >
+                    {panelHeader}
+                    {children}
+                </Panel>
+            );
+        }
+
+        if (activeTab === 'publish') {
+            if (items.length !== 1) {
+                // this block should never run, but I'm handling it anyway just in case
+
+                const error = gettext('Publishing multiple items from authoring pane is not supported');
+
+                logger.error(new Error(error));
+
+                return (
+                    <div>{error}</div>
+                );
+            }
+
+            const item = items[0]; // only one item is supported in publishing tab
+
+            return (
+                <WithPublishTab
+                    onDataChange={onDataChange}
+                    onError={onError}
+                    item={item}
+                    closePublishView={onClose}
+                    markupV2={markupV2}
+                    handleUnsavedChanges={
+                        () => handleUnsavedChanges([item]).then((res) => res[0])
+                    }
+                >
+                    {({columnCount, content}) => (
+                        <PanelWithHeader columnCount={columnCount}>
+                            {content}
+                        </PanelWithHeader>
+                    )}
+                </WithPublishTab>
+            );
+        } else if (activeTab === 'correct') {
+            if (items.length !== 1) {
+                // this block should never run, but I'm handling it anyway just in case
+
+                const error = gettext('Correcting multiple items from authoring pane is not supported');
+
+                logger.error(new Error(error));
+
+                return (
+                    <div>{error}</div>
+                );
+            }
+
+            const item = items[0]; // only one item is supported in correction tab
+
+            return (
+                <PanelWithHeader>
+                    <SendCorrectionTab
+                        item={item}
+                        closePublishView={onClose}
+                        markupV2={markupV2}
+                        handleUnsavedChanges={
+                            () => handleUnsavedChanges([item]).then((res) => res[0])
+                        }
+                    />
+                </PanelWithHeader>
+            );
+        } else if (activeTab === 'send_to') {
+            return (
+                <PanelWithHeader>
+                    <SendToTab
+                        items={items}
+                        closeSendToView={onClose}
+                        handleUnsavedChanges={handleUnsavedChanges}
+                        markupV2={markupV2}
+                    />
+                </PanelWithHeader>
+            );
+        } else if (activeTab === 'fetch_to') {
+            return (
+                <PanelWithHeader>
+                    <FetchToTab
+                        items={items}
+                        closeFetchToView={onClose}
+                        handleUnsavedChanges={handleUnsavedChanges}
+                        markupV2={markupV2}
+                    />
+                </PanelWithHeader>
+            );
+        } else if (activeTab === 'duplicate_to') {
+            return (
+                <PanelWithHeader>
+                    <DuplicateToTab
+                        items={items}
+                        closeDuplicateToView={onClose}
+                        markupV2={markupV2}
+                    />
+                </PanelWithHeader>
+            );
+        } else if (activeTab === 'unspike') {
+            return (
+                <PanelWithHeader>
+                    <UnspikeTab
+                        items={items}
+                        closeUnspikeView={onClose}
+                        markupV2={markupV2}
+                    />
+                </PanelWithHeader>
+            );
+        } else {
+            return assertNever(activeTab);
+        }
     }
 }

@@ -141,7 +141,7 @@ ToggleBox.propTypes = {
     invalid: PropTypes.bool,
     noMargin: PropTypes.bool,
     forceScroll: PropTypes.bool,
-    paddingTop: PropTypes.bool,
+    paddingBlockStart: PropTypes.bool,
 };
 
 ToggleBox.defaultProps = {

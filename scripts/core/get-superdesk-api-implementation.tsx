@@ -61,7 +61,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
-import {httpRequestJsonLocal, httpRequestRawLocal} from './helpers/network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -102,6 +102,7 @@ import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
 import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
+import {showModal} from '@superdesk/common';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -268,6 +269,7 @@ export function getSuperdeskApiImplementation(
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
+        httpRequestVoidLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
@@ -278,6 +280,7 @@ export function getSuperdeskApiImplementation(
                 patch: patchArticle,
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
+                itemAction: (article) => sdApi.article.itemAction(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
@@ -322,6 +325,9 @@ export function getSuperdeskApiImplementation(
                         .then((response) => response._items)
                 ),
             },
+            templates: {
+                getUserTemplates: sdApi.templates.getUserTemplates,
+            },
         },
         state: applicationState,
         instance: {
@@ -339,6 +345,9 @@ export function getSuperdeskApiImplementation(
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },
                 prepareExternalImageForDroppingToEditor,
+            },
+            showModal: (Component: React.ComponentType<{closeModal(): void}>, containerClass?: string) => {
+                return showModal(Component, containerClass);
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string, title?: string) => new Promise((resolve) => {
@@ -437,6 +446,7 @@ export function getSuperdeskApiImplementation(
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
         privileges: {
+            getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => sdApi.user.hasPrivilege(privilege),
         },
         preferences: {
@@ -463,7 +473,7 @@ export function getSuperdeskApiImplementation(
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
             getSessionId: () => session.sessionId,
-            getCurrentUserId: () => session.identity._id,
+            getCurrentUserId: () => sdApi.user.getCurrentUserId(),
         },
         browser: {
             location: {

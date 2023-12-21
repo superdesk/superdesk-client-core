@@ -21,6 +21,8 @@ jobs:
 
     - run: npm ci
     - run: npm run test
+      env:
+        TZ: "Europe/Prague"
 
   e2e:
     runs-on: ubuntu-latest
@@ -62,3 +64,8 @@ jobs:
       with:
         name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png
+
+    - name: Server Logs
+      if: ${{ failure() }}
+      run: docker-compose logs superdesk
+      working-directory: e2e/server

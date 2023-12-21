@@ -149,7 +149,8 @@ class GlobalSearch {
 
             itemElem.click();
 
-            browser.wait(() => itemElem.getAttribute('class').then((classes) => classes.includes('active')), 500);
+            browser.wait(ECE.attributeContains(itemElem, 'class', 'active'));
+
             browser.sleep(350); // there is timeout on click
         };
 
@@ -181,7 +182,7 @@ class GlobalSearch {
             browser.sleep(100);
             const btn = itemElem.element(by.className('icn-btn'));
 
-            browser.wait(ECE.elementToBeClickable(btn), 1000);
+            browser.wait(ECE.elementToBeClickable(btn));
             btn.click();
 
             const menu = element(by.css('.dropdown__menu.open'));

@@ -29,3 +29,12 @@ export interface ISendToDestinationPersonalSpace {
 }
 
 export type ISendToDestination = ISendToDestinationDesk | ISendToDestinationPersonalSpace;
+
+export interface IHocInteractivePanelResult {
+    columnCount: number;
+    content: React.ReactNode;
+}
+
+export interface IPropsHocInteractivePanelTab {
+    children(args: IHocInteractivePanelResult): JSX.Element;
+}

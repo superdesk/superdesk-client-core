@@ -2,10 +2,11 @@ import React from 'react';
 import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
-import {IRestApiResponse, ITemplate} from 'superdesk-api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
+import {
+    ITemplate,
+} from 'superdesk-api';
 import {DropdownOption} from './dropdown-option';
-import {nameof} from 'core/helpers/typescript-helpers';
+import {sdApi} from 'api';
 
 interface IProps {
     onSelect(template: ITemplate): void;
@@ -23,27 +24,6 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
         this.state = {
             searchString: '',
         };
-
-        this.fetchData = this.fetchData.bind(this);
-    }
-
-    fetchData(pageToFetch: number, pageSize: number, abortSignal?: AbortSignal): Promise<IRestApiResponse<ITemplate>> {
-        return httpRequestJsonLocal<IRestApiResponse<ITemplate>>({
-            method: 'GET',
-            path: '/content_templates',
-            urlParams: {
-                max_results: pageSize,
-                page: pageToFetch,
-                sort: nameof<ITemplate>('template_name'),
-                where: this.state.searchString.length < 1 ? undefined : {
-                    [nameof<ITemplate>('template_name')]: {
-                        $regex: this.state.searchString,
-                        $options: '-i',
-                    },
-                },
-            },
-            abortSignal,
-        });
     }
 
     render() {
@@ -70,14 +50,15 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     </Spacer>
                     <SpacerBlock v gap="4" />
                     <Input
-                        type="text"
-                        label=""
                         inlineLabel
                         labelHidden
+                        type="text"
+                        label=""
                         value={this.state.searchString}
                         onChange={(val) => {
                             this.setState({searchString: val});
                         }}
+                        data-test-id="search"
                     />
                     <div className="content-create-dropdown--spacer" />
                 </div>
@@ -85,8 +66,15 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                 <div style={{height: '100%', overflow: 'auto'}}>
                     <WithPagination
                         key={this.state.searchString}
-                        getItems={(pageNo, pageSize, signal) => this.fetchData(pageNo, pageSize, signal)
-                            .then((res) => ({items: res._items, itemCount: res._meta.total}))
+                        getItems={(pageNo, pageSize, signal) =>
+                            sdApi.templates.getUserTemplates(
+                                pageNo,
+                                pageSize,
+                                'create',
+                                this.state.searchString,
+                                signal,
+                            )
+                                .then((res) => ({items: res._items, itemCount: res._meta.total}))
                         }
                     >
                         {

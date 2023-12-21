@@ -1,10 +1,8 @@
 import {includes} from 'lodash';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
 import {sdApi} from 'api';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
-
-export type IArticleAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
 /**
  * @ngdoc service
@@ -24,7 +22,7 @@ export class AuthoringWorkspaceService {
     private $window: any;
 
     item: any;
-    action: IArticleAction;
+    action: IAuthoringActionType;
     state: any;
 
     widgetVisibilityCheckerFuntions: Array<(arg) => Promise<boolean>>;
@@ -101,12 +99,8 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {
-            _id: IArticle['_id'],
-            _type?: IArticle['_type'],
-            state?: IArticle['state']
-        },
-        action?: IArticleAction,
+        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
+        action?: IAuthoringActionType,
     ) {
         return sdApi.article.edit(item, action);
     }
@@ -313,7 +307,7 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action: IArticleAction, repo?, state?) {
+    private authoringOpen(itemId, action: IAuthoringActionType, repo?, state?) {
         return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
                 this.item = item;

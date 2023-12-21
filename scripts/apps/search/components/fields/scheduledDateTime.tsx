@@ -30,7 +30,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
             return (
                 <span
                     key="scheduledDateTime"
-                    style={{color: '#da7200', marginRight: 4}}
+                    style={{color: '#da7200', marginInlineEnd: 4}}
                     title={title}
                 >
                     {datetimeFormatted.short}

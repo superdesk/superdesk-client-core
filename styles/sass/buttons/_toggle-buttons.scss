@@ -15,7 +15,7 @@ $toggleButtonBorderColorHover: var(--sd-colour-line--strong);
 //     border: 1px solid $toggleButtonBorderColor;
 //     height: 26px;
 //     line-height: 20px;
-//     margin-bottom: 4px;
+//     margin-block-end: 4px;
 //     @include transition(all 0.2s ease-out);
 //     &:hover {
 //         text-decoration: none;
@@ -79,7 +79,7 @@ $toggleButtonBorderColorHover: var(--sd-colour-line--strong);
     }
     .button-list {
         .toggle-button, .btn {
-            margin-bottom: 0;
+            margin-block-end: 0;
        } 
     }
 }
@@ -119,8 +119,8 @@ $checkBtnColorActive: #78909C;
             background: url(~images/checkmark-big-full.png) no-repeat;
             background-size: 42px;
             background-position: 0 -2px;
-            top: 0; bottom: 0;
-            right: 8px;
+            inset-block-start: 0; inset-block-end: 0;
+            inset-inline-end: 8px;
             @include opacity(16);
         }
     }

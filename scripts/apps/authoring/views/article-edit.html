@@ -245,7 +245,7 @@
     </div>
 </div>
 
-<div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; top: -1000px; left: -1000px; height: 150px; width: 500px; display: block;"></div>
+<div contenteditable="true" id="editor3Tansa" tansa-proofing="true" style="position: fixed; inset-block-start: -1000px; inset-inline-start: -1000px; height: 150px; width: 500px; display: block;"></div>
 
 <div class="field body"
      ng-if="schema.body_html"
@@ -341,7 +341,7 @@
 
             <div class="media-container__action-bar" ng-if="_editable">
                 <div class="flex-grid flex-grid--medium-3">
-                    <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                    <div class="flex-grid__item sd-text__left" style="text-align: start;">
                         <sd-video-thumbnail-editor data-item="item" data-on-change="autosave"></sd-video-thumbnail-editor>
                     </div>
                     <div class="flex-grid__item">
@@ -383,6 +383,7 @@
          data-tabindex="editor.description_text.order"
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
          data-limit="schema.description_text.maxlength"
+         data-plain-text="true"
     ></div>
 </div>
 
@@ -725,30 +726,6 @@
 </div>
 
 <!-- Slugline -->
-<div class="field"
-     sd-validation-error="error.slugline"
-     data-required="schema.slugline.required"
-     ng-if="schema.slugline && editor['slugline'].section === 'content'"
-     sd-width="{{editor.slugline.sdWidth}}"
-     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
-     order="{{editor.slugline.order}}">
-    <label for="slugline" class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength">
-        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
-    </span>
-    <sd-validate-characters ng-if="schema.slugline.validate_characters"
-        class="disallowed-char-error"
-        item="item.slugline"
-        field="'slugline'"></sd-validate-characters>
-    <input type="text" class="slugline"
-       id="slugline"
-       data-language="item.language"
-       ng-model="item.slugline"
-       ng-change="autosave(item)"
-       ng-disabled="!_editable || schema.slugline.readonly === true"
-       ng-trim="false"
-       tabindex="{{editor.slugline.order}}">
-</div>
 <div class="field"
      sd-width="{{editor.slugline.sdWidth|| 'full'}}"
      ng-if="schema.slugline && editor['slugline'].section === 'content'"

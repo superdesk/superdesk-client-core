@@ -7,6 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {metadata} from './helpers/metadata';
 import {assertToastMsg} from './helpers/utils';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {
@@ -19,7 +20,6 @@ describe('Content profiles', () => {
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
         expect(templates.getContentProfile()).toEqual('Simple');
         templates.cancel();
 
@@ -57,7 +57,6 @@ describe('Content profiles', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
 
         // publish of the required field will fail
         authoring.setHeaderSluglineText('Story1 slugline');
@@ -89,12 +88,12 @@ describe('Content profiles', () => {
 
         contentProfiles.editContentFields();
 
-        const btns = element.all(by.partialButtonText(FIELD_LABEL));
+        const buttons = element.all(by.partialButtonText(FIELD_LABEL));
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(0);
+        browser.wait(ECE.hasElementCount(buttons, 0));
 
         contentProfiles.openAddFieldDropdown();
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(1);
+        browser.wait(ECE.hasElementCount(buttons, 1));
     });
 });

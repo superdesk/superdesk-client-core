@@ -8,13 +8,18 @@ services:
             - e2e
 
     mongo:
-        image: mongo:4
+        image: mongo:4.4
         ports:
             - "27017:27017"
         networks:
             - e2e
+        environment:
+            - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:
             - /data/db
+        volumes:
+          - ./mongo-rs-initialize.js:/docker-entrypoint-initdb.d/mongo-rs-initialize.js:ro
+        command: --replSet rs0
 
     elastic:
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
@@ -24,6 +29,7 @@ services:
             - e2e
         environment:
             - discovery.type=single-node
+            - action.auto_create_index=false
         tmpfs:
             - /usr/share/elasticsearch/data
 
@@ -45,6 +51,9 @@ services:
             - WEB_WORKERS=2
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
+        volumes:
+          - ./dump:/opt/superdesk/dump:rw
+
 networks:
     e2e:
         driver: bridge

@@ -48,7 +48,15 @@ export function getFieldContainer(
                             }}
                         >
                             <Spacer h gap="8" noGrow>
-                                <span>{field.name}</span>
+                                <span>
+                                    {field.fieldConfig.required && (
+                                        <span
+                                            className="sd-font-size--x-small"
+                                            style={{color: 'var(--sd-colour-alert)'}}
+                                        >* </span>
+                                    )}
+                                    {field.name}
+                                </span>
                                 <span>{toggle}</span>
                             </Spacer>
                         </span>

@@ -85,7 +85,7 @@ export class Comment extends React.Component<any, any> {
 
                     {
                         isReply !== false ? null : (
-                            <div className="editor-popup__content-block" style={{paddingBottom: 0}}>
+                            <div className="editor-popup__content-block" style={{paddingBlockEnd: 0}}>
                                 <div className="space-between editor-popup__info-bar">
                                     <span className="label">{gettext('Comment')}</span>
                                     {this.props.inlineActions || null}

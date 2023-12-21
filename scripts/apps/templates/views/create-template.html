@@ -5,12 +5,20 @@
 </div>
 
 <div class="modal__body">
-    <form name="templateForm">
+    <form name="templateForm" data-test-id="save-as-template">
         <fieldset>
             <div class="field">
                 <label for="template-name" translate>Name</label>
                 <div class="control">
-                    <input type="text" id="template-name" name="name" required ng-model="template.name" ng-maxlength="40">
+                    <input
+                        type="text"
+                        id="template-name"
+                        name="name"
+                        required
+                        ng-model="template.name"
+                        ng-maxlength="40"
+                        data-test-id="name-input"
+                    />
                     <div class="error" ng-show="template._issues.template_name"
                         translate>Sorry, but template name must be unique.</div>
                     <em class="info" ng-show="!template.willCreateNew()" translate>It will update existing template.</em>
@@ -20,12 +28,12 @@
             </div>
 
             <div ng-if="privileges.content_templates">
-                <div class="field">                
+                <div class="field">
                     <div class="control">
                         <sd-check ng-model="template.is_public">Desk template</sd-check>
                     </div>
                 </div>
-    
+
                 <div class="field" ng-if="template.is_public !== false">
                     <label for="template-desk" translate>Desk</label>
                     <div class="control">

@@ -155,6 +155,19 @@ export function ArticleEditDirective(
                     }
                 }
 
+                // Needed only for authoring Angular. In authoring react we have a generic
+                // event ('resource:updated') which listens to all item changes.
+                scope.$on('author_approval:updated', (_event, extra) => {
+                    if (extra.item_id === scope.item?._id) {
+                        if (scope.item.extra == null) {
+                            scope.item.extra = {};
+                        }
+
+                        scope.item.extra.publish_sign_off = extra.new_sign_off;
+                        scope.$apply();
+                    }
+                });
+
                 scope.$watch('item.language', () => {
                     scope.monthNames = getMonthNamesShort(scope.item.language ?? appConfig.default_language)
                         .map((label, i) => ({id: i.toString(), label: label}));
@@ -410,7 +423,7 @@ export function ArticleEditDirective(
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
-                        scope.refreshTrigger++;
+                        scope.refresh();
                     }
 
                     scope.refresh(); // reload footer editorState from HTML that was set here

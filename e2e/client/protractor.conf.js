@@ -1,6 +1,7 @@
 /* eslint-disable comma-dangle */
 
 var path = require('path');
+const execSync = require('child_process').execSync;
 
 function getChromeOptions() {
     var chromeOptions = {
@@ -42,7 +43,7 @@ var config = {
     framework: 'jasmine2',
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 200000,
+        defaultTimeoutInterval: 300000,
     },
 
     capabilities: {
@@ -55,6 +56,16 @@ var config = {
     chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
 
     onPrepare: function() {
+        execSync(
+            `
+                echo "chrome version:" && $CHROME_BIN --version
+                echo "\n"
+                echo "webdriver-manager version:" && npx webdriver-manager version
+                echo "\n"
+            `,
+            {stdio: 'inherit'},
+        );
+
         require('./specs/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
 
         // so it can be used without import in tests
@@ -73,6 +84,7 @@ var config = {
             this.specDone = function(result) {
                 if (result.failedExpectations.length > 0) {
                     browser.screenshot(result.fullName.replace(/[^\w]+/g, '-'));
+                    require('./specs/helpers/utils').printLogs();
                 }
             };
         }

@@ -3,10 +3,10 @@
 
 .monitoring {
     position: absolute;
-    top: $nav-height;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset-block-start: $nav-height;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    inset-block-end: 0;
 
     .sortbar.sortbar-custom-sort-groups {
         .dropdown {
@@ -16,7 +16,7 @@
                 font-weight: 300;
                 font-style: italic;
                 color: $grayLight;
-                margin-left: 1em;
+                margin-inline-start: 1em;
             }
         }
 
@@ -26,16 +26,16 @@
     }
 
     .subnav {
-        top: 0;
+        inset-block-start: 0;
 
         .dropdown {
             .dropdown {
                 min-width: 120px;
-                float: right;
+                float: inline-end;
             }
             .direction {
                 line-height: 18px;
-                margin-left: 15px;
+                margin-inline-start: 15px;
             }
         }
 
@@ -51,13 +51,13 @@
     }
 
     .main-section {
-        top: 0;
+        inset-block-start: 0;
         .content-list {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            inset-block-end: 0;
             overflow-y: auto;
             @include transition(all .3s);
             @include border-box();
@@ -67,7 +67,7 @@
                 flex-direction: column;
             }
             .list {
-                padding-top: 9px
+                padding-block-start: 9px
             }
             .stage {
                 padding: 0;
@@ -96,7 +96,7 @@
                     box-shadow: 0 0 10px 0 var(--sd-colour-interactive);
                 }
                 .list-view {
-                    margin-bottom: 0;
+                    margin-block-end: 0;
                     // &.list-without-items {
                     //     li {
                     //         height: 40px;
@@ -141,9 +141,9 @@
         .content-item-preview {
             position: absolute;
             z-index: 1;
-            top: 0;
-            right: 0;
-            bottom: 0;
+            inset-block-start: 0;
+            inset-inline-end: 0;
+            inset-block-end: 0;
             width: $sidepreview-width + 160;
             @media only screen and (max-width : 1430px) {
                 width: $sidepreview-width - 40;
@@ -170,19 +170,19 @@
                     height: auto;
                     position: absolute;
                     overflow: visible;
-                    top: 9.6rem;
-                    right:0;
-                    bottom: 0;
+                    inset-block-start: 9.6rem;
+                    inset-inline-end:0;
+                    inset-block-end: 0;
                     width: 0;
                     z-index: 3;
                     .content-item-preview {
                         width: $sidepreview-width - 80;
                         transition: all ease-in-out 0.2s;
                         overflow-y: visible !important;
-                        right: 80 - $sidepreview-width - 4;
+                        inset-inline-end: 80 - $sidepreview-width - 4;
                         box-shadow: inset 3px 0 2px -1px rgba(0, 0, 0, 0.12), 2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
                         &.shift {
-                            right:0;
+                            inset-inline-end:0;
                             box-shadow: -2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
                         }
                         .shift-preview__toggle {
@@ -200,7 +200,7 @@
         }
         &.search-page-container {
             .content-item-preview {
-            top: $nav-height;
+            inset-block-start: $nav-height;
             }
         }
         &.search {
@@ -224,8 +224,8 @@
     width: 24px;
     height: 48px;
     padding: 0;
-    top: 0;
-    right: -24px;
+    inset-block-start: 0;
+    inset-inline-end: -24px;
     border: 0;
     line-height: 0;
     opacity: .65;
@@ -241,7 +241,7 @@
         i { color: $white; }
     }
     &.shift {
-        top: 1px;
+        inset-block-start: 1px;
         @include border-radius(2px 0 0 2px);
         @include box-shadow(-1px 0px 7px 0px rgba(0, 0, 0, 0.3));
         @include rotate(180deg);
@@ -300,11 +300,11 @@
 .notification-container {
     display: inline-flex !important;
     vertical-align: sub;
-    margin-top: 2px;
+    margin-block-start: 2px;
 }
 .monitoring-dropdown {
     .dropdown__menu {
-        margin-top: 5px;
+        margin-block-start: 5px;
         max-width: 220px !important;
     }
 
@@ -326,12 +326,12 @@
     .acknowledge {
         width: auto;
         display: inline;
-        float: right;
+        float: inline-end;
     }
 
     .title {
-        padding-bottom: 6px;
-        margin-left: 15px;
+        padding-block-end: 6px;
+        margin-inline-start: 15px;
         @include text-semibold();
         text-transform: uppercase;
         font-size: 13px;
@@ -341,14 +341,14 @@
     li {
         display: block;
         padding: 5px 15px 5px 20px;
-        border-bottom: 1px solid var(--sd-colour-line--light);
+        border-block-end: 1px solid var(--sd-colour-line--light);
 
         .slugline {
             font-weight: 500;
             color: #216278;
             text-transform: uppercase;
             font-size: 12px;
-            margin-right: 10px;
+            margin-inline-end: 10px;
             white-space: nowrap;
         }
 
@@ -357,15 +357,15 @@
         }
 
         .location {
-            border-top: 1px solid #ebebeb;
-            margin-top: 10px;
+            border-block-start: 1px solid #ebebeb;
+            margin-block-start: 10px;
         }
 
         .sender {
-            margin-top: 10px;
+            margin-block-start: 10px;
             span {
                 @include text-semibold();
-                margin-right: 5px;
+                margin-inline-end: 5px;
                 font-size: 12px;
             }
         }
@@ -376,8 +376,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-left: 2rem;
-    margin-right: 2rem;
+    margin-inline-start: 2rem;
+    margin-inline-end: 2rem;
     font-size: 1.5rem;
     .stage-group__split {
         padding: 0 0.4rem 0 0.8rem;
@@ -385,7 +385,7 @@
     }
     .stage-group__badge {
         padding: 0.4rem 0.8rem;
-        margin-left: 1rem;
+        margin-inline-start: 1rem;
     }
     .dropdown.open {
         .navbtn {

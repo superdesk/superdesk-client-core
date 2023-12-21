@@ -8,6 +8,7 @@ interface IProps {
     value: Date;
     onChange(value: Date): void;
     required?: boolean;
+    'data-test-id'?: string;
 }
 
 function getTimeISO(date: Date | null): string {
@@ -22,11 +23,31 @@ function getTimeISO(date: Date | null): string {
 }
 
 export class DateTimePicker extends React.PureComponent<IProps> {
+    /**
+     * time picker sometimes sends empty string in onChange handler
+     * and expects that to be passed as value on next render
+     * otherwise it skips a character
+     */
+    private applyTimePickerHack: boolean; // TODO: convert to stateful component; sync via state reset(key)
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.applyTimePickerHack = false;
+    }
+
     render() {
         const {value} = this.props;
 
         return (
-            <Spacer h gap="8" noWrap alignItems="center" justifyContent="space-evenly" >
+            <Spacer
+                h
+                gap="8"
+                noWrap
+                alignItems="center"
+                justifyContent="space-evenly"
+                data-test-id={this.props['data-test-id']}
+            >
                 <DatePicker
                     label=""
                     inlineLabel
@@ -36,13 +57,22 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                         this.props.onChange(val);
                     }}
                     dateFormat={appConfig.view.dateformat}
+                    data-test-id="date-input"
                 />
                 <TimePicker
                     label=""
                     inlineLabel
                     labelHidden
-                    value={getTimeISO(value)}
+                    value={this.applyTimePickerHack ? '' : getTimeISO(value)}
                     onChange={(timeNext) => {
+                        if (timeNext === '') {
+                            this.applyTimePickerHack = true;
+                            this.forceUpdate();
+                            return;
+                        }
+
+                        this.applyTimePickerHack = false;
+
                         const [hoursStr, minutesStr] = timeNext.split(':');
                         const copiedDate = new Date(value?.getTime() ?? new Date());
 
@@ -52,6 +82,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                         this.props.onChange(copiedDate);
                     }}
                     required={this.props.required}
+                    data-test-id="time-input"
                 />
                 <Button
                     text={gettext('Clear')}

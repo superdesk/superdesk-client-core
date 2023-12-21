@@ -18,7 +18,7 @@ $editor-styleButton-size: 			3rem;
 	font-size: 13px !important;
 	font-style: normal;
 	padding: 0 10px;
-	border-top: 1px solid $editor-neutral-border;
+	border-block-start: 1px solid $editor-neutral-border;
 	height: 0;
 	min-height: auto;
 	opacity: 0;
@@ -32,13 +32,13 @@ $editor-styleButton-size: 			3rem;
 		opacity: 1;
 	}
 	a {
-		margin-left: 10px;
+		margin-inline-start: 10px;
 		cursor: pointer;
 		color: $editor-neutral-color;
 		font-weight: 400;
 		&:hover {
 			color: var(--sd-colour-interactive);
-			border-bottom: 1px dotted var(--sd-colour-interactive);
+			border-block-end: 1px dotted var(--sd-colour-interactive);
 		}
 	}
 }
@@ -51,7 +51,7 @@ $editor-styleButton-size: 			3rem;
 		position: relative;
 		transition: box-shadow 0.3s ease, border-color 0.3s ease;
 		&.no-toolbar {
-			padding-top: 5px;
+			padding-block-start: 5px;
 		}
 		iframe {
 			width: 97%;
@@ -60,7 +60,7 @@ $editor-styleButton-size: 			3rem;
 		// 	font-size: 13px;
 		// 	color: $editor-neutral-color;
 		// 	padding: 0 10px;
-		// 	border-top: 1px solid rgba(150,150,150,0.25);
+		// 	border-block-start: 1px solid rgba(150,150,150,0.25);
 		// 	height: 0;
 		// 	opacity: 0;
 		// 	transition: all .2s ease-out;
@@ -72,12 +72,12 @@ $editor-styleButton-size: 			3rem;
 		// 	}
 
 		// 	a {
-		// 		margin-left: 10px;
+		// 		margin-inline-start: 10px;
 		// 		cursor: pointer;
 		// 		color: $editor-neutral-color;
 		// 		&:hover {
 		// 			color: var(--sd-colour-interactive);
-		// 			border-bottom: 1px dotted var(--sd-colour-interactive);
+		// 			border-block-end: 1px dotted var(--sd-colour-interactive);
 		// 		}
 		// 	}
 		// }
@@ -130,6 +130,7 @@ $editor-styleButton-size: 			3rem;
 			border-radius: 2px;
 			box-shadow: 0 1px 6px rgba(0, 0, 0, 0.26), 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(123, 123, 123, 0.3) !important;
 			transition: 0.3s linear box-shadow;
+			flex-grow: 1;
 			&:hover {
 				box-shadow: 0 1px 8px rgba(0, 0, 0, 0.46), 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(123, 123, 123, 0.6) !important;
 				.image-block__remove {
@@ -169,13 +170,13 @@ $editor-styleButton-size: 			3rem;
 		}
 
 		.image-block__title {
-			margin-bottom: 1.6rem;
+			margin-block-end: 1.6rem;
 			font-size: 1.5rem;
 			font-weight: 500;
 		}
 		.image-block__description {
-			margin-top: 1rem;
-			margin-bottom: 0.2rem;
+			margin-block-start: 1rem;
+			margin-block-end: 0.2rem;
 			font-weight: 300;
 		}
 		.image-block__remove, .embed-block__remove, .embed-block__edit {
@@ -219,7 +220,7 @@ $editor-styleButton-size: 			3rem;
 			margin: 1.6rem 1.6rem 0;
 		}
 		.image-block__action-bar {
-			text-align: right;
+			text-align: end;
 			padding: 0.6rem 0 0;
 		}
 		.image-block__icons-block {
@@ -229,7 +230,7 @@ $editor-styleButton-size: 			3rem;
 			@include image-overlay_action-button;
 
 			& + .image-block__image-action {
-				margin-left: 2rem;
+				margin-inline-start: 2rem;
 			}
 		}
 
@@ -239,14 +240,14 @@ $editor-styleButton-size: 			3rem;
 				span {
 					border-color: rgba(255, 255, 255, 0.5) !important;
 					&:last-child {
-						border-bottom: none;
+						border-block-end: none;
 					}
 				}
 			}
 		}
 
 		.multi-line-quote {
-			border-left: 5px solid red;
+			border-inline-start: 5px solid red;
 			font-style: italic;
 		}
 
@@ -261,7 +262,7 @@ $editor-styleButton-size: 			3rem;
 			}
 
 			&__controls {
-				margin-bottom: 6px;
+				margin-block-end: 6px;
 
 				span {
 					background: #000;
@@ -277,7 +278,7 @@ $editor-styleButton-size: 			3rem;
 
 					&:first-child {
 						border-radius: 5px 0 0 5px;
-						border-right: 1px solid #999;
+						border-inline-end: 1px solid #999;
 					}
 
 					&:last-child {
@@ -326,7 +327,7 @@ $editor-styleButton-size: 			3rem;
 		}
 
 		.media-block {
-			text-align: left;
+			text-align: start;
 			font-family: $baseFontFamily;
 
 			&__wrapper {
@@ -338,7 +339,7 @@ $editor-styleButton-size: 			3rem;
 				font-size: 16px;
 				line-height: 1.4;
 				padding: 5px 5px 5px 0;
-				margin-bottom: 5px;
+				margin-block-end: 5px;
 				min-height: 28px;
 				background-color: transparent;
 				border: none;
@@ -365,10 +366,10 @@ $editor-styleButton-size: 			3rem;
 			margin: 8px 0 0 20px;
 			padding: 0 0 0 20px;
 
-			.public-DraftStyleDefault-depth1 {margin-left: 40px;}
-			.public-DraftStyleDefault-depth2 {margin-left: 60px;}
-			.public-DraftStyleDefault-depth3 {margin-left: 80px;}
-			.public-DraftStyleDefault-depth4 {margin-left: 100px;}
+			.public-DraftStyleDefault-depth1 {margin-inline-start: 40px;}
+			.public-DraftStyleDefault-depth2 {margin-inline-start: 60px;}
+			.public-DraftStyleDefault-depth3 {margin-inline-start: 80px;}
+			.public-DraftStyleDefault-depth4 {margin-inline-start: 100px;}
 			& > li {
 				border-bottom-width: 0.6em !important;
 			}
@@ -408,10 +409,10 @@ $editor-styleButton-size: 			3rem;
 }
 
 .Editor3-editor-single-line {
-	border-bottom: 1px solid var(--sd-colour-line--light);
+	border-block-end: 1px solid var(--sd-colour-line--light);
 	cursor: text;
 	font-size: 16px;
-	margin-bottom: 10px;
+	margin-block-end: 10px;
 }
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
@@ -419,11 +420,11 @@ $editor-styleButton-size: 			3rem;
 	padding: 10px 15px 0 15px;
 	span[style*="super"] {
 		display: inline-block;
-		margin-top: -6px;
+		margin-block-start: -6px;
 	}
 	span[style*="sub"] {
 		display: inline-block;
-		margin-bottom: -6px;
+		margin-block-end: -6px;
 	}
 }
 
@@ -440,7 +441,7 @@ $editor-styleButton-size: 			3rem;
 	min-height: 20px;
 
 	[data-block="true"] {
-        border-bottom: 1.5em solid transparent;
+        border-block-end: 1.5em solid transparent;
 
         &.unstyled__block--over {
             border-bottom-color: scale-color($blue, $alpha: -70%);
@@ -456,32 +457,32 @@ $editor-styleButton-size: 			3rem;
 		}
 	}
     .unstyled  {
-		padding-top: 0.4em;
+		padding-block-start: 0.4em;
 		border-top-width: 0;
 		transition: border-width 0.1s ease-in-out;
 	}
     .unstyled:first-child {
-        padding-top: 0.6em;
+        padding-block-start: 0.6em;
 	}
 	.unstyled:last-child {
-        padding-bottom: 1em;
+        padding-block-end: 1em;
     }
 
     .unstyled--over {
-        padding-top: 0;
-		border-top: 1.5em solid scale-color($blue, $alpha: -70%);
+        padding-block-start: 0;
+		border-block-start: 1.5em solid scale-color($blue, $alpha: -70%);
 		transition: border-width 0.1s ease-in-out;
 	}
 
 	.unstyled {
 		+ h3, + h4, + h5, + h6 {
 			&[data-block="true"] {
-				padding-top: .4em;
+				padding-block-start: .4em;
 			}
 		}
 		+ h1, + h2 {
 			&[data-block="true"] {
-				padding-top: 0.2em;
+				padding-block-start: 0.2em;
 			}
 		}
 	}
@@ -492,7 +493,7 @@ $editor-styleButton-size: 			3rem;
 }
 
 .Editor3-editor .Editor3-blockquote {
-	border-left: 5px solid #eee;
+	border-inline-start: 5px solid #eee;
 	font-style: italic;
 	margin: 16px 0;
 	padding: 10px 20px;
@@ -505,13 +506,13 @@ $editor-styleButton-size: 			3rem;
 	overflow-y: auto;
 
 	[data-block="true"] {
-		border-bottom: none;
+		border-block-end: none;
 		margin: 0 0 0.5;
 	}
 	pre {
 		position: relative;
 		white-space: pre !important;
-		padding-right: 2ch;
+		padding-inline-end: 2ch;
 		.public-DraftStyleDefault-block {
 			white-space: inherit;
 		}
@@ -524,7 +525,7 @@ $editor-styleButton-size: 			3rem;
 			top: 0;
 			bottom: 0;
 			width: var(--preCharacterLimit);
-			border-right: 1px dotted red;
+			border-inline-end: 1px dotted red;
 			z-index: 1;
 			pointer-events: none;
 		}
@@ -538,7 +539,7 @@ $editor-styleButton-size: 			3rem;
 	font-size: 14px !important;
 	user-select: none;
 	background-color: $editor-neutral-bg;
-	border-bottom: 1px solid;
+	border-block-end: 1px solid;
 	border-bottom-color: $editor-neutral-border;
 	line-height: 100% !important;
 
@@ -602,8 +603,8 @@ $editor-styleButton-size: 			3rem;
 
 .Editor3-styleButton {
 	&--short {
-		padding-right: 0.2rem;
-		margin-right: -1rem;
+		padding-inline-end: 0.2rem;
+		margin-inline-end: -1rem;
 	}
 	color: $editor-styleButton-color;
 	cursor: pointer;
@@ -682,11 +683,11 @@ $editor-styleButton-size: 			3rem;
 
 	.Editor3-editor {
 		font-size: 13px;
-		margin-bottom: 10px;
+		margin-block-end: 10px;
 
 		.public-DraftEditor-content {
-			[data-block="true"]            { margin-bottom: 0.7em; }
-			[data-block="true"]:last-child { margin-bottom: 0.3em; }
+			[data-block="true"]            { margin-block-end: 0.7em; }
+			[data-block="true"]:last-child { margin-block-end: 0.3em; }
 
 			padding: 5px 10px 0 10px;
 		}
@@ -705,8 +706,8 @@ $editor-styleButton-size: 			3rem;
 	.dropdown__menu {
 		padding: 15px;
 
-		label    { margin-bottom: 5px; }
-		textarea { margin-bottom: 10px; }
+		label    { margin-block-end: 5px; }
+		textarea { margin-block-end: 10px; }
 
 	}
 }
@@ -714,7 +715,7 @@ $editor-styleButton-size: 			3rem;
 .mentions-input {
 	width: 300px;
 	max-width: 100%;
-	margin-bottom: 10px;
+	margin-block-end: 10px;
 
 	&__suggestions__item {
 		height: auto;
@@ -839,7 +840,7 @@ $editor-styleButton-size: 			3rem;
 		p {
 			font-size: 1.4rem;
 			line-height: 140%;
-			margin-bottom: 0;
+			margin-block-end: 0;
 		}
 	}
 }
@@ -914,45 +915,6 @@ $editor-styleButton-size: 			3rem;
 
 // Style overrides for Custom fields in the article header
 
-.authoring-header__input-editor3 {
-	.Editor3-editor .public-DraftEditorPlaceholder-root,
-	.Editor3-editor .public-DraftEditor-content {
-		padding: 3px 0 2px;
-	}
-	.Editor3-root {
-		border: none !important;
-	}
-	.DraftEditor-root {
-		border-bottom: 1px solid var(--color-input-border);
-		background-color: var(--color-input-bg);
-		transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-		min-height: 32px;
-		padding: 0.4rem 0.8rem 0;
-		&:hover {
-			border-color: var(--color-input-border-hover);
-            background-color: var(--color-input-bg--hover);
-		}
-		&:focus-within {
-			background-color: var(--color-input-bg--focus);
-            box-shadow: 0 1px 0 0 #5ea9c8;
-            border-color: #5ea9c8;
-		}
-	}
-	.Editor3-editor {
-		font-family: "Roboto", Helvetica, Arial, sans-serif;
-		font-weight: 400;
-		font-size: 13px;
-
-		&.no-toolbar {
-			padding-top: 0;
-		}
-	}
-
-	.Editor3-editor .public-DraftEditor-content [data-block="true"] {
-		border-bottom: none;
-	}
-}
-
 .Editor3-editor {
 	q::before, q::after, blockquote::before, blockquote::after {
 		content: "";
@@ -976,7 +938,6 @@ $editor-styleButton-size: 			3rem;
 	border: none;
 	border-bottom: 1px solid var(--color-input-border);
 	border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
-	padding: 0 0.8rem!important;
 	font-size: 14px;
 	line-height: 30px;
 
@@ -985,7 +946,7 @@ $editor-styleButton-size: 			3rem;
 	}
 
 	.public-DraftEditor-content {
-		padding: 0;
+		padding: 0 0.8rem;
 
 		// not selector avoids drop indicators being hidden
 		[data-block="true"]:not(.unstyled__block--over) {
@@ -996,13 +957,13 @@ $editor-styleButton-size: 			3rem;
 
 .draggable-block-handle-hide {
 	position: absolute;
-	left: -30px;
+	left: -22px;
 	visibility: hidden;
 }
 
 .draggable-block-handle {
 	position: absolute;
-	left: -30px;
+	left: -22px;
 	visibility: visible;
 }
 

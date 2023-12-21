@@ -2,9 +2,14 @@
     data-text="{{environmentName}}">
     <div class="pull-left">
         <span id="hamburger-menu">
-            <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()"
-                ng-class="{'is-active': flags.menu}" aria-controls="main-menu"
-                aria-expanded="{{flags.menu ? true : false}}" aria-label="{{ :: 'Toggle main menu' | translate }}">
+            <button
+                class="collapse-nav pull-left hamburger hamburger--spin"
+                ng-click="toggleMenu()"
+                ng-class="{'is-active': flags.menu}"
+                aria-controls="main-menu"
+                aria-expanded="{{flags.menu ? true : false}}"
+                aria-label="{{ :: 'Toggle main menu' | translate }}"
+            >
                 <span class="hamburger__box">
                     <span class="hamburger__inner"></span>
                 </span>
@@ -25,13 +30,11 @@
             <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}"
                 flow="down">feature preview</span>
         </button>
-        <div style="float: right">
+        <div style="float: inline-right">
             <sd-global-menu-horizontal></sd-global-menu-horizontal>
         </div>
 
-        <button class="navbtn" ng-click="toggleTheme()">
-            <i class="icon-adjust" style="color: white"></i>
-        </button>
+        <!-- <sd-authoring-switch style="margin-right: 16px""></sd-authoring-switch> -->
 
         <button class="navbtn dropdown__toggle" ng-click="toggleNotifications()"
             aria-label="{{ 'View notifications' | translate }}">

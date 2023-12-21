@@ -75,23 +75,10 @@ export function queryElastic(
                 source,
             };
 
-            const queryString = '?' + Object.keys(query).map((key) =>
-                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`,
-            ).join('&');
-
-            return new Promise((resolve) => {
-                const xhr = new XMLHttpRequest();
-
-                xhr.open('GET', appConfig.server.url + '/' + endpoint + queryString, true);
-
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('Authorization', session.token);
-
-                xhr.onload = function() {
-                    resolve(JSON.parse(this.responseText));
-                };
-
-                xhr.send();
+            return httpRequestJsonLocal({
+                method: 'GET',
+                path: `/${endpoint}`,
+                urlParams: query,
             });
         });
 }

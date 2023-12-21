@@ -2,6 +2,8 @@ var path = require('path');
 var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
 
+process.env.TZ = "Europe/Prague";
+
 module.exports = function(config) {
     var webpackConfig = makeConfig(grunt);
 

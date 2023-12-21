@@ -18,10 +18,10 @@ export function getInitialDestination(
     const currentDeskId = sdApi.desks.getCurrentDeskId();
 
     let destinationDesk: string = (() => {
-        if (currentDeskId != null) {
-            return currentDeskId;
-        } else if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
+        if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
             return lastDestination.desk;
+        } else if (currentDeskId != null) {
+            return currentDeskId;
         } else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
@@ -83,4 +83,14 @@ export function getInitialDestination(
     };
 
     return destination;
+}
+
+export function getCurrentDeskDestination(): ISendToDestination {
+    let destinationDesk: string = sdApi.desks.getCurrentDeskId();
+
+    return {
+        type: 'desk',
+        desk: destinationDesk,
+        stage: null,
+    };
 }

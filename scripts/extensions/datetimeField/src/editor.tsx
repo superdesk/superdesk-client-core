@@ -6,6 +6,7 @@ import addMinutes from 'date-fns/addMinutes';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import {IConfig, IValueOperational} from './interfaces';
+import {getConfigWithDefaults} from './config';
 
 const {gettext, gettextPlural} = superdesk.localization;
 const {getLocaleForDatePicker} = superdesk.ui.framework;
@@ -16,6 +17,8 @@ type IProps = IEditorComponentProps<IValueOperational, IConfig, never>;
 
 export class Editor extends React.PureComponent<IProps> {
     render() {
+        const config = getConfigWithDefaults(this.props.config);
+
         const checkbox = (
             <Switch
                 label={{content: ''}}
@@ -23,7 +26,7 @@ export class Editor extends React.PureComponent<IProps> {
                 onChange={(value) => {
                     if (value) {
                         this.props.onChange(
-                            dateToServerString(addMinutes(new Date(), this.props.config.initial_offset_minutes)),
+                            dateToServerString(addMinutes(new Date(), config.initial_offset_minutes)),
                         );
                     } else {
                         this.props.onChange(null);
@@ -32,88 +35,88 @@ export class Editor extends React.PureComponent<IProps> {
             />
         );
 
+        const Container = this.props.container;
+
         if (this.props.value == null) {
             return (
-                <div>
+                <Container>
                     {checkbox}
-                </div>
+                </Container>
             );
         } else {
             const date = new Date(this.props.value);
             const hour = format(date, 'HH:mm'); // ISO8601
-            const steps = this.props.config?.increment_steps ?? [];
+            const steps = config.increment_steps;
 
             // Get the DatePicker locale using the language of this item
             const language = this.props.language ?? superdesk.instance.config.default_language;
             const datePickerLocale = getLocaleForDatePicker(language);
 
             return (
-                <Spacer h gap="8" justifyContent="start" noGrow>
-                    {checkbox}
+                <Container>
+                    <Spacer h gap="8" justifyContent="start" noGrow>
+                        {checkbox}
 
-                    <Spacer h gap="8">
-                        <DatePickerISO
-                            labelHidden
-                            inlineLabel
-                            label={gettext('Date')}
-                            dateFormat={superdesk.instance.config.view.dateformat}
-                            locale={datePickerLocale}
-                            value={this.props.value} // must be full datetime here to avoid timezone conversion
-                            onChange={(dateString) => {
-                                if (dateString === '') {
-                                    this.props.onChange(null);
-                                    return;
-                                }
-
-                                const [yearStr, monthStr, dayStr] = dateString.split('-');
-
-                                this.props.onChange(
-                                    dateToServerString(
-                                        set(
-                                            date,
-                                            {
-                                                year: parseInt(yearStr, 10),
-                                                month: parseInt(monthStr, 10) - 1,
-                                                date: parseInt(dayStr, 10),
-                                            },
-                                        ),
-                                    ),
-                                );
-                            }}
-                        />
-
-                        <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
-
-                        <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
-                            <TimePicker
+                        <Spacer h gap="8" noGrow>
+                            <DatePickerISO
                                 labelHidden
                                 inlineLabel
-                                label={gettext('Time')}
-                                required // because it's a part of the date-time
-                                value={hour}
-                                onChange={(value) => {
-                                    const [hours, minutes] = value.split(':');
+                                label={gettext('Date')}
+                                dateFormat={superdesk.instance.config.view.dateformat}
+                                locale={datePickerLocale}
+                                value={this.props.value} // must be full datetime here to avoid timezone conversion
+                                onChange={(dateString) => {
+                                    if (dateString === '') {
+                                        this.props.onChange(null);
+                                        return;
+                                    }
+
+                                    const [yearStr, monthStr, dayStr] = dateString.split('-');
 
                                     this.props.onChange(
                                         dateToServerString(
                                             set(
                                                 date,
                                                 {
-                                                    hours: parseInt(hours, 10),
-                                                    minutes: parseInt(minutes, 10),
+                                                    year: parseInt(yearStr, 10),
+                                                    month: parseInt(monthStr, 10) - 1,
+                                                    date: parseInt(dayStr, 10),
                                                 },
                                             ),
                                         ),
                                     );
                                 }}
                             />
-                        </div>
-                    </Spacer>
 
-                    {
-                        steps.length < 1
-                            ? null
-                            : (
+                            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
+
+                            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+                                <TimePicker
+                                    labelHidden
+                                    inlineLabel
+                                    required // because it's a part of the date-time
+                                    value={hour}
+                                    onChange={(value) => {
+                                        const [hours, minutes] = value.split(':');
+
+                                        this.props.onChange(
+                                            dateToServerString(
+                                                set(
+                                                    date,
+                                                    {
+                                                        hours: parseInt(hours, 10),
+                                                        minutes: parseInt(minutes, 10),
+                                                    },
+                                                ),
+                                            ),
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </Spacer>
+
+                        {
+                            steps.length < 1 && (
                                 <Spacer h gap="4" justifyContent="start" noGrow>
                                     {
                                         steps.map((step, i) => {
@@ -162,8 +165,9 @@ export class Editor extends React.PureComponent<IProps> {
                                     }
                                 </Spacer>
                             )
-                    }
-                </Spacer>
+                        }
+                    </Spacer>
+                </Container>
             );
         }
     }

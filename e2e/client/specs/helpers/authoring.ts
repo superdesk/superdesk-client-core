@@ -3,10 +3,11 @@
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor, click} from './utils';
 import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
+import {PLAIN_TEXT_TEMPLATE_NAME} from './constants';
+import {TreeSelectDriver} from './tree-select-driver';
 
 class Authoring {
     lock: any;
-    publish_button: any;
     correct_button: any;
     kill_button: any;
     close_button: any;
@@ -20,27 +21,21 @@ class Authoring {
     edit_correct_button: any;
     edit_kill_button: any;
     edit_takedown_button: any;
-    navbarMenuBtn: any;
-    newPlainArticleLink: any;
     newEmptyPackageLink: any;
     infoIconsBox: any;
     sendToButton: any;
-    sendAndContinueBtn: any;
     sendAndPublishBtn: any;
-    sendBtn: any;
     moreActionsButton: any;
     multieditButton: any;
     compareVersionsMenuItem: any;
     setCategoryBtn: any;
     getCategoryListItems: any;
-    sendItemContainer: any;
     linkToMasterButton: any;
     marked_for_legal: any;
     sms: any;
     anpa_category: any;
     subject: any;
     missing_link: any;
-    publish_panel: any;
     send_panel: any;
     fetch_panel: any;
     headline: any;
@@ -67,9 +62,7 @@ class Authoring {
     ignore: () => any;
     savePublish: () => any;
     publish: (skipConfirm?: any) => void;
-    sendAndpublish: (desk: any, skipConfirm?: any) => void;
     closeSendAndPublish: () => any;
-    publishFrom: (desk: any) => void;
     schedule: (skipConfirm?: any) => void;
     correct: () => any;
     save: () => any;
@@ -180,10 +173,10 @@ class Authoring {
     openCompareVersionsInnerDropdown: (index: any) => void;
     getInnerDropdownItemVersions: (index: any) => any;
     openItemVersionInBoard: (board: any, index: any) => void;
+    createPlainTextArticle: () => void;
 
     constructor() {
         this.lock = element(by.css('[ng-click="lock()"]'));
-        this.publish_button = element(by.buttonText('publish'));
         this.correct_button = element(by.buttonText('correct'));
         this.kill_button = element(by.buttonText('kill'));
         this.close_button = element(by.buttonText('Close'));
@@ -198,15 +191,11 @@ class Authoring {
         this.edit_kill_button = element(by.css('[title="Kill"]'));
         this.edit_takedown_button = element(by.css('[title="Takedown"]'));
 
-        this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
-        this.newPlainArticleLink = element(by.id('create_text_article'));
         this.newEmptyPackageLink = element(by.id('create_package'));
         this.infoIconsBox = element(by.css('.info-icons'));
 
         this.sendToButton = element(by.id('send-to-btn'));
-        this.sendAndContinueBtn = element(by.buttonText('send and continue'));
         this.sendAndPublishBtn = element(by.buttonText('publish from'));
-        this.sendBtn = element(by.buttonText('send'));
 
         this.moreActionsButton = element(by.id('more-actions'));
 
@@ -219,7 +208,6 @@ class Authoring {
         this.getCategoryListItems = element(by.id('category-setting'))
             .all(el(['dropdown__item']).locator());
 
-        this.sendItemContainer = element(by.id('send-item-container'));
         this.linkToMasterButton = element(by.id('preview-master'));
         this.marked_for_legal = element(by.model('item.flags.marked_for_legal'));
         this.sms = element(by.model('item.flags.marked_for_sms'));
@@ -227,7 +215,6 @@ class Authoring {
             .all(by.css('[data-field="anpa_category"]'));
         this.subject = element(by.className('authoring-header__detailed')).all(by.css('[data-field="subject"]'));
         this.missing_link = element(by.className('missing-link'));
-        this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
         this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
         this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
         this.headline = element(by.css('.headline [contenteditable]'));
@@ -280,8 +267,8 @@ class Authoring {
             var embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var embargoTime = '04:00';
 
-            element(by.model('item.embargo_date')).element(by.tagName('input')).sendKeys(embargoDate);
-            element(by.model('item.embargo_time')).element(by.tagName('input')).sendKeys(embargoTime);
+            el(['authoring', 'interactive-actions-panel', 'embargo', 'date-input']).sendKeys(embargoDate);
+            el(['authoring', 'interactive-actions-panel', 'embargo', 'time-input']).sendKeys(embargoTime);
         };
 
         this.confirmSendTo = function() {
@@ -293,62 +280,55 @@ class Authoring {
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
-            browser.wait(ECE.elementToBeClickable(this.send_panel));
-            this.send_panel.click();
+            el(['interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
 
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
 
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
             if (_continue) {
-                this.sendAndContinueBtn.click();
+                el(['interactive-actions-panel', 'send-and-open']).click();
             } else {
-                this.sendBtn.click();
+                el(['interactive-actions-panel', 'send']).click();
             }
         };
 
         this.duplicateTo = (desk, stage, open) => {
-            let duplicateButton = element(by.id('duplicate-btn'));
-            let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
 
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
-
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
             if (open) {
-                duplicateAndOpenButton.click();
+                el(['interactive-actions-panel', 'duplicate-and-open']).click();
             } else {
-                duplicateButton.click();
+                el(['interactive-actions-panel', 'duplicate']).click();
             }
         };
 
         this.selectDeskforSendTo = function(desk) {
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = element(by.css('.dropdown--boxed .dropdown__toggle'));
-
-            dropdown.waitReady();
-            dropdown.click();
-            sidebar.element(by.buttonText(desk)).click();
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).setValue(desk);
         };
 
         this.markAction = function() {
             return element(by.className('svg-icon-add-to-list')).click();
         };
 
-        this.createTextItem = function() {
-            return element(by.className('sd-create-btn'))
-                .click()
-                .then(() => element(by.id('create_text_article')).click());
+        this.createTextItem = () => {
+            this.createTextItemFromTemplate(PLAIN_TEXT_TEMPLATE_NAME);
         };
 
         /**
@@ -357,13 +337,11 @@ class Authoring {
          * @param {String} name
          */
         this.createTextItemFromTemplate = (name) => {
-            element(by.className('sd-create-btn')).click();
-            element(by.id('more_templates')).click();
-            let templates = element.all(by.repeater('template in templates track by template._id'));
-
-            templates.all(by.css('[ng-click="select({template: template})"]'))
-                .filter((elem) => elem.getText().then((text) => text.toUpperCase().indexOf(name.toUpperCase()) > -1))
-                .click();
+            el(['content-create']).click();
+            el(['content-create-dropdown'], by.buttonText('More templates...')).click();
+            el(['content-create-dropdown', 'search']).sendKeys(name);
+            el(['content-create-dropdown'], by.buttonText(name)).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         this.close = function() {
@@ -423,40 +401,8 @@ class Authoring {
         };
 
         this.publish = function(skipConfirm) {
-            browser.wait(() => this.sendToButton.isPresent(), 1000);
-            this.sendToButton.click();
-
-            browser.wait(() => this.publish_panel.isPresent(), 3000);
-
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 3000);
-
-            this.publish_panel.click();
-            this.publish_button.click();
-
-            if (!skipConfirm) {
-                var modal = element(by.className('modal__dialog'));
-
-                modal.isPresent().then((isPresent) => {
-                    if (isPresent) {
-                        modal.element(by.className('btn--primary')).click();
-                    }
-                });
-            }
-        };
-
-        this.sendAndpublish = function(desk, skipConfirm) {
-            browser.wait(() => this.sendToButton.isPresent(), 1000);
-            this.sendToButton.click();
-
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 1000);
-
-            this.publish_panel.click();
-            this.selectDeskforSendTo(desk);
-            this.sendAndPublishBtn.click();
+            el(['authoring', 'open-send-publish-pane']).click();
+            el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));
@@ -470,17 +416,7 @@ class Authoring {
         };
 
         this.closeSendAndPublish = function() {
-            var sidebar = element.all(by.css('.side-panel')).last();
-
-            return sidebar.element(by.css('[ng-click="close()"]')).click();
-        };
-
-        this.publishFrom = function(desk) {
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_panel.isPresent(), 2000);
-            this.selectDeskforSendTo(desk);
-            this.sendAndPublishBtn.click();
+            el(['authoring', 'interactive-actions-panel', 'close']).click();
         };
 
         this.schedule = function(skipConfirm) {
@@ -490,14 +426,10 @@ class Authoring {
             var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var scheduleTime = '04:00';
 
-            element(by.model('item.publish_schedule_date')).element(by.tagName('input')).sendKeys(scheduleDate);
-            element(by.model('item.publish_schedule_time')).element(by.tagName('input')).sendKeys(scheduleTime);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).sendKeys(scheduleDate);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).sendKeys(scheduleTime);
 
-            this.publish_panel.click();
-
-            browser.wait(() => this.publish_button.isPresent(), 1000);
-
-            this.publish_button.click();
+            el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
                 var modal = element(by.className('modal__dialog'));

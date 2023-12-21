@@ -74,6 +74,7 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
                         size="large"
                         type="primary"
                         expand
+                        data-test-id="unspike"
                     />
                 </PanelFooter>
             </React.Fragment>

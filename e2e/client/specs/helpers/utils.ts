@@ -42,10 +42,9 @@ export function printLogs(prefix) {
         .then((browserLog) => {
             var logs = browserLog.filter((log) => log.level.value >= 1000);
 
-            console.info(
-                (prefix ? prefix + ' ' : '') +
-                'log: ' + require('util').inspect(logs, {dept: 3}),
-            );
+            for (const log of logs) {
+                console.error(`BROWSER CONSOLE ERROR: ${log.message}`);
+            }
         });
 }
 
@@ -180,13 +179,6 @@ export function altKey(key) {
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
     const elem = element(s([`notification--${type}`], msg));
 
-    click(elem);
-
-    /**
-     * It seems there's an issue with protractor:
-     * Clicking an element throws `StaleElementReferenceError` when clicked immediately
-     * after waiting until it's clickable.
-     */
     elem.isPresent().then((present) => {
         // Only click if the toast is still present.
         if (present) {

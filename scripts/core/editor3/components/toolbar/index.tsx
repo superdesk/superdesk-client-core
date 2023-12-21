@@ -207,7 +207,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         <SelectionButton
                             onClick={showPopup(PopupTypes.Link)}
                             iconName="link"
-                            tooltip={gettext('Link')}
+                            tooltip={gettext('Link (Ctrl+K)')}
                             uiTheme={this.props.uiTheme}
                         />
                     )}

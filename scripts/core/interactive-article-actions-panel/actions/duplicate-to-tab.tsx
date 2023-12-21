@@ -82,6 +82,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
                                     size="large"
                                     type="primary"
                                     expand
+                                    data-test-id="duplicate-and-open"
                                 />
                             )
                         }
@@ -93,6 +94,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
                             size="large"
                             type="primary"
                             expand
+                            data-test-id="duplicate"
                         />
                     </ButtonGroup>
                 </PanelFooter>

@@ -38,14 +38,8 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'h4': gettext('h4'),
         'h5': gettext('h5'),
         'h6': gettext('h6'),
-        'justifyLeft': gettext('justifyLeft'),
-        'justifyCenter': gettext('justifyCenter'),
-        'justifyRight': gettext('justifyRight'),
-        'justifyFull': gettext('justifyFull'),
-        'outdent': gettext('outdent'),
-        'indent': gettext('indent'),
-        'unordered list': gettext('h1'),
-        'ordered list': gettext('unordered list'),
+        'unordered list': gettext('unordered list'),
+        'ordered list': gettext('ordered list'),
         'pre': gettext('pre'),
         'quote': gettext('quote'),
         'media': gettext('media'),
@@ -58,6 +52,19 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'bold': gettext('bold'),
         'table': gettext('table'),
         'multi-line quote': gettext('multi-line quote'),
+        'formatting marks': gettext('formatting marks'),
+        'remove format': gettext('remove format'),
+        'remove all format': gettext('remove all format'),
+        'annotation': gettext('annotation'),
+        'comments': gettext('comments'),
+        'suggestions': gettext('suggestions'),
+        'embed': gettext('embed'),
+        'tab': gettext('tab'),
+        'tab as spaces': gettext('tab as space'),
+        'undo': gettext('undo'),
+        'redo': gettext('redo'),
+        'uppercase': gettext('uppercase'),
+        'lowercase': gettext('lowercase'),
     };
 };
 
@@ -239,35 +246,18 @@ export function getContentProfileFormConfig(
     };
 
     if (field?.id != null && hasFormattingOptions(field.id, editor, customFields)) {
-        const editor3Enabled = editor?.body_html?.editor3 === true;
+        const formattingOptionsEditor3Field: IFormField = {
+            label: gettext('Formatting options'),
+            type: FormFieldType.selectMultiple,
+            field: 'formatOptions',
+            required: false,
+            component_parameters: {
+                items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
+                    .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
+            },
+        };
 
-        if (editor3Enabled) {
-            const formattingOptionsEditor3Field: IFormField = {
-                label: gettext('Formatting options'),
-                type: FormFieldType.selectMultiple,
-                field: 'formatOptions',
-                required: false,
-                component_parameters: {
-                    items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
-                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
-                },
-            };
-
-            fields.push(formattingOptionsEditor3Field);
-        } else {
-            const formattingOptionsEditor2Field: IFormField = {
-                label: gettext('Formatting options'),
-                type: FormFieldType.selectMultiple,
-                field: 'formatOptions',
-                required: false,
-                component_parameters: {
-                    items: Object.entries(getEditor3RichTextFormattingOptions())
-                        .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
-                },
-            };
-
-            fields.push(formattingOptionsEditor2Field);
-        }
+        fields.push(formattingOptionsEditor3Field);
     }
 
     if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {

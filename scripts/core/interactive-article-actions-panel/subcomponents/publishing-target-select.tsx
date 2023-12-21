@@ -58,19 +58,56 @@ interface IProps {
     onChange(value: IPublishingTarget): void;
 }
 
-export class PublishingTargetSelect extends React.PureComponent<IProps> {
-    render() {
-        const metadata = ng.get('metadata');
-        const subscribers: Array<{_id: string; name: string}> = metadata.values.customSubscribers;
-        const regions: Array<IRegion> = metadata.values.geographical_restrictions ?? [];
-        const subscriberTypes: Array<ISubscriberType> = metadata.values.subscriberTypes;
+interface IState {
+    loading: boolean;
+    subscribers: Array<{_id: string; name: string}>;
+    regions: Array<IRegion>;
+    subscriberTypes: Array<ISubscriberType>;
+}
 
-        return (
+export class PublishingTargetSelect extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            loading: true,
+            regions: [],
+            subscribers: [],
+            subscriberTypes: [],
+        };
+
+        this.setMetadataValues = this.setMetadataValues.bind(this);
+    }
+
+    setMetadataValues(metadataService: any) {
+        this.setState({
+            loading: false,
+            subscribers: metadataService.values.customSubscribers ?? [],
+            regions: metadataService.values.geographical_restrictions ?? [],
+            subscriberTypes: metadataService.values.subscriberTypes ?? [],
+        });
+    }
+
+    componentDidMount(): void {
+        const metadataService = ng.get('metadata');
+
+        if (metadataService.values.customSubscribers != null) {
+            this.setMetadataValues(metadataService);
+        } else {
+            metadataService.fetchSubscribers().then(() => {
+                this.setMetadataValues(metadataService);
+            });
+        }
+    }
+
+    render() {
+        return this.state.loading === false && (
             <ToggleBox title={gettext('Target')} initiallyOpen>
                 <FormLabel text={gettext('Target subscribers')} />
 
                 <div style={{paddingTop: 5}}>
                     <TreeSelect
+                        zIndex={2000}
                         label=""
                         inlineLabel
                         labelHidden
@@ -78,12 +115,12 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
                         allowMultiple
                         getId={(item) => item._id}
                         getLabel={(item) => item.name}
-                        getOptions={() => subscribers.map((x) => ({value: x}))}
+                        getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
                         value={this.props.value.target_subscribers}
                         onChange={(val) => {
                             this.props.onChange({
                                 ...this.props.value,
-                                target_subscribers: subscribers
+                                target_subscribers: this.state.subscribers
                                     .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
                             });
                         }}
@@ -96,8 +133,9 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
 
                 <div style={{paddingTop: 5}}>
                     <ControlledVocabulariesSelect
-                        vocabularies={regions}
-                        value={this.props.value.target_regions}
+                        zIndex={2000}
+                        vocabularies={this.state.regions}
+                        value={this.props.value.target_regions ?? []}
                         onChange={(val) => {
                             this.props.onChange({
                                 ...this.props.value,
@@ -113,8 +151,9 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
 
                 <div style={{paddingTop: 5}}>
                     <ControlledVocabulariesSelect
-                        vocabularies={subscriberTypes}
-                        value={this.props.value.target_types}
+                        zIndex={2000}
+                        vocabularies={this.state.subscriberTypes}
+                        value={this.props.value.target_types ?? []}
                         onChange={(val) => {
                             this.props.onChange({
                                 ...this.props.value,

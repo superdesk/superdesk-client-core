@@ -29,8 +29,8 @@ angular.module('superdesk.core.upload.crop', [])
                     $(e).css({
                         width: Math.round(rx * boundX) + 'px',
                         height: Math.round(ry * boundY) + 'px',
-                        marginLeft: '-' + Math.round(rx * cordx) + 'px',
-                        marginTop: '-' + Math.round(ry * cordy) + 'px',
+                        marginInlineStart: '-' + Math.round(rx * cordx) + 'px',
+                        marginBlockStart: '-' + Math.round(ry * cordy) + 'px',
                     });
                 }
 

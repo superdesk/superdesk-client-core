@@ -13,14 +13,14 @@
         }
         .widget-content {
             overflow-x: hidden;
-            top: 0;
+            inset-block-start: 0;
         }
 
         .widget-mode {
-            float: right;
+            float: inline-end;
             position: relative;
             z-index: 1;
-            margin-right: 40px;
+            margin-inline-end: 40px;
             padding: 9px 0 0;
             .text {
                 text-transform: uppercase;
@@ -43,12 +43,12 @@
             }
             .p-dropdown {
                 min-height: 5.6rem;
-                border-bottom: 1px solid var(--sd-colour-line--light);
+                border-block-end: 1px solid var(--sd-colour-line--light);
                 background-color: var(--sd-item__main-Bg);
                 border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
                 width: 100%;
                 &:hover {
-                    border-bottom: 1px solid var(--sd-colour-line--light);
+                    border-block-end: 1px solid var(--sd-colour-line--light);
                     background-color: var(--sd-item__main-Bg--hover);
                 }
             }
@@ -58,9 +58,9 @@
             height: 24px;
             width: 24px;
             padding: 4px;
-            right: 6px;
+            inset-inline-end: 6px;
             margin: 0;
-            top: 5px;
+            inset-block-start: 5px;
             transition: opacity ease-in-out 0.2s;
             opacity: 0.5;
             &:hover {
@@ -115,8 +115,8 @@
             }
             .more-actions {
                 position: absolute;
-                right: 0px;
-                top: 6px;
+                inset-inline-end: 0px;
+                inset-block-start: 6px;
             }
             .search-box__btn {
                 flex: 0 0 auto;
@@ -124,7 +124,7 @@
             }
             .search-box__icon {
                 opacity: 0.3;
-                margin-left: 0.6rem;
+                margin-inline-start: 0.6rem;
             }
             &--hidden {
                 height:0;
@@ -156,9 +156,9 @@
         .filter-box {
             height: $nav-height - 10px;
             position: absolute;
-            top: $nav-height - 10px;
-            left: 0; right: 0;
-            border-bottom: 1px solid var(--sd-colour-line--light);
+            inset-block-start: $nav-height - 10px;
+            inset-inline-start: 0; inset-inline-end: 0;
+            border-block-end: 1px solid var(--sd-colour-line--light);
             .btn {
                 margin: 5px 5px 0 0;
                 padding: 0 10px;
@@ -167,8 +167,8 @@
                 }
             }
             .text {
-                margin-right: 10px;
-                float: left;
+                margin-inline-end: 10px;
+                float: inline-start;
                 padding: 10px;
                 font-style: italic;
             }
@@ -177,17 +177,17 @@
         .pagination-box {
             height: $nav-height - 10px;
             position: absolute;
-            top: $nav-height - 10px;
-            left: 0; right: 0;
-            border-bottom: 1px solid var(--sd-colour-line--light);
+            inset-block-start: $nav-height - 10px;
+            inset-inline-start: 0; inset-inline-end: 0;
+            border-block-end: 1px solid var(--sd-colour-line--light);
             .sd-pagination {
                 padding: 5px 10px;
             }
             &.mode-detailed {
-                top: 2*($nav-height - 10px);
+                inset-block-start: 2*($nav-height - 10px);
             }
             .page-info {
-                float: left;
+                float: inline-start;
             }
         }
 
@@ -196,11 +196,11 @@
         }
         .ingest-list-holder {
             position: absolute;
-            top: 3.6rem;
-            left: 0; right: 0;
-            bottom: 0;
+            inset-block-start: 3.6rem;
+            inset-inline-start: 0; inset-inline-end: 0;
+            inset-block-end: 0;
             &.mode-detailed {
-                top: 3*($nav-height - 10px);
+                inset-block-start: 3*($nav-height - 10px);
             }
         }
         .ingest-list {
@@ -212,7 +212,7 @@
                 position: relative;
                 .item-block {
                     cursor: pointer;
-                    border-bottom: 1px solid var(--sd-colour-line--light);
+                    border-block-end: 1px solid var(--sd-colour-line--light);
                     padding: 10px;
                     display:flex;
                     .content {
@@ -221,16 +221,16 @@
                     }
                     i {
                         color: $sd-text-light;
-                        margin-top: 1px;
+                        margin-block-start: 1px;
                     }
                     &--basic {
-                        border-bottom: none;
+                        border-block-end: none;
                         padding: 4px 0;
                     }
                 }
                 .basic {
                     .legal {
-                        margin-left: 10px;
+                        margin-inline-start: 10px;
                     }
                     .keyword {
                         color: $sd-keyword;
@@ -249,27 +249,27 @@
                     margin:0;
                     list-style-type: none;
                     padding: 0;
-                    margin-bottom: 5px;
+                    margin-block-end: 5px;
                     > li {
-                        float: left;
-                        padding-right: 7px;
-                        margin-right: 7px;
-                        border-right: 1px solid var(--sd-colour-line--light);
+                        float: inline-start;
+                        padding-inline-end: 7px;
+                        margin-inline-end: 7px;
+                        border-inline-end: 1px solid var(--sd-colour-line--light);
                         font-size: 11px;
                         color: $sd-text-light;
                         line-height: 21px;
                         em {
                             color: $sd-text-lighter;
-                            margin-right: 4px;
+                            margin-inline-end: 4px;
                         }
                         .state-label {
-                            margin-top: 4px;
+                            margin-block-start: 4px;
                         }
                         .type-icon {
                             @include opacity(50);
                         }
                         .urgency-label {
-                            margin-top: 2px;
+                            margin-block-start: 2px;
                         }
                         &:last-child {
                             border: 0;
@@ -281,11 +281,11 @@
                 }
                 .main-line {
                     figure {
-                        float: left;
-                        margin-right: 10px;
+                        float: inline-start;
+                        margin-inline-end: 10px;
                         border: 1px solid var(--sd-colour-line--x-light);
                         padding: 2px;
-                        margin-top: 3px;
+                        margin-block-start: 3px;
                         img {
                             height: 55px;
                         }
@@ -307,7 +307,7 @@
                 }
                 .pinned.pinned-instance {
                     padding: 10px 5px 5px;
-                    border-bottom: 0;
+                    border-block-end: 0;
                     .content {
                         padding: 5px;
                         background: $white;
@@ -318,18 +318,18 @@
                 }
                 &:first-child {
                     .pinned.pinned-instance {
-                        margin-top: 10px;
+                        margin-block-start: 10px;
                     }
                 }
                 .basic.item-block {
                     .content {
                         p {
-                            padding-right: 15px;
+                            padding-inline-end: 15px;
                             i {
-                                margin-top: -2px;
+                                margin-block-start: -2px;
                                 height: 18px;
-                                padding-left: 0;
-                                margin-right: 4px;
+                                padding-inline-start: 0;
+                                margin-inline-end: 4px;
                                 background-position-x: 0px;
                                 color: $sd-text-light;
                             }
@@ -343,7 +343,7 @@
                     color: $sd-text-light;
                 }
                 .toggle-box {
-                    margin-bottom: 0;
+                    margin-block-end: 0;
                 }
             }
             .active {
@@ -352,23 +352,23 @@
                 }
             }
             &.simple-list {
-                margin-top: 1.6rem;
+                margin-block-start: 1.6rem;
             }
         }
         .main-list {
             position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            top: 34px;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+            inset-block-end: 0;
+            inset-block-start: 34px;
             width: 100%;
             @include transition(all ease 0.2s);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             &.wrap {
-                left: -100%;
-                right: auto;
+                inset-inline-start: -100%;
+                inset-inline-end: auto;
                 overflow: hidden;
                 .scroll-shadow {
                     display: none;
@@ -378,19 +378,19 @@
                 }
             }
             &.custom-widget {
-                bottom: 50%;
+                inset-block-end: 50%;
             }
         }
         .preview {
             //display: none;
             position: absolute;
-            left: 0;
+            inset-inline-start: 0;
             width: 100%;
-            bottom: 0;
-            top: 38px;
+            inset-block-end: 0;
+            inset-block-start: 38px;
             @include transition(all ease 0.2s);
             &.custom-widget {
-                top: 50%;
+                inset-block-start: 50%;
             }
             .nav {
                 height: 34px;
@@ -398,7 +398,7 @@
                 align-items: center;
                 background: var(--sd-colour-panel-bg--100);
                 padding: 0 10px;
-                border-bottom: 1px solid var(--sd-colour-line--light);
+                border-block-end: 1px solid var(--sd-colour-line--light);
             }
             .open, .associate {
                 border: 0;
@@ -411,8 +411,8 @@
                     line-height:24px;
                 }
                 i {
-                    margin-top: 3px;
-                    margin-right: 5px;
+                    margin-block-start: 3px;
+                    margin-inline-end: 5px;
                     @include opacity(40);
                 }
                 &:hover {
@@ -422,11 +422,11 @@
                 }
             }
             .state-label {
-                margin-top: 5px;
+                margin-block-start: 5px;
             }
             .content-item-preview {
                 .content-container {
-                    top: 36px;
+                    inset-block-start: 36px;
                     img {
                         max-width: 100%;
                         height: auto;
@@ -434,7 +434,7 @@
                 }
             }
             &.wrap {
-                left: 100%;
+                inset-inline-start: 100%;
                 .scroll-shadow {
                     display: none;
                 }
@@ -500,26 +500,26 @@
                 time {
                     font-size: 11px;
                     color: $sd-text-lighter;
-                    text-align: right;
+                    text-align: end;
                     display: inline-block;
                     margin: 4px 10px 0 0;
                 }
             }
 
             .main-list {
-                top: 0px
+                inset-block-start: 0px
             }
 
             .existing-items {
-                top: -35px;
+                inset-block-start: -35px;
             }
 
             .ingest-list-holder {
-                bottom: 0;
+                inset-block-end: 0;
             }
 
             .preview {
-                top: 44px;
+                inset-block-start: 44px;
             }
         }
     }

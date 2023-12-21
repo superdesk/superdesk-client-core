@@ -19,15 +19,15 @@ $search-widget-preview-width: 440px;
         position: relative;
         overflow: initial;
         padding: 0;
-        left: 0; right: 0;
+        inset-inline-start: 0; inset-inline-end: 0;
         height: 100%;
     }
     .widget-content {
         position: relative;
-        top: 0;
+        inset-block-start: 0;
         overflow: initial;
-        padding-bottom: 0;
-        border-top: 0;
+        padding-block-end: 0;
+        border-block-start: 0;
         height: 100%;
         > div {
             height: 100%;
@@ -58,20 +58,20 @@ $search-widget-preview-width: 440px;
     .search-container {
         position: absolute;
         width: $search-widget-width;
-        top: 0; left: 0; bottom: 0;
+        inset-block-start: 0; inset-inline-start: 0; inset-block-end: 0;
         .search-box {
             display: flex;
             box-sizing: border-box;
-            left: 0; right: 0; top: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start: 0;
             height: $nav-height;
-            border-bottom: 1px solid #dcdcdc;
+            border-block-end: 1px solid #dcdcdc;
             background: #fff url(~images/search-icon.png) no-repeat 15px 16px;
             input {
                 position: static;
                 flex: 1;
                 width: auto;
                 height: 100%;
-                padding-left: 46px;
+                padding-inline-start: 46px;
                 box-sizing: border-box;
                 border: 0 !important;
                 background: transparent;
@@ -84,26 +84,26 @@ $search-widget-preview-width: 440px;
                 margin: auto;
                 height: 22px;
                 width: 28px;
-                right: 0px;
-                top: 0;
+                inset-inline-end: 0px;
+                inset-block-start: 0;
 
             }
         }
         .filter-list {
             position: absolute;
-            top: $nav-height;
-            left: 0; right: 0;
+            inset-block-start: $nav-height;
+            inset-inline-start: 0; inset-inline-end: 0;
             height: $nav-height;
             @include border-box();
-            border-bottom: 1px solid #dcdcdc;
+            border-block-end: 1px solid #dcdcdc;
             padding: 10px;
         }
         .content-list {
             position: absolute;
-            top: $nav-height;
-            bottom: $bottom-view-padding - 2rem;
-            left: 0;
-            right: 0;
+            inset-block-start: $nav-height;
+            inset-block-end: $bottom-view-padding - 2rem;
+            inset-inline-start: 0;
+            inset-inline-end: 0;
             padding: 0 10px 10px;
             overflow: auto;
         }
@@ -112,26 +112,26 @@ $search-widget-preview-width: 440px;
     .preview-container {
         width: $search-widget-preview-width;
         position: absolute;
-        left: $search-widget-width;
-        bottom: 0; top: 0;
-        border-right: 1px solid #bbb;
+        inset-inline-start: $search-widget-width;
+        inset-block-end: 0; inset-block-start: 0;
+        border-inline-end: 1px solid #bbb;
         background: #fff;
         @include border-box();
         @include box-shadow(inset 1px 0 0 #dcdcdc);
         > header {
-            border-bottom: 1px solid #dcdcdc;
+            border-block-end: 1px solid #dcdcdc;
             padding: 0 15px;
         }
         .close-preview {
             position: absolute;
-            right: 10px;
-            top: 10px;
+            inset-inline-end: 10px;
+            inset-block-start: 10px;
         }
         > .content-item-preview {
             position: absolute;
-            top: $nav-height;
-            bottom: 0;
-            left: 0 ;right: 0;
+            inset-block-start: $nav-height;
+            inset-block-end: 0;
+            inset-inline-start: 0 ;right: 0;
             padding: 20px;
             overflow: auto;
         }
@@ -142,26 +142,26 @@ $search-widget-preview-width: 440px;
 .sd-widget.search {
     .search-container {
         .content-list {
-             top: 2*$nav-height;
+             inset-block-start: 2*$nav-height;
             > ul {
-                padding-right: 10px;
+                padding-inline-end: 10px;
                 > li {
                     position: relative;
                     background: $white;
-                    border-bottom: 1px solid #ededed;
+                    border-block-end: 1px solid #ededed;
                     @include border-box();
                     padding: 7px 10px;
                     line-height: 12px;
-                    border-right: 2px solid #fff;
+                    border-inline-end: 2px solid #fff;
                     .select-box {
                         width: 32px;
                         height: 21px;
-                        float: left;
-                        margin-right: 10px;
+                        float: inline-start;
+                        margin-inline-end: 10px;
                         .select {
                             position: absolute;
-                            left: 15px;
-                            top: 10px;
+                            inset-inline-start: 15px;
+                            inset-block-start: 10px;
                             display: none;
                         }
                         i {
@@ -181,7 +181,7 @@ $search-widget-preview-width: 440px;
                     .item-functions {
                         display: none;
                         position: absolute;
-                        right: 0; top: 0;
+                        inset-inline-end: 0; inset-block-start: 0;
                         li {
                             padding: 6px;
                         }
@@ -189,7 +189,7 @@ $search-widget-preview-width: 440px;
                     &:hover {
                         background: #f4f4f4;
                         cursor: pointer;
-                        padding-right: 40px;
+                        padding-inline-end: 40px;
                         border-right-color: #f4f4f4;
                         .item-functions {
                             display: block;
@@ -205,17 +205,17 @@ $search-widget-preview-width: 440px;
                         height: 18px;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        margin-left: 0;
+                        margin-inline-start: 0;
                         .keyword {
                             @include text-semibold();
                             text-transform: uppercase;
                             color: #216278;
-                            margin-right: 10px;
+                            margin-inline-end: 10px;
                         }
                     }
                     .group-select {
                         .dropdown__menu {
-                            margin-top: -3px;
+                            margin-block-start: -3px;
                             padding: 0;
                             &:before {
                                 display: none;
@@ -223,10 +223,10 @@ $search-widget-preview-width: 440px;
                             > li {
                                 padding: 3px 6px;
                                 &:first-child {
-                                    padding-top: 6px;
+                                    padding-block-start: 6px;
                                 }
                                 &:last-child {
-                                    padding-bottom: 6px;
+                                    padding-block-end: 6px;
                                 }
 
                             }
@@ -238,7 +238,7 @@ $search-widget-preview-width: 440px;
                         border-right-color: #ddd;
                         @include opacity(50);
                         &:hover {
-                            padding-right: 10px;
+                            padding-inline-end: 10px;
                         }
                     }
                     &.active {
@@ -291,7 +291,7 @@ $search-widget-preview-width: 440px;
     display: flex;
     align-items: center;
     height: 2.4rem;
-    margin-bottom: $sd-base-increment;
+    margin-block-end: $sd-base-increment;
     .stage-header__line, .stage-header__stretch-bar {
         height: 1px;
         margin: auto 4px;
@@ -322,7 +322,7 @@ $search-widget-preview-width: 440px;
 
         }
         span + span {
-            margin-left: 5px;
+            margin-inline-start: 5px;
         }
     }
     .stage-header__separator {
@@ -353,13 +353,13 @@ $search-widget-preview-width: 440px;
         margin: 0 0 0 4px;
     }
     .stage-header__name + .stage-header__number {
-        margin-left: 10px;
+        margin-inline-start: 10px;
     }
 }
 
 .sd-kanban-list__board-header {
     .stage-header {
-        margin-bottom: 0;
+        margin-block-end: 0;
     }
 }
 
@@ -391,11 +391,11 @@ $search-widget-preview-width: 440px;
     button {
         background: none;
         &.btnRefresh {
-            margin-right: 3px;
-            padding-left: 0;
+            margin-inline-end: 3px;
+            padding-inline-start: 0;
             height: 26px;
             position: absolute;
-            right: 12px;
+            inset-inline-end: 12px;
             &:hover {
                 @include opacity(90);
             }
@@ -405,10 +405,10 @@ $search-widget-preview-width: 440px;
 
 .content-list-holder {
     position: absolute;
-    top: 38px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset-block-start: 38px;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    inset-block-end: 0;
 
     .desk {
         width: 99%;
@@ -439,12 +439,12 @@ $search-widget-preview-width: 440px;
         ul.nav.nav-tabs {
             height: 35px;
             line-height: 35px;
-            border-bottom: none;
+            border-block-end: none;
 
         }
         .content-item-preview {
             .content-container, .metadata-view {
-                top: 70px;
+                inset-block-start: 70px;
             }
         }
         .package-item.item {
@@ -459,12 +459,12 @@ $search-widget-preview-width: 440px;
         }
         ul.nav.nav-tabs {
             display: flex;
-            border-top: 1px solid rgba(123,123,123,0.3);
+            border-block-start: 1px solid rgba(123,123,123,0.3);
             box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 -1px 2px 0 rgba(0, 0, 0, 0.08);
         }
         .content-item-preview {
             .content-container, .metadata-view {
-                top: 36px;
+                inset-block-start: 36px;
             }
         }
     }
@@ -476,18 +476,18 @@ $search-widget-preview-width: 440px;
         font-size: 16px;
         color: $sd-text;
         font-weight: 400;
-        margin-bottom: 16px;
-        margin-top: 10px;
+        margin-block-end: 16px;
+        margin-block-start: 10px;
         padding: 0;
     }
     .legend + div[sd-toggle-box] {
-        margin-top: 30px;
+        margin-block-start: 30px;
     }
     .desk {
         padding: 5px 0;
-        border-bottom: 1px dotted var(--sd-colour-line--strong);
+        border-block-end: 1px dotted var(--sd-colour-line--strong);
         &:first-of-type{
-            border-top: 1px dotted var(--sd-colour-line--strong);
+            border-block-start: 1px dotted var(--sd-colour-line--strong);
         }
         &--item-count {
             display: flex;
@@ -503,7 +503,7 @@ $search-widget-preview-width: 440px;
     }
     .content {
         .desk:first-of-type {
-                border-top: 1px dotted var(--sd-colour-line--strong) !important;
+                border-block-start: 1px dotted var(--sd-colour-line--strong) !important;
             }
     }
     .desk-title {
@@ -536,13 +536,13 @@ $search-widget-preview-width: 440px;
     }
     .desk-title__text {
         display: inline-block;
-        padding-left: 1rem;
+        padding-inline-start: 1rem;
     }
     .stages {
         overflow: hidden;
         margin: 5px 0 0;
         li {
-            float: left;
+            float: inline-start;
             overflow: hidden;
         }
         .sd-check__wrapper {

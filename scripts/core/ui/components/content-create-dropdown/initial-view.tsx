@@ -137,6 +137,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                         onClick={() => {
                                             this.create({kind: 'from-template', template: defaultTemplate});
                                         }}
+                                        data-test-id="default-desk-template"
                                     />
                                 </div>
 
@@ -200,6 +201,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                                 onClick={() => {
                                                     this.create({kind: 'create-package'});
                                                 }}
+                                                data-test-id="create-package"
                                             />
                                         )
                                     }
@@ -210,6 +212,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                         onClick={() => {
                                             this.create({kind: 'upload-media'});
                                         }}
+                                        data-test-id="upload-media"
                                     />
                                 </div>
                             </React.Fragment>

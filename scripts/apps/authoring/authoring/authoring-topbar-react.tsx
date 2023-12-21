@@ -1,14 +1,13 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IArticleAction} from './services/AuthoringWorkspaceService';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
     article: IArticle;
-    action: IArticleAction;
+    action: IAuthoringActionType;
     onChange(article: IArticle): void;
 }
 
@@ -77,13 +76,13 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
         const articleUpdatedReference = {...this.props.article};
 
         return (
-            <div style={{paddingLeft: 10}}>
+            <div style={{paddingInlineStart: 10}}>
                 {articleDisplayWidgets.map(
                     (widget, i) => {
                         const Component = widget.component;
 
                         return (
-                            <span key={i} style={{marginRight: 10}}>
+                            <span key={i} style={{marginInlineEnd: 10}}>
                                 <Component
                                     article={
                                         this.props.action === 'view'

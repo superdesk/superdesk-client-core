@@ -1297,12 +1297,14 @@ declare module 'superdesk-api' {
         archive_item: IArticle;
     }
 
+    export interface IUserPrivileges {
+        [privilege: string]: 1 | 0;
+    }
+
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
-        privileges?: {
-            [privilege: string]: 1 | 0;
-        };
+        privileges?: IUserPrivileges;
         author_role: string;
         editor_role: string;
     }
@@ -1348,8 +1350,8 @@ declare module 'superdesk-api' {
         desk_order: number;
         desk: IDesk['_id'];
         content_expiry: number;
-        is_visible: boolean;
-        local_readonly: boolean;
+        is_visible: boolean; // public - other users can see content or send articles to that stage
+        local_readonly: boolean; // content is readonly - even for stage owners
         incoming_macro: string;
         outgoing_macro: string;
         onstage_macro: string;
@@ -1378,7 +1380,7 @@ declare module 'superdesk-api' {
         avatar: string;
         avatar_renditions: {};
         role?: IUserRole['_id'];
-        privileges: {};
+        privileges: IUserPrivileges;
         user_type: 'user' | 'administrator';
         is_support: boolean;
         is_author: boolean;
@@ -1477,7 +1479,7 @@ declare module 'superdesk-api' {
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
         disable_entire_category_selection?: boolean;
-        selection_type?: any;
+        selection_type?: 'single selection' | 'multi selection' | 'do not show';
     }
 
     export interface IArticleField extends IVocabulary {
@@ -1619,13 +1621,17 @@ declare module 'superdesk-api' {
         | {$gte: any}
         | {$lt: any}
         | {$lte: any}
-        | {$in: any};
-        // consider adding $inString for matching substrings
+        | {$in: any}
+        | {$exists: any} // not null
+        | {$notExists: any} // is null
+        | {$stringContains: any}; // options for the future
 
     export type IComparison = {[field: string]: IComparisonOptions};
     export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
     export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
     export type ILogicalOperator = IAndOperator | IOrOperator;
+    export type ISortDirection = 'asc' | 'desc';
+    export type ISortOptions = Array<{[field: string]: ISortDirection}>;
 
     /**
      * Universal query format that works with both - Elasticsearch and pyeve endpoints
@@ -1633,7 +1639,7 @@ declare module 'superdesk-api' {
     export interface ISuperdeskQuery {
         filter: ILogicalOperator;
         fullTextSearch?: string;
-        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        sort: ISortOptions;
         page: number;
         max_results: number;
     }
@@ -1642,7 +1648,7 @@ declare module 'superdesk-api' {
         endpoint: string,
         filter: ILogicalOperator;
         fullTextSearch?: string;
-        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        sort: ISortOptions;
     }
 
 
@@ -1926,7 +1932,7 @@ declare module 'superdesk-api' {
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
         ): Promise<ICrudManagerData<Entity>>;
-        update(item: Entity): Promise<Entity>;
+        update(currentItem: Entity, item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
         refresh(): Promise<ICrudManagerData<Entity>>;
@@ -2069,6 +2075,8 @@ declare module 'superdesk-api' {
         disabled?: boolean;
         autoFocus?: boolean;
         horizontalSpacing?: boolean;
+        valueTemplate?: React.ComponentType<{option: IUser}>;
+        clearable: boolean;
     }
 
     export interface IDropdownTreeGroup<T> {
@@ -2140,6 +2148,8 @@ declare module 'superdesk-api' {
         style?: React.CSSProperties;
 
         children: Array<React.ReactNode>;
+
+        'data-test-id'?: string;
     }
 
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
@@ -2308,6 +2318,34 @@ declare module 'superdesk-api' {
     type IRequestFactory = () => IDataRequestParams;
 
     type IResponseHandler = (res: IRestApiResponse<T>) => any;
+
+    export type IAuthoringActionType =
+        'view'
+        | 'kill'
+        | 'correct'
+        | 'deschedule'
+        | 'unlinkUpdate'
+        | 'cancelCorrection'
+        | 'export'
+        | 'unspike'
+        | 'mark_item_for_desks'
+        | 'mark_item_for_highlight'
+        | 'new_take'
+        | 're_write'
+        | 'save'
+        | 'edit'
+        | 'mark_item'
+        | 'duplicate'
+        | 'duplicateTo'
+        | 'copy'
+        | 'package_item'
+        | 'multi_edit'
+        | 'send'
+        | 'create_broadcast'
+        | 'add_to_current'
+        | 'resend'
+        | 'set_label'
+        | 'takedown';
 
     export interface IDataProvider {
         update: () => void;
@@ -2614,6 +2652,7 @@ declare module 'superdesk-api' {
         elasticsearch: IElasticSearchApi;
         httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response>;
+        httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise<void>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -2643,6 +2682,7 @@ declare module 'superdesk-api' {
                     additionalData?: Partial<IArticle>,
                 ): void;
             };
+            showModal: (Component: React.ComponentType<{closeModal(): void;}>, containerClass?: string) => Promise<void>;
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
             showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
@@ -2671,6 +2711,7 @@ declare module 'superdesk-api' {
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
+                itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
@@ -2687,6 +2728,15 @@ declare module 'superdesk-api' {
             attachment: IAttachmentsApi;
             users: {
                 getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+            };
+            templates: {
+                getUserTemplates(
+                    pageToFetch: number,
+                    pageSize: number,
+                    type: string,
+                    searchString?: string,
+                    abortSignal?: AbortSignal,
+                ): Promise<IRestApiResponse<ITemplate>>;
             };
         };
         helpers: {
@@ -2822,6 +2872,7 @@ declare module 'superdesk-api' {
             ): string;
         };
         privileges: {
+            getOwnPrivileges(): Promise<IUserPrivileges>;
             hasPrivilege(privilege: string): boolean;
         };
         preferences: {
@@ -3359,6 +3410,10 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
+        /**
+         * Allows for the field to be hidden from custom field type config
+         */
+        private?: boolean;
         /**
          * Must return `true` if not empty.
          */

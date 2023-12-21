@@ -31,6 +31,10 @@ function getAllDesks(): OrderedMap<IDesk['_id'], IDesk> {
     return desksMap;
 }
 
+function getCurrentUserDesks(): Array<IDesk> {
+    return ng.get('desks').userDesks;
+}
+
 function getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage> {
     let stagesMap: OrderedMap<IStage['_id'], IStage> = OrderedMap();
 
@@ -53,6 +57,7 @@ interface IDesksApi {
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
     getDeskById(id: IDesk['_id']): IDesk ;
     getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
+    getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
 }
 
 export const desks: IDesksApi = {
@@ -62,4 +67,5 @@ export const desks: IDesksApi = {
     getAllDesks,
     getDeskById,
     getDeskStages,
+    getCurrentUserDesks,
 };

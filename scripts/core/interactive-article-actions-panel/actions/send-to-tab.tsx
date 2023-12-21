@@ -164,6 +164,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                     size="large"
                                     type="primary"
                                     expand
+                                    data-test-id="send-and-open"
                                 />
                             )
                         }
@@ -176,6 +177,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                             size="large"
                             type="primary"
                             expand
+                            data-test-id="send"
                         />
 
                         {

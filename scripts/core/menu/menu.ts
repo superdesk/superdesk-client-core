@@ -3,6 +3,8 @@ import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {setupAuthoringReact} from './authoring-switch';
+import {AuthoringSwitch} from 'apps/authoring-react/authoring-swtich';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -68,6 +70,10 @@ angular.module('superdesk.core.menu', [
             GlobalMenuHorizontal,
             [],
         ),
+    )
+    .component(
+        'sdAuthoringSwitch',
+        reactToAngular1(AuthoringSwitch),
     )
 
     // set flags for other directives
@@ -157,6 +163,7 @@ angular.module('superdesk.core.menu', [
         'privileges',
         'lodash',
         'workspaceMenu',
+        '$location',
         function(
             $route,
             superdesk,
@@ -166,6 +173,7 @@ angular.module('superdesk.core.menu', [
             privileges,
             _,
             workspaceMenu,
+            $location,
         ) {
             return {
                 require: '^sdSuperdeskView',
@@ -258,15 +266,6 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    scope.toggleTheme = function() {
-                        scope.theme = scope.theme === 'dark-ui' ? '' : 'dark-ui';
-                        localStorage.setItem('theme', scope.theme);
-
-                        scope.theme ?
-                            body.attr('data-theme', scope.theme) :
-                            body.removeAttr('data-theme');
-                    };
-
                     scope.toggleMenu = function() {
                         ctrl.flags.menu = !ctrl.flags.menu;
                     };
@@ -286,13 +285,19 @@ angular.module('superdesk.core.menu', [
 
                         _.each(scope.menu, (activity) => {
                             activity.isActive = route && route.href &&
-                                    route.href.substr(0, activity.href.length) === activity.href;
+                                route.href.substr(0, activity.href.length) === activity.href;
                         });
 
                         if (route && route.href) {
                             scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
                         }
                     }
+
+                    setupAuthoringReact($location.absUrl());
+
+                    scope.$on('$locationChangeSuccess', (e, newUrl) => {
+                        setupAuthoringReact(newUrl);
+                    });
 
                     scope.$on('$locationChangeStart', () => {
                         ctrl.flags.menu = false;

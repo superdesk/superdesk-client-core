@@ -49,17 +49,18 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     allowMultiple
                     fullWidth
                     kind="synchronous"
-                    getId={(item) => item}
-                    getLabel={(item) => item}
-                    getOptions={() => items != null ? items.map((item) => ({value: item.label})) : []}
+                    getId={(item) => item.id}
+                    getLabel={(item) => item.label}
+                    getOptions={() => items != null ? items.map((item) => ({value: item})) : []}
                     onChange={(item) => {
-                        this.props.onChange(item);
+                        this.props.onChange(item.map(({id}) => id));
                     }}
-                    value={this.props.value}
+                    value={items.filter(({id}) => (this.props.value ?? []).includes(id))}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
                     inlineLabel
                     labelHidden
+                    zIndex={1051}
                 />
 
                 {

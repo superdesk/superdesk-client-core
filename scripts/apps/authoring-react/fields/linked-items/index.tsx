@@ -37,15 +37,17 @@ export function getLinkedItemsField(): ILinkedItemsField {
         contributions: {
             authoring: {
                 onCloseAfter: (item) => {
-                    const itemId = item._id;
-                    const storedItemId = sdApi.localStorage.getItem(`open-item-after-related-closed--${itemId}`);
+                    if (item?._id != null) {
+                        const itemId = item._id;
+                        const storedItemId = sdApi.localStorage.getItem(`open-item-after-related-closed--${itemId}`);
 
-                    /**
-                     * If related item was just created and saved, open the original item
-                     * that triggered the creation of this related item.
-                     */
-                    if (storedItemId != null) {
-                        openArticle(storedItemId, 'edit');
+                        /**
+                         * If related item was just created and saved, open the original item
+                         * that triggered the creation of this related item.
+                         */
+                        if (storedItemId != null) {
+                            openArticle(storedItemId, 'edit');
+                        }
                     }
                 },
             },

@@ -85,7 +85,7 @@ export class GenericArrayListPageComponent<T, P>
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    update(nextItem: T): Promise<T> {
+    update(_item: T, nextItem: T): Promise<T> {
         this.handleChange(this.props.value.map(
             (item) => this.props.getId(item) === this.props.getId(nextItem) ? nextItem : item),
         );
