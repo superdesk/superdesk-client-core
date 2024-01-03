@@ -42,7 +42,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.onChangeThrottled = throttle((field: IArticleField, value: any) => {
             this.props.onChange(field, value);
-        }, 300, {leading: false});
+        }, 500, {leading: false});
 
         this.setValue = this.setValue.bind(this);
     }
