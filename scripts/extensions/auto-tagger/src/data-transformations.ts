@@ -10,14 +10,20 @@ export function createTagsPatch(
 ): Partial<IArticle> {
     const serverFormat = toServerFormat(tags, superdesk);
     const patch: Partial<IArticle> = {};
-
+    console.log('serverFormat', serverFormat);
+    console.log('article', article);
+    console.log('tags', tags);
+    console.log('superdesk', superdesk);
+    console.log('patch', patch);
     getServerResponseKeys().forEach((key) => {
         let oldValues = OrderedMap<string, ISubject>((article[key] || []).map((_item) => [_item.qcode, _item]));
         const newValues = serverFormat[key];
         let newValuesMap = OrderedMap<string, ISubject>();
-
+        console.log('oldValues', oldValues);
+        console.log('newValues', newValues);
         const wasRemoved = (tag: ISubject) => {
             if(oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode)) {
+                console.log('wasRemoved', tag);
                 return true;
             }
             else {

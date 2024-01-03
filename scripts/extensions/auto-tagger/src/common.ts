@@ -10,6 +10,7 @@ export function getAutoTaggingVocabularyLabels(superdesk: ISuperdesk): Promise<M
         {field: 'name', direction: 'ascending'},
         {imatrics_enabled: true},
     ).then((vocabularies) => {
+        console.log('vocabularies', vocabularies);
         return Map(
             vocabularies._items.map(({_id, display_name}) => [_id, display_name]),
         );
