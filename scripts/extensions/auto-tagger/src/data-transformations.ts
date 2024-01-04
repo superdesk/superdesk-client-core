@@ -23,8 +23,10 @@ export function createTagsPatch(
         console.log('newValues', newValues);
         // Preserve tags with specific schemes
         oldValues?.forEach((tag, qcode) => {
+            // Type assertion to ensure qcode is treated as a string
+            const key = qcode as string;
             if (tag && (tag.scheme === 'subject_custom' || tag.scheme === 'destinations')) {
-                newValuesMap = newValuesMap.set(qcode, tag);
+                newValuesMap = newValuesMap.set(key, tag);
             }
         });
         const wasRemoved = (tag: ISubject) => {
