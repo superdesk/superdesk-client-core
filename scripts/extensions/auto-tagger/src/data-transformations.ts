@@ -16,7 +16,7 @@ export function createTagsPatch(
     console.log('superdesk', superdesk);
     console.log('patch', patch);
     getServerResponseKeys().forEach((key) => {
-        let oldValues = OrderedMap<string, ISubject>((article[key] || []).filter(_item => _item.qcode != null).map((_item) => [_item.qcode, _item]));
+        let oldValues = OrderedMap<string, ISubject>((article[key] || []).filter(_item => typeof _item.qcode === 'string').map((_item) => [_item.qcode, _item]));
         const newValues = serverFormat[key];
         let newValuesMap = OrderedMap<string, ISubject>();
         console.log('oldValues', oldValues);
