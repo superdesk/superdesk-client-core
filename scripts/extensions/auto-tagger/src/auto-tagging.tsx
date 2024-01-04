@@ -213,14 +213,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     // Use the line below to get the existing tags from the article
                     // const existingTags = getExistingTags(this.props.article);                         
                         
-                    if (this._mounted) {                        
-
+                    if (this._mounted) {      
+                        const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
+                        ? dataBeforeLoading.changes.analysis // keep existing tags
+                        : OrderedMap<string, ITagUi>();                  
+                        // Merge new analysis with existing tags
+                        const mergedTags = existingTags.merge(resClient);
                         this.setState({
                             data: {
                                 original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
                                     ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
                                     : dataBeforeLoading.original, // use previous data
-                                changes: {analysis: resClient},
+                                changes: {analysis: mergedTags},
                             },
                         });
                     }
@@ -583,25 +587,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     onChange={(value) => this.setState({ tentativeTagName: value })}
                                                 />
                                             </div>
-
-                                            {/* <div style={{marginLeft: 10, marginTop: 14}}>
-                                                <Button
-                                                    type="primary"
-                                                    icon="plus-large"
-                                                    size="small"
-                                                    shape="round"
-                                                    text={gettext('Add')}
-                                                    iconOnly={true}
-                                                    disabled={readOnly}
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            newItem: {
-                                                                name: '',
-                                                            },
-                                                        });
-                                                    }}
-                                                />
-                                            </div> */}
                                         </div>
                                         <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <Button
