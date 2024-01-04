@@ -21,6 +21,12 @@ export function createTagsPatch(
         let newValuesMap = OrderedMap<string, ISubject>();
         console.log('oldValues', oldValues);
         console.log('newValues', newValues);
+        // Preserve tags with specific schemes
+        oldValues.forEach((tag, qcode) => {
+            if (tag.scheme === 'subject_custom' || tag.scheme === 'destinations') {
+                newValuesMap = newValuesMap.set(qcode, tag);
+            }
+        });
         const wasRemoved = (tag: ISubject) => {
             if(oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode)) {
                 console.log('wasRemoved', tag);
