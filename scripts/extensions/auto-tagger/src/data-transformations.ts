@@ -23,7 +23,7 @@ export function createTagsPatch(
         console.log('newValues', newValues);
         // Preserve tags with specific schemes
         oldValues.forEach((tag, qcode) => {
-            if (tag.scheme === 'subject_custom' || tag.scheme === 'destinations') {
+            if (tag && (tag.scheme === 'subject_custom' || tag.scheme === 'destinations')) {
                 newValuesMap = newValuesMap.set(qcode, tag);
             }
         });
