@@ -37,8 +37,11 @@ export function createTagsPatch(
             }
         }
 
+        // Add new values to the map, ensuring tag is defined and has a qcode
         newValues?.forEach((tag) => {
-            newValuesMap = newValuesMap.set(tag.qcode, tag);
+            if (tag && tag.qcode) {
+                newValuesMap = newValuesMap.set(tag.qcode, tag);
+            }
         });
 
         // Has to be executed even if newValuesMap is empty in order
