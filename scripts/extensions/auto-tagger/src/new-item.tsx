@@ -69,7 +69,15 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
             }
 
             return (
-                <div className="sd-card auto-tagging-widget__card-absolute new-item-popup">
+                <div className="sd-card auto-tagging-widget__card-absolute" 
+                style={{
+                    width: '90%',
+                    margin: 'auto 0',
+                    top: '70px',
+                    left: '16px',
+                    zIndex: 99,
+                    position: 'absolute'
+                }}>
                     <div className="sd-card__header sd-card__header--white">
                         <div className="sd-card__heading">{gettext('Add entity')}</div>
                     </div>

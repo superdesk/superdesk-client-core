@@ -27,12 +27,3 @@
     font-size: 13px;
     font-weight: 300;
 }
-
-.new-item-popup {
-    width: 90%;
-    margin: auto 0;
-    top: 70px;
-    left: 16px;
-    z-index: 99;
-    position: absolute;
-}
