@@ -323,6 +323,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 result,
                 data,
             );
+            // Reset the autocomplete input
+            this.setState({ tentativeTagName: '' });
         }
         getGroupName(group: string, vocabularyLabels: Map<string, string>) {
             return this.semaphoreFields.others[group]?.name ?? vocabularyLabels?.get(group) ?? group;
@@ -579,12 +581,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             _value.entireResponse;
 
                                                         this.insertTagFromSearch(tag, data, entireResponse);
+                                                        console.log('tentativeTagName: ', this.state.tentativeTagName')
                                                         // Delay the state update
                                                         setTimeout(() => {
                                                             this.setState({ tentativeTagName: '' });
                                                         }, 10); // Adjust the timeout duration as needed
+                                                        console.log('tentativeTagName: ', this.state.tentativeTagName')
                                                     }}
-                                                    onChange={(value) => this.setState({ tentativeTagName: value })}
+                                                    onChange={(value) => {
+                                                        console.log('tentativeTagName: ', this.state.tentativeTagName')
+                                                        console.log('value: ', value)
+                                                        this.setState({ tentativeTagName: value })
+                                                    }}
                                                 />
                                             </div>
                                         </div>
