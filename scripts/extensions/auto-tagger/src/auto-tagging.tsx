@@ -585,8 +585,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         // Delay the state update
                                                         setTimeout(() => {
                                                             this.setState({ tentativeTagName: '' });
-                                                        }, 10); // Adjust the timeout duration as needed
-                                                        console.log('tentativeTagName: ', this.state.tentativeTagName);
+                                                        }, 100); // Adjust the timeout duration as needed
+                                                        console.log('tentativeTagName after clearing: ', this.state.tentativeTagName);
                                                     }}
                                                     onChange={(value) => {
                                                         console.log('tentativeTagName: ', this.state.tentativeTagName);
