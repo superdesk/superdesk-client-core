@@ -505,7 +505,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <div style={{flexGrow: 1}}>
                                                 <Autocomplete
-                                                    value={this.state.tentativeTagName}
+                                                    value={''}
                                                     keyValue="keyValue"
                                                     items={[]}
                                                     placeholder="Search for an entity or subject"
@@ -545,9 +545,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                               console.error('Error during fetch request:', error);
                                                               // Handle the error, for example, by calling an error callback
                                                             });
-    
-
-
                                                         return {
                                                             cancel: () => {
                                                                 cancelled = true;
@@ -579,21 +576,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         const tag: ITagUi = _value.tag;
                                                         const entireResponse: IAutoTaggingSearchResult =
                                                             _value.entireResponse;
-
                                                         this.insertTagFromSearch(tag, data, entireResponse);
-                                                        console.log('tentativeTagName: ', this.state.tentativeTagName);
-                                                        // Delay the state update
-                                                        setTimeout(() => {
-                                                            this.setState({ tentativeTagName: '' }, () => {
-                                                                console.log('State updated: tentativeTagName: ', this.state.tentativeTagName);
-                                                            });
-                                                        }, 500); // Adjust the timeout duration as needed
                                                     }}
-                                                    onChange={(value) => {
-                                                        console.log('tentativeTagName: ', this.state.tentativeTagName);
-                                                        console.log('value: ', value);
-                                                        this.setState({ tentativeTagName: value })
-                                                    }}
+                                                    onChange={
+                                                        //do nothing
+                                                        () => {}
+                                                    }
                                                 />
                                             </div>
                                         </div>
@@ -608,9 +596,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 onClick={() => {
                                                     this.setState({
                                                         newItem: {
-                                                            name: this.state.tentativeTagName,
+                                                            name: '',
                                                         },
-                                                        tentativeTagName: '', // Clear the input field after setting the newItem
                                                     });
                                                 }}/>
                                         </div>
