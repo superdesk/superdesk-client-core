@@ -579,7 +579,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             _value.entireResponse;
 
                                                         this.insertTagFromSearch(tag, data, entireResponse);
-                                                        this.setState({ tentativeTagName: '' });
+                                                        // Delay the state update
+                                                        setTimeout(() => {
+                                                            this.setState({ tentativeTagName: '' });
+                                                        }, 10); // Adjust the timeout duration as needed
                                                     }}
                                                     onChange={(value) => this.setState({ tentativeTagName: value })}
                                                 />
