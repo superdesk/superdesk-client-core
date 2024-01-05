@@ -183,9 +183,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.save = this.save.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
-
-
-
     
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
@@ -582,7 +579,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             _value.entireResponse;
 
                                                         this.insertTagFromSearch(tag, data, entireResponse);
-                                                        // this.setState({ tentativeTagName: '' });
+                                                        this.setState({ tentativeTagName: '' });
                                                     }}
                                                     onChange={(value) => this.setState({ tentativeTagName: value })}
                                                 />
