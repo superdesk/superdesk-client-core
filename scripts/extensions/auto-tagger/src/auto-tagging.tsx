@@ -584,9 +584,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         console.log('tentativeTagName: ', this.state.tentativeTagName);
                                                         // Delay the state update
                                                         setTimeout(() => {
-                                                            this.setState({ tentativeTagName: '' });
-                                                        }, 100); // Adjust the timeout duration as needed
-                                                        console.log('tentativeTagName after clearing: ', this.state.tentativeTagName);
+                                                            this.setState({ tentativeTagName: '' }, () => {
+                                                                console.log('State updated: tentativeTagName: ', this.state.tentativeTagName);
+                                                            });
+                                                        }, 500); // Adjust the timeout duration as needed
                                                     }}
                                                     onChange={(value) => {
                                                         console.log('tentativeTagName: ', this.state.tentativeTagName);
