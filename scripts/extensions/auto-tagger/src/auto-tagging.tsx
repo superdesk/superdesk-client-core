@@ -579,7 +579,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         const entireResponse: IAutoTaggingSearchResult =
                                                             _value.entireResponse;
                                                         this.insertTagFromSearch(tag, data, entireResponse);
-                                                        forceRenderKey: Math.random();
+                                                        this.setState({ tentativeTagName: '', forceRenderKey: Math.random() });
+                                                        
                                                     }}
                                                     onChange={
                                                         //do nothing
