@@ -22,6 +22,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {IRelatedEntities} from 'core/getRelatedEntities';
+import {dragStart} from 'utils/dragging';
 
 export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -251,7 +252,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     onDragStart(event) {
-        ng.get('dragitem').start(event, this.props.item);
+        dragStart(event, this.props.item);
     }
 
     toggleNested(event) {

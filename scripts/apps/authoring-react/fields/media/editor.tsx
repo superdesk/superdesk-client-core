@@ -7,7 +7,7 @@ import {
     IMediaUserPreferences,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
-import {getSuperdeskType, gettext} from 'core/utils';
+import {gettext} from 'core/utils';
 import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {MediaCarousel} from './media-carousel/media-carousel';
 import {SpacerBlock} from 'core/ui/components/Spacer';
@@ -16,6 +16,7 @@ import {SUPERDESK_MEDIA_TYPES} from 'core/constants';
 import {notify} from 'core/notify/notify';
 import {maxItemsDefault} from './constants';
 import {validateWorkflow} from 'apps/relations/services/RelationsService';
+import {getSuperdeskType} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<IMediaValueOperational, IMediaConfig, IMediaUserPreferences>;
 

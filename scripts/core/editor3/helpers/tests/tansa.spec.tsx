@@ -1,3 +1,4 @@
+import {CustomEditor3Entity} from 'core/editor3/constants';
 import * as Setup from '../../reducers/tests/suggestion_setup';
 import {prepareHtmlForPatching, patchHTMLonTopOfEditorState} from '../patch-editor-3-html';
 
@@ -73,7 +74,7 @@ describe('editor3.helpers.tansa', () => {
             ],
             entityMap: {
                 0: {
-                    type: 'MEDIA',
+                    type: CustomEditor3Entity.MEDIA,
                     mutability: 'MUTABLE',
                     data: {
                         media: {

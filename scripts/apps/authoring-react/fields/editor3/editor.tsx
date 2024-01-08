@@ -44,6 +44,7 @@ import {Select, Option} from 'superdesk-ui-framework/react';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
 import {SpacerBlock} from 'core/ui/components/Spacer';
 import {editor3ToOperationalFormat} from '.';
+import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -468,6 +469,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             singleLine={config.singleLine ?? false}
                             cleanPastedHtml={config.cleanPastedHtml ?? false}
                             autocompleteSuggestions={this.state.autocompleteSuggestions}
+                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
                         />
                     </ReactContextForEditor3.Provider>
                 </Provider>

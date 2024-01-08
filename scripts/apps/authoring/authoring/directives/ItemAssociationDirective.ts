@@ -1,7 +1,8 @@
 import * as ctrl from '../controllers';
-import {stripHtmlTags, getSuperdeskType} from 'core/utils';
+import {stripHtmlTags} from 'core/utils';
 import {gettext} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
+import {getSuperdeskType} from 'utils/dragging';
 
 /**
  * @ngdoc directive

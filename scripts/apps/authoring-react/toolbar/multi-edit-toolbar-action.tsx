@@ -4,7 +4,7 @@ import {MultiEditModal} from '../multi-edit-modal';
 import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {showModal} from '@superdesk/common';
-import {getItemLabel, gettext} from 'core/utils';
+import {getArticleLabel, gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';
 
@@ -42,7 +42,7 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                         inlineLabel
                         labelHidden
                         zIndex={1050}
-                        optionLabel={(article) => getItemLabel(article)}
+                        optionLabel={(article) => getArticleLabel(article)}
                         value={this.state.selectedArticles}
                         onChange={(values) => {
                             this.setState({selectedArticles: values});

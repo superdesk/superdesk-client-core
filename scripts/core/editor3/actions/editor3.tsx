@@ -9,6 +9,11 @@ import {
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {IEditorStore} from '../store';
+import {IEditorDragDropPayload} from '../reducers/editor3';
+import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {getArticleLabel, gettext} from 'core/utils';
+import {notify} from 'core/notify/notify';
+import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
 
 /**
  * @ngdoc method
@@ -64,17 +69,52 @@ export function handleEditorTab(e) {
     };
 }
 
-/**
- * @ngdoc method
- * @name dragDrop
- * @param {DataTransfer} transfer
- * @return {String} mediaType
- * @return {String} blockKey
- * @description Creates the editor drop action.
- */
-export function dragDrop(transfer, mediaType, blockKey = null) {
-    if (mediaType === 'Files') {
-        return insertMedia(transfer.files);
+const canAddArticleEmbedDefault: ReturnType<typeof canAddArticleEmbed> = Promise.resolve({
+    ok: false,
+    error: gettext('Embedding is not allowed for this editor'),
+});
+
+export function dragDrop(
+    dataTransfer: DataTransfer,
+    type: string,
+    blockKey: string | null,
+    _canAddArticleEmbed?: (srcId: string) => ReturnType<typeof canAddArticleEmbed>,
+) {
+    if (type === 'Files') {
+        return insertMedia(dataTransfer.files);
+    } else if (type === MIME_TYPE_SUPERDESK_TEXT_ITEM) {
+        const partialArticle: IArticle = JSON.parse(dataTransfer.getData(type));
+
+        return (dispatch) => {
+            dispatch({type: 'EDITOR_LOADING', payload: true});
+
+            const canEmbedArticle = _canAddArticleEmbed ?? (() => canAddArticleEmbedDefault);
+
+            return canEmbedArticle(partialArticle._id).then((res) => {
+                if (res.ok === true) {
+                    const payload: IEditorDragDropPayload = {
+                        data: {
+                            id: res.src._id,
+                            name: getArticleLabel(res.src),
+                            html: res.src.body_html ?? '',
+                        },
+                        blockKey,
+                        contentType: 'article-embed',
+                    };
+
+                    const action = {
+                        type: 'EDITOR_DRAG_DROP',
+                        payload: payload,
+                    };
+
+                    dispatch(action);
+                } else {
+                    notify.error(res.error);
+                }
+            }).finally(() => {
+                dispatch({type: 'EDITOR_LOADING', payload: false});
+            });
+        };
     }
 
     return (dispatch) => {
@@ -82,14 +122,22 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
 
         dispatch({type: 'EDITOR_LOADING', payload: true});
 
-        const item: IArticle = JSON.parse(transfer.getData(mediaType));
+        const item: IArticle = JSON.parse(dataTransfer.getData(type));
 
         return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
-                dispatch({
+                const payload: IEditorDragDropPayload = {
+                    data,
+                    blockKey,
+                    contentType: 'media',
+                };
+
+                const action = {
                     type: 'EDITOR_DRAG_DROP',
-                    payload: {data, blockKey},
-                });
+                    payload: payload,
+                };
+
+                dispatch(action);
             })
             .finally(() => {
                 dispatch({type: 'EDITOR_LOADING', payload: false});
@@ -238,7 +286,7 @@ export function changeCase(changeTo: ITextCase, selection: SelectionState) {
     };
 }
 
-export type EditorLimit = { ui: CharacterLimitUiBehavior, chars: number };
+export type EditorLimit = {ui: CharacterLimitUiBehavior, chars: number};
 export function changeLimitConfig(payload: EditorLimit) {
     const config = payload.ui ? payload : {...payload, ui: DEFAULT_UI_FOR_EDITOR_LIMIT};
 

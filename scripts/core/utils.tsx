@@ -98,33 +98,6 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
 });
 
 /**
- * Get superdesk supported type for data transfer if any
- *
- * @param {Event} event
- * @param {Boolean} supportExternalFiles
- * @return {string}
- */
-export const getSuperdeskType = (event, supportExternalFiles = true) => {
-    const evt = event.originalEvent ?? event;
-
-    return evt.dataTransfer.types.find((name) =>
-        name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
-    );
-};
-
-export function getDroppedItem(event): IArticle | null {
-    const superdeskType = getSuperdeskType(event);
-
-    if (superdeskType == null || superdeskType === 'Files') {
-        return null;
-    }
-
-    const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
-
-    return __item;
-}
-
-/**
  * Works the same way as `gettext`, except that it's possible to also use React components
  * as placeholders, not only strings.
  */
@@ -376,7 +349,7 @@ export function fromServerDateFormat(date: string): Date {
     return new Date(date.slice(0, 19));
 }
 
-export function getItemLabel(item: IArticle): string {
+export function getArticleLabel(item: IArticle): string {
     const headlineTrimmed = item.headline?.trim();
     const sluglineTrimmed = item.slugline?.trim();
 

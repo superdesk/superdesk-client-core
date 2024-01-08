@@ -1526,6 +1526,7 @@ declare module 'superdesk-api' {
         description: string;
         schema: Object;
         editor: IContentProfileEditorConfig;
+        embeddable: boolean;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
@@ -1988,9 +1989,11 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsCard {
+        width?: import('react').CSSProperties['width'];
         background?: import('react').CSSProperties['background'];
         padding?: import('react').CSSProperties['padding'];
         borderRadius?: import('react').CSSProperties['borderRadius'];
+        heading?: React.ReactNode;
     }
 
     export interface IPropsListItemColumn {
@@ -2258,6 +2261,7 @@ declare module 'superdesk-api' {
         'media' |
         'link' |
         'embed' |
+        'embed articles' |
         'underline' |
         'italic' |
         'bold' |
