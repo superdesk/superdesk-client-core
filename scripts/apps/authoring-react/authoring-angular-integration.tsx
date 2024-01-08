@@ -14,7 +14,7 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import React from 'react';
-import {getItemLabel, gettext} from 'core/utils';
+import {gettext, getArticleLabel} from 'core/utils';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
@@ -320,7 +320,7 @@ function getInlineToolbarActions(
                         >
                             {gettext(
                                 'Are you sure you want to unpublish item "{{label}}"?',
-                                {label: getItemLabel(item)},
+                                {label: getArticleLabel(item)},
                             )}
                         </Modal>
                     ));
