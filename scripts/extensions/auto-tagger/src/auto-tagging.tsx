@@ -53,6 +53,7 @@ interface IState {
     newItem: INewItem | null;
     vocabularyLabels: Map<string, string> | null;
     tentativeTagName: string;
+    forceRenderKey: number;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -506,6 +507,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             <div style={{flexGrow: 1}}>
                                                 <Autocomplete
                                                     value={''}
+                                                    key={this.state.forceRenderKey}
                                                     keyValue="keyValue"
                                                     items={[]}
                                                     placeholder="Search for an entity or subject"
@@ -577,6 +579,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         const entireResponse: IAutoTaggingSearchResult =
                                                             _value.entireResponse;
                                                         this.insertTagFromSearch(tag, data, entireResponse);
+                                                        forceRenderKey: Math.random();
                                                     }}
                                                     onChange={
                                                         //do nothing
