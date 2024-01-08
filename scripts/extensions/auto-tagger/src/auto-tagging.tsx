@@ -172,6 +172,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 runAutomaticallyPreference: 'loading',
                 vocabularyLabels: null,
                 tentativeTagName: '',
+                forceRenderKey: Math.random(),
             };
 
             this._mounted = false;
