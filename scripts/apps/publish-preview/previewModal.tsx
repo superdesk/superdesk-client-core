@@ -1,13 +1,10 @@
 import React from 'react';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {IArticle} from 'superdesk-api';
 import {IDestination} from 'superdesk-interfaces/Destination';
+import {Button, Modal} from 'superdesk-ui-framework/react';
 
 const getFormattedDocument = (url) => fetch(
     url,
@@ -83,53 +80,56 @@ export class PreviewModal extends React.Component<IProps> {
         );
 
         return (
-            <Modal>
-                <ModalHeader>{gettext('Select preview target')}</ModalHeader>
-                <ModalBody>
-                    <ul>
-                        {
-                            subscribers.map((subscriber, i) => (
-                                <li key={i}>
-                                    <strong>{subscriber.name}</strong>
-                                    <ul>
-                                        {
-                                            subscriber.destinations
-                                                .filter((dest) => publishPreviewEnabled(dest))
-                                                .map((destination, j) => (
-                                                    <li
-                                                        key={j}
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'space-between',
-                                                            margin: '4px 0',
+            <Modal
+                visible
+                zIndex={1050}
+                size="small"
+                position="top"
+                headerTemplate={gettext('Select preview target')}
+                footerTemplate={
+                    <Button type="default" text={gettext('Cancel')} onClick={closeModal} />
+                }
+            >
+                <ul>
+                    {
+                        subscribers.map((subscriber, i) => (
+                            <li key={i}>
+                                <strong>{subscriber.name}</strong>
+                                <ul>
+                                    {
+                                        subscriber.destinations
+                                            .filter((dest) => publishPreviewEnabled(dest))
+                                            .map((destination, j) => (
+                                                <li
+                                                    key={j}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        margin: '4px 0',
+                                                    }}
+                                                >
+                                                    <span>{destination.name}</span>
+                                                    <button
+                                                        className="btn btn--primary btn--small"
+                                                        onClick={() => {
+                                                            this.openPreviewForItem(
+                                                                subscriber._id,
+                                                                destination.format,
+                                                                destination.preview_endpoint_url,
+                                                            );
                                                         }}
                                                     >
-                                                        <span>{destination.name}</span>
-                                                        <button
-                                                            className="btn btn--primary btn--small"
-                                                            onClick={() => {
-                                                                this.openPreviewForItem(
-                                                                    subscriber._id,
-                                                                    destination.format,
-                                                                    destination.preview_endpoint_url,
-                                                                );
-                                                            }}
-                                                        >
-                                                            {gettext('preview')}
-                                                        </button>
-                                                    </li>
-                                                ))
-                                        }
-                                    </ul>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                </ModalBody>
-                <ModalFooter>
-                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
-                </ModalFooter>
+                                                        {gettext('preview')}
+                                                    </button>
+                                                </li>
+                                            ))
+                                    }
+                                </ul>
+                            </li>
+                        ))
+                    }
+                </ul>
             </Modal>
         );
     }

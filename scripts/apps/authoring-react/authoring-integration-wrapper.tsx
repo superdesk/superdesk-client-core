@@ -435,7 +435,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 authoringStorage,
                                 handleUnsavedChanges,
                                 sideWidget,
-                                onArticleChange,
+                                onItemChange,
                             }, readOnly) => {
                                 const OpenWidgetComponent = (() => {
                                     if (panelState.active === true) {
@@ -453,7 +453,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         );
                                     } else if (sideWidget != null) {
                                         return getWidgetsFromExtensions(item).find(
-                                            ({label}) => sideWidget === label,
+                                            ({_id}) => sideWidget === _id,
                                         ).component;
                                     } else {
                                         return null;
@@ -475,7 +475,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             onFieldsDataChange={handleFieldsDataChange}
                                             readOnly={readOnly}
                                             handleUnsavedChanges={() => handleUnsavedChanges()}
-                                            onArticleChange={onArticleChange}
+                                            onItemChange={onItemChange}
                                         />
                                     );
                                 }

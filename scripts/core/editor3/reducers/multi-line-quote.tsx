@@ -3,6 +3,7 @@ import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {getBlockKeys} from '../helpers/selection/blockKeys';
 import {IEditorStore} from '../store';
 import {onChange} from './editor3';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * Contains the list of multi-line quote related reducers.
@@ -52,11 +53,17 @@ const addMultiLineQuote = (state: IEditorStore) => {
         const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
             .map((key) => contentState.getBlockForKey(key));
 
-        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE',
+        contentStateWithEntity = contentState.createEntity(
+            CustomEditor3Entity.MULTI_LINE_QUOTE,
+            'MUTABLE',
             getTableData(convertToRaw(ContentState.createFromBlockArray(selectedBlocks))),
         );
     } else {
-        contentStateWithEntity = contentState.createEntity('MULTI-LINE_QUOTE', 'MUTABLE', getTableData());
+        contentStateWithEntity = contentState.createEntity(
+            CustomEditor3Entity.MULTI_LINE_QUOTE,
+            'MUTABLE',
+            getTableData(),
+        );
     }
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();

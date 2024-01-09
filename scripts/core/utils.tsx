@@ -8,6 +8,7 @@ import formatISO from 'date-fns/formatISO';
 import {IScope} from 'angular';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+
 const language = getUserInterfaceLanguage();
 const filename = `/languages/${language}.json?nocache=${Date.now()}`;
 
@@ -96,33 +97,6 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
         })
         .catch(reject);
 });
-
-/**
- * Get superdesk supported type for data transfer if any
- *
- * @param {Event} event
- * @param {Boolean} supportExternalFiles
- * @return {string}
- */
-export const getSuperdeskType = (event, supportExternalFiles = true) => {
-    const evt = event.originalEvent ?? event;
-
-    return evt.dataTransfer.types.find((name) =>
-        name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
-    );
-};
-
-export function getDroppedItem(event): IArticle | null {
-    const superdeskType = getSuperdeskType(event);
-
-    if (superdeskType == null || superdeskType === 'Files') {
-        return null;
-    }
-
-    const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
-
-    return __item;
-}
 
 export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
     let current = scope.$parent;
@@ -292,12 +266,12 @@ export function translateArticleType(type: IArticle['type']) {
 export function getUserSearchMongoQuery(searchString: string) {
     return {
         $or: [
-            {username: {$regex: searchString, $options: '-i'}},
-            {display_name: {$regex: searchString, $options: '-i'}},
-            {first_name: {$regex: searchString, $options: '-i'}},
-            {last_name: {$regex: searchString, $options: '-i'}},
-            {email: {$regex: searchString, $options: '-i'}},
-            {sign_off: {$regex: searchString, $options: '-i'}},
+            {username: {$regex: searchString, $options: 'i'}},
+            {display_name: {$regex: searchString, $options: 'i'}},
+            {first_name: {$regex: searchString, $options: 'i'}},
+            {last_name: {$regex: searchString, $options: 'i'}},
+            {email: {$regex: searchString, $options: 'i'}},
+            {sign_off: {$regex: searchString, $options: 'i'}},
         ],
     };
 }
@@ -388,7 +362,7 @@ export function fromServerDateFormat(date: string): Date {
     return new Date(date.slice(0, 19));
 }
 
-export function getItemLabel(item: IArticle): string {
+export function getArticleLabel(item: IArticle): string {
     const headlineTrimmed = item.headline?.trim();
     const sluglineTrimmed = item.slugline?.trim();
 

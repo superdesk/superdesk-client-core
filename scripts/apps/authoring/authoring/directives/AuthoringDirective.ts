@@ -20,7 +20,7 @@ import {getArticleSchemaMiddleware} from '..';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 
@@ -121,7 +121,7 @@ export function AuthoringDirective(
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
-            $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
+            $scope.showExportButton = sdApi.highlights.showHighlightExportButton($scope.origItem);
             $scope.openSuggestions = () => suggest.setActive();
             $scope.openCompareVersions = (item) => compareVersions.init(item);
             $scope.isValidEmbed = {};
@@ -166,7 +166,9 @@ export function AuthoringDirective(
                         $scope.deskName = $scope.origItem.task.desk;
                         $scope.stage = $scope.origItem.task.stage;
                     } else {
-                        api('stages').getById($scope.origItem.task.stage)
+                        // gets the  whole stage object by Id
+                        api('stages')
+                            .getById($scope.origItem.task.stage)
                             .then((result) => {
                                 $scope.stage = result;
                             });
@@ -312,45 +314,15 @@ export function AuthoringDirective(
              * Export the list of highlights as a text item.
              */
             $scope.exportHighlight = function(item) {
-                if ($scope.save_enabled()) {
-                    modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-                        .then(() => {
-                            _exportHighlight(item._id);
-                        },
-                        );
-                } else {
-                    _exportHighlight(item._id);
-                }
+                sdApi.highlights.exportHighlight(item._id, $scope.save_enabled());
             };
 
-            function _exportHighlight(_id) {
-                api.generate_highlights.save({}, {package: _id})
-                    .then(authoringWorkspace.edit, (response) => {
-                        if (response.status === 403) {
-                            _forceExportHighlight(_id);
-                        } else {
-                            notify.error(gettext('Error creating highlight.'));
-                        }
-                    });
-            }
-
-            function _forceExportHighlight(_id) {
-                modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
-                    .then(() => {
-                        api.generate_highlights.save({}, {package: _id, export: true})
-                            .then(authoringWorkspace.edit, (response) => {
-                                notify.error(gettext('Error creating highlight.'));
-                            });
-                    });
-            }
-
             function _previewHighlight(_id) {
-                api.generate_highlights.save({}, {package: _id, preview: true})
-                    .then((response) => {
-                        $scope.highlight_preview = response.body_html;
-                    }, (data) => {
-                        $scope.highlight_preview = data.message;
-                    });
+                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
+                    $scope.highlight_preview = res;
+                }).catch((err) => {
+                    $scope.highlight_preview = err;
+                });
             }
 
             if ($scope.origItem.highlight) {
@@ -440,7 +412,7 @@ export function AuthoringDirective(
 
             function publishItem(orig, item): Promise<boolean> {
                 autosave.stop(item);
-                const action: string = $scope.action != null
+                const action: IAuthoringActionType = $scope.action != null
                     ? ($scope.action === 'edit' ? 'publish' : $scope.action)
                     : 'publish';
 

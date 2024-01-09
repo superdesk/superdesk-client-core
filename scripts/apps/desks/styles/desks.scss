@@ -40,23 +40,23 @@ $desk-width: 270px;
 
 .desk-tabs {
     .online-users {
-        margin-top: -10px;
-        margin-left: 20px;
-        border-left: 1px solid #dfdfdf;
+        margin-block-start: -10px;
+        margin-inline-start: 20px;
+        border-inline-start: 1px solid #dfdfdf;
     }
 }
 
 
 .master-desk-view {
     overflow: hidden;
-    padding-bottom: 0 !important;
+    padding-block-end: 0 !important;
     z-index: auto;
 }
 
 .main-desk-container {
 
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
     display: flex;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -75,13 +75,13 @@ $desk-width: 270px;
     &::-webkit-scrollbar {
         width: 18px;
         height: 18px;
-        border-top: 1px solid #d0d0d0;
+        border-block-start: 1px solid #d0d0d0;
     }
     &::-webkit-scrollbar:hover {
         background-color: $sd-background;
     }
     &::-webkit-scrollbar-thumb {
-        border-top: 1px solid #d0d0d0;
+        border-block-start: 1px solid #d0d0d0;
         background: #bbb;
         @include box-shadow(inset 0px 1px 0px 3px $sd-background);
     }
@@ -100,33 +100,33 @@ $desk-width: 270px;
 
     .desk {
         position: absolute;
-        left: 0; right: 30px; top:0; bottom: 0;
+        inset-inline-start: 0; inset-inline-end: 30px; inset-block-start:0; inset-block-end: 0;
         overflow:hidden;
         &__header {
             position: absolute;
-            left: 0; right: 0; top:0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:0;
             height: 25px;
             line-height: 25px;
-            border-bottom: 5px solid #4d4d4d;
+            border-block-end: 5px solid #4d4d4d;
         }
         &__name {
             text-transform: uppercase;
-            float: left;
+            float: inline-start;
             @include text-bold();
             &:hover {
                 cursor: default;
             }
         }
         &__open {
-            margin-left: 10px;
-            i { margin-bottom: 3px; color: $grayLight; }
+            margin-inline-start: 10px;
+            i { margin-block-end: 3px; color: $grayLight; }
             &:hover {
                 i { color: $grayDark; }
                 cursor:pointer;
             }
         }
         &__action {
-            float:right;
+            float: inline-end;
             .dropdown__toggle {
                 @include opacity(60);
                 border: 0;
@@ -134,12 +134,12 @@ $desk-width: 270px;
                 vertical-align: baseline;
             }
                         .dropdown__menu {
-                            right: 5px;
+                            inset-inline-end: 5px;
                         }
         }
         &__content {
             position: absolute;
-            left: 0; right: 0; top:30px; bottom: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:30px; inset-block-end: 0;
             overflow-x: hidden;
             overflow-y: auto;
 
@@ -163,7 +163,7 @@ $desk-width: 270px;
 
 .inline-content-items {
     min-height: 18px;
-    margin-bottom: 6px;
+    margin-block-end: 6px;
     @include box-shadow(0 1px 4px 0 rgba(0,0,0,.2));
     .item {
         cursor: default;
@@ -171,12 +171,12 @@ $desk-width: 270px;
         height: 32px;
         line-height: 32px;
         @include border-box();
-        border-left: 3px solid #d1d1d1;
-        border-right: 2px solid $white;
-        border-bottom: 1px solid #eee;
+        border-inline-start: 3px solid #d1d1d1;
+        border-inline-end: 2px solid $white;
+        border-block-end: 1px solid #eee;
         position: relative;
         &:last-child {
-            border-bottom: none;
+            border-block-end: none;
         }
         &.active {
             background: $sd-hover;
@@ -186,7 +186,7 @@ $desk-width: 270px;
             border-left-color: #b70101;
         }
         .type {
-            float: left;
+            float: inline-start;
             height: 32px;
             i {
                 margin: 0 8px;
@@ -197,9 +197,9 @@ $desk-width: 270px;
         }
         .urgency {
             height: 32px;
-            float: left;
+            float: inline-start;
             line-height: 30px;
-            margin-right: 10px;
+            margin-inline-end: 10px;
         }
         .urgency-label, .priority-label {
             vertical-align: middle;
@@ -214,12 +214,12 @@ $desk-width: 270px;
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: 12px;
-            padding-right: 10px;
+            padding-inline-end: 10px;
             .keywords {
                   color: $sd-keyword;
                   font-weight: 500;
                   text-transform: uppercase;
-                  margin-right: 5px;
+                  margin-inline-end: 5px;
             }
         }
                 &:not(:-moz-handler-blocked) {
@@ -229,7 +229,7 @@ $desk-width: 270px;
                 }
         .action {
             position: absolute;
-            right: 0; top: 0;
+            inset-inline-end: 0; inset-block-start: 0;
             display: none;
                         background-color: inherit;
 
@@ -237,9 +237,9 @@ $desk-width: 270px;
                 background: transparent;
                 height: 32px;
                 border: 0;
-                border-left: 1px solid var(--sd-colour-line--light);
+                border-inline-start: 1px solid var(--sd-colour-line--light);
                 display: block;
-                float: left;
+                float: inline-start;
                 &:hover {
                     cursor: pointer;
                     background: var(--sd-item__main-Bg--hover);
@@ -253,7 +253,7 @@ $desk-width: 270px;
         }
         &.shifted:hover {
             .text {
-                padding-right: 57px;
+                padding-inline-end: 57px;
             }
             .action {
                 display: block;
@@ -262,7 +262,7 @@ $desk-width: 270px;
     }
     &.content-tasks {
         .item {
-            border-left: none;
+            border-inline-start: none;
         }
     }
 }
@@ -286,18 +286,18 @@ $desk-width: 270px;
             @include text-semibold();
         }
         .slugline {
-            padding-left: 20px;
+            padding-inline-start: 20px;
             color: $sd-keyword;
             text-transform: uppercase;
             font-weight: 500;
         }
         .oldslugline {
-            padding-left: 20px;
+            padding-inline-start: 20px;
             color: $sd-blue-text;
             text-transform: uppercase;
         }
         .headline {
-            padding-left: 40px;
+            padding-inline-start: 40px;
             text-transform: none;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -355,20 +355,20 @@ $desk-width: 270px;
     .stages {
         .col {
             position: absolute;
-            top: 60px;
-            bottom: 10px;
-            left: 0;
-            right: 50%;
+            inset-block-start: 60px;
+            inset-block-end: 10px;
+            inset-inline-start: 0;
+            inset-inline-end: 50%;
             padding: 10px 20px;
             overflow-x: hidden;
             overflow-y: auto;
             &:last-child {
-                left: 50%; right: 0;
-                border-left: 1px solid var(--sd-colour-line--light);
+                inset-inline-start: 50%; inset-inline-end: 0;
+                border-inline-start: 1px solid var(--sd-colour-line--light);
             }
         }
         .row {
-            padding-top: 20px;
+            padding-block-start: 20px;
             clear: both;
             label {
                 display: inline-block;
@@ -380,7 +380,7 @@ $desk-width: 270px;
         .heading {
             padding: 2px 0;
             color: var(--color-text-light);
-            margin-right: 10px;
+            margin-inline-end: 10px;
             text-transform: uppercase;
         }
         [sd-content-expiry] {
@@ -388,15 +388,15 @@ $desk-width: 270px;
             float: none;
             .right {
                 position: absolute;
-                top: -18px; right: 0;
+                inset-block-start: -18px; inset-inline-end: 0;
             }
             label {
                 font-size: 13px;
                 color: $sd-text;
             }
         }
-        .stage-type { margin-bottom: 10px; }
-        select { margin-bottom: 10px; }
+        .stage-type { margin-block-end: 10px; }
+        select { margin-block-end: 10px; }
         .pills-list {
             li {
                 cursor: pointer;
@@ -404,11 +404,11 @@ $desk-width: 270px;
                 .global-label {
                     font-size: 12px;
                     color: var(--color-text-lighter);
-                    margin-top: 5px;
-                    margin-right: 5px;
+                    margin-block-start: 5px;
+                    margin-inline-end: 5px;
                     text-transform: none;
                     span:nth-child(2) { 
-                        margin-left: 0; 
+                        margin-inline-start: 0; 
                     }
                 }
                 &.active {
@@ -418,7 +418,7 @@ $desk-width: 270px;
                     }
                 }
                 &.editable {
-                    padding-top: 0;
+                    padding-block-start: 0;
                     .char-count {
                         &.error {
                             @include text-semibold();
@@ -433,7 +433,7 @@ $desk-width: 270px;
                     border-radius: 2px;
                     outline: 1px solid var(--sd-colour-interactive);
                     background-color: var(--sd-colour-interactive--alpha-20);
-                    margin-bottom: 10px;
+                    margin-block-end: 10px;
                 }
                 li:not(.editable) {
                     display: none;
@@ -445,7 +445,7 @@ $desk-width: 270px;
                 display: block;
                 @include border-radius(3px);
                 @include border-box();
-                margin-bottom: 5px;
+                margin-block-end: 5px;
                 height: 28px;
                 padding: 5px 10px;
                 text-transform: uppercase;
@@ -482,7 +482,7 @@ $desk-width: 270px;
     .col-heading {
         padding: 2px 0;
         color: var(--color-text-light);
-        margin-right: 10px;
+        margin-inline-end: 10px;
         text-transform: uppercase;
     }
 }
@@ -501,11 +501,11 @@ $desk-width: 270px;
 .modal--tabs {
     .button-toolbar {
         position: absolute;
-        top: 0;
-        left: 0;
+        inset-block-start: 0;
+        inset-inline-start: 0;
         background-color: var(--sd-colour-bg__sliding-toolbar);
         padding: 10px;
-        text-align: right;
+        text-align: end;
         width: 100%;
         animation: dropOut2 .3s cubic-bezier(.695,.105,.285,1.275) 1;
         box-shadow: var(--sd-shadow__subnav);
@@ -513,7 +513,7 @@ $desk-width: 270px;
 }
 
 .members-list {
-    padding-top: 1rem;
+    padding-block-start: 1rem;
 } 
 
 /*----------------------------------------
@@ -521,8 +521,8 @@ $desk-width: 270px;
 ----------------------------------------*/
 
 .item-group {
-    margin-top:5px;
-    margin-bottom: 10px;
+    margin-block-start:5px;
+    margin-block-end: 10px;
     &__content {
         padding: 2px;
         overflow: auto;
@@ -572,7 +572,7 @@ $desk-width: 270px;
         color: #777;
         @include text-semibold();
         cursor: default;
-        float: left;
+        float: inline-start;
         &--todo {
             color: $todo-color;
         }
@@ -595,21 +595,21 @@ $desk-width: 270px;
     background: var(--sd-item__main-Bg);
     height: 32px;
     line-height: 32px;
-    border-left: 3px solid transparent;
-    border-right: 2px solid var(--sd-item__main-Bg);
-    border-bottom: 1px solid var(--sd-colour-line--light);
+    border-inline-start: 3px solid transparent;
+    border-inline-end: 2px solid var(--sd-item__main-Bg);
+    border-block-end: 1px solid var(--sd-colour-line--light);
     position: relative;
     display:flex;
-    padding-right: 8px;
+    padding-inline-end: 8px;
     &--slugline-view {
         min-height: 32px;
-        border-left:none;
+        border-inline-start:none;
         height:auto;
         line-height: 160%;
         padding: 10px;
     }
     &:last-child {
-        border-bottom: none;
+        border-block-end: none;
     }
     &--active {
         background: var(--sd-item__main-Bg--activated);
@@ -622,7 +622,7 @@ $desk-width: 270px;
         opacity: 0.5;
     }
     &--no-border {
-        border-left:none;
+        border-inline-start:none;
     }
     &__type {
         height: 100%;
@@ -639,7 +639,7 @@ $desk-width: 270px;
     }
     &__urgency-field {
         height: 100%;
-        margin-right: 8px;
+        margin-inline-end: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -657,13 +657,13 @@ $desk-width: 270px;
         height: 32px;
         @include text-overflow();
         font-size: 12px;
-        padding-right: 10px;
+        padding-inline-end: 10px;
         flex-grow: 1;
         .keywords {
             color: $sd-keyword;
             font-weight: 500;
             text-transform: uppercase;
-            margin-right: 5px;
+            margin-inline-end: 5px;
         }
     }
     &__date time {
@@ -677,7 +677,7 @@ $desk-width: 270px;
     &__action {
         display: none;
         background-color: inherit;
-        margin-right: -8px;
+        margin-inline-end: -8px;
     }
     &.active {
         .action button:hover {
@@ -689,7 +689,7 @@ $desk-width: 270px;
     }
     &.shifted:hover {
         .content-item__text {
-            padding-right: 0;
+            padding-inline-end: 0;
         }
         .content-item__action {
             display: flex;
@@ -708,22 +708,22 @@ $desk-width: 270px;
 
 .slugline-item {
     @extend .content-item;
-    border-left:none;
+    border-inline-start:none;
     height:auto;
     line-height: 160%;
     padding: 0 8px;
     margin:0;
     display:block;
-    border-bottom: 1px var(--sd-colour-line--light);
+    border-block-end: 1px var(--sd-colour-line--light);
     &:last-child {
-        border-bottom: none;
+        border-block-end: none;
     }
     &__row {
         height: 24px;
         clear: both;
         @include text-overflow();
         &--main {
-            padding-top: 10px;
+            padding-block-start: 10px;
         }
     }
     .place {

@@ -2,7 +2,7 @@
 @import '~variables.scss';
 
 .field-search__popup {
-    margin-top: 1px;
+    margin-block-start: 1px;
 
     &-list {
         li {
@@ -26,10 +26,10 @@
     }
 
     &-item-label {
-        padding-top: 5px;
+        padding-block-start: 5px;
         display: inline-block;
         width: 200px;
-        text-align: left;
+        text-align: start;
     }
 
 }

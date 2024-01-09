@@ -1,11 +1,20 @@
 import React from 'react';
 
-import {getValidMediaType, canDropMedia, dragEventShouldShowDropZone} from './Editor3Component';
+import {
+    getValidMediaType,
+    canDropMedia,
+    EVENT_TYPES_TRIGGER_DROP_ZONE,
+    IPropsEditor3Component,
+} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
-import {EDITOR_BLOCK_TYPE} from '../constants';
+import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {notify} from 'core/notify/notify';
+import {articleEmbedsConfigured} from './article-embed/can-add-article-embed';
+import {gettext} from 'core/utils';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
@@ -34,6 +43,17 @@ function isHtmlTextAndShouldCreateEmbed(event, mediaType, editorProps): boolean 
     const html = event.originalEvent.dataTransfer.getData(mediaType);
 
     return embedShouldBeCreated(html, editorProps);
+}
+
+export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Component) {
+    if (event.dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
+        return articleEmbedsConfigured(editorProps);
+    }
+
+    const mediaFormattingOption: RICH_FORMATTING_OPTION = 'media';
+    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
+
+    return editorProps.editorFormat.includes(mediaFormattingOption) && intersection.length > 0;
 }
 
 interface IProps {
@@ -69,12 +89,26 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
         let handled = false;
         const block = getEditorBlock(event);
 
-        if (typeof block === 'string' && block.length > 0) {
+        const {dataTransfer} = event.originalEvent;
+
+        if (dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
+            if (articleEmbedsConfigured(this.props.editorProps)) {
+                this.props.dispatch(dragDrop(
+                    dataTransfer,
+                    MIME_TYPE_SUPERDESK_TEXT_ITEM,
+                    this.getDropBlockKey(),
+                    this.props.editorProps.canAddArticleEmbed,
+                ));
+            } else {
+                notify.error(gettext('Embedding articles is not configured for this content profile field'));
+            }
+
+            handled = true;
+        } else if (typeof block === 'string' && block.length > 0) {
             // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
             handled = true;
         } else {
-            const {dataTransfer} = event.originalEvent;
             const mediaType = getValidMediaType(event.originalEvent);
             const blockKey = this.getDropBlockKey();
             const link = event.originalEvent.dataTransfer.getData('URL');
@@ -108,7 +142,7 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
     }
 
     onDragOver(event) {
-        if (!dragEventShouldShowDropZone(event.originalEvent)) {
+        if (!dragEventShouldShowDropZone(event.originalEvent, this.props.editorProps)) {
             return;
         }
 
@@ -123,7 +157,7 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
     }
 
     onDragLeave(event) {
-        if (!dragEventShouldShowDropZone(event.originalEvent)) {
+        if (!dragEventShouldShowDropZone(event.originalEvent, this.props.editorProps)) {
             return;
         }
 

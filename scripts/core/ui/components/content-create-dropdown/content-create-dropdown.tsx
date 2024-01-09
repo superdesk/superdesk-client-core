@@ -4,10 +4,11 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
-import {getSuperdeskType, gettext} from 'core/utils';
+import {gettext} from 'core/utils';
 import {showPopup} from '../popupNew';
 import {InitialView} from './initial-view';
 import {DropZone3} from '../drop-zone-3';
+import {getSuperdeskType} from 'utils/dragging';
 
 const defaultButton = ({onClick}: IPropsAddContentCustomButton) => (
     <Button

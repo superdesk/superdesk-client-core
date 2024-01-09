@@ -15,36 +15,36 @@ $jcrop-handle-offset-small: -4px;
         border-radius: 50%;
     }
     .jcrop-handle.ord-n {
-        margin-left: $jcrop-handle-offset;
-        margin-top: $jcrop-handle-offset;
+        margin-inline-start: $jcrop-handle-offset;
+        margin-block-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-s {
-        margin-bottom: $jcrop-handle-offset;
-        margin-left: $jcrop-handle-offset;
+        margin-block-end: $jcrop-handle-offset;
+        margin-inline-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-e {
-        margin-right: $jcrop-handle-offset;
-        margin-top: $jcrop-handle-offset;
+        margin-inline-end: $jcrop-handle-offset;
+        margin-block-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-w {
-        margin-left: $jcrop-handle-offset;
-        margin-top: $jcrop-handle-offset;
+        margin-inline-start: $jcrop-handle-offset;
+        margin-block-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-nw {
-        margin-left: $jcrop-handle-offset;
-        margin-top: $jcrop-handle-offset;
+        margin-inline-start: $jcrop-handle-offset;
+        margin-block-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-ne {
-        margin-right: $jcrop-handle-offset;
-        margin-top: $jcrop-handle-offset;
+        margin-inline-end: $jcrop-handle-offset;
+        margin-block-start: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-se {
-        margin-bottom: $jcrop-handle-offset;
-        margin-right: $jcrop-handle-offset;
+        margin-block-end: $jcrop-handle-offset;
+        margin-inline-end: $jcrop-handle-offset;
     }
     .jcrop-handle.ord-sw {
-        margin-bottom: $jcrop-handle-offset;
-        margin-left: $jcrop-handle-offset;
+        margin-block-end: $jcrop-handle-offset;
+        margin-inline-start: $jcrop-handle-offset;
     }
     .sd-grid-item {
         .jcrop-handle {
@@ -52,36 +52,36 @@ $jcrop-handle-offset-small: -4px;
             height: $jcrop-handle-size-small;
         }
         .jcrop-handle.ord-n {
-            margin-left: $jcrop-handle-offset-small;
-            margin-top: $jcrop-handle-offset-small;
+            margin-inline-start: $jcrop-handle-offset-small;
+            margin-block-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-s {
-            margin-bottom: $jcrop-handle-offset-small;
-            margin-left: $jcrop-handle-offset-small;
+            margin-block-end: $jcrop-handle-offset-small;
+            margin-inline-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-e {
-            margin-right: $jcrop-handle-offset-small;
-            margin-top: $jcrop-handle-offset-small;
+            margin-inline-end: $jcrop-handle-offset-small;
+            margin-block-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-w {
-            margin-left: $jcrop-handle-offset-small;
-            margin-top: $jcrop-handle-offset-small;
+            margin-inline-start: $jcrop-handle-offset-small;
+            margin-block-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-nw {
-            margin-left: $jcrop-handle-offset-small;
-            margin-top: $jcrop-handle-offset-small;
+            margin-inline-start: $jcrop-handle-offset-small;
+            margin-block-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-ne {
-            margin-right: $jcrop-handle-offset-small;
-            margin-top: $jcrop-handle-offset-small;
+            margin-inline-end: $jcrop-handle-offset-small;
+            margin-block-start: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-se {
-            margin-bottom: $jcrop-handle-offset-small;
-            margin-right: $jcrop-handle-offset-small;
+            margin-block-end: $jcrop-handle-offset-small;
+            margin-inline-end: $jcrop-handle-offset-small;
         }
         .jcrop-handle.ord-sw {
-            margin-bottom: $jcrop-handle-offset-small;
-            margin-left: $jcrop-handle-offset-small;
+            margin-block-end: $jcrop-handle-offset-small;
+            margin-inline-start: $jcrop-handle-offset-small;
         }
     }
       

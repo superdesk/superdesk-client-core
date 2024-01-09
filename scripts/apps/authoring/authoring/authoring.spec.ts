@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
+import {CustomEditor3Entity} from 'core/editor3/constants';
 import {onChange} from 'core/editor3/store/index';
 import {convertFromRaw, RawDraftContentState} from 'draft-js';
 import {AuthoringWorkspaceService} from './services/AuthoringWorkspaceService';
@@ -126,12 +127,12 @@ describe('authoring', () => {
             entityMap: {
                 0: {
                     data: {media: entity1},
-                    type: 'MEDIA',
+                    type: CustomEditor3Entity.MEDIA,
                     mutability: 'MUTABLE',
                 },
                 1: {
                     data: {media: entity2},
-                    type: 'MEDIA',
+                    type: CustomEditor3Entity.MEDIA,
                     mutability: 'MUTABLE',
                 },
             },

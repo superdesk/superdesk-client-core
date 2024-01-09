@@ -792,7 +792,8 @@ describe('monitoring', () => {
         monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
 
-        browser.wait(ECE.stalenessOf(element(by.id('multi-select-count'))));
+        // check if multi select is closed
+        browser.wait(ECE.not(ECE.presenceOf(element(by.id('multi-select-count')))), 500);
     });
 
     it('can view published duplicated item in duplicate tab of non-published original item', () => {

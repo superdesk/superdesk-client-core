@@ -1,10 +1,11 @@
 import {forEach, startsWith, endsWith, some} from 'lodash';
-import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
 import {IArticle, IVocabulary, IRelatedArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {isLink} from 'apps/relations/services/RelationsService';
+import {getSuperdeskType} from 'utils/dragging';
 
 function isRelatedArticle(x: IArticle | IRelatedArticle): x is IRelatedArticle {
     return isLink(x);

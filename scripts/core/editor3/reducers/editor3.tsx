@@ -7,7 +7,7 @@ import {
     ContentBlock,
 } from 'draft-js';
 import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
-import {addMedia} from './toolbar';
+import {addArticleEmbed, addMedia} from './toolbar';
 import {getDecorators, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
@@ -15,6 +15,8 @@ import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispa
 import {insertEntity} from '../helpers/draftInsertEntity';
 import {logger} from 'core/services/logger';
 import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -353,6 +355,26 @@ const onTab = (state: IEditorStore, e) => {
     return onChange(state, newState);
 };
 
+export type IDroppableEditorContent = 'media' | 'article-embed';
+
+export interface IEditorDragDropMedia {
+    contentType: 'media';
+    data: any;
+    blockKey: string;
+}
+
+export interface IEditorDragDropArticleEmbed {
+    contentType: 'article-embed';
+    data: {
+        id: string;
+        name: string;
+        html: string;
+    };
+    blockKey: string;
+}
+
+export type IEditorDragDropPayload = IEditorDragDropMedia | IEditorDragDropArticleEmbed;
+
 /**
  * @ngdoc method
  * @name dragDrop
@@ -360,8 +382,16 @@ const onTab = (state: IEditorStore, e) => {
  * @return {Object} New state
  * @description Handles the dragdrop event over the editor.
  */
-const dragDrop = (state, {data, blockKey}) => {
-    const editorState = addMedia(state.editorState, data, blockKey);
+const dragDrop = (state, {data, blockKey, contentType}: IEditorDragDropPayload) => {
+    const editorState = (() => {
+        if (contentType === 'media') {
+            return addMedia(state.editorState, data, blockKey);
+        } else if (contentType === 'article-embed') {
+            return addArticleEmbed(state.editorState, data, blockKey);
+        } else {
+            assertNever(contentType);
+        }
+    })();
 
     return {
         ...onChange(state, editorState),
@@ -505,7 +535,13 @@ export function moveBlock(state, options) {
  */
 const applyEmbed = (state, {code, targetBlockKey}) => {
     const data = typeof code === 'string' ? {html: code} : code;
-    const nextEditorState = insertEntity(state.editorState, 'EMBED', 'MUTABLE', {data}, targetBlockKey);
+    const nextEditorState = insertEntity(
+        state.editorState,
+        CustomEditor3Entity.EMBED,
+        'MUTABLE',
+        {data},
+        targetBlockKey,
+    );
 
     return onChange(state, nextEditorState);
 };

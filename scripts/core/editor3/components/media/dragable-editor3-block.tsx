@@ -39,6 +39,8 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> 
                 onMouseEnter={() => {
                     this.setState({
                         displayHandle: true,
+                    }, () => {
+                        window.clearTimeout(this.timeoutId);
                     });
                 }}
                 onMouseLeave={() => {
@@ -46,7 +48,7 @@ class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> 
                         this.setState({
                             displayHandle: false,
                         });
-                    }, 3000);
+                    }, 500);
                 }}
             >
                 <div

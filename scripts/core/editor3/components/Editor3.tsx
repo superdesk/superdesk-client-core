@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {Editor3Component} from './Editor3Component';
@@ -8,7 +7,6 @@ import * as actions from '../actions';
 import {EditorState} from 'draft-js';
 
 export class Editor3Base extends React.Component<any, any> {
-    static propTypes: any;
     static defaultProps: any;
 
     componentDidCatch(error: Error) {
@@ -26,10 +24,6 @@ export class Editor3Base extends React.Component<any, any> {
     }
 }
 
-Editor3Base.propTypes = Editor3Component.propTypes = {
-    onChange: PropTypes.func,
-};
-
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showToolbar: state.showToolbar,
@@ -46,11 +40,16 @@ const mapStateToProps = (state) => ({
     limit: state.limitConfig?.chars,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
     onChange: (editorState: EditorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
-    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
+    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(
+        transfer,
+        mediaType,
+        null,
+        ownProps.canAddArticleEmbed,
+    )),
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),

@@ -1,14 +1,9 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-
 import {gettext} from 'core/utils';
-import Button from 'core/ui/components/Button';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Checkbox} from 'core/ui/components/Form';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     closeModal(): void;
@@ -38,9 +33,35 @@ export function getUnpublishConfirmModal(
 
         render() {
             return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>{gettext('Confirm Unpublishing')}</ModalHeader>
-                    <ModalBody>
+                <Modal
+                    visible
+                    zIndex={1050}
+                    position="top"
+                    size="small"
+                    onHide={this.props.closeModal}
+                    headerTemplate={gettext('Confirm Unpublishing')}
+                    footerTemplate={
+                        (
+                            <ButtonGroup align="end">
+                                <Button
+                                    text={gettext('Cancel')}
+                                    type="default"
+                                    onClick={this.props.closeModal}
+                                />
+                                <Button
+                                    text={gettext('Confirm')}
+                                    type="primary"
+                                    onClick={() => {
+                                        unpublish(this.state.related);
+                                        this.props.closeModal();
+                                    }}
+                                />
+                            </ButtonGroup>
+                        )
+                    }
+
+                >
+                    <div>
                         {gettext('Are you sure you want to unpublish item "{{headline}}"?', {
                             headline: item.headline || item.slugline,
                         })}
@@ -64,21 +85,7 @@ export function getUnpublishConfirmModal(
                                 </ul>
                             </form>
                         )}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="default" onClick={this.props.closeModal}>
-                            {gettext('Cancel')}
-                        </Button>
-                        <Button
-                            color="primary"
-                            onClick={() => {
-                                unpublish(this.state.related);
-                                this.props.closeModal();
-                            }}
-                        >
-                            {gettext('Confirm')}
-                        </Button>
-                    </ModalFooter>
+                    </div>
                 </Modal>
             );
         }

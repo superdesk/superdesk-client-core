@@ -38,7 +38,7 @@
         position: inherit !important;
         padding: 10px;
         &.show {
-            top: 0px;
+            inset-block-start: 0px;
         }
     }
 
@@ -59,14 +59,14 @@
             font-weight: normal;
             line-height: 16px;
             padding: 0 20px;
-            margin-bottom: 10px;
+            margin-block-end: 10px;
             color: rgba(0, 0, 0, 0.75);
         }
 
         .active {
             position: absolute;
-            top: 24px;
-            right: 15px;
+            inset-block-start: 24px;
+            inset-inline-end: 15px;
         }
     }
 
@@ -99,8 +99,8 @@
     .validation-error {
         color: #ab3434;
         font-size: 12px;
-        margin-top: 5px;
-        margin-bottom: 0;
+        margin-block-start: 5px;
+        margin-block-end: 0;
     }
     .validation-info {
         font-size: 11px;
@@ -130,7 +130,7 @@
     min-width: 90px;
 }
 .sd-line-input__message--add-padding {
-    padding-top: 2.4rem !important;
+    padding-block-start: 2.4rem !important;
 }
 .sd-line-input__toggle {
     .sd-line-input__label {
@@ -141,7 +141,7 @@
 .sd-line-input__usage {
     min-width: 90px;
     .sd-line-input__label {
-        padding-top: 1.4rem !important;
+        padding-block-start: 1.4rem !important;
         &:after {
             content: none !important;
         }
@@ -170,7 +170,7 @@
 .sd-line-input {
     .sd-line-input__label {
         &.sd-line-input__label--hide-required {
-            margin-top: 3px;
+            margin-block-start: 3px;
             &:after {
                 content: none !important;
             }
@@ -180,8 +180,8 @@
 
 .contact__type-icon {
     position: absolute !important;
-    top: 1.6rem;
-    left: 1.2rem;
+    inset-block-start: 1.6rem;
+    inset-inline-start: 1.2rem;
     background: #67afa1;
     height: 3.4rem;
     width: 3.4rem;
@@ -197,16 +197,16 @@
 
 .subnav {
     .contact__type-icon {
-        top: 8px;
-        left: 12px;
+        inset-block-start: 8px;
+        inset-inline-start: 12px;
         position: relative;
     }
 }
 
 .contact-header__container {
-    padding-left: 4.4rem;
+    padding-inline-start: 4.4rem;
     min-height: 4.8rem;
-    margin-top: 0.5rem;
+    margin-block-start: 0.5rem;
     h3 {
         font-size: 1.6rem;
         line-height: 120%;
@@ -231,7 +231,7 @@
         .social-info {
             margin: 0 0.5rem;
             span {
-                margin-right: 0.5rem;
+                margin-inline-end: 0.5rem;
             }
         }
     }

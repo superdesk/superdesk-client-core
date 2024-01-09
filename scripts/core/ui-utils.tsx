@@ -1,6 +1,8 @@
 import {showModal} from '@superdesk/common';
 import {Modal} from 'superdesk-ui-framework/react';
 import React from 'react';
+import ng from 'core/services/ng';
+import {gettext} from './utils';
 
 export const ui = {
     alert: (message: string) => (
@@ -17,4 +19,9 @@ export const ui = {
             );
         })
     ),
+    confirm: (message: string, title?: string) => new Promise((resolve) => {
+        ng.get('modal').confirm(message, title ?? gettext('Confirm'))
+            .then(() => resolve(true))
+            .catch(() => resolve(false));
+    }),
 };

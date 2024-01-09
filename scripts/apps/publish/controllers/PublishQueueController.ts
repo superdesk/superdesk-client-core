@@ -100,7 +100,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             orTerms = {$or: [
                 {headline: {
                     $regex: $scope.searchQuery,
-                    $options: '-i'},
+                    $options: 'i'},
                 }, {unique_name: $scope.searchQuery},
             ]};
         }

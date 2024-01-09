@@ -30,7 +30,7 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPTION, string> => {
+export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
         'h1': gettext('h1'),
         'h2': gettext('h2'),
@@ -59,6 +59,7 @@ export const getEditor3RichTextFormattingOptions = (): Dictionary<FORMATTING_OPT
         'comments': gettext('comments'),
         'suggestions': gettext('suggestions'),
         'embed': gettext('embed'),
+        'embed articles': gettext('embed articles'),
         'tab': gettext('tab'),
         'tab as spaces': gettext('tab as space'),
         'undo': gettext('undo'),
@@ -79,6 +80,7 @@ export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTIO
     // may not be parsed well
     'pre',
     'embed',
+    'embed articles',
     'media',
     'table',
 ];

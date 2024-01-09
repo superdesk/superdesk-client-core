@@ -35,7 +35,7 @@ import {appConfig} from 'appConfig';
 import {
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {RICH_FORMATTING_OPTION, IActiveCell, IArticle} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IActiveCell, IArticle, IDesk} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -318,7 +318,7 @@ export function getInitialContent(props): ContentState {
     );
 
     /**
-     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * To avoid synchronization issues between html/plaintext values and draftjs object,
      * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
      */
     if (hasUnsafeFormattingOptions) {

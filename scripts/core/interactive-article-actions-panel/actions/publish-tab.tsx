@@ -178,6 +178,14 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                                     this.setState({
                                                         selectedDestination: value,
                                                     });
+
+                                                    /**
+                                                     * do not persist destination
+                                                     * article desk isn't supposed to be changed,
+                                                     * except when user chooses "publish from" option
+                                                     * that sends to another desk and publishes at the same time.
+                                                     * If operation is cancelled, "publish from" value must not be saved
+                                                     */
                                                 }}
                                                 includePersonalSpace={false}
 
@@ -199,13 +207,15 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                     onChange={(val) => {
                                         this.setState(
                                             {publishingDateOptions: val},
-                                            () => this.props.onDataChange({
-                                                ...this.props.item,
-                                                ...getPublishingDatePatch(
-                                                    this.props.item,
-                                                    this.state.publishingDateOptions,
-                                                ),
-                                            }),
+                                            () => {
+                                                this.props.onDataChange?.({
+                                                    ...this.props.item,
+                                                    ...getPublishingDatePatch(
+                                                        this.props.item,
+                                                        this.state.publishingDateOptions,
+                                                    ),
+                                                });
+                                            },
                                         );
                                     }}
                                     allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
@@ -216,13 +226,15 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                     onChange={(val) => {
                                         this.setState(
                                             {publishingTarget: val},
-                                            () => this.props.onDataChange({
-                                                ...this.props.item,
-                                                ...getPublishingTargetPatch(
-                                                    this.props.item,
-                                                    this.state.publishingTarget,
-                                                ),
-                                            }),
+                                            () => {
+                                                this.props.onDataChange?.({
+                                                    ...this.props.item,
+                                                    ...getPublishingTargetPatch(
+                                                        this.props.item,
+                                                        this.state.publishingTarget,
+                                                    ),
+                                                });
+                                            },
                                         );
                                     }}
                                 />

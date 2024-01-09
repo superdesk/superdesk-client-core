@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
-import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-ui-framework/react';
+import {Switch, Button, ButtonGroup, EmptyState, Autocomplete, Modal} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {showModal} from '@superdesk/common';
 
@@ -98,56 +98,59 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
 
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
-    const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
 
     showModal(({closeModal}) => (
-        <Modal>
-            <ModalHeader onClose={closeModal}>
-                {gettext('iMatrics service error')}
-            </ModalHeader>
+        <Modal
+            visible
+            zIndex={1050}
+            size="small"
+            position="top"
+            onHide={closeModal}
+            headerTemplate={
+                gettext('iMatrics service error')
+            }
+            footerTemplate={
+                (
+                    <Button
+                        text={gettext('close')}
+                        onClick={() => {
+                            closeModal();
+                        }}
+                    />
+                )
+            }
+        >
+            <h3>{gettext('Some tags can not be displayed')}</h3>
 
-            <ModalBody>
-                <h3>{gettext('Some tags can not be displayed')}</h3>
+            <p>
+                {
+                    gettext(
+                        'iMatrics service has returned tags referencing parents that do not exist in the response.',
+                    )
+                }
+            </p>
 
-                <p>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>{gettext('tag name')}</th>
+                        <th>{gettext('qcode')}</th>
+                        <th>{gettext('parent ID')}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
                     {
-                        gettext(
-                            'iMatrics service has returned tags referencing parents that do not exist in the response.',
-                        )
+                        errors.map((tag) => (
+                            <tr key={tag.qcode}>
+                                <td>{tag.name}</td>
+                                <td>{tag.qcode}</td>
+                                <td>{tag.parent}</td>
+                            </tr>
+                        ))
                     }
-                </p>
-
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>{gettext('tag name')}</th>
-                            <th>{gettext('qcode')}</th>
-                            <th>{gettext('parent ID')}</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {
-                            errors.map((tag) => (
-                                <tr key={tag.qcode}>
-                                    <td>{tag.name}</td>
-                                    <td>{tag.qcode}</td>
-                                    <td>{tag.parent}</td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-            </ModalBody>
-
-            <ModalFooter>
-                <Button
-                    text={gettext('close')}
-                    onClick={() => {
-                        closeModal();
-                    }}
-                />
-            </ModalFooter>
+                </tbody>
+            </table>
         </Modal>
     ));
 }
@@ -601,7 +604,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     />
                                                 </div>
 
-                                                <div style={{marginLeft: 10, marginTop: 14}}>
+                                                <div style={{marginInlineStart: 10, marginBlockStart: 14}}>
                                                     <Button
                                                         type="primary"
                                                         icon="plus-large"

@@ -25,6 +25,7 @@ import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {findParentScope} from '../utils';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
+import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
 
 /**
  * @ngdoc directive
@@ -309,6 +310,7 @@ class Editor3Directive {
                                     cleanPastedHtml={this.cleanPastedHtml}
                                     autocompleteSuggestions={autocompleteSuggestions}
                                     plainText={this.plainText}
+                                    canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
                                 />
                             </ReactContextForEditor3.Provider>
                         </Provider>,

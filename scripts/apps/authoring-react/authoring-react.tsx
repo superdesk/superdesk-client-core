@@ -15,6 +15,7 @@ import {
     IKeyBindings,
     IAuthoringOptions,
     IStoreValueIncomplete,
+    IAuthoringSectionTheme,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -24,7 +25,7 @@ import {
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
-import {AuthoringSection, IAuthoringSectionTheme} from './authoring-section/authoring-section';
+import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
@@ -297,7 +298,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.toggleField = this.toggleField.bind(this);
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
-        this.onArticleChange = this.onArticleChange.bind(this);
+        this.onItemChange = this.onItemChange.bind(this);
         this.setLoadingState = this.setLoadingState.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
@@ -1059,7 +1060,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
     }
 
-    onArticleChange(state: IStateLoaded<T>, itemWithChanges: T) {
+    onItemChange(state: IStateLoaded<T>, itemWithChanges: T) {
         this.setState({
             ...state,
             itemWithChanges,
@@ -1094,7 +1095,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
-            onArticleChange: (item: T) => this.onArticleChange(state, item),
+            onItemChange: (item: T) => this.onItemChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,

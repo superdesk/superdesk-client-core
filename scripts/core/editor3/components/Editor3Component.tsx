@@ -32,7 +32,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE} from '../constants';
+import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
@@ -41,11 +41,13 @@ import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 import {isMacOS} from 'core/utils';
+import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 
-const EVENT_TYPES_TRIGGER_DROP_ZONE = [
+export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
+    MIME_TYPE_SUPERDESK_TEXT_ITEM,
 ];
 
 const VALID_MEDIA_TYPES = [
@@ -68,12 +70,6 @@ const editor3AutocompleteClassName = 'editor3-autocomplete';
  */
 export function getValidMediaType(event) {
     return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
-}
-
-export function dragEventShouldShowDropZone(event) {
-    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
-
-    return intersection.length > 0;
 }
 
 // caret position isn't displayed if a boolean is returned while dragging text
@@ -106,7 +102,7 @@ export function canDropMedia(e, editorConfig): undefined | boolean {
     }
 }
 
-interface IProps {
+export interface IPropsEditor3Component {
     readOnly?: boolean;
     locked?: boolean;
     loading?: boolean;
@@ -137,6 +133,7 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    canAddArticleEmbed?: (srcId: string) => Promise<typeof canAddArticleEmbed>;
     uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     showPopup?(type: any, data: any): void;
 }
@@ -163,7 +160,7 @@ interface IState {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps, IState> {
+export class Editor3Component extends React.Component<IPropsEditor3Component, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -577,10 +574,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.includes('media');
+        /**
+         * INFO: I can't remember exactly, but I think this was done for performance reasons
+         * so if nothing can be dropped(based on config), we don't even replace rendering of unstyled blocks
+         * to listen for drop events.
+         * I've briefly looked at the component we're supplying for replacement and it doesn't look like it would
+         * add much performance overhead if it was replaced unconditionally, but I don't want to break it
+         * nor spend time on testing so I'm keeping it as is for now.
+         */
+        const dropAreaEnabled =
+            this.props.editorFormat.includes('media') || this.props.editorFormat.includes('embed articles');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
-            mediaEnabled ? {
+            dropAreaEnabled ? {
                 unstyled: {
                     element: UnstyledBlock,
                     aliasedElements: ['p'],

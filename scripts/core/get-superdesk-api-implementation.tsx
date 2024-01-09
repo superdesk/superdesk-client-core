@@ -38,10 +38,6 @@ import {
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
 import {memoize, omit} from 'lodash';
-import {Modal} from './ui/components/Modal/Modal';
-import {ModalHeader} from './ui/components/Modal/ModalHeader';
-import {ModalBody} from './ui/components/Modal/ModalBody';
-import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
@@ -65,7 +61,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
-import {httpRequestJsonLocal, httpRequestRawLocal} from './helpers/network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -273,6 +269,7 @@ export function getSuperdeskApiImplementation(
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
+        httpRequestVoidLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
@@ -388,10 +385,6 @@ export function getSuperdeskApiImplementation(
             Alert,
             Figure,
             DropZone,
-            Modal,
-            ModalHeader,
-            ModalBody,
-            ModalFooter,
             Badge,
             SelectUser,
             UserAvatar: UserAvatarFromUserId,

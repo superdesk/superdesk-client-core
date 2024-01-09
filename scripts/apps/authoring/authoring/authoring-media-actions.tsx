@@ -22,7 +22,7 @@ export class AuthoringMediaActions extends React.PureComponent<IProps> {
         const article = {...this.props.article};
 
         return (
-            <div style={{paddingLeft: 4}}>
+            <div style={{paddingInlineStart: 4}}>
                 {mediaActions.map(
                     (Component, i) =>
                         <Component key={i} article={article} />,

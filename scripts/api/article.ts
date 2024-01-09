@@ -15,7 +15,7 @@ import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/sub
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {flatMap, trim} from 'lodash';
+import {flatMap, keys, pick, trim} from 'lodash';
 import {
     IArticle,
     IAuthoringActionType,
@@ -29,8 +29,9 @@ import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {patchArticle} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
+import _ from 'lodash';
 
-type IArticleActionType = string | 'publish' | 'edit';
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
 const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !isLockedInCurrentSession(_article);
@@ -93,6 +94,29 @@ function doSpike(item: IArticle) {
         path: `/archive/spike/${item._id}`,
         payload: {
             state: 'spiked',
+        },
+        headers: {
+            'If-Match': item._etag,
+        },
+    }).then(() => {
+        const $location = ng.get('$location');
+
+        if ($location.search()._id === item._id) {
+            $location.search('_id', null);
+        }
+
+        if (applicationState.articleInEditMode === item._id) {
+            ng.get('authoringWorkspace').close();
+        }
+    });
+}
+
+function deschedule(item: IArticle): Promise<void> {
+    return httpRequestJsonLocal<IArticle>({
+        method: 'PATCH',
+        path: `/archive/${item._id}`,
+        payload: {
+            publish_schedule: null,
         },
         headers: {
             'If-Match': item._etag,
@@ -254,7 +278,7 @@ interface IScope {
 function publishItem(
     orig: IArticle,
     item: IArticle,
-    action: IArticleActionType = 'publish',
+    action: IAuthoringActionType = 'publish',
     onError?: (error: IPublishingError) => void,
 ): Promise<boolean | IArticle> {
     const scope: IScope = {};
@@ -285,7 +309,7 @@ function publishItem_legacy(
     orig: IArticle,
     item: IArticle,
     scope: IScope,
-    action: string | 'publish' | 'edit' = 'publish',
+    action: IAuthoringActionType = 'publish',
     onError?: (error: IPublishingError) => void,
 ): Promise<boolean> {
     let warnings: Array<{text: string}> = [];
@@ -374,6 +398,58 @@ function publishItem_legacy(
         });
 }
 
+function edit(
+    item: {
+        _id: IArticle['_id'],
+        _type?: IArticle['_type'],
+        state?: IArticle['state']
+    },
+    action?: IAuthoringActionType,
+): void {
+    if (item != null) {
+        // disable edit of external ingest sources
+        // that are not editable (editFeaturedImage false or not available)
+
+        if (
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+        ) {
+            return;
+        }
+
+        ng.get('authoringWorkspace').authoringOpen(
+            item._id,
+            action || 'edit',
+            item._type || null,
+            item.state === 'being_corrected',
+        );
+    } else {
+        ng.get('authoringWorkspace').close();
+    }
+}
+
+function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle> {
+    const itemForTemplate = {
+        template_name: action,
+        item: pick(
+            item,
+            [...(keys(CONTENT_FIELDS_DEFAULTS)), '_id', 'versioncreated', 'task'],
+        ),
+    };
+
+    return httpRequestJsonLocal({
+        method: 'POST',
+        path: '/content_templates_apply',
+        payload: itemForTemplate,
+    }).then((result: IArticle) => {
+        return {
+            ...result,
+            ...(action === 'kill' ? {operation: 'kill'} : {}),
+            state: ITEM_STATE.PUBLISHED,
+        };
+    });
+}
+
 /**
  * Gets opened items from your workspace.
  */
@@ -450,6 +526,8 @@ interface IArticleApi {
     doSpike(item: IArticle): Promise<void>;
     doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void>;
 
+    deschedule(item: IArticle): Promise<void>;
+
     fetchItems(
         items: Array<IArticle>,
         selectedDestination: ISendToDestinationDesk,
@@ -483,7 +561,19 @@ interface IArticleApi {
     canPublishOnDesk(deskType: string): boolean;
     showCloseAndContinue(item: IArticle, dirty: boolean): boolean;
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
-    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: string): Promise<boolean>;
+    publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IAuthoringActionType): Promise<boolean>;
+
+    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle>;
+
+    // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
+    edit(
+        item: {
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
+        },
+        action?: IAuthoringActionType,
+    ): void;
 
     // Instead of passing a fake scope from React
     // every time to the publishItem_legacy we can use this function which
@@ -491,7 +581,7 @@ interface IArticleApi {
     publishItem(
         orig: IArticle,
         item: IArticle,
-        action?: string,
+        action?: IAuthoringActionType,
 
         // onError is optional in this function and in `publishItem_legacy` since when you're calling
         // it from React you want to pass only it to handle certain errors and apply them to the scope
@@ -535,4 +625,7 @@ export const article: IArticleApi = {
     showCloseAndContinue,
     publishItem_legacy,
     publishItem,
+    edit,
+    deschedule,
+    getItemPatchWithKillOrTakedownTemplate,
 };

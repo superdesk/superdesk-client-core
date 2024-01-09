@@ -8,17 +8,17 @@
         padding: 0 20px;
         font-size: 1.5rem;
         border: 0;
-        border-left: 1px solid var(--sd-colour-line--light) !important;
+        border-inline-start: 1px solid var(--sd-colour-line--light) !important;
 
         i {
             vertical-align: text-top !important;
-            margin-right: 0.6rem;
+            margin-inline-end: 0.6rem;
         }
     }
     .badge {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        inset-block-start: 5px;
+        inset-inline-end: 5px;
         z-index: 2;
     }
 }

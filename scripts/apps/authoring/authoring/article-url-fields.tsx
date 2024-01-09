@@ -83,7 +83,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                             </button>
                         </div>
                         <textarea
-                            style={{marginTop: 0.5 + 'em'}}
+                            style={{marginBlockStart: 0.5 + 'em'}}
                             disabled={!editable}
                             className="sd-editor__default-input"
                             placeholder={gettext('Description')}
@@ -98,7 +98,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                         disabled={!editable}
                         className="btn btn--primary"
                         onClick={() => this.addUrl()}
-                        style={{marginTop: 10}}
+                        style={{marginBlockStart: 10}}
                     >
                         {gettext('Add URL')}
                     </button>

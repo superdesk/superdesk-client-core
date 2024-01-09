@@ -155,7 +155,7 @@ declare module 'superdesk-api' {
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
-        onArticleChange(item: T): void;
+        onItemChange(item: T): void;
         save(): Promise<T>;
         initiateClosing(): void;
         keepChangesAndClose(): void;
@@ -624,7 +624,7 @@ declare module 'superdesk-api' {
             fieldsAdapter: IFieldsAdapter<IArticle>;
             storageAdapter: IStorageAdapter<IArticle>;
 
-            onArticleChange?(article: IArticle): void;
+            onItemChange?(article: IArticle): void;
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
@@ -1536,6 +1536,7 @@ declare module 'superdesk-api' {
         description: string;
         schema: Object;
         editor: IContentProfileEditorConfig;
+        embeddable: boolean;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
@@ -1998,9 +1999,11 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsCard {
+        width?: import('react').CSSProperties['width'];
         background?: import('react').CSSProperties['background'];
         padding?: import('react').CSSProperties['padding'];
         borderRadius?: import('react').CSSProperties['borderRadius'];
+        heading?: React.ReactNode;
     }
 
     export interface IPropsListItemColumn {
@@ -2061,19 +2064,6 @@ declare module 'superdesk-api' {
 
         onFileSelect?: (files: Array<File>) => void;
         fileAccept?: string;
-    }
-
-    export interface IModalProps {
-        'data-test-id'?: string;
-        size?: 'large' | 'extra-large' | 'fill' | 'full-screen';
-    }
-
-    export interface IPropsModalHeader {
-        onClose?(): void;
-    }
-
-    export interface IModalFooterProps {
-        flex?: boolean;
     }
 
     export interface IGenericListPageComponent<T> {
@@ -2281,6 +2271,7 @@ declare module 'superdesk-api' {
         'media' |
         'link' |
         'embed' |
+        'embed articles' |
         'underline' |
         'italic' |
         'bold' |
@@ -2368,6 +2359,8 @@ declare module 'superdesk-api' {
         | 'add_to_current'
         | 'resend'
         | 'set_label'
+        | 'publish'
+        | 'unpublish'
         | 'takedown';
 
     export interface IDataProvider {
@@ -2675,6 +2668,7 @@ declare module 'superdesk-api' {
         elasticsearch: IElasticSearchApi;
         httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response>;
+        httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise<void>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -2820,10 +2814,6 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType<IModalProps>;
-            ModalHeader: React.ComponentType<IPropsModalHeader>;
-            ModalBody: React.ComponentType;
-            ModalFooter: React.ComponentType<IModalFooterProps>;
             Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
@@ -3394,10 +3384,27 @@ declare module 'superdesk-api' {
         value2: IValue;
     }
 
+    export interface IAuthoringSectionTheme {
+        backgroundColor: string;
+
+        // used in placed where we need to differetiate some ui components from background for example toolbars
+        backgroundColorSecondary: string;
+
+        textColor: string;
+        fontFamily: string;
+
+        fieldTheme: {
+            [fieldId: string]: {
+                fontSize: string | undefined;
+            };
+        };
+    }
+
     export interface ICommonFieldConfig {
         readOnly?: boolean;
         required?: boolean;
         allow_toggling?: boolean;
+        width?: number; // percentage of row width
     }
 
     export interface IConfigComponentProps<IConfig extends ICommonFieldConfig> {
