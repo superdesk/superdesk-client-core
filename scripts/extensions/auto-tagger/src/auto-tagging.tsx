@@ -194,7 +194,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
-                    path: '/ai/',
+                    path: '/am/',
                     payload: {
                         service: 'semaphore',
                         item: {
@@ -232,7 +232,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     if (this._mounted) {
                         this.setState({
-                            data: 'not-initialized' // or you could set to a new error state
+                            data: 'error' // or you could set to a new error state
                         });
                     }
                     
@@ -251,6 +251,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     this.runAnalysis();
                 }
             } catch (error) {
+                if (this._mounted) {
+                    this.setState({data: 'error'});
+                }
                 console.error('Error in initializeData:', error);
             }
         }
@@ -410,6 +413,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         (() => {
                             if (data === 'loading' || data === 'not-initialized') {
                                 return null;
+                            } else if (data === 'error') {
+                                // Error state logic
+                                return (
+                                    <div>
+                                        The auto-tagger is not working currently. Please use the manual way to add tags.
+                                    </div>
+                                );
                             } else {
                                 const treeErrors = arrayToTree(
                                     data.changes.analysis.toArray(),
