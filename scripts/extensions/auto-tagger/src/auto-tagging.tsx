@@ -400,7 +400,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 return null;
             }
 
-            const {data} = this.state;
+            const {data, log} = this.state;
             const dirty = data === 'loading' || data === 'not-initialized' ? false :
                 this.isDirty(data.original, data.changes);
 
@@ -504,7 +504,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             </div>
 
                             {
-                                data === 'loading' || data === 'not-initialized' ? null : (
+                                data === 'loading' || data === 'not-initialized' || log === 'error' ? null : (
                                     <>
                                         <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <div style={{flexGrow: 1}}>
