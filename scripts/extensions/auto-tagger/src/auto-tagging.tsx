@@ -49,7 +49,7 @@ type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingRespo
 
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
-    data: 'not-initialized' | 'loading' | IEditableData;
+    data: 'not-initialized' | 'loading' | 'error' | IEditableData;
     newItem: INewItem | null;
     vocabularyLabels: Map<string, string> | null;
     tentativeTagName: string;
