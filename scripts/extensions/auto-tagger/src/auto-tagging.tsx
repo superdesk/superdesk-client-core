@@ -212,7 +212,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     // Use the line below to get the existing tags from the article
                     // const existingTags = getExistingTags(this.props.article);                         
                         
-                    if (this._mounted) {      
+                    if (this._mounted) {   
+                        if (data !== 'error' && data !== 'loading' && data !== 'not-initialized') {   
                         const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
                         ? dataBeforeLoading.changes.analysis // keep existing tags
                         : OrderedMap<string, ITagUi>();                  
@@ -232,7 +233,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     if (this._mounted) {
                         this.setState({
-                            data: 'error' // or you could set to a new error state
+                            data: 'not-initialized',
                         });
                     }
                     
@@ -251,9 +252,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     this.runAnalysis();
                 }
             } catch (error) {
-                if (this._mounted) {
-                    this.setState({data: 'error'});
-                }
                 console.error('Error in initializeData:', error);
             }
         }
@@ -413,13 +411,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         (() => {
                             if (data === 'loading' || data === 'not-initialized') {
                                 return null;
-                            } else if (data === 'error') {
-                                // Error state logic
-                                return (
-                                    <div>
-                                        The auto-tagger is not working currently. Please use the manual way to add tags.
-                                    </div>
-                                );
                             } else {
                                 const treeErrors = arrayToTree(
                                     data.changes.analysis.toArray(),
@@ -429,28 +420,33 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
-                                        <Alert
-                                            type="warning"
-                                            size="small"
-                                            title={gettext('Autotagger service error')}
-                                            message={
-                                                gettextPlural(
-                                                    treeErrors.length,
-                                                    '1 tag can not be displayed',
-                                                    '{{n}} tags can not be displayed',
-                                                    {n: treeErrors.length},
-                                                )
-                                            }
-                                            actions={[
-                                                {
-                                                    label: gettext('details'),
-                                                    onClick: () => {
-                                                        showAutoTaggerServiceErrorModal(superdesk, treeErrors);
-                                                    },
-                                                    icon: 'info-sign',
-                                                },
-                                            ]}
-                                        />
+                                        <>
+                                            <Alert
+                                                type="warning"
+                                                size="small"
+                                                title={gettext('Autotagger service error')}
+                                                message={
+                                                    gettextPlural(
+                                                        treeErrors.length,
+                                                        '1 tag can not be displayed',
+                                                        '{{n}} tags can not be displayed',
+                                                        {n: treeErrors.length},
+                                                        )
+                                                    }
+                                                    actions={[
+                                                        {
+                                                            label: gettext('details'),
+                                                            onClick: () => {
+                                                                showAutoTaggerServiceErrorModal(superdesk, treeErrors);
+                                                            },
+                                                            icon: 'info-sign',
+                                                        },
+                                                    ]}
+                                                    />
+                                            <div>
+                                                The auto-tagger is not working currently. Please use the manual way to add tags.
+                                            </div>
+                                        </>
                                     );
                                 } else {
                                     return null;
