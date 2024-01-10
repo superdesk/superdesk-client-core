@@ -213,7 +213,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     // const existingTags = getExistingTags(this.props.article);                         
                         
                     if (this._mounted) {   
-                        if (data !== 'error' && data !== 'loading' && data !== 'not-initialized') {   
                         const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
                         ? dataBeforeLoading.changes.analysis // keep existing tags
                         : OrderedMap<string, ITagUi>();                  
@@ -228,18 +227,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             },
                         });
                     }
-                }
-            }).catch((error) => {
-                    console.error('Error during analysis. We are in runAnalysis:  ',error);   
-
-                    if (this._mounted) {
-                        this.setState({
-                            data: 'not-initialized',
-                        });
-                    }
-                    
+                }).catch((error) => {
+                        console.error('Error during analysis. We are in runAnalysis:  ',error);   
+                
+                        if (this._mounted) {
+                            this.setState({
+                                data: 'not-initialized',
+                            });
+                        }
+                        
+                    });
                 });
-            });
         }
         initializeData(preload: boolean) {
             try {
