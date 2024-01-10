@@ -250,7 +250,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     this.runAnalysis();
                 }
             } catch (error) {
-                this.setState({ log: error });
+                this.setState({ log: "error" });
                 console.error('Error in initializeData:', error);
             }
         }
@@ -413,7 +413,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     console.error('Error during analysis');
                                     return (
                                         <Alert
-                                            type="danger"
+                                            type="error"
                                             size="small"
                                             title={gettext('Autotagger service error')}
                                             message={gettext('Error during analysis')}
