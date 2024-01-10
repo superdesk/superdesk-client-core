@@ -240,6 +240,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         initializeData(preload: boolean) {
             try {
+                // will comment out the line below later
+                this.setState({ log: "error" });
                 const existingTags = getExistingTags(this.props.article);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
@@ -409,17 +411,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     {
                         (() => {
                             if (data === 'loading' || data === 'not-initialized') {
-                                if (this.state.log == 'error') {
-                                    console.error('Error during analysis');
-                                    return (
-                                        <Alert
-                                            type="error"
-                                            size="small"
-                                            title={gettext('Autotagger service error')}
-                                            message={gettext('Error during analysis')}
-                                        />
-                                    );
-                                }
                                 return null;
                             } else {
                                 const treeErrors = arrayToTree(
@@ -634,6 +625,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <EmptyState
                                         title={gettext('No tags yet')}
                                         description={readOnly ? undefined : gettext('Click "Run" to test Autotagger')}
+                                    />
+                                );
+                            } else if (this.state.log == 'error') {
+                                console.error('Error during analysis');
+                                return (
+                                    <Alert
+                                        type="error"
+                                        size="small"
+                                        title={gettext('Autotagger service error')}
+                                        message={gettext('Error during analysis')}
                                     />
                                 );
                             } else {
