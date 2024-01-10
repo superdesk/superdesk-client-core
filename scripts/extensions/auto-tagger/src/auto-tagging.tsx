@@ -228,7 +228,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             },
                         });
                     }
-                }).catch((error) => {
+                }
+            }).catch((error) => {
                     console.error('Error during analysis. We are in runAnalysis:  ',error);   
 
                     if (this._mounted) {
