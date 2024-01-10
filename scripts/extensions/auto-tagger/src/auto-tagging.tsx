@@ -54,6 +54,7 @@ interface IState {
     vocabularyLabels: Map<string, string> | null;
     tentativeTagName: string;
     forceRenderKey: number;
+    log: string;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -173,6 +174,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 vocabularyLabels: null,
                 tentativeTagName: '',
                 forceRenderKey: Math.random(),
+                log: '',
             };
 
             this._mounted = false;
@@ -194,7 +196,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
-                    path: '/am/',
+                    path: '/ai/',
                     payload: {
                         service: 'semaphore',
                         item: {
@@ -207,11 +209,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-
-                    const resClient = toClientFormat(res.analysis);
-                    // Use the line below to get the existing tags from the article
-                    // const existingTags = getExistingTags(this.props.article);                         
-                        
+                    const resClient = toClientFormat(res.analysis);               
+                    
                     if (this._mounted) {   
                         const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
                         ? dataBeforeLoading.changes.analysis // keep existing tags
@@ -229,13 +228,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     }
                 }).catch((error) => {
                         console.error('Error during analysis. We are in runAnalysis:  ',error);   
-                
+
                         if (this._mounted) {
                             this.setState({
                                 data: 'not-initialized',
                             });
                         }
-                        
+
                     });
                 });
         }
@@ -251,6 +250,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     this.runAnalysis();
                 }
             } catch (error) {
+                this.setState({ log: error });
                 console.error('Error in initializeData:', error);
             }
         }
@@ -409,6 +409,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     {
                         (() => {
                             if (data === 'loading' || data === 'not-initialized') {
+                                if (this.state.log == 'error') {
+                                    console.error('Error during analysis');
+                                    return (
+                                        <Alert
+                                            type="danger"
+                                            size="small"
+                                            title={gettext('Autotagger service error')}
+                                            message={gettext('Error during analysis')}
+                                        />
+                                    );
+                                }
                                 return null;
                             } else {
                                 const treeErrors = arrayToTree(
@@ -419,7 +430,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
-                                        <>
                                             <Alert
                                                 type="warning"
                                                 size="small"
@@ -442,10 +452,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         },
                                                     ]}
                                                     />
-                                            <div>
-                                                The auto-tagger is not working currently. Please use the manual way to add tags.
-                                            </div>
-                                        </>
                                     );
                                 } else {
                                     return null;
