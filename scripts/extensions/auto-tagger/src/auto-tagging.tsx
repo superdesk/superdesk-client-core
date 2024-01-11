@@ -54,7 +54,7 @@ interface IState {
     vocabularyLabels: Map<string, string> | null;
     tentativeTagName: string;
     forceRenderKey: number;
-    log: string;
+    log: string | 'error';
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -240,8 +240,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         initializeData(preload: boolean) {
             try {
-                // will comment out the line below later
-                this.setState({ log: "error" });
                 const existingTags = getExistingTags(this.props.article);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
@@ -633,8 +631,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <Alert
                                         type="error"
                                         size="small"
-                                        title={gettext('Autotagger service error')}
-                                        message={gettext('Error during analysis')}
+                                        title={gettext('Unable to use Autotagger service')}
+                                        message={gettext('Please use the index field to add tags manually')}
                                     />
                                 );
                             } else {
@@ -755,7 +753,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                         <div className="widget-content__footer">
                             {(() => {
-                                if (data === 'loading') {
+                                if (data === 'loading' || log === 'error') {
                                     return null;
                                 } else if (data === 'not-initialized') {
                                     return (
