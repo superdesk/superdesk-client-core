@@ -22,7 +22,7 @@
                             ng-click="selectTerm(t, $event)"
                         >
                             <sd-user-avatar ng-if="t.user != null" data-user="t.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
-                            <span>{{getLocaleName(t, item)}}</span>
+                            <span>{{ getLocaleName(t, item) | capitalize }}</span>
                         </button>
                     </li>
                 </ul>
