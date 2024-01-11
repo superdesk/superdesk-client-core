@@ -2180,7 +2180,13 @@ declare module 'superdesk-api' {
                     order: number;
                 };
             },
-
+            others: {
+                [key: string]: {
+                    name: string;
+                    order: number;
+                };
+            }
+        };
         semaphoreFields: {
             entities: {
                 [key: string]: {
