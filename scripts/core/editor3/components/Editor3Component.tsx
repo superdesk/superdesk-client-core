@@ -52,6 +52,7 @@ const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
+    'application/superdesk.compatible.embed',
 ];
 
 const VALID_MEDIA_TYPES = [
