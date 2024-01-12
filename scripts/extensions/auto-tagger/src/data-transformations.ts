@@ -25,7 +25,7 @@ export function createTagsPatch(
         oldValues?.forEach((tag, qcode) => {
             // Type assertion to ensure qcode is treated as a string
             const key = qcode as string;
-            if (tag && (tag.scheme === 'subject_custom' || tag.scheme === 'destinations' || tag.scheme === 'distribution')) {
+            if (tag && (tag.scheme === 'subject_custom' || tag.scheme === 'destinations' || tag.scheme === 'distribution' || tag.scheme === 'subject')) {
                 newValuesMap = newValuesMap.set(key, tag);
             }
         });
