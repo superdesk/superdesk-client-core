@@ -240,6 +240,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         initializeData(preload: boolean) {
             try {
+                this.setState({ log: "error" });
                 const existingTags = getExistingTags(this.props.article);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
@@ -628,11 +629,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             } else if (this.state.log == 'error') {
                                 console.error('Error during analysis');
                                 return (
-                                    <Alert
-                                        type="error"
-                                        size="small"
+                                    <EmptyState
                                         title={gettext('Unable to use Autotagger service')}
-                                        message={gettext('Please use the index field to add tags manually')}
+                                        description={gettext('Please use the index field to add tags manually')}
                                     />
                                 );
                             } else {
