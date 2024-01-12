@@ -281,6 +281,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 source: 'manual',
                 altids: {},
                 group: newItem.group,
+                scheme: newItem.scheme,
             };
 
             this.updateTags(
