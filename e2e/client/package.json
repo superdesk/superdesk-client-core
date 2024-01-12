@@ -20,6 +20,8 @@
     "build": "npx @superdesk/build-tools build-root-repo ./",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
+    "playwright": "playwright test",
+    "playwright-interactive": "playwright test --ui",
     "protractor": "node run-end-to-end-tests.js",
     "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",
     "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w",

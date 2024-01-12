@@ -49,45 +49,7 @@ jobs:
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
 
-    - name: Protractor
-      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
-      env:
-        TRAVIS: ci
-        SCREENSHOTS_DIR: /tmp
-      working-directory: e2e/client
-
-    - name: Upload screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: screenshots-e2e-${{ matrix.suite }}
-        path: /tmp/*.png
-
-    - name: Server Logs
-      if: ${{ failure() }}
-      run: docker-compose logs superdesk
-      working-directory: e2e/server
-
-  e2e-playwright:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '14.x'
-
-    - name: Start e2e server
-      run: |
-        docker-compose pull
-        docker-compose build
-        docker-compose up -d
-      working-directory: e2e/server
-
-    - name: Build client
-      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
-      working-directory: e2e/client
+    # playwright start
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
@@ -103,6 +65,26 @@ jobs:
         name: playwright-report
         path: e2e/client/playwright-report/
         retention-days: 30
+
+    # playwright end
+
+    # protractor start
+
+    - name: Protractor
+      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
+      env:
+        TRAVIS: ci
+        SCREENSHOTS_DIR: /tmp
+      working-directory: e2e/client
+
+    - name: Upload screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshots-e2e-${{ matrix.suite }}
+        path: /tmp/*.png
+
+    # protractor end
 
     - name: Server Logs
       if: ${{ failure() }}
