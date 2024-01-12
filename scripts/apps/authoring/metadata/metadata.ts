@@ -1385,9 +1385,10 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             // Extract the name in the current language
             let name = getVocabularyItemNameTranslated(term, item.language);
 
-
-            // Capitalize the name
-            name = service.capitalizeItemName(name);
+            // Check if the term has `in_jimi` field and if it's true, then capitalize the name
+            if (term?.in_jimi && term?.in_jimi === true) {
+                name = service.capitalizeItemName(name);
+            }
 
             return name;
         },
