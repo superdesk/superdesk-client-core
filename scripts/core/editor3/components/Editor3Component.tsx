@@ -52,6 +52,9 @@ const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
+
+    // allows dropping marked links as embeds (used by ansa)
+    'application/superdesk.compatible.embed',
 ];
 
 const VALID_MEDIA_TYPES = [
