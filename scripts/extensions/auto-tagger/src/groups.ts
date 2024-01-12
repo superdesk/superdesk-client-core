@@ -36,5 +36,9 @@ export function getGroups(superdesk: ISuperdesk): OrderedMap<string, IGroupLabel
         plural: gettext('Objects'),
     });
 
+    groups = groups.set('subject', {
+        singular: gettext('Subject'),
+        plural: gettext('Subjects'),
+    });
     return groups;
 }
