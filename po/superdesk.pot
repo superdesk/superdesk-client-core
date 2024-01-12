@@ -916,7 +916,7 @@ msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:50
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:74
-msgid "Add entity"
+msgid "Add tag"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldList.tsx:126
@@ -2947,7 +2947,7 @@ msgid "Click Run to test Autotagger"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:618
-msgid "Add an entity"
+msgid "Add a tag"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:111
@@ -5481,12 +5481,12 @@ msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:60
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:135
-msgid "Entity type"
+msgid "tag type"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:83
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:195
-msgid "Entity type is required."
+msgid "tag type is required."
 msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:74

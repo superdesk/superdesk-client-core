@@ -13,7 +13,7 @@ import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
 
-export const entityGroups = OrderedSet(['place', 'person', 'organisation', 'event']);
+export const entityGroups = OrderedSet(['place', 'person', 'organisation', 'event', 'subject']);
 
 export type INewItem = Partial<ITagUi>;
 
@@ -240,7 +240,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         initializeData(preload: boolean) {
             try {
-                this.setState({ log: "error" });
                 const existingTags = getExistingTags(this.props.article);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
@@ -593,11 +592,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         </div>
                                         <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
                                             <Button
-                                                aria-label="Add an entity"
+                                                aria-label="Add a tag"
                                                 type="primary"
                                                 size="small"
                                                 shape="round"
-                                                text={gettext('Add an entity')}
+                                                text={gettext('Add a tag')}
                                                 disabled={readOnly}
                                                 onClick={() => {
                                                     this.setState({

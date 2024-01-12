@@ -675,7 +675,7 @@ msgid "Add description"
 msgstr "Adicionar Descrição"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:49
-msgid "Add entity"
+msgid "Add tag"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:8
@@ -4534,11 +4534,11 @@ msgid "Entity"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:59
-msgid "Entity type"
+msgid "tag type"
 msgstr ""
 
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:82
-msgid "Entity type is required."
+msgid "tag type is required."
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:240
