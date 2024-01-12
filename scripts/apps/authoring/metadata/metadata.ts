@@ -1366,6 +1366,11 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
+        // Utility function to capitalize item names
+        capitalizeItemName: function(name) {
+            if (!name) return '';
+            return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        },
         getLocaleName: function(term, item: any) {
             if (!term) {
                 return 'None';
@@ -1377,7 +1382,14 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             // is an array when called from global search filters.
             const language = typeof item.language === 'string' ? item.language : undefined;
 
-            return getVocabularyItemNameTranslated(term, language);
+            // Extract the name in the current language
+            let name = getVocabularyItemNameTranslated(term, item.language);
+
+
+            // Capitalize the name
+            name = service.capitalizeItemName(name);
+
+            return name;
         },
     };
 
