@@ -27,6 +27,7 @@ export function createTagsPatch(
             const key = qcode as string;
             if (tag && (tag.scheme === 'subject_custom' || tag.scheme === 'destinations' || tag.scheme === 'distribution' || tag.scheme === 'subject')) {
                 newValuesMap = newValuesMap.set(key, tag);
+                console.log('newValuesMap', newValuesMap);
             }
         });
         const wasRemoved = (tag: ISubject) => {

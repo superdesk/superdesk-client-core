@@ -241,6 +241,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         initializeData(preload: boolean) {
             try {
                 const existingTags = getExistingTags(this.props.article);
+                console.log('existing tags', existingTags);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
                     this.setState({
@@ -274,16 +275,22 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 return;
             }
 
+            // Determine the group kind based on the group value
+            const groupKind = newItem.group.value === 'subject' ? 'scheme' : newItem.group.kind;
+
             const tag: ITagUi = {
                 qcode: Math.random().toString(),
                 name: _title,
                 description: newItem.description,
                 source: 'manual',
                 altids: {},
-                group: newItem.group,
-                scheme: newItem.scheme,
+                group: {
+                    ...newItem.group,
+                    kind: groupKind
+                },
+                scheme: newItem.group.value,
             };
-
+            console.log('new tag', tag);
             this.updateTags(
                 data.changes.analysis.set(tag.qcode, tag),
                 data,
