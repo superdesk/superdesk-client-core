@@ -22,6 +22,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
         render() {
             const {tags, onRemove, readOnly, savedTags, inline} = this.props;
             const tagsJs: Array<ITagUi> = Object.values(tags.toJS());
+            console.log(tagsJs);
 
             const tagsTree = arrayToTree(
                 tagsJs,
