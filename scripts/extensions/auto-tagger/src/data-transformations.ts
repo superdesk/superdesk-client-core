@@ -40,7 +40,7 @@ export function createTagsPatch(
 
         // Add new values to the map, ensuring tag is defined, has a qcode, and a valid scheme
         newValues?.forEach((tag) => {
-            if (tag && tag.qcode && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme)) {
+            if (tag?.qcode && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag?.scheme)) {
                 newValuesMap = newValuesMap.set(tag.qcode, tag);
             }
         });
