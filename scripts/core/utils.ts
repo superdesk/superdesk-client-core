@@ -160,6 +160,19 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+export function getArticleLabel(item: IArticle): string {
+    const headlineTrimmed = item.headline?.trim();
+    const sluglineTrimmed = item.slugline?.trim();
+
+    if (headlineTrimmed?.length > 0) {
+        return headlineTrimmed;
+    } else if (sluglineTrimmed?.length > 0) {
+        return sluglineTrimmed;
+    } else {
+        return `[${gettext('Untitled')}]`;
+    }
+}
+
 export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string) {
     const _language = _lang ?? getUserInterfaceLanguage();
 

@@ -49,7 +49,10 @@
                     id="{{ :: widget._id }}"
                     title="{{widget.label}}"
                     sd-hotkey="{{generateHotkey($index+1)}}"
-                    sd-hotkey-options="{global: true}">
+                    sd-hotkey-options="{global: true}"
+                    data-test-id="authoring-widget"
+                    data-test-value="{{widget.label}}"
+                >
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
 
                     <span class="sd-sidetab-menu__info-label badge badge--primary"
