@@ -24,8 +24,10 @@ export function createTagsPatch(
         // Preserve tags with specific schemes
         // Add existing values to the map, ensuring tag has a defined scheme
         oldValues?.forEach((tag, qcode) => {
-            if (tag && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme)) {
-                newValuesMap = newValuesMap.set(qcode, tag);
+            if (qcode && typeof qcode === 'string') {
+                if (tag && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme ?? '')) {
+                    newValuesMap = newValuesMap.set(qcode, tag);
+                }
             }
         });
         const wasRemoved = (tag: ISubject) => {
@@ -40,8 +42,11 @@ export function createTagsPatch(
 
         // Add new values to the map, ensuring tag is defined, has a qcode, and a valid scheme
         newValues?.forEach((tag) => {
-            if (tag?.qcode && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag?.scheme)) {
-                newValuesMap = newValuesMap.set(tag.qcode, tag);
+            // Check if qcode is defined and is a string
+            if (tag?.qcode && typeof tag.qcode === 'string') {
+                if (['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme ?? '')) {
+                    newValuesMap = newValuesMap.set(tag.qcode, tag);
+                }
             }
         });
 
