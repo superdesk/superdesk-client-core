@@ -11,9 +11,7 @@ export function createTagsPatch(
     const serverFormat = toServerFormat(tags, superdesk);
     const patch: Partial<IArticle> = {};
     console.log('serverFormat', serverFormat);
-    console.log('article', article);
     console.log('tags', tags);
-    console.log('superdesk', superdesk);
     console.log('patch', patch);
     getServerResponseKeys().forEach((key) => {
         let oldValues = OrderedMap<string, ISubject>((article[key] || []).filter(_item => typeof _item.qcode === 'string').map((_item) => [_item.qcode, _item]));
@@ -27,6 +25,7 @@ export function createTagsPatch(
             if (qcode && typeof qcode === 'string') {
                 if (tag && ['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme ?? '')) {
                     newValuesMap = newValuesMap.set(qcode, tag);
+                    console.log('preserve', tag);
                 }
             }
         });
@@ -42,11 +41,8 @@ export function createTagsPatch(
 
         // Add new values to the map, ensuring tag is defined, has a qcode, and a valid scheme
         newValues?.forEach((tag) => {
-            // Check if qcode is defined and is a string
-            if (tag?.qcode && typeof tag.qcode === 'string') {
-                if (['subject_custom', 'destinations', 'distribution', 'subject'].includes(tag.scheme ?? '')) {
-                    newValuesMap = newValuesMap.set(tag.qcode, tag);
-                }
+            if (tag && tag.qcode) {
+                newValuesMap = newValuesMap.set(tag.qcode, tag);
             }
         });
 
@@ -56,7 +52,9 @@ export function createTagsPatch(
             .merge(newValuesMap)
             .filter((tag) => wasRemoved(tag) !== true)
             .toArray();
-    });
+
+        });
+        console.log('final patch', patch)
     return patch;
 }
 

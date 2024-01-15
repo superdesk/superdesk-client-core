@@ -414,7 +414,6 @@ function MetaDropdownDirective($filter, metadata) {
 
             scope.findItemByScheme = (items: Array<ISubject>, scheme: string) => {
                 const term = items.find((item) => item.scheme === scheme);
-                console.log('findItemByScheme', items, scheme, term);
                 return metadata.getLocaleName(term, scope.item);
             };
 
