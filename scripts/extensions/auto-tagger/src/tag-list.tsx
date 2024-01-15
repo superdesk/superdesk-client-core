@@ -22,7 +22,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
         render() {
             const {tags, onRemove, readOnly, savedTags, inline} = this.props;
             const tagsJs: Array<ITagUi> = Object.values(tags.toJS());
-            console.log(tagsJs);
+            console.log("tagJs", tagsJs);
 
             const tagsTree = arrayToTree(
                 tagsJs,
@@ -41,7 +41,6 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                         tag={item}
                         key={item.qcode}
                         gettext={gettext}
-
                         // root items with children have to be on a separate line
                         display={isRootNodeWithChildren && !inline ? 'block' : undefined}
                     >

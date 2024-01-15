@@ -606,7 +606,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const savedTags = data.original.analysis.keySeq().toSet();
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
-
+                                console.log("othersGrouped", othersGrouped);
                                 othersGrouped.forEach((tags, groupId) => {
                                     if (tags != null && groupId != null) {
                                         allGrouped = allGrouped.set(groupId,
@@ -634,7 +634,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         );
                                     }
                                 });
-
+                                console.log("entitiesGroupedAndSorted", entitiesGroupedAndSorted);
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
                                         <ToggleBoxNext
