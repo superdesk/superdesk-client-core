@@ -1312,7 +1312,7 @@ describe('unsaved changes', () => {
 
         monitoring.actionOnItem('Spike Item', 0, 0);
 
-        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+        monitoring.expectSaveChangesDialog();
     });
 
     it('warns before closing article from open articles bar', () => {
@@ -1320,7 +1320,7 @@ describe('unsaved changes', () => {
 
         createItem('item 1');
 
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0), 3000);
 
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -1328,14 +1328,13 @@ describe('unsaved changes', () => {
 
         browser.sleep(300); // wait for autosave
 
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 1));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 1), 3000);
 
         el(['opened-articles-bar', 'item', 'close']).click();
 
-        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+        monitoring.expectSaveChangesDialog();
+        monitoring.ignoreSaveChangesDialog();
 
-        el(['modal-footer'], by.buttonText('Ignore')).click();
-
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0), 3000);
     });
 });

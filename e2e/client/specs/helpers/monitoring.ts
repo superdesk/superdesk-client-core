@@ -10,6 +10,14 @@ import {multiAction} from './actions';
 export const MONITORING_DEBOUNCE_MAX_WAIT = 10000;
 
 class Monitoring {
+    ignoreSaveChangesDialog() {
+        element(by.className('p-dialog-footer')).element(by.buttonText('Ignore')).click();
+    }
+
+    expectSaveChangesDialog() {
+        browser.wait(ECE.textToBePresentInElement(element(by.className('p-dialog-header')), 'Save changes?'), 3000);
+    }
+
     config: ElementFinder;
     label: ElementFinder;
     openMonitoring: () => void;
