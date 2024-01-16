@@ -188,7 +188,10 @@
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
      ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.abstract.required">
+     data-required="schema.abstract.required"
+     data-test-id="authoring-field"
+     data-test-value="abstract"
+    >
 
     <label for="abstract" class="field__label">{{label('abstract')}}</label>
     <sd-character-count-config-button data-field="'abstract'"></sd-character-count-config-button>
@@ -330,6 +333,8 @@
      data-required="schema.body_html.required"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}"
      ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
+     data-test-id="authoring-field"
+     data-test-value="body_html"
      tansa-proofing="false">
 
     <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>

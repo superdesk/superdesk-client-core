@@ -9,7 +9,12 @@ export class Monitoring {
     }
 
     async selectDesk(deskName: string) {
-        await this.page.locator(s('monitoring--selected-desk')).click();
-        await this.page.locator(s('monitoring--select-desk-options', 'item'), {hasText: deskName}).click();
+        const deskSelectDropdown = this.page.locator(s('monitoring--selected-desk'));
+        const selectedDeskText = await deskSelectDropdown.textContent();
+
+        if (selectedDeskText.toLocaleLowerCase().includes(deskName.toLocaleLowerCase()) !== true) {
+            await deskSelectDropdown.click();
+            await this.page.locator(s('monitoring--select-desk-options', 'item'), {hasText: deskName}).click();
+        }
     }
 }

@@ -66,7 +66,10 @@
     </div>
 
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
-        ng-if="active && !isWidgetLocked(active) && !active.pinned">
+        ng-if="active && !isWidgetLocked(active) && !active.pinned"
+        data-test-id="authoring-widget-panel"
+        data-test-value="{{active.label}}"
+    >
         <section class="tabcontent" ng-init="widget=active">
             <!--
                 react based widgets use WidgetHeading component

@@ -707,17 +707,6 @@ describe('authoring', () => {
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
     });
 
-    it('can apply macro', () => {
-        workspace.selectDesk('Politic Desk');
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
-        expect(authoring.getBodyText()).toBe('item6 text');
-        expect(authoring.getAbstractText()).toBe('');
-        authoring.openMacros();
-        authoring.callMacros('Populate Abstract');
-        expect(authoring.getAbstractText()).toBe('item6 text');
-    });
-
     it('Not modifying crops will not trigger an article change', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
         el(['content-create']).click();

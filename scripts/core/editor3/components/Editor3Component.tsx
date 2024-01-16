@@ -611,6 +611,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         });
                     }
                 }}
+                data-test-id="editor3"
 
                 // "dragend" event won't fire if an item is dropped inside draft-js field
                 // it's handled there separately
