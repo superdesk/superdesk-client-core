@@ -268,13 +268,13 @@ export function screenshot(name) {
 }
 
 export function acceptConfirm() {
-    element(by.className('modal__footer'))
+    element(by.className('p-dialog-footer'))
         .element(by.className('btn--primary'))
         .click();
 
     // wait for modal to disappear
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
-        element(by.className('modal__backdrop')),
+        element(by.className('p-component-overlay')),
     ), 2000);
 }
 
