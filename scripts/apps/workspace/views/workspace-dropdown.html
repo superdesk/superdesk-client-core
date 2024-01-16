@@ -13,6 +13,7 @@
             <button
                 ng-click="selectDesk(desk)"
                 ng-disabled="desk._id === selected._id"
+                data-test-id="item"
             >{{ :: desk.name }}</button>
         </li>
         <li class="desk-item" ng-show="desks.length === 0"><i class="no-desk">No Desks Assigned</i></li>
