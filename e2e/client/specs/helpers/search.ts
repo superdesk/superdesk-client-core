@@ -149,7 +149,7 @@ class GlobalSearch {
 
             itemElem.click();
 
-            browser.wait(ECE.attributeContains(itemElem, 'class', 'active'));
+            browser.wait(ECE.attributeContains(itemElem, 'class', 'active'), 2000);
 
             browser.sleep(350); // there is timeout on click
         };
@@ -182,7 +182,7 @@ class GlobalSearch {
             browser.sleep(100);
             const btn = itemElem.element(by.className('icn-btn'));
 
-            browser.wait(ECE.elementToBeClickable(btn));
+            browser.wait(ECE.elementToBeClickable(btn), 1000);
             btn.click();
 
             const menu = element(by.css('.dropdown__menu.open'));
@@ -218,7 +218,7 @@ class GlobalSearch {
                 ? menu.element(by.buttonText(action))
                 : menu.element(by.partialButtonText(action));
 
-            browser.wait(ECE.visibilityOf(elem));
+            browser.wait(ECE.visibilityOf(elem), 1000);
 
             elem.click();
         };
@@ -342,7 +342,7 @@ class GlobalSearch {
          * @param {number} item
          */
         this.checkMarkedForDesk = function(deskName, item) {
-            browser.wait(ECE.visibilityOf(this.getItem(item).element(by.className('icon-bell'))));
+            browser.wait(ECE.visibilityOf(this.getItem(item).element(by.className('icon-bell'))), 1000);
         };
 
         /**

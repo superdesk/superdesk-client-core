@@ -142,7 +142,7 @@ class Monitoring {
 
         this.openMonitoring = function() {
             nav('/workspace/monitoring');
-            browser.wait(ECE.visibilityOf(el(['monitoring-view'])));
+            browser.wait(ECE.visibilityOf(el(['monitoring-view'])), 2000);
         };
 
         this.showMonitoring = function() {
@@ -264,9 +264,9 @@ class Monitoring {
         this.getSpikedItems = function() {
             const wrapper = el(['articles-list']);
 
-            browser.wait(ECE.visibilityOf(wrapper));
+            browser.wait(ECE.visibilityOf(wrapper), 2000);
 
-            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
+            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)), 2000);
 
             const items = els(['article-item'], null, wrapper);
 
@@ -334,7 +334,7 @@ class Monitoring {
         this.getTextItemBySlugline = function(group, item) {
             const _element = this.getItem(group, item).element(s(['field--slugline']));
 
-            browser.wait(ECE.visibilityOf(_element));
+            browser.wait(ECE.visibilityOf(_element), 2000);
 
             return _element.getText();
         };
@@ -355,7 +355,7 @@ class Monitoring {
                 ? element(by.className('toggle-button__text--all'))
                 : element(by.className('filetype-icon-' + fileType));
 
-            browser.wait(ECE.visibilityOf(elem));
+            browser.wait(ECE.visibilityOf(elem), 2000);
             elem.click();
         };
 
@@ -366,7 +366,7 @@ class Monitoring {
         this.previewAction = function(groupIndex, itemIndex) {
             const item = this.getItem(groupIndex, itemIndex);
 
-            browser.wait(ECE.elementToBeClickable(item));
+            browser.wait(ECE.elementToBeClickable(item), 2000);
             item.click();
             var preview = element(by.id('item-preview'));
 
@@ -404,7 +404,7 @@ class Monitoring {
         this.tabAction = function(tab) {
             const btn = element(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]'));
 
-            browser.wait(ECE.elementToBeClickable(btn));
+            browser.wait(ECE.elementToBeClickable(btn), 2000);
 
             btn.click();
         };
@@ -412,9 +412,9 @@ class Monitoring {
         this.openRelatedItem = function(index) {
             const relatedItemsContainer = el(['related-items-view']);
 
-            browser.wait(ECE.visibilityOf(relatedItemsContainer));
+            browser.wait(ECE.visibilityOf(relatedItemsContainer), 2000);
             els(['article-item'], null, relatedItemsContainer).get(index).click();
-            browser.wait(ECE.presenceOf(el(['authoring'])));
+            browser.wait(ECE.presenceOf(el(['authoring'])), 2000);
         };
 
         /**
@@ -496,7 +496,7 @@ class Monitoring {
 
             var checkbox = el(['multi-select-checkbox'], null, item);
 
-            browser.wait(ECE.visibilityOf(checkbox));
+            browser.wait(ECE.visibilityOf(checkbox), 1000);
 
             return checkbox.click();
         };
@@ -537,7 +537,7 @@ class Monitoring {
 
         this.showMonitoringSettings = function() {
             el(['monitoring-settings-button']).click();
-            browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
+            browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed(), 2000);
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
         };
 
@@ -591,7 +591,7 @@ class Monitoring {
             btn.click();
 
             // wait for modal to be removed
-            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
+            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])), 2000);
         };
 
         /**
@@ -810,7 +810,7 @@ class Monitoring {
 
             const bellIcon = crtItem.element(by.className('icon-bell'));
 
-            browser.wait(ECE.visibilityOf(bellIcon));
+            browser.wait(ECE.visibilityOf(bellIcon), 2000);
 
             bellIcon.click();
             var deskList = element(by.className('highlights-list-menu'));
