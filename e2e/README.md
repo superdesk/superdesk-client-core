@@ -49,6 +49,13 @@ To improve readability, `s` function is used where only IDs are passed:
 await page.locator(s('authoring', 'comments-widget', 'submit')).click();
 ```
 
+### Dos and don'ts
+
+* Don't use dynamic test IDs like ```data-test-id={`filter-${bucket.key}`}```. It's easier to find code when IDs are static. Do use `data-test-value` if you need to attach dynamic data: ```data-test-id="filter" data-test-value={bucket.key}```
+
+* Do use multiple selectors for tests to be more stable - `[data-test-id="comments-widget"] [data-test-id="submit"]` instead of `[data-test-id="submit"]`
+* `data-test-id` attributes are not meant to be globally unique. They only have to be unique in their "scope". For example, if we have a comments widget marked with `[data-test-id="comments-widget"]` attribute - test IDs inside comments widget must be locally unique, but we can use test IDs that were already used in other parts of the application.
+
 ### Known issues
 
 * Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
