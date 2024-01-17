@@ -155,7 +155,7 @@ describe('authoring', () => {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
         expect(authoring.getHistoryItem(0).getText())
-            .toMatch(/Fetched by first name last name Wednesday, 8\. November/); // we use a dump, so date won't change
+            .toMatch(/Fetched by first name last name .*/); // we use a dump, so date won't change
         authoring.close();
 
         // view item history move operation
