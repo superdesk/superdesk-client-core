@@ -242,7 +242,10 @@ class GlobalSearch {
                 .mouseMove(header)
                 .perform();
             waitFor(btn, 1000);
+
             btn.click();
+
+            browser.sleep(200); // wait a bit after triggering an action to start queries etc
         };
 
         /**
