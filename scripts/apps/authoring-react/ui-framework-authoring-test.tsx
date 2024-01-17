@@ -1,5 +1,4 @@
-/* tslint:disable: max-line-length */
-
+/* eslint-disable max-len */
 import * as React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Form from 'superdesk-ui-framework/react/components/Form';

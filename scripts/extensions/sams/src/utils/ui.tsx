@@ -123,7 +123,8 @@ export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
 export function getAssetRenditionDimension(asset: IAssetItem, rendition: RENDITION) {
     const {gettext} = superdeskApi.localization;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const dimensions = asset.renditions.find((r) => r?.name === rendition)?.params!;
 
-    return gettext('{{width}} * {{height}}', {width: dimensions?.width, height: dimensions?.height});
+    return gettext('{{width}} * {{height}}', {width: dimensions.width, height: dimensions.height});
 }
