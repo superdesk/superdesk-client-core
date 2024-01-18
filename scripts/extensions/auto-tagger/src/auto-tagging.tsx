@@ -69,26 +69,30 @@ export function hasConfig(key: string, semaphoreFields: ISemaphoreFields) {
 // Runs when clicking the "Run" button. Returns the tags from the semaphore service
 export function getAutoTaggingData(data: IEditableData, semaphoreConfig: any) {
     const items = data.changes.analysis;
-
+    console.log('items', items);
     const isEntity = (tag: ITagUi) => tag.group && entityGroups.has(tag.group.value);
-
+    console.log('isEntity', isEntity);
     const entities = items.filter((tag) => isEntity(tag));
+    console.log('entities', entities);
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-
+    console.log('entitiesGrouped', entitiesGrouped);
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, semaphoreConfig.entities))
         .sortBy((_, key) => semaphoreConfig.entities[key].order,
             (a, b) => a - b);
+    console.log('entitiesGroupedAndSortedByConfig', entitiesGroupedAndSortedByConfig);
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
         .filter((_, key) => !hasConfig(key, semaphoreConfig.entities))
         .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
             (a, b) => a.localeCompare(b));
+    console.log('entitiesGroupedAndSortedNotInConfig', entitiesGroupedAndSortedNotInConfig);
     const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
         .concat(entitiesGroupedAndSortedNotInConfig);
-
+    console.log('entitiesGroupedAndSorted', entitiesGroupedAndSorted);
     const others = items.filter((tag) => isEntity(tag) === false);
+    console.log('others', others);
     const othersGrouped = others.groupBy((tag) => tag.group.value);
-
+    console.log('othersGrouped', othersGrouped);
     return {entitiesGroupedAndSorted, othersGrouped};
 }
 
@@ -289,6 +293,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     kind: groupKind
                 },
                 scheme: newItem.group.value,
+                // Add parent key with null value if scheme is 'subject'
+                ...(newItem.group.value === 'subject' && { parent: null }),
+
             };
             console.log('new tag', tag);
             this.updateTags(
