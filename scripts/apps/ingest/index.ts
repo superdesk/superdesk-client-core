@@ -11,13 +11,13 @@ import _ from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {appConfig} from 'appConfig';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {sdApi} from 'api';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {CustomIngestRoutingAction} from './components/settings/CustomIngestRoutingAction';
 import {CustomIngestRoutingActionPreview} from './components/settings/CustomIngestRoutingActionPreview';
 
-angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
-    .service('send', svc.SendService);
+angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks']);
 
 /**
  * @ngdoc module
@@ -114,8 +114,12 @@ angular.module('superdesk.apps.ingest', [
             .activity('fetchAs', {
                 label: gettext('Fetch To'),
                 icon: 'fetch-as',
-                controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item], 'fetch_to');
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['fetch_to'],
+                        activeTab: 'fetch_to',
+                    });
                 }],
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1},
@@ -125,8 +129,8 @@ angular.module('superdesk.apps.ingest', [
                 label: gettext('Fetch'),
                 icon: 'archive',
                 monitor: true,
-                controller: ['send', 'data', function(send, data) {
-                    return send.validateAndSend(data.item);
+                controller: ['data', function(data) {
+                    sdApi.article.fetchItemsToCurrentDesk([data.item]);
                 }],
                 keyboardShortcut: 'ctrl+enter',
                 filters: [{action: 'list', type: 'ingest'}],
@@ -142,8 +146,12 @@ angular.module('superdesk.apps.ingest', [
                 label: gettext('Fetch To'),
                 icon: 'fetch-as',
                 monitor: true,
-                controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item], 'externalsourceTo');
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['fetch_to'],
+                        activeTab: 'fetch_to',
+                    });
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},

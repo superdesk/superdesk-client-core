@@ -7,6 +7,7 @@ import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
 import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
+import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -66,9 +67,9 @@ export function VocabularyEditController(
     if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
         if ($scope.vocabulary.field_options == null) {
-            $scope.vocabulary.field_options = {allowed_workflows: relationsService.getDefaultAllowedWorkflows()};
+            $scope.vocabulary.field_options = {allowed_workflows: defaultAllowedWorkflows};
         } else if ($scope.vocabulary.field_options.allowed_workflows == null) {
-            $scope.vocabulary.field_options.allowed_workflows = relationsService.getDefaultAllowedWorkflows();
+            $scope.vocabulary.field_options.allowed_workflows = defaultAllowedWorkflows;
         }
     }
 
@@ -188,8 +189,13 @@ export function VocabularyEditController(
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
+        const editing = origVocabulary?._id != null;
+
+        if (editing) {
+            $scope.updateVocabulary(origVocabulary);
+        }
+
         $scope.closeVocabulary();
-        $scope.updateVocabulary(origVocabulary);
     };
 
     // try to reproduce data model of vocabulary:
@@ -220,7 +226,7 @@ export function VocabularyEditController(
 
     const fields = getFields();
 
-    $scope.customFieldTypes = Object.keys(fields).map((id) => ({
+    $scope.customFieldTypes = Object.keys(fields).filter((id) => fields[id].private !== true).map((id) => ({
         id: id,
         label: fields[id].label,
     }));

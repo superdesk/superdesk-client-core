@@ -1,5 +1,3 @@
-import {LIMIT_CHARACTERS_OVERFLOW_STYLE} from '../helpers/characters-limit';
-
 export const customStyleMap = {
     HIGHLIGHT: {
         display: 'inline-block',
@@ -45,9 +43,5 @@ export const customStyleMap = {
     SUPERSCRIPT: {
         verticalAlign: 'super',
         fontSize: 'smaller',
-    },
-
-    [LIMIT_CHARACTERS_OVERFLOW_STYLE]: {
-        color: '#ff0000',
     },
 };

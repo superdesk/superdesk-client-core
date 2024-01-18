@@ -10,7 +10,7 @@ import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
 import {getSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
-import {EditorStore} from '../directive';
+import {ReactContextForEditor3} from '../directive';
 
 /**
  * @ngdoc react
@@ -24,9 +24,9 @@ import {EditorStore} from '../directive';
 export class HighlightsPopup extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-    static contextType = EditorStore;
+    static contextType = ReactContextForEditor3;
 
-    context: React.ContextType<typeof EditorStore>;
+    context: React.ContextType<typeof ReactContextForEditor3>;
 
     rendered: any;
 

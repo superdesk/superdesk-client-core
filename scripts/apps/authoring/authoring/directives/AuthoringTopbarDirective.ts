@@ -1,10 +1,11 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {IArticleAction} from 'superdesk-api';
+import {IAuthoringAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {addInternalEventListener} from 'core/internal-events';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 
 /**
  * @ngdoc directive
@@ -25,11 +26,7 @@ export function AuthoringTopbarDirective(
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             function setActionsFromExtensions() {
-                scope.articleActionsFromExtensions = [];
-
-                getArticleActionsFromExtensions(scope.item).then((articleActions) => {
-                    scope.articleActionsFromExtensions = articleActions;
-                });
+                scope.articleActionsFromExtensions = getArticleActionsFromExtensions(scope.item);
             }
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
@@ -40,13 +37,44 @@ export function AuthoringTopbarDirective(
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
             scope.isCorrection = (item) => appConfig?.corrections_workflow
-                && item.state === ITEM_STATE.CORRECTION && scope.action === 'correct';
+                && item.state === ITEM_STATE.CORRECTION && scope.action === 'edit';
 
             scope.handleArticleChange = (article) => {
                 Object.assign(scope.item, article);
 
                 scope.autosave(scope.item, 0);
             };
+
+            scope.openPublishOrSendToPane = () => {
+                const availableTabs = getAvailableTabs();
+                const activeTab = getActiveTab(availableTabs);
+
+                dispatchInternalEvent('interactiveArticleActionStart', {
+                    items: [scope.item],
+                    tabs: availableTabs,
+                    activeTab: activeTab,
+                });
+            };
+
+            function getAvailableTabs(): Array<IArticleActionInteractive> {
+                if (scope.isCorrection(scope.item)) {
+                    return ['send_to', 'correct'];
+                } else if (scope.item.flags?.marked_for_not_publication === true) {
+                    return ['send_to'];
+                } else {
+                    return ['send_to', 'publish'];
+                }
+            }
+
+            function getActiveTab(availableTabs: Array<IArticleActionInteractive>): IArticleActionInteractive {
+                if (availableTabs.includes('correct')) {
+                    return 'correct';
+                } else if (availableTabs.includes('publish')) {
+                    return 'publish';
+                } else {
+                    return availableTabs[0];
+                }
+            }
 
             /*
              * Save item
@@ -78,7 +106,7 @@ export function AuthoringTopbarDirective(
                 return TranslationService.checkAvailability(scope.item);
             };
 
-            scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
+            scope.triggerActionFromExtension = (actionToTrigger: IAuthoringAction) => {
                 actionToTrigger.onTrigger();
             };
 

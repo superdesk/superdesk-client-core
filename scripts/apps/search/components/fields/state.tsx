@@ -27,7 +27,7 @@ export function getStateLabel(itemState: ITEM_STATE) {
     }
 }
 
-class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
+export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
     render() {
         const props = this.props;
 

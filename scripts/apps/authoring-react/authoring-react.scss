@@ -1,0 +1,60 @@
+.sd-authoring-react {
+    position: absolute;
+    top: $nav-height;
+    left: 0;
+    width: 100%;
+    height: calc(100% - #{$nav-height} - #{$authoring-opened-articles});
+    overflow-y: auto;
+    z-index: 100;
+    background: $white;
+}
+
+.sd-authoring-react-template-edit-view {
+    padding: 1rem;
+}
+
+.authoring-toolbar-1 {
+    display: flex;
+    width: 100%;
+    overflow: auto;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding-left: 16px;
+
+    > * {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        // allow desk/stage name to get truncated
+        &:first-child {
+            overflow: hidden;
+        }
+    }
+}
+
+.desk-and-stage {
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 10px;
+    @include text-light();
+    letter-spacing: 0.035em;
+    line-height: 34px;
+    color: $gray;
+    text-transform: uppercase;
+}
+
+.desk-and-stage--desk,
+.desk-and-stage--stage {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.desk-and-stage--desk {
+    color: $grayDark;
+    @include text-semibold();
+}

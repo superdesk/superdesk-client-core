@@ -6,6 +6,7 @@ import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/component
 import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
 import {applicationState} from 'core/get-superdesk-api-implementation';
+import {WorkQueueCreateNewButton} from './work-queue-create-new-button';
 
 /**
  * This file is part of Superdesk.
@@ -317,6 +318,8 @@ function WorkqueueCtrl(
             $scope.articleInEditMode = null;
         }
     });
+
+    $scope.createNewButton = WorkQueueCreateNewButton;
 }
 
 function WorkqueueListDirective() {

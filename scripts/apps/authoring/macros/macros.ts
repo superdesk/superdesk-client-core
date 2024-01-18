@@ -170,7 +170,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
      */
     $scope.call = function(macro: IMacro) {
         const editor = editorResolver.get();
-        const isEditor3 = editor.version() !== '2';
+        const isEditor3 = editor.version() === '3';
         const useReplace = macro.replace_type === 'simple-replace' || macro.replace_type === 'keep-style-replace';
         const isSimpleReplace = macro.replace_type === 'simple-replace';
         let item = _.extend({}, $scope.origItem, $scope.item);

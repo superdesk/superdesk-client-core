@@ -60,3 +60,15 @@
         }
     }
 }
+
+.commented-text {
+    margin-bottom: 1rem;
+    color: $grayLight;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    .text {
+        font-weight: bold;
+    }
+}

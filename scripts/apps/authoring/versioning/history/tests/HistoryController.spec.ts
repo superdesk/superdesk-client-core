@@ -1,3 +1,5 @@
+import ng from 'core/services/ng';
+
 describe('archive-history', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.apps.highlights'));
@@ -40,6 +42,11 @@ describe('archive-history', () => {
         spyOn(archiveService, 'getVersions').and.returnValue($q.when([version]));
     }));
 
+    beforeEach(inject(($httpBackend, $injector) => {
+        ng.register($injector);
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
+
     it('calls archive history for non-legal story', inject(($controller, $rootScope, api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{version: 1}]}));
 
@@ -72,42 +79,8 @@ describe('archive-history', () => {
         expect(api.query).not.toHaveBeenCalledWith('archive_history');
     }));
 
-    it('calls versions if no history', inject(($controller, $rootScope, api, $q) => {
-        spyOn(api, 'query').and.returnValue($q.when({_items: []}));
-
-        var scope = $rootScope.$new();
-
-        scope.item = {_id: 123, _type: 'archive'};
-        $controller('HistoryWidgetCtrl', {$scope: scope});
-
-        $rootScope.$digest();
-        expect(scope.historyItems.length).toBe(1);
-        expect(scope.historyItems[0].displayName).toBe('John');
-    }));
-
-    it('merges history into versions if no history',
-        inject(($controller, $rootScope, api, $q) => {
-            const historyItem = {
-                version: 2,
-                user_id: 2,
-                item_id: 123,
-            };
-
-            spyOn(api, 'query').and.returnValue($q.when({_items: [historyItem]}));
-
-            var scope = $rootScope.$new();
-
-            scope.item = {_id: 123, _type: 'archive'};
-            $controller('HistoryWidgetCtrl', {$scope: scope});
-
-            $rootScope.$digest();
-            expect(scope.historyItems.length).toBe(2);
-            expect(scope.historyItems[0].displayName).toBe('John');
-            expect(scope.historyItems[1].displayName).toBe('Smith');
-        }));
-
     it('returns history if history starts from version 1',
-        inject(($controller, $rootScope, api, $q) => {
+        (done) => inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 user_id: 2,
@@ -122,12 +95,17 @@ describe('archive-history', () => {
             $controller('HistoryWidgetCtrl', {$scope: scope});
 
             $rootScope.$digest();
-            expect(scope.historyItems.length).toBe(1);
-            expect(scope.historyItems[0].displayName).toBe('Smith');
+
+            setTimeout(() => {
+                expect(scope.historyItems.length).toBe(1);
+                expect(scope.historyItems[0].displayName).toBe('Smith');
+
+                done();
+            });
         }));
 
     it('returns System as user if no user in history',
-        inject(($controller, $rootScope, api, $q) => {
+        (done) => inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 item_id: 123,
@@ -141,12 +119,16 @@ describe('archive-history', () => {
             $controller('HistoryWidgetCtrl', {$scope: scope});
 
             $rootScope.$digest();
-            expect(scope.historyItems.length).toBe(1);
-            expect(scope.historyItems[0].displayName).toBe('System');
+
+            setTimeout(() => {
+                expect(scope.historyItems.length).toBe(1);
+                expect(scope.historyItems[0].displayName).toBe('System');
+                done();
+            });
         }));
 
     it('ignores lock history entries',
-        inject(($controller, $rootScope, api, $q) => {
+        (done) => inject(($controller, $rootScope, api, $q) => {
             const historyItems = [{
                 version: 1,
                 item_id: 123,
@@ -173,8 +155,12 @@ describe('archive-history', () => {
             $controller('HistoryWidgetCtrl', {$scope: scope});
 
             $rootScope.$digest();
-            expect(scope.historyItems.length).toBe(2);
-            expect(scope.historyItems[0].operation).toBe('create');
-            expect(scope.historyItems[1].operation).toBe('update');
+
+            setTimeout(() => {
+                expect(scope.historyItems.length).toBe(2);
+                expect(scope.historyItems[0].operation).toBe('create');
+                expect(scope.historyItems[1].operation).toBe('update');
+                done();
+            });
         }));
 });

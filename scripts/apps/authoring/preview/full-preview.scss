@@ -1,0 +1,48 @@
+.sd-full-preview {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+    background: white;
+}
+
+.sd-full-preview--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.6rem;
+    border-bottom: 1px solid #c5c5c5;
+}
+
+.sd-full-preview--content-wrapper {
+    padding-top: 1.6rem;
+    flex-shrink: 1;
+    overflow-y: auto;
+}
+
+.sd-full-preview--content {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+
+    img {
+        max-width: 100%;
+    }
+}
+
+@media print
+{
+    body.prepare-to-print {
+        > *:not(.print-container) {
+            display: none;
+        }
+
+        .sd-full-preview {
+            position: static;
+        }
+    }
+}

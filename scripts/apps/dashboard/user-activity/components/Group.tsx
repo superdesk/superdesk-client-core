@@ -55,13 +55,6 @@ export class GroupComponent extends React.Component<IProps> {
                                 empty: gettext('No results for this user'),
                             }}
                             canEdit={true}
-                            preview={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
                             select={(item: IArticle) => {
                                 this.services.superdesk.intent(
                                     'preview',

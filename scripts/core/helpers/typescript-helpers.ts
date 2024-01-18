@@ -53,3 +53,13 @@ export function numberToString(value?: number): string | undefined {
 export function notNullOrUndefined<T>(x: null | undefined | T): x is T {
     return x != null;
 }
+
+export function isNullOrUndefined<T>(x: null | undefined | T): x is null | undefined {
+    return x != null;
+}
+
+export function isNumeric(str: string): boolean {
+    const _isNan = isNaN as unknown as (str) => boolean;
+
+    return !_isNan(str);
+}

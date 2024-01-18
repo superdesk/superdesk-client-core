@@ -1,16 +1,10 @@
 import * as React from 'react';
-
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
-
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-
 import {gettext} from 'core/utils';
-import {Input, Switch} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Input, Modal, Spacer, Switch} from 'superdesk-ui-framework/react';
+import {noop} from 'lodash';
 
 interface IProps {
     files: Array<File>;
@@ -121,105 +115,114 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
         const ulClass = 'upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4';
 
         return (
-            <Modal size="fill">
-                <ModalHeader onClose={this.state.saving ? null : this.props.closeModal}>
-                    {gettext('Attach files')}
-                </ModalHeader>
-                <ModalBody>
-                    <form className="attachmentsForm upload-media">
-                        <div className="upload-edit">
-                            <ul className={ulClass}>
-                                {this.state.items.map((item, index) => (
-                                    <li className="flex-grid__item sd-shadow--z3 sd-card" key={item.file.name}>
-                                        <div className="thumb sd-card__thumbnail">
-                                            <div className="holder"><i className="big-icon--text" /></div>
-                                            <span className="remove" onClick={() => this.cancelItem(index)}>
-                                                <i className="icon-close-small" />
-                                            </span>
-                                        </div>
-                                        <div className="sd-card__content">
-                                            {item.progress === 0 ? null : (
-                                                <div className="upload-progress">
-                                                    <div className="bar" style={{width: item.progress + '%'}} />
-                                                </div>
-                                            )}
-                                            <div className="other-info">
-                                                <div className="form__row">
-                                                    <Switch
-                                                        label={{content: gettext('Internal'), hidden: true}}
-                                                        value={item.meta.internal}
-                                                        onChange={(value) => {
-                                                            this.updateItemMeta(index, 'internal', value);
-                                                        }}
-                                                        disabled={this.state.saving}
-                                                    />
-                                                    <label>{gettext('Internal')}</label>
-                                                </div>
-                                                <div className="form__row">
-                                                    <Input
-                                                        label={gettext('Title')}
-                                                        type="text"
-                                                        required={true}
-                                                        value={item.meta.title}
-                                                        onChange={(value) => {
-                                                            this.updateItemMeta(index, 'title', value);
-                                                        }}
-                                                        disabled={this.state.saving}
-                                                    />
-                                                </div>
-                                                <div className="form__row">
-                                                    <Input
-                                                        type="text"
-                                                        label={gettext('Description')}
-                                                        required={true}
-                                                        value={item.meta.description}
-                                                        onChange={(value) => {
-                                                            this.updateItemMeta(index, 'description', value);
-                                                        }}
-                                                        disabled={this.state.saving}
-                                                    />
-                                                </div>
-                                                <div className="form__row">
-                                                    <Input
-                                                        type="text"
-                                                        label={gettext('File Name')}
-                                                        required={true}
-                                                        value={item.file.name}
-                                                        onChange={() => false}
-                                                        disabled={true}
-                                                    />
-                                                </div>
-                                                <div className="form__row">
-                                                    <Input
-                                                        type="text"
-                                                        label={gettext('File Size')}
-                                                        required={true}
-                                                        value={item.file.size.toString()}
-                                                        onChange={() => false}
-                                                        disabled={true}
-                                                    />
-                                                </div>
+            <Modal
+                visible
+                zIndex={1050}
+                size="x-large"
+                position="center"
+                onHide={this.state.saving ? noop : this.props.closeModal}
+                headerTemplate={gettext('Attach files')}
+                footerTemplate={
+                    (
+                        <Spacer h gap="8" alignItems="center" justifyContent="end" noGrow>
+                            <span className="pull-left">{gettext('* fields are required')}</span>
+                            <ButtonGroup>
+                                <Button
+                                    text={gettext('Cancel')}
+                                    type="default"
+                                    onClick={this.props.closeModal}
+                                    disabled={this.state.saving}
+                                />
+                                <Button
+                                    text={gettext('Upload')}
+                                    type="primary"
+                                    onClick={this.save}
+                                    disabled={this.disableUploadButton()}
+                                />
+                            </ButtonGroup>
+                        </Spacer>
+                    )
+                }
+            >
+                <form className="attachmentsForm upload-media">
+                    <div className="upload-edit">
+                        <ul className={ulClass}>
+                            {this.state.items.map((item, index) => (
+                                <li className="flex-grid__item sd-shadow--z3 sd-card" key={item.file.name}>
+                                    <div className="thumb sd-card__thumbnail">
+                                        <div className="holder"><i className="big-icon--text" /></div>
+                                        <span className="remove" onClick={() => this.cancelItem(index)}>
+                                            <i className="icon-close-small" />
+                                        </span>
+                                    </div>
+                                    <div className="sd-card__content">
+                                        {item.progress === 0 ? null : (
+                                            <div className="upload-progress">
+                                                <div className="bar" style={{width: item.progress + '%'}} />
+                                            </div>
+                                        )}
+                                        <div className="other-info">
+                                            <div className="form__row">
+                                                <Switch
+                                                    label={{content: gettext('Internal'), hidden: true}}
+                                                    value={item.meta.internal}
+                                                    onChange={(value) => {
+                                                        this.updateItemMeta(index, 'internal', value);
+                                                    }}
+                                                    disabled={this.state.saving}
+                                                />
+                                            </div>
+                                            <div className="form__row">
+                                                <Input
+                                                    type="text"
+                                                    label={gettext('Title')}
+                                                    required={true}
+                                                    value={item.meta.title}
+                                                    onChange={(value) => {
+                                                        this.updateItemMeta(index, 'title', value);
+                                                    }}
+                                                    disabled={this.state.saving}
+                                                />
+                                            </div>
+                                            <div className="form__row">
+                                                <Input
+                                                    type="text"
+                                                    label={gettext('Description')}
+                                                    required={true}
+                                                    value={item.meta.description}
+                                                    onChange={(value) => {
+                                                        this.updateItemMeta(index, 'description', value);
+                                                    }}
+                                                    disabled={this.state.saving}
+                                                />
+                                            </div>
+                                            <div className="form__row">
+                                                <Input
+                                                    type="text"
+                                                    label={gettext('File Name')}
+                                                    required={true}
+                                                    value={item.file.name}
+                                                    onChange={() => false}
+                                                    disabled={true}
+                                                />
+                                            </div>
+                                            <div className="form__row">
+                                                <Input
+                                                    type="text"
+                                                    label={gettext('File Size')}
+                                                    required={true}
+                                                    value={item.file.size.toString()}
+                                                    onChange={() => false}
+                                                    disabled={true}
+                                                />
                                             </div>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </form>
-                </ModalBody>
-                <ModalFooter>
-                    <span className="pull-left">{gettext('* fields are required')}</span>
-                    <button
-                        className="btn btn--primary pull-right"
-                        onClick={this.save}
-                        disabled={this.disableUploadButton()}
-                    >
-                        {gettext('Upload')}
-                    </button>
-                    <button className="btn pull-right" onClick={this.props.closeModal} disabled={this.state.saving}>
-                        {gettext('Cancel')}
-                    </button>
-                </ModalFooter>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </form>
             </Modal>
         );
     }

@@ -97,6 +97,14 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
         }
     };
 
+    this.getAllVocabulariesSync = function() {
+        if (self.AllActiveVocabularies) {
+            return self.AllActiveVocabularies;
+        } else {
+            return [];
+        }
+    };
+
     /**
      * @ngdoc method
      * @name VocabularyService#_resetVocabularies
@@ -106,6 +114,9 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
     this._resetVocabularies = function() {
         self.AllActiveVocabularies = null;
         self.vocabularies = null;
+
+        this.getVocabularies();
+        this.getAllActiveVocabularies();
     };
 
     this.getDefaultDatefieldShortcuts = function() {

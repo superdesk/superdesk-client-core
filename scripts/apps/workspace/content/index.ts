@@ -3,10 +3,10 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {ContentService} from './services';
 import * as directive from './directives';
 import {coreMenuGroups} from 'core/activity/activity';
-import {WidgetsConfig} from './components/WidgetsConfig';
 import {gettext} from 'core/utils';
-import ContentProfileFields from './controllers/ContentProfileFields';
 import {ContentProfilesController} from './controllers/ContentProfilesController';
+import {ContentProfileFieldsConfig} from './components/ContentProfileFieldsConfig';
+import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
 
 /**
  * @ngdoc module
@@ -25,23 +25,17 @@ angular.module('superdesk.apps.workspace.content', [
 ])
     .service('content', ContentService)
 
-    .directive('sdContentCreate', directive.ContentCreateDirective)
-    .directive('sdContentSchemaEditor', directive.ContentProfileSchemaEditor)
     .directive('sdItemProfile', directive.ItemProfileDirective)
-    .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
-    .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['initialWidgetsConfig', 'onUpdate']))
-    .component('sdSchemaEditorFieldsDropdown', {
-        template: require('./views/schema-editor-fields-dropdown.html'),
-        bindings: {
-            bottom: '@',
-            fields: '=',
-            onSelect: '&',
-        },
-    })
-
+    .component(
+        'sdContentProfileFieldsConfig',
+        reactToAngular1(ContentProfileFieldsConfig, ['profile', 'profileType', 'patchContentProfile']),
+    )
+    .component(
+        'sdContentCreate',
+        reactToAngular1(ContentCreateDropdown, ['customButton', 'onCreate', 'initializeAsUpdated']),
+    )
     .controller('ContentProfilesController', ContentProfilesController)
-    .controller('ContentProfileFields', ContentProfileFields)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk

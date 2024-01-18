@@ -1,9 +1,41 @@
 import _ from 'lodash';
+import {ITemplate} from 'superdesk-api';
 
 export function TemplateEditorModal() {
     return {
         templateUrl: 'scripts/apps/templates/views/template-editor-modal.html',
         link: function(scope) {
+            let _isDirty;
+
+            /**
+             * Set dirty on autosave - it is called on change
+             */
+            scope.autosave = () => {
+                _isDirty = true;
+            };
+
+            scope.setDirtyFromReact = () => {
+                _isDirty = true;
+
+                scope.$apply();
+            };
+
+            scope.onChangeData = (item: ITemplate['data']) => {
+                scope.template.data = item;
+
+                scope.setDirtyFromReact();
+            };
+
+            scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
+
+            scope.templatesFilter = function(templateType) {
+                if (scope.template._id && scope.template.template_type === 'kill') {
+                    return templateType._id === 'kill';
+                }
+
+                return templateType._id !== 'kill';
+            };
+
             _.defer(() => {
                 const ENTER = 13;
 
@@ -26,20 +58,6 @@ export function TemplateEditorModal() {
                 scope.$on('$destroy', () => {
                     modalBodyContainer.off('keydown', handleKeyDown);
                 });
-
-                let _isDirty;
-
-                /**
-                 * Set dirty on autosave - it is called on change
-                 */
-                scope.autosave = () => {
-                    _isDirty = true;
-                };
-
-                /**
-                 * Test if scope is dirty
-                 */
-                scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
             });
         },
     };

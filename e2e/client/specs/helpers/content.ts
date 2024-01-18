@@ -169,7 +169,7 @@ class Content {
 
         this.unspikeItems = function() {
             multiAction('Unspike');
-            element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.selectSpikedList = function() {

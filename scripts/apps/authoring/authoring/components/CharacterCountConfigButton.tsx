@@ -1,16 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {showModal} from 'core/services/modalService';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
+import {showModal} from '@superdesk/common';
 import {gettext} from 'core/utils';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {RadioGroup, CheckGroup} from 'superdesk-ui-framework';
+import {RadioGroup, CheckGroup, Modal, ButtonGroup, Button} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
-
-export const CHARACTER_LIMIT_UI_PREF = 'editor:char_limit_ui';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
 export type CharacterLimitUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
 export interface ICharacterLimitUiBehavior {
@@ -27,10 +22,7 @@ interface IState {
     preferences: any;
 }
 
-export class CharacterCountConfigButton extends React.Component<
-    IProps,
-    IState
-> {
+export class CharacterCountConfigButton extends React.Component<IProps, IState> {
     preferencesService: any;
 
     constructor(props) {
@@ -59,9 +51,11 @@ export class CharacterCountConfigButton extends React.Component<
 
         const newPreferences = {
             ...this.state.preferences,
-            [CHARACTER_LIMIT_UI_PREF]: {
-                ...this.state.preferences[CHARACTER_LIMIT_UI_PREF],
-                [this.props.field]: newValue,
+            [AUTHORING_FIELD_PREFERENCES]: {
+                ...this.state.preferences[AUTHORING_FIELD_PREFERENCES],
+                [this.props.field]: {
+                    characterLimitMode: newValue,
+                },
             },
         };
 
@@ -75,6 +69,8 @@ export class CharacterCountConfigButton extends React.Component<
             return null;
         }
 
+        const fieldPrefs = this.state.preferences[AUTHORING_FIELD_PREFERENCES];
+
         return (
             <button
                 className="char-count-config-button"
@@ -82,11 +78,7 @@ export class CharacterCountConfigButton extends React.Component<
                     showModal((props) => (
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
-                            value={
-                                this.state.preferences[
-                                    CHARACTER_LIMIT_UI_PREF
-                                ]?.[this.props.field] ?? DEFAULT_UI_FOR_EDITOR_LIMIT
-                            }
+                            value={fieldPrefs?.[this.props.field]?.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT}
                             onChange={this.onModalValueChange}
                         />
                     ));
@@ -108,7 +100,7 @@ interface IModalState {
     radioValue: CharacterLimitUiBehavior;
 }
 
-class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
+export class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
     constructor(props) {
         super(props);
 
@@ -125,9 +117,34 @@ class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalS
 
     render() {
         return (
-            <Modal>
-                <ModalHeader>{gettext('Character limit settings')}</ModalHeader>
-                <ModalBody>
+            <Modal
+                visible
+                zIndex={1050}
+                size="medium"
+                position="top"
+                headerTemplate={gettext('Character limit settings')}
+                footerTemplate={
+                    (
+                        <ButtonGroup align="end">
+                            <Button
+                                text={gettext('Cancel')}
+                                type="default"
+                                onClick={this.props.closeModal}
+                            />
+                            <Button
+                                text={gettext('Save')}
+                                type="primary"
+                                onClick={() => {
+                                    this.props.onChange(this.state.radioValue);
+                                    this.props.closeModal();
+                                }}
+                                disabled={false}
+                            />
+                        </ButtonGroup>
+                    )
+                }
+            >
+                <div>
                     <p>
                         {gettext(
                             'You can either completely block further writing after the character' +
@@ -150,22 +167,7 @@ class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalS
                             onChange={this.onRadioValueChange}
                         />
                     </CheckGroup>
-                </ModalBody>
-                <ModalFooter>
-                    <button
-                        className="btn btn--primary pull-right"
-                        onClick={() => {
-                            this.props.onChange(this.state.radioValue);
-                            this.props.closeModal();
-                        }}
-                        disabled={false}
-                    >
-                        {gettext('Save')}
-                    </button>
-                    <button className="btn pull-right" onClick={this.props.closeModal}>
-                        {gettext('Cancel')}
-                    </button>
-                </ModalFooter>
+                </div>
             </Modal>
         );
     }

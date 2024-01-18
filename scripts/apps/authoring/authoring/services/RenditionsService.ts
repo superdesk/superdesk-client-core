@@ -56,10 +56,22 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(item, options): Promise<IArticle> {
-        const clonedItem = _.extend({}, item);
+    this.crop = function(
+        item,
+        options,
+        mode: {
+            immutable: boolean; // immutability is required when calling from authoring-react
+        } = {immutable: false},
+    ): Promise<IArticle> {
+        let clonedItem;
 
-        clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
+        if (mode.immutable) {
+            clonedItem = _.cloneDeep(item);
+        } else {
+            clonedItem = _.extend({}, item);
+
+            clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
+        }
 
         return self.get().then((renditions) => {
             // we want to crop only renditions that change the ratio
@@ -90,7 +102,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
             })
                 .then((metaData) => {
                     // apply the metadata changes
-                    return _.extend(item, metaData);
+                    if (mode.immutable) {
+                        return _.cloneDeep({...clonedItem, ...metaData});
+                    } else {
+                        return _.extend(item, metaData);
+                    }
                 });
         });
     };

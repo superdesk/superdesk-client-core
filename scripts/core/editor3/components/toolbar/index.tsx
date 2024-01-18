@@ -16,6 +16,7 @@ import {gettext} from 'core/utils';
 import {MultiLineQuoteControls} from './MultiLineQuoteControls';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IEditorStore} from 'core/editor3/store';
+import {IEditorComponentProps} from 'superdesk-api';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -42,6 +43,7 @@ interface IProps extends Partial<IEditorStore> {
     editorNode: any;
     disabled: boolean;
     popup: any;
+    uiTheme: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
 }
 
 /**
@@ -185,7 +187,17 @@ class ToolbarComponent extends React.Component<IProps, IState> {
 
         if (activeCell == null) {
             return (
-                <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
+                <div
+                    className={cx}
+                    style={{
+                        width: this.state.width,
+                        backgroundColor: this.props.uiTheme == null
+                            ? undefined
+                            : this.props.uiTheme.backgroundColorSecondary,
+                        color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
+                    }}
+                    ref={this.toolbarNode}
+                >
                     {/* Styles */}
                     <BlockStyleButtons />
                     <InlineStyleButtons />
@@ -196,6 +208,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             onClick={showPopup(PopupTypes.Link)}
                             iconName="link"
                             tooltip={gettext('Link (Ctrl+K)')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('embed') && (
@@ -203,6 +216,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             onClick={showPopup(PopupTypes.Embed)}
                             iconName="code"
                             tooltip="Embed"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('media') && (
@@ -210,6 +224,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             onClick={insertMedia}
                             tooltip={gettext('Media')}
                             iconName="picture"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('table') && (
@@ -217,6 +232,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             onClick={addTable}
                             tooltip={gettext('Table')}
                             iconName="table"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('multi-line quote') && (
@@ -226,6 +242,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             }}
                             tooltip={gettext('Multi-line quote')}
                             iconName="text-block"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('remove format') && (
@@ -235,15 +252,16 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             key="remove-format-button"
                             iconName="clear-format"
                             tooltip={gettext('Remove formatting')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
-                    {has('remove all format') && (
+                    {(has('remove all format') && !suggestingMode) && (
                         <IconButton
                             onClick={removeAllFormat}
-                            precondition={!suggestingMode}
                             key="remove-all-format-button"
                             iconName="clear-all"
                             tooltip={gettext('Remove all formatting')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('comments') && (
@@ -255,6 +273,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             key="comment-button"
                             iconName="comment"
                             tooltip={gettext('Comment')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
                     {has('annotation') && (
@@ -266,6 +285,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             key="annotation-button"
                             iconName="edit-line"
                             tooltip={gettext('Annotation')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -275,6 +295,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             label={'suggestions'}
                             style={'suggestions'}
                             onToggle={toggleSuggestingMode}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -284,6 +305,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             label={'invisibles'}
                             style={'invisibles'}
                             onToggle={toggleInvisibles}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -294,6 +316,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             key="uppercase-button"
                             iconName="to-uppercase"
                             tooltip={gettext('Convert text to uppercase')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -304,6 +327,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             key="lowercase-button"
                             iconName="to-lowercase"
                             tooltip={gettext('Convert text to lowercase')}
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -314,6 +338,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             }}
                             tooltip={gettext('Undo') + ' (ctrl + z)'}
                             iconName="undo"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -324,6 +349,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             }}
                             tooltip={gettext('Redo') + ' (ctrl + y)'}
                             iconName="redo"
+                            uiTheme={this.props.uiTheme}
                         />
                     )}
 
@@ -332,6 +358,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         data={popup.data}
                         editorState={this.props.editorState}
                         highlightsManager={this.props.highlightsManager}
+                        uiTheme={this.props.uiTheme}
                     />
 
                     {/* LinkToolbar must be the last node. */}

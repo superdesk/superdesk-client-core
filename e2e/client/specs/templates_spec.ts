@@ -21,6 +21,7 @@ describe('templates', () => {
         templates.openTemplatesSettings();
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
+        templates.selectProfile('Plain text');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');
@@ -43,14 +44,14 @@ describe('templates', () => {
         // check the New Template is accessable from both desks
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
-        authoring.createTextItemFromTemplate('new');
+        authoring.createTextItemFromTemplate('new template');
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
 
         authoring.close();
         workspace.selectDesk('Politic Desk');
-        authoring.createTextItemFromTemplate('new');
+        authoring.createTextItemFromTemplate('new template');
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
@@ -60,6 +61,7 @@ describe('templates', () => {
         templates.openTemplatesSettings();
         templates.add();
         templates.getTemplateNameElement().sendKeys('Second New Template');
+        templates.selectProfile('Plain text');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');

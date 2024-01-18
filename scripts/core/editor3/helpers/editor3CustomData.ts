@@ -23,7 +23,7 @@ import {
 import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 
-function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
+export function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
 
     const allStyleNames = getUniqueStyleNamesInDraftSelection(
@@ -123,6 +123,16 @@ export function setCustomDataForEditor__deprecated(editorState, key, value) {
     }
 
     return setAllCustomDataForEditor__deprecated(editorState, Map().set(key, value));
+}
+
+export function getCustomEditor3Data(
+    contentState: ContentState,
+    dataKey: keyof typeof editor3DataKeys,
+): Array<any> {
+    return contentState
+        .getFirstBlock()
+        .getData()
+        .get(dataKey);
 }
 
 export function getCustomDataFromEditor(editorState, key) {

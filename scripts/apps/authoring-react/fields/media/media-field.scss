@@ -1,0 +1,70 @@
+.field--media {
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1);
+}
+
+.field--media--carousel {
+    position: relative;
+    background-color: #2c2c2c;
+    text-align: center;
+}
+
+.field--media--carousel-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+.field--media--carousel:hover .field--media--carousel-overlay {
+    display: block;
+}
+
+.field--media--metadata {
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+
+    > * {
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+
+        &:nth-child(1), &:nth-child(2) {
+            border-top: 1px dotted rgba(255, 255, 255, 0.5);
+        }
+    }
+}
+
+.field--media--metadata-label {
+    opacity: 0.9;
+    font-weight: 300;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.image-crops-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.image-crop {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2c2c2c;
+}
+
+.image-crop--label {
+    max-width: 150px;
+}

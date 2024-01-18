@@ -2,16 +2,11 @@
 
 import * as React from 'react';
 import {gettext} from 'core/utils';
-
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Label} from 'core/ui/components/Form/Label';
 import {Input} from 'core/ui/components/Form/Input';
 import {TextArea} from 'core/ui/components/Form/TextArea';
-
 import {IAttachment} from 'superdesk-api';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
     attachment: IAttachment;
@@ -38,43 +33,49 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <Modal>
-                <ModalHeader onClose={this.props.closeEdit}>
-                    {gettext('Edit Attachment')}
-                </ModalHeader>
+            <Modal
+                visible
+                zIndex={1050}
+                size="small"
+                position="top"
+                onHide={this.props.closeEdit}
+                headerTemplate={gettext('Edit Attachment')}
+                footerTemplate={
+                    (
+                        <ButtonGroup align="end">
+                            <Button
+                                text={gettext('Cancel')}
+                                type="default"
+                                onClick={this.props.closeEdit}
+                            />
+                            <Button
+                                text={gettext('Update')}
+                                type="primary"
+                                onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
+                                disabled={!this.state.title}
+                            />
+                        </ButtonGroup>
+                    )
+                }
+            >
+                <div className="sd-line-input">
+                    <Label text={gettext('Title')} />
+                    <Input
+                        field="title"
+                        value={this.state.title}
+                        onChange={this.update}
+                        required
+                    />
+                </div>
 
-                <ModalBody>
-                    <div className="sd-line-input">
-                        <Label text={gettext('Title')} />
-                        <Input
-                            field="title"
-                            value={this.state.title}
-                            onChange={this.update}
-                            required
-                        />
-                    </div>
-
-                    <div className="sd-line-input">
-                        <Label text={gettext('Description')} />
-                        <TextArea
-                            field="description"
-                            value={this.state.description}
-                            onChange={this.update}
-                        />
-                    </div>
-                </ModalBody>
-
-                <ModalFooter>
-                    <button
-                        className="btn btn--primary pull-right"
-                        onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
-                        disabled={!this.state.title}
-                    >{gettext('Update')}</button>
-                    <button
-                        className="btn pull-right"
-                        onClick={this.props.closeEdit}
-                    >{gettext('Cancel')}</button>
-                </ModalFooter>
+                <div className="sd-line-input">
+                    <Label text={gettext('Description')} />
+                    <TextArea
+                        field="description"
+                        value={this.state.description}
+                        onChange={this.update}
+                    />
+                </div>
             </Modal>
         );
     }

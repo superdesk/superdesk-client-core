@@ -3,6 +3,9 @@ import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuW
 import {logger} from 'core/services/logger';
 import {editor3StateToHtml} from './editor3StateToHtml';
 import {getData, IEditor3TableData} from 'core/editor3/helpers/table';
+import {MULTI_LINE_QUOTE_CLASS} from 'core/editor3/components/multi-line-quote/MultiLineQuote';
+import {CustomEditor3Entity} from 'core/editor3/constants';
+import {IEditorDragDropArticleEmbed} from 'core/editor3/reducers/editor3';
 
 /**
  * @ngdoc class
@@ -42,14 +45,16 @@ export class AtomicBlockParser {
         const rawKey = this.getRawKey(data);
 
         switch (entity.getType()) {
-        case 'MEDIA':
+        case CustomEditor3Entity.MEDIA:
             return this.parseMedia(data, rawKey).trim();
-        case 'EMBED':
+        case CustomEditor3Entity.EMBED:
             return this.parseEmbed(data).trim();
-        case 'TABLE':
+        case CustomEditor3Entity.TABLE:
             return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
-        case 'MULTI-LINE_QUOTE':
+        case CustomEditor3Entity.MULTI_LINE_QUOTE:
             return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
+        case CustomEditor3Entity.ARTICLE_EMBED:
+            return (data as IEditorDragDropArticleEmbed['data']).html;
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
         }
@@ -192,7 +197,7 @@ export class AtomicBlockParser {
 
     /**
      * Returns the HTML representation of an atomic
-     * 'MULTI-LINE_QUOTE' block having the passed entity data.
+     * @see{CustomEditor3Entity.MULTI_LINE_QUOTE} block having the passed entity data.
      */
     parseMultiLineQuote(data: IEditor3TableData): string {
         if (this.disabled.indexOf('table') > -1) {
@@ -200,7 +205,7 @@ export class AtomicBlockParser {
         }
 
         const {cells} = data;
-        let html = '<div class="multi-line-quote">';
+        let html = `<div class="${MULTI_LINE_QUOTE_CLASS}">`;
         const cellContentState = cells[0]?.[0] != null
             ? convertFromRaw(cells[0][0])
             : ContentState.createFromText('');

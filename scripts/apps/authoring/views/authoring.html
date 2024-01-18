@@ -15,16 +15,9 @@
                                 ></sd-authoring-topbar-react>
                             </div>
                         </div>
-        
+
                         <div class="authoring-sticky__theme-controls ">
                             <div class="preview-modal-control" ng-if="$root.config.features.preview">
-                                <div
-                                    sd-full-preview
-                                    ng-if="fullPreview"
-                                    data-items="[item]"
-                                    data-close-action="closeFullPreview"
-                                ></div>
-         
                                 <button class="preview-toggle icn-btn"
                                     ng-if="canPrintPreview(item)"
                                     title="{{:: 'Preview' | translate}}"
@@ -58,7 +51,7 @@
                         <div ng-if="item.type === 'composite'" sd-package-edit></div>
                     </article>
                 </div>
-                
+
             </div>
         </div>
 
@@ -66,18 +59,10 @@
 
     </div>
 
-    <div sd-send-item
-        id="send-item-container"
-        ng-if="views.send"
-        data-item="item"
-        data-orig="origItem"
-        data-view="views.send"
-        data-before-send="beforeSend(action)"
-        data-editable="_editable"
-        data-publish="publish()"
-        data-action="action"
-        data-autosave="autosave(item)"
-        data-mode="authoring"
-        data-test-id="send-publish-pane"
-    ></div>
+    <sd-interactive-article-actions-panel-combined
+        handle-unsaved-changes="handleUnsavedChangesReact"
+        location="'authoring'"
+        on-error="onError"
+        on-data-change="autosave"
+    />
 </section>

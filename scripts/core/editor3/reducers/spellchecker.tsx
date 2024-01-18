@@ -2,7 +2,7 @@ import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
-import {getCustomDecorator, IEditorStore} from '../store';
+import {getDecorators, IEditorStore} from '../store';
 import {ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
 const spellchecker = (state: IEditorStore, action) => {
@@ -120,7 +120,13 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
 
     const nextEditorState = EditorState.set(
         editorState,
-        {decorator: enabled ? getCustomDecorator(language, spellcheckWarningsByBlock) : getCustomDecorator()},
+        {
+            decorator: getDecorators(
+                language,
+                enabled ? spellcheckWarningsByBlock : null,
+                state.limitConfig,
+            ),
+        },
     );
 
     return {

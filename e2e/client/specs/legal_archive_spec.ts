@@ -79,7 +79,7 @@ describe('legal_archive', () => {
         expect(authoring.edit_button.isPresent()).toBe(false);
         expect(authoring.edit_correct_button.isPresent()).toBe(false);
         expect(authoring.edit_kill_button.isPresent()).toBe(false);
-        expect(authoring.navbarMenuBtn.isPresent()).toBe(false);
+        expect(element(by.css('[data-test-id="content-create"]')).isPresent()).toBe(false);
         expect(authoring.sendToButton.isDisplayed()).toBe(false);
 
         authoring.showInfo();

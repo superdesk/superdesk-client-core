@@ -1,14 +1,9 @@
-<div ng-if="canAddRelatedItems()" class="pull-right dropdown dropdown--align-right strict" dropdown>
-    <button class="btn btn--primary btn--small btn--text-only" dropdown__toggle ng-disabled="!editable">
-        <i class="icon-plus-sign icon--blue"></i><span translate>Create new</span>
-    </button>
-
-    <div
-        sd-content-create
-        on-created="onCreated"
+<div ng-if="canAddRelatedItems() && editable !== false" class="pull-right">
+    <sd-content-create
+        custom-button="relatedItemsNewButton"
+        on-create="onCreated"
         initialize-as-updated="true"
-        class="dropdown__menu dropdown__menu--has-head-foot pull-right"
-    ></div>
+    ></sd-content-create>
 </div>
 
 <button class="item-association item-association--no-click" ng-if="isEmptyRelatedItems(field._id)"

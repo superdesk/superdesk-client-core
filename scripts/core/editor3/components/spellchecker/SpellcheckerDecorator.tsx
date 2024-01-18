@@ -146,10 +146,7 @@ export function getSpellcheckingDecorator(
                     return <span>{this.props.children}</span>;
                 }
 
-                // props.start isn't available in the latest release yet
-                // it's fixed in https://github.com/facebook/draft-js/commit/8000486ed6890d1f69100379d954a62ac8a4eb08
-                const {start} = this.props.children[0].props;
-                const {decoratedText} = this.props;
+                const {decoratedText, start} = this.props;
 
                 const warningForDecoration = warningsForBlock.find((warning) =>
                     warning.startOffset === start && warning.text === decoratedText);

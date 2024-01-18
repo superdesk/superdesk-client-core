@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import * as React from 'react';
 
 import {gettext} from 'core/utils';
@@ -5,7 +6,7 @@ import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {IFormField, IFormGroup, IGenericListPageComponent, IBaseRestApiResponse} from 'superdesk-api';
+import {IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
 import {Label} from 'superdesk-ui-framework/react/components/Label';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ISystemMessage, RESOURCE} from '..';
@@ -30,52 +31,58 @@ const getTypeLabel = (type: ISystemMessage['type']) => {
     }
 };
 
-export class SystemMessagesSettingsComponent extends React.PureComponent {
-    render() {
-        const formConfig: IFormGroup = {
-            type: 'inline',
-            direction: 'vertical',
-            form: [
-                {
-                    field: 'is_active',
-                    label: gettext('Active'),
-                    type: FormFieldType.checkbox,
+/**
+ * It needs to be a function because calling gettext in the top level doesn't work
+ */
+function getFormConfig(): IFormGroup {
+    const formConfig: IFormGroup = {
+        type: 'inline',
+        direction: 'vertical',
+        form: [
+            {
+                field: 'is_active',
+                label: gettext('Active'),
+                type: FormFieldType.checkbox,
+            },
+            {
+                field: 'type',
+                label: gettext('Style'),
+                type: FormFieldType.select,
+                required: true,
+                component_parameters: {
+                    options: [
+                        {id: 'primary', label: getTypeLabel('primary')},
+                        {id: 'success', label: getTypeLabel('success')},
+                        {id: 'warning', label: getTypeLabel('warning')},
+                        {id: 'alert', label: getTypeLabel('alert')},
+                    ],
                 },
-                {
-                    field: 'type',
-                    label: gettext('Style'),
-                    type: FormFieldType.select,
-                    required: true,
-                    component_parameters: {
-                        options: [
-                            {id: 'primary', label: getTypeLabel('primary')},
-                            {id: 'success', label: getTypeLabel('success')},
-                            {id: 'warning', label: getTypeLabel('warning')},
-                            {id: 'alert', label: getTypeLabel('alert')},
-                        ],
-                    },
-                },
-                {
-                    field: 'message_title',
-                    label: gettext('Title'),
-                    type: FormFieldType.textSingleLine,
-                    required: true,
-                },
-                {
-                    field: 'message',
-                    label: gettext('Message'),
-                    type: FormFieldType.textEditor3,
-                    required: true,
-                },
-            ],
-        };
+            },
+            {
+                field: 'message_title',
+                label: gettext('Title'),
+                type: FormFieldType.plainText,
+                required: true,
+            },
+            {
+                field: 'message',
+                label: gettext('Message'),
+                type: FormFieldType.textEditor3,
+                required: true,
+            },
+        ],
+    };
 
-        const renderRow = (
-            key: string,
-            item: ISystemMessage,
-            page: IGenericListPageComponent<ISystemMessage>,
-        ) => (
-            <ListItem key={key} onClick={() => page.openPreview(item._id)}>
+    return formConfig;
+}
+
+class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<ISystemMessage>> {
+    render() {
+        const {item, page} = this.props;
+        const formConfig = getFormConfig();
+
+        return (
+            <ListItem onClick={() => page.openPreview(item._id)}>
                 <ListItemColumn ellipsisAndGrow noBorder>
                     <ListItemRow>
                         <ListItemColumn bold noBorder>
@@ -127,14 +134,23 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
                 </ListItemActionsMenu>
             </ListItem>
         );
+    }
+}
 
-        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage>(RESOURCE, formConfig);
+export class SystemMessagesSettingsComponent extends React.PureComponent {
+    render() {
+        const formConfig = getFormConfig();
+        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage, never>(
+            RESOURCE,
+            formConfig,
+            {field: 'message_title', direction: 'ascending'},
+        );
 
         return (
             <Page title={gettext('System Message')}>
                 <ListComponent
-                    renderRow={renderRow}
-                    formConfig={formConfig}
+                    ItemComponent={ItemComponent}
+                    getFormConfig={() => formConfig}
                     defaultSortOption={{field: 'message_title', direction: 'ascending'}}
                     getId={(item) => item._id}
                 />

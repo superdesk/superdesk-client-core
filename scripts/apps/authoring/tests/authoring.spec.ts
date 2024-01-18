@@ -27,7 +27,6 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
@@ -100,7 +99,7 @@ describe('authoring', () => {
     }));
 
     it('can save while item is being autosaved', (done) => inject(($rootScope, $timeout, $q, api) => {
-        var $scope = startAuthoring({headline: 'test', task: 'desk:1'}, 'edit');
+        var $scope = startAuthoring({headline: 'test', task: 'desk:1', profile: '123'}, 'edit');
 
         $scope.item.body_html = 'test';
         $rootScope.$digest();
@@ -120,7 +119,7 @@ describe('authoring', () => {
     }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
-        startAuthoring({headline: 'test'}, 'edit');
+        startAuthoring({headline: 'test', profile: '123'}, 'edit');
         $location.search('item', 'foo');
         $location.search('action', 'edit');
         $rootScope.$digest();
@@ -137,7 +136,7 @@ describe('authoring', () => {
     }));
 
     it('can populate content metadata for undo', inject(($rootScope) => {
-        var orig = {headline: 'foo'};
+        var orig = {headline: 'foo', profile: '123'};
         var scope = startAuthoring(orig, 'edit');
 
         expect(scope.origItem.headline).toBe('foo');
@@ -156,11 +155,13 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
+                profile: '123',
             };
 
             let rewriteOf = {
                 _id: 'rewriteOf',
                 headline: 'rewrite',
+                profile: '123',
                 associations: {
                     featuremedia: {
 
@@ -194,11 +195,13 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
+                profile: '123',
             };
 
             let rewriteOf = {
                 _id: 'rewriteOf',
                 headline: 'rewrite',
+                profile: '123',
                 associations: {
                     featuremedia: {
 
@@ -234,6 +237,7 @@ describe('authoring', () => {
                 _id: 'test',
                 headline: 'headline',
                 rewrite_of: 'rewriteOf',
+                profile: '123',
             };
 
             let rewriteOf = {
@@ -244,6 +248,7 @@ describe('authoring', () => {
 
                     },
                 },
+                profile: '123',
             };
 
             let defered = $q.defer();
@@ -286,6 +291,7 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
+                profile: '123',
             };
 
             let rewriteOf = {
@@ -295,6 +301,7 @@ describe('authoring', () => {
                         test: 'test',
                     },
                 },
+                profile: '123',
             };
 
             let defered = $q.defer();
@@ -388,64 +395,40 @@ describe('authoring', () => {
                 .toBe(true);
         }));
 
-        it('can close a read-only item', inject((authoring, confirm, lock, $rootScope) => {
-            var done = jasmine.createSpy('done');
+        it('can close a read-only item', (done) => inject((authoring, confirm, lock, $rootScope) => {
+            const onClose = jasmine.createSpy('onClose1');
 
-            authoring.close({}).then(done);
+            authoring.close({}, {}, true, onClose);
             $rootScope.$digest();
 
-            expect(confirm.confirm).not.toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
-            expect(done).toHaveBeenCalled();
+            setTimeout(() => {
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
+                expect(onClose).toHaveBeenCalled();
+                done();
+            }, 100);
         }));
 
         it('can unlock on close editable item without changes made',
-            inject((authoring, confirm, lock, $rootScope) => {
-                expect(authoring.isEditable(ITEM)).toBe(true);
-                authoring.close(ITEM, false);
-                $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
-            }));
+            (done) => inject((authoring, confirm, lock, $rootScope, session) => {
+                const onClose = jasmine.createSpy('onClose2');
 
-        it('confirms if an item is dirty and saves',
-            inject((authoring, confirm, lock, $q, $rootScope) => {
-                var edit = Object.create(ITEM);
+                const itemLocked = {
+                    ...ITEM,
+                    lock_user: session.identity._id,
+                    lock_session: session.sessionId,
+                };
 
-                edit.headline = 'test';
-
-                authoring.close(edit, ITEM, true);
+                expect(authoring.isEditable(itemLocked)).toBe(true);
+                authoring.close(itemLocked, itemLocked, false, onClose);
                 $rootScope.$digest();
 
-                expect(confirm.confirm).toHaveBeenCalled();
-                expect(lock.unlock).not.toHaveBeenCalled();
-
-                spyOn(authoring, 'save').and.returnValue($q.when());
-                confirmDefer.resolve();
-                $rootScope.$digest();
-
-                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-                expect(lock.unlock).toHaveBeenCalled();
-            }));
-
-        it('confirms if an item is dirty on opening new or existing item and not unlocking on save',
-            inject((authoring, confirm, lock, $q, $rootScope) => {
-                var edit = Object.create(ITEM);
-
-                edit.headline = 'test';
-
-                authoring.close(edit, ITEM, true, true);
-                $rootScope.$digest();
-
-                expect(confirm.confirm).toHaveBeenCalled();
-                expect(lock.unlock).not.toHaveBeenCalled();
-
-                spyOn(authoring, 'save').and.returnValue($q.when());
-                confirmDefer.resolve();
-                $rootScope.$digest();
-
-                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-                expect(lock.unlock).not.toHaveBeenCalled();
+                setTimeout(() => {
+                    expect(confirm.confirm).not.toHaveBeenCalled();
+                    expect(lock.unlock).toHaveBeenCalled();
+                    expect(onClose).toHaveBeenCalled();
+                    done();
+                }, 100);
             }));
 
         it('can unlock an item', inject((authoring, session, confirm, autosave) => {
@@ -515,40 +498,6 @@ describe('authoring', () => {
                 $rootScope.$digest();
 
                 expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
-            }));
-
-        it('close the published dirty item without confirmation',
-            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-                var publishedItem = Object.create(ITEM);
-
-                publishedItem.state = 'published';
-                var edit = Object.create(publishedItem);
-
-                edit.headline = 'test';
-                spyOn(authoring, 'isEditable').and.returnValue(true);
-                spyOn(autosave, 'drop').and.returnValue($q.when({}));
-                authoring.close(edit, publishedItem, true, false);
-                $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
-                expect(autosave.drop).toHaveBeenCalled();
-            }));
-
-        it('close the corrected dirty item without confirmation',
-            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-                var publishedItem = Object.create(ITEM);
-
-                publishedItem.state = 'corrected';
-                var edit = Object.create(publishedItem);
-
-                edit.headline = 'test';
-                spyOn(authoring, 'isEditable').and.returnValue(true);
-                spyOn(autosave, 'drop').and.returnValue($q.when({}));
-                authoring.close(edit, publishedItem, true, false);
-                $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
-                expect(autosave.drop).toHaveBeenCalled();
             }));
 
         it('can validate schedule', inject((authoring) => {
@@ -636,7 +585,6 @@ describe('Item Crops directive', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
 
     it('showCrops return true if image renditions are present',
         inject(($rootScope, $compile, $q, metadata, vocabularies) => {
@@ -1996,31 +1944,6 @@ describe('authoring workspace', () => {
         expect(authoringWorkspace.action).toBe('edit');
     }));
 
-    it('can open an item for edit or readonly', inject((
-        authoringWorkspace: AuthoringWorkspaceService,
-        authoring,
-        send,
-        $q,
-        $rootScope,
-    ) => {
-        item.state = 'draft';
-        authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit', false);
-
-        item.state = 'published';
-        authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view', false);
-
-        var archived = {_id: 'bar'};
-
-        spyOn(send, 'validateAndSend').and.returnValue($q.when(archived));
-        item._type = 'ingest';
-        authoringWorkspace.open(item);
-        expect(send.validateAndSend).toHaveBeenCalledWith(item);
-        $rootScope.$digest();
-        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit', false);
-    }));
-
     describe('init', () => {
         it('can open item from $location for editing', inject((api, $location, $rootScope, $injector) => {
             $location.search('item', item._id);
@@ -2201,326 +2124,4 @@ describe('authoring themes', () => {
         $rootScope.$digest();
         expect(proofreadTheme).not.toBe(null);
     }));
-});
-
-describe('send item directive', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {url: undefined, ws: undefined},
-            iframely: {key: '123'},
-            editor: {},
-            features: {onlyEditor3: false},
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
-
-    beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
-    beforeEach(window.module('superdesk.core.preferences'));
-    beforeEach(window.module('superdesk.apps.authoring'));
-    beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.core.api'));
-    beforeEach(window.module('superdesk.apps.vocabularies'));
-    beforeEach(window.module('superdesk.apps.searchProviders'));
-    beforeEach(window.module('superdesk.apps.extension-points'));
-
-    beforeEach(inject(($templateCache) => {
-        $templateCache.put('scripts/apps/authoring/views/send-item.html', '');
-    }));
-
-    it('can hide embargo if user does not have the privilege',
-        inject(($compile, $rootScope, privileges) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-            };
-            var userPrivileges = {
-                embargo: false,
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(true);
-            expect(iscope.showEmbargo()).toBe(false);
-        }));
-
-    it('can show embargo and publish schedule for text item',
-        inject(($compile, $rootScope, privileges) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-            };
-            var userPrivileges = {
-                embargo: true,
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(true);
-            expect(iscope.showEmbargo()).toBe(true);
-        }));
-
-    it('can show embargo date',
-        inject(($compile, $rootScope, privileges) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                embargo_date: Date(),
-            };
-            var userPrivileges = {
-                embargo: true,
-            };
-
-            privileges.setUserPrivileges(userPrivileges);
-            $rootScope.$digest();
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(false);
-            expect(iscope.showEmbargo()).toBe(true);
-        }));
-
-    it('can show published schedule date',
-        inject(($compile, $rootScope) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                publish_schedule_date: Date(),
-            };
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.showPublishSchedule()).toBe(true);
-            expect(iscope.showEmbargo()).toBe(false);
-        }));
-
-    it('can get last destination desk and stage',
-        inject(($compile, $rootScope, preferencesService, $q) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: '123456',
-                type: 'text',
-            };
-
-            var destination = {desk: '123', stage: '456'};
-
-            spyOn(preferencesService, 'get').and.returnValue($q.when(destination));
-
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-
-            scope.$digest();
-
-            iscope = elem.isolateScope();
-            iscope.destination_last = null;
-
-            preferencesService.get().then((prefs) => {
-                iscope.destination_last = {
-                    desk: prefs.desk,
-                    stage: prefs.stage,
-                };
-            });
-
-            iscope.$digest();
-
-            expect(iscope.destination_last.desk).toEqual('123');
-            expect(iscope.destination_last.stage).toEqual('456');
-        }));
-
-    it('can show send and publish button',
-        inject(($compile, $rootScope) => {
-            var scope, elem, iscope;
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                task: {
-                    desk: '123',
-                    stage: '456',
-                },
-                _current_version: 1,
-            };
-            scope.action = 'edit';
-            elem = $compile('<div sd-send-item data-item="item" data-orig="item" data-mode="authoring" ' +
-                'data-action="action"></div>')(scope);
-            scope.$digest();
-            iscope = elem.isolateScope();
-            expect(iscope.canSendAndPublish()).toBeFalsy();
-
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                ui: {
-                    ...appConfig.ui,
-                    sendAndPublish: 1,
-                },
-            };
-
-            Object.assign(appConfig, testConfig);
-
-            expect(iscope.canSendAndPublish()).toBeFalsy();
-            iscope.selectedDesk = {_id: '123'};
-            iscope.selectedStage = {_id: '456'};
-            expect(iscope.canSendAndPublish()).toBeFalsy();
-            iscope.selectedDesk = {_id: '123'};
-            iscope.selectedStage = {_id: '4566'};
-            iscope.itemActions = {publish: 1};
-            expect(iscope.canSendAndPublish()).toBeFalsy();
-            iscope.selectedDesk = {_id: '1234'};
-            iscope.selectedStage = {_id: '456'};
-            expect(iscope.canSendAndPublish()).toBeTruthy();
-        }));
-
-    describe('Send And Publish', () => {
-        var scope, iScope, elem, publish;
-        var movedItem = {
-            _id: 'foo',
-            type: 'text',
-            state: 'in-progress',
-            task: {
-                desk: 'New Desk',
-                stage: 'New Stage',
-            },
-            _current_version: 2,
-            _etag: '1111',
-            _locked: true,
-        };
-
-        var selectedDesk = {
-            _id: 'New Desk', name: 'new desk',
-        };
-
-        var selectedStage = {
-            _id: 'New Stage', name: 'new stage',
-        };
-
-        beforeEach(inject(($q, $compile, $rootScope, api, editor) => {
-            spyOn(api, 'find').and.returnValue($q.when({}));
-            spyOn(api, 'save').and.returnValue($q.when({task: {desk: 'new', stage: 'new'}}));
-
-            scope = $rootScope.$new();
-            scope.item = {
-                _id: 'foo',
-                type: 'text',
-                state: 'in-progress',
-                task: {
-                    desk: '123',
-                    stage: '456',
-                },
-                _current_version: 1,
-                _etag: '123',
-            };
-            scope.action = 'edit';
-            scope.publish = function() {
-                return publish;
-            };
-            elem = $compile('<div sd-send-item data-item="item" data-orig="item" data-mode="authoring" ' +
-                'data-action="action" data-publish="publish()"></div>')(scope);
-            scope.$digest();
-            iScope = elem.isolateScope();
-            iScope.beforeSend = function() {
-                return $q.when({});
-            };
-        }));
-
-        it('can send and publish item to different desk', inject((
-            authoring,
-            $q,
-            authoringWorkspace: AuthoringWorkspaceService,
-        ) => {
-            publish = true; // publish succeeds
-            iScope.selectedDesk = selectedDesk;
-            iScope.selectedStage = selectedStage;
-            spyOn(authoring, 'open').and.returnValue($q.when(movedItem));
-            spyOn(authoringWorkspace, 'close').and.returnValue($q.when(true));
-            expect(iScope.orig.task.desk).toBe('123');
-            expect(iScope.orig.task.stage).toBe('456');
-            expect(iScope.orig._etag).toBe('123');
-            iScope.sendAndPublish();
-            iScope.$digest();
-            expect(authoring.open).toHaveBeenCalledWith('foo', false);
-            expect(authoringWorkspace.close).toHaveBeenCalledWith(false);
-            expect(iScope.orig.task.desk).toBe(selectedDesk._id);
-            expect(iScope.orig.task.stage).toBe(selectedStage._id);
-            expect(iScope.orig._locked).toBe(true);
-            expect(iScope.orig._etag).toBe('1111');
-        }));
-
-        it('can send and publish item to different desk publish fails',
-            inject((authoring, $q, authoringWorkspace: AuthoringWorkspaceService, notify) => {
-                publish = false; // publish succeeds
-                iScope.selectedDesk = selectedDesk;
-                iScope.selectedStage = selectedStage;
-                spyOn(authoring, 'open').and.returnValue($q.when(movedItem));
-                spyOn(authoringWorkspace, 'close').and.returnValue($q.when(true));
-                expect(iScope.orig.task.desk).toBe('123');
-                expect(iScope.orig.task.stage).toBe('456');
-                expect(iScope.orig._etag).toBe('123');
-                iScope.sendAndPublish();
-                iScope.$digest();
-                expect(authoring.open).toHaveBeenCalledWith('foo', false);
-                expect(authoringWorkspace.close).not.toHaveBeenCalledWith(false);
-                expect(iScope.orig.task.desk).toBe(selectedDesk._id);
-                expect(iScope.orig.task.stage).toBe(selectedStage._id);
-                expect(iScope.orig._locked).toBe(true);
-                expect(iScope.orig._etag).toBe('1111');
-            }));
-
-        it('can send and publish item to different desk but locking failed',
-            inject((authoring, $q, authoringWorkspace: AuthoringWorkspaceService, notify) => {
-                publish = true; // publish succeeds
-                movedItem._locked = false; // locked failed.
-                iScope.selectedDesk = selectedDesk;
-                iScope.selectedStage = selectedStage;
-                spyOn(authoring, 'open').and.returnValue($q.when(movedItem));
-                spyOn(authoringWorkspace, 'close').and.returnValue($q.when(true));
-                spyOn(notify, 'error');
-                expect(iScope.orig.task.desk).toBe('123');
-                expect(iScope.orig.task.stage).toBe('456');
-                expect(iScope.orig._etag).toBe('123');
-                iScope.sendAndPublish();
-                iScope.$digest();
-                expect(authoring.open).toHaveBeenCalledWith('foo', false);
-                expect(authoringWorkspace.close).not.toHaveBeenCalledWith(false);
-                expect(iScope.orig.task.desk).toBe(selectedDesk._id);
-                expect(iScope.orig.task.stage).toBe(selectedStage._id);
-                expect(iScope.orig._locked).toBe(false);
-                expect(iScope.orig._etag).toBe('1111');
-                expect(notify.error).toHaveBeenCalledWith('Failed to send and publish.');
-            }));
-    });
 });

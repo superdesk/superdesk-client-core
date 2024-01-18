@@ -9,6 +9,7 @@ import {
     convertFromHTML,
     convertToRaw,
 } from 'draft-js';
+import {CustomEditor3Entity} from 'core/editor3/constants';
 
 /**
  * @ngdoc class
@@ -282,7 +283,7 @@ class HTMLParser {
             descriptionElement.remove();
         }
 
-        return atomicBlock(block, 'EMBED', 'MUTABLE', {
+        return atomicBlock(block, CustomEditor3Entity.EMBED, 'MUTABLE', {
             data: {html: htmlElement.innerHTML},
             description: descriptionText,
         });
@@ -298,7 +299,7 @@ class HTMLParser {
 
         htmlElement.innerHTML = items[id];
 
-        return atomicBlock(block, 'EMBED', 'MUTABLE', {
+        return atomicBlock(block, CustomEditor3Entity.EMBED, 'MUTABLE', {
             data: {html: htmlElement.innerHTML},
         });
     }
@@ -335,7 +336,7 @@ class HTMLParser {
             }
         }
 
-        return atomicBlock(block, 'TABLE', 'MUTABLE', {data: {numRows, numCols, cells}});
+        return atomicBlock(block, CustomEditor3Entity.TABLE, 'MUTABLE', {data: {numRows, numCols, cells}});
     }
 
     /**
@@ -357,7 +358,7 @@ class HTMLParser {
         const id = this.getBlockId(block);
         const mediaJson = this.media[id];
 
-        return atomicBlock(block, 'MEDIA', 'MUTABLE', mediaJson);
+        return atomicBlock(block, CustomEditor3Entity.MEDIA, 'MUTABLE', mediaJson);
     }
 
     /**
@@ -382,7 +383,11 @@ class HTMLParser {
 }
 
 export function getContentStateFromHtml(html: string, associations: object = {}): ContentState {
-    return new HTMLParser(html, associations).contentState();
+    if (html.length < 1) {
+        return ContentState.createFromText('');
+    } else {
+        return new HTMLParser(html, associations).contentState();
+    }
 }
 
 /**

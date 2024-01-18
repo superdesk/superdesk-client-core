@@ -13,6 +13,7 @@ import {PopupTypes} from '../actions/popups';
 import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
 import {processCells} from './table';
 import {ILink} from '../components/links/LinkInput';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @description Contains the list of toolbar related reducers.
@@ -260,7 +261,10 @@ const insertMedia = (state, {files = [], targetBlockKey = null}) => {
  * the updated editor state.
  */
 export const addMedia = (editorState: EditorState, media, targetBlockKey = null): EditorState =>
-    insertEntity(editorState, 'MEDIA', 'MUTABLE', {media}, targetBlockKey);
+    insertEntity(editorState, CustomEditor3Entity.MEDIA, 'MUTABLE', {media}, targetBlockKey);
+
+export const addArticleEmbed = (editorState: EditorState, data, targetBlockKey = null): EditorState =>
+    insertEntity(editorState, CustomEditor3Entity.ARTICLE_EMBED, 'MUTABLE', data, targetBlockKey);
 
 /**
  * @ngdoc method

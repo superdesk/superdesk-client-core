@@ -2,12 +2,14 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {getVocabularySelectionTypes} from '../../vocabularies/constants';
-import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
+import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
-import {ISubject} from 'superdesk-api';
+import {IArticle, ISubject, IVocabularyItem} from 'superdesk-api';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
+import {sdApi} from 'api';
+import {PublishingTargetSelect} from 'core/interactive-article-actions-panel/subcomponents/publishing-target-select';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
@@ -1366,19 +1368,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        getLocaleName: function(term, item: any) {
-            if (!term) {
-                return 'None';
-            }
-
-            // Item can be anything here. It might be an article object or search filters object
-            // depending where the function is called from.
-            // It's checked if language is a string in order not to confuse it when language
-            // is an array when called from global search filters.
-            const language = typeof item.language === 'string' ? item.language : undefined;
-
-            return getVocabularyItemNameTranslated(term, language);
-        },
+        getLocaleName: (term: IVocabularyItem, item: IArticle) => sdApi.vocabularies.getVocabularyItemLabel(term, item),
     };
 
     $rootScope.$on('subscriber:create', () => service.fetchSubscribers());
@@ -1447,6 +1437,16 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
+    .component(
+        'sdTargetSubscribers',
+        reactToAngular1(
+            PublishingTargetSelect,
+            [
+                'value',
+                'onChange',
+            ],
+        ),
+    )
     .component(
         'sdMetaDataDropdownSingleSelectReact',
         reactToAngular1(

@@ -25,6 +25,9 @@ import * as actions from './actions';
 import {RelatedView} from './views/related-view';
 import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
+import {sdApi} from 'api';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -37,13 +40,10 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdInlineMeta', directive.InlineMeta)
     .directive('sdMediaPreview', directive.MediaPreview)
     .directive('sdMediaPreviewWidget', directive.MediaPreviewWidget)
-    .directive('sdItemPreviewContainer', directive.ItemPreviewContainer)
-    .directive('sdMediaView', directive.MediaView)
     .directive('sdMediaMetadata', directive.MediaMetadata)
     .component('sdRelatedView', reactToAngular1(RelatedView, ['relatedItems'], []))
     .directive('sdFetchedDesks', directive.FetchedDesks)
     .directive('sdMetaIngest', directive.MetaIngest)
-    .directive('sdSingleItem', directive.SingleItem)
     .directive('sdDraggableItem', directive.DraggableItem)
     .directive('sdItemCrops', directive.ItemCrops)
     .directive('sdItemRendition', directive.ItemRendition)
@@ -61,8 +61,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdPackageItemLabelsDropdown', directive.PackageItemLabelsDropdown)
     .directive('sdAssignmentIcon', directive.AssignmentIcon)
     .directive('sdRelatedItemsPreview', directive.RelatedItemsPreview)
-    .service('familyService', svc.FamilyService)
-    .service('dragitem', svc.DragItemService);
+    .service('familyService', svc.FamilyService);
 
 /**
  * @ngdoc module
@@ -79,8 +78,6 @@ angular.module('superdesk.apps.archive', [
     'superdesk.apps.dashboard.widgets.relatedItem',
     'superdesk.apps.workspace.menu',
 ])
-
-    .service('spike', svc.SpikeService)
     .service('multi', svc.MultiService)
     .service('archiveService', svc.ArchiveService)
 
@@ -133,10 +130,11 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Unspike Item'),
                 icon: 'unspike',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', function unspikeActivity(spike, data, $rootScope) {
-                    return spike.unspike(data.item).then((item) => {
-                        $rootScope.$broadcast('item:unspike');
-                        return item;
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['unspike'],
+                        activeTab: 'unspike',
                     });
                 }],
                 filters: [{action: 'list', type: 'spike'}],
@@ -170,8 +168,12 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Duplicate To'),
                 icon: 'copy',
                 monitor: true,
-                controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item], 'duplicateTo');
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['duplicate_to'],
+                        activeTab: 'duplicate_to',
+                    });
                 }],
                 filters: [
                     {action: 'list', type: 'archive'},
@@ -401,7 +403,6 @@ angular.module('superdesk.apps.archive', [
     }]);
 
 spikeActivity.$inject = [
-    'spike',
     'data',
     'modal',
     '$location',
@@ -409,10 +410,11 @@ spikeActivity.$inject = [
     'authoringWorkspace',
     'confirm',
     'autosave',
+    '$rootScope',
 ];
 
-function spikeActivity(spike, data, modal, $location, multi,
-    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave) {
+function spikeActivity(data, modal, $location, multi,
+    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave, $rootScope) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && includes(multi.getIds(), data.item._id)) {
@@ -433,8 +435,20 @@ function spikeActivity(spike, data, modal, $location, multi,
                         break;
 
                     case IUnsavedChangesAction.discardChanges:
-                        closePromptFn();
-                        _spike();
+                        httpRequestJsonLocal<IArticle>({
+                            method: 'GET',
+                            path: `/archive_autosave/${data.item._id}`,
+                        }).then((item) => httpRequestRawLocal({
+                            method: 'DELETE',
+                            path: `/archive_autosave/${item._id}`,
+                            headers: {
+                                'If-Match': item._etag,
+                            },
+                        }).then(() => {
+                            $rootScope.$applyAsync();
+                            closePromptFn();
+                            _spike();
+                        }));
 
                         break;
 
@@ -456,7 +470,7 @@ function spikeActivity(spike, data, modal, $location, multi,
     function _spike() {
         if ($location.path() === '/workspace/personal') {
             return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
-                .then(() => spike.spike(data.item));
+                .then(() => sdApi.article.doSpike(data.item));
         }
 
         const onSpikeMiddlewares
@@ -476,7 +490,7 @@ function spikeActivity(spike, data, modal, $location, multi,
 
         showSpikeDialog(
             modal,
-            () => spike.spike(data.item),
+            () => sdApi.article.doSpike(data.item),
             gettext('Are you sure you want to spike the item?'),
             onSpikeMiddlewares,
             item,

@@ -1,10 +1,13 @@
+import React from 'react';
 import {flatMap, noop} from 'lodash';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {IArticle, IContentProfile} from 'superdesk-api';
+import {IArticle, IAuthoringWidgetLayoutProps, IContentProfile} from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
+import {WidgetHeaderComponent} from './WidgetHeaderComponent';
+import {WidgetLayoutComponent} from './WidgetLayoutComponent';
 
 const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
@@ -92,10 +95,46 @@ function AuthoringWidgetsProvider() {
     };
 }
 
-export const widgetReactIntegration = {
+export interface IWidgetIntegrationComponentProps {
+    widgetName: string;
+    pinned: boolean;
+    widget: any;
+    editMode: boolean;
+    pinWidget(widget: any): void;
+    closeWidget(): void;
+
+    /**
+     * Only available in authoring-react.
+     * If used, widgetName will not be shown.
+     * Required for displaying multiple sections for the same widget.
+     */
+    customContent?: JSX.Element;
+}
+
+/**
+ * This was initially written for {@link AuthoringWidgetHeading} to work.
+ * Wrapper components for header/layout were later added in order to be able to use
+ * react-based layout components from ui-framework while maintaining existing markup
+ * and styles in the angular based authoring.
+ */
+interface IWidgetIntegration {
+    pinWidget(widget: any): void;
+    getActiveWidget(): any;
+    closeActiveWidget(): any;
+    getPinnedWidget(): any;
+    WidgetHeaderComponent: React.ComponentType<IWidgetIntegrationComponentProps>;
+    WidgetLayoutComponent: React.ComponentType<IAuthoringWidgetLayoutProps>;
+    disableWidgetPinning: boolean;
+}
+
+export const widgetReactIntegration: IWidgetIntegration = {
     pinWidget: noop as any,
     getActiveWidget: noop as any,
     getPinnedWidget: noop as any,
+    closeActiveWidget: noop,
+    WidgetHeaderComponent: () => null,
+    WidgetLayoutComponent: () => null,
+    disableWidgetPinning: false,
 };
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
@@ -298,6 +337,11 @@ function WidgetsManagerCtrl(
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
+    widgetReactIntegration.getPinnedWidget =
+        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+
+    widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
+    widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
 
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];

@@ -1,9 +1,9 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {IArticle} from 'superdesk-api';
-import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from './AuthoringService';
+import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from './authoring-helpers';
 
 const RESOURCE = 'archive_autosave';
-const AUTOSAVE_TIMEOUT = 3000;
 
 let $q, $timeout, api;
 

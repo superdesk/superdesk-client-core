@@ -44,14 +44,6 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
         }
     };
 
-    $scope.openLightbox = function() {
-        $scope.selected.view = $scope.selected.preview;
-    };
-
-    $scope.closeLightbox = function() {
-        $scope.selected.view = null;
-    };
-
     $scope.clear = function() {
         legal.criteria = $scope.criteria = {};
         $scope.search();

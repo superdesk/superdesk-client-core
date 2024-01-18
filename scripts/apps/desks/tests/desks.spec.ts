@@ -5,6 +5,7 @@ describe('desks service', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     it('can fetch current user desks',
         inject((desks, session, api, preferencesService, $rootScope, $q) => {

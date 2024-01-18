@@ -34,7 +34,7 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getLocalizedTypeText(type, blockType) {
+export function getLocalizedTypeText(type, blockType) {
     const description = Highlights.getHighlightDescription(type);
     const blockStyleDescription = Highlights.getBlockStylesDescription(blockType);
     const space = blockStyleDescription !== '' ? ' ' : '';
@@ -109,9 +109,12 @@ angular
 
                     return new Promise((resolve) => {
                         content.getType(item.profile).then((type) => {
-                            const editor3enabled = get(type, 'editor.body_html.editor3') === true;
-
-                            resolve(editor3enabled);
+                            /**
+                             * It used to be checked whether editor3 is enabled,
+                             * but now that editor3 is the only editor
+                             * it is only checked whether content profile has body_html field
+                             */
+                            resolve(type?.editor?.body_html != null);
                         });
                     });
                 }],

@@ -63,6 +63,8 @@
             "scripts/extensions/**/dist/**",
             "end-to-end-testing-helpers/dist/**",
             "end-to-end-testing-helpers/node_modules/**",
+            "superdesk-common/node_modules/**",
+            "superdesk-common/dist/**",
             "build-tools/**"
         ]
     }

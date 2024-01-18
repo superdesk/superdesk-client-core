@@ -216,7 +216,7 @@
         input {
             font-size: 14px;
             border: 0 !important;
-            width: auto;
+            width: 100%;
             padding: 0;
             color: var(--color-text);
             background-color: transparent;
@@ -224,7 +224,6 @@
             flex-grow: 1;
             &:focus {
                 box-shadow: none;
-                width: auto;
 
             }
             &::placeholder {
@@ -292,7 +291,6 @@
         flex-grow: 1;
         .search-handler {
             box-shadow: none !important;
-            min-width: 0;
             input {
                 flex-grow: 1;
                 flex-shrink: 1;
@@ -326,7 +324,7 @@
             pointer-events: none;
         }
     }
-    
+
     &:focus-within {
         box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 6px var(--sd-colour-interactive--alpha-20);
         background-color: var(--sd-colour-bg__searchbar);
@@ -1141,7 +1139,7 @@
         background-color: var(--sd-colour__webkit-scrollbar--hover);
         cursor: pointer;
     }
-    
+
     ::-webkit-scrollbar-thumb {
         background: var(--sd-colour__webkit-scrollbar-thumb);
     }
@@ -1878,6 +1876,12 @@
     }
 }
 
+.drag-and-drop--handle {
+    width: 6px;
+    height: 20px;
+    background: transparent url(~images/draggable-bg.png) repeat-y left 3px top 3px;
+}
+
 // HANDLE FOR SPLITTER
 // ----------------------------------------------
 .ui-resizable-e {
@@ -1974,6 +1978,12 @@
     }
 }
 
+// For items appended to body
+// content-profile settings
+body > .sd-list-item {
+    z-index: 1060;
+}
+
 .sd-toggle + label {
     letter-spacing: 0;
     color: $sd-text;
@@ -2063,6 +2073,7 @@ sd-multi-image-edit {
     letter-spacing: 0.04em;
 }
 .locked-info__label {
+    white-space: nowrap;
     opacity: 0.8;
     font-weight: 300;
     margin-inline-end: 0.4rem;
@@ -2247,8 +2258,8 @@ sd-multi-image-edit {
     .sd-widget.related-item .existing-items {
         inset-block-start: -35px;
     }
-    .sd-widget.ingest .preview, 
-    .sd-widget.archive .preview, 
+    .sd-widget.ingest .preview,
+    .sd-widget.archive .preview,
     .sd-widget.related-item .preview,
     .sd-widget.aggregate .preview,
     .sd-widget.package-manager .preview,
@@ -2270,7 +2281,7 @@ sd-multi-image-edit {
         [class^="big-icon-"],
         [class*=" big-icon-"] {
             color: rgba(255, 255, 255, 0.4) !important;
-        } 
+        }
     }
 }
 
@@ -2279,6 +2290,10 @@ sd-multi-image-edit {
     display: block !important;
 }
 
+// Transition for draggable lists
+.modal__body .sd-list-item {
+    transition: transform .1s linear !important;
+}
 
 /// UI FRAMEWORK REDUNDANT OVERRIDES
 /// needed for testing purposes

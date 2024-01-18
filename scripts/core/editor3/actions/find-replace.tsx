@@ -1,8 +1,11 @@
+import {EditorState} from 'draft-js';
+import {IPayloadSetHighlightsCriteria} from '../reducers/find-replace';
+
 /**
  * @ngdoc method
  * @name findNext
  * @param {String} txt Text to find
- * @description Creates the action to find the next occurence of txt.
+ * @description Creates the action to find the next occurrence of txt.
  */
 export function findNext() {
     return {type: 'HIGHLIGHTS_FIND_NEXT'};
@@ -12,7 +15,7 @@ export function findNext() {
  * @ngdoc method
  * @name findPrev
  * @param {String} txt Text to find
- * @description Creates the action to find the previous occurence of txt.
+ * @description Creates the action to find the previous occurrence of txt.
  */
 export function findPrev() {
     return {type: 'HIGHLIGHTS_FIND_PREV'};
@@ -32,17 +35,24 @@ export function replace(withTxt) {
     };
 }
 
-/**
- * @ngdoc method
- * @name replaceAll
- * @param {String} from Text to replace from
- * @param {String} to Text to replace to
- * @description Creates the action to replace all occurences of from to to.
- */
-export function replaceAll(withTxt) {
+export function multiReplace(diff) {
+    return {
+        type: 'HIGHLIGHTS_REPLACE_MULTIPLE',
+        payload: diff,
+    };
+}
+
+export function patchHTMLonEditorState(payload: {editorState: EditorState, html: string, simpleReplace: boolean}) {
+    return {
+        type: 'PATCH_HTML_ON_EDITOR_STATE',
+        payload,
+    };
+}
+
+export function replaceAll(replaceText: string) {
     return {
         type: 'HIGHLIGHTS_REPLACE_ALL',
-        payload: withTxt,
+        payload: replaceText,
     };
 }
 
@@ -60,9 +70,9 @@ export function renderHighlights() {
  * @name setSearchSettings
  * @description Creates the action to set new search settings
  */
-export function setHighlightCriteria(opts) {
+export function setHighlightCriteria(payload: IPayloadSetHighlightsCriteria) {
     return {
         type: 'HIGHLIGHTS_CRITERIA',
-        payload: opts,
+        payload,
     };
 }

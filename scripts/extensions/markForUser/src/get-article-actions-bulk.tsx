@@ -1,5 +1,6 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import {uniq} from 'lodash';
+import {showModal} from '@superdesk/common';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {updateMarkedUser, markForUserAndSendToNextStage, canChangeMarkedUser} from './common';
 
@@ -29,7 +30,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
             label: gettext('Mark for user'),
             icon: 'icon-assign',
             onTrigger: () => {
-                superdesk.ui.showModal(getMarkForUserModal({
+                showModal(getMarkForUserModal({
                     superdesk: superdesk,
                     markForUser: (selectedUserId) => {
                         articles.forEach((article) => {

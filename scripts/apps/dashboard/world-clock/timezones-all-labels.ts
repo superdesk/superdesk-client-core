@@ -6,7 +6,7 @@ export const getTimezoneLabel = (tz) => {
     return labels[tz];
 };
 
-const getTimezoneLabels = () => ({
+export const getTimezoneLabels = () => ({
     'Africa/Abidjan': gettext('Africa/Abidjan'),
     'Africa/Accra': gettext('Africa/Accra'),
     'Africa/Cairo': gettext('Africa/Cairo'),

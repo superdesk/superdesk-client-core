@@ -10,6 +10,14 @@ import {multiAction} from './actions';
 export const MONITORING_DEBOUNCE_MAX_WAIT = 10000;
 
 class Monitoring {
+    ignoreSaveChangesDialog() {
+        element(by.className('p-dialog-footer')).element(by.buttonText('Ignore')).click();
+    }
+
+    expectSaveChangesDialog() {
+        browser.wait(ECE.textToBePresentInElement(element(by.className('p-dialog-header')), 'Save changes?'), 3000);
+    }
+
     config: ElementFinder;
     label: ElementFinder;
     openMonitoring: () => void;
@@ -17,7 +25,6 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
-    createItemAction: (action: any) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -60,7 +67,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: (item, stage?: string) => wdpromise.Promise<void>;
+    unspikeItem: (item, stage?: string) => void;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -98,7 +105,6 @@ class Monitoring {
     openSendMenu: () => void;
     publish: () => void;
     getPublishButtonText: any;
-    startUpload: () => void;
     uploadModal: ElementFinder;
     openFetchAsOptions: (group: any, item: any) => void;
     clickOnFetchButton: any;
@@ -123,7 +129,6 @@ class Monitoring {
     searchInput: ElementFinder;
     getCorrectionItems: (group: any) => any;
     getTakeItems: (group: any) => any;
-    getSendToDropdown: () => ElementFinder;
     getPackageItem: (index: any) => ElementFinder;
     getPackageItemActionDropdown: (index: any) => ElementFinder;
     getPackageItemLabelEntry: () => ElementFinder;
@@ -137,7 +142,7 @@ class Monitoring {
 
         this.openMonitoring = function() {
             nav('/workspace/monitoring');
-            browser.wait(ECE.visibilityOf(el(['monitoring-view'])));
+            browser.wait(ECE.visibilityOf(el(['monitoring-view'])), 2000);
         };
 
         this.showMonitoring = function() {
@@ -163,21 +168,12 @@ class Monitoring {
         };
 
         /**
-         * On monitoring view create a new item
-         *
-         * @param {string} action - the create item action can be: create_text_article,
-         * create_preformatted_article and create_package
-         */
-        this.createItemAction = function(action) {
-            element(by.className('icon-plus-large')).click();
-            element(by.id(action)).click();
-            browser.sleep(500);
-        };
-
-        /**
          * Create new item using desk template
          */
-        this.createFromDeskTemplate = () => this.createItemAction('create_text_article');
+        this.createFromDeskTemplate = () => {
+            el(['content-create']).click();
+            el(['content-create-dropdown', 'default-desk-template']).click();
+        };
 
         this.getGroup = function(group: number) {
             return this.getGroups().get(group);
@@ -187,7 +183,7 @@ class Monitoring {
             const groups = element.all(by.repeater('group in aggregate.groups'));
 
             browser.sleep(3000); // due to debouncing, loading does not start immediately
-            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 2000);
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0), 3000);
 
             return groups;
         };
@@ -268,9 +264,9 @@ class Monitoring {
         this.getSpikedItems = function() {
             const wrapper = el(['articles-list']);
 
-            browser.wait(ECE.visibilityOf(wrapper));
+            browser.wait(ECE.visibilityOf(wrapper), 2000);
 
-            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
+            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)), 2000);
 
             const items = els(['article-item'], null, wrapper);
 
@@ -338,7 +334,7 @@ class Monitoring {
         this.getTextItemBySlugline = function(group, item) {
             const _element = this.getItem(group, item).element(s(['field--slugline']));
 
-            browser.wait(ECE.visibilityOf(_element));
+            browser.wait(ECE.visibilityOf(_element), 2000);
 
             return _element.getText();
         };
@@ -359,7 +355,7 @@ class Monitoring {
                 ? element(by.className('toggle-button__text--all'))
                 : element(by.className('filetype-icon-' + fileType));
 
-            browser.wait(ECE.visibilityOf(elem));
+            browser.wait(ECE.visibilityOf(elem), 2000);
             elem.click();
         };
 
@@ -370,7 +366,7 @@ class Monitoring {
         this.previewAction = function(groupIndex, itemIndex) {
             const item = this.getItem(groupIndex, itemIndex);
 
-            browser.wait(ECE.elementToBeClickable(item));
+            browser.wait(ECE.elementToBeClickable(item), 2000);
             item.click();
             var preview = element(by.id('item-preview'));
 
@@ -416,9 +412,9 @@ class Monitoring {
         this.openRelatedItem = function(index) {
             const relatedItemsContainer = el(['related-items-view']);
 
-            browser.wait(ECE.visibilityOf(relatedItemsContainer));
+            browser.wait(ECE.visibilityOf(relatedItemsContainer), 2000);
             els(['article-item'], null, relatedItemsContainer).get(index).click();
-            browser.wait(ECE.presenceOf(el(['authoring'])));
+            browser.wait(ECE.presenceOf(el(['authoring'])), 2000);
         };
 
         /**
@@ -500,7 +496,7 @@ class Monitoring {
 
             var checkbox = el(['multi-select-checkbox'], null, item);
 
-            browser.wait(ECE.visibilityOf(checkbox));
+            browser.wait(ECE.visibilityOf(checkbox), 1000);
 
             return checkbox.click();
         };
@@ -512,19 +508,20 @@ class Monitoring {
 
         this.unspikeMultipleItems = function() {
             multiAction('Unspike');
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.unspikeItem = function(item, stage?: string) {
             articleList.executeContextMenuAction(this.getSpikedItem(item), 'Unspike Item');
 
-            var sidebar = element.all(by.css('.side-panel')).last();
-
             if (stage) {
-                sidebar.element(by.buttonText(stage)).click();
+                el(
+                    ['interactive-actions-panel', 'stage-select'],
+                    by.cssContainingText('[data-test-id="item"]', stage),
+                ).click();
             }
 
-            return element(by.buttonText('send')).click();
+            el(['interactive-actions-panel', 'unspike']).click();
         };
 
         this.openItemMenu = function(group, item) {
@@ -539,8 +536,8 @@ class Monitoring {
         };
 
         this.showMonitoringSettings = function() {
-            element(by.css('.icon-settings')).click();
-            browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed());
+            el(['monitoring-settings-button']).click();
+            browser.wait(() => element.all(by.css('.aggregate-widget-config')).isDisplayed(), 2000);
             element.all(by.css('[ng-click="goTo(step)"]')).first().click();
         };
 
@@ -594,7 +591,7 @@ class Monitoring {
             btn.click();
 
             // wait for modal to be removed
-            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
+            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])), 2000);
         };
 
         /**
@@ -717,7 +714,7 @@ class Monitoring {
         };
 
         this.openCreateMenu = function() {
-            element(by.className('sd-create-btn')).click();
+            element(by.css('[data-test-id="content-create"]')).click();
             browser.sleep(100);
         };
 
@@ -733,10 +730,6 @@ class Monitoring {
 
         this.getPublishButtonText = () => element(by.css('[ng-click="publish()"]')).getText();
 
-        this.startUpload = function() {
-            element(by.id('start-upload-btn')).click();
-        };
-
         this.uploadModal = element(by.className('upload-media'));
 
         this.openFetchAsOptions = function(group, item) {
@@ -744,7 +737,7 @@ class Monitoring {
         };
 
         this.clickOnFetchButton = function() {
-            return element(by.css('[ng-click="send()"]')).click();
+            el(['interactive-actions-panel', 'fetch']).click();
         };
 
         // Cancel button resets the multi selection
@@ -763,7 +756,7 @@ class Monitoring {
 
         this.fetchAndOpen = function(group, item) {
             this.actionOnItem('Fetch To', group, item);
-            return element(by.css('[ng-click="send(true)"]')).click();
+            el(['interactive-actions-panel', 'fetch-and-open']).click();
         };
 
         /**
@@ -817,7 +810,7 @@ class Monitoring {
 
             const bellIcon = crtItem.element(by.className('icon-bell'));
 
-            browser.wait(ECE.visibilityOf(bellIcon));
+            browser.wait(ECE.visibilityOf(bellIcon), 2000);
 
             bellIcon.click();
             var deskList = element(by.className('highlights-list-menu'));
@@ -974,18 +967,6 @@ class Monitoring {
 
         this.getTakeItems = function(group) {
             return this.getGroupItems(group).all(by.className('takekey'));
-        };
-
-        /**
-         * Returns the desk dropdown in send to panel
-         *
-         */
-        this.getSendToDropdown = () => {
-            var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
-                dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
-
-            return dropdownSelected;
         };
 
         this.getPackageItem = function(index) {

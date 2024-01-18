@@ -21,7 +21,7 @@ export class FormGroupDirectionWrapper extends React.Component<IProps> {
                 ? `${currentClassname} form-group-horizontal`
                 : 'form-group-horizontal';
 
-            return <div className={nextClassname} />;
+            return <div className={nextClassname}>{this.props.children}</div>;
         } else {
             assertNever(direction);
         }

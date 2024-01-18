@@ -1,4 +1,5 @@
 import {IArticle} from 'superdesk-api';
+import {IPanelAction} from './interactive-article-actions-panel/interfaces';
 
 interface IInternalEvents {
     addImage: {
@@ -7,10 +8,20 @@ interface IInternalEvents {
     };
     saveArticleInEditMode: void;
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
+    replaceAuthoringDataWithChanges: Partial<unknown>;
+
+    /**
+     * Unsaved changes will be lost.
+     * Only applies to authoring-react.
+     */
+    dangerouslyForceReloadAuthoring: void;
+
     changeUserPreferences: {[preferenceId: string]: any};
-    openFullPreview: Array<IArticle>;
     openExportView: Array<IArticle['_id']>;
     extensionsHaveLoaded: true;
+
+    interactiveArticleActionStart: IPanelAction;
+    interactiveArticleActionEnd: void;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(

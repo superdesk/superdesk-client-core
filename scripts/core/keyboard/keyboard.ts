@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {sdApi} from 'api';
 
 export const KEYS = Object.freeze({
     pageup: 33,
@@ -57,6 +58,23 @@ function shouldInvoke(combination: string, event: KeyboardEvent) {
         && event.shiftKey === shiftKey
         && getKeyAccordingToSuperdeskConvention(event.key) === key
     );
+}
+
+/**
+ * keyboardManager removes bindings on route change and thus doesn't work for global bindings
+ */
+export function registerGlobalKeybindings() {
+    window.addEventListener('keydown', (event) => {
+        const {currentPathStartsWith} = sdApi.navigation;
+
+        // ctrl+m creates a new article using the default desk template
+        if (
+            shouldInvoke('ctrl+m', event)
+            && (currentPathStartsWith(['workspace']) || currentPathStartsWith(['search']))
+        ) {
+            sdApi.article.createNewUsingDeskTemplate();
+        }
+    });
 }
 
 export default angular.module('superdesk.core.keyboard', [])

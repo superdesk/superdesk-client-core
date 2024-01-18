@@ -7,11 +7,12 @@ import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
 import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
+import {sdApi} from 'api';
+import {dispatchInternalEvent, addInternalEventListener} from 'core/internal-events';
 
 export interface IMultiActions {
-    send(): void;
-    sendAs(): void;
-    fetch(fetchAs?: boolean): void;
+    sendTo(): void;
+    fetch(fetchTo?: boolean): void;
     canRemoveIngestItems(): boolean;
     removeIngestItems(): void;
     multiedit(): void;
@@ -23,7 +24,7 @@ export interface IMultiActions {
     canEditMetadata(): boolean;
     canPackageItems(): boolean;
     canPublishItem(): boolean;
-    duplicateTo(): Promise<any>;
+    duplicateTo(): void;
     duplicateInPlace(): void;
     canHighlightItems(): boolean;
     publish(): void;
@@ -46,21 +47,21 @@ export function getMultiActions(
     const notify = ng.get('notify');
     const packages = ng.get('packages');
     const remove = ng.get('remove');
-    const send = ng.get('send');
     const privileges = ng.get('privileges');
-    const confirm = ng.get('confirm');
-    const session = ng.get('session');
-    const spike = ng.get('spike');
     const superdesk = ng.get('superdesk');
 
-    const personalLocationPath = $location.path() === '/workspace/personal';
+    function sendTo() {
+        dispatchInternalEvent('interactiveArticleActionStart', {
+            items: getSelectedItems(),
+            tabs: ['send_to'],
+            activeTab: 'send_to',
+        });
 
-    function sendFn() {
-        send.all(getSelectedItems());
-    }
-
-    function sendAs() {
-        send.allAs(getSelectedItems());
+        const removeListener = addInternalEventListener('interactiveArticleActionEnd', () => {
+            unselectAll();
+            removeListener();
+            $rootScope.$applyAsync();
+        });
     }
 
     const fetch = (fetchAs = false) => {
@@ -68,16 +69,25 @@ export function getMultiActions(
 
         setActioning(true, items);
 
-        (fetchAs ?
-            send.allAs(getSelectedItems(), 'externalsourceTo') :
-            send.all(getSelectedItems())
-        )
-            .then(() => {
+        if (fetchAs) {
+            dispatchInternalEvent('interactiveArticleActionStart', {
+                items: items,
+                tabs: ['fetch_to'],
+                activeTab: 'fetch_to',
+            });
+
+            const removeListener = addInternalEventListener('interactiveArticleActionEnd', () => {
                 unselectAll();
-            })
-            .finally(() => {
+                setActioning(false, items);
+                removeListener();
+                $rootScope.$applyAsync();
+            });
+        } else {
+            sdApi.article.fetchItemsToCurrentDesk(items).then(() => {
+                unselectAll();
                 setActioning(false, items);
             });
+        }
     };
 
     const setActioning = (actioning: boolean, items) => {
@@ -145,9 +155,12 @@ export function getMultiActions(
      */
     function spikeItems(): void {
         const spikeMultiple = () => {
-            spike.spikeMultiple(getSelectedItems());
-            $rootScope.$broadcast('item:spike');
-            unselectAll();
+            Promise.all(
+                getSelectedItems().map((item) => sdApi.article.doSpike(item)),
+            ).then(() => {
+                $rootScope.$broadcast('item:spike');
+                unselectAll();
+            });
         };
 
         if ($location.path() === '/workspace/personal') {
@@ -183,9 +196,17 @@ export function getMultiActions(
      * Multiple item unspike
      */
     function unspikeItems() {
-        spike.unspikeMultiple(getSelectedItems());
-        $rootScope.$broadcast('item:unspike');
-        unselectAll();
+        dispatchInternalEvent('interactiveArticleActionStart', {
+            items: getSelectedItems(),
+            tabs: ['unspike'],
+            activeTab: 'unspike',
+        });
+
+        const removeListener = addInternalEventListener('interactiveArticleActionEnd', () => {
+            unselectAll();
+            removeListener();
+            $rootScope.$applyAsync();
+        });
     }
 
     const canEditMetadata = () => getSelectedItems().every(
@@ -223,8 +244,16 @@ export function getMultiActions(
      * Multiple items duplicate
      */
     function duplicateTo() {
-        return send.allAs(getSelectedItems(), 'duplicateTo').then(() => {
+        dispatchInternalEvent('interactiveArticleActionStart', {
+            items: getSelectedItems(),
+            tabs: ['duplicate_to'],
+            activeTab: 'duplicate_to',
+        });
+
+        const removeListener = addInternalEventListener('interactiveArticleActionEnd', () => {
             unselectAll();
+            removeListener();
+            $rootScope.$applyAsync();
         });
     }
 
@@ -377,8 +406,7 @@ export function getMultiActions(
     };
 
     const actions: IMultiActions = {
-        send: sendFn,
-        sendAs,
+        sendTo,
         fetch,
         canRemoveIngestItems,
         removeIngestItems,

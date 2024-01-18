@@ -1,5 +1,5 @@
 <div sd-modal data-model="template" data-close="cancel()" class="modal--fill template-editor-modal" data-test-id="'template-edit-view'">
-    <div class="modal__header modal__header--flex"> 
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 class="modal__heading" ng-hide="template._id" translate>Add New Template</h3>
         <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
@@ -11,10 +11,10 @@
                 <div class="template-icon">
                     <i class="icon-text"></i>
                 </div>
-    
+
                 <div class="template-header">
                     <div class="form__row form__row--s-padding">
-                        <div sd-validation-error="error.template_name" 
+                        <div sd-validation-error="error.template_name"
                             data-required="true"
                             class="sd-line-input sd-line-input--no-label sd-line-input--boxed sd-line-input--no-margin"
                             ng-class="{'sd-line-input--invalid': templateForm.name.$error.maxlength}">
@@ -28,14 +28,14 @@
                             <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
                             <input type="text" class="sd-line-input__input" id="template-profile" ng-model="item.profile">
                         </div>
-        
+
                         <div class="sd-line-input sd-line-input--label-left sd-line-input--is-select" ng-if="template.template_type !== 'kill' && content_types.length">
                             <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
                             <select id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
                                 <option value=""></option>
                             </select>
                         </div>
-        
+
                         <div sd-validation-error="error.template_type" data-required="true"
                                 class="sd-line-input sd-line-input--label-left sd-line-input--is-select">
                             <label class="sd-line-input__label" for="template-type" translate>Template Type</label>
@@ -48,14 +48,18 @@
                             </select>
                         </div>
                     </div>
-    
+
                     <div ng-if="privileges.content_templates" class="form__row form__row--no-padding">
                         <span sd-switch ng-model="template.is_public"></span>
                         <label for="template-is-private" translate>Make Public</label>
                     </div>
                 </div>
-    
-                <div class="template-editor">
+
+                <div style="height: 100%;" ng-if="authoringReactViewEnabled && item != null && item.profile != null">
+                    <sd-edit-template style="height: 100%;" data-scope-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
+                </div>
+
+                <div class="template-editor" ng-if="authoringReactViewEnabled === false">
                     <header sd-authoring-header></header>
                     <div class="main-article">
                         <div class="fieldset" sd-article-edit></div>
@@ -65,7 +69,7 @@
             <form class="template-container__metadata" name="metadataForm">
                 <div class="template-metadata">
                     <div ng-if="showDesks()">
-    
+
                         <div for="template-desk" ng-if="template.template_type !== 'create'">
                             <div class="sd-line-input sd-line-input--is-select">
                                 <label class="sd-line-input__label" translate>Desk</label>
@@ -78,7 +82,7 @@
                                 </select>
                             </div>
                         </div>
-    
+
                         <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true" data-style="circle" data-test-id="desks">
                             <div class="multi-select" ng-if="template.template_type === 'create'">
                                 <ul class="sd-check__group sd-check__group--grid">
@@ -89,16 +93,16 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata" data-style="circle">
                         <div class="form__row form__row--s-padding">
                             <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label translate>Not For Publication</label>
                         </div>
-    
+
                         <div class="form__row form__row--l-padding">
                             <span sd-switch ng-model="item.flags.marked_for_legal"></span><label translate>Legal</label>
                         </div>
-    
+
                         <div class="form__row form__row--s-padding">
                             <div class="sd-line-input">
                                 <label class="sd-line-input__label" translate>Usage terms</label>
@@ -124,34 +128,10 @@
 
                         <div class="form__row">
                             <label class="form-label" translate>Target Subscribers</label>
-                            <div class="term-editor"
-                                sd-meta-terms
-                                data-item="item"
-                                data-unique="_id"
-                                data-list="metadata.customSubscribers"
-                                data-field="target_subscribers"
-                                data-reload-list="true"
-                                data-header="true"
-                                ></div>
-                        </div>
-    
-                        <div class="form__row">
-                            <label class="form-label" translate>Target Regions</label>
-                            <div sd-meta-target
-                                data-list="metadata.regions"
-                                data-targets="item.target_regions"
-                                ></div>
-                        </div>
-    
-                        <div class="form__row">
-                            <label class="form-label" translate>Target Types</label>
-                            <div sd-meta-target
-                                data-list="metadata.subscriberTypes"
-                                data-targets="item.target_types"
-                                ></div>
+                            <sd-target-subscribers on-change="onChangeData" value="template.data"></sd-target-subscribers>
                         </div>
                     </div>
-    
+
                     <div class="" ng-if="showScheduling()">
                         <div class="toggle-box">
                             <div class="toggle-box__header">
@@ -226,7 +206,6 @@
                                 </select>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </form>

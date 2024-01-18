@@ -1,10 +1,10 @@
 import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 import React from 'react';
-import {IArticle, IArticleField} from 'superdesk-api';
+import {IArticle, IVocabulary} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    fields: Array<IArticleField>;
+    fields: Array<IVocabulary>;
 }
 
 export class PreviewSubject extends React.PureComponent<IProps> {

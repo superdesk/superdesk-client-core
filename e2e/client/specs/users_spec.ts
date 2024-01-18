@@ -246,8 +246,8 @@ describe('users', () => {
 
             // navigate to Workspace and create a new article
             workspace.openContent();
-            authoring.navbarMenuBtn.click();
-            authoring.newPlainArticleLink.click();
+
+            authoring.createTextItem();
 
             // authoring opened, click the set category menu and see what
             // categories are offered
@@ -275,8 +275,7 @@ describe('users', () => {
 
             // navigate to Workspace and create a new article
             monitoring.openMonitoring();
-            authoring.navbarMenuBtn.click();
-            authoring.newPlainArticleLink.click();
+            authoring.createTextItem();
 
             browser.sleep(100);
             // Open subject metadata dropdown field
@@ -354,19 +353,19 @@ describe('users', () => {
         });
 
         it('while creating a new user', () => {
-            var buttonCreate = element(by.className('sd-create-btn'));
+            var buttonCreate = element(by.css('[data-test-id="create-user-button"]'));
 
             buttonCreate.click();
-            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
+            expect(element(by.css('[data-test-id="default-desk-template"]')).isPresent()).toBe(false);
         });
 
         it('while pre-viewing and user clicks on create new user', () => {
-            var buttonCreate = element(by.className('sd-create-btn'));
+            var buttonCreate = element(by.css('[data-test-id="create-user-button"]'));
 
             element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();
-            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
+            expect(element(by.css('[data-test-id="default-desk-template"]')).isPresent()).toBe(false);
         });
     });
 

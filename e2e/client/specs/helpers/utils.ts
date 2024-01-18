@@ -179,13 +179,6 @@ export function altKey(key) {
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
     const elem = element(s([`notification--${type}`], msg));
 
-    click(elem);
-
-    /**
-     * It seems there's an issue with protractor:
-     * Clicking an element throws `StaleElementReferenceError` when clicked immediately
-     * after waiting until it's clickable.
-     */
     elem.isPresent().then((present) => {
         // Only click if the toast is still present.
         if (present) {
@@ -275,13 +268,13 @@ export function screenshot(name) {
 }
 
 export function acceptConfirm() {
-    element(by.className('modal__footer'))
+    element(by.className('p-dialog-footer'))
         .element(by.className('btn--primary'))
         .click();
 
     // wait for modal to disappear
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
-        element(by.className('modal__backdrop')),
+        element(by.className('p-component-overlay')),
     ), 2000);
 }
 

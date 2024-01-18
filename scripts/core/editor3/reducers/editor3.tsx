@@ -6,15 +6,17 @@ import {
     SelectionState,
     ContentBlock,
 } from 'draft-js';
-import {setTansaHtml} from '../helpers/tansa';
-import {addMedia} from './toolbar';
-import {getCustomDecorator, IEditorStore} from '../store';
+import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
+import {addArticleEmbed, addMedia} from './toolbar';
+import {getDecorators, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
-import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {logger} from 'core/services/logger';
+import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -55,6 +57,8 @@ const editor3 = (state: IEditorStore, action) => {
         return changeLimitConfig(state, action.payload);
     case 'EDITOR_AUTOCOMPLETE':
         return autocomplete(state, action.payload);
+    case 'SET_EXTERNAL_OPTIONS':
+        return setExternalOptions(state, action.payload);
     default:
         return state;
     }
@@ -94,17 +98,41 @@ export const forceUpdate = (state, keepSelection = false) => {
     };
 };
 
-function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: EditorState): EditorState {
-    if (editorStateCurrent.getCurrentContent() === editorStateNext.getCurrentContent()) {
+function updateDecorators(
+    stateCurrent: IEditorStore,
+    editorStateNext: EditorState,
+    force: boolean = false, // required to redecorate text limit overflow after option is toggled
+): EditorState {
+    const contentChanged = stateCurrent.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
+
+    if (!contentChanged && !force) {
         return editorStateNext;
-    } else {
-        // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
-        // won't get repopulated, because spellchecker only runs when content changes.
-        return EditorState.set(
-            editorStateNext,
-            {decorator: getCustomDecorator()},
-        );
     }
+
+    /*
+        Spellchecker info must be cleared on contentState change because:
+        1. User might have deleted a piece of text marked by spellchecker
+        when the decorator runs again, it will attempt to decorate the same ranges
+        and will crash, because that content is no longer there.
+        2. User might insert content before spellchecker decorated content which
+        will make offsets inaccurate and when the decorator runs again
+        it will decorate the wrong ranges.
+
+        Clear only when content changes. Otherwise, it will get cleared on caret changes, but
+        won't get repopulated, because spellchecker only runs when content changes.
+    */
+    const spellcheckWarnings = contentChanged ? {} : stateCurrent.spellchecking?.warningsByBlock;
+
+    return EditorState.set(
+        editorStateNext,
+        {
+            decorator: getDecorators(
+                stateCurrent?.spellchecking?.language,
+                spellcheckWarnings,
+                stateCurrent.limitConfig,
+            ),
+        },
+    );
 }
 
 export function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
@@ -113,13 +141,6 @@ export function editorStateChangeMiddlewares(state, editorState: EditorState, co
     newState = applyAbbreviations({
         ...state, editorState,
     });
-
-    if (contentChanged && (state.limitConfig?.ui === 'highlight' || state.limitConfig?.ui === 'limit')) {
-        newState = {
-            ...state,
-            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
-        };
-    }
 
     return newState;
 }
@@ -145,17 +166,8 @@ export const onChange = (
     force = false, // TODO: Remove `force` once Draft v0.11.0 is in
     keepSelection = false,
     skipOnChange = false,
-) => {
-    /*
-        Spellchecker info must be cleared on contentState change because:
-        1. User might have deleted a piece of text marked by spellchecker
-        when the decorator runs again, it will attempt to decorate the same ranges
-        and will crash, because that content is no longer there.
-        2. User might insert content before spellchecker decorated content which
-        will make offsets inaccurate and when the decorator runs again
-        it will decorate the wrong ranges.
-    */
-    const editorStateNext = clearSpellcheckInfo(state.editorState, newEditorState);
+): IEditorStore => {
+    let editorStateNext = updateDecorators(state, newEditorState);
 
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
@@ -165,7 +177,7 @@ export const onChange = (
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
 
-    const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged);
+    const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged || force);
 
     if (force) {
         return forceUpdate(newState, keepSelection);
@@ -340,6 +352,26 @@ const onTab = (state: IEditorStore, e) => {
     return onChange(state, newState);
 };
 
+export type IDroppableEditorContent = 'media' | 'article-embed';
+
+export interface IEditorDragDropMedia {
+    contentType: 'media';
+    data: any;
+    blockKey: string;
+}
+
+export interface IEditorDragDropArticleEmbed {
+    contentType: 'article-embed';
+    data: {
+        id: string;
+        name: string;
+        html: string;
+    };
+    blockKey: string;
+}
+
+export type IEditorDragDropPayload = IEditorDragDropMedia | IEditorDragDropArticleEmbed;
+
 /**
  * @ngdoc method
  * @name dragDrop
@@ -347,8 +379,16 @@ const onTab = (state: IEditorStore, e) => {
  * @return {Object} New state
  * @description Handles the dragdrop event over the editor.
  */
-const dragDrop = (state, {data, blockKey}) => {
-    const editorState = addMedia(state.editorState, data, blockKey);
+const dragDrop = (state, {data, blockKey, contentType}: IEditorDragDropPayload) => {
+    const editorState = (() => {
+        if (contentType === 'media') {
+            return addMedia(state.editorState, data, blockKey);
+        } else if (contentType === 'article-embed') {
+            return addArticleEmbed(state.editorState, data, blockKey);
+        } else {
+            assertNever(contentType);
+        }
+    })();
 
     return {
         ...onChange(state, editorState),
@@ -463,7 +503,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
  */
 const setHtmlFromTansa = (state, {html, simpleReplace}) => {
     const {editorState} = state;
-    const newEditorState = setTansaHtml(editorState, html, simpleReplace);
+    const newEditorState = patchHTMLonTopOfEditorState(editorState, html, simpleReplace);
 
     return onChange(state, newEditorState);
 };
@@ -492,17 +532,28 @@ export function moveBlock(state, options) {
  */
 const applyEmbed = (state, {code, targetBlockKey}) => {
     const data = typeof code === 'string' ? {html: code} : code;
-    const nextEditorState = insertEntity(state.editorState, 'EMBED', 'MUTABLE', {data}, targetBlockKey);
+    const nextEditorState = insertEntity(
+        state.editorState,
+        CustomEditor3Entity.EMBED,
+        'MUTABLE',
+        {data},
+        targetBlockKey,
+    );
 
     return onChange(state, nextEditorState);
 };
 
 const setLoading = (state, loading) => ({...state, loading});
 
-const changeLimitConfig = (state: IEditorStore, limitConfig) => {
-    const editorState = handleOverflowHighlights(state.editorState, limitConfig.chars);
+const changeLimitConfig = (state: IEditorStore, limitConfig: EditorLimit) => {
+    const limitConfigApplied: IEditorStore = {...state, limitConfig};
 
-    return {...state, limitConfig, editorState};
+    const redecorated: IEditorStore = {
+        ...limitConfigApplied,
+        editorState: updateDecorators(limitConfigApplied, state.editorState, true),
+    };
+
+    return redecorated;
 };
 
 const pushState = (state: IEditorStore, contentState: ContentState) => {
@@ -541,4 +592,18 @@ const autocomplete = (state, {value}) => {
     );
 
     return onChange(state, EditorState.push(editorState, newContent, 'insert-characters'));
+};
+
+const setExternalOptions = (
+    state: IEditorStore,
+    payload: IActionPayloadSetExternalOptions,
+) => {
+    let result: IEditorStore = {
+        ...state,
+        ...payload,
+    };
+
+    result.showToolbar = result.editorFormat?.length > 0 ?? false;
+
+    return onChange(result, result.editorState);
 };

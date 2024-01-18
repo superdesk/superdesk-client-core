@@ -7,7 +7,6 @@ import * as Form from './Form';
 import * as ColumnBox from './ColumnBox/';
 import * as SlideInPanel from './SlideInPanel';
 import SearchBox from './SearchBox';
-import DateTime from './DateTime';
 import PanelInfo from './PanelInfo';
 import {CollapseBox} from './CollapseBox';
 import TermsList from './TermsList';
@@ -26,6 +25,7 @@ import {DropdownMenuDivider} from './dropdown-menu-divider';
 import {NavTabs} from './nav-tabs';
 import {DropZone} from './drop-zone';
 import {PlainTextEditor} from './PlainTextEditor/PlainTextEditor';
+import UserPopup from './UserPopup';
 
 export {
     List,
@@ -35,7 +35,6 @@ export {
     SearchBox,
     Preview,
     Form,
-    DateTime,
     PanelInfo,
     CollapseBox,
     ColumnBox,
@@ -56,4 +55,5 @@ export {
     NavTabs,
     DropZone,
     PlainTextEditor,
+    UserPopup,
 };

@@ -1,6 +1,6 @@
 import {
     isNull, isUndefined, find, filter, keys, findIndex,
-    defer, sortBy, map, forEach, startsWith, flatMap} from 'lodash';
+    sortBy, map, forEach, startsWith, flatMap} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
@@ -293,14 +293,55 @@ export function AuthoringHeaderDirective(
                 scope.$apply();
             };
 
-            // If correction set focus to the ednote to encourage user to fill it in
-            defer(() => {
-                if (scope.action === 'correct') {
-                    elem.find('#ednote').focus();
+            const loadingStartTimestamp = Date.now();
+            let lastElementCount = null;
+
+            /**
+             * Use interval to approximately determine when fields have loaded.
+             */
+            const interval = setInterval(() => {
+                if (Date.now() - loadingStartTimestamp > 5000) {
+                    // stop trying after 5s
+                    // there might not be inputs in authoring header configured
+                    clearInterval(interval);
                 } else {
-                    elem.find('#slugline').focus();
+                    const elements = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')];
+
+                    if (elements.length < 1) {
+                        return;
+                    } else if (lastElementCount == null) {
+                        lastElementCount = elements.length;
+
+                        return;
+                    } else if (lastElementCount !== elements.length) {
+                        lastElementCount = elements.length;
+
+                        return;
+                    } else {
+                        clearInterval(interval);
+                    }
+
+                    if (scope.action === 'correct') {
+                        elem.find('#ednote').focus();
+                    } else {
+                        const sorted = elements
+                            .map((el) => {
+                                const orderEl = el.closest('[order]');
+
+                                return {
+                                    input: el,
+                                    order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
+                                };
+                            })
+                            .filter(({order}) => order != null)
+                            .sort((a, b) => a.order - b.order);
+
+                        if (sorted.length > 0) {
+                            sorted[0].input.focus();
+                        }
+                    }
                 }
-            });
+            }, 100);
         },
     };
 }

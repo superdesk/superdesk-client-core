@@ -16,34 +16,7 @@
 
 <div class="field"
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
-     ng-if="schema.headline && !(features.onlyEditor3 || editor.body_html.editor3)"
-     order="{{editor.headline.order}}"
-     sd-validation-error="error.headline"
-     ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.headline.required">
-
-    <label for="title" class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength">
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
-    </span>
-    <sd-validate-characters ng-if="schema.headline.validate_characters"
-        class="disallowed-char-error"
-        item="item.headline"
-        field="'headline'"></sd-validate-characters>
-    <div id="title" class="headline"
-         sd-text-editor
-         data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
-         data-language="item.language"
-         ng-model="item.headline"
-         ng-change="autosave(item)"
-         data-read-only="!_editable || schema.headline.readonly === true"
-         data-test-id="field--headline"
-         ng-trim="false"></div>
-</div>
-
-<div class="field"
-     sd-width="{{editor.headline.sdWidth|| 'full'}}"
-     ng-if="schema.headline && (features.onlyEditor3 || editor.body_html.editor3)"
+     ng-if="schema.headline"
      order="{{editor.headline.order}}"
      sd-validation-error="error.headline"
      ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
@@ -79,7 +52,7 @@
 </div>
 
 <div class="field"
-     ng-if="schema.sms && item._type !== 'archived' && !isMediaType"
+     ng-if="schema.sms && item._type !== 'archived'"
      sd-width="{{editor.sms.sdWidth|| 'full'}}"
      order="{{editor.sms.order}}"
      sd-validation-error="error.sms"
@@ -161,30 +134,7 @@
 
 <div class="field abstract"
      sd-width="{{editor.abstract.sdWidth|| 'full'}}"
-     ng-if="schema.abstract && !(features.onlyEditor3 || editor.body_html.editor3) && !isMediaType"
-     order="{{editor.abstract.order}}"
-     sd-validation-error="error.abstract"
-     ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.abstract.required">
-
-    <label for="abstract" class="field__label">{{label('abstract')}}</label>
-    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
-    <span sd-word-count data-item="item.abstract" data-html="true"></span>
-    <div id="abstract" class="abstract"
-         sd-text-editor
-         data-config="{disableToolbar: true, imageDragging: false, disableEditing: isPublished(item), tabindex: editor.abstract.order, paste: {cleanPastedHTML: editor.abstract.cleanPastedHTML}}"
-         data-editorformat="editor.abstract.formatOptions"
-         data-language="item.language"
-         ng-model="item.abstract"
-         ng-change="autosave(item)"
-         data-read-only="!_editable || schema.abstract.readonly === true"
-         ng-trim="false">
-    </div>
-</div>
-
-<div class="field abstract"
-     sd-width="{{editor.abstract.sdWidth|| 'full'}}"
-     ng-if="schema.abstract && (features.onlyEditor3 || editor.body_html.editor3)"
+     ng-if="schema.abstract"
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
      ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
@@ -237,7 +187,7 @@
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
 <div class="field"
-     ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline && !isMediaType"
+     ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline"
      order="{{editor.dateline.order}}"
      sd-validation-error="error.dateline"
      data-required="schema.dateline.required"
@@ -295,36 +245,10 @@
     </div>
 </div>
 
-<div class="field body"
-     ng-if="!isMediaType && schema.body_html && !(features.onlyEditor3 || editor.body_html.editor3)"
-     order="{{editor.body_html.order}}"
-     sd-validation-error="error.body_html"
-     data-required="schema.body_html.required"
-     ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
-     sd-width="{{editor.body_html.sdWidth|| 'full'}}">
-    <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
-    <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <sd-character-count data-item="item.body_html" data-html="true"></sd-character-count>
-    <span sd-word-count data-item="item.body_html" data-html="true"></span>
-    <sd-line-count data-html="item.body_html"></sd-line-count>
-    <div id="bodyhtml"
-         sd-text-editor
-         data-config="{disableEditing: isPublished(item), multiBlockEdition: true, tabindex: editor.body_html.order, showTitle: editor.body_html.imageTitle, paste: {cleanPastedHTML: editor.body_html.cleanPastedHTML}}"
-         data-editorformat="editor.body_html.formatOptions"
-         ng-model="item.body_html"
-         data-read-only="!_editable || schema.body_html.readonly === true"
-         ng-change="autosave(item)"
-         data-associations="item.associations"
-         data-language="item.language"
-         data-type="item.type"
-         class="body-text">
-    </div>
-</div>
-
-<div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; inset-block-start: -1000px; inset-inline-start: -1000px; height: 150px; width: 500px; display: block;"></div>
+<div contenteditable="true" id="editor3Tansa" tansa-proofing="true" style="position: fixed; inset-block-start: -1000px; inset-inline-start: -1000px; height: 150px; width: 500px; display: block;"></div>
 
 <div class="field body"
-     ng-if="!isMediaType && schema.body_html && (features.onlyEditor3 || editor.body_html.editor3)"
+     ng-if="schema.body_html"
      order="{{editor.body_html.order}}"
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
@@ -432,30 +356,7 @@
     </div>
 </div>
 
-<div ng-if="isMediaType && !(features.onlyEditor3 || editor.body_html.editor3)"
-     class="field abstract"
-     order="{{editor.description_text.order}}"
-     sd-validation-error="error.description_text"
-     sd-width="{{editor.description_text.sdWidth|| 'full'}}"
-     ng-attr-title="{{schema.description_text.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.description_text.required">
-    <label for="title" class="field__label">{{label('description_text')}}</label>
-    <span ng-if="validator.description_text.maxlength">
-        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
-    </span>
-    <div id="title" class="abstract"
-         sd-text-editor
-         data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
-         data-editorformat="editor.description_text.formatOptions"
-         data-language="item.language"
-         ng-model="item.description_text"
-         ng-change="autosave(item)"
-         data-read-only="!_editable || schema.description_text.readonly === true"
-         ng-trim="false"></div>
-    <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
-</div>
-
-<div ng-if="isMediaType && (features.onlyEditor3 || editor.body_html.editor3)"
+<div ng-if="isMediaType"
      class="field abstract"
      order="{{editor.description_text.order}}"
      sd-validation-error="error.description_text"
@@ -487,7 +388,7 @@
 </div>
 
 <div class="field"
-     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !isMediaType"
+     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite'"
      sd-validation-error="error.body_footer_value"
      data-required="schema.footer.required"
      order="{{editor.footer.order}}"
@@ -509,29 +410,7 @@
 </div>
 
 <div class="field"
-     ng-if="schema.body_footer && !(features.onlyEditor3 || editor.body_html.editor3) && !isMediaType"
-     order="{{editor.body_footer.order}}"
-     sd-validation-error="error.body_footer"
-     data-required="schema.body_footer.required"
-     ng-attr-title="{{schema.body_footer.readonly === true ? readOnlyLabel : ''}}"
-     sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
-    <label for="body_footer" class="field__label">{{label('body_footer')}}</label>
-    <div id="body_footer" class="body"
-         sd-text-editor
-         data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
-         data-language="item.language"
-         ng-model="item.body_footer"
-         ng-change="autosave(item)"
-         data-read-only="!_editable || schema.body_footer.readonly === true"
-         ng-trim="false"
-         sd-focus-element
-         data-append-element=".field"
-         data-append-class="active">
-    </div>
-</div>
-
-<div class="field"
-     ng-if="schema.body_footer && (features.onlyEditor3 || editor.body_html.editor3)"
+     ng-if="schema.body_footer"
      order="{{editor.body_footer.order}}"
      sd-validation-error="error.body_footer"
      data-required="schema.body_footer.required"
@@ -848,32 +727,8 @@
 
 <!-- Slugline -->
 <div class="field"
-     sd-validation-error="error.slugline"
-     data-required="schema.slugline.required"
-     ng-if="schema.slugline && editor['slugline'].section === 'content' && !(features.onlyEditor3 || editor.body_html.editor3)"
-     sd-width="{{editor.slugline.sdWidth}}"
-     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
-     order="{{editor.slugline.order}}">
-    <label for="slugline" class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength">
-        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
-    </span>
-    <sd-validate-characters ng-if="schema.slugline.validate_characters"
-        class="disallowed-char-error"
-        item="item.slugline"
-        field="'slugline'"></sd-validate-characters>
-    <input type="text" class="slugline"
-       id="slugline"
-       data-language="item.language"
-       ng-model="item.slugline"
-       ng-change="autosave(item)"
-       ng-disabled="!_editable || schema.slugline.readonly === true"
-       ng-trim="false"
-       tabindex="{{editor.slugline.order}}">
-</div>
-<div class="field"
      sd-width="{{editor.slugline.sdWidth|| 'full'}}"
-     ng-if="schema.slugline && editor['slugline'].section === 'content' && (features.onlyEditor3 || editor.body_html.editor3)"
+     ng-if="schema.slugline && editor['slugline'].section === 'content'"
      order="{{editor.slugline.order}}"
      sd-validation-error="error.slugline"
      ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"

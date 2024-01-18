@@ -1,8 +1,12 @@
 <form name="editForm">
     <div sd-modal data-model="dictionary" data-close="cancel()">
         <div class="modal__header modal__header--flex">
-            <h3 class="modal__heading" ng-show="!dictionary._id" translate>Add New {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary</h3>
-            <h3 class="modal__heading" ng-show="dictionary._id" translate>Edit {{(isAbbreviations() ? 'Abbreviations' : '') | translate}} Dictionary</h3>
+            <h3 class="modal__heading" ng-show="!dictionary._id && isAbbreviations()" translate>Add New Abbreviations Dictionary</h3>
+            <h3 class="modal__heading" ng-show="!dictionary._id && !isAbbreviations()" translate>Add New Dictionary</h3>
+
+            <h3 class="modal__heading" ng-show="dictionary._id && isAbbreviations()" translate>Edit Abbreviations Dictionary</h3>
+            <h3 class="modal__heading" ng-show="dictionary._id && !isAbbreviations()" translate>Edit Dictionary</h3>
+
             <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         </div>
 
@@ -48,7 +52,7 @@
 
             <ng-form ng-if="dictionary._id && !isAbbreviations()">
                 <fieldset>
-                    <label for="words-search">{{ :: 'Search' | translate }} (<span translate translate-n="wordsCount" translate-plural="{{ $count}} words">{{ wordsCount}} word</span>)</label>
+                    <label for="words-search">{{ :: 'Search' | translate }} (<span translate translate-n="wordsCount" translate-plural="{{ $count}} words">{{wordsCount}} word</span>)</label>
                     <div class="form__row form__row--flex form__row--no-padding">
                         <div class="sd-line-input sd-line-input--no-label sd-line-input--no-margin">
                                 <input id="words-search"
@@ -96,7 +100,7 @@
                     </div>
 
                 </fieldset>
-                
+
                 <div class="abbreviations-list" ng-if="abbreviationKeys.length">
                     <div class="abbreviations-list__item abbreviations-list__item--heading">
                         <div class="abbreviations-field">

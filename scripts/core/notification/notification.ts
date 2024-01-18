@@ -10,7 +10,7 @@
 
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {IPublicWebsocketMessages, IWebsocketMessage} from 'superdesk-api';
+import {IPublicWebsocketMessages, IWebsocketMessage, IArticle, IUser} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 // implementing interface to be able to get keys at runtime
@@ -23,6 +23,7 @@ const publicWebsocketMessageNames: IPublicWebsocketMessages = {
 
 // implementing interface to be able to get keys at runtime
 const internalWebsocketMessageNames: IInternalWebsocketMessages = {
+    'item:lock': undefined,
     'item:spike': undefined,
     'item:unspike': undefined,
     'item:highlights': undefined,
@@ -47,6 +48,14 @@ export function isWebsocketEventInternal(eventName: string) {
 }
 
 interface IInternalWebsocketMessages { // not exposed to client API
+    'item:lock': IWebsocketMessage<{
+        item: IArticle['_id'];
+        item_version: string;
+        lock_session: string;
+        lock_time: string;
+        user: IUser['_id'];
+        _etag: string;
+    }>;
     'item:spike': IWebsocketMessage<never>;
     'item:unspike': IWebsocketMessage<never>;
     'item:highlights': IWebsocketMessage<{item_id?: string; mark_id?: string; marked: number}>;

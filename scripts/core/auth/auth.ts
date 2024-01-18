@@ -1,11 +1,45 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
 
 export const SESSION_EVENTS = {
     LOGIN: 'login',
     LOGOUT: 'logout',
     IDENTITY_LOADED: 'identity_loaded',
+};
+
+const {fetch: originalFetch} = window;
+
+window.fetch = (...args) => {
+    const [resource, config] = args;
+
+    /**
+     * Prevent requests not coming from our app get intercepted.
+     */
+    if (resource.toString().includes(appConfig.server.url) === false) {
+        return originalFetch(resource, config);
+    }
+
+    return originalFetch(resource, config)
+        .then((resp) => {
+            if (resp.status === 401) {
+                const session = ng.get('session');
+
+                session.expire();
+
+                return session.getIdentity().then(() => {
+                    return originalFetch(resource, {
+                        ...config,
+                        headers: {
+                            'Authorization': session.token,
+                        },
+                    });
+                });
+            }
+
+            return resp;
+        });
 };
 
 /**

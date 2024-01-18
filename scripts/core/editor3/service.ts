@@ -1,7 +1,7 @@
 import * as action from './actions';
 import {forEachMatch} from './helpers/find-replace';
 import {clearHighlights} from './helpers/find-replace';
-import {getTansaHtml} from './helpers/tansa';
+import {prepareHtmlForPatching} from './helpers/patch-editor-3-html';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 import {IArticle} from 'superdesk-api';
 
@@ -26,8 +26,7 @@ let spellcheckerStores = [];
  * @module superdesk.core.editor3
  * @name editor3
  * @description editor3 is the service that allows interacting with the editor from
- * the outside. It uses the same interface as the editor service of core/editor2/editor.js
- * to allow plugging one or the other based on the editor of the item being edited.
+ * the outside.
  */
 export class EditorService {
     /**
@@ -227,7 +226,7 @@ export class EditorService {
         const state = store.getState();
         const {editorState} = state;
 
-        return getTansaHtml(editorState);
+        return prepareHtmlForPatching(editorState);
     }
 
     /**

@@ -3,6 +3,7 @@
 import {gettext} from 'core/utils';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
+import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 
 const THEME_LIGHT = 'light-ui';
 
@@ -16,11 +17,11 @@ const THEME_LIGHT = 'light-ui';
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search', 'authThemes'];
 
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, search,
+    $timeout, $q, userList, _, search, authThemes,
 ) {
     // human readable labels for server values
     const LABELS = {
@@ -48,19 +49,6 @@ export function UserPreferencesDirective(
             scope.activeNavigation = null;
 
             scope.activeTheme = localStorage.getItem('theme');
-
-            if (scope.activeTheme === '') {
-                scope.activeTheme = THEME_LIGHT;
-            }
-
-            scope.$watch('activeTheme', (val) => {
-                if (!val) {
-                    return;
-                }
-
-                localStorage.setItem('theme', val);
-                body.attr('data-theme', val);
-            });
 
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
@@ -126,6 +114,9 @@ export function UserPreferencesDirective(
                         if (_.get(preferences, 'desktop:notification.enabled')) {
                             preferencesService.desktopNotification.requestPermission();
                         }
+
+                        localStorage.setItem('theme', scope.activeTheme);
+                        body.attr('data-theme', scope.activeTheme);
                         notify.success(gettext('User preferences saved'));
                         scope.cancel();
                     }, (reason) => {
@@ -429,6 +420,19 @@ export function UserPreferencesDirective(
 
                     p[key] = _.extend(val, scope.preferences[key]);
                 });
+
+                if (orig['editor:theme'] != null) {
+                    p['editor:theme'] = {
+                        ...orig['editor:theme'],
+                        theme: JSON.stringify(authThemes.syncWithApplicationTheme(
+                            scope.activeTheme,
+                            orig['editor:theme'].theme.length
+                                ? orig['editor:theme'].theme
+                                : JSON.stringify(DEFAULT_EDITOR_THEME.theme),
+                        )),
+                    };
+                }
+
                 return p;
             }
         },
