@@ -47,8 +47,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
         const {name, description, qcode, source, altids, aliases, original_source, parent, scheme} = item;
         // Checking if the item has original_source to filter auto tagger tags
         if (original_source != null) {
-            if(scheme == "http://cv.iptc.org/newscodes/mediatopic/")
-            {
+            if(scheme === "http://cv.iptc.org/newscodes/mediatopic/" || scheme === "subject") {
                 const tag: ITagUi = {
                     name,
                     description,

@@ -294,6 +294,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     kind: groupKind
                 },
                 scheme: newItem.group.value,
+                original_source: 'human',
             };
             console.log('new tag', tag);
             this.updateTags(
