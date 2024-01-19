@@ -194,7 +194,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
-
+            console.log('dataBeforeLoading', dataBeforeLoading);
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract, slugline} = this.props.article;
 
@@ -214,7 +214,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     },
                 }).then((res) => {
                     const resClient = toClientFormat(res.analysis);               
-                    
+                    console.log('resClient', resClient);
                     if (this._mounted) {   
                         const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
                         ? dataBeforeLoading.changes.analysis // keep existing tags
@@ -248,6 +248,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 console.log('existing tags', existingTags);
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
+                    console.log('resClient', resClient);
                     this.setState({
                         data: { original: { analysis: resClient }, changes: { analysis: resClient } },
                     });
