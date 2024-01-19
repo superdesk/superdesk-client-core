@@ -13,6 +13,33 @@
 `npm run playwright` - runs all tests in headless mode
 `npm run playwright-interactive` - starts playwright IDE that allows to run tests individually and inspect the timeline
 
+
+### Test databases
+
+Most tests run against `main` database snapshot (`e2e/server/dump/full/main`). When more data is needed, we can update it. If you need very specific data for a test and feel like it wouldn't belong in the main snapshot - it is possible to create a "record". A record is a patch that can be applied to a full dump when running a test, but does not change it.
+
+### Managing database snapshots
+
+Most tests run against `main` database snapshot (`e2e/server/dump/full/main`). That snapshot is quite minimal and it is likely that you will need to add more data for your tests. Here's how to do it:
+
+1. ensure you have server and client started (following the steps above)
+2. cd into `server`
+3. create virtual environment `python3 -m venv env`
+4. activate virtual environment `source env/bin/activate`
+5. install python dependencies - `pip install -Ur requirements.txt`
+
+6. restore main dump `curl -X POST http://localhost:5000/api/restore_record -H "Content-Type: application/json" --data '{"name": "main"}'`
+7. remove the dump you just restored `rm -r server/dump/full/main`
+8. open superdesk in the browser and do the changes you need(best not to remove/rename things because it might break other tests)
+9. regenerate `main` dump from your existing database state `python manage.py storage:dump --name main`
+10. in case you make a mistake, undo the removal of the main dump and continue from step 6.
+
+To create records/patches do the following steps:
+
+1. Do steps 1-6 from instructions above
+2. start recording `python manage.py storage:record --base-dump main --name my-new-record-name`
+
+
 ### VSCode plugin
 
 https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright
