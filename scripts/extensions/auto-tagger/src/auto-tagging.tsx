@@ -642,7 +642,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('Unable to use Autotagger service')}
-                                        description={gettext('Please use the index field to add tags manually')}
+                                        description={gettext('Please use the Index field to add tags manually')}
                                     />
                                 );
                             } else {
