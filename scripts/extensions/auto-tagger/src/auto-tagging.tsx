@@ -293,9 +293,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     kind: groupKind
                 },
                 scheme: newItem.group.value,
-                // Add parent key with null value if scheme is 'subject'
-                ...(newItem.group.value === 'subject' && { parent: null }),
-
             };
             console.log('new tag', tag);
             this.updateTags(
