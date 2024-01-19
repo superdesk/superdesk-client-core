@@ -12,7 +12,7 @@ test('desk notifications', async ({page}) => {
     await page.goto('/#/workspace/monitoring');
 
     await page.locator(
-        s('monitoring-group=Politic Desk / one', 'article-item=item5'),
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
     await page.locator(
@@ -21,7 +21,7 @@ test('desk notifications', async ({page}) => {
 
     await page.locator(
         s('comments-widget', 'new-comment-input'),
-    ).fill('#Politic_Desk hello');
+    ).fill('#Sports hello');
 
     await page.locator(
         s('comments-widget', 'new-comment-submit'),
@@ -29,7 +29,7 @@ test('desk notifications', async ({page}) => {
 
     await expect(
         page.locator(
-            s('monitoring-group=Politic Desk / Incoming Stage', 'desk-notifications'),
+            s('monitoring-group=Sports / Incoming Stage', 'desk-notifications'),
         ),
     ).toContainText('1', {timeout: 10000});
 });

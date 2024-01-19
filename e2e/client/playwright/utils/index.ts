@@ -1,13 +1,13 @@
 import * as request from 'request';
 import {expect, Page} from '@playwright/test';
 
-export function restoreDatabaseSnapshot(): Promise<void> {
+export function restoreDatabaseSnapshot(options?: {snapshotName?: string}): Promise<void> {
     return new Promise((resolve) => {
         request.post({
             uri: 'http://localhost:5000/api/restore_record',
             method: 'POST',
             timeout: 30000,
-            json: {name: 'legacy'},
+            json: options?.snapshotName ?? 'initial',
         }, resolve);
     });
 }

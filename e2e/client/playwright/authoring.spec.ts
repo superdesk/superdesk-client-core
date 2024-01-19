@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {login, restoreDatabaseSnapshot, s} from './utils';
 
-test('can apply macro', async ({page}) => {
+test('can apply "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
     await login(page);
 
@@ -10,15 +10,15 @@ test('can apply macro', async ({page}) => {
 
     await page.goto('/#/workspace/monitoring');
 
-    await monitoring.selectDesk('Politic Desk');
+    await monitoring.selectDesk('Sports');
 
     await page.locator(
-        s('monitoring-group=Politic Desk / two', 'article-item=item6'),
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
-    ).toHaveText('item6 text');
+    ).toHaveText('test sport story body');
 
     await expect(
         page.locator(s('authoring', 'authoring-field=abstract')).getByRole('textbox'),
@@ -37,5 +37,5 @@ test('can apply macro', async ({page}) => {
 
     await expect(
         page.locator(s('authoring', 'authoring-field=abstract')).getByRole('textbox'),
-    ).toHaveText('item6 text');
+    ).toHaveText('test sport story body');
 });
