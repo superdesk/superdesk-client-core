@@ -162,7 +162,7 @@
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "lint": "tsc -p scripts --noEmit && eslint --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client/specs tasks",
-    "lint-fix": "tsc -p scripts --noEmit && eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client/specs tasks",
+    "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client/specs tasks",
     "server": "grunt server",
     "dev": "npm run server"
   }
