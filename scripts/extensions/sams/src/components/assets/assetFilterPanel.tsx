@@ -123,6 +123,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
     removeTag(value: IAssetTag) {
         this.setState((preState) => {
             const tags: Array<IAssetTag> = preState.localSearchParams.tags!;
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const index = this.state.localSearchParams.tags?.indexOf(value)!;
 
             tags.splice(index, 1);

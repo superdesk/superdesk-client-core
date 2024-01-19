@@ -13,6 +13,7 @@ var ElementFinder = $('').constructor;
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
 ElementFinder.prototype.waitReady = function(optStr) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     var self = this;
     var specTimeoutMs = browser.allScriptsTimeout * 2;
     var driverWaitIterations = 0;
