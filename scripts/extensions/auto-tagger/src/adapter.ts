@@ -15,7 +15,7 @@ export interface ITagBase {
 }
 
 export interface ISubjectTag extends ITagBase {
-    parent?: string;
+    parent?: string | null;
 }
 
 export interface IServerResponse {
@@ -158,7 +158,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 qcode,
                 source,
                 altids,
-                parent,
+                parent: parent ?? undefined,
                 scheme: item.group.value,
                 aliases,
                 original_source,
