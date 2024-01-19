@@ -29,15 +29,15 @@ export function createTagsPatch(
                 }
             }
         });
-        const wasRemoved = (tag: ISubject) => {
-            if(oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode)) {
-                console.log('wasRemoved', tag);
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
+        // const wasRemoved = (tag: ISubject) => {
+        //     if(oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode)) {
+        //         console.log('wasRemoved', tag);
+        //         return true;
+        //     }
+        //     else {
+        //         return false;
+        //     }
+        // }
 
         // Add new values to the map, ensuring tag is defined, has a qcode, and a valid scheme
         newValues?.forEach((tag) => {
@@ -46,13 +46,17 @@ export function createTagsPatch(
             }
         });
 
+        // Determine removed tags
+        const removedTags = oldValues.filter((_, qcode) => !newValuesMap.has(qcode)).keySeq().toSet();
         // Has to be executed even if newValuesMap is empty in order
         // for removed groups to be included in the patch.
         patch[key] = oldValues
             .merge(newValuesMap)
-            .filter((tag) => wasRemoved(tag) !== true)
+            .filter((_, qcode) => !removedTags.has(qcode))
             .toArray();
 
+            console.log('removedTags', removedTags);
+            console.log(`final patch for ${key}`, patch[key]);
         });
         console.log('final patch', patch)
     return patch;
