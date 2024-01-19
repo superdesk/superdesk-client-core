@@ -5,13 +5,11 @@ import {
     convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator,
 } from 'draft-js';
-import {createStore} from 'redux';
+import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
-    forceUpdate,
     setAbbreviations,
     EditorLimit,
 } from '../actions';
@@ -22,7 +20,7 @@ import {
     FIELD_KEY_SEPARATOR,
 } from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
-import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
+import {getAnnotationsFromContentState, getAnnotationsFromItem} from '../helpers/editor3CustomData';
 import {
     initializeHighlights,
     prepareHighlightsForExport,
@@ -36,14 +34,17 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {IActiveCell, RICH_FORMATTING_OPTION} from 'superdesk-api';
-import {getFormattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {
+    formattingOptionsUnsafeToParseFromHTML,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {RICH_FORMATTING_OPTION, IActiveCell, IArticle, IDesk} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {getMiddlewares} from 'core/redux-utils';
+import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
+import {CompositeDecoratorCustom} from './composite-decorator-custom';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -71,7 +72,7 @@ export interface IEditorStore {
     editorState: EditorState;
     searchTerm: { pattern: string; index: number; caseSensitive: boolean };
     popup: { type: any };
-    readOnly: any;
+    readOnly: boolean;
     locked: boolean;
     showToolbar: any;
     singleLine: any;
@@ -99,9 +100,10 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
-export const getCustomDecorator = (
+export const getDecorators = (
     language?: string,
-    spellcheckWarnings: ISpellcheckWarningsByBlock = null,
+    spellcheckWarnings?: ISpellcheckWarningsByBlock,
+    limitConfig?: EditorLimit,
 ) => {
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
@@ -111,8 +113,59 @@ export const getCustomDecorator = (
         );
     }
 
-    return new CompositeDecorator(decorators);
+    if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+        decorators.push(
+            getTextLimitHighlightDecorator(limitConfig.chars),
+        );
+    }
+
+    return new CompositeDecoratorCustom(decorators);
 };
+
+/**
+ * @param spellcheck ng service or null
+ */
+export function getInitialSpellcheckerData(spellcheck, language: string): IEditorStore['spellchecking'] {
+    const spellcheckerDisabledInConfig = appConfig.features?.useTansaProofing === true;
+
+    if (spellcheck != null) {
+        if (!spellcheckerDisabledInConfig) {
+            spellcheck.setLanguage(language);
+        }
+    }
+
+    return {
+        language: language,
+        enabled:
+            !spellcheckerDisabledInConfig &&
+            spellcheck &&
+            spellcheck.isAutoSpellchecker,
+        inProgress: false,
+        warningsByBlock: {},
+    };
+}
+
+export function initializeSpellchecker(store, spellcheck) {
+    return new Promise<void>((resolve) => {
+        if (spellcheck != null) {
+            Promise.all([
+                spellcheck.getAbbreviationsDict(),
+
+                // after we have the dictionary, force update the editor to highlight typos
+                // if another action is dispatched, `dispatch(forceUpdate())` isn't needed
+                spellcheck.getDict(),
+            ]).then((res) => {
+                const [abbreviations] = res;
+
+                store.dispatch(setAbbreviations(abbreviations || {}));
+
+                setTimeout(() => {
+                    resolve();
+                });
+            });
+        }
+    });
+}
 
 /**
  * @name createEditorStore
@@ -125,20 +178,7 @@ export default function createEditorStore(
     props: IProps,
     spellcheck,
     isReact = false,
-) {
-    const spellcheckerDisabledInConfig =
-        get(appConfig, 'features.useTansaProofing') === true;
-    let disableSpellchecker = true;
-
-    if (spellcheck != null) {
-        disableSpellchecker =
-            spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
-
-        if (!spellcheckerDisabledInConfig) {
-            spellcheck.setLanguage(props.language);
-        }
-    }
-
+): Store<IEditorStore> {
     const content = getInitialContent(props);
 
     const onChangeValue = isReact
@@ -154,12 +194,10 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getCustomDecorator(),
+        getDecorators(),
     );
 
-    editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
-
-    const store = createStore<IEditorStore, any, any, any>(
+    const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
         reducers,
         {
             editorState,
@@ -176,15 +214,7 @@ export default function createEditorStore(
             editorFormat: props.editorFormat || [],
             onChangeValue: onChangeValue,
             item: props.item,
-            spellchecking: {
-                language: props.language,
-                enabled:
-                    !spellcheckerDisabledInConfig &&
-                    spellcheck &&
-                    spellcheck.isAutoSpellchecker,
-                inProgress: false,
-                warningsByBlock: {},
-            },
+            spellchecking: getInitialSpellcheckerData(spellcheck, props.language),
             suggestingMode: false,
             invisibles: false,
             svc: props.svc,
@@ -195,13 +225,7 @@ export default function createEditorStore(
         getMiddlewares(),
     );
 
-    if (spellcheck != null) {
-        // after we have the dictionary, force update the editor to highlight typos
-        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
-        spellcheck.getAbbreviationsDict().then((abbreviations) => {
-            store.dispatch(setAbbreviations(abbreviations || {}));
-        });
-    }
+    initializeSpellchecker(store, spellcheck);
 
     editor3Stores.push(store);
 
@@ -216,15 +240,39 @@ export function unsetStore() {
     return editor3Stores = [];
 }
 
+export function getAnnotationsForField(item: IArticle, fieldId: string) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromItem(item, fieldId),
+    );
+}
+
+export function getAnnotationsForStorage(contentState: ContentState) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromContentState(contentState),
+    );
+}
+
 /**
  * Generate item annotations field
  *
  * @param {Object} item
  */
-function generateAnnotations(item) {
+export function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
         getAnnotationsFromItem(item, 'body_html'),
     );
+}
+
+export function prepareEditor3StateForExport(contentState: ContentState): ContentState {
+    const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
+    const contentStateCleaned = removeInlineStyles(
+        contentState,
+        decorativeStyles,
+    );
+
+    return prepareHighlightsForExport(
+        EditorState.createWithContent(contentStateCleaned),
+    ).getCurrentContent();
 }
 
 /**
@@ -242,15 +290,8 @@ export function onChange(contentState, {plainText = false} = {}) {
         throw new Error('pathToValue is required');
     }
 
-    const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
-    const contentStateCleaned = removeInlineStyles(
-        contentState,
-        decorativeStyles,
-    );
-    const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
-        EditorState.createWithContent(contentStateCleaned),
-    ).getCurrentContent();
-    const rawState = convertToRaw(contentStateHighlightsReadyForExport);
+    const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
+    const rawState = convertToRaw(contentStatePreparedForExport);
 
     setFieldMetadata(
         this.item,
@@ -282,10 +323,10 @@ export function onChange(contentState, {plainText = false} = {}) {
     if (plainText) {
         objectToUpdate[
             fieldName
-        ] = contentStateHighlightsReadyForExport.getPlainText();
+        ] = contentStatePreparedForExport.getPlainText();
     } else {
         objectToUpdate[fieldName] = editor3StateToHtml(
-            contentStateHighlightsReadyForExport,
+            contentStatePreparedForExport,
         );
         generateAnnotations(this.item);
     }
@@ -318,11 +359,11 @@ export function getInitialContent(props): ContentState {
     }
 
     const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
-        (option: RICH_FORMATTING_OPTION) => Object.keys(getFormattingOptionsUnsafeToParseFromHTML()).includes(option),
+        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 
     /**
-     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * To avoid synchronization issues between html/plaintext values and draftjs object,
      * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
      */
     if (hasUnsafeFormattingOptions) {

@@ -17,6 +17,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
     WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
+    defaultSortOption: ISortOption,
     formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
     return class CrudManagerHttp extends React.Component<Props, ICrudManagerState<Entity>>
@@ -31,7 +32,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
             this.state = {
                 _items: null,
                 _meta: null,
-                activeSortOption: null,
+                activeSortOption: defaultSortOption ?? null,
                 activeFilters: {},
             };
 
@@ -78,9 +79,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 }));
         }
 
-        update(nextItem: Entity): Promise<Entity> {
-            const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
-
+        update(currentItem: Entity, nextItem: Entity): Promise<Entity> {
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
             return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
                 .then((res) => this.refresh().then(() => {
@@ -96,6 +95,14 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                 .then(() => this.refresh())
                 .then(() => {
                     notify.success(gettext('The item has been deleted.'));
+                })
+                .catch((reason) => {
+                    if (reason?.message != null) {
+                        notify.error(reason.message);
+                        return;
+                    }
+
+                    return Promise.reject(reason);
                 });
         }
 

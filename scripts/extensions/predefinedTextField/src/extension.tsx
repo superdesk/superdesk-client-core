@@ -1,23 +1,28 @@
-import {IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {ICustomFieldType, IExtension, IExtensionActivationResult} from 'superdesk-api';
 import {superdesk} from './superdesk';
-import {PredefinedFieldEditor} from './editor';
-import {PredefinedFieldConfig} from './config';
-import {PredefinedFieldPreview} from './preview';
+import {Editor} from './editor';
+import {Config} from './config';
+import {Preview} from './preview';
+import {IConfig, IUserPreferences, IValueOperational, IValueStorage} from './interfaces';
 
 const {gettext} = superdesk.localization;
+
+const predefinedField: ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> = {
+    id: 'predefined-text',
+    label: gettext('Predefined text field'),
+    editorComponent: Editor,
+    previewComponent: Preview,
+    configComponent: Config,
+    hasValue: (val) => typeof val === 'string' && val.length > 0,
+    getEmptyValue: () => '',
+};
 
 const extension: IExtension = {
     activate: () => {
         const result: IExtensionActivationResult = {
             contributions: {
                 customFieldTypes: [
-                    {
-                        id: 'predefined-text',
-                        label: gettext('Predefined text field'),
-                        editorComponent: PredefinedFieldEditor,
-                        previewComponent: PredefinedFieldPreview,
-                        configComponent: PredefinedFieldConfig,
-                    },
+                    predefinedField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
                 ],
             },
         };

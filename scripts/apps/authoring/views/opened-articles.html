@@ -25,11 +25,8 @@
         </li>
     </ul>
 
-    <div class="opened-articles-bar__create-new dropdown dropdown--dropleft strict" dropdown ng-if="privileges.archive">
-        <button class="btn btn--primary dropdown__toggle" dropdown__toggle>
-            <i class="icon-plus-sign"></i>{{ 'Create new' | translate }}
-        </button>
-        <div class="dropdown__menu dropdown--dropup" sd-content-create></div>
+    <div class="opened-articles-bar__create-new" ng-if="privileges.archive">
+        <sd-content-create custom-button="createNewButton"></sd-content-create>
     </div>
 </div>
 

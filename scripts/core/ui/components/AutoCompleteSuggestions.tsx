@@ -1,57 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import {createPopper, Modifier, Instance as PopperInstance} from '@popperjs/core/';
+import {createPopper, Instance as PopperInstance} from '@popperjs/core/';
 import maxSize from 'popper-max-size-modifier';
 import {isScrolledIntoViewVertically} from 'core/utils';
-
-const sameWidth: Modifier<any, any> = {
-    name: 'sameWidth',
-    enabled: true,
-    phase: 'beforeWrite',
-    requires: ['computeStyles'],
-    fn: ({state}) => {
-        state.styles.popper.width = `${state.rects.reference.width}px`;
-    },
-    effect: ({state}) => {
-        const {reference} = state.elements;
-
-        if (reference instanceof HTMLElement) {
-            state.elements.popper.style.width = `${reference.offsetWidth}px`;
-        }
-    },
-};
-
-export const applyMaxSize: Modifier<any, any> = {
-    name: 'applyMaxSize',
-    enabled: true,
-    phase: 'beforeWrite',
-    requires: ['maxSize'],
-    fn: ({state}) => {
-        const {height} = state.modifiersData.maxSize;
-
-        // subtracting 10 in order to make a gap between the edge of the viewport
-        state.styles.popper.maxHeight = `${height - 10}px`;
-    },
-};
-
-// Default "flip" modifier doesn't work well with "applyMaxSize"
-const flipCustomModifier: Modifier<any, any> = {
-    name: 'flipCustom',
-    enabled: true,
-    phase: 'main',
-    fn: ({state}) => {
-        if (state.placement === 'bottom') {
-            const availableSpaceAtTheBottom =
-                document.documentElement.clientHeight
-                - (state.rects.reference.y + state.rects.reference.height);
-
-            if (availableSpaceAtTheBottom < 120) {
-                state.placement = 'top';
-                state.reset = true;
-            }
-        }
-    },
-};
+import {applyMaxSize, flipCustomModifier, sameWidth} from 'core/popper-utils';
 
 interface IProps {
     referenceNode: HTMLElement;

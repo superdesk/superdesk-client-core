@@ -72,6 +72,7 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
                         .filter((type) => editorFormat.indexOf(type) > -1)
                         .map((type) => (
                             <StyleButton
+                                uiTheme={this.props.uiTheme}
                                 key={type}
                                 active={blockStyles[type] === blockType}
                                 label={type}

@@ -1,14 +1,18 @@
 import React from 'react';
+import {Map} from 'immutable';
 import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IArticleField, ITemplate} from 'superdesk-api';
+import {IArticle, IVocabulary, ITemplate, IFieldsData} from 'superdesk-api';
+import ng from 'core/services/ng';
+import {preferences} from 'api/preferences';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
 interface IProps {
     item: IArticle;
-    field: IArticleField;
+    field: IVocabulary;
     editable: boolean;
-    onChange: (field: IArticleField, value: any) => any;
+    onChange: (field: IVocabulary, value: any) => any;
     template?: ITemplate;
 }
 
@@ -18,14 +22,19 @@ interface IProps {
 // Internal state is used to fix this.
 interface IState {
     value: any;
+    preferences: {};
 }
 
 function getValue(props: IProps) {
     return get(props.item.extra, props.field._id);
 }
 
+function getFieldsData(props: IProps): IFieldsData {
+    return Map<string, any>(Object.entries(props.item.extra));
+}
+
 export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
-    onChangeThrottled: ((field: IArticleField, value: any) => void) & Cancelable;
+    onChangeThrottled: ((field: IVocabulary, value: any) => void) & Cancelable;
 
     // IProps['item'] is mutated when updating so prevProps from `componentDidUpdate`
     // can't be used to compare the previous value. This property is used instead.
@@ -36,21 +45,24 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.state = {
             value: getValue(props),
+            preferences: ng.get('preferencesService').getSync(),
         };
 
         this.lastPropsValue = this.state.value;
 
-        this.onChangeThrottled = throttle((field: IArticleField, value: any) => {
+        this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
             this.props.onChange(field, value);
         }, 300, {leading: false});
 
         this.setValue = this.setValue.bind(this);
     }
+
     setValue(value) {
         this.setState({value}, () => {
             this.onChangeThrottled(this.props.field, value);
         });
     }
+
     componentDidUpdate() {
         const propsValue = getValue(this.props);
         const propsValueChanged = JSON.stringify(propsValue) !== JSON.stringify(this.lastPropsValue);
@@ -62,6 +74,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.lastPropsValue = propsValue;
     }
+
     render() {
         const {item, field, editable} = this.props;
         const FieldType = getField(field.custom_field_type);
@@ -70,12 +83,14 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
             return null;
         }
 
+        const preferencesForFields = this.state.preferences[AUTHORING_FIELD_PREFERENCES] ?? {};
+
         return (
             <div>
                 {this.props.template != null && FieldType.templateEditorComponent != null ?
                     (
                         <FieldType.templateEditorComponent
-                            item={item}
+                            language={item.language}
                             value={this.state.value}
                             setValue={(value) => this.setValue(value)}
                             readOnly={!editable}
@@ -84,12 +99,33 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                     ) :
                     (
                         <FieldType.editorComponent
-                            item={item}
+                            editorId={field._id}
+                            language={item.language}
                             value={this.state.value}
-                            setValue={(value) => this.setValue(value)}
+                            fieldsData={getFieldsData(this.props)}
+                            onChange={(value) => this.setValue(value)}
                             readOnly={!editable}
                             config={field.custom_field_config}
                             fieldId={field._id}
+                            editorPreferences={preferencesForFields[field._id]}
+                            onEditorPreferencesChange={(val) => {
+                                const nextFieldPreferences = {
+                                    ...preferencesForFields,
+                                    [field._id]: val,
+                                };
+
+                                preferences.update(AUTHORING_FIELD_PREFERENCES, nextFieldPreferences);
+
+                                this.setState({
+                                    preferences: {
+                                        ...this.state.preferences,
+                                        [AUTHORING_FIELD_PREFERENCES]: nextFieldPreferences,
+                                    },
+                                });
+                            }}
+                            getVocabularyItems={() => []} // only used in authoring-react
+                            container={({children}) => (<div>{children}</div>)}
+                            item={item}
                         />
                     )
                 }

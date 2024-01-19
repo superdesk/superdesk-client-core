@@ -140,59 +140,6 @@
     inset-block-end: 32px;
 }
 
-
-// Medium editor
-// -------------------------------------------------
-.medium-editor-toolbar-actions {
-    li button {
-        height: 30px !important;
-        min-width: 40px !important;
-        padding-block-start: 10px !important;
-    }
-}
-.medium-toolbar-arrow-under:after {
-    inset-block-start: 40px !important;
-}
-
-.text-editor-info {
-    font-size: 89%;
-}
-
-.text-editor, .text-editor.medium-editor-element {
-    min-height: 20px;
-
-    .sderror {
-        border-block-end: 1px dotted #cc0000;
-        background-color: rgba(204,0,0,0.1);
-        line-height: normal;
-    }
-
-    .sdfindreplace {
-        background-color: rgba(0,0,0,0.1);
-    }
-
-    .sdfindreplace.sdactive {
-        background-color: rgba(255,230,0,1);
-    }
-
-    a {
-        color: var(--sd-colour-interactive);
-    }
-}
-
-.typing {
-    .text-editor {
-        .sderror, .typing .sdfindreplace {
-            border-block-end: none;
-            background-color: transparent;
-        }
-
-        &.clone {
-            display: none;
-        }
-    }
-}
-
 // Placeholders
 // -------------------------------------------------
 [contenteditable=true] {
@@ -482,6 +429,46 @@ $authoring-toolbar-spacing: 10px;
 // Authoring Header
 // -------------------------------------------------
 
+.created-modified-info {
+    display: flex;
+    align-items: center;
+
+    .created-modified-info--separator {
+        width: 1px;
+        height: 16px;
+        background-color: #DADADA;
+        margin-left: $authoring-toolbar-spacing;
+        margin-right: $authoring-toolbar-spacing;
+    }
+
+    dl, dt, dd {
+        font-size: 12px;
+        line-height: 1;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    dl {
+        display: flex;
+        align-items: center;
+    }
+
+    dt {
+        color: $sd-gray-text;
+    }
+    dd {
+        color: $sd-text;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    dd + dt,
+    dt + dt {
+        margin-left: 8px;
+    }
+}
+
 // ---- Sticky header ----
 .authoring-sticky {
     height:$sd-base-increment * 6;
@@ -681,6 +668,37 @@ $authoring-toolbar-spacing: 10px;
     --toggleBorderColor: transparent;
     @include header-toggle;
 
+    width: 37px;
+    height: 25px;
+    border: 0;
+    padding: 0 0 4px;
+    background-color: var(--authoringHeaderBG);
+    z-index: 3;
+    line-height: 0;
+    border-radius: 0 0 22px 22px;
+    box-shadow: 0 -2px 0 0 var(--authoringHeaderBG), 0 1px 3px 0 rgba(0,0,0,0.3);
+    @include transition(all ease-in 0.12s);
+    i {
+        opacity: 0.75;
+    }
+    &:hover {
+        height: 32px;
+        bottom: -32px;
+        padding-top: 2px;
+        i {
+            opacity: 1;
+        }
+    }
+    i {
+        height: 15px;
+        @include transition(all 0.5s);
+
+    }
+    &.active {
+        i {
+            @include rotate(180deg);
+        }
+    }
 }
 
 .authoring-header__row {
@@ -699,6 +717,22 @@ $authoring-toolbar-spacing: 10px;
     [class^="icon-"], [class*=" icon-"] {
         color: inherit;
     }
+}
+
+.char-count-base {
+    font-size: 11px;
+    font-style: italic;
+    color: $grayLight;
+
+    &.error {
+        color: $red;
+    }
+}
+
+.editor3-invalid-chars-error {
+    font-size: 12px;
+    font-style: italic;
+    color: $red;
 }
 
 .authoring-header__item {
@@ -727,15 +761,10 @@ $authoring-toolbar-spacing: 10px;
     }
 
     .char-count {
-        font-size: 11px;
-        font-style: italic;
-        color: $sd-text-label;
+        @extend .char-count-base;
         float: inline-end;
         margin-block-end: -16px;
         margin-inline-start: 5px;
-        &.error {
-            color: $red;
-        }
     }
 
     [sd-meta-terms] + .sd-invalid-text {
@@ -1803,3 +1832,11 @@ feature-image {
     margin-inline-start: 5px;
 }
 
+.input-field-error {
+    font-size: 1.2rem;
+    color: $errorText;
+}
+
+.form-label--invalid {
+    color: $errorText;
+}

@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {browser, element, by} from 'protractor';
+import {browser, element, by, ExpectedConditions as EC} from 'protractor';
 import {el, els, s, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
@@ -166,16 +166,17 @@ describe('internal destinations & generic-page-list', () => {
         el(['list-page--filters-form', 'gform-input--desk']).click();
         el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
-        browser.wait(ECE.hasElementCount(items, 2));
+
+        browser.wait(ECE.hasElementCount(items, 2), 1000);
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
 
-        browser.wait(ECE.attributeEquals(activeFilter, 'textContent', 'desk: Sports Desk'));
+        browser.wait(EC.textToBePresentInElement(activeFilter, 'Desk: Sports Desk'), 1000);
 
         el(['tag-label--remove'], null, activeFilter).click();
 
-        browser.wait(ECE.hasElementCount(items, 3));
+        browser.wait(ECE.hasElementCount(items, 3), 1000);
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
     });
 });

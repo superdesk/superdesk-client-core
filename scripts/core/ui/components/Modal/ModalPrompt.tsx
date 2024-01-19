@@ -1,15 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import Textarea from 'react-textarea-autosize';
-
-import {Modal} from './Modal';
-import {ModalHeader} from './ModalHeader';
-import {ModalBody} from './ModalBody';
-import {ModalFooter} from './ModalFooter';
 import {gettext} from 'core/utils';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
-export class ModalPrompt extends React.Component<any, any> {
+interface IPropsModalPrompt {
+    title: string;
+    initialValue?: string;
+    onSubmit(value: string): void;
+    close(): void;
+}
+
+export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -36,35 +37,36 @@ export class ModalPrompt extends React.Component<any, any> {
 
     render() {
         return (
-            <Modal>
-                <ModalHeader>{this.props.title}</ModalHeader>
-
-                <ModalBody>
-                    <Textarea
-                        value={this.state.value}
-                        onChange={this.updateValue}
-                        style={{maxHeight: 400, resize: 'none'}}
-                    />
-                </ModalBody>
-
-                <ModalFooter>
-                    <button className="btn" onClick={this.props.close}>{gettext('Cancel')}</button>
-                    <button
-                        className="btn btn--primary"
-                        onClick={this.submitValue}
-                        disabled={this.state.value.length < 1}
-                    >
-                        {gettext('Submit')}
-                    </button>
-                </ModalFooter>
+            <Modal
+                visible
+                zIndex={1050}
+                size="medium"
+                position="top"
+                headerTemplate={this.props.title}
+                footerTemplate={
+                    (
+                        <ButtonGroup align="end">
+                            <Button
+                                type="default"
+                                text={gettext('Cancel')}
+                                onClick={this.props.close}
+                            />
+                            <Button
+                                type="primary"
+                                text={gettext('Submit')}
+                                disabled={this.state.value.length < 1}
+                                onClick={this.submitValue}
+                            />
+                        </ButtonGroup>
+                    )
+                }
+            >
+                <Textarea
+                    value={this.state.value}
+                    onChange={this.updateValue}
+                    style={{maxHeight: 400, resize: 'none'}}
+                />
             </Modal>
         );
     }
 }
-
-ModalPrompt.propTypes = {
-    title: PropTypes.string.isRequired,
-    initialValue: PropTypes.string,
-    onSubmit: PropTypes.func.isRequired,
-    close: PropTypes.func.isRequired,
-};

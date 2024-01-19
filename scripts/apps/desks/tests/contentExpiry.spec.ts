@@ -1,6 +1,7 @@
 describe('content expiry', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     function setupElement(context, contentExpiry) {
         let scope, elem, iscope;

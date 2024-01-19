@@ -26,14 +26,14 @@ import {AuthoringWorkspaceService} from './services';
 import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
-import {FullPreviewDirective} from './directives/FullPreviewDirective';
-import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
-import {FullPreview} from '../preview/fullPreview';
 import {sdApi} from 'api';
 import {TextWithMentions} from 'apps/users/components';
+import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -87,6 +87,7 @@ angular.module('superdesk.apps.authoring', [
     'contenteditable',
     'decipher.history',
     'superdesk.config',
+    'angular-embed',
     mediaModule.name,
 ])
 
@@ -97,12 +98,19 @@ angular.module('superdesk.apps.authoring', [
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
 
-    .factory('history', svc.HistoryFactory)
-
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
-    .directive('sdSendItem', directive.SendItem)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
+    .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringAngularIntegration, ['itemId', 'action'], []))
+    .component(
+        'sdInteractiveArticleActionsPanelCombined',
+        reactToAngular1(InteractiveArticleActionsPanelCombined, [
+            'onError',
+            'handleUnsavedChanges',
+            'onDataChange',
+            'location',
+        ], []),
+    )
     .component('sdCharacterCountConfigButton', reactToAngular1(
         CharacterCountConfigButton, ['field'], [], 'display: inline',
     ))
@@ -123,9 +131,6 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
-    .directive('sdFullPreview', FullPreviewDirective)
-    .directive('sdFullPreviewItem', FullPreviewItemDirective)
-    .component('sdFullPreviewReact', reactToAngular1(FullPreview, ['item', 'editor', 'fields', 'hideMedia']))
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
@@ -259,8 +264,12 @@ angular.module('superdesk.apps.authoring', [
             .activity('move.item', {
                 label: gettext('Send to'),
                 icon: 'share-alt',
-                controller: ['data', 'send', (data, send) => {
-                    send.allAs([data.item], 'send_to');
+                controller: ['data', (data) => {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['send_to'],
+                        activeTab: 'send_to',
+                    });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
@@ -270,8 +279,11 @@ angular.module('superdesk.apps.authoring', [
             .activity('move.item.personal_space', {
                 label: gettext('Send to Personal Space'),
                 icon: 'share-alt',
-                controller: ['data', 'send', (data, send) => {
-                    send.oneAs([data.item][0], '', 'send_to_personal');
+                controller: ['data', (data) => {
+                    sdApi.article.sendItems(
+                        [data.item],
+                        {type: 'personal-space'},
+                    );
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
@@ -432,7 +444,15 @@ angular.module('superdesk.apps.authoring', [
             },
         });
     }])
-    .run(['keyboardManager', 'gettext', function(keyboardManager) {
+    .config(['embedServiceProvider', 'iframelyServiceProvider',
+        function(embedServiceProvider, iframelyServiceProvider) {
+            iframelyServiceProvider.setKey(appConfig.iframely.key);
+            // don't use noembed as first choice
+            embedServiceProvider.setConfig('useOnlyFallback', true);
+            // iframely respect the original embed for more services than 'embedly'
+            embedServiceProvider.setConfig('fallbackService', 'iframely');
+        }])
+    .run(['keyboardManager', 'embedService', function(keyboardManager) {
         keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));

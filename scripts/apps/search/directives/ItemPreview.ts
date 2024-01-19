@@ -41,7 +41,6 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
         scope: {
             item: '=',
             close: '&',
-            openLightbox: '=',
             openSingleItem: '=',
             hideActionsMenu: '=',
             showHistoryTab: '=',

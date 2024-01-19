@@ -2,11 +2,12 @@ import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
-import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
 import {getAssociationsByFieldId} from '../controllers/AssociationController';
 import {IArticle} from 'superdesk-api';
+import {getSuperdeskType} from 'utils/dragging';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 

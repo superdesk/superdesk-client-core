@@ -168,7 +168,7 @@
               <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
 
               <sd-preview-custom-field ng-if="field.field_type === 'custom'" item="selected.preview" field="field"></sd-preview-custom-field>
-              
+
               <ul class="text body-text" ng-if="field.field_type === 'urls'">
                 <li ng-repeat="item in selected.preview.extra[field._id] track by $index" order="{{editor[field._id].order}}">{{item.url}}<br>
                   <p class="nav-space description-text">{{item.description}}</p>
@@ -183,7 +183,7 @@
                 order="{{editor[field._id].order}}"
                 class="body preview-editor">
                 <div>
-                    <label class="preview-label" translate>{{field.display_name}}</label>
+                    <label class="preview-label">{{field.display_name}}</label>
                 </div>
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">

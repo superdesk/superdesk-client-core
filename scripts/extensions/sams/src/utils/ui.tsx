@@ -2,6 +2,8 @@
 import * as React from 'react';
 import {Provider} from 'react-redux';
 
+import {showModal} from '@superdesk/common';
+
 // Types
 import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT, IAssetItem, RENDITION} from '../interfaces';
 import {superdeskApi} from '../apis';
@@ -22,7 +24,7 @@ export function showModalConnectedToStore<T = any>(
         return Promise.reject('SAMS store has not been initialised');
     }
 
-    return superdeskApi.ui.showModal(
+    return showModal(
         ({closeModal}) => (
             <Provider store={store}>
                 <Component closeModal={closeModal} {...props ?? {}} />

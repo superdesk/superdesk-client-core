@@ -68,12 +68,14 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                 {this.props.children ? this.props.children : (
                     <>
                         <i className="big-icon--upload-alt sd-file-upload__icon" />
-                        <p>
+                        <span className="item-association__text-label">
                             {gettext(this.props.label)}
-                        </p>
-                        <button className="btn btn--hollow btn--primary">
-                            {gettext('Select Files')}
-                        </button>
+                        </span>
+                        <div>
+                            <span className="btn btn--hollow btn--primary">
+                                {gettext('Select Files')}
+                            </span>
+                        </div>
                     </>
                 )}
                 {this.props.onFileSelect != null && (
@@ -85,7 +87,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                         onChange={(event) => {
                             event.preventDefault();
                             if (this.input.current.files.length) {
-                                this.props.onFileSelect(this.input.current.files);
+                                this.props.onFileSelect(Array.from(this.input.current.files));
                             }
                             event.target.value = null; // reset to allow selecting same file again
                         }}

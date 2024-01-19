@@ -41,7 +41,14 @@ const extension: IExtension = {
                 contributions: {
                     globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
                     articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
-                    authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                    authoringTopbarWidgets: [
+                        {
+                            component: getDisplayMarkedUserComponent(superdesk),
+                            availableOffline: false,
+                            priority: 0.1,
+                            group: 'start',
+                        },
+                    ],
                     personalSpace: {
                         getSections: () => personalSpaceSections,
                     },

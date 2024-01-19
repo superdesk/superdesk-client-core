@@ -17,6 +17,9 @@ import {extensions} from 'appConfig';
 import {flatMap} from 'lodash';
 import {IEditor3AnnotationInputTab} from 'superdesk-api';
 import {stateToHTML} from 'draft-js-export-html';
+import {PositionInline} from 'core/ui/components/position-once';
+import {Card} from 'core/ui/components/Card';
+import {Spacer} from 'core/ui/components/Spacer';
 
 interface IProps {
     editorState: EditorState;
@@ -52,6 +55,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     static defaultProps: any;
     tabsRef: NavTabs;
     annotationInputTabsFromExtensions: Array<IEditor3AnnotationInputTab>;
+    positionerRef: null | PositionInline;
 
     constructor(props) {
         super(props);
@@ -92,6 +96,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                     ? activationResult.contributions.editor3.annotationInputTabs
                     : [],
         );
+
+        this.positionerRef = null;
     }
 
     getAnnotatedText(): string {
@@ -199,6 +205,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             this.setState({
                 loaded: true,
                 activeTabInitial: active,
+            }, () => {
+                this.positionerRef.setReady();
             });
         });
     }
@@ -283,51 +291,61 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         );
 
         return (
-            <div className="annotation-input">
-                <Dropdown open={true} scrollable={false}>
-                    {
-                        this.annotationInputTabsFromExtensions.length > 0
-                            ? (
-                                <NavTabs
-                                    tabs={[
-                                        {
-                                            label: gettext('New annotation'),
-                                            render: () => annotationInputComponent,
-                                        },
-                                        ...this.annotationInputTabsFromExtensions.map((tab) => {
-                                            const Component = tab.component;
+            <PositionInline
+                placement="bottom-start"
+                onClose={_hidePopups}
+                delayed={true}
+                ref={(component) => {
+                    this.positionerRef = component;
+                }}
+                zIndex={90}
+            >
+                <Card padding={10}>
+                    <div className="annotation-input" style={{width: 460}}>
+                        {
+                            this.annotationInputTabsFromExtensions.length > 0
+                                ? (
+                                    <NavTabs
+                                        tabs={[
+                                            {
+                                                label: gettext('New annotation'),
+                                                render: () => annotationInputComponent,
+                                            },
+                                            ...this.annotationInputTabsFromExtensions.map((tab) => {
+                                                const Component = tab.component;
 
-                                            return {
-                                                label: tab.label,
-                                                render: () => (
-                                                    <Component
-                                                        annotationText={this.getAnnotatedText()}
-                                                        onCancel={_hidePopups}
-                                                        annotationTypeSelect={annotationTypeSelect}
-                                                        annotationInputComponent={annotationInputComponent}
-                                                        mode={this.getAnnotationInputMode()}
-                                                        onApplyAnnotation={(html: string) => {
-                                                            this.onChange(
-                                                                convertToRaw(getContentStateFromHtml(html)),
-                                                                this.onSubmit,
-                                                            );
-                                                        }}
-                                                    />
-                                                ),
+                                                return {
+                                                    label: tab.label,
+                                                    render: () => (
+                                                        <Component
+                                                            annotationText={this.getAnnotatedText()}
+                                                            onCancel={_hidePopups}
+                                                            annotationTypeSelect={annotationTypeSelect}
+                                                            annotationInputComponent={annotationInputComponent}
+                                                            mode={this.getAnnotationInputMode()}
+                                                            onApplyAnnotation={(html: string) => {
+                                                                this.onChange(
+                                                                    convertToRaw(getContentStateFromHtml(html)),
+                                                                    this.onSubmit,
+                                                                );
+                                                            }}
+                                                        />
+                                                    ),
 
-                                            };
-                                        }),
-                                    ]}
-                                    active={this.state.activeTabInitial}
-                                    ref={(r) => {
-                                        this.tabsRef = r;
-                                    }}
-                                />
-                            )
-                            : <div>{annotationInputComponent}</div>
-                    }
-                </Dropdown>
-            </div>
+                                                };
+                                            }),
+                                        ]}
+                                        active={this.state.activeTabInitial}
+                                        ref={(r) => {
+                                            this.tabsRef = r;
+                                        }}
+                                    />
+                                )
+                                : <div>{annotationInputComponent}</div>
+                        }
+                    </div>
+                </Card>
+            </PositionInline>
         );
     }
 }

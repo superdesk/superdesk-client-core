@@ -1,11 +1,12 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
+import {showModal} from '@superdesk/common';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {updateMarkedUser, markForUserAndSendToNextStage} from './common';
 
 export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle) {
     const {isLocked, isLockedInOtherSession} = superdesk.entities.article;
 
-    superdesk.ui.showModal(getMarkForUserModal({
+    showModal(getMarkForUserModal({
         superdesk: superdesk,
         markForUser: (selectedUserId) => {
             updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId});

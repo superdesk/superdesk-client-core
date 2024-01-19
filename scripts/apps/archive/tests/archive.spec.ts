@@ -33,95 +33,6 @@ describe('content', () => {
         Object.assign(appConfig, testConfig);
     });
 
-    it('can spike items', inject((spike, api, $q) => {
-        spyOn(api, 'update').and.returnValue($q.when());
-        spike.spike(item);
-        expect(api.update).toHaveBeenCalledWith('archive_spike', item, {state: 'spiked'});
-    }));
-
-    it('can unspike items', inject((spike, api, send, $q, $rootScope) => {
-        var config = {desk: 'foo', stage: 'working'};
-
-        spyOn(api, 'update').and.returnValue($q.when());
-        spyOn(send, 'startConfig').and.returnValue($q.when(config));
-        spike.unspike(item);
-        $rootScope.$digest();
-        expect(api.update).toHaveBeenCalledWith('archive_unspike', item, {task: config});
-    }));
-
-    it('onSpike middleware is called',
-        (done) => inject((
-            superdesk,
-            activityService,
-            privileges,
-            modal,
-            lock,
-            session,
-            authoringWorkspace: AuthoringWorkspaceService,
-            config,
-            metadata,
-            preferencesService,
-        ) => {
-            const extensionDelay = 200;
-
-            const articleEntities = {
-                onSpike: () => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve({});
-                        }, extensionDelay);
-                    });
-                },
-            };
-
-            spyOn(articleEntities, 'onSpike').and.callThrough();
-            spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares
-
-            registerExtensions(
-                [
-                    {
-                        id: 'test-extension',
-                        load: () => Promise.resolve({default: {
-                            activate: () => {
-                                return Promise.resolve({
-                                    contributions: {
-                                        entities: {
-                                            article: articleEntities,
-                                        },
-                                    },
-                                });
-                            },
-                        }}),
-                    },
-                ],
-                superdesk,
-                modal,
-                privileges,
-                lock,
-                session,
-                authoringWorkspace,
-                config,
-                metadata,
-                {item: () => false},
-                preferencesService,
-            ).then(() => {
-                activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
-
-                setTimeout(() => {
-                    expect(articleEntities.onSpike).toHaveBeenCalled();
-                });
-
-                setTimeout(() => {
-                    expect(modal.createCustomModal).not.toHaveBeenCalled();
-                }, extensionDelay - 50);
-
-                setTimeout(() => {
-                    expect(modal.createCustomModal).toHaveBeenCalled();
-                    done();
-                }, extensionDelay + 50);
-            }).catch(done.fail);
-        }));
-
     describe('archive service', () => {
         beforeEach(inject((desks, session, preferencesService) => {
             session.identity = {_id: 'user:1'};
@@ -253,28 +164,6 @@ describe('content', () => {
             multi.toggle(items[0]);
             expect(multi.isSelected(items[0])).toEqual(true);
             expect(multi.isSelected({_id: 2})).toEqual(false);
-        }));
-    });
-
-    describe('item preview container', () => {
-        it('can handle preview:item intent', inject(($rootScope, $compile, superdesk) => {
-            var scope = $rootScope.$new();
-            var elem = $compile('<div sd-item-preview-container></div>')(scope);
-
-            scope.$digest();
-
-            var iscope = elem.isolateScope();
-
-            expect(iscope.item).toBe(null);
-
-            scope.$apply(() => {
-                superdesk.intent('preview', 'item', item);
-            });
-
-            expect(iscope.item).toBe(item);
-
-            iscope.close();
-            expect(iscope.item).toBe(null);
         }));
     });
 

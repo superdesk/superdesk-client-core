@@ -1,25 +1,28 @@
-import * as helpers from 'apps/authoring/authoring/helpers';
-import _ from 'lodash';
-import {merge, flatMap} from 'lodash';
-import postscribe from 'postscribe';
-import thunk from 'redux-thunk';
-import {gettext} from 'core/utils';
-import {logger} from 'core/services/logger';
-import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {getArticleSchemaMiddleware} from '..';
-import {isPublished} from 'apps/archive/utils';
-import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {copyJson} from 'core/helpers/utils';
-import {appConfig, extensions} from 'appConfig';
-import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
-import {addInternalEventListener} from 'core/internal-events';
-import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
-import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {sdApi} from 'api';
+import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {isPublished} from 'apps/archive/utils';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import * as helpers from 'apps/authoring/authoring/helpers';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {isMediaType} from 'core/helpers/item';
-import {confirmPublish} from '../services/quick-publish-modal';
+import {copyJson} from 'core/helpers/utils';
+import {addInternalEventListener} from 'core/internal-events';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {logger} from 'core/services/logger';
+import {gettext} from 'core/utils';
+import _, {merge} from 'lodash';
+import postscribe from 'postscribe';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import thunk from 'redux-thunk';
+import {getArticleSchemaMiddleware} from '..';
+import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {InitializeMedia} from '../services/InitializeMediaService';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
+import {confirmPublish} from '../services/quick-publish-modal';
+import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 
 /**
  * @ngdoc directive
@@ -56,6 +59,7 @@ AuthoringDirective.$inject = [
     'embedService',
     '$injector',
     'autosave',
+    'storage',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -83,6 +87,7 @@ export function AuthoringDirective(
     embedService,
     $injector,
     autosave,
+    storage,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -116,7 +121,7 @@ export function AuthoringDirective(
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
-            $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
+            $scope.showExportButton = sdApi.highlights.showHighlightExportButton($scope.origItem);
             $scope.openSuggestions = () => suggest.setActive();
             $scope.openCompareVersions = (item) => compareVersions.init(item);
             $scope.isValidEmbed = {};
@@ -142,22 +147,14 @@ export function AuthoringDirective(
                 }
             }, true);
 
-            function checkShortcutButtonAvailability(personal = false) {
-                if (personal) {
-                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
-                }
-                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
-            }
-
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
-            $scope.fullPreview = false;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
 
-            content.getTypes().then(() => {
-                $scope.content_types = content.types;
+            content.getTypes().then((result) => {
+                $scope.content_types = result;
             });
 
             /**
@@ -169,7 +166,9 @@ export function AuthoringDirective(
                         $scope.deskName = $scope.origItem.task.desk;
                         $scope.stage = $scope.origItem.task.stage;
                     } else {
-                        api('stages').getById($scope.origItem.task.stage)
+                        // gets the  whole stage object by Id
+                        api('stages')
+                            .getById($scope.origItem.task.stage)
                             .then((result) => {
                                 $scope.stage = result;
                             });
@@ -183,14 +182,22 @@ export function AuthoringDirective(
              * Get the Current Template for the item.
             */
             function getCurrentTemplate() {
-                if (typeof $scope.item?.template !== 'string') {
-                    return;
-                }
+                const item: IArticle | null = $scope.item;
 
-                api('content_templates').getById($scope.item.template)
-                    .then((result) => {
-                        $scope.currentTemplate = result;
-                    });
+                if (item.type === 'composite') {
+                    $scope.currentTemplate = {};
+                } else {
+                    if (typeof item?.template !== 'string') {
+                        logger.error(new Error('template must be present'));
+                        $scope.currentTemplate = {};
+                        return;
+                    }
+
+                    api('content_templates').getById(item.template)
+                        .then((result) => {
+                            $scope.currentTemplate = result;
+                        });
+                }
             }
 
             /**
@@ -208,30 +215,25 @@ export function AuthoringDirective(
                 }
             }
 
-            /**
-             * Check if it is allowed to publish on desk
-             * @returns {Boolean}
-             */
-            function canPublishOnDesk() {
-                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-                    privileges.userHasPrivileges({publish: 1});
-            }
-
             desks.initialize().then(() => {
                 getDeskStage();
                 getCurrentTemplate();
                 $scope.$watch('item', () => {
-                    $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
+                        && !sdApi.navigation.isPersonalSpace()
+                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
-                    && !isPersonalSpace && checkShortcutButtonAvailability();
+                    $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
-                    $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
-                        && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+                    $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
+                        && sdApi.article.canPublishOnDesk($scope.deskType)
+                        && authoringApiCommon.checkShortcutButtonAvailability(
+                            $scope.item,
+                            false,
+                            sdApi.navigation.isPersonalSpace(),
+                        );
 
-                    $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
-                        && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
+                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
@@ -304,57 +306,23 @@ export function AuthoringDirective(
             $scope.openFullPreview = function($event) {
                 if ($event.button === 0 && !$event.ctrlKey) {
                     $event.preventDefault();
-                    $scope.fullPreview = true;
+                    previewItems([$scope.item]);
                 }
-            };
-
-            $scope.closeFullPreview = function() {
-                $scope.fullPreview = false;
             };
 
             /**
              * Export the list of highlights as a text item.
              */
             $scope.exportHighlight = function(item) {
-                if ($scope.save_enabled()) {
-                    modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
-                        .then(() => {
-                            _exportHighlight(item._id);
-                        },
-                        );
-                } else {
-                    _exportHighlight(item._id);
-                }
+                sdApi.highlights.exportHighlight(item._id, $scope.save_enabled());
             };
 
-            function _exportHighlight(_id) {
-                api.generate_highlights.save({}, {package: _id})
-                    .then(authoringWorkspace.edit, (response) => {
-                        if (response.status === 403) {
-                            _forceExportHighlight(_id);
-                        } else {
-                            notify.error(gettext('Error creating highlight.'));
-                        }
-                    });
-            }
-
-            function _forceExportHighlight(_id) {
-                modal.confirm(gettext('There are items locked or not published. Do you want to continue?'))
-                    .then(() => {
-                        api.generate_highlights.save({}, {package: _id, export: true})
-                            .then(authoringWorkspace.edit, (response) => {
-                                notify.error(gettext('Error creating highlight.'));
-                            });
-                    });
-            }
-
             function _previewHighlight(_id) {
-                api.generate_highlights.save({}, {package: _id, preview: true})
-                    .then((response) => {
-                        $scope.highlight_preview = response.body_html;
-                    }, (data) => {
-                        $scope.highlight_preview = data.message;
-                    });
+                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
+                    $scope.highlight_preview = res;
+                }).catch((err) => {
+                    $scope.highlight_preview = err;
+                });
             }
 
             if ($scope.origItem.highlight) {
@@ -436,155 +404,19 @@ export function AuthoringDirective(
                 return true;
             }
 
-            /**
-             * Checks if associations is with rewrite_of item then open then modal to add associations.
-             * The user has options to add associated media to the current item and review the media change
-             * or publish the current item without media.
-             * User will be prompted in following scenarios:
-             * 1. Edit feature image and confirm media update is enabled.
-             * 2. Once item is published then no confirmation.
-             * 3. If current item is update and updated story has associations
-             */
-            function checkMediaAssociatedToUpdate() {
-                let rewriteOf = $scope.item.rewrite_of;
-
-                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
-                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
-                    !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
-                    $scope.item.associations && $scope.item.associations.featuremedia) {
-                    return $q.when(true);
-                }
-
-                return api.find('archive', rewriteOf)
-                    .then((rewriteOfItem) => {
-                        if (rewriteOfItem && rewriteOfItem.associations &&
-                            rewriteOfItem.associations.featuremedia) {
-                            return confirm.confirmFeatureMedia(rewriteOfItem);
-                        }
-                        return true;
-                    })
-                    .then((result) => {
-                        if (result && result.associations) {
-                            $scope.item.associations = result.associations;
-                            $scope.autosave($scope.item);
-                            return false;
-                        }
-
-                        return true;
-                    });
-            }
-
-            function getOnPublishMiddlewares()
-            : Array<IExtensionActivationResult['contributions']['entities']['article']['onPublish']> {
-                return flatMap(
-                    Object.values(extensions).map(({activationResult}) => activationResult),
-                    (activationResult) =>
-                        activationResult.contributions != null
-                        && activationResult.contributions.entities != null
-                        && activationResult.contributions.entities.article != null
-                        && activationResult.contributions.entities.article.onPublish != null
-                            ? activationResult.contributions.entities.article.onPublish
-                            : [],
-                );
-            }
-
-            function publishItem(orig, item) {
-                autosave.stop(item);
-
-                var action = $scope.action === 'edit' ? 'publish' : $scope.action;
-                const onPublishMiddlewares = getOnPublishMiddlewares();
-                let warnings: Array<{text: string}> = [];
-                const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
-
+            $scope.onError = (error: IPanelError) => {
                 $scope.error = {};
+                Object.assign($scope.error, error.fields);
+                $scope.$applyAsync();
+            };
 
-                return onPublishMiddlewares.reduce(
-                    (current, next) => {
-                        return current.then((result) => {
-                            if (result && result.warnings && result.warnings.length > 0) {
-                                warnings = warnings.concat(result.warnings);
-                            }
+            function publishItem(orig, item): Promise<boolean> {
+                autosave.stop(item);
+                const action: IAuthoringActionType = $scope.action != null
+                    ? ($scope.action === 'edit' ? 'publish' : $scope.action)
+                    : 'publish';
 
-                            return next(Object.assign({
-                                _id: _.get(orig, '_id'),
-                                type: _.get(orig, 'type'),
-                            }, item));
-                        });
-                    },
-                    initialValue,
-                )
-                    .then((result) => {
-                        if (result && result.warnings && result.warnings.length > 0) {
-                            warnings = warnings.concat(result.warnings);
-                        }
-
-                        return result;
-                    })
-                    .then(() => checkMediaAssociatedToUpdate())
-                    .then((result) => {
-                        if (result && warnings.length < 1) {
-                            return authoring.publish(orig, item, action);
-                        }
-                        return $q.reject(false);
-                    })
-                    .then((response: IArticle) => {
-                        notify.success(gettext('Item published.'));
-                        $scope.item = response;
-                        $scope.dirty = false;
-                        authoringWorkspace.close(true);
-                        return true;
-                    }, (response) => {
-                        let issues = _.get(response, 'data._issues');
-
-                        if (issues) {
-                            if (angular.isDefined(issues['validator exception'])) {
-                                var errors = issues['validator exception'];
-                                var modifiedErrors = errors.replace(/\[/g, '')
-                                    .replace(/\]/g, '')
-                                    .split(',');
-
-                                modifiedErrors.forEach((error) => {
-                                    const message = _.trim(error, '\' ');
-                                    // the message format is 'Field error text' (contains ')
-                                    const field = message.split(' ')[0];
-
-                                    $scope.error[field.toLocaleLowerCase()] = true;
-                                    notify.error(message);
-                                });
-
-                                if (issues.fields) {
-                                    Object.assign($scope.error, issues.fields);
-                                }
-
-                                $scope.$applyAsync(); // make $scope.error changes visible
-
-                                if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                                    authoring.open(item._id, true).then((res) => {
-                                        $scope.origItem = res;
-                                        $scope.dirty = false;
-                                        $scope.item = copyJson($scope.origItem);
-                                    });
-                                }
-                                return $q.reject(false);
-                            }
-
-                            if (issues.unique_name && issues.unique_name.unique) {
-                                notify.error(UNIQUE_NAME_ERROR);
-                                return $q.reject(false);
-                            }
-                        } else if (response && response.status === 412) {
-                            notifyPreconditionFailed();
-                            return $q.reject(false);
-                        } else if (warnings.length > 0) {
-                            warnings.forEach(
-                                (warning) => {
-                                    notify.error(warning.text);
-                                },
-                            );
-                            return $q.reject(false);
-                        }
-                        return $q.reject(false);
-                    });
+                return sdApi.article.publishItem_legacy(orig, item, $scope, action);
             }
 
             function notifyPreconditionFailed() {
@@ -803,7 +635,7 @@ export function AuthoringDirective(
             // Close the current article, create an update of the article and open it in the edit mode.
             $scope.closeAndContinue = function() {
                 $scope.close().then(() => {
-                    authoring.rewrite($scope.item);
+                    sdApi.article.rewrite($scope.item);
                 });
             };
 
@@ -819,10 +651,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // returned promise used by superdesk-fi
-                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
-                    authoringWorkspace.close(true);
-                    $rootScope.$broadcast('item:close', $scope.origItem._id);
-                });
+                return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
 
             /**
@@ -839,13 +668,6 @@ export function AuthoringDirective(
              */
             $scope.minimize = function() {
                 authoringWorkspace.close(true);
-            };
-
-            $scope.closeOpenNew = function(createFunction, paramValue) {
-                _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.dirty, true).then(() => {
-                    createFunction(paramValue);
-                });
             };
 
             /**
@@ -865,6 +687,12 @@ export function AuthoringDirective(
 
                 return lock.unlock($scope.origItem)
                     .catch(() => $scope.origItem); // ignore failed unlock
+            };
+
+            $scope.handleUnsavedChangesReact = (items: Array<IArticle>) => {
+                return $scope.beforeSend().then(() => {
+                    return [$scope.origItem];
+                });
             };
 
             /**
@@ -1020,31 +848,10 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = $scope.item.task.desk;
-
-                if (currentDeskId == null) {
-                    throw new Error('currentDeskId is null');
-                }
-
-                var stageIndex, stageList = desks.deskStages[currentDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
-
-                for (var i = 0; i < stageList.length; i++) {
-                    if (stageList[i]._id === $scope.stage._id) {
-                        selectedStage = stageList[i];
-                        stageIndex = i + 1 === stageList.length ? 0 : i + 1;
-                        break;
-                    }
-                }
-
-                $rootScope.$broadcast('item:nextStage', {
-                    stage: stageList[stageIndex],
-                    itemId: $scope.item._id,
-                    selectedStage: selectedStage,
-                    selectedDesk: selectedDesk,
-                    item: $scope.item,
+                sdApi.article.sendItemToNextStage($scope.item).then(() => {
+                    $scope.$applyAsync();
+                    $scope.close();
                 });
-                $scope.close();
             };
 
             // Returns true if the given text is an URL
@@ -1210,7 +1017,10 @@ export function AuthoringDirective(
 
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
-                content.getTypes().then(() => {
+                content.getTypes().then((result) => {
+                    // Update scope with new content types
+                    $scope.content_types = result;
+
                     _.forEach($scope.content_types, (profile) => {
                         if ($scope.item.profile === profile._id && profile.schema) {
                             _.forEach(profile.schema, (schema, fieldId) => {

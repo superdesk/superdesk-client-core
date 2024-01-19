@@ -7,20 +7,19 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {metadata} from './helpers/metadata';
 import {assertToastMsg} from './helpers/utils';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content fields')).click();
-        contentProfiles.disableField('Abstract');
+        contentProfiles.editContentFields();
         contentProfiles.update();
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
         expect(templates.getContentProfile()).toEqual('Simple');
         templates.cancel();
 
@@ -38,7 +37,6 @@ describe('Content profiles', () => {
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(1);
         expect(templates.getContentProfile()).toEqual('');
         templates.cancel();
     });
@@ -46,11 +44,8 @@ describe('Content profiles', () => {
     it('displays defined fields in authoring', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content fields')).click();
-        contentProfiles.disableField('Abstract');
-        element(by.buttonText('Header fields')).click();
         contentProfiles.setRequired('Ed. Note');
         contentProfiles.update();
         templates.openTemplatesSettings();
@@ -62,7 +57,6 @@ describe('Content profiles', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
 
         // publish of the required field will fail
         authoring.setHeaderSluglineText('Story1 slugline');
@@ -90,16 +84,16 @@ describe('Content profiles', () => {
         expect(metadata.items().count()).toBe(1);
 
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
 
-        element(by.buttonText('Content fields')).click();
+        contentProfiles.editContentFields();
 
-        const btns = element.all(by.partialButtonText(FIELD_LABEL));
+        const buttons = element.all(by.partialButtonText(FIELD_LABEL));
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(0);
+        browser.wait(ECE.hasElementCount(buttons, 0));
 
         contentProfiles.openAddFieldDropdown();
 
-        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(1);
+        browser.wait(ECE.hasElementCount(buttons, 1));
     });
 });

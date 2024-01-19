@@ -29,7 +29,7 @@
                         </div>
                         <div class="boxed-list__item-content-row">
                             <span ng-if="item.takes && item.takes.sequence > 1" class="state-label takes" translate>Takes</span>
-                            <span class="state-label state-{{item.state}}" translate>{{item.state | removeLodash}}</span>
+                            <span class="state-label state-{{item.state}}">{{item.state | removeLodash}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>

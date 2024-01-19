@@ -6,6 +6,7 @@ import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
 import {blockRenderer} from '../blockRenderer';
+import {CustomEditor3Entity} from 'core/editor3/constants';
 
 const editorState = EditorState.createEmpty();
 
@@ -169,7 +170,10 @@ describe('editor3.blockRenderer', () => {
 
     it('should return non-null as component for recognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
-        const contentState = {getEntity: () => ({getType: () => 'EMBED', getData: () => ({data: {html: 'abc'}})})};
+        const contentState = {getEntity: () => ({
+            getType: () => CustomEditor3Entity.EMBED,
+            getData: () => ({data: {html: 'abc'}}),
+        })};
         const component = blockRenderer(block)
             .component({block, contentState});
         const store = mockStore().store as unknown as Store;

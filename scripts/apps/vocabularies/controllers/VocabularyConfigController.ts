@@ -3,7 +3,7 @@ import {IVocabulary, IVocabularyItem, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext, downloadFile} from 'core/utils';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {UploadConfig} from '../components/UploadConfigModal';
 
 function getOther() {

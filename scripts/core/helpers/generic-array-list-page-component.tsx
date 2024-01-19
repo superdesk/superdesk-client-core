@@ -32,11 +32,10 @@ function getItemsWithMeta(_items) {
     };
 }
 
-export class GenericArrayListPageComponent<T>
-    extends React.Component<IPropsGenericArrayListPage<T>, IState>
+export class GenericArrayListPageComponent<T, P>
+    extends React.Component<IPropsGenericArrayListPage<T, P>, IState>
     implements ICrudManagerMethods<T> {
-    private lastId: number;
-    constructor(props: IPropsGenericArrayListPage<T>) {
+    constructor(props: IPropsGenericArrayListPage<T, P>) {
         super(props);
 
         this.state = {
@@ -54,8 +53,6 @@ export class GenericArrayListPageComponent<T>
         this.goToPage = this.goToPage.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
-
-        this.lastId = 0;
     }
 
     handleChange(value: Array<T>) {
@@ -63,7 +60,13 @@ export class GenericArrayListPageComponent<T>
     }
 
     create(item: T): Promise<T> {
-        const result: Array<T> = [...this.props.value, item];
+        const i = this.props.newItemIndex ?? this.props.value.length;
+
+        const result: Array<T> = [
+            ...this.props.value.slice(0, i),
+            item,
+            ...this.props.value.slice(i),
+        ];
 
         return new Promise((resolve) => {
             resolve(item);
@@ -82,7 +85,7 @@ export class GenericArrayListPageComponent<T>
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    update(nextItem: T): Promise<T> {
+    update(_item: T, nextItem: T): Promise<T> {
         this.handleChange(this.props.value.map(
             (item) => this.props.getId(item) === this.props.getId(nextItem) ? nextItem : item),
         );
@@ -119,8 +122,7 @@ export class GenericArrayListPageComponent<T>
     render() {
         return (
             <GenericListPageComponent
-                {...omit(this.props, ['value', 'onChange'])} // omit own props
-                disallowPagination={true}
+                {...omit(this.props, ['value', 'onChange', 'newItemIndex'])} // omit own props
                 labelForItemSaveButton={gettext('Apply')}
                 crudManager={{
                     read: this.read,

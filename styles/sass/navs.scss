@@ -405,6 +405,12 @@
     }
 }
 
+.navbtn--white {
+    [class^="icon-"], [class*=" icon-"] {
+        color: white!important;
+    }
+}
+
 .subnav__stretch-bar {
     display: flex;
     flex-grow: 1;

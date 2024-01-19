@@ -25,7 +25,7 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
         return (
             <div className="sd-line-input sd-line-input--no-label sd-line-input--is-select">
                 <select
-                    value={selectedValue}
+                    value={selectedValue ?? ''}
                     onChange={(event) => {
                         const _qcode = event.target.value;
 
@@ -35,7 +35,7 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
                     tabIndex={tabIndex}
                     className="sd-line-input__select"
                 >
-                    <option value="" disabled selected hidden>{gettext('-- Choose --')}</option>
+                    <option value="" disabled hidden>{gettext('-- Choose --')}</option>
                     {
                         optionsWithTranslations.map(({label, value}) => (
                             <option key={value} value={value}>{label}</option>

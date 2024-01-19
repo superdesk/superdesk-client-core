@@ -52,6 +52,18 @@ export function omit<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...ke
     return picked;
 }
 
+export function filterObject<T extends {}>(obj: T, filterFn: (value, key) => boolean): Partial<T> {
+    const result = {} as T;
+
+    for (const [key, value] of Object.entries(obj)) {
+        if (filterFn(value, key) === true) {
+            result[key] = value;
+        }
+    }
+
+    return result;
+}
+
 export function isImage(e: Element): e is HTMLImageElement {
     return e.tagName === 'IMG';
 }
@@ -93,21 +105,6 @@ export function copyJson(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-// will help downloading binary file
-export function downloadBlob(data: BinaryType, mimetype: string, filename: string): void {
-    const a = document.createElement('a');
-
-    document.body.appendChild(a);
-    const blob = new Blob([data], {type: mimetype}),
-        url = window.URL.createObjectURL(blob);
-
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-}
-
 export function copyString(data) {
     var element = document.createElement('textarea');
 
@@ -118,21 +115,15 @@ export function copyString(data) {
     document.body.removeChild(element);
 }
 
-/** Does not mutate the original array. */
-export function arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T> {
-    if (
-        from < 0 || from > arr.length - 1
-        || to < 0 || to > arr.length - 1
-    ) {
-        console.error('Out of range.');
-        return arr;
-    }
+/**
+ * Returns 'black' or 'white' depending on contrast of the background color.
+ * @param backgroundColor - 6 characters long hex code starting with #
+ */
+export function getTextColor(backgroundColor: string): 'black' | 'white' {
+    const r = parseInt(backgroundColor.substr(1, 2), 16);
+    const g = parseInt(backgroundColor.substr(3, 2), 16);
+    const b = parseInt(backgroundColor.substr(5, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
-    const copy = [...arr];
-
-    const item = copy.splice(from, 1)[0];
-
-    copy.splice(to, 0, item);
-
-    return copy;
+    return (yiq >= 128) ? 'black' : 'white';
 }

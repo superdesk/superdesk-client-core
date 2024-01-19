@@ -12,7 +12,7 @@ import {partition} from 'lodash';
 
 interface IProps {
     desks: Array<IDesk>;
-    usersById: IStoreState['users']['entities'];
+    usersById: IStoreState['entities']['users'];
     onUserSelect(user: IUser): void;
 }
 
@@ -163,7 +163,7 @@ class UsersComponent extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IStoreState) => ({
-    usersById: state.users.entities,
+    usersById: state.entities.users,
 });
 
 export default connect(mapStateToProps)(UsersComponent);

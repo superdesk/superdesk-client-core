@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
@@ -38,5 +39,29 @@ export function CharacterCount(props: IProps) {
                 )}
             </span>
         </>
+    );
+}
+
+/**
+ * Unlike {@see CharacterCount}, this version does not use floats/margins
+ * It should replace the former version when angular based authoring is removed
+ * from the codebase.
+ */
+export function CharacterCount2(props: IProps) {
+    const {limit} = props;
+    const numChars = getEditorFieldCharactersCount(props.item, props.html);
+    const highlightLimit = limit && numChars > limit;
+
+    return (
+        <span className={classNames('char-count-base', {error: highlightLimit})}>
+            {numChars}
+            {limit && (
+                <span className={classNames({error: highlightLimit})}>
+                    /{limit}
+                </span>
+            )}
+            &nbsp;
+            {gettext('characters')}
+        </span>
     );
 }

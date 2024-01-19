@@ -238,8 +238,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Name')}
                                         type="text"
+                                        label={gettext('Name')}
                                         value={this.state.localSearchParams.name ?? ''}
                                         onChange={this.onChange.name}
                                     />
@@ -248,8 +248,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Filename')}
                                         type="text"
+                                        label={gettext('Filename')}
                                         value={this.state.localSearchParams.filename ?? ''}
                                         onChange={this.onChange.filename}
                                     />
@@ -258,8 +258,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Description')}
                                         type="text"
+                                        label={gettext('Description')}
                                         value={this.state.localSearchParams.description ?? ''}
                                         onChange={this.onChange.description}
                                     />

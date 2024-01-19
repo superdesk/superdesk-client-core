@@ -1,6 +1,6 @@
-DraggableItem.$inject = ['dragitem'];
+import {dragStart} from 'utils/dragging';
 
-export function DraggableItem(dragitem) {
+export function DraggableItem() {
     return {
         link: function(scope, elem) {
             if (scope.item) {
@@ -8,7 +8,7 @@ export function DraggableItem(dragitem) {
 
                 // set item data on event
                 elem.on('dragstart', (event) => {
-                    dragitem.start(event, scope.item);
+                    dragStart(event, scope.item);
                 });
 
                 scope.$on('$destroy', () => {

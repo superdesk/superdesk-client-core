@@ -2,7 +2,7 @@ import React from 'react';
 import {gettext, gettextPlural} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {TranslationsListWrapper} from '../translations-list-wrapper';
-import {showPopup} from 'core/ui/components/popup';
+import {showPopup} from 'core/ui/components/popupNew';
 
 interface IProps {
     item: IArticle;

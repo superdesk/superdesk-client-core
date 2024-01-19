@@ -3,3 +3,4 @@ monitoring can display the item in Desk Output when it's published in a producti
 authoring related item widget can open published item
 send warns that there are spelling mistakes
 master_desk show content view - edit item
+can save and use language preferences

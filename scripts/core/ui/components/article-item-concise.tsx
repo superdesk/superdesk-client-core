@@ -1,7 +1,8 @@
 import React from 'react';
+import {IconButton, Menu} from 'superdesk-ui-framework/react';
 
 import {IArticle} from 'superdesk-api';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
+import {gettext} from 'core/utils';
 
 import {slugline as Slugline} from 'apps/search/components/fields/slugline';
 import {headline as Headline} from 'apps/search/components/fields/headline';
@@ -13,16 +14,17 @@ import {ListItemColumn, ListItemRow, ListItem} from 'core/components/ListItem';
 
 interface IProps {
     article: IArticle;
-    datetime?: any;
+    actionsMenu?: React.ComponentProps<typeof Menu>['items'];
+    backgroundColor?: string;
 }
 
-class ArticleItemConciseComponent extends React.PureComponent<IProps> {
+export class ArticleItemConcise extends React.PureComponent<IProps> {
     render() {
-        const {article} = this.props;
+        const {article, backgroundColor} = this.props;
 
         return (
-            <div>
-                <ListItem>
+            <div style={{backgroundColor: backgroundColor}}>
+                <ListItem noBackground={backgroundColor != null}>
                     <ListItemColumn>
                         <div className="list-field type-icon">
                             <TypeIcon
@@ -61,10 +63,30 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                             </ListItemColumn>
                         </ListItemRow>
                     </ListItemColumn>
+
+                    {
+                        this.props.actionsMenu != null && (
+                            <ListItemColumn>
+                                <div>
+                                    <Menu
+                                        items={this.props.actionsMenu}
+                                    >
+                                        {(toggle) => (
+                                            <IconButton
+                                                icon="dots-vertical"
+                                                ariaValue={gettext('Item actions')}
+                                                onClick={(event) => {
+                                                    toggle(event);
+                                                }}
+                                            />
+                                        )}
+                                    </Menu>
+                                </div>
+                            </ListItemColumn>
+                        )
+                    }
                 </ListItem>
             </div>
         );
     }
 }
-
-export const ArticleItemConcise = connectServices<IProps>(ArticleItemConciseComponent, ['datetime']);

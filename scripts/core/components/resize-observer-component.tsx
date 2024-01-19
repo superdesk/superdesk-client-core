@@ -1,22 +1,29 @@
 import React from 'react';
 
-interface IDimensions {
+interface IResizeObserverDimensions {
     width: number;
+    height: number;
 }
 
-interface IProps {
-    children: (props: IDimensions) => JSX.Element;
+interface IPropsResizeObserverComponent {
+    style?: React.CSSProperties;
+    position?: 'relative' | 'absolute';
+    children: (props: IResizeObserverDimensions) => JSX.Element;
 }
 
 interface IState {
-    dimensions: IDimensions | 'not-initialized';
+    dimensions: IResizeObserverDimensions | 'not-initialized';
 }
 
-export class ResizeObserverComponent extends React.PureComponent<IProps, IState> {
-    el: HTMLDivElement;
-    observerInstance: any;
+/**
+ * Higher order component for dynamically retrieving element dimensions.
+ * TODO: replace with the one from ui-framework
+ */
+export class ResizeObserverComponent extends React.PureComponent<IPropsResizeObserverComponent, IState> {
+    private el: HTMLDivElement;
+    private observerInstance: ResizeObserver;
 
-    constructor(props: IProps) {
+    constructor(props: IPropsResizeObserverComponent) {
         super(props);
 
         this.state = {
@@ -29,6 +36,7 @@ export class ResizeObserverComponent extends React.PureComponent<IProps, IState>
             this.setState({
                 dimensions: {
                     width: Math.floor(entries[0].contentRect.width),
+                    height: Math.floor(entries[0].contentRect.height),
                 },
             });
         });
@@ -48,12 +56,31 @@ export class ResizeObserverComponent extends React.PureComponent<IProps, IState>
                 ref={(el) => {
                     this.el = el;
                 }}
+                style={{
+                    position: 'relative',
+                    ...this.props.style,
+                }}
             >
-                {
-                    dimensions === 'not-initialized'
-                        ? null
-                        : this.props.children(dimensions)
-                }
+                {/**
+                 * Absolute positioning is needed for accurate calculation.
+                 * Otherwise, initial calculation would work well,
+                 * but if parent of `ResizeObserverComponent` is resized down,
+                 * it would include its own size(which is based on the initial result from this component),
+                 * including children, into calculation and would produce a wrong result.
+                */}
+                <div
+                    style={
+                        this.props.position === 'absolute'
+                            ? {position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}
+                            : undefined
+                    }
+                >
+                    {
+                        dimensions === 'not-initialized'
+                            ? null
+                            : this.props.children(dimensions)
+                    }
+                </div>
             </div>
         );
     }

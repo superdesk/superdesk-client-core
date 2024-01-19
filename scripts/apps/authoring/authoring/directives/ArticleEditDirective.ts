@@ -35,6 +35,7 @@ interface IScope extends ng.IScope {
     articleEdit: any;
     dirty: boolean;
     extra: any;
+    refreshTrigger: number;
     autosave(item: any): any;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
@@ -85,8 +86,6 @@ ArticleEditDirective.$inject = [
     '$filter',
     'superdesk',
     'session',
-    'history',
-    '$interpolate',
     'suggest',
     'renditions',
 ];
@@ -96,8 +95,6 @@ export function ArticleEditDirective(
     $filter,
     superdesk,
     session,
-    history,
-    $interpolate,
     suggest,
     renditions,
 ) {
@@ -146,15 +143,6 @@ export function ArticleEditDirective(
                         return false;
                     }
                 });
-
-                // watch item and save every change in history in order to perform undo/redo later
-                // ONLY for editor2 (with blocks)
-                try {
-                    angular.module('superdesk.apps.editor2');
-                    history.watch('item', mainEditScope || scope);
-                } catch (e) {
-                    // no-op
-                }
 
                 scope.$on('History.undone', triggerAutosave);
                 scope.$on('History.redone', triggerAutosave);
@@ -437,6 +425,8 @@ export function ArticleEditDirective(
                         autosave.save(scope.item, scope.origItem);
                         scope.refresh();
                     }
+
+                    scope.refresh(); // reload footer editorState from HTML that was set here
 
                     // first option should always be selected, as multiple helplines could be added in footer
                     _.defer(() => {

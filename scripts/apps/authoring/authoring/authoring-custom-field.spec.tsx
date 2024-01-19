@@ -5,6 +5,7 @@ import {ICustomFieldType, IEditorComponentProps, IArticle, IVocabulary} from 'su
 import {registerInternalExtension, unregisterInternalExtension} from 'core/helpers/register-internal-extension';
 import {testArticle} from 'test-data/test-article';
 import {testVocabulary} from 'test-data/test-vocabulary';
+import ng from 'core/services/ng';
 
 const vocabularyId = 'vocabulary_id';
 
@@ -22,7 +23,7 @@ const vocabulary: IVocabulary = {
     custom_field_type: 'test-custom-authoring-field',
 };
 
-class TestEditorComponent extends React.PureComponent<IEditorComponentProps<string, never>> {
+class TestEditorComponent extends React.PureComponent<IEditorComponentProps<string, never, never>> {
     render() {
         return (
             <div>
@@ -30,7 +31,7 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
                     type="text"
                     value={this.props.value}
                     onChange={(event) => {
-                        this.props.setValue(event.target.value);
+                        this.props.onChange(event.target.value);
                     }}
                 />
             </div>
@@ -38,21 +39,25 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
     }
 }
 
-const customField: ICustomFieldType<string, string> = {
+const customField: ICustomFieldType<string, string, string, never> = {
     id: 'test-custom-authoring-field',
     label: 'Test Field',
     editorComponent: TestEditorComponent,
     previewComponent: () => null,
+    hasValue: (x) => x != null,
+    getEmptyValue: () => null,
 };
 
 describe('custom authoring field', () => {
-    beforeEach(() => {
+    beforeEach(inject(($injector) => {
+        ng.register($injector);
+
         registerInternalExtension('test-authoring-custom-field', {
             contributions: {
                 customFieldTypes: [customField],
             },
         });
-    });
+    }));
 
     afterEach(() => {
         unregisterInternalExtension('test-authoring-custom-field');

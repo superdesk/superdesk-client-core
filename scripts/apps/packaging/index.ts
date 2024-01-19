@@ -15,6 +15,7 @@ import {PackagesService} from './services';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 /**
  * @ngdoc module
@@ -108,8 +109,12 @@ angular.module('superdesk.apps.packaging', [
             .activity('movepackage', {
                 label: gettext('Send package to'),
                 icon: 'share-alt',
-                controller: ['data', 'send', (data, send) => {
-                    send.allAs([data.item], 'send_to');
+                controller: ['data', (data) => {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['send_to'],
+                        activeTab: 'send_to',
+                    });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>

@@ -1,9 +1,10 @@
 
+import {noop} from 'lodash';
 import React from 'react';
-import {IArticle, IAuthoringSideWidget} from 'superdesk-api';
+import {IArticle, IArticleSideWidget} from 'superdesk-api';
 
 interface IProps {
-    widget: IAuthoringSideWidget;
+    widget: IArticleSideWidget;
     article: IArticle;
 }
 
@@ -16,7 +17,23 @@ export class WidgetReact extends React.PureComponent<IProps> {
         const key = this.props.article.lock_session ?? Math.random().toString();
 
         return (
-            <Component key={key} article={this.props.article} />
+            <Component
+                key={key}
+                article={this.props.article}
+
+                // below props are only relevant for authoring-react
+                readOnly={undefined}
+                contentProfile={undefined}
+                fieldsData={undefined}
+                onFieldsDataChange={noop}
+                handleUnsavedChanges={undefined}
+
+                // only used in widgets compatible with authoring-react
+                authoringStorage={null}
+                fieldsAdapter={null}
+                storageAdapter={null}
+                getLatestArticle={() => ({} as IArticle)}
+            />
         );
     }
 }

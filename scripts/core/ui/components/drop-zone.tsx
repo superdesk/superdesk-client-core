@@ -97,7 +97,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                         onChange={(event) => {
                             event.preventDefault();
                             if (this.input.current.files.length) {
-                                this.props.onFileSelect(this.input.current.files);
+                                this.props.onFileSelect(Array.from(this.input.current.files));
                             }
                             event.target.value = null; // reset to allow selecting same file again
                         }}

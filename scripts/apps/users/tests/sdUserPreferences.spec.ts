@@ -43,6 +43,15 @@ describe('sdUserPreferences directive', () => {
                 category: 'article_defaults',
                 place: '',
             },
+            'editor:theme': {
+                type: 'string',
+                theme: JSON.stringify({
+                    theme: 'default',
+                    headline: 'medium',
+                    abstract: 'medium',
+                    body: 'medium',
+                }),
+            },
         };
 
         metadata.values = {
