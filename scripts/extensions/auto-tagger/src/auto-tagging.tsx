@@ -69,30 +69,29 @@ export function hasConfig(key: string, semaphoreFields: ISemaphoreFields) {
 // Runs when clicking the "Run" button. Returns the tags from the semaphore service
 export function getAutoTaggingData(data: IEditableData, semaphoreConfig: any) {
     const items = data.changes.analysis;
-    console.log('items', items);
     const isEntity = (tag: ITagUi) => tag.group && entityGroups.has(tag.group.value);
-    console.log('isEntity', isEntity);
+
     const entities = items.filter((tag) => isEntity(tag));
-    console.log('entities', entities);
+
     const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-    console.log('entitiesGrouped', entitiesGrouped);
+
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, semaphoreConfig.entities))
         .sortBy((_, key) => semaphoreConfig.entities[key].order,
             (a, b) => a - b);
-    console.log('entitiesGroupedAndSortedByConfig', entitiesGroupedAndSortedByConfig);
+
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
         .filter((_, key) => !hasConfig(key, semaphoreConfig.entities))
         .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
             (a, b) => a.localeCompare(b));
-    console.log('entitiesGroupedAndSortedNotInConfig', entitiesGroupedAndSortedNotInConfig);
+
     const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
         .concat(entitiesGroupedAndSortedNotInConfig);
-    console.log('entitiesGroupedAndSorted', entitiesGroupedAndSorted);
+
     const others = items.filter((tag) => isEntity(tag) === false);
-    console.log('others', others);
+
     const othersGrouped = others.groupBy((tag) => tag.group.value);
-    console.log('othersGrouped', othersGrouped);
+
     return {entitiesGroupedAndSorted, othersGrouped};
 }
 
@@ -194,7 +193,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
-            console.log('dataBeforeLoading', dataBeforeLoading);
+
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract, slugline} = this.props.article;
 
@@ -214,7 +213,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     },
                 }).then((res) => {
                     const resClient = toClientFormat(res.analysis);               
-                    console.log('resClient', resClient);
+
                     if (this._mounted) {   
                         const existingTags = dataBeforeLoading !== 'loading' && dataBeforeLoading !== 'not-initialized'
                         ? dataBeforeLoading.changes.analysis // keep existing tags
@@ -245,10 +244,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         initializeData(preload: boolean) {
             try {
                 const existingTags = getExistingTags(this.props.article);
-                console.log('existing tags', existingTags);
+
                 if (Object.keys(existingTags).length > 0) {
                     const resClient = toClientFormat(existingTags);
-                    console.log('resClient', resClient);
+
                     this.setState({
                         data: { original: { analysis: resClient }, changes: { analysis: resClient } },
                     });
@@ -296,7 +295,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 scheme: newItem.group.value,
                 original_source: 'human',
             };
-            console.log('new tag', tag);
+
             this.updateTags(
                 data.changes.analysis.set(tag.qcode, tag),
                 data,
@@ -656,7 +655,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const savedTags = data.original.analysis.keySeq().toSet();
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
-                                console.log("othersGrouped", othersGrouped);
+
                                 othersGrouped.forEach((tags, groupId) => {
                                     if (tags != null && groupId != null) {
                                         allGrouped = allGrouped.set(groupId,
@@ -685,7 +684,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         );
                                     }
                                 });
-                                console.log("entitiesGroupedAndSorted", entitiesGroupedAndSorted);
+
                                 //  renders the tags in the entities group in the widget window
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
