@@ -1,10 +1,9 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {login, restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s} from './utils';
 
 test('can apply "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
-    await login(page);
 
     const monitoring = new Monitoring(page);
 

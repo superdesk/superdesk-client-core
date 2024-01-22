@@ -7,7 +7,7 @@ export function restoreDatabaseSnapshot(options?: {snapshotName?: string}): Prom
             uri: 'http://localhost:5000/api/restore_record',
             method: 'POST',
             timeout: 30000,
-            json: {name: options?.snapshotName ?? 'initial'},
+            json: {name: options?.snapshotName ?? 'main'},
         }, resolve);
     });
 }

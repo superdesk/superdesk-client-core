@@ -1,5 +1,5 @@
 import {test, expect} from '@playwright/test';
-import {login, restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s} from './utils';
 
 /**
  * when a desk is mentioned in article comments,
@@ -7,7 +7,6 @@ import {login, restoreDatabaseSnapshot, s} from './utils';
  */
 test('desk notifications', async ({page}) => {
     await restoreDatabaseSnapshot();
-    await login(page);
 
     await page.goto('/#/workspace/monitoring');
 

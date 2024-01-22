@@ -28,7 +28,7 @@ Most tests run against `main` database snapshot (`e2e/server/dump/full/main`). T
 4. activate virtual environment `source env/bin/activate`
 5. install python dependencies - `pip install -Ur requirements.txt`
 
-6. restore main dump `curl -X POST http://localhost:5000/api/restore_record -H "Content-Type: application/json" --data '{"name": "main"}'`
+6. restore main dump `python manage.py storage:restore main`
 7. remove the dump you just restored `rm -r server/dump/full/main`
 8. open superdesk in the browser and do the changes you need(best not to remove/rename things because it might break other tests)
 9. regenerate `main` dump from your existing database state `python manage.py storage:dump --name main`

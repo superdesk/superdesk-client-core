@@ -1,9 +1,8 @@
 import {test, expect} from '@playwright/test';
-import {login, restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s} from './utils';
 
 test('creating a new user', async ({page}) => {
     await restoreDatabaseSnapshot();
-    await login(page);
 
     await page.goto('/#/users');
 
