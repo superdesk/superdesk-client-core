@@ -11,7 +11,9 @@ export function focusFirstChildInput(parent: HTMLElement) {
             // it's possible no inputs are ever rendered
             clearInterval(interval);
         } else {
-            const elements: Array<HTMLElement> = Array.from(parent.querySelectorAll('input, textarea, [contenteditable]'));
+            const elements: Array<HTMLElement> = Array.from(
+                parent.querySelectorAll('input, textarea, [contenteditable]'),
+            );
 
             if (elements.length < 1) {
                 return;
