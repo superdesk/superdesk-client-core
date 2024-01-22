@@ -52,6 +52,7 @@ import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
+import {focusFirstChildInput} from 'utils/focus-first-child-input';
 
 export function getFieldsData<T>(
     item: T,
@@ -274,6 +275,7 @@ type IState<T> = {initialized: false} | IStateLoaded<T>;
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
+    private componentRef: HTMLElement | null;
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -297,6 +299,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
+        this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -352,6 +355,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.componentRef = null;
+    }
+
+    setRef(ref: HTMLElement) {
+        this.componentRef = ref;
     }
 
     initiateUnmounting(): Promise<void> {
@@ -529,6 +538,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             this.props.onEditingStart?.(initialState.itemWithChanges);
 
             this.setState(initialState);
+
+            if (this.componentRef != null) {
+                this.eventListenersToRemoveBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
+            }
         });
 
         registerToReceivePatches(this.props.itemId, (patch) => {
@@ -1283,7 +1296,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         return (
-            <React.Fragment>
+            <div style={{display: 'contents'}} ref={this.setRef}>
                 {
                     state.loading && (
                         <Loader overlay />
@@ -1416,7 +1429,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         }}
                     </WithInteractiveArticleActionsPanel>
                 </WithKeyBindings>
-            </React.Fragment>
+            </div>
         );
     }
 }
