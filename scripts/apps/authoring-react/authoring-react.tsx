@@ -273,7 +273,7 @@ interface IStateLoaded<T> {
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
-    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
 
@@ -354,7 +354,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
-        this.eventListenersToRemoveBeforeUnmounting = [];
+        this.cleanupFunctionsToRunBeforeUnmounting = [];
 
         this.componentRef = null;
     }
@@ -540,7 +540,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             this.setState(initialState);
 
             if (this.componentRef != null) {
-                this.eventListenersToRemoveBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
+                this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
         });
 
@@ -558,13 +558,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.eventListenersToRemoveBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
+        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
             if (this.state.initialized) {
                 dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
             }
         }));
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
                 'replaceAuthoringDataWithChanges',
                 (event) => {
@@ -578,7 +578,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ),
         );
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
@@ -629,7 +629,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
          * Update UI when locked in another session,
          * regardless whether by same or different user.
          */
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalWebsocketEventListener('item:lock', (data) => {
                 const {user, lock_session, lock_time, _etag} = data.extra;
 
@@ -688,7 +688,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
          * Reload item if updated while locked in another session.
          * Unless there are unsaved changes.
          */
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addWebsocketEventListener('resource:updated', (event) => {
                 const {_id, resource} = event.extra;
                 const state = this.state;
@@ -730,7 +730,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }),
         );
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener('dangerouslyForceReloadAuthoring', () => {
                 const state = this.state;
 
@@ -768,7 +768,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         unregisterFromReceivingPatches();
 
-        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+        for (const fn of this.cleanupFunctionsToRunBeforeUnmounting) {
             fn();
         }
     }
