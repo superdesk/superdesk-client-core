@@ -1,4 +1,4 @@
-import {Page} from '@playwright/test';
+import {Page, expect} from '@playwright/test';
 import {s} from '../utils';
 
 export class Monitoring {
@@ -11,6 +11,8 @@ export class Monitoring {
     async selectDesk(deskName: string) {
         const deskSelectDropdown = this.page.locator(s('monitoring--selected-desk'));
         const selectedDeskText = await deskSelectDropdown.textContent();
+
+        expect(selectedDeskText.toLocaleLowerCase()).not.toContain('select workspace');
 
         if (selectedDeskText.toLocaleLowerCase().includes(deskName.toLocaleLowerCase()) !== true) {
             await deskSelectDropdown.click();
