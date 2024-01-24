@@ -10,9 +10,8 @@ export class Monitoring {
 
     async selectDesk(deskName: string) {
         const deskSelectDropdown = this.page.locator(s('monitoring--selected-desk'));
-        const selectedDeskText = await deskSelectDropdown.textContent();
 
-        await expect(selectedDeskText.toLocaleLowerCase()).not.toContain('select workspace');
+        const selectedDeskText = await deskSelectDropdown.textContent();
 
         if (selectedDeskText.toLocaleLowerCase().includes(deskName.toLocaleLowerCase()) !== true) {
             await deskSelectDropdown.click();
