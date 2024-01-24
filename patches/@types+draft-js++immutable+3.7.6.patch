@@ -10,7 +10,7 @@ index f8eb1c6..87fe41e 100644
 +      mapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => M,
        context?: any
      ): /*this*/Iterable<K, M>;
-
+ 
 @@ -1995,7 +1995,7 @@ declare module Immutable {
       *
       */
@@ -19,7 +19,7 @@ index f8eb1c6..87fe41e 100644
 +      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
        context?: any
      ): /*this*/Iterable<K, V>;
-
+ 
 @@ -2008,7 +2008,7 @@ declare module Immutable {
       *
       */
@@ -28,7 +28,7 @@ index f8eb1c6..87fe41e 100644
 +      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
        context?: any
      ): /*this*/Iterable<K, V>;
-
+ 
 @@ -2044,7 +2044,7 @@ declare module Immutable {
       *
       */
@@ -37,7 +37,7 @@ index f8eb1c6..87fe41e 100644
 +      comparatorValueMapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => C,
        comparator?: (valueA: C, valueB: C) => number
      ): /*this*/Iterable<K, V>;
-
+ 
 @@ -2055,7 +2055,7 @@ declare module Immutable {
       * Note: This is always an eager operation.
       */
@@ -46,4 +46,4 @@ index f8eb1c6..87fe41e 100644
 +      grouper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => G,
        context?: any
      ): /*Map*/Seq.Keyed<G, /*this*/Iterable<K, V>>;
-
+ 
