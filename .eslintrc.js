@@ -73,6 +73,12 @@ module.exports = Object.assign({}, sharedConfigs, {
                     "functions": "always-multiline"
                 }],
 
+                "space-before-function-paren": ["error", {
+                    "anonymous": "never",
+                    "named": "never",
+                    "asyncArrow": "always"
+                }],
+
 
                 // allow calling hasOwnProperty
                 "no-prototype-builtins": 0,
