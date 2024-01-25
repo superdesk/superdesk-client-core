@@ -124,7 +124,7 @@ class GlobalSearch {
                 ECE.hasElementCount(element.all(by.css('.media-box')), n),
                 2000,
             );
-        },
+        };
 
         /**
          * Get the item at 'index' from global

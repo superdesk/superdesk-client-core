@@ -19,6 +19,7 @@ export default angular.module('superdesk.core.services.server', [])
                 var url = appConfig.server.url;
 
                 for (var i = 0; i < arguments.length; i++) {
+                    // eslint-disable-next-line prefer-rest-params
                     url += '/' + arguments[i];
                 }
 

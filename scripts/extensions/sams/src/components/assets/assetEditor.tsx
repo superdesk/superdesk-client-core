@@ -106,6 +106,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
         this.setState((preState: IState) => {
             const tags: Array<{name: string, code: string}> = preState.tags!;
             const newTag: any = value!;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const index = this.state.tags?.indexOf(newTag)!;
 
             tags.splice(index, 1);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+
 // External Modules
 import * as React from 'react';
 import {connect} from 'react-redux';

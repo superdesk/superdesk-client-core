@@ -218,9 +218,12 @@ export default angular.module('superdesk.core.services.modal', [
         }
 
         this.confirm = function() {
+            // eslint-disable-next-line prefer-rest-params
             if (typeof arguments[0] === 'object' && arguments.length === 1) {
+                // eslint-disable-next-line prefer-rest-params
                 return confirmConfigurationObject.apply(this, arguments);
             } else {
+                // eslint-disable-next-line prefer-rest-params
                 return confirmArgumentsList.apply(this, arguments);
             }
         };

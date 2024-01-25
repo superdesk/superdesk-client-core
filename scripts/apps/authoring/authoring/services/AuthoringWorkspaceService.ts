@@ -47,7 +47,7 @@ export class AuthoringWorkspaceService {
         this.widgetVisibilityCheckerFuntions = [];
 
         // plugin support
-        this.authoringTopBarAdditionalButtons = {},
+        this.authoringTopBarAdditionalButtons = {};
         this.authoringTopBarButtonsToHide = {};
         this.displayAuthoringHeaderCollapedByDefault = null;
 
