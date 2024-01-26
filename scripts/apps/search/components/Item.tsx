@@ -6,7 +6,7 @@ import {get} from 'lodash';
 
 import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
-import {gettext} from 'core/utils';
+import {getArticleLabel, gettext} from 'core/utils';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
@@ -483,6 +483,7 @@ export class Item extends React.Component<IProps, IState> {
                 draggable: !this.props.isNested,
                 tabIndex: 0,
                 'data-test-id': 'article-item',
+                'data-test-value': getArticleLabel(item),
             },
             (
                 <div

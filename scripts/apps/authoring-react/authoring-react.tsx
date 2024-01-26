@@ -53,6 +53,7 @@ import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
+import {focusFirstChildInput} from 'utils/focus-first-child-input';
 
 export function getFieldsData<T>(
     item: T,
@@ -274,8 +275,9 @@ interface IStateLoaded<T> {
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
-    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
+    private componentRef: HTMLElement | null;
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -300,6 +302,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
         this.setLoadingState = this.setLoadingState.bind(this);
+        this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -354,7 +357,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
-        this.eventListenersToRemoveBeforeUnmounting = [];
+        this.cleanupFunctionsToRunBeforeUnmounting = [];
+
+        this.componentRef = null;
+    }
+
+    setRef(ref: HTMLElement) {
+        this.componentRef = ref;
     }
 
     setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void> {
@@ -554,6 +563,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             this.props.onEditingStart?.(initialState.itemWithChanges);
 
             this.setState(initialState);
+
+            if (this.componentRef != null) {
+                this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
+            }
         });
 
         registerToReceivePatches(this.props.itemId, (patch) => {
@@ -570,13 +583,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.eventListenersToRemoveBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
+        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
             if (this.state.initialized) {
                 dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
             }
         }));
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
                 'replaceAuthoringDataWithChanges',
                 (event) => {
@@ -590,7 +603,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ),
         );
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
@@ -641,7 +654,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
          * Update UI when locked in another session,
          * regardless whether by same or different user.
          */
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalWebsocketEventListener('item:lock', (data) => {
                 const {user, lock_session, lock_time, _etag} = data.extra;
 
@@ -700,7 +713,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
          * Reload item if updated while locked in another session.
          * Unless there are unsaved changes.
          */
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addWebsocketEventListener('resource:updated', (event) => {
                 const {_id, resource} = event.extra;
                 const state = this.state;
@@ -742,7 +755,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }),
         );
 
-        this.eventListenersToRemoveBeforeUnmounting.push(
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener('dangerouslyForceReloadAuthoring', () => {
                 const state = this.state;
 
@@ -780,7 +793,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         unregisterFromReceivingPatches();
 
-        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+        for (const fn of this.cleanupFunctionsToRunBeforeUnmounting) {
             fn();
         }
     }
@@ -1299,7 +1312,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         return (
-            <React.Fragment>
+            <div style={{display: 'contents'}} ref={this.setRef}>
                 {
                     state.loading && (
                         <Loader overlay />
@@ -1432,7 +1445,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         }}
                     </WithInteractiveArticleActionsPanel>
                 </WithKeyBindings>
-            </React.Fragment>
+            </div>
         );
     }
 }

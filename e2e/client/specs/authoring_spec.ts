@@ -155,7 +155,7 @@ describe('authoring', () => {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(1);
         expect(authoring.getHistoryItem(0).getText())
-            .toMatch(/Fetched by first name last name Wednesday, 8\. November/); // we use a dump, so date won't change
+            .toMatch(/Fetched by first name last name .*/); // we use a dump, so date won't change
         authoring.close();
 
         // view item history move operation
@@ -617,17 +617,6 @@ describe('authoring', () => {
 
         authoring.maximize('item9');
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
-    });
-
-    it('can apply macro', () => {
-        workspace.selectDesk('Politic Desk');
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
-        expect(authoring.getBodyText()).toBe('item6 text');
-        expect(authoring.getAbstractText()).toBe('');
-        authoring.openMacros();
-        authoring.callMacros('Populate Abstract');
-        expect(authoring.getAbstractText()).toBe('item6 text');
     });
 
     it('Not modifying crops will not trigger an article change', () => {

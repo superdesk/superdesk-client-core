@@ -1,0 +1,47 @@
+{
+  "cookies": [
+    {
+      "name": "i18next",
+      "value": "en",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "session",
+      "value": "eyJzZXNzaW9uX3Rva2VuIjoiMDc5ZmI2M2MtZGM5OC00NTBmLWEzM2UtYzE5NzkzNzU2ZGYxIn0.Za43nw.4OjKgOWCcJ3oxa0kHscH-h47aLo",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:9000",
+      "localStorage": [
+        {
+          "name": "sess:id",
+          "value": "65ae379f77677941642bb478"
+        },
+        {
+          "name": "sess:href",
+          "value": "auth_db/65ae379f77677941642bb478"
+        },
+        {
+          "name": "sess:user",
+          "value": "{\"_id\":\"655494d8dfb36babb9663383\",\"username\":\"admin\",\"email\":\"admin@example.com\",\"user_type\":\"administrator\",\"is_active\":true,\"is_support\":false,\"needs_activation\":false,\"is_author\":true,\"private\":false,\"is_enabled\":true,\"password_changed_on\":\"2023-11-15T09:52:24+0000\",\"display_name\":\"admin\",\"sign_off\":\"ADM\",\"role\":null,\"_created\":\"2023-11-15T09:52:24+0000\",\"_updated\":\"2024-01-22T09:38:39+0000\",\"_etag\":\"d7adcb6bc3104208aacdfefeeefd7a01f8949663\",\"invisible_stages\":[],\"last_activity_at\":\"2024-01-22T09:38:39+0000\",\"_links\":{\"self\":{\"title\":\"User\",\"href\":\"users/655494d8dfb36babb9663383\"},\"parent\":{\"title\":\"home\",\"href\":\"/\"},\"collection\":{\"title\":\"users\",\"href\":\"users\"}},\"dateline_source\":\"Short name for your organisation\"}"
+        },
+        {
+          "name": "sess:token",
+          "value": "Basic MDc5ZmI2M2MtZGM5OC00NTBmLWEzM2UtYzE5NzkzNzU2ZGYxOg=="
+        }
+      ]
+    }
+  ]
+}

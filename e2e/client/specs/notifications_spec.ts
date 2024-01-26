@@ -37,27 +37,4 @@ describe('notifications', () => {
 
         expect(unreadCount.getText()).toBe('');
     });
-
-    xit('create a new desk mention', () => {
-        expect(monitoring.getTextItem(2, 0)).toBe('item5');
-
-        desks.openDesksSettings();
-        desks.showMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0, false);
-
-        monitoring.toggleDesk(1);
-        monitoring.toggleStage(1, 0);
-        monitoring.nextStages();
-        monitoring.nextSearches();
-        monitoring.nextReorder();
-        monitoring.saveSettings();
-
-        monitoring.openMonitoring();
-
-        monitoring.actionOnItem('Edit', 1, 0);
-        authoring.showComments();
-        authoring.writeTextToComment('#Politic_Desk hello');
-        browser.sleep(200);
-        expect(element(by.id('deskNotifications')).getText()).toBe('1');
-    });
 });
