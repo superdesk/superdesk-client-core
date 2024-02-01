@@ -9,6 +9,7 @@ import {getReadOnlyLabel} from './ArticleEditDirective';
 import {translateArticleType, gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {slideUpDown} from 'core/ui/slide-up-down';
+import {runBeforeUpdateMiddlware} from '../services/AuthoringService';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -222,6 +223,16 @@ export function AuthoringHeaderDirective(
 
                 return Promise.resolve();
             }
+
+            /**
+             * Applies changes of the priority field instantly without the timeout introduced by autosave.
+             * Specifically implemented because of custom ANSA headline changes functionality,
+             * triggered on priority field change. (SDANSA-531)
+             */
+            scope.autosavePriority = () => {
+                runBeforeUpdateMiddlware(scope.item, scope.origItem);
+                scope.autosave(scope.item);
+            };
 
             /**
              * Sets the anpa category corresponding to the required subservice: if a subservice
