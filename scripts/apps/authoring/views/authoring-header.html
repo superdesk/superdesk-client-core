@@ -290,7 +290,7 @@
                          data-label="Priority"
                          ng-disabled="!_editable || schema.priority.readonly === true"
                          data-key="qcode"
-                         data-change="priorityCustomFunction()"
+                         data-change="autosavePriority()"
                          tabindex="{{editor.priority.order}}">
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>

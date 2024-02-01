@@ -229,7 +229,7 @@ export function AuthoringHeaderDirective(
              * Specifically implemented because of custom ANSA headline changes functionality,
              * triggered on priority field change. (SDANSA-531)
              */
-            scope.priorityCustomFunction = () => {
+            scope.autosavePriority = () => {
                 runBeforeUpdateMiddlware(scope.item, scope.origItem);
                 scope.autosave(scope.item);
             };
