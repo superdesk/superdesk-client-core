@@ -290,7 +290,7 @@
                          data-label="Priority"
                          ng-disabled="!_editable || schema.priority.readonly === true"
                          data-key="qcode"
-                         data-change="autosave(item)"
+                         data-change="priorityCustomFunction()"
                          tabindex="{{editor.priority.order}}">
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>
@@ -635,5 +635,5 @@
 </div>
 
 <div class="authoring-header__toggle-container">
-    <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>    
+    <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
 </div>
