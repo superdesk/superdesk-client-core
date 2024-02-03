@@ -915,7 +915,7 @@ describe('monitoring', () => {
         el(['authoring', 'field-slugline']).sendKeys(slugline);
         el(['authoring', 'field-editors-note']).sendKeys(editorsNote);
         browser.sleep(500); // input debouncing
-        el(['authoring', 'save']).click();
+        authoring.save();
 
         el(['authoring', 'actions-button']).click();
         el(['authoring', 'actions-list']).element(by.buttonText('Save as template')).click();
