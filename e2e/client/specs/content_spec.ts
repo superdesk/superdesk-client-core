@@ -227,7 +227,7 @@ describe('content', () => {
 
         authoring.closeSendAndPublish();
 
-        element(by.css('[ng-click="saveTopbar()"]')).click();
+        authoring.save();
         element(by.id('closeAuthoringBtn')).click();
 
         content.previewItem('item3');

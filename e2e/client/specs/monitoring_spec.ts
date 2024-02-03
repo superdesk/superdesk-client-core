@@ -19,7 +19,7 @@ function createItem(headline: string) {
     el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(headline);
 
     browser.sleep(300); // wait for debouncing
-    el(['authoring-topbar', 'save']).click();
+    authoring.save();
     el(['authoring-topbar', 'close']).click();
 }
 
