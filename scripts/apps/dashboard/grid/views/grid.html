@@ -1,5 +1,5 @@
 <div class="gridster" ng-class="{editmode: status}">
-    <ul class="dash-grid">
+    <ul class="dash-grid" data-test-id="widget-list">
         <li ng-repeat="widget in widgets" sd-grid-item class="gs_w">
             <div sd-widget data-widget="widget" data-configurable="configurable" data-save="save()"><div ng-include="widget.template"></div></div>
         </li>

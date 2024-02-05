@@ -36,6 +36,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                     zIndex={1050}
                     size="small"
                     position="top"
+                    data-test-id='options-modal'
                     headerTemplate={title}
                     footerTemplate={
                         (

@@ -1,4 +1,4 @@
-<div sd-modal data-model="workspace" data-close="cancel()">
+<div sd-modal data-model="workspace" data-close="cancel()" data-test-id="'workspace-modal'">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-hide="workspace._id" translate>Create new Workspace</h3>
         <h3 class="modal__heading" ng-show="workspace._id" translate>Rename Workspace</h3>
@@ -14,6 +14,7 @@
                     <div class="sd-input sd-input--required" ng-class="{'sd-input--invalid': errors.name}">
                         <label class="sd-input__label" for="workspace-name" translate>Workspace name</label>
                         <input id="workspace-name"
+                                data-test-id="workspace-name"
                                 type="text"
                                 class="sd-input__input"
                                 ng-model="workspace.name"
