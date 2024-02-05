@@ -38,6 +38,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                     position="top"
                     data-test-id='options-modal'
                     headerTemplate={title}
+                    data-test-id='options-modal'
                     footerTemplate={
                         (
                             <div>
