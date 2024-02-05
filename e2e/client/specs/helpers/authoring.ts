@@ -452,6 +452,7 @@ class Authoring {
             this.save_button.click();
             return browser.wait(
                 ECE.stalenessOf(this.save_button.element(by.css('[data-test-id="loading-indicator"]'))),
+                5000,
             );
         };
 
