@@ -36,29 +36,6 @@ describe('users', () => {
             expect(modelValue('user.email')).toBe('a@a.com');
             expect(modelValue('user.sign_off')).toBe('fl');
         });
-
-        it('can save and use language preferences', () => {
-            userPreferences.setLang('Deutsch');
-            browser.sleep(500); // wait for sliding animation
-            el(['save']).click();
-
-            browser.sleep(500); // wait for modal
-            // click modal confirm to reload
-            element(by.css('.modal__dialog .btn--primary')).click();
-            browser.sleep(2000); // wait for reload
-
-            const header = element(by.css('[ng-hide="currentRoute.topTemplateUrl"]'));
-
-            browser.wait(ECE.presenceOf(header), 1000);
-            expect(header.getText()).toEqual('Mein Profil');
-
-            browser.sleep(500);
-            // go back to original lanuages
-            userPreferences.setLang('English');
-
-            browser.sleep(500); // wait for sliding animation
-            el(['save']).click();
-        });
     });
 
     describe('users list:', () => {

@@ -65,7 +65,7 @@ describe('field adapters', () => {
         for (const dropdownAdapter of dropdownAdapters) {
             if (dropdownAdapter.storeValue != null) {
                 expect(() => {
-                    dropdownAdapter.storeValue(null, testArticle, {});
+                    dropdownAdapter.storeValue(null, testArticle, {}, false);
                 }).not.toThrow();
             }
         }
