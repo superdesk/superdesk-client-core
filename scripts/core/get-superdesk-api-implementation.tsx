@@ -103,6 +103,7 @@ import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
+import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -350,11 +351,7 @@ export function getSuperdeskApiImplementation(
                 return showModal(Component, containerClass);
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string, title?: string) => new Promise((resolve) => {
-                modal.confirm(message, title ?? gettext('Confirm'))
-                    .then(() => resolve(true))
-                    .catch(() => resolve(false));
-            }),
+            confirm: (message: string, title?: string) => showConfirmationPrompt({title: title ?? gettext('Confirm'), message}),
             showIgnoreCancelSaveDialog,
             notify: notify,
             framework: {
