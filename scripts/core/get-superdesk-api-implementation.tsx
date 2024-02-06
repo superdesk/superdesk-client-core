@@ -351,7 +351,10 @@ export function getSuperdeskApiImplementation(
                 return showModal(Component, containerClass);
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string, title?: string) => showConfirmationPrompt({title: title ?? gettext('Confirm'), message}),
+            confirm: (message: string, title?: string) => showConfirmationPrompt({
+                title: title ?? gettext('Confirm'),
+                message,
+            }),
             showIgnoreCancelSaveDialog,
             notify: notify,
             framework: {
