@@ -531,7 +531,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     const itemCurrent = item.autosaved ?? item.saved;
 
                     return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
-                        return {item, profile};
+                        let newHeader = profile.header.map((field) => {
+                            if (field.fieldConfig.width == null) {
+                                field.fieldConfig.width = 100;
+                            };
+
+                            return field;
+                        }).toOrderedMap();
+
+                        let newContent = profile.content.map((field) => {
+                            if (field.fieldConfig.width == null) {
+                                field.fieldConfig.width = 100;
+                            };
+
+                            return field;
+                        }).toOrderedMap();
+
+                        const newProfile: IContentProfileV2 = {...profile, content: newContent, header: newHeader}
+
+                        return {item, profile: newProfile};
                     });
                 }),
                 authoringStorage.getUserPreferences(),
