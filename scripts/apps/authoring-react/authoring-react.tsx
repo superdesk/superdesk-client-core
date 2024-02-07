@@ -427,22 +427,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         return itemWithFieldsApplied;
     }
 
-    handleFieldChange(fieldId: string, data: unknown) {
+    handleFieldChange(fieldId: string, data: unknown, exposed: IExposedFromAuthoring<T>) {
         const {state} = this;
 
         if (state.initialized !== true) {
             throw new Error('can not change field value when authoring is not initialized');
         }
 
-        const {onFieldChange} = this.props;
         const fieldsDataUpdated = state.fieldsDataWithChanges.set(fieldId, data);
+        const resultFromOnFieldChange = this.props.onFieldChange?.(
+            fieldId,
+            fieldsDataUpdated,
+            this.computeLatestEntity,
+            exposed,
+        );
+        const fieldsDataChangeResult = resultFromOnFieldChange.fieldsData == null
+            ? {fieldsData: fieldsDataUpdated}
+            : resultFromOnFieldChange;
 
         this.setState({
             ...state,
-            fieldsDataWithChanges: onFieldChange == null
-                ? fieldsDataUpdated
-                : onFieldChange(fieldId, fieldsDataUpdated, this.computeLatestEntity),
-        });
+            fieldsDataWithChanges: fieldsDataChangeResult.fieldsData,
+        }, () => fieldsDataChangeResult.executeSideEffects?.());
     }
 
     handleFieldsDataChange(fieldsData: Map<string, unknown>): void {
@@ -493,16 +499,34 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }
     }
 
-    componentDidMount() {
+    loadProfile(profileId: string) {
+        const {state} = this;
+
+        if (state.initialized) {
+            const latestEntity = this.computeLatestEntity();
+
+            this.switchProfile(() => {
+                return Promise.resolve({
+                    saved: state.itemOriginal,
+                    autosaved: {
+                        ...latestEntity,
+                        profile: profileId,
+                    },
+                });
+            });
+        }
+    }
+
+    switchProfile(getEntity: (itemId: string) => Promise<{autosaved: T, saved: T}>) {
         const authThemes = ng.get('authThemes');
 
         this._mounted = true;
 
         const {authoringStorage} = this.props;
 
-        Promise.all(
+        return Promise.all(
             [
-                authoringStorage.getEntity(this.props.itemId).then((item) => {
+                getEntity(this.props.itemId).then((item) => {
                     const itemCurrent = item.autosaved ?? item.saved;
 
                     return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
@@ -535,13 +559,21 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 proofReadingTheme,
             );
 
-            this.props.onEditingStart?.(initialState.itemWithChanges);
-
             this.setState(initialState);
 
             if (this.componentRef != null) {
                 this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
+
+            return initialState;
+        });
+    }
+
+    componentDidMount() {
+        const {authoringStorage} = this.props;
+
+        this.switchProfile(() => authoringStorage.getEntity(this.props.itemId)).then((initialState) => {
+            this.props.onEditingStart?.(initialState.itemWithChanges);
         });
 
         registerToReceivePatches(this.props.itemId, (patch) => {
@@ -1108,6 +1140,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }
             },
+            loadContentProfile: (contentProfileId) => this.loadProfile(contentProfileId),
         };
 
         const authoringOptions: IAuthoringOptions<T> | null =
@@ -1387,7 +1420,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
-                                                    onChange={this.handleFieldChange}
+                                                    onChange={(fieldId, value) => this.handleFieldChange(fieldId, value, exposed)}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     useHeaderLayout
@@ -1406,7 +1439,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
+                                                onChange={(fieldId, value) => this.handleFieldChange(fieldId, value, exposed)}
                                                 language={getLanguage(state.itemWithChanges)}
                                                 userPreferencesForFields={state.userPreferencesForFields}
                                                 setUserPreferencesForFields={this.setUserPreferences}

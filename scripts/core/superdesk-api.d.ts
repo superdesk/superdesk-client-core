@@ -120,6 +120,7 @@ declare module 'superdesk-api' {
             doClose: () => void,
         ): Promise<void>;
         getContentProfile(item: T, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2>;
+        setContentProfile(item: T, contentProfileId: string): T;
         getUserPreferences(): Promise<any>;
         autosave: IAuthoringAutoSave<T>;
     }
@@ -154,6 +155,7 @@ declare module 'superdesk-api' {
         initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
+        loadContentProfile(contentProfileId?: string): void
     }
 
     export interface IAuthoringOptions<T> {
@@ -217,7 +219,15 @@ declare module 'superdesk-api' {
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
-        onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => T): IFieldsData;
+        onFieldChange?(
+            fieldId: string,
+            fieldsData: IFieldsData,
+            computeLatestEntity: () => T,
+            exposed: IExposedFromAuthoring<T>,
+        ): {
+            fieldsData: IFieldsData;
+            executeSideEffects?: () => void;
+        };
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
 
@@ -750,6 +760,21 @@ declare module 'superdesk-api' {
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
+                onFieldChange?(
+                    fieldId: string,
+                    fieldData: IFieldsData,
+                    computeLatestEntity: () => IArticle,
+                    exposed: IExposedFromAuthoring<IArticle>,
+                ): {
+                    fieldsData: IFieldsData;
+                    /**
+                     * This is an experimental solution. Keep in mind that if multiple extensions provide side-effects
+                     * the client might hit a performance bottleneck - it might take a long time for authoring react
+                     * to get to the final rendering state. Ideally we should return an object with flags,
+                     * on what actions the extension needs executed inside Authoring React.
+                     */
+                    executeSideEffects?: () => void;
+                };
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
                  *

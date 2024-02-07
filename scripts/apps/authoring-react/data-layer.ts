@@ -335,6 +335,12 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             });
         });
     },
+    setContentProfile: (item, contentProfileId) => {
+        return {
+            ...item,
+            profile: contentProfileId,
+        };
+    },
     getContentProfile: (item, fieldsAdapter) => {
         if (item.type === 'composite') {
             return getPackagesContentProfile(item, fieldsAdapter);

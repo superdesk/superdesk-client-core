@@ -234,7 +234,15 @@ interface IPropsWrapper extends IProps {
     // If it's set to true or false then it can be collapsed/expanded back.
     sidebarMode?: boolean | 'hidden';
     authoringStorage: IAuthoringStorage<IArticle>;
-    onFieldChange?(fieldId: string, fieldsData: IFieldsData, computeLatestEntity: () => IArticle): IFieldsData;
+    onFieldChange?(
+        fieldId: string,
+        fieldsData: IFieldsData,
+        computeLatestEntity: () => IArticle,
+        exposed: IExposedFromAuthoring<IArticle>
+    ): {
+        fieldsData: IFieldsData;
+        executeSideEffects?: () => void;
+    };
 }
 
 /**
@@ -449,8 +457,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         );
                                     } else if (sideWidget != null) {
                                         return getWidgetsFromExtensions(item).find(
-                                            ({_id}) => sideWidget === _id,
-                                        ).component;
+                                            (x) => {
+                                                return sideWidget === x.label;
+                                            }).component;
                                     } else {
                                         return null;
                                     }
