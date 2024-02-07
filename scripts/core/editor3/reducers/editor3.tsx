@@ -123,15 +123,20 @@ function updateDecorators(
     */
     const spellcheckWarnings = contentChanged ? {} : stateCurrent.spellchecking?.warningsByBlock;
 
+    const result = getDecorators(
+        stateCurrent?.spellchecking?.enabled ?? false,
+        stateCurrent?.spellchecking?.language,
+        spellcheckWarnings,
+        stateCurrent.limitConfig,
+    );
+
+    if (result.mustReApplyDecorators !== true) {
+        return editorStateNext;
+    }
+
     return EditorState.set(
         editorStateNext,
-        {
-            decorator: getDecorators(
-                stateCurrent?.spellchecking?.language,
-                spellcheckWarnings,
-                stateCurrent.limitConfig,
-            ),
-        },
+        {decorator: result.decorator},
     );
 }
 
@@ -172,9 +177,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
-        const plainText = state.plainText === true || state.singleLine === true;
-
-        state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
+        state.onChangeValue();
     }
 
     const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged || force);

@@ -122,10 +122,11 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
         editorState,
         {
             decorator: getDecorators(
+                enabled,
                 language,
                 enabled ? spellcheckWarningsByBlock : null,
                 state.limitConfig,
-            ),
+            ).decorator,
         },
     );
 

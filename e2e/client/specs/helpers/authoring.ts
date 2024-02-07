@@ -450,7 +450,10 @@ class Authoring {
         this.save = function() {
             browser.wait(() => this.save_button.isEnabled(), 2000);
             this.save_button.click();
-            return browser.wait(() => this.save_button.getAttribute('disabled'));
+            return browser.wait(
+                ECE.stalenessOf(this.save_button.element(by.css('[data-test-id="loading-indicator"]'))),
+                5000,
+            );
         };
 
         this.edit = function() {

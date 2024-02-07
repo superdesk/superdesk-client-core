@@ -29,9 +29,14 @@
                             <input type="text" class="sd-line-input__input" id="template-profile" ng-model="item.profile">
                         </div>
 
-                        <div class="sd-line-input sd-line-input--label-left sd-line-input--is-select" ng-if="template.template_type !== 'kill' && content_types.length">
+                        <div
+                            sd-validation-error="error.profile"
+                            data-required="true"
+                            class="sd-line-input sd-line-input--label-left sd-line-input--is-select"
+                            ng-if="template.template_type !== 'kill' && content_types.length"
+                        >
                             <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
-                            <select id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
+                            <select required id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
                                 <option value=""></option>
                             </select>
                         </div>

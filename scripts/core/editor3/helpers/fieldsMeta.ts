@@ -1,3 +1,5 @@
+import {IArticle} from 'superdesk-api';
+
 export const fieldsMetaKeys = {
     draftjsState: 'draftjsState',
 };
@@ -34,7 +36,7 @@ export function getFieldMetadata(item, fieldKey, contentKey) {
     return wrapper.unwrap(item[META_FIELD_NAME][fieldKey][contentKey]);
 }
 
-export function setFieldMetadata(item, fieldKey, contentKey, contentValue) {
+export function setFieldMetadata(item: IArticle, fieldKey: string, contentKey: string, contentValue: any) {
     if (Object.keys(fieldsMetaKeys).includes(contentKey) === false) {
         throw new Error('Invalid key');
     }

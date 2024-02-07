@@ -73,7 +73,7 @@ interface IProps {
 }
 
 const getCompareVersionsModal = (
-    getLatestItem: () => IArticle,
+    getLatestItem: IExposedFromAuthoring<IArticle>['getLatestItem'],
     authoringStorage: IAuthoringStorage<IArticle>,
     fieldsAdapter: IFieldsAdapter<IArticle>,
     storageAdapter: IStorageAdapter<IArticle>,
@@ -112,7 +112,7 @@ const getCompareVersionsModal = (
     },
 });
 
-const getMultiEditModal = (getItem: () => IArticle): IAuthoringAction => ({
+const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Multi-edit'),
     onTrigger: () => {
         showModal(({closeModal}) => (
@@ -125,7 +125,7 @@ const getMultiEditModal = (getItem: () => IArticle): IAuthoringAction => ({
 });
 
 const getExportModal = (
-    getLatestItem: () => IArticle,
+    getLatestItem: IExposedFromAuthoring<IArticle>['getLatestItem'],
     handleUnsavedChanges: () => Promise<IArticle>,
     hasUnsavedChanges: () => boolean,
 ): IAuthoringAction => ({
@@ -148,7 +148,7 @@ const getExportModal = (
     },
 });
 
-const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
+const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => {
     const showHighlightsModal = () => {
         sdApi.highlights.fetchHighlights().then((res) => {
             if (res._items.length === 0) {
@@ -175,7 +175,7 @@ const getHighlightsAction = (getItem: () => IArticle): IAuthoringAction => {
     };
 };
 
-const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
+const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
     onTrigger: () => (
         showModal(({closeModal}) => {
@@ -189,7 +189,7 @@ const getSaveAsTemplate = (getItem: () => IArticle): IAuthoringAction => ({
     ),
 });
 
-const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
+const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Translate'),
     onTrigger: () => {
         showModal(({closeModal}) => (
@@ -201,7 +201,7 @@ const getTranslateModal = (getItem: () => IArticle): IAuthoringAction => ({
     },
 });
 
-const getMarkedForDesksModal = (getItem: () => IArticle): IAuthoringAction => ({
+const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
     onTrigger: () => (
         showModal(({closeModal}) => {

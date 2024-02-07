@@ -45,6 +45,12 @@ declare module 'superdesk-api' {
         content: IFieldsV2;
     }
 
+    /**
+     * in some cases e.g. autosave it is desirable to get an incomplete entity for performance reasons
+     * by skipping derived data
+     */
+    export type IStoreValueIncomplete = boolean;
+
     export interface IFieldAdapter<T> {
         getFieldV2: (
             fieldEditor,
@@ -63,7 +69,7 @@ declare module 'superdesk-api' {
          * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
          * HTML or plaintext version of the data in another location, and possibly annotations in third location.
          */
-        storeValue?(value: unknown, article: T, config: unknown): T;
+        storeValue?(value: unknown, article: T, config: unknown, preferIncomplete: IStoreValueIncomplete): T;
 
         /**
          * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
@@ -140,7 +146,7 @@ declare module 'superdesk-api' {
          * It is expensive to compute it on every render, that's why
          * we are passing a function instead.
          */
-        getLatestItem(): T;
+        getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
         toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -613,7 +619,7 @@ declare module 'superdesk-api' {
             article: IArticle;
 
 
-            getLatestArticle(): IArticle;
+            getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
 
             // other props below are specific to authoring-react implementation
 

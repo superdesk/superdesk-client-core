@@ -224,7 +224,13 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 return !_.has($scope.error, 'template_name') && !_.has($scope.error, 'template_type');
             }
 
+            $scope.requestEditor3DirectivesToGenerateHtml = [];
+
             $scope.save = function() {
+                for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
+                    fn();
+                }
+
                 $scope.template.schedule.cron_list = [];
                 _.forEach($scope.cron_times, (time) => {
                     $scope.template.schedule.cron_list.push(time.substring(3, 5) + ' ' + time.substring(0, 2) +

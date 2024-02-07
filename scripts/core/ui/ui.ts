@@ -7,6 +7,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
+import {Spinner} from 'superdesk-ui-framework/react';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
@@ -1293,6 +1294,13 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             FormattingOptionsTreeSelect,
             ['value', 'fieldId', 'fields', 'onChange'],
+        ),
+    )
+
+    .component('sdSpinner',
+        reactToAngular1(
+            Spinner,
+            ['size'],
         ),
     )
 
