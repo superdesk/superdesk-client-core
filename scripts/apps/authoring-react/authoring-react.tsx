@@ -534,7 +534,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         let newHeader = profile.header.map((field) => {
                             if (field.fieldConfig.width == null) {
                                 field.fieldConfig.width = 100;
-                            };
+                            }
 
                             return field;
                         }).toOrderedMap();
@@ -542,12 +542,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         let newContent = profile.content.map((field) => {
                             if (field.fieldConfig.width == null) {
                                 field.fieldConfig.width = 100;
-                            };
+                            }
 
                             return field;
                         }).toOrderedMap();
 
-                        const newProfile: IContentProfileV2 = {...profile, content: newContent, header: newHeader}
+                        const newProfile: IContentProfileV2 = {...profile, content: newContent, header: newHeader};
 
                         return {item, profile: newProfile};
                     });
