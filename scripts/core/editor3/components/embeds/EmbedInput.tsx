@@ -6,6 +6,7 @@ import {embed, hidePopups} from '../../actions';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {notify} from 'core/notify/notify';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 
@@ -15,6 +16,17 @@ export const getEmbedObject = (url) => {
     return $.ajax({
         url: `//iframe.ly/api/oembed?callback=?&url=${url}&api_key=${apiKey}&omit_script=true&iframe=true`,
         dataType: 'json',
+    }).then((result) => {
+        /**
+         * No standard way of differentiating between an error and a valid response.
+         * An observation was made that if the result doesn't contain an html field,
+         * then the response is invalid. (SDANSA-556)
+         */
+        if (result.html == null) {
+            notify.error(result.description ?? 'An unknown error ocurred.');
+        } else {
+            return result;
+        }
     });
 };
 
