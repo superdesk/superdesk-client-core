@@ -47,16 +47,6 @@ const editor3TestConfigWithFormatting: IEditor3Config = {
     showStatistics: false,
 };
 
-const editor3TestConfigWithoutFormatting: IEditor3Config = {
-    editorFormat: [],
-    minLength: undefined,
-    maxLength: undefined,
-    cleanPastedHtml: false,
-    singleLine: true,
-    disallowedCharacters: [],
-    showStatistics: false,
-};
-
 const titleField: IAuthoringFieldV2 = {
     id: 'title',
     name: gettext('Title'),
