@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 /* eslint-disable complexity */
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -19,13 +20,19 @@ import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 import ng from 'core/services/ng';
 import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
-import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {
+    CharacterCountConfigButton,
+    CharacterLimitUiBehavior,
+} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {fieldsMetaKeys, FIELD_KEY_SEPARATOR, setFieldMetadata} from './helpers/fieldsMeta';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
-import {findParentScope} from '../utils';
+import {findParentScope, gettext} from '../utils';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
+import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-statistics-connected';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
 
 /**
  * @ngdoc directive
@@ -125,6 +132,15 @@ class Editor3Directive {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
+    fieldId?: string;
+
+    // In most cases a function is called to get the label by ID. This is only required for custom fields.
+    fieldLabel?: string;
+    required?: boolean;
+    validationError?: string;
+    validateCharacters?: boolean;
+    headerStyles?: boolean;
+    helperText: string;
 
     constructor() {
         this.scope = {};
@@ -254,6 +270,20 @@ class Editor3Directive {
              * @description Force the output to be plain text and not contain any html.
              */
             plainText: '=?',
+
+            fieldId: '=',
+
+            fieldLabel: '=',
+
+            required: '=',
+
+            validationError: '=',
+
+            validateCharacters: '=',
+
+            headerStyles: '=',
+
+            helperText: '=',
         };
     }
 
@@ -269,9 +299,10 @@ class Editor3Directive {
         Promise.all([
             ng.get('preferencesService').get(),
             getAutocompleteSuggestions(this.pathToValue, this.language),
+            getLabelNameResolver(),
         ])
             .then((res) => {
-                const [userPreferences, autocompleteSuggestions] = res;
+                const [userPreferences, autocompleteSuggestions, getLabel] = res;
 
                 // defaults
                 this.language = this.language || 'en';
@@ -296,22 +327,171 @@ class Editor3Directive {
 
                 let store = createEditorStore(this, ng.get('spellcheck'));
 
+                const fieldName: string | null = (() => {
+                    if (this.fieldLabel != null) {
+                        return this.fieldLabel;
+                    } else if (this.fieldId == null) {
+                        return null;
+                    } else {
+                        return getLabel(this.fieldId);
+                    }
+                })();
+
                 const renderEditor3 = () => {
                     const element = $element.get(0);
 
                     ReactDOM.unmountComponentAtNode(element);
 
+                    const textStatistics = (
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <TextStatisticsConnected />
+
+                            {
+                                this.limit != null && (
+                                    <CharacterCountConfigButton field={this.fieldId} />
+                                )
+                            }
+                        </div>
+                    );
+
+                    const validationErrors = (() => {
+                        if (this.validationError != null) {
+                            return (
+                                <div
+                                    className="disallowed-char-error"
+                                    style={{float: 'none', margin: 0}}
+                                >
+                                    {this.validationError}
+                                </div>
+                            );
+                        } else if (this.validateCharacters != null) {
+                            return (
+                                <div>
+                                    <ValidateCharactersConnected fieldId={this.fieldId} />
+                                </div>
+                            );
+                        }
+                    })();
+
+                    const editor3 = (
+                        <Editor3
+                            scrollContainer={this.scrollContainer}
+                            singleLine={this.singleLine}
+                            cleanPastedHtml={this.cleanPastedHtml}
+                            autocompleteSuggestions={autocompleteSuggestions}
+                            plainText={this.plainText}
+                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
+                        />
+                    );
+
+                    const getTemplateForBody = () => {
+                        const labelStyle: React.CSSProperties = {
+                            marginBlockEnd: 0,
+                        };
+
+                        if (this.validationError != null) {
+                            labelStyle.backgroundColor = 'red';
+                        }
+
+                        return (
+                            <div>
+                                <div style={{marginBlockEnd: 15}}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                gap: 8,
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div className="field__label" style={labelStyle}>{fieldName}</div>
+                                            {this.required && (
+                                                <span className="sd-required">{gettext('Required')}</span>
+                                            )}
+                                        </div>
+
+                                        {textStatistics}
+                                    </div>
+
+                                    {validationErrors}
+                                </div>
+                                {editor3}
+
+                                <div className="sd-editor__info-text">{this.helperText}</div>
+                            </div>
+                        );
+                    };
+
+                    const getTemplateForHeader = () => {
+                        return (
+                            <div style={{display: 'flex'}}>
+                                <div className="authoring-header__item-label">
+                                    {fieldName}
+                                    {this.required && (
+                                        <span>
+                                            &nbsp;
+                                            <span
+                                                aria-label={gettext('required')}
+                                                style={{color: 'red', fontSize: 12}}
+                                            >
+                                                *
+                                            </span>
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div style={{flexGrow: 1}}>
+                                    <div>
+                                        {editor3}
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        {
+                                            validationErrors ?? (
+                                                <span
+                                                    className="authoring-header__hint"
+                                                    style={{margin: 0}}
+                                                >
+                                                    {this.helperText}
+                                                </span>
+                                            )}
+                                        {textStatistics}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    };
+
                     ReactDOM.render(
                         <Provider store={store}>
                             <ReactContextForEditor3.Provider value={store}>
-                                <Editor3
-                                    scrollContainer={this.scrollContainer}
-                                    singleLine={this.singleLine}
-                                    cleanPastedHtml={this.cleanPastedHtml}
-                                    autocompleteSuggestions={autocompleteSuggestions}
-                                    plainText={this.plainText}
-                                    canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
-                                />
+                                {(() => {
+                                    if (fieldName != null && this.headerStyles === true) {
+                                        return getTemplateForHeader();
+                                    } else if (fieldName != null && this.headerStyles !== true) {
+                                        return getTemplateForBody();
+                                    } else {
+                                        return editor3;
+                                    }
+                                })()}
                             </ReactContextForEditor3.Provider>
                         </Provider>,
                         element,
@@ -390,6 +570,13 @@ class Editor3Directive {
                 $scope.$watch('vm.readOnly', (val, old) => {
                     if (val !== old) {
                         store.dispatch(setReadOnly(val));
+                    }
+                });
+
+                // when validation status changes, increment `refreshTrigger` which will cause editor3 to re-render
+                $scope.$watch('vm.validationError', (val, old) => {
+                    if (val !== old) {
+                        this.refreshTrigger++;
                     }
                 });
 
