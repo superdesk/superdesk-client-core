@@ -38,3 +38,28 @@ test('can apply "populate abstract" macro', async ({page}) => {
         page.locator(s('authoring', 'authoring-field=abstract')).getByRole('textbox'),
     ).toHaveText('test sport story body');
 });
+
+test('shows error if embed is invalid', async ({page}) => {
+    await restoreDatabaseSnapshot();
+
+    const monitoring = new Monitoring(page);
+
+    await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDesk('Sports');
+
+    await page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    ).dblclick();
+
+    await expect(
+        page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
+    ).toHaveText('test sport story body');
+
+    await page.locator(s('Embed')).getByRole('button').click();
+
+    await page.getByPlaceholder('Enter URL or code to embed').type('https://google.com');
+
+    await page.locator(s('embed-controls', 'submit')).click();
+    await expect(page.getByText('https://google.com')).toBeDefined();
+});
