@@ -117,8 +117,12 @@ export class EmbedInputComponent extends React.Component<any, any> {
         }
 
         getEmbedObject(value)
-            .then((data) => data.type === 'link' ? $.Deferred().reject() : data)
-            .then(this.processSuccess, this.processError);
+            .then((data) => {
+                this.processSuccess(data);
+            })
+            .catch((error) => {
+                this.processError(error);
+            });
     }
 
     /**
@@ -158,11 +162,11 @@ export class EmbedInputComponent extends React.Component<any, any> {
                     }}
                     placeholder={gettext('Enter URL or code to embed')}
                 />
-                <div className="input-controls">
-                    <a className="icn-btn" onClick={this.onSubmit}>
+                <div data-test-id="embed-controls" className="input-controls">
+                    <a role="button" data-test-id="submit" className="icn-btn" onClick={this.onSubmit}>
                         <i className="icon-ok" />
                     </a>
-                    <a className="icn-btn" onClick={this.onCancel}>
+                    <a role="button" data-test-id="cancel" className="icn-btn" onClick={this.onCancel}>
                         <i className="icon-close-small" />
                     </a>
                 </div>

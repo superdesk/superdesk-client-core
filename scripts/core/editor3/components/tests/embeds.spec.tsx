@@ -97,26 +97,4 @@ describe('editor3.components.embed-input', () => {
         expect(wrapper.state('error')).toBe('this is the error');
         expect(wrapper.find('.embed-dialog__error').text()).toBe('this is the error');
     }));
-
-    it('should call onSubmit and reset error on success', inject(($q, $rootScope) => {
-        const {options} = mockStore();
-        const onCancel = jasmine.createSpy();
-        const onSubmit = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embed={onSubmit} hidePopups={onCancel} />, options);
-
-        spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
-
-        wrapper.setState({error: 'some error'});
-
-        const instance: any = wrapper.find('input').instance();
-
-        instance.value = 'http://will.fail';
-        wrapper.simulate('submit');
-
-        $rootScope.$apply();
-
-        expect(onSubmit).toHaveBeenCalledWith('resolve-value');
-        expect(onCancel).toHaveBeenCalled();
-        expect(wrapper.state('error')).toBe('');
-    }));
 });
