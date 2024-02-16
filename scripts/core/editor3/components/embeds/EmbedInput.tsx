@@ -15,6 +15,17 @@ export const getEmbedObject = (url) => {
     return $.ajax({
         url: `//iframe.ly/api/oembed?callback=?&url=${url}&api_key=${apiKey}&omit_script=true&iframe=true`,
         dataType: 'json',
+    }).then((result) => {
+        /**
+         * No standard way of differentiating between an error and a valid response.
+         * An observation was made that if the result doesn't contain an html field,
+         * then the response is invalid. (SDANSA-556)
+         */
+        if (result.html == null) {
+            return Promise.reject(result);
+        }
+
+        return result;
     });
 };
 

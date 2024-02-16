@@ -32,7 +32,7 @@ export function AuthoringTopbarDirective(
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
-            scope.saveDisabled = false;
+            scope.saveTopbarLoading = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
@@ -44,6 +44,8 @@ export function AuthoringTopbarDirective(
 
                 scope.autosave(scope.item, 0);
             };
+
+            scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.openPublishOrSendToPane = () => {
                 const availableTabs = getAvailableTabs();
@@ -81,11 +83,24 @@ export function AuthoringTopbarDirective(
              * @return {promise}
              */
             scope.saveTopbar = function() {
-                scope.saveDisabled = true;
-                return scope.save(scope.item)
-                    .finally(() => {
-                        scope.saveDisabled = false;
-                    });
+                scope.saveTopbarLoading = true;
+
+                // when very big articles being are saved(~14k words),
+                // the browser can't animate the loading spinner properly
+                // the delay is chosen so the spinner freezes in a visible state.
+                const timeoutDuration = 500;
+
+                setTimeout(() => {
+                    for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
+                        fn();
+                    }
+
+                    return scope.save(scope.item)
+                        .finally(() => {
+                            scope.saveTopbarLoading = false;
+                            scope.$applyAsync();
+                        });
+                }, timeoutDuration);
             };
 
             // Activate preview formatted item

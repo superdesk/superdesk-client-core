@@ -17,6 +17,36 @@ import {superdesk} from '../superdesk';
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
 
+const editor3TestConfigWithFormatting: IEditor3Config = {
+    editorFormat: [
+        'bold',
+        'italic',
+        'underline',
+        'link',
+        'h2',
+        'h3',
+        'ordered list',
+        'unordered list',
+        'strikethrough',
+        'quote',
+        'remove format',
+        'remove all format',
+        'comments',
+        'annotation',
+        'suggestions',
+        'undo',
+        'redo',
+        'uppercase',
+        'lowercase',
+    ],
+    minLength: undefined,
+    maxLength: undefined,
+    cleanPastedHtml: false,
+    singleLine: true,
+    disallowedCharacters: [],
+    showStatistics: false,
+};
+
 const editor3TestConfigWithoutFormatting: IEditor3Config = {
     editorFormat: [],
     minLength: undefined,
@@ -48,7 +78,7 @@ const technicalTitle: IAuthoringFieldV2 = {
 };
 
 const contentFieldConfig: IEditor3Config = {
-    ...editor3TestConfigWithoutFormatting,
+    ...editor3TestConfigWithFormatting,
     singleLine: false,
 };
 
