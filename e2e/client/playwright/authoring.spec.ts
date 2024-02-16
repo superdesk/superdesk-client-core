@@ -39,7 +39,7 @@ test('can apply "populate abstract" macro', async ({page}) => {
     ).toHaveText('test sport story body');
 });
 
-test('shows error if embed is invalid', async ({page}) => {
+test('can embed if url is valid', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
