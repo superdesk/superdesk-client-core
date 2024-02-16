@@ -31,7 +31,7 @@ test('duplicate to personal space', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/personal');
-    await expect(page.locator(s('loading-placeholder'))).not.toBeVisible();
+    await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
     await expect(page.locator(articleSelector)).toHaveCount(0);
 
@@ -46,7 +46,7 @@ test('duplicate to personal space', async ({page}) => {
     );
 
     await page.goto('/#/workspace/personal');
-    await expect(page.locator(s('loading-placeholder'))).not.toBeVisible();
+    await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
     await expect(page.locator(s('article-item=test sports story'))).toHaveCount(1);
     await expect(page.locator(s('article-item'))).toHaveCount(itemCountInPersonalSpace + 1);

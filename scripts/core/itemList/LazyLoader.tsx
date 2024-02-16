@@ -207,9 +207,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                     {(() => {
                         if (loading === true) {
                             return (
-                                <div data-test-id="loading-placeholder">
-                                    <ListItemLoader />
-                                </div>
+                                <ListItemLoader />
                             );
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {

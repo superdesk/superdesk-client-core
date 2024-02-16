@@ -55,9 +55,7 @@ export class SmoothLoader extends React.Component<IProps> {
                 {
                     loading && (
                         <div style={{height: '100%', position: 'relative'}}>
-                            <div data-test-id="loading-placeholder">
-                                <ListItemLoader />
-                            </div>
+                            <ListItemLoader />
                             <div
                                 dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}}
                                 style={{height: '100%'}}
