@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {loadIframelyEmbedJs} from './loadIframely';
 import {connect} from 'react-redux';
 import {embed, hidePopups} from '../../actions';
@@ -29,14 +28,6 @@ export const getEmbedObject = (url) => {
     });
 };
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @param {Function} hidePopups To be called when the input needs to be hidden.
- * @param {Function} onSubmit Dispatcher for the submit action. Takes the oEmbed response object as a parameter.
- * @name EmbedInputComponent
- * @description The dialog displayed when an embed URL is entered.
- */
 interface IProps {
     embed?: (data: any) => void;
     hidePopups: () => void;
