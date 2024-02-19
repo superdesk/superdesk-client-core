@@ -12,7 +12,6 @@ export const SUPERDESK_MEDIA_TYPES = {
     VIDEO: 'application/superdesk.item.video',
     EMBED: 'application/superdesk.compatible.embed',
     AUDIO: 'application/superdesk.item.audio',
-    EMBED: 'application/superdesk.compatible.embed',
 };
 
 export const MEDIA_TYPES_TRIGGER_DROP_ZONE = Object.values(SUPERDESK_MEDIA_TYPES);
