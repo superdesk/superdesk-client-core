@@ -6,6 +6,8 @@ import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 import {EDITOR_BLOCK_TYPE} from '../constants';
+import {notify} from 'core/notify/notify';
+import {gettext} from 'core/utils';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;
