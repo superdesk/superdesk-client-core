@@ -116,15 +116,27 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
-    const _language = language ?? getUserInterfaceLanguage();
+export function getVocabularyItemNameTranslated(term, language = 'en-CA') {
+    // Normalize language code format to match the expected keys in term.translations.name
+    // Assuming the expected format is 'en-CA', 'fr-CA', etc.
+    const normalizedLanguage = language.replace('_', '-');
 
-    // FIXME: Remove replacing _/- when language codes are normalized on the server.
+    // Check if the term has translations and the specified language is available
+    if (term.translations && term.translations.name && term.translations.name[normalizedLanguage]) {
+        return term.translations.name[normalizedLanguage];
+    }
 
-    return term.translations?.name?.[_language]
-        ?? term.translations?.name?.[_language.replace('_', '-')]
-        ?? term.name;
+    // Fallback to the 'en-CA' if the specified language translation is not available
+    // and if 'en-CA' translation exists.
+    if (term.translations && term.translations.name && term.translations.name['en-CA']) {
+        return term.translations.name['en-CA'];
+    }
+
+    // If no translations are available or the specified language and fallback language are not available,
+    // return the default 'name' property.
+    return term.name;
 }
+
 
 export function translateArticleType(type: IArticle['type']) {
     switch (type) {
