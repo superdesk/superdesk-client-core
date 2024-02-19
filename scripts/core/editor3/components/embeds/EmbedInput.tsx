@@ -37,13 +37,18 @@ export const getEmbedObject = (url) => {
  * @name EmbedInputComponent
  * @description The dialog displayed when an embed URL is entered.
  */
-export class EmbedInputComponent extends React.Component<any, any> {
+interface IProps {
+    embed?: (data: any) => void;
+    hidePopups: () => void;
+}
+
+export class EmbedInputComponent extends React.Component<IProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
     txt: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
 
         this.state = {error: ''};
@@ -76,7 +81,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
      * the action that embeds the response into the editor.
      */
     processSuccess(data) {
-        this.props.embed(data);
+        this.props.embed?.(data);
         this.onCancel();
     }
 
@@ -171,11 +176,6 @@ export class EmbedInputComponent extends React.Component<any, any> {
         );
     }
 }
-
-EmbedInputComponent.propTypes = {
-    embed: PropTypes.func.isRequired,
-    hidePopups: PropTypes.func.isRequired,
-};
 
 export const EmbedInput = connect(null, {
     embed,
