@@ -1365,11 +1365,6 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        // Utility function to capitalize item names
-        // capitalizeItemName: function(name) {
-        //     if (!name) return '';
-        //     return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        // },
         getLocaleName: function(term, item: any) {
             if (!term) {
                 return 'None';
@@ -1383,11 +1378,6 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
 
             // Extract the name in the current language
             let name = getVocabularyItemNameTranslated(term, item.language);
-
-            // Check if the term has `in_jimi` field and if it's true, then capitalize the name
-            // if (term?.in_jimi && term?.in_jimi === true) {
-            //     name = service.capitalizeItemName(name);
-            // }
 
             return name;
         },
