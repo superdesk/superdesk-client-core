@@ -1,5 +1,5 @@
 import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'superdesk-api';
-import TranslateWidget from './translate-widget';
+import getTranslateWidgetComponent from './translate-widget';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -14,8 +14,8 @@ const extension: IExtension = {
                         _id: 'translate-widget',
                         label: label,
                         icon: 'translate',
-                        order: 1,
-                        component: TranslateWidget(superdesk, label),
+                        order: 2,
+                        component: getTranslateWidgetComponent(superdesk, label),
                         isAllowed: (item: IArticle) => item.type === 'text',
                     },
                 ],
