@@ -5,6 +5,7 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
         const label = gettext('Translate');
+        console.log('Translate widget activated');
 
         const result: IExtensionActivationResult = {
             contributions: {

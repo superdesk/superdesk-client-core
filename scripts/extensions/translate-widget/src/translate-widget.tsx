@@ -5,6 +5,7 @@ import "./TranslateWidget.css";
 
 
 const TranslateWidget = (superdesk: ISuperdesk, label: string) => {
+  console.log("Translate widget activated with label:", label);
   return class TranslatingWidget extends React.PureComponent<any, any> {
     render() {
       <div className="translate-widget">
