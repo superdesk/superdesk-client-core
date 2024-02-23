@@ -21,12 +21,12 @@ export const getTranslateWidgetComponent = (
 
     render() {
       return (
-        <div className="translate-widget">
-          <header className="header">
-            <h1>Translate Widget</h1>
+        <div className="translate-widget" style={{width: '50vw'}}>
+          <header className="header" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: '24px'}}>
+            <h1 style={{margin: '0', fontSize: '24px', fontWeight: 600, color: '#333'}}>Translate Widget</h1>
           </header>
-          <div className="columns">
-            <div className="input-column">
+          <div className="columns" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px'}}>
+            <div className="input-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '10px', marginRight: '10px'}}>
               <section className="language-selection">
                 <RadioButtonGroup
                   group={{ groupLabel: "Input Languages" }}
@@ -68,7 +68,7 @@ export const getTranslateWidgetComponent = (
                 onClick={() => false}
               />
             </div>
-            <div className="output-column">
+            <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '10px', marginLeft: '10px'}}>
               <section className="language-selection">
                 <RadioButtonGroup
                   group={{ groupLabel: "Output Languages" }}
