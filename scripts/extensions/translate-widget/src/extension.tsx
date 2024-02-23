@@ -1,5 +1,5 @@
-import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'superdesk-api';
-import getTranslateWidgetComponent from './translate-widget';
+import {ISuperdesk, IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {getTranslateWidgetComponent} from './translate-widget';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {

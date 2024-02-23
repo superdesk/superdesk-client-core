@@ -7,6 +7,7 @@ export const getTranslateWidgetComponent = (superdesk: ISuperdesk, label: string
   console.log("Translate widget activated with label:", label);
   return class TranslatingWidget extends React.PureComponent<any, any> {
     constructor(props: any) {
+      console.log("superdesk:", superdesk);
       super(props);
     }
 
