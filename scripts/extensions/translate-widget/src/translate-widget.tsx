@@ -1,12 +1,15 @@
 import * as React from "react";
-import { ISuperdesk } from "superdesk-api";
+import { ISuperdesk, IArticle } from "superdesk-api";
 import { Input, Button, RadioButtonGroup } from "superdesk-ui-framework/react";
 import "./TranslateWidget.css";
 
 export const getTranslateWidgetComponent = (superdesk: ISuperdesk, label: string) => {
   console.log("Translate widget activated with label:", label);
-  return class TranslatingWidget extends React.PureComponent<any, any> {
-    constructor(props: any) {
+  interface TranslatingWidgetProps {
+    article: IArticle; // Ensure this matches the IArticle interface
+  }
+  return class TranslatingWidget extends React.PureComponent<TranslatingWidgetProps, any> {
+    constructor(props: TranslatingWidgetProps) {
       console.log("superdesk:", superdesk);
       super(props);
     }
