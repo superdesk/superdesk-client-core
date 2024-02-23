@@ -72,6 +72,8 @@ export function registerExtensions(
     return Promise.all(
         extensionLoaders.map(
             ({id, load, configuration}) => {
+                // TODO: Remove this console.log
+                console.log('Loading extension', id, load, configuration);
                 const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
                     id,
                     extensionsWithActivationResult,

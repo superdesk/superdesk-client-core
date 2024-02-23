@@ -15,8 +15,7 @@ const extension: IExtension = {
                         label: label,
                         icon: 'translate',
                         order: 2,
-                        component: getTranslateWidgetComponent(superdesk, label),
-                        isAllowed: (item: IArticle) => item.type === 'text',
+                        component: getTranslateWidgetComponent(superdesk, label)
                     },
                 ],
             },
