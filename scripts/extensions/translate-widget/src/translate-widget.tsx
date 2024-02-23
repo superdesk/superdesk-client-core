@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ISuperdesk, IArticle } from "superdesk-api";
 import { Input, Button, RadioButtonGroup } from "superdesk-ui-framework/react";
-import "./TranslateWidget.css";
 
 export const getTranslateWidgetComponent = (
   superdesk: ISuperdesk,
