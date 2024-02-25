@@ -64,7 +64,6 @@ export const getTranslateWidgetComponent = (
               </section>
               <Button
                 text="Translate Article"
-                style={{width: '100%'}}
                 type="primary"
                 onClick={() => false}
               />
