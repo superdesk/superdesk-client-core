@@ -257,6 +257,10 @@ function WidgetsManagerCtrl(
                 $scope.closeWidget();
             } else {
                 $scope.active = widget;
+                console.log('widget', widget);
+                // Set flags based on whether the activated widget is the translate-widget
+                $scope.isTranslateWidgetFullWidth = widget._id === 'translate-widget';
+                $scope.isWidgetDisplayFlex = widget._id === 'translate-widget';
             }
         }
     };
