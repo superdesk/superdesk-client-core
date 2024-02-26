@@ -101,7 +101,7 @@ describe('editor3.components.embed-input', () => {
         const onSubmit = jasmine.createSpy();
         const wrapper = mount(<EmbedInput embed={onSubmit} hidePopups={onCancel} />, options);
 
-        spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
+        spyOn($, 'ajax').and.returnValue($q.resolve({html: 'foo'}));
 
         wrapper.setState({error: 'some error'});
 
@@ -112,7 +112,7 @@ describe('editor3.components.embed-input', () => {
 
         $rootScope.$apply();
 
-        expect(onSubmit).toHaveBeenCalledWith('resolve-value');
+        expect(onSubmit).toHaveBeenCalledWith({html: 'foo'});
         expect(onCancel).toHaveBeenCalled();
         expect(wrapper.state('error')).toBe('');
     }));
