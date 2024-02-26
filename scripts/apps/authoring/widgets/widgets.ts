@@ -192,6 +192,12 @@ function WidgetsManagerCtrl(
                         $injector.invoke(widget.badgeAsync, null, {item})
                             .then((value) => widget.badgeAsyncValue = value);
                     }
+                    console.log('WidgetsManagerCtrl', widget);
+                    // if the widget is translate widget, then apply extra styles
+                    if(this.widget._id === 'translate-widget') {
+                        $scope.isTranslateWidgetFullWidth = true;
+                        $scope.isWidgetDisplayFlex = true;
+                    }
                 });
 
                 if (this.widgetFromPreferences) {
@@ -359,11 +365,6 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
         link: function(scope) {
-            // if the widget is translate widget, then apply extra styles
-            if(this.widget._id === 'translate-widget') {
-                scope.isTranslateWidgetFullWidth = true;
-                scope.isWidgetDisplayFlex = true;
-            }
             scope.widget = null;
             scope.pinnedWidget = null;
 
