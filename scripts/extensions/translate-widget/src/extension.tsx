@@ -12,7 +12,7 @@ const extension: IExtension = {
                     {
                         _id: 'translate-widget',
                         label: label,
-                        icon: 'translate',
+                        icon: 'multiedit',
                         order: 2,
                         component: getTranslateWidgetComponent(superdesk, label)
                     },
