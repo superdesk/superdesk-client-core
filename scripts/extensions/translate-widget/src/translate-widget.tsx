@@ -10,7 +10,10 @@ export const getTranslateWidgetComponent = (
   interface TranslatingWidgetProps {
     article: IArticle; // Ensure this matches the IArticle interface
   }
-  let isTranslateClicked = false;
+
+  interface IState {
+    isTranslateClicked: boolean;
+}
 
   const articleText = {
     "english": {
@@ -24,16 +27,25 @@ export const getTranslateWidgetComponent = (
         "body": "Alors que le monde se prépare à marquer l'anniversaire de l'invasion russe de l'Ukraine, le soutien du Canada à l'envoi de munitions et de fournitures militaires supplémentaires à ce pays en guerre s'est accru depuis l'automne dernier, suggère un nouveau sondage Léger. Samedi marquera deux années complètes depuis que la Russie a lancé une invasion à grande échelle et plongé le pays dans une guerre acharnée et brutale. Le gouvernement libéral fédéral s'est engagé à soutenir l'Ukraine aussi longtemps qu'il le faudra. Mais à mesure que le conflit s'éternise, il est devenu un point d'éclair politique au Canada et aux États-Unis. Les Canadiens avec qui je parle d'un océan à l'autre sont toujours sans équivoque sur le fait que nous devons être là pour l'Ukraine, a déclaré le premier ministre Justin Trudeau lors d'une conférence de presse jeudi en Nouvelle-Écosse. Nous travaillons avec des partenaires du monde entier pour nous assurer que nous envoyons davantage d'équipements militaires, autant que possible, et que nous continuons à en acheter davantage sur les marchés mondiaux pour les envoyer en Ukraine. Un répondant sur quatre au sondage en ligne mené le week-end dernier pour La Presse Canadienne a déclaré que le Canada devrait envoyer encore plus de fournitures militaires à l'Ukraine. Seulement 20 pour cent ont déclaré la même chose lors d'une enquête comparable réalisée en octobre. Pourtant, les Canadiens semblent divisés sur la question de savoir à quel point c'est trop. Le dernier sondage révèle que 23 pour cent des personnes interrogées estiment que le Canada devrait envoyer moins de munitions à l'Ukraine, tandis que 34 pour cent souhaitent que les niveaux de soutien matériel restent les mêmes. Quant à l'argent, 38 pour cent ont déclaré que le Canada devrait maintenir le même niveau de dépenses, tandis que 31 pour cent ont déclaré que le gouvernement devrait dépenser moins. Seulement 16 pour cent ont déclaré souhaiter une augmentation des niveaux de dépenses. À ce jour, le Canada a engagé plus de 9 milliards de dollars en aide globale à l'Ukraine, a déclaré Trudeau. Une grande majorité des personnes interrogées, environ 60 pour cent, ont déclaré qu'elles ne voyaient aucune perspective de paix dans un avenir proche et craignaient que la guerre ne s'éternise pendant plusieurs années. 33 pour cent prédisent encore deux années de conflit. L'enquête a été menée auprès de quelque 1 529 adultes canadiens du 16 au 18 février. Les enquêtes en ligne ne peuvent pas se voir attribuer une marge d'erreur car elles ne échantillonnent pas la population de manière aléatoire. Plus tôt cette semaine, le ministre de la Défense, Bill Blair, a déclaré que le Canada enverrait plus de 800 drones en Ukraine à partir du printemps, ce qui représente une part de 95 millions de dollars du programme d'aide militaire actuel de 500 millions de dollars du gouvernement. Pendant ce temps, le conflit est devenu un sujet de discussion national populaire tant pour le gouvernement libéral que pour ses rivaux de l'opposition conservatrice. Les conservateurs accusent le gouvernement d'avoir laissé tomber l'Ukraine et veulent que Trudeau livre davantage de fournitures mortelles. Le Canada a promis des milliards de dollars en soutien militaire, mais tout cela ne s'est pas concrétisé. De leur côté, les libéraux accusent l'opposition d'avoir « abandonné » l'Ukraine en votant contre un accord de libre-échange modernisé entre le Canada et l'Ukraine — un accord auquel les conservateurs se sont opposés parce qu'il prévoyait un prix sur le carbone. Le Canada était uni dans son engagement envers l'Ukraine jusqu'à ce que les conservateurs décident de voter contre l'accord, a déploré Trudeau jeudi. En ce qui concerne le soutien humanitaire, les répondants au sondage Léger sont moins polarisés. Quelque 41 pour cent ont déclaré que le Canada devrait maintenir ses niveaux d'aide actuels, tandis que 28 pour cent étaient favorables à une augmentation. Seulement 15 pour cent des personnes interrogées ont déclaré que le Canada devrait envoyer moins d'aide humanitaire. Depuis l'invasion de 2022, les sondages de Léger suggèrent que moins de Canadiens pensent que le conflit pourrait se transformer en guerre mondiale, même si 58 pour cent des répondants craignent toujours cette possibilité. Les trois quarts des personnes interrogées craignent qu'un conflit mondial ne survienne en mars 2022, selon un précédent sondage Léger. Quant à savoir quel pays gagnera la guerre, 47 pour cent des personnes interrogées lors de la dernière enquête ont déclaré ne pas le savoir. Les autres étaient divisés, 28 pour cent s'attendant à ce que l'Ukraine batte la force d'invasion et 25 pour cent pensaient que la Russie. Ce rapport de La Presse Canadienne a été publié pour la première fois le 22 février 2024."
     }
 }
-  function handleTranslateClick() {
-    isTranslateClicked = true;
-  }
+
   return class TranslatingWidget extends React.PureComponent<
     TranslatingWidgetProps,
-    any
+    IState
   > {
+
     constructor(props: TranslatingWidgetProps) {
       console.log("superdesk:", superdesk);
       super(props);
+      this.state = {
+        isTranslateClicked: false,
+    };
+
+    this.handleTranslateClick = this.handleTranslateClick.bind(this)
+    }
+
+    handleTranslateClick() {
+      console.log("button clicked")
+      this.setState({isTranslateClicked: true})
     }
 
     render() {
@@ -92,26 +104,24 @@ export const getTranslateWidgetComponent = (
                   >
                     BODY HTML
                   </label>
-                  <input 
-                    type="text" 
+                  <textarea
                     id="bodyHtml"
                     value={articleText.english.body}
+                    disabled
                     style={{
                       border: 'none',
-                      borderBottom: '1px solid rgb(204, 204, 204, 0.3)',
+                      borderBottom: '1px solid rgba(204, 204, 204, 0.3)',
                       borderTopLeftRadius: '2px',
                       borderTopRightRadius: '2px',
-                      padding: '0 0.8rem',
+                      padding: '0.8rem',
                       fontSize: '16px',
                       outline: 'none',
-                      flex: '1',
                       overflow: 'auto',
                       width: '100%',
-                      display: 'block',
-                      position: 'relative', 
-                      background: 'rgb(111, 125, 144,6%)'
+                      height: '100%',
+                      resize: 'none',
+                      background: 'rgba(111, 125, 144, 0.06)',
                     }}
-                    disabled
                   />
                 </div>
               </section>
@@ -169,24 +179,23 @@ export const getTranslateWidgetComponent = (
                   >
                     TRANSLATED BODY HTML
                   </label>
-                  <input 
+                  <textarea 
                     type="text" 
                     id="translatedBodyHtml"
                     value={isTranslateClicked ? articleText.french.body : ''}
                     style={{
                       border: 'none',
-                      borderBottom: '1px dotted rgba(22, 25, 29, 0.2)',
+                      borderBottom: '1px solid rgba(204, 204, 204, 0.3)',
                       borderTopLeftRadius: '2px',
                       borderTopRightRadius: '2px',
-                      padding: '0 0.8rem',
+                      padding: '0.8rem',
                       fontSize: '16px',
                       outline: 'none',
-                      flex: '1',
                       overflow: 'auto',
                       width: '100%',
-                      display: 'block',
-                      position: 'relative', 
-                      background: 'rgb(111, 125, 144,6%)'
+                      height: '100%',
+                      resize: 'none',
+                      background: 'rgba(111, 125, 144, 0.06)',
                     }}
                   />
                 </div>
