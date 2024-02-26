@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from 'react';
 import { ISuperdesk, IArticle } from "superdesk-api";
 import { Input, Button, RadioButtonGroup } from "superdesk-ui-framework/react";
 import articleText from './articleText.json';
@@ -194,7 +195,4 @@ export const getTranslateWidgetComponent = (
     }
   };
 };
-function useState(arg0: boolean): [any, any] {
-  throw new Error("Function not implemented.");
-}
 
