@@ -129,7 +129,7 @@ export const getTranslateWidgetComponent = (
                 text="Translate Article"
                 type="primary"
                 expand={true}
-                onClick={handleTranslateClick}
+                onClick={this.handleTranslateClick}
               />
             </div>
             <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding: '16px', paddingRight: '0', gap: '32px', height: '94%'}}>
@@ -148,13 +148,13 @@ export const getTranslateWidgetComponent = (
               <section className="output-section" style={{display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', height: '75vh', paddingLeft: '8px'}}>
                 <Input
                   label=" Translated Headline"
-                  value={isTranslateClicked ? articleText.french.headline : ""}
+                  value={this.isTranslateClicked ? articleText.french.headline : ""}
                   type="text"
                   onChange={() => false}
                 />
                 <Input
                   label="Translated Extended Headline"
-                  value={isTranslateClicked ? articleText.french.extendedHeadline : ""}
+                  value={this.isTranslateClicked ? articleText.french.extendedHeadline : ""}
                   type="text"
                   onChange={() => false}
                 />
@@ -179,10 +179,9 @@ export const getTranslateWidgetComponent = (
                   >
                     TRANSLATED BODY HTML
                   </label>
-                  <textarea 
-                    type="text" 
+                  <textarea
                     id="translatedBodyHtml"
-                    value={isTranslateClicked ? articleText.french.body : ''}
+                    value={this.isTranslateClicked ? articleText.french.body : ''}
                     style={{
                       border: 'none',
                       borderBottom: '1px solid rgba(204, 204, 204, 0.3)',
@@ -200,7 +199,7 @@ export const getTranslateWidgetComponent = (
                   />
                 </div>
               </section>
-              { isTranslateClicked ?
+              { this.isTranslateClicked ?
               <Button
               text="Replace Article"
               type="primary"
