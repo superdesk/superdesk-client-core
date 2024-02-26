@@ -152,7 +152,7 @@ function WidgetsManagerCtrl(
         const widgets = authoringWidgets.filter((widget) => {
             console.log('widget', widget);
             // if the widget is translate widget, then apply extra styles
-            if(this.widget._id === 'translate-widget') {
+            if(widget._id === 'translate-widget') {
                 $scope.isTranslateWidgetFullWidth = true;
                 $scope.isWidgetDisplayFlex = true;
             }
