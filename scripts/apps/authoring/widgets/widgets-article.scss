@@ -191,10 +191,16 @@
         margin-bottom: 10px;
     }
 }
+
 // Custom CSS for the article widget to be full screen
 .full-screen {
     width: 93%;
   }  
 .flex-container {
     display: flex;
+}
+
+.position-fix {
+    left: 0px;
+    right: -24px;
 }
