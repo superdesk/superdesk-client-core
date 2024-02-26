@@ -6,6 +6,7 @@ export const getTranslateWidgetComponent = (
   superdesk: ISuperdesk,
   label: string
 ) => {
+  console.log("Translate widget activated with label:", label);
   interface TranslatingWidgetProps {
     article: IArticle; // Ensure this matches the IArticle interface
   }
@@ -14,10 +15,8 @@ export const getTranslateWidgetComponent = (
     any
   > {
     constructor(props: TranslatingWidgetProps) {
+      console.log("superdesk:", superdesk);
       super(props);
-      // Use type assertions to "use" the variables
-      const _label: string = label;
-      const _superdesk: any = superdesk;
     }
 
     render() {
