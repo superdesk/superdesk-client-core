@@ -148,13 +148,13 @@ export const getTranslateWidgetComponent = (
               <section className="output-section" style={{display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', height: '75vh', paddingLeft: '8px'}}>
                 <Input
                   label=" Translated Headline"
-                  value={this.isTranslateClicked ? articleText.french.headline : ""}
+                  value={this.state.isTranslateClicked ? articleText.french.headline : ""}
                   type="text"
                   onChange={() => false}
                 />
                 <Input
                   label="Translated Extended Headline"
-                  value={this.isTranslateClicked ? articleText.french.extendedHeadline : ""}
+                  value={this.state.isTranslateClicked ? articleText.french.extendedHeadline : ""}
                   type="text"
                   onChange={() => false}
                 />
@@ -181,7 +181,7 @@ export const getTranslateWidgetComponent = (
                   </label>
                   <textarea
                     id="translatedBodyHtml"
-                    value={this.isTranslateClicked ? articleText.french.body : ''}
+                    value={this.state.isTranslateClicked ? articleText.french.body : ''}
                     style={{
                       border: 'none',
                       borderBottom: '1px solid rgba(204, 204, 204, 0.3)',
@@ -199,7 +199,7 @@ export const getTranslateWidgetComponent = (
                   />
                 </div>
               </section>
-              { this.isTranslateClicked ?
+              { this.state.isTranslateClicked ?
               <Button
               text="Replace Article"
               type="primary"
