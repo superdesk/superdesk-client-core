@@ -21,8 +21,8 @@ export const getTranslateWidgetComponent = (
 
     render() {
       return (
-        <div className="translate-widget" style={{width: '93%', margin: '0', height: '100%'}}>
-          <header className="header" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '24px', marginBottom: '16px', marginTop: '20px'}}>
+        <div className="translate-widget" style={{width: '95%', margin: '0', height: '100%'}}>
+          <header className="header" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '24px', marginBottom: '8px', marginTop: '20px'}}>
             <h1 style={{margin: '0', fontSize: '24px', fontWeight: 500, color: '#4d4d4d'}}>Translate Widget</h1>
           </header>
           <div className="columns" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', height: '90%'}}>
@@ -54,13 +54,47 @@ export const getTranslateWidgetComponent = (
                   disabled={true}
                   onChange={() => false}
                 />
-                <Input
-                  label="Body HTML"
-                  value={""}
-                  type="text"
-                  disabled={true}
-                  onChange={() => false}
-                />
+                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto' }}>
+                  <label 
+                    htmlFor="bodyHtml" 
+                    style={{ 
+                      marginBottom: '5px', 
+                      color: '#647182', 
+                      fontSize: '1.1rem', 
+                      textTransform: 'uppercase', 
+                      fontWeight: 500, 
+                      letterSpacing: '0.08em', 
+                      position: 'relative', 
+                      minHeight: '1.6rem', 
+                      lineHeight: '100%', 
+                      margin: 0,
+                      display: 'inline-flex', 
+                      alignItems: 'flex-start', 
+                      justifyContent: 'flex-start' 
+                    }}
+                  >
+                    BODY HTML
+                  </label>
+                  <input 
+                    type="text" 
+                    id="bodyHtml" 
+                    placeholder="BODY HTML"
+                    style={{
+                      border: 'none',
+                      borderBottom: '1px solid #ccc',
+                      borderTopLeftRadius: '2px',
+                      borderTopRightRadius: '2px',
+                      padding: '0 0.8rem',
+                      fontSize: '16px',
+                      outline: 'none',
+                      flex: '1',
+                      overflow: 'auto',
+                      width: '100%',
+                      display: 'block',
+                      position: 'relative'
+                    }}
+                  />
+                </div>
               </section>
               <Button
                 text="Translate Article"
@@ -69,7 +103,7 @@ export const getTranslateWidgetComponent = (
                 onClick={() => false}
               />
             </div>
-            <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding: '16px', gap: '32px', height: '100%'}}>
+            <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding: '16px', paddingRight: '0', gap: '32px', height: '100%'}}>
               <section className="language-selection" style={{marginLeft: '8px'}}>
                 <RadioButtonGroup
                   group={{ groupLabel: "Output Languages" }}
@@ -82,7 +116,7 @@ export const getTranslateWidgetComponent = (
                   onChange={() => false}
                 />
               </section>
-              <section className="output-section" style={{display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', paddingLeft: '8px'}}>
+              <section className="output-section" style={{display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', height: '75vh', paddingLeft: '8px'}}>
                 <Input
                   label=" Translated Headline"
                   value={""}
@@ -97,13 +131,47 @@ export const getTranslateWidgetComponent = (
                   disabled={true}
                   onChange={() => false}
                 />
-                <Input
-                  label="Translated Body HTML"
-                  value={""}
-                  type="text"
-                  disabled={true}
-                  onChange={() => false}
-                />
+                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto' }}>
+                  <label 
+                    htmlFor="translatedBodyHtml" 
+                    style={{ 
+                      marginBottom: '5px', 
+                      color: '#647182', 
+                      fontSize: '1.1rem', 
+                      textTransform: 'uppercase', 
+                      fontWeight: 500, 
+                      letterSpacing: '0.08em', 
+                      position: 'relative', 
+                      minHeight: '1.6rem', 
+                      lineHeight: '100%', 
+                      margin: 0,
+                      display: 'inline-flex', 
+                      alignItems: 'flex-start', 
+                      justifyContent: 'flex-start' 
+                    }}
+                  >
+                    TRANSLATED BODY HTML
+                  </label>
+                  <input 
+                    type="text" 
+                    id="tran" 
+                    placeholder="BODY HTML"
+                    style={{
+                      border: 'none',
+                      borderBottom: '1px dotted rgba(22, 25, 29, 0.2)',
+                      borderTopLeftRadius: '2px',
+                      borderTopRightRadius: '2px',
+                      padding: '0 0.8rem',
+                      fontSize: '16px',
+                      outline: 'none',
+                      flex: '1',
+                      overflow: 'auto',
+                      width: '100%',
+                      display: 'block',
+                      position: 'relative'
+                    }}
+                  />
+                </div>
               </section>
             </div>
           </div>
