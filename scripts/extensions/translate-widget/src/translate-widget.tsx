@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ISuperdesk, IArticle } from "superdesk-api";
 import { Input, Button, RadioButtonGroup } from "superdesk-ui-framework/react";
 
@@ -11,7 +10,8 @@ export const getTranslateWidgetComponent = (
   interface TranslatingWidgetProps {
     article: IArticle; // Ensure this matches the IArticle interface
   }
-  const [isTranslateClicked, setIsTranslateClicked] = useState(false);
+  let isTranslateClicked = false;
+
   const articleText = {
     "english": {
         "headline": "Canada Ukraine",
@@ -25,7 +25,7 @@ export const getTranslateWidgetComponent = (
     }
 }
   function handleTranslateClick() {
-    setIsTranslateClicked(true)
+    isTranslateClicked = true;
   }
   return class TranslatingWidget extends React.PureComponent<
     TranslatingWidgetProps,
