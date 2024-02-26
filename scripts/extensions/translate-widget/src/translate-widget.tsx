@@ -54,12 +54,12 @@ export const getTranslateWidgetComponent = (
                   disabled={true}
                   onChange={() => false}
                 />
-                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto'}}>
                   <label 
                     htmlFor="bodyHtml" 
                     style={{ 
                       marginBottom: '5px', 
-                      color: '#647182', 
+                      color: 'rgb(100, 113, 130, 0.5)', 
                       fontSize: '1.1rem', 
                       textTransform: 'uppercase', 
                       fontWeight: 500, 
@@ -77,8 +77,7 @@ export const getTranslateWidgetComponent = (
                   </label>
                   <input 
                     type="text" 
-                    id="bodyHtml" 
-                    placeholder="BODY HTML"
+                    id="bodyHtml"
                     style={{
                       border: 'none',
                       borderBottom: '1px solid #ccc',
@@ -91,7 +90,8 @@ export const getTranslateWidgetComponent = (
                       overflow: 'auto',
                       width: '100%',
                       display: 'block',
-                      position: 'relative'
+                      position: 'relative', 
+                      background: 'rgb(111, 125, 144,6%)'
                     }}
                   />
                 </div>
@@ -103,7 +103,7 @@ export const getTranslateWidgetComponent = (
                 onClick={() => false}
               />
             </div>
-            <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding: '16px', paddingRight: '0', gap: '32px', height: '100%'}}>
+            <div className="output-column" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', padding: '16px', paddingRight: '0', gap: '32px', height: '94%'}}>
               <section className="language-selection" style={{marginLeft: '8px'}}>
                 <RadioButtonGroup
                   group={{ groupLabel: "Output Languages" }}
@@ -121,17 +121,15 @@ export const getTranslateWidgetComponent = (
                   label=" Translated Headline"
                   value={""}
                   type="text"
-                  disabled={true}
                   onChange={() => false}
                 />
                 <Input
                   label="Translated Extended Headline"
                   value={""}
                   type="text"
-                  disabled={true}
                   onChange={() => false}
                 />
-                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: '1', overflow: 'auto'}}>
                   <label 
                     htmlFor="translatedBodyHtml" 
                     style={{ 
@@ -154,8 +152,7 @@ export const getTranslateWidgetComponent = (
                   </label>
                   <input 
                     type="text" 
-                    id="tran" 
-                    placeholder="BODY HTML"
+                    id="translatedBodyHtml"
                     style={{
                       border: 'none',
                       borderBottom: '1px dotted rgba(22, 25, 29, 0.2)',
@@ -168,7 +165,8 @@ export const getTranslateWidgetComponent = (
                       overflow: 'auto',
                       width: '100%',
                       display: 'block',
-                      position: 'relative'
+                      position: 'relative', 
+                      background: 'rgb(111, 125, 144,6%)'
                     }}
                   />
                 </div>
