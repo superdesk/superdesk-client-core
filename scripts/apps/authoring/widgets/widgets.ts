@@ -150,15 +150,6 @@ function WidgetsManagerCtrl(
         }
 
         const widgets = authoringWidgets.filter((widget) => {
-            console.log('widget', widget);
-            // if the widget is translate widget, then apply extra styles
-            if(widget._id === 'translate-widget') {
-                $scope.isTranslateWidgetFullWidth = true;
-                $scope.isWidgetDisplayFlex = true;
-            }else {
-                $scope.isTranslateWidgetFullWidth = false;
-                $scope.isWidgetDisplayFlex = false;
-            }
             if (widget.component != null) { // widgets from extensions are themselves in control of widget visibility
                 return widget.isAllowed?.(item) ?? true;
             } else {
@@ -266,6 +257,10 @@ function WidgetsManagerCtrl(
                 $scope.closeWidget();
             } else {
                 $scope.active = widget;
+                console.log('widget', widget);
+                // Set flags based on whether the activated widget is the translate-widget
+                $scope.isTranslateWidgetFullWidth = widget._id === 'translate-widget';
+                $scope.isWidgetDisplayFlex = widget._id === 'translate-widget';
             }
         }
     };

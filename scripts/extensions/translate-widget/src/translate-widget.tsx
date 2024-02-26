@@ -21,7 +21,7 @@ export const getTranslateWidgetComponent = (
 
     render() {
       return (
-        <div className="translate-widget" style={{width: '93%', margin: 'auto', height: '100%', marginRight: '0'}}>
+        <div className="translate-widget" style={{width: '93%', margin: '0', height: '100%'}}>
           <header className="header" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '24px', marginBottom: '16px', marginTop: '20px'}}>
             <h1 style={{margin: '0', fontSize: '24px', fontWeight: 500, color: '#4d4d4d'}}>Translate Widget</h1>
           </header>
