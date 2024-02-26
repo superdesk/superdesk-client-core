@@ -150,6 +150,12 @@ function WidgetsManagerCtrl(
         }
 
         const widgets = authoringWidgets.filter((widget) => {
+            console.log('widget', widget);
+            // if the widget is translate widget, then apply extra styles
+            if(this.widget._id === 'translate-widget') {
+                $scope.isTranslateWidgetFullWidth = true;
+                $scope.isWidgetDisplayFlex = true;
+            }
             if (widget.component != null) { // widgets from extensions are themselves in control of widget visibility
                 return widget.isAllowed?.(item) ?? true;
             } else {
@@ -191,12 +197,6 @@ function WidgetsManagerCtrl(
                         widget.badgeAsyncValue = null;
                         $injector.invoke(widget.badgeAsync, null, {item})
                             .then((value) => widget.badgeAsyncValue = value);
-                    }
-                    console.log('WidgetsManagerCtrl', widget);
-                    // if the widget is translate widget, then apply extra styles
-                    if(this.widget._id === 'translate-widget') {
-                        $scope.isTranslateWidgetFullWidth = true;
-                        $scope.isWidgetDisplayFlex = true;
                     }
                 });
 
