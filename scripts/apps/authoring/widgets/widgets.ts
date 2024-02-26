@@ -359,9 +359,11 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
         link: function(scope) {
-            // In the AngularJS controller/directive
-            scope.isTranslateWidgetFullWidth = true; // Or set based on some condition
-
+            // if the widget is translate widget, then apply extra styles
+            if(this.widget._id === 'translate-widget') {
+                scope.isTranslateWidgetFullWidth = true;
+                scope.isWidgetDisplayFlex = true;
+            }
             scope.widget = null;
             scope.pinnedWidget = null;
 
