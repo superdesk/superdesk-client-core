@@ -15,6 +15,9 @@ export const getTranslateWidgetComponent = (
   > {
     constructor(props: TranslatingWidgetProps) {
       super(props);
+      // Use type assertions to "use" the variables
+      const _label: string = label;
+      const _superdesk: any = superdesk;
     }
 
     render() {
