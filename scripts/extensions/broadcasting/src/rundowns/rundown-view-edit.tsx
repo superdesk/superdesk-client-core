@@ -563,7 +563,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     {
                                         rundownItemAction != null && (
                                             <AuthoringReact
-                                                headerCollapsed={true}
+                                                headerCollapsed={false}
                                                 key={rundownItemAction.authoringReactKey}
                                                 itemId=""
                                                 resourceNames={['rundown_items']}
