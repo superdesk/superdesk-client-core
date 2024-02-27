@@ -61,6 +61,7 @@ const {
     WithLiveResources,
     SpacerBlock,
     Spacer,
+    ActionButton,
 } = superdesk.components;
 const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
@@ -467,13 +468,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 },
                                             ]}
                                         >
-                                            <button
-                                                className="sd-navbtn"
-                                                aria-label={gettext('Actions')}
+                                            <ActionButton
+                                                ariaValue={gettext('Actions')}
                                                 onClick={noop}
-                                            >
-                                                <i className="icon-dots-vertical" />
-                                            </button>
+                                            />
                                         </Dropdown>
                                     </Spacer>
                                 </Spacer>

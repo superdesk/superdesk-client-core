@@ -2121,6 +2121,12 @@ declare module 'superdesk-api' {
         square?: boolean;
     }
 
+    export interface IPropsActionButton {
+        ariaValue: string;
+        refValue?(event): void;
+        onClick(event: React.MouseEvent): void;
+    }
+
     export interface IPropsIcon {
         className: string;
         size?: number;
@@ -2815,6 +2821,7 @@ declare module 'superdesk-api' {
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
             Badge: React.ComponentType<IPropsBadge>;
+            ActionButton: React.ComponentType<IPropsActionButton>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
