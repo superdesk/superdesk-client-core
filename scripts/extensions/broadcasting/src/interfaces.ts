@@ -61,7 +61,6 @@ export interface IRundownItemBase {
         }
     };
     subitems?: Array<ISubitem>;
-    _id?: string;
 }
 
 export type IRundownItem = IRundownItemBase & IBaseRestApiResponse & ILockInfo;

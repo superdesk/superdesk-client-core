@@ -143,7 +143,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     </Spacer>
                 ),
                 action: this.props.getActions(item),
-                selected: this.props.itemId === item._id,
+                selected: isRundownItem(item) ? this.props.itemId === item._id : false,
                 onClick: () => {
                     this.props.preview(item);
                 },
