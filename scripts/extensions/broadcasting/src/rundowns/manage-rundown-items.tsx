@@ -188,7 +188,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             );
                         }
                     }}
-                    itemId={this.props.selectedItem}
+                    selectedItem={this.props.selectedItem}
                 />
             </div>
         );
