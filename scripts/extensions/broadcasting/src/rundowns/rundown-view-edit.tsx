@@ -672,6 +672,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         return <span />;
                                                     }
 
+                                                    if (rundownItemAction.type === 'create') {
+                                                        return null;
+                                                    }
+
                                                     return (
                                                         <Nav.SideBarTabs
                                                             activeTab={sideWidget?.name ?? null}
