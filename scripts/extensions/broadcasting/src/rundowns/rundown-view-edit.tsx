@@ -549,6 +549,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             ),
                                                         });
                                                     }}
+                                                    selectedItem={
+                                                        this.props.rundownItemAction?.type !== 'create'
+                                                            ? this.props.rundownItemAction?.itemId
+                                                            : null
+                                                    }
                                                 />
                                             );
                                         }}
