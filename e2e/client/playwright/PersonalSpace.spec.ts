@@ -19,7 +19,7 @@ test.describe('Personal Space', async () => {
         await page.locator(s('options-modal')).getByRole('button', {name: 'save'}).click();
     
         // check visibility of article
-        await expect(page.locator(s('monitoring-group=Personal Items / ')).locator(s('article-item=new article'))).toBeVisible();
+        await expect(page.locator(s('monitoring-group=Personal Items')).locator(s('article-item=new article'))).toBeVisible();
     
         // edit article
         await page.hover(s('article-item=new article'));
@@ -29,8 +29,8 @@ test.describe('Personal Space', async () => {
         await page.locator(s('authoring-topbar')).locator(s('save')).click();
     
         // check visibility of edited article
-        await expect(page.locator(s('monitoring-group=Personal Items / ')).locator(s('article-item=new article'))).not.toBeVisible();
-        await expect(page.locator(s('monitoring-group=Personal Items / ')).locator(s('article-item=edited new article'))).toBeVisible();
+        await expect(page.locator(s('monitoring-group=Personal Items')).locator(s('article-item=new article'))).not.toBeVisible();
+        await expect(page.locator(s('monitoring-group=Personal Items')).locator(s('article-item=edited new article'))).toBeVisible();
     });
     
     test('Copy article in Personal space', async ({page}) => {
@@ -59,7 +59,7 @@ test.describe('Personal Space', async () => {
         await page.locator(s('interactive-actions-panel')).locator(s('send')).click();
     
         // check if article removed from personal space
-        await expect(page.locator(s('monitoring-group=Personal Items / ')).locator(s('article-item=personal space article 1'))).not.toBeVisible();
+        await expect(page.locator(s('monitoring-group=Personal Items')).locator(s('article-item=personal space article 1'))).not.toBeVisible();
     
         // go to monitoring and check visibility of article
         await page.goto('/#/workspace/monitoring');

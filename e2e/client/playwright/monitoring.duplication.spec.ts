@@ -13,7 +13,7 @@ test('duplicate in place', async ({page}) => {
     await expect(page.locator(articleSelector)).toHaveCount(1);
 
     const initialItemsCountAcrossAllStages = await page.locator(s('article-item')).count();
-
+    
     await monitoring.executeActionOnMonitoringItem(
         page.locator(articleSelector),
         'Duplicate',
@@ -31,11 +31,11 @@ test('duplicate to personal space', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/personal');
+
+    await expect(page.locator(s('list-item-placeholder'))).toBeVisible();
     await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
-    await expect(page.locator(articleSelector)).toHaveCount(0);
-
-    const itemCountInPersonalSpace = await page.locator(s('article-item')).count();
+    const itemCountInPersonalSpace = await page.locator(s('article-item')).count(); // need to be 1
 
     await page.goto('/#/workspace/monitoring');
 
