@@ -4,6 +4,7 @@ import {applyDefault} from 'core/helpers/typescript-helpers';
 import {CC} from 'core/ui/configurable-ui-components';
 import {generate} from 'json-merge-patch';
 import {noop} from 'lodash';
+import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -144,13 +145,14 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     ) {
                         resolve(false);
                     } else {
-                        modal.confirm(
-                            gettext('Do you want to reload the page now?'),
-                            gettext('The page needs to be reloaded to change the language'),
-                        )
-                            .then(() => {
+                        showConfirmationPrompt({
+                            title: 'Do you want to reload the page now?',
+                            message: 'The page needs to be reloaded to change the language',
+                        }).then((confirmed) => {
+                            if (confirmed) {
                                 resolve(true);
-                            });
+                            }
+                        });
                     }
                 })
                     .then((reloadPage) => {

@@ -1,4 +1,4 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config, IEditor3ValueStorage} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {retrieveStoredValueEditor3Generic, storeEditor3ValueBase} from '.';
 
@@ -29,22 +29,34 @@ export const body_html: IFieldAdapter<IArticle> = {
         authoringStorage,
     ),
 
-    storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(
-            'body_html',
-            item,
-            value,
-            config,
-        );
+    storeValue: (value: IEditor3ValueStorage, item, config, preferIncomplete) => {
+        if (preferIncomplete) {
+            return {
+                ...item,
+                fields_meta: {
+                    ...(item.fields_meta ?? {}),
+                    body_html: {
+                        draftjsState: [value.rawContentState],
+                    },
+                },
+            };
+        } else {
+            const result = storeEditor3ValueBase(
+                'body_html',
+                item,
+                value,
+                config,
+            );
 
-        const articleUpdated = {...result.article};
+            const articleUpdated = {...result.article};
 
-        articleUpdated.body_html = result.stringValue;
+            articleUpdated.body_html = result.stringValue;
 
-        // Keep compatibility with existing output format.
-        // (only applicable to body_html field)
-        articleUpdated.annotations = result.annotations;
+            // Keep compatibility with existing output format.
+            // (only applicable to body_html field)
+            articleUpdated.annotations = result.annotations;
 
-        return articleUpdated;
+            return articleUpdated;
+        }
     },
 };

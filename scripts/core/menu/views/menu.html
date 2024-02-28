@@ -1,5 +1,9 @@
-<div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}"
-    data-text="{{environmentName}}">
+<div
+    id="top-menu"
+    ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}"
+    data-text="{{environmentName}}"
+    data-test-id="top-menu"
+>
     <div class="pull-left">
         <span id="hamburger-menu">
             <button
@@ -15,9 +19,14 @@
                 </span>
             </button>
         </span>
-        <h1 class="sd-top-menu__header"
+        <h1
+            class="sd-top-menu__header"
             ng-if="currentRoute.category !== 'superdesk.core.menu.settings' && !currentRoute.topTemplateUrl"
-            ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</h1>
+            ng-hide="currentRoute.topTemplateUrl"
+            data-test-id="page-title"
+        >
+            {{ currentRoute.label | translate}}
+        </h1>
         <h1 class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'">{{
             "Settings" | translate}}</h1>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
@@ -43,8 +52,12 @@
             <i class="icon-bell" style="color: white"></i>
         </button>
 
-        <div class="dropdown dropdown--align-right current-user__dropdown" dropdown>
-            <button class="current-user__button dropdown__toggle" aria-label="{{ 'View profile details' | translate }}" dropdown__toggle>
+        <div class="dropdown dropdown--align-right current-user__dropdown" dropdown data-test-id="my-profile-dropdown">
+            <button
+                class="current-user__button dropdown__toggle"
+                aria-label="{{ 'View profile details' | translate }}"
+                dropdown__toggle data-test-id="my-profile"
+            >
                 <sd-user-avatar data-user="currentUser"></sd-user-avatar>
             </button>
             <ul class="dropdown__menu">

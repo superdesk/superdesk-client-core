@@ -88,7 +88,7 @@ describe('publishing', () => {
         const slugline = 'testing-send-and-publish';
 
         el(['authoring', 'field-slugline']).sendKeys(slugline);
-        el(['authoring', 'save']).click();
+        authoring.save();
 
         el(['authoring', 'open-send-publish-pane']).click();
 

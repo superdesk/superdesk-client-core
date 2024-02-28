@@ -24,7 +24,10 @@ module.exports = function makeConfig(grunt) {
     const apps = sdConfig.importApps || sdConfig.apps || [];
 
     // include only 'superdesk-core' and valid modules inside node_modules
-    let validModules = ['superdesk-core'].concat(apps);
+    let validModules = [
+        'superdesk-core',
+        'planning', // on fireq we store superdesk-planning in linked `planning` folder
+    ].concat(apps);
 
     const jQueryModule = getModuleDir('jquery');
 
@@ -99,10 +102,12 @@ module.exports = function makeConfig(grunt) {
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
-                        return !validModules.some(
+                        const exclude = !validModules.some(
                             (app) =>
                                 absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
                         );
+
+                        return exclude;
                     },
                     loader: 'ts-loader',
                     options: {

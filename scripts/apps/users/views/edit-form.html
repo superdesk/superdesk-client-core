@@ -1,6 +1,6 @@
 <form ng-if="!loading" name="userForm" data-test-id="user-details-form">
     <div>
-        <div class="action-bar" ng-class="{show:dirty}">
+        <div class="action-bar" ng-class="{show:dirty}" data-test-id="action-bar">
             <div class="button-group button-group--end button-group--comfort">
                 <button id="cancel-edit-btn" type="button" class="btn" ng-click="cancel()" ng-disabled="!dirty" translate data-test-id="cancel">Cancel</button>
                 <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">Save</button>
@@ -20,8 +20,11 @@
             <div class="profile-info__content">
                 <!-- General content -->
                 <div class="details-info">
-                    
-                    <div id="user-general" class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--gradient-1 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3">
+
+                    <div
+                        id="user-general"
+                        class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--gradient-1 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3"
+                    >
                         <div class="header-info">
                             <div class="sd-container sd-container--flex">
                                 <span class="sd-margin-e--auto">
@@ -76,7 +79,7 @@
                                     <label class="sd-input__label" for="first-name" translate>first name</label>
                                     <input class="sd-input__input" type="text" name="first_name" id="first-name" ng-model="user.first_name" required ng-readonly="user._readonly && user._readonly.first_name" data-test-id="field--first_name">
                                     <div class="sd-input__message-box">
-                                        <div ng-show="userForm.first_name.$error.required" class="sd-input__message" translate>This field is required.</div> 
+                                        <div ng-show="userForm.first_name.$error.required" class="sd-input__message" translate>This field is required.</div>
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +243,7 @@
                         </div>
                     </div>
                 </div><!-- END General content -->
-    
+
                 <!-- Author content -->
                 <div class="details-info" ng-show="user.is_author" id="authorDetails">
                     <h3 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Author info</h3>
@@ -256,10 +259,10 @@
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                         </div>
-        
+
                         <div class="field__email form__group form__group--default form__group--mb-3" sd-info-item>
                             <div class="form__item">
                                 <div class="sd-input">
@@ -268,7 +271,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
                             <div class="form__item">
                                 <div class="sd-input" ng-disabled="!user.is_author">
@@ -277,16 +280,16 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="biography">{{ :: 'Biography'|translate }}</label>
                                     <textarea class="sd-input__input" id="biography" sd-auto-height ng-model="user.biography" ng-disabled="!user.is_author"></textarea>
-                                </div>    
+                                </div>
                             </div>
                         </div>
-        
+
                         <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
                             <div class="form__item">
                                 <div class="sd-input">
@@ -303,7 +306,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
                             <div class="form__item">
                                 <div class="sd-input">
@@ -317,10 +320,10 @@
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">{{ :: 'e.g. superdeskman from https://www.instagram.com/superdeskman'|translate }}</div>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
-        
+
                         <div sd-info-item class="field__email form__group form__group--default form__group--mb-2" ng-if="privileges.users">
                             <div class="form__item">
                                 <div class="sd-input">
@@ -339,7 +342,7 @@
                                             <span translate>Please provide a valid twitter account</span>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>

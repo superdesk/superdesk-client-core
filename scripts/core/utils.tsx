@@ -5,6 +5,7 @@ import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superd
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
+import {IScope} from 'angular';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 
@@ -96,6 +97,18 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
         })
         .catch(reject);
 });
+
+export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
+    let current = scope.$parent;
+
+    while (current != null) {
+        if (predicate(current) === true) {
+            return current;
+        } else {
+            current = current.$parent;
+        }
+    }
+}
 
 /**
  * Works the same way as `gettext`, except that it's possible to also use React components
