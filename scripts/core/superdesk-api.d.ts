@@ -202,7 +202,7 @@ declare module 'superdesk-api' {
 
         // positioned relatively; shown at the same time as getSidePanel
         // used for rendering icon buttons of available side widgets
-        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
+        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element | null;
 
         // positioned absolutely; shown at the same time as getSidebar
         // used for side widgets
@@ -735,7 +735,7 @@ declare module 'superdesk-api' {
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
-            customFieldTypes?: Array<ICustomFieldType<unknown, unknown, unknown, unknown>>;
+            customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
