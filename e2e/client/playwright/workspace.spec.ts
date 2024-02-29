@@ -37,7 +37,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await page.locator('button', {hasText: 'Workspace 1'}).click();
+        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // starting create item
         await articleTemplateSlugline('new article');
@@ -83,7 +83,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await page.locator('button', {hasText: 'Workspace 1'}).click();
+        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // go to dashboard
         await page.locator('[data-test-id="Dashboard"]').click();
@@ -104,7 +104,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await page.locator('button', {hasText: 'Workspace 1'}).click();
+        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // spike article
         await page.hover(s('article-item=story 2'));
