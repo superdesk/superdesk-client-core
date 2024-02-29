@@ -33,6 +33,7 @@ import {canAddArticleEmbed} from './components/article-embed/can-add-article-emb
 import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-statistics-connected';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
+import {Spacer} from 'core/ui/components/Spacer';
 
 /**
  * @ngdoc directive
@@ -343,13 +344,7 @@ class Editor3Directive {
                     ReactDOM.unmountComponentAtNode(element);
 
                     const textStatistics = (
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
                             <TextStatisticsConnected />
 
                             {
@@ -357,7 +352,7 @@ class Editor3Directive {
                                     <CharacterCountConfigButton field={this.fieldId} />
                                 )
                             }
-                        </div>
+                        </Spacer>
                     );
 
                     const validationErrors = (() => {
@@ -402,28 +397,17 @@ class Editor3Directive {
                         return (
                             <div>
                                 <div style={{marginBlockEnd: 15}}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: 8,
-                                                alignItems: 'center',
-                                            }}
-                                        >
+                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
                                             <div className="field__label" style={labelStyle}>{fieldName}</div>
+
                                             {this.required && (
                                                 <span className="sd-required">{gettext('Required')}</span>
                                             )}
-                                        </div>
+                                        </Spacer>
 
                                         {textStatistics}
-                                    </div>
+                                    </Spacer>
 
                                     {validationErrors}
                                 </div>
@@ -457,13 +441,7 @@ class Editor3Directive {
                                         {editor3}
                                     </div>
 
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
+                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
                                         {
                                             validationErrors ?? (
                                                 <span
@@ -474,7 +452,7 @@ class Editor3Directive {
                                                 </span>
                                             )}
                                         {textStatistics}
-                                    </div>
+                                    </Spacer>
                                 </div>
                             </div>
                         );

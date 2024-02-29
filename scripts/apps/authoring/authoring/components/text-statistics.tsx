@@ -3,6 +3,7 @@ import {CharacterCount2} from 'apps/authoring/authoring/components/CharacterCoun
 import {gettextPlural} from 'core/utils';
 import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
+import {Spacer} from 'core/ui/components/Spacer';
 
 interface IProps {
     text: string;
@@ -16,7 +17,7 @@ export class TextStatistics extends React.PureComponent<IProps> {
         const readingTime: string = getReadingTimeText(this.props.text, this.props.language);
 
         return (
-            <div style={{display: 'flex', gap: '6px'}}>
+            <Spacer h gap="8" noWrap>
                 <span className="char-count-base">
                     {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
                 </span>
@@ -28,7 +29,7 @@ export class TextStatistics extends React.PureComponent<IProps> {
                 />
 
                 <span className="char-count-base">{readingTime}</span>
-            </div>
+            </Spacer>
         );
     }
 }
