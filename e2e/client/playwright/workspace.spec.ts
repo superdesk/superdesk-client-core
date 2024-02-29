@@ -37,6 +37,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
+        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // starting create item
@@ -83,6 +84,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
+        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // go to dashboard
@@ -104,6 +106,7 @@ test.describe('Custom Workspace', async () => {
     
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
+        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
     
         // spike article
