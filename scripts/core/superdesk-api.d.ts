@@ -2122,8 +2122,8 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsActionButton {
-        ariaValue: string;
-        refValue?(event): void;
+        'aria-label': string;
+        ref?(event): void;
         onClick(event: React.MouseEvent): void;
     }
 
@@ -2821,7 +2821,7 @@ declare module 'superdesk-api' {
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
             Badge: React.ComponentType<IPropsBadge>;
-            ActionButton: React.ComponentType<IPropsActionButton>;
+            MoreActionsButton: React.ComponentType<IPropsActionButton>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;

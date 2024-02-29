@@ -4,7 +4,7 @@ import {Menu} from 'superdesk-ui-framework/react';
 import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
-import {ActionButton} from 'core/ui/components/ActionButton';
+import {MoreActionsButton} from 'core/ui/components/MoreActionsButton';
 
 interface IProps {
     getActions: () => Array<IAuthoringAction>;
@@ -32,8 +32,8 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     render() {
         if (this.state.actions == null) {
             return (
-                <ActionButton
-                    ariaValue={gettext('Actions menu')}
+                <MoreActionsButton
+                    aria-label={gettext('Actions menu')}
                     onClick={this.getActions}
                 />
             );
@@ -61,9 +61,9 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 <div>
                     <Menu items={menuItems}>
                         {(toggle) => (
-                            <ActionButton
-                                ariaValue={gettext('Actions menu')}
-                                refValue={(el) => {
+                            <MoreActionsButton
+                                aria-label={gettext('Actions menu')}
+                                ref={(el) => {
                                     if (el != null) {
                                         setTimeout(() => {
                                             el.click();

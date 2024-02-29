@@ -1,18 +1,18 @@
 import * as React from 'react';
 
 interface IProps {
-    ariaValue: string;
-    refValue?(event): void;
+    'aria-label': string;
+    ref?(event): void;
     onClick(event: React.MouseEvent): void;
 }
 
-export class ActionButton extends React.PureComponent<IProps> {
+export class MoreActionsButton extends React.PureComponent<IProps> {
     render() {
         return (
             <button
                 className="sd-navbtn"
-                aria-label={this.props.ariaValue}
-                ref={this.props.refValue}
+                aria-label={this.props['aria-label']}
+                ref={this.props.ref}
                 onClick={this.props.onClick}
             >
                 <i className="icon-dots-vertical" />

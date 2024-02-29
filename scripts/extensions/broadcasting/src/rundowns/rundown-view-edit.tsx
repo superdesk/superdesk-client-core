@@ -61,7 +61,7 @@ const {
     WithLiveResources,
     SpacerBlock,
     Spacer,
-    ActionButton,
+    MoreActionsButton,
 } = superdesk.components;
 const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
@@ -468,8 +468,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 },
                                             ]}
                                         >
-                                            <ActionButton
-                                                ariaValue={gettext('Actions')}
+                                            <MoreActionsButton
+                                                aria-label={gettext('Actions')}
                                                 onClick={noop}
                                             />
                                         </Dropdown>

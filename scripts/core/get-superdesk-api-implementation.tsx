@@ -45,7 +45,7 @@ import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
-import {ActionButton} from './ui/components/ActionButton';
+import {MoreActionsButton} from './ui/components/MoreActionsButton';
 import {
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
@@ -387,7 +387,7 @@ export function getSuperdeskApiImplementation(
             Figure,
             DropZone,
             Badge,
-            ActionButton,
+            MoreActionsButton,
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,
