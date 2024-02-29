@@ -549,6 +549,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             ),
                                                         });
                                                     }}
+                                                    selectedItem={
+                                                        this.props.rundownItemAction?.type !== 'create'
+                                                            ? this.props.rundownItemAction?.itemId
+                                                            : null
+                                                    }
                                                 />
                                             );
                                         }}
@@ -563,7 +568,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     {
                                         rundownItemAction != null && (
                                             <AuthoringReact
-                                                headerCollapsed={true}
+                                                headerCollapsed={false}
                                                 key={rundownItemAction.authoringReactKey}
                                                 itemId=""
                                                 resourceNames={['rundown_items']}
@@ -670,6 +675,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     if (sideWidgetsAllowed.length < 1) {
                                                         return <span />;
+                                                    }
+
+                                                    if (rundownItemAction.type === 'create') {
+                                                        return null;
                                                     }
 
                                                     return (

@@ -37,7 +37,7 @@ describe('editor3.components.embed-input', () => {
     it('should render', () => {
         const {options} = mockStore();
         const noop = () => ({});
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={noop} onSubmit={noop} />, options);
+        const wrapper = mount(<EmbedInput hidePopups={noop} onSubmit={noop} />, options);
 
         expect(wrapper.find('.icon-ok').length).toBe(1);
         expect(wrapper.find('.icon-close-small').length).toBe(1);
@@ -46,9 +46,8 @@ describe('editor3.components.embed-input', () => {
 
     it('should reset error and call onCancel on close', () => {
         const {options} = mockStore();
-        const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} hidePopups={onCancel} />, options);
+        const wrapper = mount(<EmbedInput hidePopups={onCancel} />, options);
 
         wrapper.find('.icon-close-small').simulate('click');
 
@@ -57,9 +56,8 @@ describe('editor3.components.embed-input', () => {
 
     it('should call onCancel when Escape is pressed', () => {
         const {options} = mockStore();
-        const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} hidePopups={onCancel} />, options);
+        const wrapper = mount(<EmbedInput hidePopups={onCancel} />, options);
 
         wrapper.simulate('keyup', {key: 'Escape'});
 
@@ -68,9 +66,8 @@ describe('editor3.components.embed-input', () => {
 
     it('should not call onCancel when other keys are pressed', () => {
         const {options} = mockStore();
-        const noop = () => ({});
         const onCancel = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embedCode={noop} onCancel={onCancel} />, options);
+        const wrapper = mount(<EmbedInput hidePopups={onCancel} />, options);
 
         wrapper.simulate('keyup', {key: '.'});
 
@@ -104,7 +101,7 @@ describe('editor3.components.embed-input', () => {
         const onSubmit = jasmine.createSpy();
         const wrapper = mount(<EmbedInput embed={onSubmit} hidePopups={onCancel} />, options);
 
-        spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
+        spyOn($, 'ajax').and.returnValue($q.resolve({html: 'foo'}));
 
         wrapper.setState({error: 'some error'});
 
@@ -115,7 +112,7 @@ describe('editor3.components.embed-input', () => {
 
         $rootScope.$apply();
 
-        expect(onSubmit).toHaveBeenCalledWith('resolve-value');
+        expect(onSubmit).toHaveBeenCalledWith({html: 'foo'});
         expect(onCancel).toHaveBeenCalled();
         expect(wrapper.state('error')).toBe('');
     }));
