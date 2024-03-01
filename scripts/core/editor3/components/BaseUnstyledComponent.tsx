@@ -66,7 +66,6 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
     }
 
     onDrop(event) {
-        debugger;
         this.setState({over: false});
 
         let handled = false;
