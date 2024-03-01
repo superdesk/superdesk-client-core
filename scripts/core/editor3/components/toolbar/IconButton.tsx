@@ -20,7 +20,8 @@ interface IProps {
 export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, tooltip, uiTheme}) => (
     <div
         data-flow={'down'}
-        data-test-id={tooltip}
+        data-test-id="icon-button"
+        data-test-value={tooltip}
         data-sd-tooltip={tooltip}
         className="Editor3-styleButton"
         style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
