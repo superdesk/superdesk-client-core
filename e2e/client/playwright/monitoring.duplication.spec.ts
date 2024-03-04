@@ -13,7 +13,7 @@ test('duplicate in place', async ({page}) => {
     await expect(page.locator(articleSelector)).toHaveCount(1);
 
     const initialItemsCountAcrossAllStages = await page.locator(s('article-item')).count();
-    
+
     await monitoring.executeActionOnMonitoringItem(
         page.locator(articleSelector),
         'Duplicate',

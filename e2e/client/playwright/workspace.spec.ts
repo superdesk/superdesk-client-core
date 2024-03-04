@@ -39,7 +39,9 @@ test.describe('Custom Workspace', async () => {
 
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
+        await expect(
+            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
+        ).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
 
         // starting create item
@@ -86,7 +88,9 @@ test.describe('Custom Workspace', async () => {
 
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
+        await expect(
+            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
+        ).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
 
         // go to dashboard
@@ -99,7 +103,9 @@ test.describe('Custom Workspace', async () => {
         await page.locator(s('modal-widget')).getByRole('button', {name: 'Done'}).click();
 
         // check if exist in dashboard
-        await expect(page.locator(s('dashboard')).locator(s('widget-list')).locator('li', {hasText: 'World Clock'})).toBeVisible();
+        await expect(
+            page.locator(s('dashboard')).locator(s('widget-list')).locator('li', {hasText: 'World Clock'}),
+        ).toBeVisible();
     });
 
     test('Spike and unspike article from custom workspace', async ({page}) => {
@@ -108,12 +114,14 @@ test.describe('Custom Workspace', async () => {
 
         // switch to the custom workspace
         await page.locator(s('monitoring--selected-desk')).click();
-        await expect(page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'})).toBeVisible();
+        await expect(
+            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
+        ).toBeVisible();
         await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
 
         // spike article
         await page.hover(s('article-item=story 2'));
-        await page.locator(s('monitoring-view')).locator(s('article-item=story 2')).locator(s('context-menu-button')).click();
+        await page.locator(s('monitoring-view', 'article-item=story 2', 'context-menu-button')).click();
         await page.locator(s('context-menu')).locator('button', {hasText: 'Spike Item'}).click();
 
         // confirm spike
@@ -129,7 +137,7 @@ test.describe('Custom Workspace', async () => {
 
         // unspike article
         await page.hover(s('article-item=story 2'));
-        await page.locator(s('monitoring-view')).locator(s('article-item=story 2')).locator(s('context-menu-button')).click();
+        await page.locator(s('monitoring-view', 'article-item=story 2', 'context-menu-button')).click();
         await page.locator(s('context-menu')).locator('button', {hasText: 'Unspike Item'}).click();
         await expect(page.locator(s('interactive-actions-panel'))).toBeVisible();
         await page.locator(s('interactive-actions-panel')).locator(s('item'), {hasText: 'Working Stage'}).check();
@@ -139,4 +147,4 @@ test.describe('Custom Workspace', async () => {
         await page.goto('/#/workspace/monitoring');
         await expect(page.locator(s('monitoring-view')).locator(s('article-item=story 2'))).toBeVisible();
     });
-})
+});

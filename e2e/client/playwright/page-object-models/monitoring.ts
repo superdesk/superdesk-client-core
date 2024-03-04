@@ -32,6 +32,8 @@ export class Monitoring {
             await this.page.locator(s('context-menu')).getByRole('button', {name: action}).hover();
         }
 
-        await this.page.locator(s('context-menu')).getByRole('button', {name: actionPath[actionPath.length - 1]}).click();
+        await this.page.locator(s('context-menu'))
+            .getByRole('button', {name: actionPath[actionPath.length - 1]})
+            .click();
     }
 }
