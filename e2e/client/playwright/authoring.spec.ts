@@ -9,7 +9,7 @@ test('can apply "populate abstract" macro', async ({page}) => {
 
     await page.goto('/#/workspace/monitoring');
 
-    await monitoring.selectDesk('Sports');
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),

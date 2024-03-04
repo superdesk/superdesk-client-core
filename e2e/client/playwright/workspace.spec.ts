@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('Custom Workspace', async () => {
@@ -28,6 +29,8 @@ test.describe('Custom Workspace', async () => {
     test('Create article in custom workspace', async ({page}) => {
         test.setTimeout(60000);
 
+        const monitoring = new Monitoring(page);
+
         const articleTemplateSlugline = async (slugline) => {
             await page.locator(s('create-new-item')).click();
             await page.locator(s('default-desk-template')).click();
@@ -37,12 +40,9 @@ test.describe('Custom Workspace', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
-        // switch to the custom workspace
-        await page.locator(s('monitoring--selected-desk')).click();
-        await expect(
-            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
-        ).toBeVisible();
-        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
+        await page.goto('/#/workspace/monitoring');
+
+        await monitoring.selectDeskOrWorkspace('Workspace 1');
 
         // starting create item
         await articleTemplateSlugline('new article');
@@ -83,15 +83,12 @@ test.describe('Custom Workspace', async () => {
     });
 
     test('Add widget to custom workspace dashboard', async ({page}) => {
+        const monitoring = new Monitoring(page);
+
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
-        // switch to the custom workspace
-        await page.locator(s('monitoring--selected-desk')).click();
-        await expect(
-            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
-        ).toBeVisible();
-        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
+        await monitoring.selectDeskOrWorkspace('Workspace 1');
 
         // go to dashboard
         await page.locator('[data-test-id="Dashboard"]').click();
@@ -109,15 +106,12 @@ test.describe('Custom Workspace', async () => {
     });
 
     test('Spike and unspike article from custom workspace', async ({page}) => {
+        const monitoring = new Monitoring(page);
+
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
-        // switch to the custom workspace
-        await page.locator(s('monitoring--selected-desk')).click();
-        await expect(
-            page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}),
-        ).toBeVisible();
-        await page.locator(s('monitoring--select-desk-options')).locator('button', {hasText: 'Workspace 1'}).click();
+        await monitoring.selectDeskOrWorkspace('Workspace 1');
 
         // spike article
         await page.hover(s('article-item=story 2'));
