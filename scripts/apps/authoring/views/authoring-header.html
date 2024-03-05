@@ -446,14 +446,9 @@
                 ng-repeat="field in fields track by field._id"
                 ng-if="field.field_type === 'text' && editor[field._id].section === 'header'"
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
-                data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
                 ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-                sd-validation-error="error[field._id.toLowerCase()]">
-
-                <label class="authoring-header__item-label">{{field.display_name}}</label>
-                <sd-validate-characters ng-if="schema[field._id].validate_characters"
-                    class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
+            >
                 <div class="authoring-header__input-holder">
                     <div sd-editor3
                         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
@@ -467,26 +462,16 @@
                         data-editor-format="editor[field._id].formatOptions"
                         data-item="item"
                         data-refresh-trigger="refreshTrigger"
-                        data-tabindex="editor[field._id].order">
-                    </div>
-
-                    <div style="display: flex; align-content: center; justify-content: space-between;">
-                        <div>
-                            <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
-                        </div>
-
-                        <div>
-                            <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
-                                <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
-                            </span>
-                            <sd-validate-characters
-                                ng-if="schema[field._id].validate_characters"
-                                item="item.extra[field._id]"
-                                field="field.display_name"
-                                class="disallowed-char-error"
-                            ></sd-validate-characters>
-                        </div>
-                    </div>
+                        data-tabindex="editor[field._id].order"
+                        data-limit="schema[field._id].maxlength"
+                        data-header-styles="true"
+                        data-helper-text="field.helper_text"
+                        data-field-id="field._id"
+                        data-field-label="field.display_name"
+                        data-required="schema[field._id].required"
+                        data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
+                        data-validate-characters="schema[field._id].validate_characters"
+                    ></div>
                 </div>
             </div>
 
