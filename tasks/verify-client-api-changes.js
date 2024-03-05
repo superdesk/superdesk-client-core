@@ -16,7 +16,7 @@ const allExtensions = 'scripts/extensions';
 
 getDirectories(allExtensions).forEach((extensionDir) => {
     execSync(
-        `cd ${allExtensions}/${extensionDir} && npm install && npm run compile`,
+        `cd ${allExtensions}/${extensionDir} && npm ci && npm run compile`,
         {stdio: 'inherit'}
     );
 });
