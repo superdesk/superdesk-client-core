@@ -16,7 +16,10 @@ function getMediaMetadata(metadata: Partial<IArticle>, fields): Partial<IArticle
         } else if (metadata[field.field] != null) {
             output[field.field] = metadata[field.field];
         } else if (field.cv != null && metadata.subject?.length > 0) {
-            const values = metadata.subject.filter((subj) => subj.scheme === field.field);
+            const alreadyAddedSubjectQcodes = new Set((output.subject ?? []).map(({qcode}) => qcode));
+            const values = metadata.subject.filter(
+                (subj) => subj.scheme === field.field && alreadyAddedSubjectQcodes.has(subj.qcode) !== true,
+            );
 
             if (values.length) {
                 output.subject = output.subject ? output.subject.concat(values) : values;

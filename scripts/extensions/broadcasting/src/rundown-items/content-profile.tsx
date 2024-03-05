@@ -45,6 +45,7 @@ const editor3TestConfigWithFormatting: IEditor3Config = {
     singleLine: true,
     disallowedCharacters: [],
     showStatistics: false,
+    width: 100,
 };
 
 const editor3TestConfigWithoutFormatting: IEditor3Config = {
@@ -55,6 +56,7 @@ const editor3TestConfigWithoutFormatting: IEditor3Config = {
     singleLine: true,
     disallowedCharacters: [],
     showStatistics: false,
+    width: 100,
 };
 
 const titleField: IAuthoringFieldV2 = {
@@ -93,6 +95,7 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
+    width: 100,
 };
 
 const itemTypeField: IAuthoringFieldV2 = {
@@ -106,6 +109,7 @@ const cameraConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: CAMERA,
     multiple: true,
+    width: 100,
 };
 
 const cameraField: IAuthoringFieldV2 = {
@@ -119,17 +123,21 @@ const durationField: IAuthoringFieldV2 = {
     id: 'duration',
     name: gettext('Duration'),
     fieldType: 'duration',
-    fieldConfig: {},
+    fieldConfig: {
+        width: 100,
+    },
 };
 
 const plannedDurationField: IAuthoringFieldV2 = {
     id: 'planned_duration',
     name: gettext('Planned duration'),
     fieldType: 'duration',
-    fieldConfig: {},
+    fieldConfig: {
+        width: 100,
+    },
 };
 
-const subitemAttachmentsConfig: IAttachmentsConfig = {};
+const subitemAttachmentsConfig: IAttachmentsConfig = {width: 100};
 
 const subitemAttachments: IAuthoringFieldV2 = {
     id: 'subitem_attachments',
@@ -142,6 +150,7 @@ const statusConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: STATUS_VOCABULARY_ID,
     multiple: false,
+    width: 100,
 };
 
 const statusField: IAuthoringFieldV2 = {
@@ -155,7 +164,9 @@ const subitemsField: IAuthoringFieldV2 = {
     id: 'subitems',
     name: gettext('Subitems'),
     fieldType: SUBITEMS_FIELD_TYPE,
-    fieldConfig: {},
+    fieldConfig: {
+        width: 100,
+    },
 };
 
 export const rundownItemContentProfile: IContentProfileV2 = {
