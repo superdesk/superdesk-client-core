@@ -29,11 +29,11 @@ export class Monitoring {
         const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
 
         for (const action of actionsWithoutLast) {
-            await this.page.locator(s('context-menu')).getByRole('button', {name: action}).hover();
+            await this.page.locator(s('context-menu')).getByRole('button', {name: action, exact: true}).hover();
         }
 
         await this.page.locator(s('context-menu'))
-            .getByRole('button', {name: actionPath[actionPath.length - 1]})
+            .getByRole('button', {name: actionPath[actionPath.length - 1], exact: true})
             .click();
     }
 
