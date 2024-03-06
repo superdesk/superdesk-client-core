@@ -237,8 +237,12 @@ interface IPropsWrapper extends IProps {
     onFieldChange?(
         fieldId: string,
         fieldsData: IFieldsData,
-        computeLatestEntity: IExposedFromAuthoring<IArticle>['getLatestItem'],
-    ): IFieldsData;
+        computeLatestEntity: () => IArticle,
+        exposed: IExposedFromAuthoring<IArticle>
+    ): {
+        fieldsData: IFieldsData;
+        executeSideEffects?: () => void;
+    };
 }
 
 /**
@@ -453,8 +457,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         );
                                     } else if (sideWidget != null) {
                                         return getWidgetsFromExtensions(item).find(
-                                            ({_id}) => sideWidget === _id,
-                                        ).component;
+                                            (x) => {
+                                                return sideWidget === x.label;
+                                            }).component;
                                     } else {
                                         return null;
                                     }

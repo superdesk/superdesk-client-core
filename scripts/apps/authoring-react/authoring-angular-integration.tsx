@@ -10,6 +10,8 @@ import {
     IExposedFromAuthoring,
     IAuthoringOptions,
     IAuthoringActionType,
+    IExtensionActivationResult,
+    IFieldsData,
 } from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -816,6 +818,33 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                             return authoringStorageIArticle;
                         }
                     })()}
+                    onFieldChange={(fieldId, fieldsData, computeLatestEntity, exposed) => {
+                        const onFieldChangeFunctionsFromExtensions = Object.values(extensions).map(
+                            (extension) => extension.activationResult?.contributions?.authoring?.onFieldChange,
+                        ).filter((fn) => fn != null);
+
+                        type IResultComputed = {fieldsData: IFieldsData; allSideEffects?: Array<() => void>;}
+                        let resultComputed: IResultComputed = {fieldsData};
+
+                        for (const fn of onFieldChangeFunctionsFromExtensions) {
+                            const result = fn(fieldId, resultComputed.fieldsData, computeLatestEntity, exposed);
+
+                            resultComputed = {
+                                fieldsData: result.fieldsData,
+                                allSideEffects: [
+                                    ...(resultComputed.allSideEffects ?? []),
+                                    result.executeSideEffects,
+                                ],
+                            };
+                        }
+
+                        return {
+                            fieldsData: resultComputed.fieldsData,
+                            executeSideEffects: () => {
+                                resultComputed.allSideEffects.forEach((fn) => fn());
+                            },
+                        };
+                    }}
                 />
             </div>
         );

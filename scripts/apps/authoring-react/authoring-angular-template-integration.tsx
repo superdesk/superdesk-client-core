@@ -22,7 +22,7 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
                         this.props.template.data = computeLatestEntity();
                         this.props.scopeApply();
 
-                        return fieldsData;
+                        return {fieldsData};
                     }}
                 />
             </div>
