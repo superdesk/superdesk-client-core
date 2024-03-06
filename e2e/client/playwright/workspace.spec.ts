@@ -29,7 +29,9 @@ test.describe('Custom Workspace', async () => {
             await page.locator(s('workspace-modal')).locator(s('workspace-name')).fill('new custom workspace');
             await expect(page.locator('button', {hasText: 'cancel'})).toBeEnabled();
             await page.locator('button', {hasText: 'cancel'}).click();
-            await expect(page.locator(s('monitoring--selected-desk'), {hasText: 'new custom workspace'})).not.toBeVisible();
+            await expect(
+                page.locator(s('monitoring--selected-desk'), {hasText: 'new custom workspace'}),
+            ).not.toBeVisible();
         });
     });
 
@@ -109,7 +111,7 @@ test.describe('Custom Workspace', async () => {
 
         await monitoring.selectDeskOrWorkspace('Workspace 1');
 
-        await page.getByRole('button', {name: 'Add widget'}).click()
+        await page.getByRole('button', {name: 'Add widget'}).click();
         await page.locator(s('widget-modal', 'widget-item=world-clock')).click();
         await page.locator(s('widget-modal')).getByRole('button', {name: 'Add This Widget'}).click();
         await page.locator(s('widget-modal')).getByRole('button', {name: 'Done'}).click();

@@ -20,14 +20,16 @@ test.describe('Personal Space', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/personal');
 
-        //TODO: need to fix executeActionOnMonitoringItem function
+        // TODO: need to fix executeActionOnMonitoringItem function
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=personal space article 1')),
             'Edit',
         );
         await page.locator(s('authoring')).locator(s('field-slugline')).fill('personal space article 1.1');
         await page.locator(s('authoring-topbar')).locator(s('save')).click();
-        await expect(page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1'))).not.toBeVisible();
+        await expect(
+            page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1')),
+        ).not.toBeVisible();
         await expect(
             page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1.1')),
         ).toBeVisible();

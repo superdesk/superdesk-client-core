@@ -41,5 +41,5 @@ export class Monitoring {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('default-desk-template')).click();
         await this.page.locator(s('authoring', 'field-slugline')).fill(template);
-    };
+    }
 }
