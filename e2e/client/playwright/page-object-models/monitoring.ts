@@ -36,4 +36,10 @@ export class Monitoring {
             .getByRole('button', {name: actionPath[actionPath.length - 1]})
             .click();
     }
+
+    async createArticleFromTemplate(template: string): Promise<void> {
+        await this.page.locator(s('content-create')).click();
+        await this.page.locator(s('default-desk-template')).click();
+        await this.page.locator(s('authoring', 'field-slugline')).fill(template);
+    };
 }
