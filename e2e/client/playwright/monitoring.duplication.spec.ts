@@ -35,7 +35,7 @@ test('duplicate to personal space', async ({page}) => {
     await expect(page.locator(s('list-item-placeholder'))).toBeVisible();
     await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
-    const itemCountInPersonalSpace = await page.locator(s('article-item')).count(); // need to be 1
+    const itemCountInPersonalSpace = await page.locator(s('article-item')).count();
 
     await page.goto('/#/workspace/monitoring');
 

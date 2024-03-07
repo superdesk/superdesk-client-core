@@ -37,9 +37,10 @@ export class Monitoring {
             .click();
     }
 
-    async createArticleFromTemplate(template: string): Promise<void> {
+    async createArticleFromTemplate(template: string, slugline: string): Promise<void> {
         await this.page.locator(s('content-create')).click();
-        await this.page.locator(s('default-desk-template')).click();
-        await this.page.locator(s('authoring', 'field-slugline')).fill(template);
+        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
+        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: template}).click();
+        await this.page.locator(s('authoring', 'field-slugline')).fill(slugline);
     }
 }

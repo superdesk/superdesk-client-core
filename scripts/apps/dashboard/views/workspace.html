@@ -11,7 +11,7 @@
         </button>
 
         <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit">
-            <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true" aria-label="Add widget"></button>
+            <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true" aria-label="{{ :: 'Add widget' | translate }}"></button>
         </div>
         <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
         <div class="dropdown" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">

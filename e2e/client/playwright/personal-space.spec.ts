@@ -9,8 +9,8 @@ test.describe('Personal Space', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/personal');
 
-        await monitoring.createArticleFromTemplate('article 1');
-        await page.locator(s('authoring-topbar')).locator(s('save')).click();
+        await monitoring.createArticleFromTemplate('story', 'article 1');
+        await page.locator(s('authoring-topbar', 'save')).click();
         await expect(page.locator(s('monitoring-group=Personal Items', 'article-item=article 1'))).toBeVisible();
     });
 
@@ -20,13 +20,12 @@ test.describe('Personal Space', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/personal');
 
-        // TODO: need to fix executeActionOnMonitoringItem function
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=personal space article 1')),
             'Edit',
         );
-        await page.locator(s('authoring')).locator(s('field-slugline')).fill('personal space article 1.1');
-        await page.locator(s('authoring-topbar')).locator(s('save')).click();
+        await page.locator(s('authoring', 'field-slugline')).fill('personal space article 1.1');
+        await page.locator(s('authoring-topbar', 'save')).click();
         await expect(
             page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1')),
         ).not.toBeVisible();
@@ -55,8 +54,7 @@ test.describe('Personal Space', async () => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
-        await page.goto('/#/workspace/monitoring');
-        await page.locator(s('Personal space')).click();
+        await page.goto('/#/workspace/personal');
 
         // send article to desk
         await monitoring.executeActionOnMonitoringItem(
@@ -64,7 +62,7 @@ test.describe('Personal Space', async () => {
             'Send to',
         );
         await page.locator(s('interactive-actions-panel')).locator(s('item'), {hasText: 'Working Stage'}).check();
-        await page.locator(s('interactive-actions-panel')).locator(s('send')).click();
+        await page.locator(s('interactive-actions-panel', 'send')).click();
 
         // check if article removed from personal space
         await expect(

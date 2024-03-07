@@ -19,7 +19,7 @@ interface IState {
     loading: boolean;
 }
 
-export function showOptionsModal(title: string, message: string, options: Array<IOption>): void {
+export function showOptionsModal(title: string, message: string, options: Array<IOption>, dataTestId?: string): void {
     class OptionsModal extends React.PureComponent<IProps, IState> {
         constructor(props: IProps) {
             super(props);
@@ -36,7 +36,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                     zIndex={1050}
                     size="small"
                     position="top"
-                    data-test-id="options-modal"
+                    data-test-id={dataTestId}
                     headerTemplate={title}
                     footerTemplate={
                         (
