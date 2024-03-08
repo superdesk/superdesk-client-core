@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('duplicate in place', async ({page}) => {
+test('duplicate in place action', async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
@@ -24,7 +24,7 @@ test('duplicate in place', async ({page}) => {
     await expect(page.locator(s('article-item'))).toHaveCount(initialItemsCountAcrossAllStages + 1);
 });
 
-test('duplicate to personal space', async ({page}) => {
+test('duplicate to personal space action', async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
