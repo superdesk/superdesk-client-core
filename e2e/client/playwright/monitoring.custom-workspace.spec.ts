@@ -7,7 +7,10 @@ test('creating a custom workspace', async ({page}) => {
     await page.goto('/#/workspace/monitoring');
 
     await page.locator(s('monitoring--selected-desk')).click();
-    await page.locator(s('monitoring--select-desk-options')).getByRole('button', {name: 'create new workspace'}).click();
+    await page
+        .locator(s('monitoring--select-desk-options'))
+        .getByRole('button', {name: 'create new workspace'})
+        .click();
     await expect(page.locator(s('workspace-modal')).locator('button', {hasText: 'save'})).toBeDisabled();
     await page.locator(s('workspace-modal')).getByLabel('workspace name').fill('new custom workspace');
     await expect(page.locator(s('workspace-modal')).locator('button', {hasText: 'save'})).toBeEnabled();
@@ -20,7 +23,10 @@ test('cancelling creation of a custom workspace', async ({page}) => {
     await page.goto('/#/workspace/monitoring');
 
     await page.locator(s('monitoring--selected-desk')).click();
-    await page.locator(s('monitoring--select-desk-options')).getByRole('button', {name: 'create new workspace'}).click();
+    await page
+        .locator(s('monitoring--select-desk-options'))
+        .getByRole('button', {name: 'create new workspace'})
+        .click();
     await page.locator(s('workspace-modal')).getByLabel('workspace name').fill('new custom workspace');
     await expect(page.locator(s('workspace-modal')).locator('button', {hasText: 'cancel'})).toBeEnabled();
     await page.locator(s('workspace-modal')).locator('button', {hasText: 'cancel'}).click();
@@ -38,7 +44,7 @@ test('creating an article from a custom workspace', async ({page}) => {
     await monitoring.selectDeskOrWorkspace('Workspace 1');
 
     // create new article and save it
-    await monitoring.createArticleFromTemplate('story', 'new article 2');
+    await monitoring.createArticleFromTemplate('story', {slugline: 'new article 2'});
     await page.locator(s('authoring-topbar', 'save')).click();
 
     // check if article exist in monitoring group

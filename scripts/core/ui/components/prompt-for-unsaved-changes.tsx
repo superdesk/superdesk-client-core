@@ -62,7 +62,7 @@ export function showUnsavedChangesPrompt(
                         highlightOption: true,
                     },
                 ],
-                'options-modal'
+                'unsaved-changes-dialog',
             );
         } else {
             showOptionsModal(
@@ -98,7 +98,7 @@ export function showUnsavedChangesPrompt(
                         highlightOption: true,
                     },
                 ],
-                'options-modal'
+                'unsaved-changes-dialog',
             );
         }
     });

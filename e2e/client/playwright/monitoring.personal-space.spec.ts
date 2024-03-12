@@ -8,7 +8,7 @@ test('creating an article in personal space', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/personal');
 
-    await monitoring.createArticleFromTemplate('story', 'article 1');
+    await monitoring.createArticleFromTemplate('story', {slugline: 'article 1'});
     await page.locator(s('authoring-topbar', 'save')).click();
     await expect(page.locator(s('monitoring-group=Personal Items', 'article-item=article 1'))).toBeVisible();
 });

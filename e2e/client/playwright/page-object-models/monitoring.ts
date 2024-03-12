@@ -37,10 +37,17 @@ export class Monitoring {
             .click();
     }
 
-    async createArticleFromTemplate(template: string, slugline: string): Promise<void> {
+    async createArticleFromTemplate(template: string, options?: {slugline?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: template}).click();
-        await this.page.locator(s('authoring', 'field-slugline')).fill(slugline);
+
+        if (options != null) {
+            let keys = Object.keys(options);
+
+            for (const key of keys) {
+                await this.page.locator(s('authoring', `field-${key}`)).fill(options[key]);
+            }
+        }
     }
 }
