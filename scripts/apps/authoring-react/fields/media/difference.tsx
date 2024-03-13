@@ -35,7 +35,7 @@ export class Difference extends React.PureComponent<IProps> {
                             <div>
                                 <Alert type="primary" size="small" margin="none">
                                     <div>
-                                        <ul style={{listStyle: 'disc', paddingLeft: 16}}>
+                                        <ul style={{listStyle: 'disc', paddingInlineStart: 16}}>
                                             {
                                                 stats.added.length > 0 && (
                                                     <li>{gettext('{{n}} items added', {n: stats.added.length})}</li>

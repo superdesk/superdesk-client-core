@@ -2107,13 +2107,13 @@ declare module 'superdesk-api' {
 
     export interface ISpacingProps {
         margin?: number;
-        marginTop?: number;
-        marginRight?: number;
-        marginBottom?: number;
+        marginBlockStart?: number;
+        marginInlineEnd?: number;
+        marginBlockEnd?: number;
         padding?: number;
-        paddingTop?: number;
-        paddingRight?: number;
-        paddingBottom?: number;
+        paddingBlockStart?: number;
+        paddingInlineEnd?: number;
+        paddingBlockEnd?: number;
     }
 
     interface IPropsBadge extends ISpacingProps {

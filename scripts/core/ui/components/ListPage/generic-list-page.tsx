@@ -501,7 +501,14 @@ export class GenericListPageComponent<T, P>
                         )
                     }
 
-                    <OnlyWithChildren style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingInline: 20}}>
+                    <OnlyWithChildren
+                        style={{
+                            display: 'flex',
+                            marginInlineStart: 'auto',
+                            gap: '10px',
+                            paddingInline: 20,
+                        }}
+                    >
                         {
                             (this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null) && (
                                 <span style={{display: 'flex', alignItems: 'center'}}>
@@ -604,7 +611,7 @@ export class GenericListPageComponent<T, P>
                         <div style={{margin: this.props.contentMargin ?? 20}}>
                             {
                                 showPagination && (
-                                    <div style={{textAlign: 'center', marginTop: -20}}>
+                                    <div style={{textAlign: 'center', marginBlockStart: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
                                             nextLabel={gettext('next')}
