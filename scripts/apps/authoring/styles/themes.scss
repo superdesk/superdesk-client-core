@@ -412,7 +412,7 @@ body, html {
                 @include opacity(100);
             }
         }
-        .field label {
+        .field label, .field__label {
             @include opacity(100);
         }
     }
@@ -507,7 +507,7 @@ body, html {
             font-weight: 300;
         }
     }
-    .headline, .headline p,  .headline div {
+    .headline p {
         line-height: 1.2 !important;
         font-weight: 500;
         .text-editor {

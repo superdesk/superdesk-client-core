@@ -61,6 +61,7 @@ const {
     WithLiveResources,
     SpacerBlock,
     Spacer,
+    MoreActionsButton,
 } = superdesk.components;
 const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
@@ -376,7 +377,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     gap="16"
                                     justifyContent="space-between"
                                     noWrap
-                                    style={{paddingLeft: 16, paddingRight: 16}}
+                                    style={{paddingLeft: 16}}
                                 >
                                     {
                                         lockedInOtherSession
@@ -396,9 +397,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             } else if (this.props.readOnly) {
                                                 return (
                                                     <React.Fragment>
+                                                        <div>{closeBtn}</div>
+
                                                         <div>
                                                             <Button
-                                                                text={gettext('Edit')}
+                                                                text={gettext('Edit Rundown')}
                                                                 onClick={() => {
                                                                     const {rundownAction} = this.props;
 
@@ -411,18 +414,16 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 type="primary"
                                                             />
                                                         </div>
-
-                                                        <div>
-                                                            {closeBtn}
-                                                        </div>
                                                     </React.Fragment>
                                                 );
                                             } else {
                                                 return (
                                                     <React.Fragment>
+                                                        <div>{closeBtn}</div>
+
                                                         <div>
                                                             <Button
-                                                                text={gettext('Save')}
+                                                                text={gettext('Save Rundown')}
                                                                 onClick={() => {
                                                                     const valid = validate(rundown);
 
@@ -439,8 +440,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 type="primary"
                                                             />
                                                         </div>
-
-                                                        <div>{closeBtn}</div>
                                                     </React.Fragment>
                                                 );
                                             }
@@ -469,10 +468,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 },
                                             ]}
                                         >
-
-                                            <IconButton
-                                                ariaValue={gettext('Actions')}
-                                                icon="dots-vertical"
+                                            <MoreActionsButton
+                                                aria-label={gettext('Actions')}
                                                 onClick={noop}
                                             />
                                         </Dropdown>
@@ -630,11 +627,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             priority: 0.1,
                                                             component: () => (
                                                                 <Button
-                                                                    text={gettext('Save')}
+                                                                    text={gettext('Save item')}
                                                                     onClick={() => {
                                                                         save();
                                                                     }}
                                                                     type="primary"
+                                                                    style="hollow"
                                                                     disabled={hasUnsavedChanges() !== true}
                                                                 />
                                                             ),
@@ -648,11 +646,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             priority: 0.1,
                                                             component: () => (
                                                                 <Button
-                                                                    text={gettext('Edit')}
+                                                                    text={gettext('Edit item')}
                                                                     onClick={() => {
                                                                         this.initiateEditing(item._id);
                                                                     }}
                                                                     type="primary"
+                                                                    style="hollow"
                                                                 />
                                                             ),
                                                         });
