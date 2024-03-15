@@ -45,7 +45,6 @@
     "angular-embed": "github:superdesk/angular-embed#d75968e",
     "angular-embedly": "github:Urigo/angular-embedly#0.0.8",
     "angular-gettext": "github:tomaskikutis/angular-gettext#master",
-    "angular-history": "github:decipherinc/angular-history#v0.8.0",
     "angular-i18n": "1.6.9",
     "angular-mocks": "1.6.9",
     "angular-moment": "1.2.0",
