@@ -1,3 +1,5 @@
+import 'angular-history/history';
+
 import * as svc from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
@@ -83,6 +85,7 @@ angular.module('superdesk.apps.authoring', [
     'superdesk.apps.vocabularies',
     'superdesk.apps.relations',
     'contenteditable',
+    'decipher.history',
     'superdesk.config',
     'angular-embed',
     mediaModule.name,
