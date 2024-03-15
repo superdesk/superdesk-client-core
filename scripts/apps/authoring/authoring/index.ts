@@ -1,4 +1,4 @@
-import 'angular-history/history';
+import './libs/angular-history/history';
 
 import * as svc from './services';
 import * as directive from './directives';
