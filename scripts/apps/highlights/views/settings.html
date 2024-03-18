@@ -12,7 +12,7 @@
             </button>
         </div>
         <div class="sd-page__content">
-            <ul class="pills-list">
+            <ul class="pills-list" data-test-id="highlights-list">
                 <li ng-repeat="config in configurations._items | filter: query track by config._id" class="clearfix">
                     <h6 class="pull-left" title="{{ config.name }}">{{ config.name }}</h6>
                     <div class="actions">
