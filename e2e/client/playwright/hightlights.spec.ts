@@ -50,7 +50,7 @@ test.describe('highlights', async () => {
         ).not.toBeVisible();
     });
 
-    test('Add item to highlight list', async ({page}) => {
+    test('adding item to highlight list', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -71,7 +71,7 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('articles-list', 'article-item=test sports story'))).toBeVisible();
     });
 
-    test('Create highlights package', async ({page}) => {
+    test('creating highlights package', async ({page}) => {
         // this test requires an article created on today's date
 
         const monitoring = new Monitoring(page);
@@ -110,7 +110,7 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('monitoring-view', 'article-item=Package Highlight 2'))).toBeVisible();
     });
 
-    test('Publish highlights package', async ({page}) => {
+    test('publishing highlights package', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -140,7 +140,7 @@ test.describe('highlights', async () => {
         ).toBeVisible();
     });
 
-    test('Export highlights', async ({page}) => {
+    test('exporting highlights', async ({page}) => {
         // this test requires an article created on today's date
 
         const monitoring = new Monitoring(page);
