@@ -68,6 +68,10 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
                     className="dropdown__toggle"
                     title={this.props.label}
                     onClick={this.toggleState} // required for keyboard navigation
+
+                    // aria label is needed because playwright treats icon as a character
+                    // and can not do an exact match
+                    aria-label={this.props.label}
                 >
                     {this.props.icon &&
                         <i className={`icon-${this.props.icon}`} />

@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('duplicate in place', async ({page}) => {
+test('duplicate in place action', async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
@@ -24,16 +24,16 @@ test('duplicate in place', async ({page}) => {
     await expect(page.locator(s('article-item'))).toHaveCount(initialItemsCountAcrossAllStages + 1);
 });
 
-test('duplicate to personal space', async ({page}) => {
+test('duplicate to personal space action', async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/personal');
-    await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
-    await expect(page.locator(articleSelector)).toHaveCount(0);
+    await expect(page.locator(s('list-item-placeholder'))).toBeVisible();
+    await expect(page.locator(s('list-item-placeholder'))).not.toBeVisible();
 
     const itemCountInPersonalSpace = await page.locator(s('article-item')).count();
 
