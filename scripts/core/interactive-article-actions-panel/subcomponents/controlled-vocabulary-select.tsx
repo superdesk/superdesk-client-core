@@ -88,7 +88,7 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                 </Spacer>
                 {
                     this.props.value.length > 0 && (
-                        <div style={{paddingTop: 5}}>
+                        <div style={{paddingBlockStart: 5}}>
                             {
                                 this.props.value
                                     .map((region) => (

@@ -107,7 +107,7 @@ export class PopupPositioner extends React.PureComponent<IPropsPositioner> {
                 ref={(el) => {
                     this.wrapperEl = el;
                 }}
-                style={{zIndex: this.props.zIndex ?? 1, position: 'absolute', left: '-100vw'}}
+                style={{zIndex: this.props.zIndex ?? 1, position: 'absolute', insetInlineStart: '-100vw'}}
             >
                 {this.props.children}
             </div>

@@ -134,7 +134,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
 
                                         {
                                             timeZone == null && (
-                                                <div style={{paddingTop: 5}}>
+                                                <div style={{paddingBlockStart: 5}}>
                                                     {gettext('If not set, the UTC+0 time zone is assumed.')}
                                                 </div>
                                             )

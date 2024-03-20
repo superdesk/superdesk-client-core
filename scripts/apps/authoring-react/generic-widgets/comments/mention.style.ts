@@ -14,13 +14,13 @@ export default ({
 
         highlighter: {
             padding: '3px',
-            paddingTop: '4px',
+            paddingBlockStart: '4px',
             overflowY: 'hidden',
         },
 
         input: {
             padding: '3px',
-            paddingTop: '4px',
+            paddingBlockStart: '4px',
             overflow: 'hidden',
             outline: 0,
             border: 0,

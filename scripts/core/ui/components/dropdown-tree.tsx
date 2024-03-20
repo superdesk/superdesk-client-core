@@ -84,8 +84,8 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             style={{
                                 position: 'absolute',
                                 zIndex: 1,
-                                top: '100%',
-                                right: 0,
+                                insetBlockStart: '100%',
+                                insetInlineEnd: 0,
                             }}
                         >
                             <div

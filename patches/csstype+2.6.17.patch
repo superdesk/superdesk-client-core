@@ -1,0 +1,1125 @@
+diff --git a/node_modules/csstype/index.d.ts b/node_modules/csstype/index.d.ts
+index 01ff5d2..dfe6077 100644
+--- a/node_modules/csstype/index.d.ts
++++ b/node_modules/csstype/index.d.ts
+@@ -565,78 +565,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-block-width
+    */
+   borderBlockWidth?: BorderBlockWidthProperty<TLength>;
+-  /**
+-   * The **`border-bottom-color`** CSS property sets the color of an element's bottom border. It can also be set with the shorthand CSS properties `border-color` or `border-bottom`.
+-   *
+-   * **Syntax**: `<'border-top-color'>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-color
+-   */
+-  borderBottomColor?: BorderBottomColorProperty;
+-  /**
+-   * The **`border-bottom-left-radius`** CSS property rounds the bottom-left corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-left-radius
+-   */
+-  borderBottomLeftRadius?: BorderBottomLeftRadiusProperty<TLength>;
+-  /**
+-   * The **`border-bottom-right-radius`** CSS property rounds the bottom-right corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-right-radius
+-   */
+-  borderBottomRightRadius?: BorderBottomRightRadiusProperty<TLength>;
+-  /**
+-   * The **`border-bottom-style`** CSS property sets the line style of an element's bottom `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-style
+-   */
+-  borderBottomStyle?: BorderBottomStyleProperty;
+-  /**
+-   * The **`border-bottom-width`** CSS property sets the width of the bottom border of a box.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-width
+-   */
+-  borderBottomWidth?: BorderBottomWidthProperty<TLength>;
+   /**
+    * The **`border-collapse`** CSS property sets whether cells inside a `<table>` have shared or separate borders.
+    *
+@@ -880,90 +808,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-inline-width
+    */
+   borderInlineWidth?: BorderInlineWidthProperty<TLength>;
+-  /**
+-   * The **`border-left-color`** CSS property sets the color of an element's left border. It can also be set with the shorthand CSS properties `border-color` or `border-left`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-color
+-   */
+-  borderLeftColor?: BorderLeftColorProperty;
+-  /**
+-   * The **`border-left-style`** CSS property sets the line style of an element's left `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-style
+-   */
+-  borderLeftStyle?: BorderLeftStyleProperty;
+-  /**
+-   * The **`border-left-width`** CSS property sets the width of the left border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-width
+-   */
+-  borderLeftWidth?: BorderLeftWidthProperty<TLength>;
+-  /**
+-   * The **`border-right-color`** CSS property sets the color of an element's right border. It can also be set with the shorthand CSS properties `border-color` or `border-right`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-color
+-   */
+-  borderRightColor?: BorderRightColorProperty;
+-  /**
+-   * The **`border-right-style`** CSS property sets the line style of an element's right `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-style
+-   */
+-  borderRightStyle?: BorderRightStyleProperty;
+-  /**
+-   * The **`border-right-width`** CSS property sets the width of the right border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-width
+-   */
+-  borderRightWidth?: BorderRightWidthProperty<TLength>;
+   /**
+    * The **`border-spacing`** CSS property sets the distance between the borders of adjacent `<table>` cells. This property applies only when `border-collapse` is `separate`.
+    *
+@@ -1006,78 +850,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-start-start-radius
+    */
+   borderStartStartRadius?: BorderStartStartRadiusProperty<TLength>;
+-  /**
+-   * The **`border-top-color`** CSS property sets the color of an element's top border. It can also be set with the shorthand CSS properties `border-color` or `border-top`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-color
+-   */
+-  borderTopColor?: BorderTopColorProperty;
+-  /**
+-   * The **`border-top-left-radius`** CSS property rounds the top-left corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-left-radius
+-   */
+-  borderTopLeftRadius?: BorderTopLeftRadiusProperty<TLength>;
+-  /**
+-   * The **`border-top-right-radius`** CSS property rounds the top-right corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-right-radius
+-   */
+-  borderTopRightRadius?: BorderTopRightRadiusProperty<TLength>;
+-  /**
+-   * The **`border-top-style`** CSS property sets the line style of an element's top `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-style
+-   */
+-  borderTopStyle?: BorderTopStyleProperty;
+-  /**
+-   * The **`border-top-width`** CSS property sets the width of the top border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-width
+-   */
+-  borderTopWidth?: BorderTopWidthProperty<TLength>;
+   /**
+    * The **`bottom`** CSS property participates in specifying the vertical position of a _positioned element_. It has no effect on non-positioned elements.
+    *
+@@ -2447,20 +2219,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/justify-tracks
+    */
+   justifyTracks?: JustifyTracksProperty;
+-  /**
+-   * The **`left`** CSS property participates in specifying the horizontal position of a _positioned element_. It has no effect on non-positioned elements.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `auto`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/left
+-   */
+-  left?: LeftProperty<TLength>;
+   /**
+    * The **`letter-spacing`** CSS property sets the spacing behavior between text characters.
+    *
+@@ -2660,48 +2418,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/margin-inline-start
+    */
+   marginInlineStart?: MarginInlineStartProperty<TLength>;
+-  /**
+-   * The **`margin-left`** CSS property sets the margin area on the left side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-left
+-   */
+-  marginLeft?: MarginLeftProperty<TLength>;
+-  /**
+-   * The **`margin-right`** CSS property sets the margin area on the right side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-right
+-   */
+-  marginRight?: MarginRightProperty<TLength>;
+-  /**
+-   * The **`margin-top`** CSS property sets the margin area on the top of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-top
+-   */
+-  marginTop?: MarginTopProperty<TLength>;
+   /**
+    * The **`mask-border-mode`** CSS property specifies the blending mode used in a mask border.
+    *
+@@ -3558,48 +3274,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-inline-start
+    */
+   paddingInlineStart?: PaddingInlineStartProperty<TLength>;
+-  /**
+-   * The **`padding-left`** CSS property sets the width of the padding area on the left side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-left
+-   */
+-  paddingLeft?: PaddingLeftProperty<TLength>;
+-  /**
+-   * The **`padding-right`** CSS property sets the width of the padding area on the right side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-right
+-   */
+-  paddingRight?: PaddingRightProperty<TLength>;
+-  /**
+-   * The **`padding-top`** padding area on the top of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-top
+-   */
+-  paddingTop?: PaddingTopProperty<TLength>;
+   /**
+    * The **`page-break-after`** CSS property adjusts page breaks _after_ the current element.
+    *
+@@ -3770,20 +3444,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/resize
+    */
+   resize?: ResizeProperty;
+-  /**
+-   * The **`right`** CSS property participates in specifying the horizontal position of a _positioned element_. It has no effect on non-positioned elements.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `auto`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/right
+-   */
+-  right?: RightProperty<TLength>;
+   /**
+    * The **`rotate`** CSS property allows you to specify rotation transforms individually and independantly of the `transform` property. This maps better to typical user interface usage, and saves having to remember the exact order of transform functions to specify in the `transform` value.
+    *
+@@ -4758,20 +4418,6 @@ The scroll-padding properties define offsets for the optimal viewing region of
+    * @see https://developer.mozilla.org/docs/Web/CSS/text-underline-position
+    */
+   textUnderlinePosition?: TextUnderlinePositionProperty;
+-  /**
+-   * The **`top`** CSS property participates in specifying the vertical position of a _positioned element_. It has no effect on non-positioned elements.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `auto`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/top
+-   */
+-  top?: TopProperty<TLength>;
+   /**
+    * The **`touch-action`** CSS property sets how a region can be manipulated by a touchscreen user (for example, by zooming features built into the browser).
+    *
+@@ -5216,18 +4862,6 @@ export interface StandardShorthandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-block-start
+    */
+   borderBlockStart?: BorderBlockStartProperty<TLength>;
+-  /**
+-   * The **`border-bottom`** CSS property is a shorthand that sets the values of `border-bottom-width`, `border-bottom-style` and `border-bottom-color`. These properties set an element's bottom border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom
+-   */
+-  borderBottom?: BorderBottomProperty<TLength>;
+   /**
+    * The **`border-color`** shorthand CSS property sets the color of all sides of an element's border.
+    *
+@@ -5289,18 +4923,6 @@ export interface StandardShorthandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-inline-start
+    */
+   borderInlineStart?: BorderInlineStartProperty<TLength>;
+-  /**
+-   * The **`border-left`** CSS property is a shorthand that sets the values of `border-left-width`, `border-left-style` and `border-left-color`. These properties set an element's left border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left
+-   */
+-  borderLeft?: BorderLeftProperty<TLength>;
+   /**
+    * The **`border-radius`** CSS property rounds the corners of an element's outer border edge. You can set a single radius to make circular corners, or two radii to make elliptical corners.
+    *
+@@ -5314,18 +4936,6 @@ export interface StandardShorthandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-radius
+    */
+   borderRadius?: BorderRadiusProperty<TLength>;
+-  /**
+-   * The **`border-right`** CSS property is a shorthand that sets the values of `border-right-width`, `border-right-style` and `border-right-color`. These properties set an element's right border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right
+-   */
+-  borderRight?: BorderRightProperty<TLength>;
+   /**
+    * The **`border-style`** CSS property is a shorthand property that sets the line style for all four sides of an element's border.
+    *
+@@ -5338,18 +4948,6 @@ export interface StandardShorthandProperties<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-style
+    */
+   borderStyle?: BorderStyleProperty;
+-  /**
+-   * The **`border-top`** CSS property is a shorthand that sets the values of `border-top-width`, `border-top-style` and `border-top-color`. These properties set an element's top border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top
+-   */
+-  borderTop?: BorderTopProperty<TLength>;
+   /**
+    * The **`border-width`** shorthand CSS property sets the widths of all four sides of an element's border.
+    *
+@@ -9900,20 +9498,6 @@ export interface StandardLonghandPropertiesHyphen<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-top-width
+    */
+   "border-top-width"?: BorderTopWidthProperty<TLength>;
+-  /**
+-   * The **`bottom`** CSS property participates in specifying the vertical position of a _positioned element_. It has no effect on non-positioned elements.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `auto`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/bottom
+-   */
+-  bottom?: BottomProperty<TLength>;
+   /**
+    * The **`box-decoration-break`** CSS property specifies how an element's fragments should be rendered when broken across multiple lines, columns, or pages.
+    *
+@@ -12322,20 +11906,6 @@ export interface StandardLonghandPropertiesHyphen<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-block-start
+    */
+   "padding-block-start"?: PaddingBlockStartProperty<TLength>;
+-  /**
+-   * The **`padding-bottom`** CSS property sets the height of the padding area on the bottom of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-bottom
+-   */
+-  "padding-bottom"?: PaddingBottomProperty<TLength>;
+   /**
+    * The **`padding-inline`** CSS property defines the logical inline start and end padding of an element, which maps to physical padding properties depending on the element's writing mode, directionality, and text orientation.
+    *
+@@ -12380,48 +11950,6 @@ export interface StandardLonghandPropertiesHyphen<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-inline-start
+    */
+   "padding-inline-start"?: PaddingInlineStartProperty<TLength>;
+-  /**
+-   * The **`padding-left`** CSS property sets the width of the padding area on the left side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-left
+-   */
+-  "padding-left"?: PaddingLeftProperty<TLength>;
+-  /**
+-   * The **`padding-right`** CSS property sets the width of the padding area on the right side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-right
+-   */
+-  "padding-right"?: PaddingRightProperty<TLength>;
+-  /**
+-   * The **`padding-top`** padding area on the top of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-top
+-   */
+-  "padding-top"?: PaddingTopProperty<TLength>;
+   /**
+    * The **`page-break-after`** CSS property adjusts page breaks _after_ the current element.
+    *
+@@ -14160,18 +13688,6 @@ export interface StandardShorthandPropertiesHyphen<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-style
+    */
+   "border-style"?: BorderStyleProperty;
+-  /**
+-   * The **`border-top`** CSS property is a shorthand that sets the values of `border-top-width`, `border-top-style` and `border-top-color`. These properties set an element's top border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top
+-   */
+-  "border-top"?: BorderTopProperty<TLength>;
+   /**
+    * The **`border-width`** shorthand CSS property sets the widths of all four sides of an element's border.
+    *
+@@ -18213,78 +17729,6 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-block-width
+    */
+   borderBlockWidth?: BorderBlockWidthProperty<TLength> | BorderBlockWidthProperty<TLength>[];
+-  /**
+-   * The **`border-bottom-color`** CSS property sets the color of an element's bottom border. It can also be set with the shorthand CSS properties `border-color` or `border-bottom`.
+-   *
+-   * **Syntax**: `<'border-top-color'>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-color
+-   */
+-  borderBottomColor?: BorderBottomColorProperty | BorderBottomColorProperty[];
+-  /**
+-   * The **`border-bottom-left-radius`** CSS property rounds the bottom-left corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-left-radius
+-   */
+-  borderBottomLeftRadius?: BorderBottomLeftRadiusProperty<TLength> | BorderBottomLeftRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-bottom-right-radius`** CSS property rounds the bottom-right corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-right-radius
+-   */
+-  borderBottomRightRadius?: BorderBottomRightRadiusProperty<TLength> | BorderBottomRightRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-bottom-style`** CSS property sets the line style of an element's bottom `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-style
+-   */
+-  borderBottomStyle?: BorderBottomStyleProperty | BorderBottomStyleProperty[];
+-  /**
+-   * The **`border-bottom-width`** CSS property sets the width of the bottom border of a box.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom-width
+-   */
+-  borderBottomWidth?: BorderBottomWidthProperty<TLength> | BorderBottomWidthProperty<TLength>[];
+   /**
+    * The **`border-collapse`** CSS property sets whether cells inside a `<table>` have shared or separate borders.
+    *
+@@ -18528,90 +17972,6 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-inline-width
+    */
+   borderInlineWidth?: BorderInlineWidthProperty<TLength> | BorderInlineWidthProperty<TLength>[];
+-  /**
+-   * The **`border-left-color`** CSS property sets the color of an element's left border. It can also be set with the shorthand CSS properties `border-color` or `border-left`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-color
+-   */
+-  borderLeftColor?: BorderLeftColorProperty | BorderLeftColorProperty[];
+-  /**
+-   * The **`border-left-style`** CSS property sets the line style of an element's left `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-style
+-   */
+-  borderLeftStyle?: BorderLeftStyleProperty | BorderLeftStyleProperty[];
+-  /**
+-   * The **`border-left-width`** CSS property sets the width of the left border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left-width
+-   */
+-  borderLeftWidth?: BorderLeftWidthProperty<TLength> | BorderLeftWidthProperty<TLength>[];
+-  /**
+-   * The **`border-right-color`** CSS property sets the color of an element's right border. It can also be set with the shorthand CSS properties `border-color` or `border-right`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-color
+-   */
+-  borderRightColor?: BorderRightColorProperty | BorderRightColorProperty[];
+-  /**
+-   * The **`border-right-style`** CSS property sets the line style of an element's right `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-style
+-   */
+-  borderRightStyle?: BorderRightStyleProperty | BorderRightStyleProperty[];
+-  /**
+-   * The **`border-right-width`** CSS property sets the width of the right border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right-width
+-   */
+-  borderRightWidth?: BorderRightWidthProperty<TLength> | BorderRightWidthProperty<TLength>[];
+   /**
+    * The **`border-spacing`** CSS property sets the distance between the borders of adjacent `<table>` cells. This property applies only when `border-collapse` is `separate`.
+    *
+@@ -18654,78 +18014,6 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-start-start-radius
+    */
+   borderStartStartRadius?: BorderStartStartRadiusProperty<TLength> | BorderStartStartRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-top-color`** CSS property sets the color of an element's top border. It can also be set with the shorthand CSS properties `border-color` or `border-top`.
+-   *
+-   * **Syntax**: `<color>`
+-   *
+-   * **Initial value**: `currentcolor`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-color
+-   */
+-  borderTopColor?: BorderTopColorProperty | BorderTopColorProperty[];
+-  /**
+-   * The **`border-top-left-radius`** CSS property rounds the top-left corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-left-radius
+-   */
+-  borderTopLeftRadius?: BorderTopLeftRadiusProperty<TLength> | BorderTopLeftRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-top-right-radius`** CSS property rounds the top-right corner of an element.
+-   *
+-   * **Syntax**: `<length-percentage>{1,2}`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome  | Firefox | Safari  |  Edge  |  IE   |
+-   * | :-----: | :-----: | :-----: | :----: | :---: |
+-   * |  **4**  |  **4**  |  **5**  | **12** | **9** |
+-   * | 1 _-x-_ |         | 3 _-x-_ |        |       |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-right-radius
+-   */
+-  borderTopRightRadius?: BorderTopRightRadiusProperty<TLength> | BorderTopRightRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-top-style`** CSS property sets the line style of an element's top `border`.
+-   *
+-   * **Syntax**: `<line-style>`
+-   *
+-   * **Initial value**: `none`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-style
+-   */
+-  borderTopStyle?: BorderTopStyleProperty | BorderTopStyleProperty[];
+-  /**
+-   * The **`border-top-width`** CSS property sets the width of the top border of an element.
+-   *
+-   * **Syntax**: `<line-width>`
+-   *
+-   * **Initial value**: `medium`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top-width
+-   */
+-  borderTopWidth?: BorderTopWidthProperty<TLength> | BorderTopWidthProperty<TLength>[];
+   /**
+    * The **`bottom`** CSS property participates in specifying the vertical position of a _positioned element_. It has no effect on non-positioned elements.
+    *
+@@ -20250,20 +19538,6 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/margin-block-start
+    */
+   marginBlockStart?: MarginBlockStartProperty<TLength> | MarginBlockStartProperty<TLength>[];
+-  /**
+-   * The **`margin-bottom`** CSS property sets the margin area on the bottom of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-bottom
+-   */
+-  marginBottom?: MarginBottomProperty<TLength> | MarginBottomProperty<TLength>[];
+   /**
+    * The **`margin-inline`** CSS property defines the logical inline start and end margins of an element, which maps to physical margins depending on the element's writing mode, directionality, and text orientation.
+    *
+@@ -21148,20 +20422,6 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-block-start
+    */
+   paddingBlockStart?: PaddingBlockStartProperty<TLength> | PaddingBlockStartProperty<TLength>[];
+-  /**
+-   * The **`padding-bottom`** CSS property sets the height of the padding area on the bottom of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-bottom
+-   */
+-  paddingBottom?: PaddingBottomProperty<TLength> | PaddingBottomProperty<TLength>[];
+   /**
+    * The **`padding-inline`** CSS property defines the logical inline start and end padding of an element, which maps to physical padding properties depending on the element's writing mode, directionality, and text orientation.
+    *
+@@ -22864,18 +22124,6 @@ export interface StandardShorthandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-block-start
+    */
+   borderBlockStart?: BorderBlockStartProperty<TLength> | BorderBlockStartProperty<TLength>[];
+-  /**
+-   * The **`border-bottom`** CSS property is a shorthand that sets the values of `border-bottom-width`, `border-bottom-style` and `border-bottom-color`. These properties set an element's bottom border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-bottom
+-   */
+-  borderBottom?: BorderBottomProperty<TLength> | BorderBottomProperty<TLength>[];
+   /**
+    * The **`border-color`** shorthand CSS property sets the color of all sides of an element's border.
+    *
+@@ -22937,18 +22185,6 @@ export interface StandardShorthandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-inline-start
+    */
+   borderInlineStart?: BorderInlineStartProperty<TLength> | BorderInlineStartProperty<TLength>[];
+-  /**
+-   * The **`border-left`** CSS property is a shorthand that sets the values of `border-left-width`, `border-left-style` and `border-left-color`. These properties set an element's left border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-left
+-   */
+-  borderLeft?: BorderLeftProperty<TLength> | BorderLeftProperty<TLength>[];
+   /**
+    * The **`border-radius`** CSS property rounds the corners of an element's outer border edge. You can set a single radius to make circular corners, or two radii to make elliptical corners.
+    *
+@@ -22962,18 +22198,6 @@ export interface StandardShorthandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-radius
+    */
+   borderRadius?: BorderRadiusProperty<TLength> | BorderRadiusProperty<TLength>[];
+-  /**
+-   * The **`border-right`** CSS property is a shorthand that sets the values of `border-right-width`, `border-right-style` and `border-right-color`. These properties set an element's right border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |   IE    |
+-   * | :----: | :-----: | :----: | :----: | :-----: |
+-   * | **1**  |  **1**  | **1**  | **12** | **5.5** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-right
+-   */
+-  borderRight?: BorderRightProperty<TLength> | BorderRightProperty<TLength>[];
+   /**
+    * The **`border-style`** CSS property is a shorthand property that sets the line style for all four sides of an element's border.
+    *
+@@ -22986,18 +22210,6 @@ export interface StandardShorthandPropertiesFallback<TLength = string | 0> {
+    * @see https://developer.mozilla.org/docs/Web/CSS/border-style
+    */
+   borderStyle?: BorderStyleProperty | BorderStyleProperty[];
+-  /**
+-   * The **`border-top`** CSS property is a shorthand that sets the values of `border-top-width`, `border-top-style` and `border-top-color`. These properties set an element's top border.
+-   *
+-   * **Syntax**: `<line-width> || <line-style> || <color>`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/border-top
+-   */
+-  borderTop?: BorderTopProperty<TLength> | BorderTopProperty<TLength>[];
+   /**
+    * The **`border-width`** shorthand CSS property sets the widths of all four sides of an element's border.
+    *
+@@ -29076,20 +28288,6 @@ export interface StandardLonghandPropertiesHyphenFallback<TLength = string | 0>
+    * @see https://developer.mozilla.org/docs/Web/CSS/margin-block-start
+    */
+   "margin-block-start"?: MarginBlockStartProperty<TLength> | MarginBlockStartProperty<TLength>[];
+-  /**
+-   * The **`margin-bottom`** CSS property sets the margin area on the bottom of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-bottom
+-   */
+-  "margin-bottom"?: MarginBottomProperty<TLength> | MarginBottomProperty<TLength>[];
+   /**
+    * The **`margin-inline`** CSS property defines the logical inline start and end margins of an element, which maps to physical margins depending on the element's writing mode, directionality, and text orientation.
+    *
+@@ -29134,48 +28332,6 @@ export interface StandardLonghandPropertiesHyphenFallback<TLength = string | 0>
+    * @see https://developer.mozilla.org/docs/Web/CSS/margin-inline-start
+    */
+   "margin-inline-start"?: MarginInlineStartProperty<TLength> | MarginInlineStartProperty<TLength>[];
+-  /**
+-   * The **`margin-left`** CSS property sets the margin area on the left side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-left
+-   */
+-  "margin-left"?: MarginLeftProperty<TLength> | MarginLeftProperty<TLength>[];
+-  /**
+-   * The **`margin-right`** CSS property sets the margin area on the right side of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-right
+-   */
+-  "margin-right"?: MarginRightProperty<TLength> | MarginRightProperty<TLength>[];
+-  /**
+-   * The **`margin-top`** CSS property sets the margin area on the top of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
+-   *
+-   * **Syntax**: `<length> | <percentage> | auto`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **3** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/margin-top
+-   */
+-  "margin-top"?: MarginTopProperty<TLength> | MarginTopProperty<TLength>[];
+   /**
+    * The **`mask-border-mode`** CSS property specifies the blending mode used in a mask border.
+    *
+@@ -29974,20 +29130,6 @@ export interface StandardLonghandPropertiesHyphenFallback<TLength = string | 0>
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-block-start
+    */
+   "padding-block-start"?: PaddingBlockStartProperty<TLength> | PaddingBlockStartProperty<TLength>[];
+-  /**
+-   * The **`padding-bottom`** CSS property sets the height of the padding area on the bottom of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-bottom
+-   */
+-  "padding-bottom"?: PaddingBottomProperty<TLength> | PaddingBottomProperty<TLength>[];
+   /**
+    * The **`padding-inline`** CSS property defines the logical inline start and end padding of an element, which maps to physical padding properties depending on the element's writing mode, directionality, and text orientation.
+    *
+@@ -30032,48 +29174,6 @@ export interface StandardLonghandPropertiesHyphenFallback<TLength = string | 0>
+    * @see https://developer.mozilla.org/docs/Web/CSS/padding-inline-start
+    */
+   "padding-inline-start"?: PaddingInlineStartProperty<TLength> | PaddingInlineStartProperty<TLength>[];
+-  /**
+-   * The **`padding-left`** CSS property sets the width of the padding area on the left side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-left
+-   */
+-  "padding-left"?: PaddingLeftProperty<TLength> | PaddingLeftProperty<TLength>[];
+-  /**
+-   * The **`padding-right`** CSS property sets the width of the padding area on the right side of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-right
+-   */
+-  "padding-right"?: PaddingRightProperty<TLength> | PaddingRightProperty<TLength>[];
+-  /**
+-   * The **`padding-top`** padding area on the top of an element.
+-   *
+-   * **Syntax**: `<length> | <percentage>`
+-   *
+-   * **Initial value**: `0`
+-   *
+-   * | Chrome | Firefox | Safari |  Edge  |  IE   |
+-   * | :----: | :-----: | :----: | :----: | :---: |
+-   * | **1**  |  **1**  | **1**  | **12** | **4** |
+-   *
+-   * @see https://developer.mozilla.org/docs/Web/CSS/padding-top
+-   */
+-  "padding-top"?: PaddingTopProperty<TLength> | PaddingTopProperty<TLength>[];
+   /**
+    * The **`page-break-after`** CSS property adjusts page breaks _after_ the current element.
+    *
+@@ -36514,7 +35614,7 @@ export type FlexFlowProperty = Globals | "column" | "column-reverse" | "nowrap"
+ 
+ export type FlexWrapProperty = Globals | "nowrap" | "wrap" | "wrap-reverse";
+ 
+-export type FloatProperty = Globals | "inline-end" | "inline-start" | "left" | "none" | "right";
++export type FloatProperty = Globals | "inline-end" | "inline-start" | "none";
+ 
+ export type FontProperty = Globals | "caption" | "icon" | "menu" | "message-box" | "small-caption" | "status-bar" | string;
+ 
+@@ -37111,7 +36211,7 @@ export type TabSizeProperty<TLength> = Globals | TLength | number;
+ 
+ export type TableLayoutProperty = Globals | "auto" | "fixed";
+ 
+-export type TextAlignProperty = Globals | "center" | "end" | "justify" | "left" | "match-parent" | "right" | "start";
++export type TextAlignProperty = Globals | "center" | "end" | "justify" | "match-parent" | "start";
+ 
+ export type TextAlignLastProperty = Globals | "auto" | "center" | "end" | "justify" | "left" | "right" | "start";
+ 

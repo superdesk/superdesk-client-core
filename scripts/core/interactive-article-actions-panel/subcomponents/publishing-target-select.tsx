@@ -105,7 +105,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
             <ToggleBox title={gettext('Target')} initiallyOpen>
                 <FormLabel text={gettext('Target subscribers')} />
 
-                <div style={{paddingTop: 5}}>
+                <div style={{paddingBlockStart: 5}}>
                     <TreeSelect
                         zIndex={2000}
                         label=""
@@ -127,11 +127,11 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
                     />
                 </div>
 
-                <div style={{paddingTop: 20}}>
+                <div style={{paddingBlockStart: 20}}>
                     <FormLabel text={gettext('Target regions')} />
                 </div>
 
-                <div style={{paddingTop: 5}}>
+                <div style={{paddingBlockStart: 5}}>
                     <ControlledVocabulariesSelect
                         zIndex={2000}
                         vocabularies={this.state.regions}
@@ -145,11 +145,11 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
                     />
                 </div>
 
-                <div style={{paddingTop: 20}}>
+                <div style={{paddingBlockStart: 20}}>
                     <FormLabel text={gettext('Target types')} />
                 </div>
 
-                <div style={{paddingTop: 5}}>
+                <div style={{paddingBlockStart: 5}}>
                     <ControlledVocabulariesSelect
                         zIndex={2000}
                         vocabularies={this.state.subscriberTypes}

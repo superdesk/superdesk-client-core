@@ -55,7 +55,7 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                     'active': itemSelected,
                     'selected': itemSelected,
                 })}
-                style={{borderBottom: '1px solid var(--sd-colour-line--light)'}}
+                style={{borderBlockEnd: '1px solid var(--sd-colour-line--light)'}}
             >
                 <span
                     style={{

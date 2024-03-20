@@ -70,7 +70,7 @@ export class DifferenceGeneric<T> extends React.PureComponent<IProps<T>> {
                         <React.Fragment>
                             {
                                 removed.map((change, i) => (
-                                    <span key={i} style={{paddingBottom: 4, borderBottom: '2px solid red'}}>
+                                    <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid red'}}>
                                         <span style={{opacity: 0.3, textDecoration: 'line-through'}}>
                                             <Template item={change.item} />
                                         </span>
@@ -100,7 +100,7 @@ export class DifferenceGeneric<T> extends React.PureComponent<IProps<T>> {
                         <React.Fragment>
                             {
                                 added.map((change, i) => (
-                                    <span key={i} style={{paddingBottom: 4, borderBottom: '2px solid green'}}>
+                                    <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid green'}}>
                                         <Template item={change.item} />
                                     </span>
                                 ))

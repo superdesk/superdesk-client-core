@@ -26,7 +26,7 @@ export class Config extends React.PureComponent<IProps> {
 
         return (
             <div>
-                <table style={{borderSpacing: 20, marginLeft: -20, marginRight: -20}}>
+                <table style={{borderSpacing: 20, marginInline: -20}}>
                     <tbody>
                         {
                             shortcuts.map((shortcut, i) => (

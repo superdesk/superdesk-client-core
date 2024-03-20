@@ -44,7 +44,7 @@ function renderSuggestion(item: IDeskSuggestion | IUserSuggestion, search, highl
                 ? <i className="icon-tasks" />
                 : <UserAvatar user={item.user} size="small" />
             }
-            <span style={{marginLeft: '1em'}}>{highlightedDisplay}</span>
+            <span style={{marginInlineStart: '1em'}}>{highlightedDisplay}</span>
         </React.Fragment>
     );
 }
