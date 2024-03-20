@@ -145,6 +145,10 @@ export default class MenuItem extends React.Component<IProps, IState> {
                         <button
                             className="dropdown__toggle"
                             title={activity.label}
+
+                            // aria label is needed because playwright treats icon as a character
+                            // and can not do an exact match
+                            aria-label={activity.label}
                         >
                             {
                                 activity.icon
@@ -176,6 +180,10 @@ export default class MenuItem extends React.Component<IProps, IState> {
                 <button
                     title={activity.label}
                     onClick={this.run}
+
+                    // aria label is needed because playwright treats icon as a character
+                    // and can not do an exact match
+                    aria-label={activity.label}
                 >
                     {
                         activity.icon

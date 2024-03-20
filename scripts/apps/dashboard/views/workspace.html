@@ -10,8 +10,8 @@
             <i class="svg-icon-ok inverse"></i>
         </button>
 
-        <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit" >
-            <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true"></button>
+        <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit">
+            <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true" aria-label="{{ :: 'Add widget' | translate }}"></button>
         </div>
         <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
         <div class="dropdown" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-<div sd-modal data-model="dashboard.add" class="modal--large modal--x-large modal--tabs">
+<div sd-modal data-model="dashboard.add" class="modal--large modal--x-large modal--tabs" data-test-id="'widget-modal'">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate>Add new widget</h3>
         <button class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>
@@ -73,7 +73,7 @@
     <div class="modal__body" ng-if="!dashboard.selectedWidget">
         <div class="modal__body-content">
             <ul class="widget-list">
-                <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}">
+                <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}" data-test-id="widget-item" data-test-value="{{ widget._id }}">
                 <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}"></div>
                 <div class="title">{{ :: widget.label | translate}}</div>
                 </li>
