@@ -5,7 +5,7 @@ import {getRelatedArticles, getRelatedMedia} from '../authoring/controllers/Asso
 
 export function getAuthoringField(
     fieldId: string,
-    item: IArticle,
+    item: Partial<IArticle>,
     customFieldsVocabularies: Array<IVocabulary>,
 ): IAuthoringField {
     const customField = customFieldsVocabularies.find(({_id}) => _id === fieldId);
@@ -98,7 +98,7 @@ export function getAuthoringField(
             return {
                 type: 'subjects',
                 id: fieldId,
-                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: _id[1]})),
+                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: (_id?.[1] ?? name)})),
             };
 
         case 'keywords':

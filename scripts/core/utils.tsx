@@ -1,11 +1,12 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo} from 'superdesk-api';
+import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo, IListViewFieldWithOptions} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
 import {IScope} from 'angular';
+import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 
@@ -97,6 +98,38 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
         })
         .catch(reject);
 });
+
+export const getProjectedFieldsArticle = () => {
+    const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
+
+    const uiFields = [
+        ...(uiConfig.priority ?? []),
+        ...(uiConfig.firstLine ?? []),
+        ...(uiConfig.secondLine ?? []),
+    ];
+
+    const projectedFields: Set<string> = new Set();
+
+    CORE_PROJECTED_FIELDS.fields.forEach((field) => {
+        projectedFields.add(field);
+    });
+
+    uiFields.forEach((_field: string | IListViewFieldWithOptions) => {
+        const field = typeof _field === 'string' ? _field : _field.field;
+
+        const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
+
+        if (Array.isArray(adjustedField)) {
+            adjustedField.forEach((__field) => {
+                projectedFields.add(__field);
+            });
+        } else {
+            projectedFields.add(adjustedField);
+        }
+    });
+
+    return Array.from(projectedFields);
+};
 
 export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
     let current = scope.$parent;
