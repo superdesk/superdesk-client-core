@@ -43,3 +43,61 @@ export const getSortedFields = (
                 && (hideMedia ? isMediaField(field) !== true : true),
         );
 };
+
+export const getSortedFieldsFiltered = (
+    section: 'header' | 'content',
+    editor: any,
+    item: Partial<IArticle>,
+    hideMedia: boolean,
+    customVocabularies: Array<IVocabulary>,
+    fieldsToExtract: Array<string>,
+): { allFields: Array<IAuthoringField>, extractedFields: {[key: string]: IAuthoringField}} => {
+    let extractedFields: {[key: string]: IAuthoringField} = {};
+    const allFields = Object.keys(editor)
+        .filter((key) => editor[key] != null) // field doesn't exist
+        .filter((key) => {
+            const isHeader = editor[key].section === 'header'
+                    || ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)
+                    || ARTICLE_COMMON_FIELDS.has(key as keyof IArticle);
+
+            const inSection = (() => {
+                if (ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)) {
+                    // Handle invalid config when header-only fields are set as content.
+                    return section === 'header';
+                } if (editor[key].section != null) {
+                    return editor[key].section === section;
+                } else {
+                    return section === 'header' ? isHeader : !isHeader;
+                }
+            })();
+
+            return inSection && editor[key].hideOnPrint !== true;
+        })
+        .sort((key1, key2) => editor[key1].order - editor[key2].order)
+        .map((key) => getAuthoringField(key, item, customVocabularies))
+        .filter((field) => {
+            if (field?.value != null
+                && authoringFieldHasValue(field)
+                && (hideMedia ? isMediaField(field) !== true : true)
+            ) {
+                if (fieldsToExtract.includes(field.id)) {
+                    extractedFields = {
+                        ...extractedFields,
+                        [field.id]: field,
+                    };
+
+                    // If the field was added to extractedFieldsArray, don't include it in allFields array
+                    return false;
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+    return {
+        allFields,
+        extractedFields,
+    };
+};
