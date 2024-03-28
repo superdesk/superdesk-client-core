@@ -2798,14 +2798,14 @@ declare module 'superdesk-api' {
                 getSortedFields(
                     section: 'header' | 'content',
                     editor: any,
-                    item: Partial<IArticle>,
+                    item: IArticle,
                     hideMedia: boolean,
                     customVocabularies: Array<IVocabulary>
                 ): Array<IAuthoringField>;
                 getSortedFieldsFiltered(
                     section: 'header' | 'content',
                     editor: any,
-                    item: Partial<IArticle>,
+                    item: IArticle,
                     hideMedia: boolean,
                     customVocabularies: Array<IVocabulary>,
                     fieldsToExtract: Array<string>,

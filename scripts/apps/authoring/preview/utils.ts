@@ -7,7 +7,7 @@ import {isMediaField} from './isMediaField';
 export const getSortedFields = (
     section: 'header' | 'content',
     editor: any,
-    item: Partial<IArticle>,
+    item: IArticle,
     hideMedia: boolean,
     customVocabularies: Array<IVocabulary>,
 ): Array<IAuthoringField> => {
@@ -46,7 +46,7 @@ export const getSortedFields = (
 export const getSortedFieldsFiltered = (
     section: 'header' | 'content',
     editor: any,
-    item: Partial<IArticle>,
+    item: IArticle,
     hideMedia: boolean,
     customVocabularies: Array<IVocabulary>,
     fieldsToExtract: Array<string>,

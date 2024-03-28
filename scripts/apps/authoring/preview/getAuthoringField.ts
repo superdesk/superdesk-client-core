@@ -4,7 +4,7 @@ import {getRelatedArticles, getRelatedMedia} from '../authoring/controllers/Asso
 
 export function getAuthoringField(
     fieldId: string,
-    item: Partial<IArticle>,
+    item: IArticle,
     customFieldsVocabularies: Array<IVocabulary>,
 ): IAuthoringField {
     const customField = customFieldsVocabularies.find(({_id}) => _id === fieldId);
