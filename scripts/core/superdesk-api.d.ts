@@ -1280,6 +1280,7 @@ declare module 'superdesk-api' {
         _autosave?: any;
         _autosaved?: any;
         _locked?: boolean;
+        search_provider?: string;
     }
 
     export interface IDangerousArticlePatchingOptions {
