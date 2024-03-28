@@ -99,7 +99,7 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
         .catch(reject);
 });
 
-export const getProjectedFieldsArticle = () => {
+export function getProjectedFieldsArticle(): Array<string> {
     const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
     const uiFields = [
@@ -129,7 +129,7 @@ export const getProjectedFieldsArticle = () => {
     });
 
     return Array.from(projectedFields);
-};
+}
 
 export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
     let current = scope.$parent;

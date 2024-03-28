@@ -1,5 +1,4 @@
-import {IArticle, IVocabulary} from 'superdesk-api';
-import {IAuthoringField} from './types';
+import {IArticle, IVocabulary, IAuthoringField} from 'superdesk-api';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {getRelatedArticles, getRelatedMedia} from '../authoring/controllers/AssociationController';
 

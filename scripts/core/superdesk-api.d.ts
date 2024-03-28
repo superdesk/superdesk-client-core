@@ -2320,6 +2320,66 @@ declare module 'superdesk-api' {
         payload: IActiveCell;
     }
 
+    export type IAuthoringField =
+        {
+            type: 'plain-text';
+            id: string;
+            value: string;
+        }
+        | {
+            type: 'html';
+            id: string;
+            value: string;
+        }
+        | {
+            type: 'subjects';
+            id: string;
+            value: Array<{name: string; qcode: string}>;
+        }
+        | {
+            type: 'vocabulary-values';
+            id: string;
+            value: {
+                vocabularyId: string;
+                qcodes: Array<string>;
+            };
+        }
+        | {
+            type: 'urls';
+            id: string;
+            value: Array<{url: string; description: string}>;
+        }
+        | {
+            type: 'media-gallery';
+            id: string;
+            value: Array<IArticle>;
+        }
+        | {
+            type: 'related-articles';
+            id: string;
+            value: Array<IRelatedArticle>;
+        }
+        | {
+            type: 'embed';
+            id: string;
+            value: {embed: string; description: string};
+        }
+        | {
+            type: 'attachments';
+            id: string;
+            value: Array<{attachment: IAttachment['_id']}>;
+        }
+        | {
+            type: 'custom';
+            id: string;
+            value: {item: IArticle; field: IVocabulary};
+        };
+
+    export interface IPreviewFieldTypeProps {
+        field: IAuthoringField;
+        language: string;
+    }
+
     // DATA API
 
     export interface IDataRequestParams {
@@ -2717,7 +2777,6 @@ declare module 'superdesk-api' {
                 isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
                 isLockedInCurrentSession(article: IArticle): boolean;
                 isLockedInOtherSession(article: IArticle): boolean;
-
                 isPersonal(article: IArticle): boolean;
                 patch(
                     article: IArticle,
@@ -2728,6 +2787,23 @@ declare module 'superdesk-api' {
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
                 itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
+                getProjectedFieldsArticle(): Array<string>;
+                getLabelNameResolver(): Promise<(fieldId: string) => string>;
+                getSortedFields(
+                    section: 'header' | 'content',
+                    editor: any,
+                    item: Partial<IArticle>,
+                    hideMedia: boolean,
+                    customVocabularies: Array<IVocabulary>
+                ): Array<IAuthoringField>;
+                getSortedFieldsFiltered(
+                    section: 'header' | 'content',
+                    editor: any,
+                    item: Partial<IArticle>,
+                    hideMedia: boolean,
+                    customVocabularies: Array<IVocabulary>,
+                    fieldsToExtract: Array<string>,
+                ): {allFields: Array<IAuthoringField>, extractedFields: {[key: string]: IAuthoringField}
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
@@ -2735,6 +2811,8 @@ declare module 'superdesk-api' {
             vocabulary: {
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): IVocabulary;
+                getCustomFieldVocabularies(): Array<IVocabulary>;
+                getLanguageVocabulary(): IVocabulary;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -2782,6 +2860,7 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
+            superdeskToElasticQuery(q: ISuperdeskQuery): {q?: string, source: string};
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -2849,6 +2928,9 @@ declare module 'superdesk-api' {
                 closeOnHoverEnd?: boolean,
                 onClose?: () => void,
             ): {close: () => void};
+            authoring: {
+                PreviewFieldType: React.ComponentType<IPreviewFieldTypeProps>;
+            };
         };
         authoringGeneric: {
             sideWidgets: {

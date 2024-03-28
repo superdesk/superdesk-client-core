@@ -1,9 +1,8 @@
 import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/components/get-editor-config';
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, IAuthoringField} from 'superdesk-api';
 import {authoringFieldHasValue} from './authoringFieldHasValue';
 import {getAuthoringField} from './getAuthoringField';
 import {isMediaField} from './isMediaField';
-import {IAuthoringField} from './types';
 
 export const getSortedFields = (
     section: 'header' | 'content',

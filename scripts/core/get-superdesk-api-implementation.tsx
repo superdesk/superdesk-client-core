@@ -10,7 +10,14 @@ import {
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags, stripLockingFields} from 'core/utils';
+import {
+    gettext,
+    gettextPlural,
+    stripBaseRestApiFields,
+    stripHtmlTags,
+    stripLockingFields,
+    getProjectedFieldsArticle,
+} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -104,6 +111,11 @@ import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
+import {toElasticQuery} from './query-formatting';
+import {getCustomFieldVocabularies, getLanguageVocabulary} from './helpers/business-logic';
+import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -267,6 +279,7 @@ export function getSuperdeskApiImplementation(
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
+            superdeskToElasticQuery: toElasticQuery,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -282,6 +295,10 @@ export function getSuperdeskApiImplementation(
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
                 itemAction: (article) => sdApi.article.itemAction(article),
+                getProjectedFieldsArticle: getProjectedFieldsArticle,
+                getLabelNameResolver: getLabelNameResolver,
+                getSortedFields: getSortedFields,
+                getSortedFieldsFiltered: getSortedFieldsFiltered,
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
@@ -312,6 +329,8 @@ export function getSuperdeskApiImplementation(
             vocabulary: {
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
+                getCustomFieldVocabularies: getCustomFieldVocabularies,
+                getLanguageVocabulary: getLanguageVocabulary,
             },
             attachment: attachmentsApi,
             users: {
@@ -410,6 +429,9 @@ export function getSuperdeskApiImplementation(
             DateTime,
             Card,
             showPopup,
+            authoring: {
+                PreviewFieldType,
+            },
         },
         forms: {
             FormFieldType,
