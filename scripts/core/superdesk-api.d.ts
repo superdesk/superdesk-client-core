@@ -202,7 +202,7 @@ declare module 'superdesk-api' {
 
         // positioned relatively; shown at the same time as getSidePanel
         // used for rendering icon buttons of available side widgets
-        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
+        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element | null;
 
         // positioned absolutely; shown at the same time as getSidebar
         // used for side widgets
@@ -2121,6 +2121,12 @@ declare module 'superdesk-api' {
         square?: boolean;
     }
 
+    export interface IPropsActionButton {
+        'aria-label': string;
+        ref?(event): void;
+        onClick(event: React.MouseEvent): void;
+    }
+
     export interface IPropsIcon {
         className: string;
         size?: number;
@@ -2894,6 +2900,7 @@ declare module 'superdesk-api' {
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
             Badge: React.ComponentType<IPropsBadge>;
+            MoreActionsButton: React.ComponentType<IPropsActionButton>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
