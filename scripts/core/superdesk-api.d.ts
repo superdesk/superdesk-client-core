@@ -2809,7 +2809,10 @@ declare module 'superdesk-api' {
                     hideMedia: boolean,
                     customVocabularies: Array<IVocabulary>,
                     fieldsToExtract: Array<string>,
-                ): {allFields: Array<IAuthoringField>, extractedFields: {[key: string]: IAuthoringField}
+                ): {
+                    allFields: Array<IAuthoringField>;
+                    extractedFields: {[key: string]: IAuthoringField};
+                };
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
