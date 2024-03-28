@@ -94,7 +94,7 @@ export function registerExtensions(
                 window['extensionsApiInstances'][id] = apiInstance;
 
                 return load()
-                    .then((module) => module?.default)
+                    .then((module) => module.default)
                     .then((extension) => {
                         extensionsWithActivationResult[id] = {
                             extension,
@@ -110,7 +110,7 @@ export function registerExtensions(
                 Object.keys(extensionsWithActivationResult).map((extensionId) => {
                     const extensionObject = extensionsWithActivationResult[extensionId];
 
-                    return extensionObject.extension?.activate(window['extensionsApiInstances'][extensionId])
+                    return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
                         .then((activationResult) => {
                             extensionObject.activationResult = activationResult;
 
@@ -121,19 +121,19 @@ export function registerExtensions(
                 registerContributionsFromCustomFields(
                     flatMap(
                         activationResults,
-                        (activationResult) => activationResult?.contributions?.customFieldTypes ?? [],
+                        (activationResult) => activationResult.contributions?.customFieldTypes ?? [],
                     ),
                 );
 
                 flatMap(
                     activationResults,
-                    (activationResult) => activationResult?.contributions?.pages ?? [],
+                    (activationResult) => activationResult.contributions?.pages ?? [],
                 )
                     .forEach(registerPage);
 
                 flatMap(
                     activationResults,
-                    (activationResult) => activationResult?.contributions?.workspaceMenuItems ?? [],
+                    (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
                 )
                     .forEach(registerWorkspaceMenu);
             });
