@@ -182,8 +182,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
-            const MEDIA_TYPES = ['video', 'picture', 'audio'];
-            var mediaFields = {};
+            scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
@@ -233,6 +232,10 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             }, true);
 
             scope.save = function() {
+                for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
+                    fn();
+                }
+
                 return authoring.save(scope.origItem, cloneDeep(scope.item)).then((res) => {
                     scope.dirty = false;
                     InitializeMedia.initMedia(scope);
