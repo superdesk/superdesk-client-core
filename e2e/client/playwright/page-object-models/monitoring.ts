@@ -50,23 +50,4 @@ export class Monitoring {
             }
         }
     }
-
-    async editArticle(item: Locator, option?: {slugline?: string}): Promise<void> {
-        await item.hover();
-        await item.locator(s('context-menu-button')).click();
-
-        await this.page.locator(s('context-menu'))
-            .getByRole('button', {name: 'Edit', exact: true})
-            .click();
-
-        if (option != null) {
-            let keys = Object.keys(option);
-
-            for (const key of keys) {
-                await this.page.locator(s('authoring', `field-${key}`)).fill(option[key]);
-            }
-        }
-
-        await this.page.locator(s('authoring-topbar', 'save')).click();
-    }
 }
