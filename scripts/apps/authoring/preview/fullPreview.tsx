@@ -1,17 +1,13 @@
 import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/components/get-editor-config';
 import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {PreviewFieldType} from './previewFieldByType';
-import {IAuthoringField} from './types';
-import {getAuthoringField} from './getAuthoringField';
-import {authoringFieldHasValue} from './authoringFieldHasValue';
-import {isMediaField} from './isMediaField';
 import {gettext} from 'core/utils';
 import {formatDate, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
 import {appConfig} from 'appConfig';
+import {getSortedFields} from './utils';
 
 interface IProps {
     item: IArticle;
@@ -70,39 +66,6 @@ export class FullPreview extends React.Component<IProps, IState> {
 
         const {hideMedia, editor, item} = this.props;
 
-        const getSortedFields = (section: 'header' | 'content'): Array<IAuthoringField> => {
-            return Object.keys(editor)
-                .filter((key) => editor[key] != null)
-                .filter(
-                    (key) => {
-                        const isHeader = editor[key].section === 'header'
-                            || ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)
-                            || ARTICLE_COMMON_FIELDS.has(key as keyof IArticle);
-
-                        const inSection = (() => {
-                            if (ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)) {
-                                // Handle invalid config when header-only fields are set as content.
-                                return section === 'header';
-                            } if (editor[key].section != null) {
-                                return editor[key].section === section;
-                            } else {
-                                return section === 'header' ? isHeader : !isHeader;
-                            }
-                        })();
-
-                        return inSection && editor[key].hideOnPrint !== true;
-                    },
-                )
-                .sort((key1, key2) => editor[key1].order - editor[key2].order)
-                .map((key) => getAuthoringField(key, item, this.state.customFieldVocabularies))
-                .filter(
-                    (field) =>
-                        field?.value != null
-                        && authoringFieldHasValue(field)
-                        && (hideMedia ? isMediaField(field) !== true : true),
-                );
-        };
-
         const rowSpacingVertical = 4;
 
         return (
@@ -123,7 +86,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                         </div>
 
                         {
-                            getSortedFields('header')
+                            getSortedFields('header', editor, item, hideMedia, this.state.customFieldVocabularies)
                                 .map((field) => {
                                     return (
                                         <div key={field.id} className="tr">
@@ -163,7 +126,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                     <br />
 
                     {
-                        getSortedFields('content')
+                        getSortedFields('content', editor, item, hideMedia, this.state.customFieldVocabularies)
                             .map((field) => {
                                 return (
                                     <div key={field.id}>
