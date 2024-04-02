@@ -280,7 +280,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 />
                                 {
                                     rundown.matching_items && (
-                                        <div style={{paddingInlineStart: 20, paddingTop: 8}}>
+                                        <div style={{paddingInlineStart: 20, paddingBlockEnd: 8}}>
                                             <RundownItems
                                                 rundownReadOnly={true}
                                                 items={rundown.matching_items}

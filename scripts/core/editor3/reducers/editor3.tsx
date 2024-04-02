@@ -177,7 +177,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
-        state.onChangeValue();
+        state.onChangeValue(editorStateNext.getCurrentContent());
     }
 
     const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged || force);

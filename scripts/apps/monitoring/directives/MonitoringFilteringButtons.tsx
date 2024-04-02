@@ -149,9 +149,8 @@ class MonitoringFilteringButtonsComponent extends React.PureComponent<IProps, {b
                     display: 'flex',
                     height: '100%',
                     alignItems: 'center',
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    borderLeft: '1px solid var(--sd-colour-line--light)',
+                    paddingInline: 10,
+                    borderInlineStart: '1px solid var(--sd-colour-line--light)',
                     whiteSpace: 'nowrap',
                 }}
             >
