@@ -87,7 +87,7 @@ export class InteractiveArticleActionsPanel
 
         const panelHeader = (
             <PanelHeader markupV2={markupV2}>
-                <div className="space-between" style={{width: '100%', paddingRight: 10}}>
+                <div className="space-between" style={{width: '100%', paddingInlineEnd: 10}}>
                     <TabList
                         tabs={filteredTabs.map((id) => ({id, label: getTabLabel(id)}))}
                         selectedTabId={activeTab}
