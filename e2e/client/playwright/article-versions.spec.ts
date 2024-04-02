@@ -10,11 +10,10 @@ test.describe('article versions', async () => {
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await page.locator(s('article-item=story 2')).hover();
-        await page.locator(s('article-item=story 2')).locator(s('context-menu-button')).click();
-        await page.locator(s('context-menu'))
-            .getByRole('button', {name: 'Edit', exact: true})
-            .click();
+        await monitoring.executeActionOnMonitoringItem(
+            page.locator(s('article-item=story 2')),
+            'Edit',
+        );
         await page.locator(s('authoring', 'field-slugline')).fill('story 2.1');
         await page.locator(s('authoring-topbar', 'save')).click();
         await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('story 2.1');
