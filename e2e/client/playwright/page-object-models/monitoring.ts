@@ -37,6 +37,20 @@ export class Monitoring {
             .click();
     }
 
+    async executeActionInEditor(...actionPath: Array<string>): Promise<void> {
+        await this.page.locator(s('authoring-topbar', 'actions-button')).click();
+
+        const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
+
+        for (const action of actionsWithoutLast) {
+            await this.page.locator(s('actions-list')).getByRole('button', {name: action}).hover();
+        }
+
+        await this.page.locator(s('actions-list'))
+            .getByRole('button', {name: actionPath[actionPath.length - 1]})
+            .click();
+    }
+
     async createArticleFromTemplate(template: string, options?: {slugline?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
