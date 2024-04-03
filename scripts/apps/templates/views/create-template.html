@@ -1,62 +1,64 @@
-<div class="modal__header">
-    <button type="button" class="modal__close pull-right" ng-click="$dismiss()">
-        <span class="icon-close-small"></span></button>
-    <h3 class="modal__heading" translate>Save as template</h3>
-</div>
+<div data-test-id="modal-save-as-template">
+    <div class="modal__header">
+        <button type="button" class="modal__close pull-right" ng-click="$dismiss()">
+            <span class="icon-close-small"></span></button>
+        <h3 class="modal__heading" translate>Save as template</h3>
+    </div>
 
-<div class="modal__body">
-    <form name="templateForm" data-test-id="save-as-template">
-        <fieldset>
-            <div class="field">
-                <label for="template-name" translate>Name</label>
-                <div class="control">
-                    <input
-                        type="text"
-                        id="template-name"
-                        name="name"
-                        required
-                        ng-model="template.name"
-                        ng-maxlength="40"
-                        data-test-id="name-input"
-                    />
-                    <div class="error" ng-show="template._issues.template_name"
-                        translate>Sorry, but template name must be unique.</div>
-                    <em class="info" ng-show="!template.willCreateNew()" translate>It will update existing template.</em>
-                    <em class="info" ng-show="template.willCreateNew()" translate>It will create a new template.</em>
-                    <span class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</span>
-                </div>
-            </div>
-
-            <div ng-if="privileges.content_templates">
+    <div class="modal__body">
+        <form name="templateForm" data-test-id="save-as-template">
+            <fieldset>
                 <div class="field">
+                    <label for="template-name" translate>Name</label>
                     <div class="control">
-                        <sd-check ng-model="template.is_public">Desk template</sd-check>
+                        <input
+                            type="text"
+                            id="template-name"
+                            name="name"
+                            required
+                            ng-model="template.name"
+                            ng-maxlength="40"
+                            data-test-id="name-input"
+                        />
+                        <div class="error" ng-show="template._issues.template_name"
+                            translate>Sorry, but template name must be unique.</div>
+                        <em class="info" ng-show="!template.willCreateNew()" translate>It will update existing template.</em>
+                        <em class="info" ng-show="template.willCreateNew()" translate>It will create a new template.</em>
+                        <span class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</span>
                     </div>
                 </div>
 
-                <div class="field" ng-if="template.is_public !== false">
-                    <label for="template-desk" translate>Desk</label>
-                    <div class="control">
-                        <select ng-model="template.desk" ng-options="desk._id as desk.name for desk in template.desks"></select>
+                <div ng-if="privileges.content_templates">
+                    <div class="field">
+                        <div class="control">
+                            <sd-check ng-model="template.is_public">Desk template</sd-check>
+                        </div>
+                    </div>
+
+                    <div class="field" ng-if="template.is_public !== false">
+                        <label for="template-desk" translate>Desk</label>
+                        <div class="control">
+                            <select ng-model="template.desk" ng-options="desk._id as desk.name for desk in template.desks" data-test-id="select-desk"></select>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
+            </fieldset>
+        </form>
+    </div>
 
-<div class="modal__footer">
-    <button type="button" class="btn"
-        ng-click="$dismiss()"
-        translate>Cancel</button>
-    <button
-        type="button"
-        class="btn btn--primary"
-        ng-disabled="templateForm.$invalid"
-        ng-click="template.save().then($close)"
-        translate
-        data-test-id="create-template-modal--save"
-    >
-        Save
-    </button>
+    <div class="modal__footer">
+        <button type="button" class="btn"
+            ng-click="$dismiss()"
+            translate>Cancel</button>
+        <button
+            type="button"
+            class="btn btn--primary"
+            ng-disabled="templateForm.$invalid"
+            ng-click="template.save().then($close)"
+            translate
+            data-test-id="create-template-modal--save"
+        >
+            Save
+        </button>
+    </div>
 </div>
