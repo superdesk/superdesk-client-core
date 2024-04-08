@@ -1,5 +1,5 @@
 <form name="editForm">
-    <div sd-modal data-model="vocabulary" class="modal--x-large">
+    <div sd-modal data-model="vocabulary" class="modal--x-large" data-test-id="'vocabulary-modal'">
         <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{vocabulary.display_name}}
             </h3>
@@ -24,7 +24,7 @@
                             ng-if="!vocabulary._links || !matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <label for="cv_id" class="sd-line-input__label" translate>ID</label>
                             <input id="cv_id" class="sd-line-input__input" type="text" ng-model="vocabulary._id"
-                                ng-pattern="idRegex" ng-readonly="!!vocabulary._links" required>
+                                ng-pattern="idRegex" ng-readonly="!!vocabulary._links" required aria-label="{{'ID' | translate}}">
                             <div class="sd-line-input__message" ng-show="issues._id.unique || issues._id.deleted"
                                 translate>ID must be unique.</div>
                             <div class="sd-line-input__message" ng-show="issues._id.conflict" translate>ID conflicts
@@ -172,7 +172,7 @@
                             <div class="form__row form__row--inner form__row--flex">
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
-                                        <select class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
+                                        <select id="field-media-type" class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
                                             <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
                                             </option>
                                         </select>
@@ -180,13 +180,13 @@
                                 </div>
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="form__row">
-                                        <sd-check name="field_type"
+                                        <sd-check name="field_type" aria-label="Image"
                                             ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">
                                             {{'Image' | translate}}</sd-check>
                                         <sd-check name="field_type"
                                             ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">
                                             {{'Video' | translate}}</sd-check>
-                                        <sd-check name="field_type"
+                                        <sd-check name="field_type"  aria-label="Audio"
                                             ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
                                             {{'Audio' | translate}}</sd-check>
                                     </div>

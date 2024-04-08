@@ -33,13 +33,15 @@
                     ng-repeat="type in ctrl.items| orderBy: 'label' | filter: query track by type._id"
                     ng-class="{inactive: !type.enabled}"
                     ng-show="(!active_only || (active_only && type.enabled)) && (contentTypeFilter == null || contentTypeFilter === type.type)"
+                    data-test-id="content-profile"
+                    data-test-value="{{ type.label }}"
                 >
                     <div class="card-box__header">
                         <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle>
+                            <button class="dropdown__toggle" dropdown__toggle data-test-id="content-profile-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
+                            <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="actions--options">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
                                 <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
@@ -129,7 +131,7 @@
 </div>
 <!-- END Create profile modal -->
 <!-- Edit profile modal -->
-<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()">
+<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()" data-test-id="'content-profile-editing-modal'">
     <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>

@@ -400,7 +400,9 @@
                  data-required="editor[cv._id].required"
                  sd-width="{{editor[cv._id].sdWidth}}"
                  ng-attr-title="{{editor[cv._id].readonly === true ? readOnlyLabel : ''}}"
-                 order="{{editor[cv._id].order}}">
+                 order="{{editor[cv._id].order}}"
+                 data-test-id="field"
+                 data-test-value="{{ cv.display_name }}">
                 <label class="authoring-header__item-label">
                     <span>{{ cv.display_name | translate }}</span>
                 </label>

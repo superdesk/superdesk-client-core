@@ -515,6 +515,8 @@
         data-required="schema[field._id].required"
         data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
         data-validate-characters="schema[field._id].validate_characters"
+        data-test-id="field"
+        data-test-value="{{ field.display_name }}"
     ></div>
 </div>
 
@@ -525,7 +527,10 @@
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    sd-validation-error="error[field._id] || error.extra[field._id]">
+    sd-validation-error="error[field._id] || error.extra[field._id]"
+    data-test-id="field"
+    data-test-value="{{ field.display_name }}"
+>
 
     <label class="field__label">{{field.display_name}}</label>
     <div
@@ -547,7 +552,10 @@
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field_id]"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-required="schema[field._id].required">
+    data-required="schema[field._id].required"
+    data-test-id="field"
+    data-test-value="{{ field.display_name }}"
+>
     <label class="field__label" translate>{{field.display_name}}</label>
     <span>
     <button ng-disabled="!_editable || schema[field._id].readonly === true" id="clear-embed-btn" type="button" class="btn btn--small pull-right" ng-click="clearEmbed(field._id)"
@@ -597,7 +605,8 @@
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-test-id="{{'authoring-field--' + field._id}}"
+    data-test-id="field"
+    data-test-value="{{ field.display_name }}"
 >
     <label class="field__label" translate>{{field.display_name}}</label>
 
@@ -659,7 +668,10 @@
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
     order="{{editor[field._id].order}}"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-required="schema[field._id].required">
+    data-required="schema[field._id].required"
+    data-test-id="field"
+    data-test-value="{{ field.display_name }}"
+>
     <sd-article-url-fields
         editable="_editable && schema[field._id].readonly !== true"
         label="field.display_name"
