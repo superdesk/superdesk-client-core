@@ -24,7 +24,7 @@
 
   <div class="sd-page__content" data-test-id="template-content">
       <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks" data-test-id="content-template--{{template.template_name}}">
+          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks" data-test-id="content-template" data-test-value="{{template.template_name}}">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle data-test-id="template-actions">

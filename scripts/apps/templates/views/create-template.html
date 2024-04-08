@@ -38,7 +38,7 @@
                     <div class="field" ng-if="template.is_public !== false">
                         <label for="template-desk" translate>Desk</label>
                         <div class="control">
-                            <select ng-model="template.desk" ng-options="desk._id as desk.name for desk in template.desks" data-test-id="select-desk"></select>
+                            <select id="template-desk" ng-model="template.desk" ng-options="desk._id as desk.name for desk in template.desks"></select>
                         </div>
                     </div>
                 </div>

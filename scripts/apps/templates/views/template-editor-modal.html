@@ -36,7 +36,7 @@
                             ng-if="template.template_type !== 'kill' && content_types.length"
                         >
                             <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
-                            <select required id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'" data-test-id="select-content-profile">
+                            <select required id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
                                 <option value="profile.id"></option>
                             </select>
                         </div>
