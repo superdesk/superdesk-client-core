@@ -53,6 +53,7 @@ services:
             - WEB_LOG_LEVEL=info
         volumes:
           - ./dump:/opt/superdesk/dump:rw
+        user: 1000:1000
 
 networks:
     e2e:
