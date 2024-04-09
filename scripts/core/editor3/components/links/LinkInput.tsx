@@ -9,6 +9,7 @@ import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion} from 
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc React
@@ -93,7 +94,7 @@ export class LinkInputComponent extends React.Component<any, any> {
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
 
             link = {href: url};
-            if (!isLocalDomain && localDomains != null) {
+            if ((appConfig.linksBlankTarget === true) || (!isLocalDomain && localDomains != null)) {
                 link.target = '_blank';
             }
         } else if (linkType === linkTypes.attachement) {
