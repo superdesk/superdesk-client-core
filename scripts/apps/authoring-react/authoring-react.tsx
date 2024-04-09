@@ -14,7 +14,6 @@ import {
     IExposedFromAuthoring,
     IKeyBindings,
     IAuthoringOptions,
-    IStoreValueIncomplete,
     IAuthoringSectionTheme,
 } from 'superdesk-api';
 import {
@@ -97,7 +96,6 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
     userPreferencesForFields: {[key: string]: unknown},
     fieldsAdapter: IFieldsAdapter<T>,
     storageAdapter: IStorageAdapter<T>,
-    preferIncomplete: IStoreValueIncomplete,
 ): T {
     let result: T = item;
 
@@ -117,7 +115,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
         })();
 
         if (fieldsAdapter[field.id]?.storeValue != null) {
-            result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig, preferIncomplete);
+            result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
         } else {
             result = storageAdapter.storeValue(storageValue, field.id, result, field.fieldConfig, field.fieldType);
         }
@@ -301,7 +299,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
-        this.setLoadingState = this.setLoadingState.bind(this);
         this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
@@ -366,27 +363,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.componentRef = ref;
     }
 
-    setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void> {
-        return new Promise<void>((resolve) => {
-            this.setState({
-                ...state,
-                loading,
-            }, () => {
-                setTimeout(() => {
-                    /**
-                     * Timeout is used to wait until the view re-renders with a loading indicator.
-                     * This is a workaround for rare scenarios where a field has a lot of data
-                     * and takes a long time to synchronously serialize to storage format causing
-                     * the browser to lock up for some time.
-                     *
-                     * Without the timeout, loading indicator would only get shown AFTER the long task had finished.
-                     */
-                    resolve();
-                });
-            });
-        });
-    }
-
     initiateUnmounting(): Promise<void> {
         if (!this.state.initialized) {
             return Promise.resolve();
@@ -430,7 +406,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
      */
-    computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): T {
+    computeLatestEntity(): T {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -446,7 +422,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             state.userPreferencesForFields,
             this.props.fieldsAdapter,
             this.props.storageAdapter,
-            options?.preferIncomplete ?? false,
         );
 
         return itemWithFieldsApplied;
@@ -597,7 +572,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     componentDidMount() {
         const {authoringStorage} = this.props;
 
-        this.switchProfile(() => authoringStorage.getEntity(this.props.itemId)).then((initialState) => {
+        this.switchProfile((itemId) => authoringStorage.getEntity(itemId)).then((initialState) => {
             this.props.onEditingStart?.(initialState.itemWithChanges);
         });
 
@@ -846,7 +821,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 if (this.hasUnsavedChanges()) {
                     authoringStorage.autosave.schedule(
                         () => {
-                            return this.computeLatestEntity({preferIncomplete: true});
+                            return this.computeLatestEntity();
                         },
                         (autosaved) => {
                             this.setState({
@@ -926,34 +901,37 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         }
 
-        return this.setLoadingState(state, true)
-            .then(() => this.cancelAutosave())
-            .then(() => {
-                return authoringStorage.saveEntity(
-                    this.computeLatestEntity(),
-                    state.itemOriginal,
-                ).then((item: T) => {
-                    const nextState = getInitialState(
-                        {saved: item, autosaved: item},
-                        state.profile,
-                        state.userPreferencesForFields,
-                        state.spellcheckerEnabled,
-                        this.props.fieldsAdapter,
-                        this.props.authoringStorage,
-                        this.props.storageAdapter,
-                        this.props.getLanguage(item),
-                        {}, // clear validation errors
-                        state.allThemes.default,
-                        state.allThemes.proofreading,
-                    );
-
-                    if (this._mounted) {
-                        this.setState(nextState);
-                    }
-
-                    return item;
-                });
+        return this.cancelAutosave().then(() => {
+            this.setState({
+                ...state,
+                loading: true,
             });
+
+            return authoringStorage.saveEntity(
+                this.computeLatestEntity(),
+                state.itemOriginal,
+            ).then((item: T) => {
+                const nextState = getInitialState(
+                    {saved: item, autosaved: item},
+                    state.profile,
+                    state.userPreferencesForFields,
+                    state.spellcheckerEnabled,
+                    this.props.fieldsAdapter,
+                    this.props.authoringStorage,
+                    this.props.storageAdapter,
+                    this.props.getLanguage(item),
+                    {}, // clear validation errors
+                    state.allThemes.default,
+                    state.allThemes.proofreading,
+                );
+
+                if (this._mounted) {
+                    this.setState(nextState);
+                }
+
+                return item;
+            });
+        });
     }
 
     /**
@@ -986,7 +964,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * Closing is initiated, the logic to handle unsaved changes runs
      * and unless closing is cancelled by user action in the UI this.props.onClose is called.
      */
-    initiateClosing(state: IStateLoaded<T>): void {
+    initiateClosing(state: IStateLoaded<T>) {
         if (this.hasUnsavedChanges() !== true) {
             this.props.onClose();
             return;
@@ -994,25 +972,31 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const {authoringStorage} = this.props;
 
-        this.setLoadingState(state, true).then(() => {
-            authoringStorage.closeAuthoring(
-                this.computeLatestEntity(),
-                state.itemOriginal,
-                () => {
-                    authoringStorage.autosave.cancel();
+        this.setState({
+            ...state,
+            loading: true,
+        });
 
-                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
-                },
-                () => this.props.onClose(),
-            ).then(() => {
-                /**
-                 * The promise will also resolve
-                 * if user decides to cancel closing.
-                 */
-                if (this._mounted) {
-                    this.setLoadingState(state, false);
-                }
-            });
+        authoringStorage.closeAuthoring(
+            this.computeLatestEntity(),
+            state.itemOriginal,
+            () => {
+                authoringStorage.autosave.cancel();
+
+                return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+            },
+            () => this.props.onClose(),
+        ).then(() => {
+            /**
+             * The promise will also resolve
+             * if user decides to cancel closing.
+             */
+            if (this._mounted) {
+                this.setState({
+                    ...state,
+                    loading: false,
+                });
+            }
         });
     }
 

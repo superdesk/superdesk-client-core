@@ -335,7 +335,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             });
         });
     },
-    setContentProfile: (item, contentProfileId) => {
+    applyContentProfile: (item, contentProfileId) => {
         return {
             ...item,
             profile: contentProfileId,
