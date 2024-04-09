@@ -146,7 +146,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     justifyContent: 'center',
                                     width: '100%',
                                     position: 'absolute',
-                                    top: '-19px',
+                                    insetBlockStart: '-19px',
                                 }}
                             >
                                 <NewFieldSelect

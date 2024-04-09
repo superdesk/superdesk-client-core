@@ -377,7 +377,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     gap="16"
                                     justifyContent="space-between"
                                     noWrap
-                                    style={{paddingLeft: 16}}
+                                    style={{paddingInlineStart: 16}}
                                 >
                                     {
                                         lockedInOtherSession
