@@ -377,6 +377,25 @@ export function ContentService(api, templates, desks, packages: IPackagesService
                 scope.editor = this.editor(profile, item.type);
                 scope.fields = this.fields(profile);
 
+                /**
+                 * order is used for tabindex in angular based authoring
+                 * since every field has a tabindex there
+                 * tab order breaks when tabindex is zero
+                 * because zero means DOM order
+                 *
+                 * order is incremented by one for every field here
+                 * to prevent tabindex being zero for one element
+                 *
+                 * this would no longer be needed in react based authoring because tabindex is not used there
+                 *
+                 * #ANGULAR_AUTHORING
+                 */
+                for (const key of Object.keys(scope.editor)) {
+                    if (scope.editor[key]?.order != null) {
+                        scope.editor[key].order++;
+                    }
+                }
+
                 return profile;
             });
         }

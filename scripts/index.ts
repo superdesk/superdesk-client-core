@@ -69,6 +69,7 @@ function isDateFormatValid() {
     return true;
 }
 
+// the application should be started by importing and calling `startApp` from a customer repository
 export function startApp(
     extensions: Array<IExtensionLoader>,
     customUiComponents: IConfigurableUiComponents,
@@ -207,11 +208,3 @@ export function startApp(
             }
         });
 }
-
-// the application should be started by importing and calling `startApp` from a customer repository
-// this is a fallback for e2e tests.
-setTimeout(() => {
-    if (started !== true) {
-        startApp([], {});
-    }
-}, 500);

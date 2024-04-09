@@ -4,6 +4,7 @@ import {Menu} from 'superdesk-ui-framework/react';
 import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
+import {MoreActionsButton} from 'core/ui/components/MoreActionsButton';
 
 interface IProps {
     getActions: () => Array<IAuthoringAction>;
@@ -31,15 +32,10 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     render() {
         if (this.state.actions == null) {
             return (
-                <button
-                    onClick={() => {
-                        this.getActions();
-                    }}
-                    className="sd-navbtn"
+                <MoreActionsButton
                     aria-label={gettext('Actions menu')}
-                >
-                    <i className="icon-dots-vertical" />
-                </button>
+                    onClick={this.getActions}
+                />
             );
         } else {
             const actionsGrouped = groupBy(this.state.actions, (action) => action.groupId);
@@ -65,11 +61,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 <div>
                     <Menu items={menuItems}>
                         {(toggle) => (
-                            <button
-                                onClick={(e) => {
-                                    toggle(e);
-                                }}
-                                className="sd-navbtn"
+                            <MoreActionsButton
                                 aria-label={gettext('Actions menu')}
                                 ref={(el) => {
                                     if (el != null) {
@@ -78,9 +70,8 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                                         });
                                     }
                                 }}
-                            >
-                                <i className="icon-dots-vertical" />
-                            </button>
+                                onClick={toggle}
+                            />
                         )}
                     </Menu>
                 </div>

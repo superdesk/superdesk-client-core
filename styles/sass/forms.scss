@@ -204,7 +204,7 @@ input[type="hidden"] {
     display: none;
 }
 
-// legend 
+// legend
 .legend {
     padding: 0;
     color: $grayLight;
@@ -370,6 +370,13 @@ textarea[readonly] {
 //         @include box-shadow(0 0 6px lighten(#ee5f5b, 20%));
 //     }
 // }
+
+.sd-required {
+    font-size: 11px;
+    font-style: italic;
+    color: $grayDark;
+}
+
 
 .sd-validate {
     &:not(.field) label:after {
