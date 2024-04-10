@@ -42,9 +42,9 @@ jobs:
 
     - name: Start e2e server
       run: |
-        docker-compose pull
-        docker-compose build
-        docker-compose up -d
+        docker compose pull
+        docker compose build
+        docker compose up -d
       working-directory: e2e/server
 
     - name: Build client
@@ -90,5 +90,5 @@ jobs:
 
     - name: Server Logs
       if: ${{ failure() }}
-      run: docker-compose logs superdesk
+      run: docker compose logs superdesk
       working-directory: e2e/server
