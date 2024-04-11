@@ -346,7 +346,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                     };
 
                     allSchemaFieldKeys.forEach((_property) => {
-                        field[_property] = schema[fieldId][_property];
+                        field[_property] = schema[fieldId]?.[_property];
                     });
 
                     return field;

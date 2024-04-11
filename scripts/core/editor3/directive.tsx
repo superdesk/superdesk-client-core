@@ -34,6 +34,7 @@ import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
 import {Spacer} from 'core/ui/components/Spacer';
+import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 
 /**
  * @ngdoc directive
@@ -103,6 +104,9 @@ function generateHtml(
         objectToUpdate[fieldName] = editor3StateToHtml(
             contentStatePreparedForExport,
         );
+
+        copyEmbeddedArticlesIntoAssociations(contentStatePreparedForExport, item);
+
         generateAnnotations(item);
     }
 }
