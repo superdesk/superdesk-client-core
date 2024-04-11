@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {addEventListener, removeEventListener} from 'core/get-superdesk-api-implementation';
 import {IAttachment} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /**
  * @name LinkStrategy
@@ -79,7 +80,18 @@ class LinkComponent extends React.Component<any, any> {
             return <a data-attachment={this.link.attachment} title={this.state.title}>{this.props.children}</a>;
         }
 
-        return <a href={this.link.href} title={this.link.href}>{this.props.children}</a>;
+        return appConfig.linksBlankTarget
+            ? (
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={this.link.href}
+                    title={this.link.href}
+                >
+                    {this.props.children}
+                </a>
+            )
+            : (<a href={this.link.href} title={this.link.href}>{this.props.children}</a>);
     }
 }
 
