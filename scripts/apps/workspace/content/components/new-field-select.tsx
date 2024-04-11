@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Menu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import '../../../workspace/content/styles/profiles.scss';
 
 interface IProps {
     availableFields: Array<{id: string; label: string; fieldType: string;}>;
