@@ -1,9 +1,10 @@
 import React from 'react';
 import {Button, Menu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
+import '../../../workspace/content/styles/profiles.scss';
 
 interface IProps {
-    availableFields: Array<{id: string; label: string}>;
+    availableFields: Array<{id: string; label: string; fieldType: string;}>;
     onSelect(value: string): void;
 }
 
@@ -14,12 +15,18 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
         return (
             <div>
                 <Menu
-                    items={availableFields.map(({id, label}) => ({
-                        label: label,
-                        onClick: () => {
-                            this.props.onSelect(id);
-                        },
-                    }))}
+                    items={availableFields.map(({id, label, fieldType}) => {
+                        const maybeLabelAndFieldType = fieldType !== ''
+                            ? <>{label} <span className="sd-text--italic sd-text--light">({fieldType})</span></>
+                            : label;
+
+                        return {
+                            label: maybeLabelAndFieldType,
+                            onClick: () => {
+                                this.props.onSelect(id);
+                            },
+                        };
+                    })}
                 >
                     {(toggle) => (
                         <Button
