@@ -162,7 +162,11 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         : null
                 }
 
-                <div className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border" data-test-id="content-profile-item" data-test-value={itemLabel}>
+                <div
+                    className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border"
+                    data-test-id="content-profile-item"
+                    data-test-value={itemLabel}
+                >
                     <span className="sd-overflow-ellipsis sd-list-item__text-strong">
                         {itemLabel}
                     </span>
@@ -224,7 +228,10 @@ class ItemComponent extends React.PureComponent<IPropsItem> {
 class ItemsContainerBase extends React.PureComponent {
     render() {
         return (
-            <div className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3" data-test-id="content-profile-items-list">
+            <div
+                className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3"
+                data-test-id="content-profile-items-list"
+            >
                 {this.props.children}
             </div>
         );

@@ -98,7 +98,9 @@ test('adding custom text field in content profile', async ({page}) => {
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Content', 'custom text field');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=custom text field'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=custom text field')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
@@ -115,7 +117,9 @@ test('adding custom date field in content profile', async ({page}) => {
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Content', 'custom date field');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=custom date field'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=custom date field')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
@@ -132,7 +136,9 @@ test('adding custom embed field in content profile', async ({page}) => {
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Content', 'custom embed field');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=custom embed field'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=custom embed field')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
@@ -149,7 +155,9 @@ test('adding custom related content field in content profile', async ({page}) =>
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Content', 'related content');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=related content'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=related content')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
@@ -166,7 +174,9 @@ test('adding custom URL field in content profile', async ({page}) => {
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Content', 'custom url field');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=custom url field'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=custom url field')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
@@ -183,7 +193,9 @@ test('adding custom vocabulary in content profile', async ({page}) => {
     await page.goto('/#/settings/content-profiles');
 
     await settings.AddFieldInContentProfile('Story', 'Header', 'custom vocabulary');
-    await expect(page.locator(s('content-profile-editing-modal', 'content-profile-item=custom vocabulary'))).toBeVisible();
+    await expect(
+        page.locator(s('content-profile-editing-modal', 'content-profile-item=custom vocabulary')),
+    ).toBeVisible();
     await page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/workspace/monitoring');
