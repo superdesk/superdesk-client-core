@@ -3,7 +3,7 @@ import {Button, Menu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IProps {
-    availableFields: Array<{id: string; label: string; fieldType: string;}>;
+    availableFields: Array<{id: string; label: string; fieldType?: string;}>;
     onSelect(value: string): void;
 }
 
@@ -15,7 +15,7 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
             <div>
                 <Menu
                     items={availableFields.map(({id, label, fieldType}) => {
-                        const maybeLabelAndFieldType = fieldType !== ''
+                        const maybeLabelAndFieldType = (fieldType != null && fieldType !== '')
                             ? <>{label} <span className="sd-text--italic sd-text--light">({fieldType})</span></>
                             : label;
 
