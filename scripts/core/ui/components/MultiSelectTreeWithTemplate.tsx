@@ -60,7 +60,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     getId={getId}
                     selectBranchWithChildren={false}
                     optionTemplate={(item) => <OptionTemplate item={item} />}
-                    valueTemplate={(item) => <ValueTemplate item={item} />}
+                    valueTemplate={(item, Wrapper) => <Wrapper><ValueTemplate item={item} /></Wrapper>}
                     allowMultiple={this.props.allowMultiple}
                     singleLevelSearch
                     readOnly={this.props.readOnly}
