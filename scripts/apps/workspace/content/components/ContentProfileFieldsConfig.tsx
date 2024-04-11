@@ -146,7 +146,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     justifyContent: 'center',
                                     width: '100%',
                                     position: 'absolute',
-                                    top: '-19px',
+                                    insetBlockStart: '-19px',
                                 }}
                             >
                                 <NewFieldSelect
@@ -345,7 +345,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                     };
 
                     allSchemaFieldKeys.forEach((_property) => {
-                        field[_property] = schema[fieldId][_property];
+                        field[_property] = schema[fieldId]?.[_property];
                     });
 
                     return field;
