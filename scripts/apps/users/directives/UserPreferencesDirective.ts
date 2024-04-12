@@ -287,7 +287,7 @@ export function UserPreferencesDirective(
             */
             function updateScopeData(helperData, userPrefs) {
                 // If the planning module is installed we save a list of the available agendas
-                if (scope.features.agenda) {
+                if (scope.features?.agenda) {
                     scope.agendas = helperData.agendas;
                 }
 

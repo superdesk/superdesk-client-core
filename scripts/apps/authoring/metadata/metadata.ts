@@ -1272,7 +1272,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         fetchAgendas: function() {
             var self = this;
 
-            if ($rootScope.features.agenda) {
+            if ($rootScope.features?.agenda) {
                 return api.get('/agenda').then((result) => {
                     var agendas = [];
 
