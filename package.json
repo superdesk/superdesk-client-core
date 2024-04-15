@@ -128,7 +128,7 @@
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
     "webpack": "3.11.0",
-    "webpack-dev-server": "2.11.1"
+    "webpack-dev-server": "5.0.4"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
@@ -145,7 +145,7 @@
     "karma-jasmine": "^1.1.1",
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.13",
+    "karma-webpack": "^5.0.1",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
