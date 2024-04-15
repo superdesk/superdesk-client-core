@@ -120,7 +120,7 @@ honcho==1.1.0
     # via -r requirements.in
 httplib2==0.22.0
     # via oauth2client
-idna==3.6
+idna==3.7
     # via requests
 itsdangerous==1.1.0
     # via
