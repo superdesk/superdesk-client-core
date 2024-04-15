@@ -140,7 +140,7 @@
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^2.0.0",
     "jasmine-core": "^2.99.1",
-    "karma": "^2.0.0",
+    "karma": "^6.4.3",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.1",
     "karma-ng-html2js-preprocessor": "^1.0.0",
