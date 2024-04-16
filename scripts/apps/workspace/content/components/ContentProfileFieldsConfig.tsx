@@ -23,6 +23,7 @@ import {WidgetsConfig} from './WidgetsConfig';
 import {NewFieldSelect} from './new-field-select';
 import {GenericArrayListPageComponent} from 'core/helpers/generic-array-list-page-component';
 import {arrayMove} from '@superdesk/common';
+import {getTypeForFieldId} from 'apps/workspace/helpers/getTypeForFieldId';
 
 // should be stored in schema rather than editor section of the content profile
 // but the fields should be editable via GUI
@@ -146,7 +147,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     justifyContent: 'center',
                                     width: '100%',
                                     position: 'absolute',
-                                    top: '-19px',
+                                    insetBlockStart: '-19px',
                                 }}
                             >
                                 <NewFieldSelect
@@ -345,7 +346,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                     };
 
                     allSchemaFieldKeys.forEach((_property) => {
-                        field[_property] = schema[fieldId][_property];
+                        field[_property] = schema[fieldId]?.[_property];
                     });
 
                     return field;
@@ -500,14 +501,19 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
             };
 
-            const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
+            const availableIds: Array<{id: string; label: string; fieldType: string;}> = this.state.allFieldIds
                 .filter((id) => {
                     return (
                         this.isAllowedForSection(this.state.selectedSection, id)
                         && !this.existsInFields(id)
                     );
                 })
-                .map((id) => ({id, label: getLabel(id)}));
+                .map((id) => ({
+                    id,
+                    label: getLabel(id),
+                    fieldType: getTypeForFieldId(id, this.state.vocabularies),
+                }))
+                .sort((x, y) => x.label.localeCompare(y.label));
 
             const setIndexForNewItem = (index) => {
                 this.setState({insertNewItemAtIndex: index});

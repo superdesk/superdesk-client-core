@@ -171,7 +171,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         return (
             <div
                 style={{
-                    marginTop: 'var(--top-navigation-height)',
+                    marginBlockStart: 'var(--top-navigation-height)',
                     width: '100%',
                     height: 'calc(100% - var(--top-navigation-height))',
                 }}
@@ -394,7 +394,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     <Layout.OverlayPanel />
                                 </Layout.LayoutContainer>
 
-                                <Layout.ContentSplitter visible={true} />
+                                <Layout.ContentSplitter visible={true} disabled />
                             </React.Fragment>
                         )
                     }

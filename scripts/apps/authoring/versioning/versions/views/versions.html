@@ -1,6 +1,6 @@
 <div class="article-versions" ng-controller="VersioningWidgetCtrl">
     <ul class="versions-list boxed-list sd-padding--2">
-        <li class="boxed-list__item boxed-list__item--clickable boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
+        <li class="boxed-list__item boxed-list__item--clickable boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty" data-test-id="article-version" data-test-value="{{ version._current_version }}">
             <div class="boxed-list__item-content">
                 <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
                     <time class="sd-text__date-time sd-text__date-time--small" sd-absdate title="{{ :: version._created | date:'medium' }}" datetime="version._created"></time>

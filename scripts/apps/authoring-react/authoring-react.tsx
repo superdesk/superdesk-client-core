@@ -1349,7 +1349,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 <React.Fragment>
                                                     <div
                                                         style={{
-                                                            paddingRight: 16,
+                                                            paddingInlineEnd: 16,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             gap: 8,
