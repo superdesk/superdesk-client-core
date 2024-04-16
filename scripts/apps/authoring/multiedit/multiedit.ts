@@ -14,6 +14,7 @@ import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
 import {InitializeMedia} from '../authoring/services/InitializeMediaService';
+import {sdApi} from 'api';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -53,6 +54,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     };
 
     this.exit = function(item) {
+        this.items.forEach((item) => sdApi.article.unlock(item.article));
         this.items = [];
         this.updateItems();
         $location.url(referrer.getReferrerUrl());
@@ -109,6 +111,7 @@ function MultieditController($scope, multiEdit) {
     };
 
     $scope.closeMulti = function() {
+        debugger;
         multiEdit.exit();
     };
 }
