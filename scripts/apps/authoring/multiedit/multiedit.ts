@@ -111,7 +111,6 @@ function MultieditController($scope, multiEdit) {
     };
 
     $scope.closeMulti = function() {
-        debugger;
         multiEdit.exit();
     };
 }
