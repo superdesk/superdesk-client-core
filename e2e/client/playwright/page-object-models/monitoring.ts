@@ -40,7 +40,10 @@ export class Monitoring {
     async createArticleFromTemplate(template: string, options?: {slugline?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
-        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: template}).click();
+        await this.page
+            .locator(s('content-create-dropdown'))
+            .getByRole('button', {name: template, exact: true})
+            .click();
 
         if (options != null) {
             let keys = Object.keys(options);
