@@ -64,7 +64,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
             })
         )).then(() => {
             if (someFailed) {
-                notify.error('Some articles failed to unlock');
+                notify.error(gettext('Some articles failed to unlock'));
             }
 
             this.items = [];
