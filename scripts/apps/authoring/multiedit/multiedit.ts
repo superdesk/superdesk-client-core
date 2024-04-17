@@ -61,8 +61,8 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
             .catch(() => {
                 someFailed = true;
                 return Promise.resolve();
-            })
-        )).then(() => {
+            })),
+        ).then(() => {
             if (someFailed) {
                 notify.error(gettext('Some articles failed to unlock'));
             }
