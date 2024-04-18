@@ -268,7 +268,11 @@ export function AuthoringDirective(
              * Create a new version
              */
             $scope.save = function() {
-                return authoring.save($scope.origItem, $scope.item).then((res) => {
+                return authoring.save(
+                    $scope.origItem,
+                    $scope.item,
+                    $scope.requestEditor3DirectivesToGenerateHtml,
+                ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
 
