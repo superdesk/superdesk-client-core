@@ -46,7 +46,7 @@
     "angular-embed": "github:superdesk/angular-embed#d75968e",
     "angular-embedly": "github:superdesk/angular-embedly#master",
     "angular-gettext": "github:superdesk/angular-gettext#master",
-    "angular-i18n": "1.6.9",
+    "angular-i18n": "1.8.3",
     "angular-mocks": "1.6.9",
     "angular-moment": "1.2.0",
     "angular-resource": "1.6.9",
