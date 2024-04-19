@@ -15,7 +15,12 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
             <div>
                 <TreeMenu
                     getId={(field) => field.id}
-                    getLabel={(field) => field.label}
+                    optionTemplate={({fieldType, label}) => {
+                        return (fieldType != null && fieldType !== '')
+                            ? <>{label} <span className="sd-text--italic sd-text--light">({fieldType})</span></>
+                            : <>{label}</>;
+                    }}
+                    getLabel={({label}) => label}
                     zIndex={1050}
                     getOptions={() => availableFields
                         .map((field) => ({
