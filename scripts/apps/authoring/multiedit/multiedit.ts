@@ -57,11 +57,14 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     this.exit = function(item) {
         let someFailed = false;
 
-        Promise.all(this.items.map((item) => sdApi.article.unlock(item.article)
-            .catch(() => {
-                someFailed = true;
-                return Promise.resolve();
-            })),
+        Promise.all(
+            this.items
+                .filter((item) => item.article != null)
+                .map((item) => sdApi.article.unlock(item.article)
+                    .catch(() => {
+                        someFailed = true;
+                        return Promise.resolve();
+                    })),
         ).then(() => {
             if (someFailed) {
                 notify.error(gettext('Some articles failed to unlock'));
