@@ -1,4 +1,6 @@
 import {sdApi} from 'api';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {getArticleLabel} from 'core/utils';
 import React from 'react';
 import {ReactNode} from 'react';
 import {IArticle} from 'superdesk-api';
@@ -17,23 +19,78 @@ interface IProps {
     article: IArticle;
 }
 
-export default class HeadlinesTab extends React.Component<IProps, any> {
+interface IState {
+    loading: boolean;
+    headlines: Array<string>;
+    error: boolean;
+}
+
+export default class HeadlinesTab extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            loading: true,
+            headlines: [],
+            error: false,
+        }
+
+        this.generateHeadlines = this.generateHeadlines.bind(this);
+    }
+
+    generateHeadlines(): void {
+        httpRequestJsonLocal<{response: Array<string>}>({
+            method: "POST",
+            // FIXME: Add config options for each action, for a custom URL
+            // Think about an extension solution where data is fetched on client repo
+            // in a custom manner, parsed into a standard format expected here,
+            // and used.
+            path: "/belga/ai/toolkit/headlines",
+            payload: {
+                text: getArticleLabel(this.props.article),
+                nrTitles: 3,
+                maxCharacters: 200,
+            }
+        }).then((res) => {
+            this.setState({
+                loading: false,
+                headlines: res.response,
+            })
+        }).catch(() => {
+            this.setState({
+                error: true,
+            })
+        })
+    }
+
+    componentDidMount(): void {
+        this.generateHeadlines();
+    }
+
     render(): ReactNode {
-        const sampleData = [
-            'Praesent commodo cursus magna, vel scelerisque nisl consectetur et aenean eu leo quam ultricies.',
-            'v2 Praesent commodo cursus magna, vel scelerisque nisl consectetur et aenean eu leo quam ultricies.',
-            'v3 Praesent commodo cursus magna, vel scelerisque nisl consectetur et aenean eu leo quam ultricies.',
-            'v4 Praesent commodo cursus magna, vel scelerisque nisl consectetur et aenean eu leo quam ultricies.',
-        ];
+        if (this.state.error) {
+            return (
+                <div
+                    onClick={() => {
+                        this.generateHeadlines();
+                    }}
+                >
+                    there was an error when trying to generate headlines, click here to try again
+                </div>
+            )
+        }
+        if (this.state.loading) {
+            return <div>loading data</div>
+        }
 
         return (
             <Spacer v gap="0" noWrap noGrow>
                 {
-                    sampleData.map((x, i) => (
+                    this.state.headlines.map((headline, i) => (
                         <React.Fragment key={i}>
                             <Container gap="small" direction="column">
                                 <Text size="small" weight="medium">
-                                    {x}
+                                    {headline}
                                 </Text>
                                 <ButtonGroup>
                                     <Button
@@ -43,7 +100,7 @@ export default class HeadlinesTab extends React.Component<IProps, any> {
                                             sdApi.article.patch(
                                                 this.props.article,
                                                 {
-                                                    headline: x,
+                                                    headline,
                                                 },
                                                 {patchDirectlyAndOverwriteAuthoringValues: true},
                                             );
@@ -55,7 +112,7 @@ export default class HeadlinesTab extends React.Component<IProps, any> {
                                         ariaValue="Copy"
                                         icon="copy"
                                         onClick={() => {
-                                            navigator.clipboard.writeText(x);
+                                            navigator.clipboard.writeText(headline);
                                         }}
                                     />
                                 </ButtonGroup>
