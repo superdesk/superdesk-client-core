@@ -26,6 +26,11 @@ import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {findParentScope} from '../utils';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
+import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-statistics-connected';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
+import {Spacer} from 'core/ui/components/Spacer';
+import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 
 /**
  * @ngdoc directive
@@ -95,6 +100,9 @@ function generateHtml(
         objectToUpdate[fieldName] = editor3StateToHtml(
             contentStatePreparedForExport,
         );
+
+        copyEmbeddedArticlesIntoAssociations(contentStatePreparedForExport, item);
+
         generateAnnotations(item);
     }
 }

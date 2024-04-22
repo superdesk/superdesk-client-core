@@ -3052,6 +3052,9 @@ declare module 'superdesk-api' {
         oidc_auth: any;
         keycloak_config: any;
 
+        /** Allow default target for links to be _blank. */
+        linksBlankTarget?: boolean;
+
         /**
          * Enable autocomplete for supported text fields in authoring.
          * Values of published items are used for autocomplete suggestions.

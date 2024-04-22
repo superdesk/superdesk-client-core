@@ -14,6 +14,8 @@ import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
 import {InitializeMedia} from '../authoring/services/InitializeMediaService';
+import {sdApi} from 'api';
+import {notify} from 'core/notify/notify';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -53,9 +55,25 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     };
 
     this.exit = function(item) {
-        this.items = [];
-        this.updateItems();
-        $location.url(referrer.getReferrerUrl());
+        let someFailed = false;
+
+        Promise.all(
+            this.items
+                .filter((item) => item.article != null)
+                .map((item) => sdApi.article.unlock(item.article)
+                    .catch(() => {
+                        someFailed = true;
+                        return Promise.resolve();
+                    })),
+        ).then(() => {
+            if (someFailed) {
+                notify.error(gettext('Some articles failed to unlock'));
+            }
+
+            this.items = [];
+            this.updateItems();
+            $location.url(referrer.getReferrerUrl());
+        });
     };
 
     this.open = function() {

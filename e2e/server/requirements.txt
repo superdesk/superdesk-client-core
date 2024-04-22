@@ -118,7 +118,7 @@ flask-script==2.0.6
     # via superdesk-core
 future==0.18.3
     # via python-twitter
-gunicorn==21.2.0
+gunicorn==22.0.0
     # via -r requirements.in
 hachoir==3.0a3
     # via superdesk-core
@@ -128,7 +128,7 @@ honcho==1.1.0
     # via -r requirements.in
 httplib2==0.22.0
     # via oauth2client
-idna==3.4
+idna==3.7
     # via requests
 itsdangerous==1.1.0
     # via
