@@ -40,7 +40,7 @@
         'active-right': active,
         'right-extended': active.extended}">
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
-        <ul class="navigation-tabs" data-test-id="navigation-tabs">
+        <ul class="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
                 ng-class="{active: widget === active, pinned: widget.pinned}">
                 <a class="sd-sidetab-menu__btn" type="submit"

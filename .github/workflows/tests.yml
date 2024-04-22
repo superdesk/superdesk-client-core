@@ -73,7 +73,7 @@ jobs:
     # protractor start
 
     - name: Protractor
-      run: npx protractor-flake --parser standard  --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
+      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp

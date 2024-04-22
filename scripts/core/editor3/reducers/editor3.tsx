@@ -17,7 +17,6 @@ import {logger} from 'core/services/logger';
 import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {CustomEditor3Entity} from '../constants';
-import {IArticle} from 'superdesk-api';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -367,7 +366,9 @@ export interface IEditorDragDropMedia {
 export interface IEditorDragDropArticleEmbed {
     contentType: 'article-embed';
     data: {
-        item: IArticle;
+        id: string;
+        name: string;
+        html: string;
     };
     blockKey: string;
 }

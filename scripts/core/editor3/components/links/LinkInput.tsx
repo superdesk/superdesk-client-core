@@ -16,7 +16,6 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
 import {IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc React
@@ -115,7 +114,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
 
             link = {href: url};
-            if ((appConfig.linksBlankTarget === true) || (!isLocalDomain && localDomains != null)) {
+            if (!isLocalDomain && localDomains != null) {
                 link.target = '_blank';
             }
         } else if (linkType === linkTypes.attachement) {

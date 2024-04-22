@@ -54,10 +54,7 @@ export class AtomicBlockParser {
         case CustomEditor3Entity.MULTI_LINE_QUOTE:
             return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
         case CustomEditor3Entity.ARTICLE_EMBED:
-            // eslint-disable-next-line no-case-declarations
-            const item = (data as IEditorDragDropArticleEmbed['data']).item;
-
-            return `<div data-association-key="${item._id}">${item.body_html}</div>`;
+            return (data as IEditorDragDropArticleEmbed['data']).html;
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
         }
