@@ -160,7 +160,10 @@ describe('editor3', () => {
     });
 
     function getPreviewBody() {
-        authoring.save();
+        const saveButton = el(['authoring', 'authoring-topbar', 'save']);
+
+        browser.wait(ECE.elementToBeClickable(saveButton));
+        saveButton.click();
         assertToastMsg('success', 'Item updated.');
         monitoring.previewAction(0, 0);
         return monitoring.getPreviewBody();

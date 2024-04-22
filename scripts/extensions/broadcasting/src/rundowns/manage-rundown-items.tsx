@@ -26,7 +26,6 @@ interface IProps<T extends IRundownItemBase | IRundownItem> {
     initiateEditing(item: T): void;
     initiatePreview(item: T): void;
     readOnly: boolean;
-    selectedItem?: string | null;
 }
 
 export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> extends React.PureComponent<IProps<T>> {
@@ -188,7 +187,6 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             );
                         }
                     }}
-                    selectedItem={this.props.selectedItem}
                 />
             </div>
         );

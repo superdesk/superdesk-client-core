@@ -80,7 +80,7 @@ class LinkComponent extends React.Component<any, any> {
                 <a
                     data-attachment={this.link.attachment}
                     title={this.state.title}
-                    style={{borderBlockEnd: '2px dotted var(--sd-colour-interactive--alpha-80)'}}
+                    style={{borderBottom: '2px dotted var(--sd-colour-interactive--alpha-80)'}}
                 >
                     {this.props.children}
                 </a>

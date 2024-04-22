@@ -333,7 +333,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
 
         return (
             <div className="widget-container">
-                <div className="main-list" style={{insetBlockStart: 0}}>
+                <div className="main-list" style={{top: 0}}>
                     {this.props.header ? (
                         <div className="widget-header">
                             <h3 className="widget-title">

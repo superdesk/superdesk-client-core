@@ -1,0 +1,34 @@
+language: node_js
+
+node_js: "lts/*"
+
+dist: bionic
+
+services:
+    - docker
+
+addons:
+    chrome: stable
+
+before_script:
+    - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+    - |
+      if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
+        npm run start-test-server
+      fi
+
+jobs:
+    allow_failures:
+        - name: "audit"
+
+    include:
+        - script: npm run test
+          name: "unit"
+          env: SKIP_SERVER_INSTALL=true
+        - script: npm run build-e2e && npm run start-client-server && npm run protractor -- --suite=a
+          name: "e2e vol. 1"
+        - script: npm run build-e2e && npm run start-client-server && npm run protractor -- --suite=b
+          name: "e2e vol. 2"
+        - script: npm audit
+          name: "audit"
+

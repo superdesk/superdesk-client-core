@@ -11,4 +11,3 @@ e2e/client/node_modules
 e2e/client/dist
 e2e/client/**/*.js
 build-tools/**
-scripts/libs/*

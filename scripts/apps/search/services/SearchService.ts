@@ -8,7 +8,7 @@ import {
 
 import _ from 'lodash';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
-import {getProjectedFieldsArticle, gettext, isElasticDateFormat} from 'core/utils';
+import {gettext, isElasticDateFormat} from 'core/utils';
 import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
@@ -887,7 +887,37 @@ export function SearchService($location, session, multi,
      * @returns {Array}
      * @description Returns the list of fields to be used in projections
      */
-    this.getProjectedFields = getProjectedFieldsArticle;
+    this.getProjectedFields = function() {
+        const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
+
+        const uiFields = [
+            ...(uiConfig.priority ?? []),
+            ...(uiConfig.firstLine ?? []),
+            ...(uiConfig.secondLine ?? []),
+        ];
+
+        const projectedFields: Set<string> = new Set();
+
+        CORE_PROJECTED_FIELDS.fields.forEach((field) => {
+            projectedFields.add(field);
+        });
+
+        uiFields.forEach((_field: string | IListViewFieldWithOptions) => {
+            const field = typeof _field === 'string' ? _field : _field.field;
+
+            const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
+
+            if (Array.isArray(adjustedField)) {
+                adjustedField.forEach((__field) => {
+                    projectedFields.add(__field);
+                });
+            } else {
+                projectedFields.add(adjustedField);
+            }
+        });
+
+        return Array.from(projectedFields);
+    };
 
     /**
      * @ngdoc method

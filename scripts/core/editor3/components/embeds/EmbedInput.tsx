@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {loadIframelyEmbedJs} from './loadIframely';
 import {connect} from 'react-redux';
 import {embed, hidePopups} from '../../actions';
@@ -14,32 +15,24 @@ export const getEmbedObject = (url) => {
     return $.ajax({
         url: `//iframe.ly/api/oembed?callback=?&url=${url}&api_key=${apiKey}&omit_script=true&iframe=true`,
         dataType: 'json',
-    }).then((result) => {
-        /**
-         * No standard way of differentiating between an error and a valid response.
-         * An observation was made that if the result doesn't contain an html field,
-         * then the response is invalid. (SDANSA-556)
-         */
-        if (result.html == null) {
-            return Promise.reject(result);
-        }
-
-        return result;
     });
 };
 
-interface IProps {
-    embed?: (data: any) => void;
-    hidePopups: () => void;
-}
-
-export class EmbedInputComponent extends React.Component<IProps, any> {
+/**
+ * @ngdoc React
+ * @module superdesk.core.editor3
+ * @param {Function} hidePopups To be called when the input needs to be hidden.
+ * @param {Function} onSubmit Dispatcher for the submit action. Takes the oEmbed response object as a parameter.
+ * @name EmbedInputComponent
+ * @description The dialog displayed when an embed URL is entered.
+ */
+export class EmbedInputComponent extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
     txt: any;
 
-    constructor(props: IProps) {
+    constructor(props) {
         super(props);
 
         this.state = {error: ''};
@@ -72,7 +65,7 @@ export class EmbedInputComponent extends React.Component<IProps, any> {
      * the action that embeds the response into the editor.
      */
     processSuccess(data) {
-        this.props.embed?.(data);
+        this.props.embed(data);
         this.onCancel();
     }
 
@@ -167,6 +160,11 @@ export class EmbedInputComponent extends React.Component<IProps, any> {
         );
     }
 }
+
+EmbedInputComponent.propTypes = {
+    embed: PropTypes.func.isRequired,
+    hidePopups: PropTypes.func.isRequired,
+};
 
 export const EmbedInput = connect(null, {
     embed,

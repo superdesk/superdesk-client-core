@@ -21,7 +21,7 @@
     "server": "grunt server",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
-    "playwright": "playwright test --workers 1",
+    "playwright": "playwright test",
     "playwright-interactive": "playwright test --ui",
     "protractor": "protractor protractor.conf.js",
     "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",

@@ -198,7 +198,7 @@ declare module 'superdesk-api' {
 
         // positioned relatively; shown at the same time as getSidePanel
         // used for rendering icon buttons of available side widgets
-        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element | null;
+        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
 
         // positioned absolutely; shown at the same time as getSidebar
         // used for side widgets
@@ -735,7 +735,7 @@ declare module 'superdesk-api' {
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
-            customFieldTypes?: Array<ICustomFieldType>;
+            customFieldTypes?: Array<ICustomFieldType<unknown, unknown, unknown, unknown>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -1295,7 +1295,6 @@ declare module 'superdesk-api' {
         _autosave?: any;
         _autosaved?: any;
         _locked?: boolean;
-        search_provider?: string;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -1664,7 +1663,7 @@ declare module 'superdesk-api' {
      * Universal query format that works with both - Elasticsearch and pyeve endpoints
      */
     export interface ISuperdeskQuery {
-        filter: ILogicalOperator | IComparison;
+        filter: ILogicalOperator;
         fullTextSearch?: string;
         sort: ISortOptions;
         page: number;
@@ -2123,24 +2122,18 @@ declare module 'superdesk-api' {
 
     export interface ISpacingProps {
         margin?: number;
-        marginBlockStart?: number;
-        marginInlineEnd?: number;
-        marginBlockEnd?: number;
+        marginTop?: number;
+        marginRight?: number;
+        marginBottom?: number;
         padding?: number;
-        paddingBlockStart?: number;
-        paddingInlineEnd?: number;
-        paddingBlockEnd?: number;
+        paddingTop?: number;
+        paddingRight?: number;
+        paddingBottom?: number;
     }
 
     interface IPropsBadge extends ISpacingProps {
         type: 'default' | 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
         square?: boolean;
-    }
-
-    export interface IPropsActionButton {
-        'aria-label': string;
-        ref?(event): void;
-        onClick(event: React.MouseEvent): void;
     }
 
     export interface IPropsIcon {
@@ -2340,66 +2333,6 @@ declare module 'superdesk-api' {
     export interface ISetActiveCellReturnType {
         type: 'EDITOR_SET_CELL';
         payload: IActiveCell;
-    }
-
-    export type IAuthoringField =
-        {
-            type: 'plain-text';
-            id: string;
-            value: string;
-        }
-        | {
-            type: 'html';
-            id: string;
-            value: string;
-        }
-        | {
-            type: 'subjects';
-            id: string;
-            value: Array<{name: string; qcode: string}>;
-        }
-        | {
-            type: 'vocabulary-values';
-            id: string;
-            value: {
-                vocabularyId: string;
-                qcodes: Array<string>;
-            };
-        }
-        | {
-            type: 'urls';
-            id: string;
-            value: Array<{url: string; description: string}>;
-        }
-        | {
-            type: 'media-gallery';
-            id: string;
-            value: Array<IArticle>;
-        }
-        | {
-            type: 'related-articles';
-            id: string;
-            value: Array<IRelatedArticle>;
-        }
-        | {
-            type: 'embed';
-            id: string;
-            value: {embed: string; description: string};
-        }
-        | {
-            type: 'attachments';
-            id: string;
-            value: Array<{attachment: IAttachment['_id']}>;
-        }
-        | {
-            type: 'custom';
-            id: string;
-            value: {item: IArticle; field: IVocabulary};
-        };
-
-    export interface IPreviewFieldTypeProps {
-        field: IAuthoringField;
-        language: string;
     }
 
     // DATA API
@@ -2799,6 +2732,7 @@ declare module 'superdesk-api' {
                 isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
                 isLockedInCurrentSession(article: IArticle): boolean;
                 isLockedInOtherSession(article: IArticle): boolean;
+
                 isPersonal(article: IArticle): boolean;
                 patch(
                     article: IArticle,
@@ -2809,26 +2743,6 @@ declare module 'superdesk-api' {
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
                 itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
-                getProjectedFieldsArticle(): Array<string>;
-                getLabelNameResolver(): Promise<(fieldId: string) => string>;
-                getSortedFields(
-                    section: 'header' | 'content',
-                    editor: any,
-                    item: IArticle,
-                    hideMedia: boolean,
-                    customVocabularies: Array<IVocabulary>
-                ): Array<IAuthoringField>;
-                getSortedFieldsFiltered(
-                    section: 'header' | 'content',
-                    editor: any,
-                    item: IArticle,
-                    hideMedia: boolean,
-                    customVocabularies: Array<IVocabulary>,
-                    fieldsToExtract: Array<string>,
-                ): {
-                    allFields: Array<IAuthoringField>;
-                    extractedFields: {[key: string]: IAuthoringField};
-                };
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
@@ -2836,8 +2750,6 @@ declare module 'superdesk-api' {
             vocabulary: {
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): IVocabulary;
-                getCustomFieldVocabularies(): Array<IVocabulary>;
-                getLanguageVocabulary(): IVocabulary;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -2885,7 +2797,6 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
-            superdeskToElasticQuery(q: ISuperdeskQuery): {q?: string, source: string};
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -2919,7 +2830,6 @@ declare module 'superdesk-api' {
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
             Badge: React.ComponentType<IPropsBadge>;
-            MoreActionsButton: React.ComponentType<IPropsActionButton>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
@@ -2954,9 +2864,6 @@ declare module 'superdesk-api' {
                 closeOnHoverEnd?: boolean,
                 onClose?: () => void,
             ): {close: () => void};
-            authoring: {
-                PreviewFieldType: React.ComponentType<IPreviewFieldTypeProps>;
-            };
         };
         authoringGeneric: {
             sideWidgets: {

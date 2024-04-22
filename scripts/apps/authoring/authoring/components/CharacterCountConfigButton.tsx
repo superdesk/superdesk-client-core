@@ -15,7 +15,7 @@ export interface ICharacterLimitUiBehavior {
 export const DEFAULT_UI_FOR_EDITOR_LIMIT: CharacterLimitUiBehavior = 'highlight';
 
 interface IProps {
-    field: string; // field ID
+    field: string;
 }
 
 interface IState {

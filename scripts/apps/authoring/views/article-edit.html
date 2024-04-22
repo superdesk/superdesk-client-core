@@ -18,8 +18,19 @@
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
      ng-if="schema.headline"
      order="{{editor.headline.order}}"
+     sd-validation-error="error.headline"
      ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.headline.required">
+
+    <label for="title" class="field__label">{{label('headline')}}</label>
+    <span ng-if="schema.headline.maxlength">
+        <sd-character-count-config-button data-field="'headline'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
+    </span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-editor3
          data-path-to-value="'headline'"
@@ -37,10 +48,6 @@
          data-clean-pasted-html="editor.headline.cleanPastedHTML"
          data-test-id="field--headline"
          data-limit="schema.headline.maxlength"
-         data-field-id="'headline'"
-         data-required="schema.headline.required"
-         data-validation-error="error.headline"
-         data-validate-characters="schema.headline.validate_characters"
     ></div>
 </div>
 
@@ -129,11 +136,17 @@
      sd-width="{{editor.abstract.sdWidth|| 'full'}}"
      ng-if="schema.abstract"
      order="{{editor.abstract.order}}"
+     sd-validation-error="error.abstract"
      ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.abstract.required"
      data-test-id="authoring-field"
      data-test-value="abstract"
     >
+
+    <label for="abstract" class="field__label">{{label('abstract')}}</label>
+    <sd-character-count-config-button data-field="'abstract'"></sd-character-count-config-button>
+    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
+    <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
          data-path-to-value="'abstract'"
@@ -149,10 +162,6 @@
          data-tabindex="editor.abstract.order"
          data-clean-pasted-html="editor.abstract.cleanPastedHTML"
          data-limit="schema.abstract.maxlength"
-         data-field-id="'abstract'"
-         data-required="schema.abstract.required"
-         data-validation-error="error.abstract"
-         data-validate-characters="schema.abstract.validate_characters"
     ></div>
 </div>
 
@@ -240,14 +249,24 @@
 </div>
 
 <div contenteditable="true" id="editor3Tansa" tansa-proofing="true" style="position: fixed; inset-block-start: -1000px; inset-inline-start: -1000px; height: 150px; width: 500px; display: block;"></div>
+
 <div class="field body"
      ng-if="schema.body_html"
      order="{{editor.body_html.order}}"
+     sd-validation-error="error.body_html"
+     data-required="schema.body_html.required"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}"
      ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
      data-test-id="authoring-field"
      data-test-value="body_html"
      tansa-proofing="false">
+
+    <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
+    <sd-character-count-config-button data-field="'body_html'" ng-if="schema.body_html.maxlength"></sd-character-count-config-button>
+    <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
+    <sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></sd-character-count>
+    <span sd-word-count data-item="item.body_html" data-html="true"></span>
+    <sd-line-count data-html="item.body_html"></sd-line-count>
     <div id="bodyhtml"
          sd-editor3
          data-path-to-value="'body_html'"
@@ -265,10 +284,6 @@
          data-tabindex="editor.body_html.order"
          data-clean-pasted-html="editor.body_html.cleanPastedHTML"
          data-limit="schema.body_html.maxlength"
-         data-field-id="'body_html'"
-         data-required="schema.body_html.required"
-         data-validation-error="error.body_html"
-         data-validate-characters="schema.body_html.validate_characters"
     ></div>
 </div>
 
@@ -349,8 +364,15 @@
 <div ng-if="isMediaType"
      class="field abstract"
      order="{{editor.description_text.order}}"
+     sd-validation-error="error.description_text"
      sd-width="{{editor.description_text.sdWidth|| 'full'}}"
-     ng-attr-title="{{schema.description_text.readonly === true ? readOnlyLabel : ''}}">
+     ng-attr-title="{{schema.description_text.readonly === true ? readOnlyLabel : ''}}"
+     data-required="schema.description_text.required">
+    <label for="title" class="field__label">{{label('description_text')}}</label>
+    <span ng-if="validator.description_text.maxlength">
+        <sd-character-count-config-button data-field="'description_text'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
+    </span>
     <div id="title" class="abstract"
          sd-editor3
          data-path-to-value="'description_text'"
@@ -367,10 +389,6 @@
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
          data-limit="schema.description_text.maxlength"
          data-plain-text="true"
-         data-field-id="'description_text'"
-         data-required="schema.description_text.required"
-         data-validation-error="error.description_text"
-         data-validate-characters="schema.description_text.validate_characters"
     ></div>
 </div>
 
@@ -492,8 +510,23 @@
 <div class="field" ng-repeat="field in fields track by field._id"
     ng-if="field.field_type === 'text' && editor[field._id].section !== 'header'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+    data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}">
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
+    sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]">
+
+    <label class="field__label">{{field.display_name}}</label>
+    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+        <sd-character-count-config-button data-field="field._id"></sd-character-count-config-button>
+
+        <sd-character-count
+            data-item="item.extra[field._id]"
+            data-html="field.field_options != null && field.field_options.single === true ? false: true"
+            data-limit="schema[field._id].maxlength"
+        ></sd-character-count>
+    </span>
+    <sd-validate-characters ng-if="schema[field._id].validate_characters"
+        class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
     <div sd-editor3
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
@@ -509,13 +542,8 @@
         data-tabindex="editor[field._id].order"
         data-clean-pasted-html="editor[field._id].cleanPastedHTML"
         data-limit="schema[field._id].maxlength"
-        data-field-id="field._id"
-        data-helper-text="field.helper_text"
-        data-field-label="field.display_name"
-        data-required="schema[field._id].required"
-        data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
-        data-validate-characters="schema[field._id].validate_characters"
     ></div>
+    <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 
 <!-- custom date editor fields -->
@@ -707,7 +735,18 @@
      sd-width="{{editor.slugline.sdWidth|| 'full'}}"
      ng-if="schema.slugline && editor['slugline'].section === 'content'"
      order="{{editor.slugline.order}}"
-     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}">
+     sd-validation-error="error.slugline"
+     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
+     data-required="schema.slugline.required">
+    <label for="title" class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength">
+        <sd-character-count-config-button data-field="'slugline'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+    </span>
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
+        item="item.slugline"
+        field="'slugline'"></sd-validate-characters>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"
@@ -722,9 +761,5 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.slugline.order"
          data-limit="schema.slugline.maxlength"
-         data-field-id="'slugline'"
-         data-required="schema.slugline.required"
-         data-validation-error="error.slugline"
-         data-validate-characters="schema.slugline.validate_characters"
     ></div>
 </div>

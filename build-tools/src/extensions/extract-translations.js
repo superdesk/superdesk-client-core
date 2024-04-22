@@ -12,7 +12,7 @@ function extractTranslations(clientDir) {
         const paths = _.get(package, 'superdeskExtension.translations-extract-paths');
 
         if (paths == null || !Array.isArray(paths)) {
-            continue;
+            return null;
         }
 
         const pathsAbsolute = paths.map((p) => path.join(extensionRootPath, p));

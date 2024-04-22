@@ -10,7 +10,6 @@ export const SUPERDESK_MEDIA_TYPES = {
     PICTURE: 'application/superdesk.item.picture',
     GRAPHIC: 'application/superdesk.item.graphic',
     VIDEO: 'application/superdesk.item.video',
-    EMBED: 'application/superdesk.compatible.embed',
     AUDIO: 'application/superdesk.item.audio',
 };
 

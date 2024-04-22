@@ -79,7 +79,7 @@ export class TextArea extends React.Component<any, any> {
             autoHeight,
             readOnly,
             placeholder,
-            paddingInlineEnd60,
+            paddingRight60,
 
             // Remove these variables from the props variable
             // So they are not passed down to the textarea dom node
@@ -96,7 +96,7 @@ export class TextArea extends React.Component<any, any> {
                     'sd-line-input__input',
                     {
                         'sd-line-input__input--auto-height': autoHeight,
-                        'sd-line-input__input--padding-right-60': paddingInlineEnd60,
+                        'sd-line-input__input--padding-right-60': paddingRight60,
                     },
                 )}
                 value={value}
@@ -119,7 +119,7 @@ TextArea.propTypes = {
     nativeOnChange: PropTypes.bool,
     placeholder: PropTypes.string,
     readOnly: PropTypes.bool,
-    paddingInlineEnd60: PropTypes.bool,
+    paddingRight60: PropTypes.bool,
     multiLine: PropTypes.bool,
 };
 
@@ -128,6 +128,6 @@ TextArea.defaultProps = {
     autoHeight: true,
     autoHeightTimeout: 50,
     nativeOnChange: false,
-    paddingInlineEnd60: false,
+    paddingRight60: false,
     multiLine: true,
 };

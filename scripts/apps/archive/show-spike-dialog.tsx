@@ -40,7 +40,7 @@ export function showSpikeDialog<T>(
         if (skipConfirmationPrompt && warnings.length < 1) {
             doSpike();
         } else {
-            modal.createCustomModal('spike-modal')
+            modal.createCustomModal()
                 .then(({openModal, closeModal}) => {
                     openModal(
                         <Modal

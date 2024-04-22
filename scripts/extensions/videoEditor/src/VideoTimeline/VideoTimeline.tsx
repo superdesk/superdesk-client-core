@@ -230,9 +230,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
         if (this.timeline.current != null) {
             const timelineStyle = window.getComputedStyle(this.timeline.current);
-            const timelinePadding =
-                parseInt(timelineStyle.paddingInlineStart, 10)
-                + parseInt(timelineStyle.paddingInlineEnd, 10);
+            const timelinePadding = parseInt(timelineStyle.paddingLeft, 10) + parseInt(timelineStyle.paddingRight, 10);
 
             timelineWidth = this.timeline.current.offsetWidth - timelinePadding;
         }

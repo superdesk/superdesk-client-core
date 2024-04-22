@@ -232,10 +232,10 @@ export default angular.module('superdesk.core.services.modal', [
             return confirmConfigurationObject.call(this, {...options, cancelText: null});
         };
 
-        this.createCustomModal = function(dataTestId) {
+        this.createCustomModal = function() {
             return new Promise((resolve) => {
                 $modal.open({
-                    template: `<div id="custom-modal-placeholder" data-test-id="${dataTestId}"></div>`,
+                    template: '<div id="custom-modal-placeholder"></div>',
                     controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
                         resolve({
                             openModal: (reactComponent) => {
