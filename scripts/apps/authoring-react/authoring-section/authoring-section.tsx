@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem} from 'superdesk-api';
+import {IAuthoringSectionTheme, IAuthoringSectionClassNames, IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
@@ -19,6 +19,7 @@ export interface IPropsAuthoringSection<T> {
     validationErrors: IAuthoringValidationErrors;
     padding?: string | number;
     uiTheme?: IAuthoringSectionTheme;
+    sectionClassNames?: IAuthoringSectionClassNames;
     item: T;
 }
 
@@ -101,6 +102,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                         <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
                                             <AuthoringSectionField
                                                 uiTheme={themeApplies ? this.props.uiTheme : undefined}
+                                                sectionClassNames={this.props.sectionClassNames}
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
                                                 onChange={this.props.onChange}

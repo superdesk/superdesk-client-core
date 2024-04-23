@@ -407,7 +407,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const HelperComponent = this.props.config.helperComponent;
 
         return (
-            <Container miniToolbar={miniToolbar}>
+            <Container miniToolbar={miniToolbar} sectionClassNames={this.props.sectionClassNames}>
                 {
                     HelperComponent != null && (
                         <HelperComponent

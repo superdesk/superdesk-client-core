@@ -3411,6 +3411,7 @@ declare module 'superdesk-api' {
          * (it will be rendered in different DOM locations depending if field is in header or content section)
          */
         miniToolbar?: JSX.Element;
+        sectionClassNames?: IAuthoringSectionClassNames;
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {
@@ -3458,6 +3459,7 @@ declare module 'superdesk-api' {
             fontSize: string;
             fontFamily: string;
         };
+        sectionClassNames?: IAuthoringSectionClassNames;
         item: any;
     }
 
@@ -3494,6 +3496,11 @@ declare module 'superdesk-api' {
                 fontSize: string | undefined;
             };
         };
+    }
+
+    export interface IAuthoringSectionClassNames {
+        header?: string;
+        content?: string;
     }
 
     export interface ICommonFieldConfig {

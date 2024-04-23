@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringFieldV2, IAuthoringSectionTheme, IFieldsData} from 'superdesk-api';
+import {IAuthoringFieldV2, IAuthoringSectionTheme, IAuthoringSectionClassNames, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
 import {IPropsAuthoringSection} from './authoring-section';
@@ -20,6 +20,7 @@ interface IProps<T> {
     getVocabularyItems: IPropsAuthoringSection<T>['getVocabularyItems'];
     validationError?: string;
     uiTheme?: IAuthoringSectionTheme;
+    sectionClassNames?: IAuthoringSectionClassNames;
     item: T;
 }
 
@@ -59,6 +60,7 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
                         fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
                         fontFamily: this.props.uiTheme.fontFamily,
                     }}
+                    sectionClassNames={this.props.sectionClassNames}
                     key={field.id}
                     editorId={field.id}
                     container={Container}
