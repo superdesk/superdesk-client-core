@@ -231,7 +231,7 @@ export function getAiSummaryWidget() {
         _id: 'ai-assistant-widget',
         label: getLabel(),
         order: 2,
-        icon: 'personal',
+        icon: 'open-ai',
         component: AiAssistantWidget,
     };
 
