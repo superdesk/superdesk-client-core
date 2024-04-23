@@ -17,6 +17,7 @@ import {
     stripHtmlTags,
     stripLockingFields,
     getProjectedFieldsArticle,
+    getArticleLabel,
 } from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -281,6 +282,7 @@ export function getSuperdeskApiImplementation(
             tryLocking,
             tryUnlocking,
             superdeskToElasticQuery: toElasticQuery,
+            getArticleLabel,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,

@@ -757,6 +757,10 @@ declare module 'superdesk-api' {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
+            aiAssistant?: {
+                generateHeadlines: (article: IArticle) => Promise<Array<string>>;
+                generateSummary: (article: IArticle) => Promise<string>;
+            }
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
@@ -2844,6 +2848,7 @@ declare module 'superdesk-api' {
             };
         };
         helpers: {
+            getArticleLabel(item: IArticle): string;
             assertNever(x: never): never;
             stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
             fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & {_status: string}): T;

@@ -1,6 +1,5 @@
 import {sdApi} from 'api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {getArticleLabel} from 'core/utils';
+import {gettext} from 'core/utils';
 import React from 'react';
 import {ReactNode} from 'react';
 import {IArticle} from 'superdesk-api';
@@ -12,116 +11,86 @@ import {
     ButtonGroup,
     Button,
     Text,
+    Loader,
+    Heading,
 } from 'superdesk-ui-framework/react';
 
 interface IProps {
-    onClose: () => void;
     article: IArticle;
-}
-
-interface IState {
+    error: boolean;
     loading: boolean;
     headlines: Array<string>;
-    error: boolean;
+    generateHeadlines: () => void;
 }
 
-export default class HeadlinesTab extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {
-            loading: true,
-            headlines: [],
-            error: false,
-        }
-
-        this.generateHeadlines = this.generateHeadlines.bind(this);
-    }
-
-    generateHeadlines(): void {
-        httpRequestJsonLocal<{response: Array<string>}>({
-            method: "POST",
-            // FIXME: Add config options for each action, for a custom URL
-            // Think about an extension solution where data is fetched on client repo
-            // in a custom manner, parsed into a standard format expected here,
-            // and used.
-            path: "/belga/ai/toolkit/headlines",
-            payload: {
-                text: getArticleLabel(this.props.article),
-                nrTitles: 3,
-                maxCharacters: 200,
-            }
-        }).then((res) => {
-            this.setState({
-                loading: false,
-                headlines: res.response,
-            })
-        }).catch(() => {
-            this.setState({
-                error: true,
-            })
-        })
-    }
-
+export default class HeadlinesTab extends React.Component<IProps> {
     componentDidMount(): void {
-        this.generateHeadlines();
+        /**
+         * Don't send another request if the widget
+         * hasn't been closed and there's previous data available.
+         */
+        if (this.props.headlines.length < 1) {
+            this.props.generateHeadlines();
+        }
     }
 
     render(): ReactNode {
-        if (this.state.error) {
+        const {error, loading, headlines, article, generateHeadlines} = this.props;
+
+        if (error) {
             return (
-                <div
-                    onClick={() => {
-                        this.generateHeadlines();
-                    }}
-                >
-                    there was an error when trying to generate headlines, click here to try again
-                </div>
-            )
+                <Spacer v alignItems="center" gap="8" justifyContent="center" noWrap>
+                    <Button
+                        style="hollow"
+                        onClick={generateHeadlines}
+                        text={gettext('Regenerate')}
+                    />
+                    <Heading type="h6" align="center">
+                        {gettext('There was an error when trying to generate headlines.')}
+                    </Heading>
+                </Spacer>
+            );
         }
-        if (this.state.loading) {
-            return <div>loading data</div>
+
+        if (loading) {
+            return <Loader overlay />;
         }
 
         return (
             <Spacer v gap="0" noWrap noGrow>
-                {
-                    this.state.headlines.map((headline, i) => (
-                        <React.Fragment key={i}>
-                            <Container gap="small" direction="column">
-                                <Text size="small" weight="medium">
-                                    {headline}
-                                </Text>
-                                <ButtonGroup>
-                                    <Button
-                                        size="small"
-                                        text="Apply"
-                                        onClick={() => {
-                                            sdApi.article.patch(
-                                                this.props.article,
-                                                {
-                                                    headline,
-                                                },
-                                                {patchDirectlyAndOverwriteAuthoringValues: true},
-                                            );
-                                        }}
-                                        type="default"
-                                        style="hollow"
-                                    />
-                                    <IconButton
-                                        ariaValue="Copy"
-                                        icon="copy"
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(headline);
-                                        }}
-                                    />
-                                </ButtonGroup>
-                            </Container>
+                {headlines.map((headline, i) => (
+                    <React.Fragment key={i}>
+                        <Container gap="small" direction="column">
+                            <Text size="small" weight="medium">
+                                {headline}
+                            </Text>
+                            <ButtonGroup>
+                                <Button
+                                    size="small"
+                                    text={gettext('Apply')}
+                                    onClick={() => {
+                                        sdApi.article.patch(
+                                            article,
+                                            {headline},
+                                            {patchDirectlyAndOverwriteAuthoringValues: true},
+                                        );
+                                    }}
+                                    type="default"
+                                    style="hollow"
+                                />
+                                <IconButton
+                                    ariaValue={gettext('Copy')}
+                                    icon="copy"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(headline);
+                                    }}
+                                />
+                            </ButtonGroup>
+                        </Container>
 
-                            <ContentDivider type="dashed" margin="small" />
-                        </React.Fragment>
-                    ))
-                }
+                        <ContentDivider type="dashed" margin="small" />
+                    </React.Fragment>
+                ))}
             </Spacer>
         );
     }

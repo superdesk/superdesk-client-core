@@ -14,6 +14,7 @@ import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import HeadlinesTab from './headlines';
 import SummaryTab from './summary';
+import {extensions} from 'appConfig';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('AI Assistant');
@@ -25,16 +26,77 @@ type IProps = React.ComponentProps<
 interface IState {
     headlinesOpen: boolean;
     summaryOpen: boolean;
+
+    /**
+     * Handle loading of each request separately,
+     */
+    loadingHeadlines: boolean;
+    loadingSummary: boolean;
+
+    headlines: Array<string>;
+    error: boolean;
+    summary: string;
 }
 
 class AiAssistantWidget extends React.PureComponent<IProps, IState> {
+    aiAssistant: IExtensionActivationResult['contributions']['aiAssistant'];
+
     constructor(props: IProps) {
         super(props);
+
+        this.aiAssistant = extensions['ai-assistant'].activationResult?.contributions?.aiAssistant;
 
         this.state = {
             headlinesOpen: false,
             summaryOpen: false,
+            headlines: [],
+            error: false,
+            loadingSummary: true,
+            loadingHeadlines: true,
+            summary: '',
         };
+
+        this.setError = this.setError.bind(this);
+        this.generateHeadlines = this.generateHeadlines.bind(this);
+        this.generateSummary = this.generateSummary.bind(this);
+    }
+
+    setError() {
+        this.setState({
+            error: true,
+        });
+    }
+
+    generateHeadlines() {
+        if (this.aiAssistant?.generateHeadlines == null) {
+            this.setError();
+        } else {
+            this.aiAssistant.generateHeadlines(this.props.article)
+                .then((res) => {
+                    this.setState({
+                        loadingHeadlines: false,
+                        headlines: res,
+                    });
+                }).catch(() => {
+                    this.setError();
+                });
+        }
+    }
+
+    generateSummary() {
+        if (this.aiAssistant?.generateSummary == null) {
+            this.setError();
+        } else {
+            this.aiAssistant.generateSummary(this.props.article)
+                .then((res) => {
+                    this.setState({
+                        loadingSummary: false,
+                        summary: res,
+                    });
+                }).catch(() => {
+                    this.setError();
+                });
+        }
     }
 
     render() {
@@ -60,9 +122,8 @@ class AiAssistantWidget extends React.PureComponent<IProps, IState> {
                                             size="small"
                                             icon="arrow-left"
                                             onClick={() => {
-                                                this.state.headlinesOpen ? this.setState({
+                                                this.setState({
                                                     headlinesOpen: false,
-                                                }) : this.setState({
                                                     summaryOpen: false,
                                                 });
                                             }}
@@ -96,7 +157,7 @@ class AiAssistantWidget extends React.PureComponent<IProps, IState> {
                                 "
                             >
                                 <IllustrationButton
-                                    text="Headlines"
+                                    text={gettext('Headlines')}
                                     onClick={() => {
                                         this.setState({
                                             headlinesOpen: true,
@@ -106,7 +167,7 @@ class AiAssistantWidget extends React.PureComponent<IProps, IState> {
                                     <SvgIconIllustration illustration="headlines" />
                                 </IllustrationButton>
                                 <IllustrationButton
-                                    text="Summary"
+                                    text={gettext('Summary')}
                                     onClick={() => {
                                         this.setState({
                                             summaryOpen: true,
@@ -121,28 +182,44 @@ class AiAssistantWidget extends React.PureComponent<IProps, IState> {
                         return (
                             <HeadlinesTab
                                 article={this.props.article}
-                                onClose={() => {
-                                    this.setState({
-                                        headlinesOpen: false,
-                                    });
-                                }}
+                                error={this.state.error}
+                                generateHeadlines={this.generateHeadlines}
+                                headlines={this.state.headlines}
+                                loading={this.state.loadingHeadlines}
+                            />
+                        );
+                    } else if (this.state.summaryOpen) {
+                        return (
+                            <SummaryTab
+                                article={this.props.article}
+                                generateSummary={this.generateSummary}
+                                summary={this.state.summary}
+                                loading={this.state.loadingSummary}
+                                error={this.state.error}
                             />
                         );
                     }
-
-                    return (
-                        <SummaryTab
-                            profileId={this.props.article.profile}
-                            onClose={() => {
-                                this.setState({
-                                    summaryOpen: false,
-                                });
-                            }}
-                        />
-                    );
                 })()}
                 footer={(this.state.headlinesOpen || this.state.summaryOpen) && (
-                    <Button onClick={() => false} text={gettext('Regenerate')} style="hollow" />
+                    <Button
+                        onClick={() => {
+                            if (this.state.headlinesOpen) {
+                                this.setState({
+                                    loadingHeadlines: true,
+                                }, () => {
+                                    this.generateHeadlines();
+                                });
+                            } else if (this.state.summaryOpen) {
+                                this.setState({
+                                    loadingSummary: true,
+                                }, () => {
+                                    this.generateSummary();
+                                });
+                            }
+                        }}
+                        text={gettext('Regenerate')}
+                        style="hollow"
+                    />
                 )}
             />
         );
@@ -154,7 +231,7 @@ export function getAiSummaryWidget() {
         _id: 'ai-assistant-widget',
         label: getLabel(),
         order: 2,
-        icon: 'info',
+        icon: 'personal',
         component: AiAssistantWidget,
     };
 

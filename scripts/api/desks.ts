@@ -10,6 +10,10 @@ function getCurrentDeskId(): IDesk['_id'] | null {
     return ng.get('desks').getCurrentDeskId();
 }
 
+function getCurrentDesk(): IDesk | null {
+    return ng.get('desks').getCurrentDesk();
+}
+
 function waitTilReady(): Promise<void> {
     return new Promise((resolve) => {
         ng.get('desks')
@@ -53,6 +57,7 @@ interface IDesksApi {
     /** Desk is considered active if it is being viewed in monitoring at the moment */
     getActiveDeskId(): IDesk['_id'] | null;
     getCurrentDeskId(): IDesk['_id'] | null;
+    getCurrentDesk(): IDesk | null;
     waitTilReady(): Promise<void>;
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
     getDeskById(id: IDesk['_id']): IDesk ;
@@ -63,6 +68,7 @@ interface IDesksApi {
 export const desks: IDesksApi = {
     getActiveDeskId,
     getCurrentDeskId,
+    getCurrentDesk,
     waitTilReady,
     getAllDesks,
     getDeskById,
