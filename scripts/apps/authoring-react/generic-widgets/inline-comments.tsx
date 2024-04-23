@@ -67,7 +67,7 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
                         <div
                             className="commented-text"
                             style={{
-                                paddingBlockStart: 10,
+                                paddingTop: 10,
                                 marginBottom: 0,
                             }}
                         >

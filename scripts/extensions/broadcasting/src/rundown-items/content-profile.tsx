@@ -17,37 +17,6 @@ import {superdesk} from '../superdesk';
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
 
-const editor3TestConfigWithFormatting: IEditor3Config = {
-    editorFormat: [
-        'bold',
-        'italic',
-        'underline',
-        'link',
-        'h2',
-        'h3',
-        'ordered list',
-        'unordered list',
-        'strikethrough',
-        'quote',
-        'remove format',
-        'remove all format',
-        'comments',
-        'annotation',
-        'suggestions',
-        'undo',
-        'redo',
-        'uppercase',
-        'lowercase',
-    ],
-    minLength: undefined,
-    maxLength: undefined,
-    cleanPastedHtml: false,
-    singleLine: true,
-    disallowedCharacters: [],
-    showStatistics: false,
-    width: 100,
-};
-
 const editor3TestConfigWithoutFormatting: IEditor3Config = {
     editorFormat: [],
     minLength: undefined,
@@ -56,7 +25,6 @@ const editor3TestConfigWithoutFormatting: IEditor3Config = {
     singleLine: true,
     disallowedCharacters: [],
     showStatistics: false,
-    width: 100,
 };
 
 const titleField: IAuthoringFieldV2 = {
@@ -80,7 +48,7 @@ const technicalTitle: IAuthoringFieldV2 = {
 };
 
 const contentFieldConfig: IEditor3Config = {
-    ...editor3TestConfigWithFormatting,
+    ...editor3TestConfigWithoutFormatting,
     singleLine: false,
 };
 
@@ -95,7 +63,6 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
-    width: 100,
 };
 
 const itemTypeField: IAuthoringFieldV2 = {
@@ -109,7 +76,6 @@ const cameraConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: CAMERA,
     multiple: true,
-    width: 100,
 };
 
 const cameraField: IAuthoringFieldV2 = {
@@ -123,21 +89,17 @@ const durationField: IAuthoringFieldV2 = {
     id: 'duration',
     name: gettext('Duration'),
     fieldType: 'duration',
-    fieldConfig: {
-        width: 100,
-    },
+    fieldConfig: {},
 };
 
 const plannedDurationField: IAuthoringFieldV2 = {
     id: 'planned_duration',
     name: gettext('Planned duration'),
     fieldType: 'duration',
-    fieldConfig: {
-        width: 100,
-    },
+    fieldConfig: {},
 };
 
-const subitemAttachmentsConfig: IAttachmentsConfig = {width: 100};
+const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
     id: 'subitem_attachments',
@@ -150,7 +112,6 @@ const statusConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: STATUS_VOCABULARY_ID,
     multiple: false,
-    width: 100,
 };
 
 const statusField: IAuthoringFieldV2 = {
@@ -164,9 +125,7 @@ const subitemsField: IAuthoringFieldV2 = {
     id: 'subitems',
     name: gettext('Subitems'),
     fieldType: SUBITEMS_FIELD_TYPE,
-    fieldConfig: {
-        width: 100,
-    },
+    fieldConfig: {},
 };
 
 export const rundownItemContentProfile: IContentProfileV2 = {

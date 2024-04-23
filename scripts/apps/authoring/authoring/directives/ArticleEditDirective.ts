@@ -155,7 +155,7 @@ export function ArticleEditDirective(
                     }
                 }
 
-                // Needed only for #ANGULAR_AUTHORING. In authoring react we have a generic
+                // Needed only for authoring Angular. In authoring react we have a generic
                 // event ('resource:updated') which listens to all item changes.
                 scope.$on('author_approval:updated', (_event, extra) => {
                     if (extra.item_id === scope.item?._id) {

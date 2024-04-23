@@ -26,7 +26,7 @@ export class MultiSelect extends React.PureComponent<IProps> {
                     }
                 </select>
 
-                <div style={{paddingBlockStart: 6}}>
+                <div style={{paddingTop: 6}}>
                     <Button
                         text={gettext('Clear')}
                         onClick={() => {

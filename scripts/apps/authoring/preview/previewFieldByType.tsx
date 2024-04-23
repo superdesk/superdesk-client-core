@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {noop} from 'lodash';
-
-import {IPreviewFieldTypeProps} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
+
+import {IAuthoringField} from './types';
 
 import {PlainTextPreview} from './field-types/plainText';
 import {HtmlPreview} from './field-types/html';
@@ -16,7 +16,12 @@ import {EmbedPreview} from './field-types/embed';
 import {AttachmentsPreview} from './field-types/attachments';
 import {PreviewCustomField} from '../authoring/preview-custom-field';
 
-export class PreviewFieldType extends React.PureComponent<IPreviewFieldTypeProps> {
+interface IProps {
+    field: IAuthoringField;
+    language: string;
+}
+
+export class PreviewFieldType extends React.PureComponent<IProps> {
     render() {
         const {field, language} = this.props;
 

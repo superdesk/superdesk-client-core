@@ -243,8 +243,8 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
                                 }}
                                 style={{
                                     position: 'absolute',
-                                    insetBlockStart: 0,
-                                    insetInlineStart: 0,
+                                    top: 0,
+                                    left: 0,
                                     width: '100%',
                                     transform: `translateY(${virtualRow.start}px)`,
                                 }}

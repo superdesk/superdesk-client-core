@@ -124,7 +124,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                     groups={desksInOrder.map((deskId) => ({
                         render: () => (
                             <GroupLabel>
-                                <Badge type="highlight" marginInlineEnd={6}>{itemsByDesk[deskId].length}</Badge>
+                                <Badge type="highlight" marginRight={6}>{itemsByDesk[deskId].length}</Badge>
                                 {desks.find(({_id}) => _id === deskId)!.name}
                             </GroupLabel>
                         ),
@@ -145,7 +145,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                         >
                             <Badge
                                 type={hasItemsMarked ? 'highlight' : 'default'}
-                                marginInlineEnd={8}
+                                marginRight={8}
                             >
                                 {articles._items.length}
                             </Badge>

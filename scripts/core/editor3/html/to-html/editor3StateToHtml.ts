@@ -7,7 +7,7 @@ import {trimStartExact, trimEndExact} from 'core/helpers/utils';
 export const editor3StateToHtml = (
     contentState: ContentState,
     disabled: Array<string> = [], // A set of disabled elements (ie. ['table'] will ignore
-): string => {
+) => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
         .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
 

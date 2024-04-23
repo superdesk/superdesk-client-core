@@ -3,7 +3,7 @@ import {Button, TreeMenu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IProps {
-    availableFields: Array<{id: string; label: string; fieldType?: string;}>;
+    availableFields: Array<{id: string; label: string}>;
     onSelect(value: string): void;
 }
 

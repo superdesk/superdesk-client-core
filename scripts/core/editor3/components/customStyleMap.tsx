@@ -1,4 +1,4 @@
-export const customStyleMap: {[key: string]: React.CSSProperties} = {
+export const customStyleMap = {
     HIGHLIGHT: {
         display: 'inline-block',
         padding: '1px 3px',
@@ -20,11 +20,11 @@ export const customStyleMap: {[key: string]: React.CSSProperties} = {
     },
 
     ANNOTATION: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 0.6)',
+        borderBottom: '4px solid rgba(100, 205, 0, 0.6)',
     },
 
     ANNOTATION_SELECTED: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 1.0)',
+        borderBottom: '4px solid rgba(100, 205, 0, 1.0)',
     },
 
     STRIKETHROUGH: {

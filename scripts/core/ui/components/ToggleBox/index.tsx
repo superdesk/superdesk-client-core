@@ -75,7 +75,7 @@ export class ToggleBox extends React.Component<any, any> {
             hideUsingCSS,
             invalid,
             noMargin,
-            paddingBlockStart,
+            paddingTop,
         } = this.props;
 
         return (
@@ -87,7 +87,7 @@ export class ToggleBox extends React.Component<any, any> {
                         hidden: !this.state.isOpen,
                         'toggle-box--invalid': invalid,
                         'toggle-box--no-margin': noMargin,
-                        'toggle-box--padding-top': paddingBlockStart,
+                        'toggle-box--padding-top': paddingTop,
                     },
                 )}
                 ref={(node) => this.dom.node = node}

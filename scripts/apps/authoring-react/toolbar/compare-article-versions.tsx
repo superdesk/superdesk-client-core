@@ -31,7 +31,7 @@ const cellStyle: React.CSSProperties = {
     background: 'white',
     width: '100%',
     height: '100%',
-    marginInlineEnd: 8,
+    marginRight: 8,
 };
 
 interface IStateLoading {
@@ -142,8 +142,8 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                         <tr
                             style={{
                                 ...rowStyle,
-                                marginInlineEnd: 8,
-                                paddingBlockEnd: 8,
+                                marginRight: 8,
+                                paddingBottom: 8,
                             }}
                         >
                             <th style={columnStyle}>

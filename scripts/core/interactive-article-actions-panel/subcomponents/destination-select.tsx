@@ -40,7 +40,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
 
         return (
             <div>
-                <div style={{paddingBlockStart: 5}}>
+                <div style={{paddingTop: 5}}>
                     <SelectFilterable
                         value={(() => {
                             const dest = selectedDestination;

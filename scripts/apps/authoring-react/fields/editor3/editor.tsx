@@ -33,15 +33,18 @@ import {
     CharacterLimitUiBehavior,
     CharacterCountConfigModal,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {CharacterCount2} from 'apps/authoring/authoring/components/CharacterCount';
 import {showModal} from '@superdesk/common';
+import {countWords} from 'core/count-words';
+import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
-import {EditorState} from 'draft-js';
+import {ContentState, EditorState, convertToRaw} from 'draft-js';
 import {Select, Option} from 'superdesk-ui-framework/react';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
 import {SpacerBlock} from 'core/ui/components/Spacer';
+import {editor3ToOperationalFormat} from '.';
 import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';
-import {TextStatistics} from '../../../authoring/authoring/components/text-statistics';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -326,6 +329,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const {config} = this.props;
         const characterLimitConfig = this.getCharacterLimitPreference();
         const plainText = this.props.value.contentState.getPlainText();
+        const wordCount = countWords(plainText);
+        const readingTime: string = getReadingTimeText(plainText, this.props.language);
         const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
         const showStatistics = config.showStatistics ?? true;
 
@@ -334,11 +339,19 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
                     {
                         showStatistics && (
-                            <TextStatistics
-                                text={this.props.value.contentState.getPlainText()}
-                                language={this.props.language}
-                                limit={this.props.config.maxLength}
-                            />
+                            <div style={{display: 'flex', gap: '6px'}}>
+                                <span className="char-count-base">
+                                    {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
+                                </span>
+
+                                <CharacterCount2
+                                    limit={this.props.config.maxLength}
+                                    html={false}
+                                    item={this.props.value.contentState.getPlainText()}
+                                />
+
+                                <span className="char-count-base">{readingTime}</span>
+                            </div>
                         )
                     }
 

@@ -61,7 +61,6 @@ const {
     WithLiveResources,
     SpacerBlock,
     Spacer,
-    MoreActionsButton,
 } = superdesk.components;
 const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
@@ -377,7 +376,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     gap="16"
                                     justifyContent="space-between"
                                     noWrap
-                                    style={{paddingInlineStart: 16}}
+                                    style={{paddingLeft: 16, paddingRight: 16}}
                                 >
                                     {
                                         lockedInOtherSession
@@ -397,11 +396,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             } else if (this.props.readOnly) {
                                                 return (
                                                     <React.Fragment>
-                                                        <div>{closeBtn}</div>
-
                                                         <div>
                                                             <Button
-                                                                text={gettext('Edit Rundown')}
+                                                                text={gettext('Edit')}
                                                                 onClick={() => {
                                                                     const {rundownAction} = this.props;
 
@@ -414,16 +411,18 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 type="primary"
                                                             />
                                                         </div>
+
+                                                        <div>
+                                                            {closeBtn}
+                                                        </div>
                                                     </React.Fragment>
                                                 );
                                             } else {
                                                 return (
                                                     <React.Fragment>
-                                                        <div>{closeBtn}</div>
-
                                                         <div>
                                                             <Button
-                                                                text={gettext('Save Rundown')}
+                                                                text={gettext('Save')}
                                                                 onClick={() => {
                                                                     const valid = validate(rundown);
 
@@ -440,6 +439,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 type="primary"
                                                             />
                                                         </div>
+
+                                                        <div>{closeBtn}</div>
                                                     </React.Fragment>
                                                 );
                                             }
@@ -468,8 +469,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 },
                                             ]}
                                         >
-                                            <MoreActionsButton
-                                                aria-label={gettext('Actions')}
+
+                                            <IconButton
+                                                ariaValue={gettext('Actions')}
+                                                icon="dots-vertical"
                                                 onClick={noop}
                                             />
                                         </Dropdown>
@@ -546,11 +549,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             ),
                                                         });
                                                     }}
-                                                    selectedItem={
-                                                        this.props.rundownItemAction?.type !== 'create'
-                                                            ? this.props.rundownItemAction?.itemId
-                                                            : null
-                                                    }
                                                 />
                                             );
                                         }}
@@ -565,7 +563,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     {
                                         rundownItemAction != null && (
                                             <AuthoringReact
-                                                headerCollapsed={false}
+                                                headerCollapsed={true}
                                                 key={rundownItemAction.authoringReactKey}
                                                 itemId=""
                                                 resourceNames={['rundown_items']}
@@ -627,12 +625,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             priority: 0.1,
                                                             component: () => (
                                                                 <Button
-                                                                    text={gettext('Save item')}
+                                                                    text={gettext('Save')}
                                                                     onClick={() => {
                                                                         save();
                                                                     }}
                                                                     type="primary"
-                                                                    style="hollow"
                                                                     disabled={hasUnsavedChanges() !== true}
                                                                 />
                                                             ),
@@ -646,12 +643,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             priority: 0.1,
                                                             component: () => (
                                                                 <Button
-                                                                    text={gettext('Edit item')}
+                                                                    text={gettext('Edit')}
                                                                     onClick={() => {
                                                                         this.initiateEditing(item._id);
                                                                     }}
                                                                     type="primary"
-                                                                    style="hollow"
                                                                 />
                                                             ),
                                                         });
@@ -674,10 +670,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     if (sideWidgetsAllowed.length < 1) {
                                                         return <span />;
-                                                    }
-
-                                                    if (rundownItemAction.type === 'create') {
-                                                        return null;
                                                     }
 
                                                     return (

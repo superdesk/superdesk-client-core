@@ -95,7 +95,7 @@ export class SubitemsViewEdit extends React.PureComponent<IProps> {
 
                                             <SpacerBlock v gap="16" />
 
-                                            <Spacer v gap="16" style={{paddingInlineStart: 20}} noWrap>
+                                            <Spacer v gap="16" style={{paddingLeft: 20}} noWrap>
                                                 <div style={{width: '100%'}}>
                                                     <Input
                                                         label={gettext('Technical information')}

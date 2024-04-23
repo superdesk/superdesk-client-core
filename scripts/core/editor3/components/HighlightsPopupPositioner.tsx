@@ -29,20 +29,20 @@ function getNextPosition(originalElement, editorNode) {
 
     element.style.left = (editorNode.getBoundingClientRect().left - 360) + 'px';
 
-    const paddingBlockStart = 4;
-    const paddingBlockEnd = 4;
+    const paddingTop = 4;
+    const paddingBottom = 4;
     const viewportHeight = $(window).innerHeight();
     const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.top;
 
     element.style.bottom = (
         remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
-            ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBlockEnd)
-            : paddingBlockEnd
+            ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBottom)
+            : paddingBottom
     ) + 'px';
     mainFlexElement.style['max-height'] = (
         viewportHeight
         - parseInt(element.style.bottom, 10)
-        - paddingBlockStart
+        - paddingTop
     ) + 'px';
 
     const result = {

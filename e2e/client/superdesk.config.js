@@ -1,8 +1,5 @@
 module.exports = function(grunt) {
     return {
-        importApps: [
-            '../index',
-        ],
         defaultRoute: '/workspace',
         features: {
             swimlane: {defaultNumberOfColumns: 4},

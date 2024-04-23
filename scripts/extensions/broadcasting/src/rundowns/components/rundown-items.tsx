@@ -30,7 +30,6 @@ interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
     getActions(item: T): JSX.Element;
     preview(item: T): void;
     edit(item: T): void;
-    selectedItem?: string | null;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
@@ -49,7 +48,6 @@ interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
     getActions(item: T): JSX.Element | undefined;
     preview(item: T): void;
     edit(item: T): void;
-    selectedItem?: string | null;
 }
 
 type IProps<T extends IRundownItem | IRundownItemBase> = IPropsReadOnly<T> | IPropsEditable<T>;
@@ -143,7 +141,6 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     </Spacer>
                 ),
                 action: this.props.getActions(item),
-                selected: isRundownItem(item) ? this.props.selectedItem === item._id : false,
                 onClick: () => {
                     this.props.preview(item);
                 },

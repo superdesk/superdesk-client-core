@@ -125,7 +125,7 @@ export class LinkInput extends React.Component<any, any> {
                         onChange={onChange}
                         placeholder="Paste link"
                         readOnly={readOnly}
-                        paddingInlineEnd60
+                        paddingRight60={true}
                         autoFocus
                         tabIndex={0}
                         multiLine={false}

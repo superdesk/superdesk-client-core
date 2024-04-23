@@ -306,7 +306,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
         const RunMacroButton: React.ComponentType<{macro: IMacro}> = ({macro}) => {
             return (
-                <div style={{paddingBlockStart: 4}}>
+                <div style={{paddingTop: 4}}>
                     <Button
                         expand
                         style="hollow"

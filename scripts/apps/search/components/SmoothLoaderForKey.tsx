@@ -48,7 +48,7 @@ export class SmoothLoaderForKey extends React.PureComponent<IProps, IState> {
         const {loading} = this.state;
         const {children} = this.props;
         const style: CSSProperties = loading
-            ? {position: 'absolute', insetInlineStart: -9999, insetBlockStart: -9999, visibility: 'hidden'}
+            ? {position: 'absolute', left: -9999, top: -9999, visibility: 'hidden'}
             : {height: '100%'};
 
         return (

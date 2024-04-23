@@ -22,7 +22,7 @@ const messageStyles: React.CSSProperties = {
     padding: 20,
     textAlign: 'center',
     backgroundColor: 'transparent',
-    borderBlockStart: '1px solid transparent',
+    borderTop: '1px solid transparent',
 };
 
 function hasScrollbar(element: Element) {

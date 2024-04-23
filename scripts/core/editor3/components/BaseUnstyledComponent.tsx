@@ -124,15 +124,9 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
             ) {
                 getEmbedObject(link)
                     .then((oEmbed) => {
-                        if (oEmbed) {
-                            this.props.dispatch(embed(oEmbed, blockKey));
-                            handled = true;
-                        }
-                    })
-                    .catch((err) => {
-                        notify.error(err.description ?? gettext('An unknown error ocurred.'));
-                        handled = false;
+                        this.props.dispatch(embed(oEmbed, blockKey));
                     });
+                handled = true;
             } else if (isHtmlTextAndShouldCreateEmbed(event, mediaType, this.props.editorProps)) {
                 this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
                 handled = true;

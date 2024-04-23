@@ -94,7 +94,9 @@ export function dragDrop(
                 if (res.ok === true) {
                     const payload: IEditorDragDropPayload = {
                         data: {
-                            item: res.src,
+                            id: res.src._id,
+                            name: getArticleLabel(res.src),
+                            html: res.src.body_html ?? '',
                         },
                         blockKey,
                         contentType: 'article-embed',

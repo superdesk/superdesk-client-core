@@ -80,13 +80,13 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
     const properties = pick(
         item,
         'margin',
-        'marginBlockStart',
-        'marginInlineEnd',
-        'marginBlockEnd',
+        'marginTop',
+        'marginRight',
+        'marginBottom',
         'padding',
-        'paddingBlockStart',
-        'paddingInlineEnd',
-        'paddingBlockEnd',
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
     );
 
     const propertiesShallowCopy = {...properties};

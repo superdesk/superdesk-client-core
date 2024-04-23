@@ -12,6 +12,7 @@ import {CollapseBox} from './CollapseBox';
 import TermsList from './TermsList';
 import * as Popup from './Popup';
 import SearchBar from './SearchBar/';
+import {ToggleBox} from './ToggleBox/';
 import Toggle from './Toggle';
 import SearchField from './SearchField/';
 import Button from './Button';
@@ -41,6 +42,7 @@ export {
     TermsList,
     Popup,
     SearchBar,
+    ToggleBox,
     Toggle,
     SearchField,
     Button,

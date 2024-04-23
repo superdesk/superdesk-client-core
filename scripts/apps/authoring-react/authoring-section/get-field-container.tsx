@@ -47,8 +47,8 @@ export function getFieldContainer(
                                 justifyContent: 'end',
                             }}
                         >
-                            <Spacer h gap="8" noGrow noWrap>
-                                <span style={{textAlign: 'end'}}>
+                            <Spacer h gap="8" noGrow>
+                                <span>
                                     {field.fieldConfig.required && (
                                         <span
                                             className="sd-font-size--x-small"
