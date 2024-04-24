@@ -1,8 +1,7 @@
-import {sdApi} from 'api';
-import {gettext} from 'core/utils';
+import {sdApi} from '../../../api';
 import React from 'react';
 import {ReactNode} from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, ISuperdesk} from 'superdesk-api';
 import {
     Spacer,
     IconButton,
@@ -21,6 +20,7 @@ interface IProps {
     loading: boolean;
     headlines: Array<string>;
     generateHeadlines: () => void;
+    superdesk: ISuperdesk;
 }
 
 export default class HeadlinesTab extends React.Component<IProps> {
@@ -36,6 +36,7 @@ export default class HeadlinesTab extends React.Component<IProps> {
 
     render(): ReactNode {
         const {error, loading, headlines, article, generateHeadlines} = this.props;
+        const {gettext} = this.props.superdesk.localization;
 
         if (error) {
             return (

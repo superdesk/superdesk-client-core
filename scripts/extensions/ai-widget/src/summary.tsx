@@ -1,9 +1,8 @@
 /* eslint-disable react/no-multi-comp */
-import {sdApi} from 'api';
-import {gettext} from 'core/utils';
+import {sdApi} from '../../../api';
 import React from 'react';
 import {ReactNode} from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, ISuperdesk} from 'superdesk-api';
 import {
     IconButton,
     Container,
@@ -21,6 +20,7 @@ interface IProps {
     loading: boolean;
     summary: string;
     generateSummary: () => void;
+    superdesk: ISuperdesk;
 }
 
 export default class SummaryTab extends React.Component<IProps> {
@@ -36,6 +36,7 @@ export default class SummaryTab extends React.Component<IProps> {
 
     render(): ReactNode {
         const {error, loading, summary, article, generateSummary} = this.props;
+        const {gettext} = this.props.superdesk.localization;
 
         if (error) {
             return (
@@ -77,8 +78,8 @@ export default class SummaryTab extends React.Component<IProps> {
                                 body_html: summary,
                                 task: {
                                     user: this.props.article.task.user,
-                                    desk: currentDesk._id,
-                                    stage: currentDesk.working_stage,
+                                    desk: currentDesk?._id,
+                                    stage: currentDesk?.working_stage,
                                 },
                             }, article.profile);
                         }}

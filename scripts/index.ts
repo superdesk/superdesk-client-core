@@ -157,13 +157,6 @@ export function startApp(
                             registerAuthoringReactFields();
                         }
 
-                        if (extensions.find(({id}) => id == 'ai-assistant')) {
-                            registerInternalExtension(
-                                'authoring-ai-assistant-widget',
-                                {contributions: {authoringSideWidgets: [getAiSummaryWidget()]}},
-                            );
-                        }
-
                         registerLegacyExtensionCompatibilityLayer();
                     });
                 });
