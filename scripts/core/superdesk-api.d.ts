@@ -3459,7 +3459,6 @@ declare module 'superdesk-api' {
             fontSize: string;
             fontFamily: string;
         };
-        sectionClassNames?: IAuthoringSectionClassNames;
         item: any;
     }
 

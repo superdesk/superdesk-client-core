@@ -20,7 +20,6 @@ interface IProps<T> {
     getVocabularyItems: IPropsAuthoringSection<T>['getVocabularyItems'];
     validationError?: string;
     uiTheme?: IAuthoringSectionTheme;
-    sectionClassNames?: IAuthoringSectionClassNames;
     item: T;
 }
 
@@ -60,7 +59,6 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
                         fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
                         fontFamily: this.props.uiTheme.fontFamily,
                     }}
-                    sectionClassNames={this.props.sectionClassNames}
                     key={field.id}
                     editorId={field.id}
                     container={Container}

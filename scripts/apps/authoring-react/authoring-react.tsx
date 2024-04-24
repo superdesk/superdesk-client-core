@@ -1414,7 +1414,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     readOnly={readOnly}
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
-                                                    sectionClassNames={{header: 'sd-input-style'}}
                                                 />
                                             )}
                                         >
