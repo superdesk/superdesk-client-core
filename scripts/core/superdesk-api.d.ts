@@ -3470,6 +3470,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IPreviewComponentProps<IValue, IConfig> {
+        item: any;
         value: IValue;
         config: IConfig;
     }
