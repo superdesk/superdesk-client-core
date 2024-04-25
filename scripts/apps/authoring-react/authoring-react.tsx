@@ -1257,6 +1257,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const printPreviewAction = (() => {
             const execute = () => {
                 previewAuthoringEntity(
+                    state.itemWithChanges,
                     state.profile,
                     state.fieldsDataWithChanges,
                 );
