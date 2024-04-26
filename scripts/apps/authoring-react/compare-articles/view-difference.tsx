@@ -11,6 +11,8 @@ interface IProps {
     profile2: IContentProfileV2;
     fieldsData1: Map<string, any>;
     fieldsData2: Map<string, any>;
+    item1: any;
+    item2: any;
     fieldPadding: number;
     gapBetweenFields?: IPropsSpacer['gap'];
 }
@@ -82,6 +84,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                         <div>
                                             <FieldEditorConfig.previewComponent
+                                                item={this.props.item2}
                                                 value={fieldsData2.get(field.id)}
                                                 config={field.fieldConfig}
                                             />
@@ -104,6 +107,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                     <div>
                                         <FieldEditorConfig.previewComponent
+                                            item={this.props.item2}
                                             value={fieldsData2.get(field.id)}
                                             config={field.fieldConfig}
                                         />
@@ -131,6 +135,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                 <div>
                                     <FieldEditorConfig.previewComponent
+                                        item={this.props.item1}
                                         value={fieldsData1.get(field.id)}
                                         config={field.fieldConfig}
                                     />

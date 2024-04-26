@@ -6,6 +6,7 @@ import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export function previewAuthoringEntity(
+    item: any,
     profile: IContentProfileV2,
     fieldsData: Immutable.Map<string, any>,
     label?: string,
@@ -44,6 +45,7 @@ export function previewAuthoringEntity(
             contentSections={[
                 <PreviewAuthoringItem
                     key="0"
+                    item={item}
                     profile={profile}
                     fieldsData={fieldsData}
                 />,

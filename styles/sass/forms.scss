@@ -374,7 +374,7 @@ textarea[readonly] {
 .sd-required {
     font-size: 11px;
     font-style: italic;
-    color: $grayDark;
+    color: var(--sd-editor-colour__txt);
 }
 
 

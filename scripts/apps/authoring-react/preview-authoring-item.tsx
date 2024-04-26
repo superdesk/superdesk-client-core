@@ -5,6 +5,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 
 interface IProps {
+    item: any;
     profile: IContentProfileV2;
     fieldsData: Map<string, any>;
     fieldPadding?: number;
@@ -32,6 +33,7 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
 
                                 <div>
                                     <FieldEditorConfig.previewComponent
+                                        item={this.props.item}
                                         value={fieldsData.get(field.id)}
                                         config={field.fieldConfig}
                                     />

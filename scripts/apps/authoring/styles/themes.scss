@@ -373,6 +373,15 @@ body, html {
         }
     }
 
+    .headline .public-DraftEditor-content {
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .abstract .public-DraftEditor-content {
+        font-weight: 400;
+    }
+
     .field__select:hover {
         -moz-appearance: menulist-button;
         -webkit-appearance: menulist-button;
