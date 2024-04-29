@@ -424,7 +424,7 @@ class Editor3Directive {
 
                     const getTemplateForHeader = () => {
                         return (
-                            <div style={{display: 'flex'}}>
+                            <div style={{display: 'flex'}} className="sd-input-style">
                                 <div className="authoring-header__item-label">
                                     {fieldName}
                                     {this.required && (
