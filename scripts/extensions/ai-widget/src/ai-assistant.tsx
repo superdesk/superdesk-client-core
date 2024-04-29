@@ -1,5 +1,5 @@
 import React from 'react';
-import {IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
+import {IArticleSideWidgetComponentType} from 'superdesk-api';
 import {
     Button,
     ContentDivider,
@@ -11,15 +11,11 @@ import {
 } from 'superdesk-ui-framework/react';
 import HeadlinesTab from './headlines';
 import SummaryTab from './summary';
-import {requests} from './requests';
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+import {superdesk} from './superdesk';
+import {configuration} from './configuration';
 
 interface IState {
-    headlinesOpen: boolean;
-    summaryOpen: boolean;
+    activeSection: 'headlines' | 'summary' | null;
 
     /**
      * Handle loading of each request separately,
@@ -32,77 +28,75 @@ interface IState {
     summary: string;
 }
 
-export default function getAiAssistantWidget(superdesk: ISuperdesk, label: string) {
-    const {gettext} = superdesk.localization;
-    const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
+export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
+        super(props);
 
-    return class AiAssistantWidget extends React.PureComponent<IProps, IState> {
-        constructor(props: IProps) {
-            super(props);
+        this.state = {
+            activeSection: null,
+            headlines: [],
+            error: false,
+            loadingSummary: true,
+            loadingHeadlines: true,
+            summary: '',
+        };
 
-            this.state = {
-                headlinesOpen: false,
-                summaryOpen: false,
-                headlines: [],
-                error: false,
-                loadingSummary: true,
-                loadingHeadlines: true,
-                summary: '',
-            };
+        this.setError = this.setError.bind(this);
+        this.generateHeadlines = this.generateHeadlines.bind(this);
+        this.generateSummary = this.generateSummary.bind(this);
+    }
 
-            this.setError = this.setError.bind(this);
-            this.generateHeadlines = this.generateHeadlines.bind(this);
-            this.generateSummary = this.generateSummary.bind(this);
-        }
+    setError() {
+        this.setState({
+            error: true,
+        });
+    }
 
-        setError() {
-            this.setState({
-                error: true,
-            });
-        }
-
-        generateHeadlines() {
-            if (requests.generateHeadlines == null) {
-                this.setError();
-            } else {
-                requests.generateHeadlines(this.props.article, superdesk)
-                    .then((res) => {
-                        this.setState({
-                            loadingHeadlines: false,
-                            headlines: res,
-                        });
-                    }).catch(() => {
-                        this.setError();
+    generateHeadlines() {
+        if (configuration.generateHeadlines == null) {
+            this.setError();
+        } else {
+            configuration.generateHeadlines(this.props.article, superdesk)
+                .then((res) => {
+                    this.setState({
+                        loadingHeadlines: false,
+                        headlines: res,
                     });
-            }
+                }).catch(() => {
+                    this.setError();
+                });
         }
+    }
 
-        generateSummary() {
-            if (requests.generateSummary == null) {
-                this.setError();
-            } else {
-                requests.generateSummary(this.props.article, superdesk)
-                    .then((res) => {
-                        this.setState({
-                            loadingSummary: false,
-                            summary: res,
-                        });
-                    }).catch(() => {
-                        this.setError();
+    generateSummary() {
+        if (configuration.generateSummary == null) {
+            this.setError();
+        } else {
+            configuration.generateSummary(this.props.article, superdesk)
+                .then((res) => {
+                    this.setState({
+                        loadingSummary: false,
+                        summary: res,
                     });
-            }
+                }).catch(() => {
+                    this.setError();
+                });
         }
+    }
 
-        render() {
-            return (
-                <AuthoringWidgetLayout
-                    header={(
-                        <Spacer v gap="0" alignItems="center">
-                            <AuthoringWidgetHeading
-                                widgetName={label}
-                                editMode={false}
-                            />
-                            {(this.state.summaryOpen || this.state.headlinesOpen) && (
+    render() {
+        const {gettext} = superdesk.localization;
+        const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
+        const headlinesLabel = gettext('Headlines');
+        const summaryLabel = gettext('Summary');
+
+        return (
+            <AuthoringWidgetLayout
+                header={(
+                        <AuthoringWidgetHeading
+                            widgetName={gettext('Ai Assistant')}
+                            editMode={false}
+                            customContent={this.state.activeSection != null ? (
                                 <>
                                     <div className="p-1">
                                         <Spacer
@@ -117,108 +111,107 @@ export default function getAiAssistantWidget(superdesk: ISuperdesk, label: strin
                                                 icon="arrow-left"
                                                 onClick={() => {
                                                     this.setState({
-                                                        headlinesOpen: false,
-                                                        summaryOpen: false,
+                                                        activeSection: null
                                                     });
                                                 }}
-                                                ariaValue={gettext(
-                                                    'Close {{ value }}',
-                                                    {value: this.state.headlinesOpen ? 'Headlines' : 'Summary'},
-                                                )}
+                                                ariaValue={gettext('Close') + this.state.activeSection === 'headlines'
+                                                    ? headlinesLabel : summaryLabel}
                                             />
                                             <Heading type="h4" align="center">
-                                                {gettext(
-                                                    '{{ value }} ',
-                                                    {value: this.state.headlinesOpen ? 'Headlines' : 'Summary'},
-                                                )}
+                                                {this.state.activeSection === 'headlines' ? headlinesLabel : summaryLabel}
                                             </Heading>
                                         </Spacer>
                                     </div>
                                     <ContentDivider type="solid" margin="none" />
                                 </>
-                            )}
-                        </Spacer>
-                    )}
-                    body={(() => {
-                        if ((this.state.headlinesOpen || this.state.summaryOpen) === false) {
-                            return (
-                                <div
-                                    className="
-                                        sd-grid-list
-                                        sd-grid-list--xx-small
-                                        sd-grid-list--gap-s
-                                        sd-grid-list--no-margin
-                                    "
-                                >
+                            ) : <></>}
+                        />
+                )}
+                body={(() => {
+                    if (this.state.activeSection == null) {
+                        return (
+                            <div
+                                className="
+                                    sd-grid-list
+                                    sd-grid-list--xx-small
+                                    sd-grid-list--gap-s
+                                    sd-grid-list--no-margin
+                                "
+                            >
+                                {configuration.generateHeadlines != null && (
                                     <IllustrationButton
                                         text={gettext('Headlines')}
                                         onClick={() => {
                                             this.setState({
-                                                headlinesOpen: true,
+                                                activeSection: 'headlines',
                                             });
                                         }}
                                     >
                                         <SvgIconIllustration illustration="headlines" />
                                     </IllustrationButton>
+                                )}
+                                {configuration.generateSummary != null && (
                                     <IllustrationButton
                                         text={gettext('Summary')}
                                         onClick={() => {
                                             this.setState({
-                                                summaryOpen: true,
+                                                activeSection: 'summary'
                                             });
                                         }}
                                     >
                                         <SvgIconIllustration illustration="summary" />
                                     </IllustrationButton>
-                                </div>
-                            );
-                        } else if (this.state.headlinesOpen) {
-                            return (
-                                <HeadlinesTab
-                                    article={this.props.article}
-                                    error={this.state.error}
-                                    generateHeadlines={this.generateHeadlines}
-                                    headlines={this.state.headlines}
-                                    loading={this.state.loadingHeadlines}
-                                    superdesk={superdesk}
-                                />
-                            );
-                        }
-
+                                )}
+                            </div>
+                        );
+                    } else if (this.state.activeSection === 'headlines') {
                         return (
-                            <SummaryTab
+                            <HeadlinesTab
                                 article={this.props.article}
-                                generateSummary={this.generateSummary}
-                                summary={this.state.summary}
-                                loading={this.state.loadingSummary}
                                 error={this.state.error}
+                                fieldsData={this.props.fieldsData}
+                                onFieldsDataChange={this.props.onFieldsDataChange}
+                                generateHeadlines={this.generateHeadlines}
+                                headlines={this.state.headlines}
+                                loading={this.state.loadingHeadlines}
                                 superdesk={superdesk}
                             />
                         );
-                    })()}
-                    footer={(this.state.headlinesOpen || this.state.summaryOpen) ? (
-                        <Button
-                            onClick={() => {
-                                if (this.state.headlinesOpen) {
-                                    this.setState({
-                                        loadingHeadlines: true,
-                                    }, () => {
-                                        this.generateHeadlines();
-                                    });
-                                } else if (this.state.summaryOpen) {
-                                    this.setState({
-                                        loadingSummary: true,
-                                    }, () => {
-                                        this.generateSummary();
-                                    });
-                                }
-                            }}
-                            text={gettext('Regenerate')}
-                            style="hollow"
+                    }
+
+                    return (
+                        <SummaryTab
+                            article={this.props.article}
+                            generateSummary={this.generateSummary}
+                            summary={this.state.summary}
+                            loading={this.state.loadingSummary}
+                            error={this.state.error}
+                            superdesk={superdesk}
                         />
-                    ) : <></>}
-                />
-            );
-        }
+                    );
+                })()}
+                footer={this.state.activeSection != null ? (
+                    <Button
+                        onClick={() => {
+                            if (this.state.activeSection === 'headlines') {
+                                this.setState({
+                                    loadingHeadlines: true,
+                                }, () => {
+                                    this.generateHeadlines();
+                                });
+                            } else if (this.state.activeSection === 'summary') {
+                                this.setState({
+                                    loadingSummary: true,
+                                }, () => {
+                                    this.generateSummary();
+                                });
+                            }
+                        }}
+                        text={gettext('Regenerate')}
+                        style="hollow"
+                    />
+                ) : <></>}
+            />
+        );
     }
 }

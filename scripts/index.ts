@@ -30,8 +30,6 @@ import {store} from 'core/data';
 import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
 import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
 import {registerLegacyExtensionCompatibilityLayer} from 'register-legacy-extension-compatibility-layer';
-import {registerInternalExtension} from 'core/helpers/register-internal-extension';
-import {getAiSummaryWidget} from 'apps/authoring-bridge/widgets/ai-widget/ai-assistant';
 
 let body = angular.element('body');
 

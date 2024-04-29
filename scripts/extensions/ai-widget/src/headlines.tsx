@@ -1,4 +1,3 @@
-import {sdApi} from '../../../api';
 import React from 'react';
 import {ReactNode} from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
@@ -13,6 +12,9 @@ import {
     Loader,
     Heading,
 } from 'superdesk-ui-framework/react';
+import {superdesk} from './superdesk';
+import {OrderedMap} from 'immutable';
+import {convertToRaw, ContentState} from 'draft-js';
 
 interface IProps {
     article: IArticle;
@@ -21,14 +23,12 @@ interface IProps {
     headlines: Array<string>;
     generateHeadlines: () => void;
     superdesk: ISuperdesk;
+    fieldsData?: OrderedMap<string, unknown>;
+    onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 }
 
 export default class HeadlinesTab extends React.Component<IProps> {
     componentDidMount(): void {
-        /**
-         * Don't send another request if the widget
-         * hasn't been closed and there's previous data available.
-         */
         if (this.props.headlines.length < 1) {
             this.props.generateHeadlines();
         }
@@ -70,11 +70,20 @@ export default class HeadlinesTab extends React.Component<IProps> {
                                     size="small"
                                     text={gettext('Apply')}
                                     onClick={() => {
-                                        sdApi.article.patch(
-                                            article,
-                                            {headline},
-                                            {patchDirectlyAndOverwriteAuthoringValues: true},
-                                        );
+                                        if (superdesk.instance.authoringReactViewEnabled) {
+                                            const rawState = convertToRaw(ContentState.createFromText(headline));
+
+                                            this.props.onFieldsDataChange?.(
+                                                this.props.fieldsData?.set(
+                                                    'headline', superdesk.helpers.editor3ToOperationalFormat({rawContentState: rawState}, 'en'))
+                                                );
+                                        } else {
+                                            superdesk.entities.article.patch(
+                                                article,
+                                                {headline},
+                                                {patchDirectlyAndOverwriteAuthoringValues: true},
+                                            );
+                                        }
                                     }}
                                     type="default"
                                     style="hollow"

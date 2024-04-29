@@ -563,7 +563,7 @@ interface IArticleApi {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
 
     createNewUsingDeskTemplate(): void;
-    createNewWithData(data: Partial<IArticle>, contentProfileId: string): void
+    createNewWithData(data: Partial<IArticle>, contentProfileId: string): void;
     getWorkQueueItems(): Array<IArticle>;
     rewrite(item: IArticle): void;
     canPublishOnDesk(deskType: string): boolean;

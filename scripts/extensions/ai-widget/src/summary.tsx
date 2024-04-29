@@ -1,5 +1,4 @@
 /* eslint-disable react/no-multi-comp */
-import {sdApi} from '../../../api';
 import React from 'react';
 import {ReactNode} from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
@@ -13,6 +12,7 @@ import {
     Heading,
     Spacer,
 } from 'superdesk-ui-framework/react';
+import {superdesk} from './superdesk';
 
 interface IProps {
     article: IArticle;
@@ -25,10 +25,6 @@ interface IProps {
 
 export default class SummaryTab extends React.Component<IProps> {
     componentDidMount(): void {
-        /**
-         * Don't send another request if the widget
-         * hasn't been closed and there's previous data available.
-         */
         if (this.props.summary === '') {
             this.props.generateSummary();
         }
@@ -72,16 +68,25 @@ export default class SummaryTab extends React.Component<IProps> {
                     />
                     <Button
                         onClick={() => {
-                            const currentDesk = sdApi.desks.getCurrentDesk();
+                            const currentDeskId = superdesk.entities.desk.getActiveDeskId();
 
-                            sdApi.article.createNewWithData({
-                                body_html: summary,
-                                task: {
-                                    user: this.props.article.task.user,
-                                    desk: currentDesk?._id,
-                                    stage: currentDesk?.working_stage,
-                                },
-                            }, article.profile);
+                            if (currentDeskId != null) {
+                                const currentDesk = superdesk.entities.desk.getDeskById(currentDeskId);
+
+                                superdesk.entities.article.createNewWithData({
+                                    body_html: summary,
+                                    task: {
+                                        user: this.props.article.task.user,
+                                        desk: currentDesk?._id,
+                                        stage: currentDesk?.working_stage,
+                                    },
+                                }, article.profile);
+                            } else {
+                                superdesk.entities.article.createNewWithData({
+                                    body_html: summary,
+                                    task: {user: this.props.article.task.user},
+                                }, article.profile);
+                            }
                         }}
                         size="small"
                         text={gettext('Create article')}

@@ -69,7 +69,7 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
-import {appConfig} from 'appConfig';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
@@ -118,6 +118,7 @@ import {getCustomFieldVocabularies, getLanguageVocabulary} from './helpers/busin
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
+import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -278,6 +279,7 @@ export function getSuperdeskApiImplementation(
             fixPatchRequest,
             fixPatchResponse,
             computeEditor3Output,
+            editor3ToOperationalFormat: editor3ToOperationalFormat,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
@@ -295,6 +297,7 @@ export function getSuperdeskApiImplementation(
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
                 isLockedInOtherSession: sdApi.article.isLockedInOtherSession,
                 patch: patchArticle,
+                createNewWithData: sdApi.article.createNewWithData,
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
                 itemAction: (article) => sdApi.article.itemAction(article),
@@ -309,6 +312,7 @@ export function getSuperdeskApiImplementation(
                         .then((response) => response._items),
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
+                getDeskById: sdApi.desks.getDeskById,
             },
             contentProfile: {
                 get: (id) => {
@@ -355,6 +359,7 @@ export function getSuperdeskApiImplementation(
         state: applicationState,
         instance: {
             config,
+            authoringReactViewEnabled,
         },
         ui: {
             article: {
