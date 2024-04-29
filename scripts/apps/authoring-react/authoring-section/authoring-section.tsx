@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem} from 'superdesk-api';
+import {IAuthoringSectionTheme, IAuthoringSectionClassNames, IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';

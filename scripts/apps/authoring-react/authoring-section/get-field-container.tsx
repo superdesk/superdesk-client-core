@@ -26,10 +26,10 @@ export function getFieldContainer(
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <div>
+                <div className={sectionClassNames?.header}>
                     <div
                         style={{
                             display: 'flex',
@@ -87,10 +87,10 @@ export function getFieldContainer(
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <div>
+                <div className={sectionClassNames?.content}>
                     <div
                         style={{
                             display: 'flex',
