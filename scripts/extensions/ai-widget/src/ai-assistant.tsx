@@ -93,39 +93,43 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         return (
             <AuthoringWidgetLayout
                 header={(
+                    <Spacer v gap="0" alignItems="center">
                         <AuthoringWidgetHeading
                             widgetName={gettext('Ai Assistant')}
                             editMode={false}
-                            customContent={this.state.activeSection != null ? (
-                                <>
-                                    <div className="p-1">
-                                        <Spacer
-                                            h
-                                            gap="64"
-                                            noGrow
-                                            justifyContent="start"
-                                            alignItems="center"
-                                        >
-                                            <IconButton
-                                                size="small"
-                                                icon="arrow-left"
-                                                onClick={() => {
-                                                    this.setState({
-                                                        activeSection: null
-                                                    });
-                                                }}
-                                                ariaValue={gettext('Close') + this.state.activeSection === 'headlines'
-                                                    ? headlinesLabel : summaryLabel}
-                                            />
-                                            <Heading type="h4" align="center">
-                                                {this.state.activeSection === 'headlines' ? headlinesLabel : summaryLabel}
-                                            </Heading>
-                                        </Spacer>
-                                    </div>
-                                    <ContentDivider type="solid" margin="none" />
-                                </>
-                            ) : <></>}
                         />
+                        {this.state.activeSection != null && (
+                            <>
+                                <div className="p-1">
+                                    <Spacer
+                                        h
+                                        gap="64"
+                                        noGrow
+                                        justifyContent="start"
+                                        alignItems="center"
+                                    >
+                                        <IconButton
+                                            size="small"
+                                            icon="arrow-left"
+                                            onClick={() => {
+                                                this.setState({
+                                                    activeSection: null,
+                                                });
+                                            }}
+                                            ariaValue={gettext('Close') + this.state.activeSection === 'headlines'
+                                                ? headlinesLabel : summaryLabel
+                                            }
+                                        />
+                                        <Heading type="h4" align="center">
+                                            {this.state.activeSection === 'headlines'
+                                                ? headlinesLabel : summaryLabel}
+                                        </Heading>
+                                    </Spacer>
+                                </div>
+                                <ContentDivider type="solid" margin="none" />
+                            </>
+                        )}
+                    </Spacer>
                 )}
                 body={(() => {
                     if (this.state.activeSection == null) {
@@ -155,7 +159,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                                         text={gettext('Summary')}
                                         onClick={() => {
                                             this.setState({
-                                                activeSection: 'summary'
+                                                activeSection: 'summary',
                                             });
                                         }}
                                     >

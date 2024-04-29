@@ -75,8 +75,12 @@ export default class HeadlinesTab extends React.Component<IProps> {
 
                                             this.props.onFieldsDataChange?.(
                                                 this.props.fieldsData?.set(
-                                                    'headline', superdesk.helpers.editor3ToOperationalFormat({rawContentState: rawState}, 'en'))
-                                                );
+                                                    'headline',
+                                                    superdesk.helpers.editor3ToOperationalFormat(
+                                                        {rawContentState: rawState},
+                                                        'en',
+                                                    ),
+                                                ));
                                         } else {
                                             superdesk.entities.article.patch(
                                                 article,

@@ -12,7 +12,7 @@ const extension: IExtension = {
                     icon: 'open-ai',
                     label: superdesk.localization.gettext('Ai Assistant'),
                     order: 2,
-                }]
+                }],
             },
         };
 
