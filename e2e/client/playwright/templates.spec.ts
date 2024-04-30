@@ -54,8 +54,10 @@ test('assigning template to a desk', async ({page}) => {
     await page.goto('/#/settings/templates');
     await page.locator(s('template-content', 'content-template=story 2', 'template-actions')).click();
     await page.locator(s('template-actions--options')).getByRole('button', {name: 'Edit'}).click();
+    // toggling button from 'off' to 'on'
     await page.locator(s('template-edit-view', 'desks', 'desk--Finances')).click();
     await page.locator(s('template-edit-view')).getByRole('button', {name: 'Save'}).click();
+    await expect(page.locator(s('template-edit-view'))).not.toBeVisible();
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Finances');
