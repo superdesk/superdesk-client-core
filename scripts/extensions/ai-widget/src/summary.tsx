@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {ReactNode} from 'react';
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {
     IconButton,
     Container,
@@ -20,7 +20,6 @@ interface IProps {
     loading: boolean;
     summary: string;
     generateSummary: () => void;
-    superdesk: ISuperdesk;
 }
 
 export default class SummaryTab extends React.Component<IProps> {
@@ -32,7 +31,7 @@ export default class SummaryTab extends React.Component<IProps> {
 
     render(): ReactNode {
         const {error, loading, summary, article, generateSummary} = this.props;
-        const {gettext} = this.props.superdesk.localization;
+        const {gettext} = superdesk.localization;
 
         if (error) {
             return (

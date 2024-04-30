@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactNode} from 'react';
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {
     Spacer,
     IconButton,
@@ -22,7 +22,6 @@ interface IProps {
     loading: boolean;
     headlines: Array<string>;
     generateHeadlines: () => void;
-    superdesk: ISuperdesk;
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 }
@@ -36,7 +35,7 @@ export default class HeadlinesTab extends React.Component<IProps> {
 
     render(): ReactNode {
         const {error, loading, headlines, article, generateHeadlines} = this.props;
-        const {gettext} = this.props.superdesk.localization;
+        const {gettext} = superdesk.localization;
 
         if (error) {
             return (

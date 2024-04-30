@@ -1,21 +1,20 @@
 import React from 'react';
 import {IArticleSideWidgetComponentType} from 'superdesk-api';
 import {
-    Button,
     ContentDivider,
     Heading,
     IconButton,
-    IllustrationButton,
     Spacer,
-    SvgIconIllustration,
 } from 'superdesk-ui-framework/react';
-import HeadlinesTab from './headlines';
-import SummaryTab from './summary';
 import {superdesk} from './superdesk';
 import {configuration} from './configuration';
+import AiAssistantHeader from './header';
+import AiAssistantFooter from './footer';
+
+export type IAiAssistantSection = 'headlines' | 'summary' | null;
 
 interface IState {
-    activeSection: 'headlines' | 'summary' | null;
+    activeSection: IAiAssistantSection;
 
     /**
      * Handle loading of each request separately,
@@ -87,8 +86,6 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     render() {
         const {gettext} = superdesk.localization;
         const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
-        const headlinesLabel = gettext('Headlines');
-        const summaryLabel = gettext('Summary');
 
         return (
             <AuthoringWidgetLayout
@@ -116,13 +113,13 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                                                     activeSection: null,
                                                 });
                                             }}
-                                            ariaValue={gettext('Close') + this.state.activeSection === 'headlines'
-                                                ? headlinesLabel : summaryLabel
+                                            ariaValue={this.state.activeSection === 'headlines'
+                                                ? gettext('Close Headlines') : gettext('Close Summary')
                                             }
                                         />
                                         <Heading type="h4" align="center">
                                             {this.state.activeSection === 'headlines'
-                                                ? headlinesLabel : summaryLabel}
+                                                ? gettext('Headlines') : gettext('Summary')}
                                         </Heading>
                                     </Spacer>
                                 </div>
@@ -131,90 +128,45 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                         )}
                     </Spacer>
                 )}
-                body={(() => {
-                    if (this.state.activeSection == null) {
-                        return (
-                            <div
-                                className="
-                                    sd-grid-list
-                                    sd-grid-list--xx-small
-                                    sd-grid-list--gap-s
-                                    sd-grid-list--no-margin
-                                "
-                            >
-                                {configuration.generateHeadlines != null && (
-                                    <IllustrationButton
-                                        text={gettext('Headlines')}
-                                        onClick={() => {
-                                            this.setState({
-                                                activeSection: 'headlines',
-                                            });
-                                        }}
-                                    >
-                                        <SvgIconIllustration illustration="headlines" />
-                                    </IllustrationButton>
-                                )}
-                                {configuration.generateSummary != null && (
-                                    <IllustrationButton
-                                        text={gettext('Summary')}
-                                        onClick={() => {
-                                            this.setState({
-                                                activeSection: 'summary',
-                                            });
-                                        }}
-                                    >
-                                        <SvgIconIllustration illustration="summary" />
-                                    </IllustrationButton>
-                                )}
-                            </div>
-                        );
-                    } else if (this.state.activeSection === 'headlines') {
-                        return (
-                            <HeadlinesTab
-                                article={this.props.article}
-                                error={this.state.error}
-                                fieldsData={this.props.fieldsData}
-                                onFieldsDataChange={this.props.onFieldsDataChange}
-                                generateHeadlines={this.generateHeadlines}
-                                headlines={this.state.headlines}
-                                loading={this.state.loadingHeadlines}
-                                superdesk={superdesk}
-                            />
-                        );
-                    }
-
-                    return (
-                        <SummaryTab
-                            article={this.props.article}
-                            generateSummary={this.generateSummary}
-                            summary={this.state.summary}
-                            loading={this.state.loadingSummary}
-                            error={this.state.error}
-                            superdesk={superdesk}
-                        />
-                    );
-                })()}
-                footer={this.state.activeSection != null ? (
-                    <Button
-                        onClick={() => {
-                            if (this.state.activeSection === 'headlines') {
-                                this.setState({
-                                    loadingHeadlines: true,
-                                }, () => {
-                                    this.generateHeadlines();
-                                });
-                            } else if (this.state.activeSection === 'summary') {
-                                this.setState({
-                                    loadingSummary: true,
-                                }, () => {
-                                    this.generateSummary();
-                                });
-                            }
+                body={(
+                    <AiAssistantHeader
+                        activeSection={this.state.activeSection}
+                        article={this.props.article}
+                        error={this.state.error}
+                        fieldsData={this.props.fieldsData}
+                        generateHeadlines={this.generateHeadlines}
+                        generateSummary={this.generateSummary}
+                        headlines={this.state.headlines}
+                        summary={this.state.summary}
+                        loadingHeadlines={this.state.loadingHeadlines}
+                        loadingSummary={this.state.loadingSummary}
+                        onFieldsDataChange={this.props.onFieldsDataChange}
+                        setSection={(id) => {
+                            this.setState({
+                                activeSection: id,
+                            });
                         }}
-                        text={gettext('Regenerate')}
-                        style="hollow"
                     />
-                ) : <></>}
+                )}
+                footer={(
+                    <AiAssistantFooter
+                        activeSection={this.state.activeSection}
+                        setLoadingHeadlines={() => {
+                            this.setState({
+                                loadingHeadlines: true,
+                            }, () => {
+                                this.generateHeadlines();
+                            });
+                        }}
+                        setLoadingSummary={() => {
+                            this.setState({
+                                loadingSummary: true,
+                            }, () => {
+                                this.generateSummary();
+                            });
+                        }}
+                    />
+                )}
             />
         );
     }
