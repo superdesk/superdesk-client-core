@@ -12,7 +12,7 @@ import {
     Loader,
     Heading,
 } from 'superdesk-ui-framework/react';
-import {superdesk} from './superdesk';
+import {superdesk} from '../superdesk';
 import {OrderedMap} from 'immutable';
 import {convertToRaw, ContentState} from 'draft-js';
 
@@ -26,7 +26,7 @@ interface IProps {
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 }
 
-export default class HeadlinesTab extends React.Component<IProps> {
+export default class HeadlinesBody extends React.Component<IProps> {
     componentDidMount(): void {
         if (this.props.headlines.length < 1) {
             this.props.generateHeadlines();

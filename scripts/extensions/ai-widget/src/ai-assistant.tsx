@@ -1,15 +1,11 @@
 import React from 'react';
 import {IArticleSideWidgetComponentType} from 'superdesk-api';
-import {
-    ContentDivider,
-    Heading,
-    IconButton,
-    Spacer,
-} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import {configuration} from './configuration';
-import AiAssistantHeader from './header';
-import AiAssistantFooter from './footer';
+import getHeadlinesWidget from './headlines/headlines-widget';
+import getSummaryWidget from './summary/summary-widget';
+import DefaultAiAssistantPanel from './main-panel';
 
 export type IAiAssistantSection = 'headlines' | 'summary' | null;
 
@@ -86,6 +82,60 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     render() {
         const {gettext} = superdesk.localization;
         const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
+        const closeActiveSection = () => {this.setState({activeSection: null})};
+        const headlinesWidget = getHeadlinesWidget({
+            closeActiveSection,
+            article: this.props.article,
+            error: this.state.error,
+            generateHeadlines: this.generateHeadlines,
+            headlines: this.state.headlines,
+            loading: this.state.loadingHeadlines,
+            reGenerateHeadlines: () => {
+                this.setState({
+                    loadingHeadlines: true,
+                }, () => this.generateHeadlines());
+            },
+            fieldsData: this.props.fieldsData,
+            onFieldsDataChange: this.props.onFieldsDataChange,
+        });
+        const summaryWidget = getSummaryWidget({
+            closeActiveSection,
+            article: this.props.article,
+            error: this.state.error,
+            generateSummary: this.generateSummary,
+            summary: this.state.summary,
+            loading: this.state.loadingSummary,
+            regenerateSummary: () => {
+                this.setState({
+                    loadingSummary: true,
+                }, () => this.generateSummary());
+            },
+        });
+        const currentComponent: {
+            header?: JSX.Element;
+            body: JSX.Element;
+            footer?: JSX.Element;
+        } = (() => {
+            if (this.state.activeSection === 'headlines') {
+                return headlinesWidget;
+            } else if (this.state.activeSection === 'summary') {
+                return summaryWidget;
+            } else {
+                return {
+                    header: undefined,
+                    body: (
+                        <DefaultAiAssistantPanel
+                            setSection={(id) => {
+                                this.setState({
+                                    activeSection: id,
+                                });
+                            }}
+                        />
+                    ),
+                    footer: undefined,
+                }
+            }
+        })();
 
         return (
             <AuthoringWidgetLayout
@@ -95,78 +145,11 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                             widgetName={gettext('Ai Assistant')}
                             editMode={false}
                         />
-                        {this.state.activeSection != null && (
-                            <>
-                                <div className="p-1">
-                                    <Spacer
-                                        h
-                                        gap="64"
-                                        noGrow
-                                        justifyContent="start"
-                                        alignItems="center"
-                                    >
-                                        <IconButton
-                                            size="small"
-                                            icon="arrow-left"
-                                            onClick={() => {
-                                                this.setState({
-                                                    activeSection: null,
-                                                });
-                                            }}
-                                            ariaValue={this.state.activeSection === 'headlines'
-                                                ? gettext('Close Headlines') : gettext('Close Summary')
-                                            }
-                                        />
-                                        <Heading type="h4" align="center">
-                                            {this.state.activeSection === 'headlines'
-                                                ? gettext('Headlines') : gettext('Summary')}
-                                        </Heading>
-                                    </Spacer>
-                                </div>
-                                <ContentDivider type="solid" margin="none" />
-                            </>
-                        )}
+                        {currentComponent.header}
                     </Spacer>
                 )}
-                body={(
-                    <AiAssistantHeader
-                        activeSection={this.state.activeSection}
-                        article={this.props.article}
-                        error={this.state.error}
-                        fieldsData={this.props.fieldsData}
-                        generateHeadlines={this.generateHeadlines}
-                        generateSummary={this.generateSummary}
-                        headlines={this.state.headlines}
-                        summary={this.state.summary}
-                        loadingHeadlines={this.state.loadingHeadlines}
-                        loadingSummary={this.state.loadingSummary}
-                        onFieldsDataChange={this.props.onFieldsDataChange}
-                        setSection={(id) => {
-                            this.setState({
-                                activeSection: id,
-                            });
-                        }}
-                    />
-                )}
-                footer={(
-                    <AiAssistantFooter
-                        activeSection={this.state.activeSection}
-                        setLoadingHeadlines={() => {
-                            this.setState({
-                                loadingHeadlines: true,
-                            }, () => {
-                                this.generateHeadlines();
-                            });
-                        }}
-                        setLoadingSummary={() => {
-                            this.setState({
-                                loadingSummary: true,
-                            }, () => {
-                                this.generateSummary();
-                            });
-                        }}
-                    />
-                )}
+                body={currentComponent.body}
+                footer={currentComponent.footer}
             />
         );
     }

@@ -166,12 +166,13 @@
 
 [class^="svg-icon-"], [class*="svg-icon-"] {
     display: inline-block;
-    :is(.svg-icon-illustration) {
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &:not(.svg-icon-illustration) {
         width:20px;
         height: 20px;
     }
-    background-repeat: no-repeat;
-    background-size: contain;
 }
 
 .svg-icon-plus {

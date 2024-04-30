@@ -1,9 +1,17 @@
 import {IExtension, IExtensionActivationResult} from 'superdesk-api';
 import {AiAssistantWidget} from './ai-assistant';
 import {superdesk} from './superdesk';
+import {configuration} from './configuration';
 
 const extension: IExtension = {
     activate: () => {
+        const hasConfiguredServices = Object.keys(configuration).length > 0;
+
+        if (hasConfiguredServices === false) {
+            alert("You haven't registered any services for the Ai Assistant Widget!")
+            return Promise.resolve({});
+        }
+
         const result: IExtensionActivationResult = {
             contributions: {
                 authoringSideWidgets: [{
@@ -15,6 +23,7 @@ const extension: IExtension = {
                 }],
             },
         };
+
 
         return Promise.resolve(result);
     },

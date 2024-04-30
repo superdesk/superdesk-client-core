@@ -12,7 +12,7 @@ import {
     Heading,
     Spacer,
 } from 'superdesk-ui-framework/react';
-import {superdesk} from './superdesk';
+import {superdesk} from '../superdesk';
 
 interface IProps {
     article: IArticle;
@@ -22,7 +22,7 @@ interface IProps {
     generateSummary: () => void;
 }
 
-export default class SummaryTab extends React.Component<IProps> {
+export default class SummaryBody extends React.Component<IProps> {
     componentDidMount(): void {
         if (this.props.summary === '') {
             this.props.generateSummary();
