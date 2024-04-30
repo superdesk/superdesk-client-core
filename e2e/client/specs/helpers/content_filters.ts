@@ -1,5 +1,6 @@
 import {element, by, browser} from 'protractor';
 import {openUrl} from './utils';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 class ContentFilters {
     addNewContentFilterButton: any;
@@ -98,7 +99,10 @@ class ContentFilters {
         /**
          * Saves the content filter
          **/
-        this.save = () => this.saveButton.click();
+        this.save = () => {
+            this.saveButton.click();
+            browser.wait(ECE.stalenessOf(el(['notifications'])), 5000);
+        };
 
         /**
          * Enters given story guid into test textbox
