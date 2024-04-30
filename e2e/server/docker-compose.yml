@@ -51,6 +51,7 @@ services:
             - WEB_WORKERS=2
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
+            - CELERY_ALWAYS_EAGER=true
         volumes:
           - ./dump:/opt/superdesk/dump:rw
         user: 1000:1000
