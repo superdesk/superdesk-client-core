@@ -249,7 +249,7 @@ interface IPropsWrapper extends IProps {
 interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: null | {
-        name: string;
+        id: string;
         pinned: boolean;
     };
 }
@@ -313,7 +313,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         icon: widget.icon,
                         size: 'big',
                         tooltip: widget.label,
-                        id: widget.label,
+                        id: widget._id,
                     };
 
                     return tab;
@@ -321,11 +321,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.sideWidget?.name}
+                    activeTab={this.state.sideWidget?.id}
                     onActiveTabChange={(val) => {
                         this.setState({
                             sideWidget: {
-                                name: val,
+                                id: val,
                                 pinned: this.state.sideWidget?.pinned ?? false,
                             },
                         });
@@ -452,9 +452,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             />
                                         );
                                     } else if (sideWidget != null) {
-                                        return getWidgetsFromExtensions(item).find((x) => {
-                                            return sideWidget === x.label;
-                                        }).component;
+                                        debugger;
+                                        return getWidgetsFromExtensions(item).find(
+                                            ({_id}) => sideWidget === _id,
+                                        ).component;
                                     } else {
                                         return null;
                                     }
@@ -483,8 +484,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
                             secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
                             validateBeforeSaving={false}
-                            getSideWidgetNameAtIndex={(article, index) => {
-                                return getWidgetsFromExtensions(article)[index].label;
+                            getSideWidgetIdAtIndex={(article, index) => {
+                                return getWidgetsFromExtensions(article)[index]._id;
                             }}
                         />
                     );

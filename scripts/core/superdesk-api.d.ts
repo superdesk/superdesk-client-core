@@ -137,7 +137,7 @@ declare module 'superdesk-api' {
      */
     export interface IExposedFromAuthoring<T> {
         item: T;
-        sideWidget: string | null; // side widget name
+        sideWidget: string | null; // side widget id
 
         /**
          * Computes the latest entity from fields data. `item` property in
@@ -146,7 +146,7 @@ declare module 'superdesk-api' {
          * we are passing a function instead.
          */
         getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
-        toggleSideWidget(name: string | null): void;
+        toggleSideWidget(id: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
         authoringStorage: IAuthoringStorage<T>;
@@ -215,11 +215,11 @@ declare module 'superdesk-api' {
         getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
-            name: string;
+            id: string;
             pinned: boolean;
         };
 
-        getSideWidgetNameAtIndex(item: T, index: number): string;
+        getSideWidgetIdAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
