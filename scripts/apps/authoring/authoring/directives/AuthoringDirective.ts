@@ -268,7 +268,11 @@ export function AuthoringDirective(
              * Create a new version
              */
             $scope.save = function() {
-                return authoring.save($scope.origItem, $scope.item).then((res) => {
+                return authoring.save(
+                    $scope.origItem,
+                    $scope.item,
+                    $scope.requestEditor3DirectivesToGenerateHtml,
+                ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
 
@@ -542,36 +546,54 @@ export function AuthoringDirective(
              * in $scope.
              */
             $scope.publish = function() {
-                if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
-                    modal.alert({
-                        headerText: gettext('Resolving suggestions'),
-                        bodyText: gettext(
-                            'Article cannot be published. Please accept or reject all suggestions first.',
-                        ),
+                $scope.$applyAsync(() => {
+                    $scope.loading = true;
+                });
+
+                return $q((resolve) => {
+                    // delay required for loading state to render
+                    // before possibly long operation (with huge articles)
+                    setTimeout(() => {
+                        for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
+                            fn();
+                        }
+
+                        resolve();
                     });
+                }).then(() => {
+                    if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
+                        modal.alert({
+                            headerText: gettext('Resolving suggestions'),
+                            bodyText: gettext(
+                                'Article cannot be published. Please accept or reject all suggestions first.',
+                            ),
+                        });
 
-                    return Promise.reject();
-                }
+                        return $q.reject();
+                    }
 
-                if (helpers.itemHasUnresolvedComments($scope.item)) {
-                    modal.confirm({
-                        bodyText: gettext(
-                            'This article contains unresolved comments.'
-                            + 'Click on Cancel to go back to editing to'
-                            + 'resolve those comments or OK to ignore and proceed with publishing',
-                        ),
-                        headerText: gettext('Resolving comments'),
-                        okText: gettext('Ok'),
-                        cancelText: gettext('Cancel'),
-                    }).then((ok) => ok ? performPublish() : false);
+                    if (helpers.itemHasUnresolvedComments($scope.item)) {
+                        modal.confirm({
+                            bodyText: gettext(
+                                'This article contains unresolved comments.'
+                                + 'Click on Cancel to go back to editing to'
+                                + 'resolve those comments or OK to ignore and proceed with publishing',
+                            ),
+                            headerText: gettext('Resolving comments'),
+                            okText: gettext('Ok'),
+                            cancelText: gettext('Cancel'),
+                        }).then((ok) => ok ? performPublish() : false);
 
-                    return Promise.reject();
-                }
+                        return $q.reject();
+                    }
 
-                return performPublish();
+                    return performPublish();
+                }).finally(() => {
+                    $scope.loading = false;
+                });
             };
 
-            function performPublish() {
+            function performPublish(): Promise<any> {
                 if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
 
@@ -597,7 +619,7 @@ export function AuthoringDirective(
                     return publishItem($scope.origItem, $scope.item);
                 }
 
-                return false;
+                return $q.reject(false);
             }
 
             $scope.showCustomButtons = () => {
