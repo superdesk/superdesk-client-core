@@ -452,7 +452,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             />
                                         );
                                     } else if (sideWidget != null) {
-                                        debugger;
                                         return getWidgetsFromExtensions(item).find(
                                             ({_id}) => sideWidget === _id,
                                         ).component;

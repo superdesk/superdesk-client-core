@@ -71,6 +71,6 @@ export default function getHeadlinesWidget({
                 text={gettext('Regenerate')}
                 style="hollow"
             />
-        )
-    }
+        ),
+    };
 }

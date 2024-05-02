@@ -82,7 +82,9 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     render() {
         const {gettext} = superdesk.localization;
         const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
-        const closeActiveSection = () => {this.setState({activeSection: null})};
+        const closeActiveSection = () => {
+            this.setState({activeSection: null});
+        };
         const headlinesWidget = getHeadlinesWidget({
             closeActiveSection,
             article: this.props.article,
@@ -133,7 +135,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                         />
                     ),
                     footer: undefined,
-                }
+                };
             }
         })();
 

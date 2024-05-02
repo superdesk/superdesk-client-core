@@ -65,6 +65,6 @@ export default function getSummaryWidget({
                 text={gettext('Regenerate')}
                 style="hollow"
             />
-        )
-    }
+        ),
+    };
 }
