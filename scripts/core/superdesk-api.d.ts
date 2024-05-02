@@ -137,7 +137,7 @@ declare module 'superdesk-api' {
      */
     export interface IExposedFromAuthoring<T> {
         item: T;
-        sideWidget: string | null; // side widget name
+        sideWidget: string | null; // side widget id
 
         /**
          * Computes the latest entity from fields data. `item` property in
@@ -146,7 +146,7 @@ declare module 'superdesk-api' {
          * we are passing a function instead.
          */
         getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
-        toggleSideWidget(name: string | null): void;
+        toggleSideWidget(id: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
         authoringStorage: IAuthoringStorage<T>;
@@ -215,11 +215,11 @@ declare module 'superdesk-api' {
         getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
-            name: string;
+            id: string;
             pinned: boolean;
         };
 
-        getSideWidgetNameAtIndex(item: T, index: number): string;
+        getSideWidgetIdAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
@@ -601,6 +601,28 @@ declare module 'superdesk-api' {
         isAllowed: (entity: T) => boolean;
     }
 
+    export interface IArticleSideWidgetComponentType {
+        article: IArticle;
+
+        getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
+
+        // other props below are specific to authoring-react implementation
+
+        readOnly: boolean;
+        contentProfile?: IContentProfileV2;
+        fieldsData?: OrderedMap<string, unknown>;
+        authoringStorage: IAuthoringStorage<IArticle>;
+        fieldsAdapter: IFieldsAdapter<IArticle>;
+        storageAdapter: IStorageAdapter<IArticle>;
+
+        onItemChange?(article: IArticle): void;
+        onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
+        /**
+         * Will prompt user to save changes. The promise will get rejected if user cancels saving.
+         */
+        handleUnsavedChanges(): Promise<IArticle>;
+    }
+
     /**
      * @deprecated: prefer {@link IGenericSideWidget}
      */
@@ -609,28 +631,7 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentType<{
-            article: IArticle;
-
-
-            getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
-
-            // other props below are specific to authoring-react implementation
-
-            readOnly: boolean;
-            contentProfile?: IContentProfileV2;
-            fieldsData?: OrderedMap<string, unknown>;
-            authoringStorage: IAuthoringStorage<IArticle>;
-            fieldsAdapter: IFieldsAdapter<IArticle>;
-            storageAdapter: IStorageAdapter<IArticle>;
-
-            onItemChange?(article: IArticle): void;
-            onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-            /**
-             * Will prompt user to save changes. The promise will get rejected if user cancels saving.
-             */
-            handleUnsavedChanges(): Promise<IArticle>;
-        }>;
+        component: React.ComponentType<IArticleSideWidgetComponentType>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
@@ -2741,6 +2742,7 @@ declare module 'superdesk-api' {
         };
         instance: {
             config: ISuperdeskGlobalConfig;
+            authoringReactViewEnabled: boolean;
         };
 
         /** Retrieves configuration options passed when registering an extension. */
@@ -2790,7 +2792,7 @@ declare module 'superdesk-api' {
                     patch: Partial<IArticle>,
                     dangerousOptions?: IDangerousArticlePatchingOptions,
                 ): Promise<void>;
-
+                createNewWithData(data: Partial<IArticle>, contentProfileId: string): void;
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
                 itemAction(article: IArticle): {[key in IAuthoringActionType]: boolean};
@@ -2828,6 +2830,7 @@ declare module 'superdesk-api' {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
                 getActiveDeskId(): IDesk['_id'] | null;
                 waitTilReady(): Promise<void>;
+                getDeskById(id: IDesk['_id']): IDesk;
             };
             attachment: IAttachmentsApi;
             users: {
@@ -2844,6 +2847,7 @@ declare module 'superdesk-api' {
             };
         };
         helpers: {
+            getArticleLabel(item: IArticle): string;
             assertNever(x: never): never;
             stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
             fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & {_status: string}): T;
@@ -2864,6 +2868,7 @@ declare module 'superdesk-api' {
                 endpoint: string,
                 entityId: string,
             ): Promise<void>;
+            editor3ToOperationalFormat(value: IEditor3ValueStorage, language: string): IEditor3ValueOperational;
             computeEditor3Output(
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
