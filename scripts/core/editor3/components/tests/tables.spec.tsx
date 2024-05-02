@@ -2,7 +2,7 @@ import React from 'react';
 import {EditorState, ContentState} from 'draft-js';
 import {shallow, mount} from 'enzyme';
 import {tableBlockAndContent} from './utils';
-import {TableCell} from '../tables';
+import {TableCell} from '../tables/TableCell';
 import {TableBlockComponent as TableBlock} from '../tables/TableBlock';
 
 describe('editor3.component.table-block', () => {

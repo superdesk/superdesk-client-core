@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
-import {TableCell} from '.';
+import {TableCell} from './TableCell';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
 import {IActiveCell, ISetActiveCellReturnType} from 'superdesk-api';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {MediaBlock} from './media';
 import {EmbedBlock} from './embeds';
-import {TableBlock} from './tables';
+import {TableBlock} from './tables/TableBlock';
 import {ContentBlock} from 'draft-js';
 import {DragableEditor3Block} from './media/dragable-editor3-block';
 import {MultiLineQuote} from './multi-line-quote';
