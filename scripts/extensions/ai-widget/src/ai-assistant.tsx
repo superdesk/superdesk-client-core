@@ -48,35 +48,27 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     generateHeadlines() {
-        if (configuration.generateHeadlines == null) {
-            this.setError();
-        } else {
-            configuration.generateHeadlines(this.props.article, superdesk)
-                .then((res) => {
-                    this.setState({
-                        loadingHeadlines: false,
-                        headlines: res,
-                    });
-                }).catch(() => {
-                    this.setError();
+        configuration.generateHeadlines?.(this.props.article, superdesk)
+            .then((res) => {
+                this.setState({
+                    loadingHeadlines: false,
+                    headlines: res,
                 });
-        }
+            }).catch(() => {
+                this.setError();
+            });
     }
 
     generateSummary() {
-        if (configuration.generateSummary == null) {
-            this.setError();
-        } else {
-            configuration.generateSummary(this.props.article, superdesk)
-                .then((res) => {
-                    this.setState({
-                        loadingSummary: false,
-                        summary: res,
-                    });
-                }).catch(() => {
-                    this.setError();
+        configuration.generateSummary?.(this.props.article, superdesk)
+            .then((res) => {
+                this.setState({
+                    loadingSummary: false,
+                    summary: res,
                 });
-        }
+            }).catch(() => {
+                this.setError();
+            });
     }
 
     render() {
