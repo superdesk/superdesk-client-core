@@ -216,6 +216,13 @@ function createNewUsingDeskTemplate(): void {
     });
 }
 
+function createNewWithData(data: Partial<IArticle>, contentProfileId: string): void {
+    dataApi.create('archive', {type: 'text', ...data, profile: contentProfileId})
+        .then((item) => {
+            openArticle(item._id, 'edit');
+        });
+}
+
 /**
  * Checks if associations is with rewrite_of item then open then modal to add associations.
  * The user has options to add associated media to the current item and review the media change
@@ -556,6 +563,7 @@ interface IArticleApi {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
 
     createNewUsingDeskTemplate(): void;
+    createNewWithData(data: Partial<IArticle>, contentProfileId: string): void;
     getWorkQueueItems(): Array<IArticle>;
     rewrite(item: IArticle): void;
     canPublishOnDesk(deskType: string): boolean;
@@ -618,6 +626,7 @@ export const article: IArticleApi = {
     lock,
     unlock,
     createNewUsingDeskTemplate,
+    createNewWithData,
     getWorkQueueItems,
     get,
     canPublishOnDesk,

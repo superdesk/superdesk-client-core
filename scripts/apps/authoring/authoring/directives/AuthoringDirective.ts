@@ -1028,6 +1028,7 @@ export function AuthoringDirective(
                         angular.extend($scope.item, event.detail);
                         angular.extend($scope.origItem, event.detail);
                         $scope.$apply();
+                        $scope.refresh();
                     }
                 },
             );
