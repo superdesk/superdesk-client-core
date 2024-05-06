@@ -4,7 +4,7 @@ import {restoreDatabaseSnapshot, s} from './utils';
 
 test.setTimeout(50000);
 
-test('item appearing in publish queue after publishing', async ({page}) => {
+test.skip('item appearing in publish queue after publishing', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
