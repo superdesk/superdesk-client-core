@@ -46,10 +46,11 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @name VocabularyService#getVocabularies
      * @public
      * @description Returns the manageable vocabularies.
+     * @param {String} vocabularyDeleted if true, fetch new vocabularies values again
      * @return {Promise} {Object} vocabularies
      */
-    this.getVocabularies = function() {
-        if (_.isNil(self.vocabularies)) {
+    this.getVocabularies = function(vocabularyDeleted) {
+        if (_.isNil(self.vocabularies) || vocabularyDeleted) {
             return api.getAll('vocabularies', {where: {type: 'manageable'}}).then(
                 (result) => {
                     result._items = $filter('sortByName')(result._items, 'display_name');
