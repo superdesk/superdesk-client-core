@@ -110,7 +110,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
     $scope.matchFieldTypeToTab = (tab, fieldType) =>
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
-            tab === 'custom-editor-blocks' && fieldType === 'block' ||
+            tab === 'custom-editor-blocks' && fieldType === 'editor-block' ||
             tab === 'date-fields' && fieldType === 'date' ||
             tab === 'urls-fields' && fieldType === 'urls' ||
             tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType) ||
@@ -123,7 +123,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      */
     $scope.reloadList = () => {
         $scope.loading = true;
-        vocabularies.getVocabularies(true).then((_vocabularies: Array<IVocabulary>) => {
+        vocabularies.getVocabularies({noCache: true}).then((_vocabularies: Array<IVocabulary>) => {
             $scope.tags = getTags(_vocabularies);
             $scope.vocabularies = _vocabularies;
             $scope.loading = false;

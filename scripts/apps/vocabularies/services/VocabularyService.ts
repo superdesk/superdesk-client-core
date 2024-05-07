@@ -46,11 +46,11 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @name VocabularyService#getVocabularies
      * @public
      * @description Returns the manageable vocabularies.
-     * @param {String} vocabularyDeleted if true, fetch new vocabularies values again
+     * @param {String} noCache if true, fetch new vocabularies values again
      * @return {Promise} {Object} vocabularies
      */
-    this.getVocabularies = function(vocabularyDeleted) {
-        if (_.isNil(self.vocabularies) || vocabularyDeleted) {
+    this.getVocabularies = function(config: {noCache?: boolean}) {
+        if (_.isNil(self.vocabularies) || config?.noCache) {
             return api.getAll('vocabularies', {where: {type: 'manageable'}}).then(
                 (result) => {
                     result._items = $filter('sortByName')(result._items, 'display_name');
