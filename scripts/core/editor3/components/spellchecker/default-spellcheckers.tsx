@@ -2,6 +2,7 @@ import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
@@ -63,18 +64,32 @@ export function getSpellchecker(language: string): ISpellchecker {
         },
     };
 
+    // overwrite actions to always dispatch an even after action execution
+    for (const actionKey of Object.keys(actions)) {
+        const perform = actions[actionKey].perform;
+
+        actions[actionKey].perform = (...args) => {
+            return perform(...args).then((result) => {
+                dispatchInternalEvent('editor3SpellcheckerActionWasExecuted', null);
+
+                return result;
+            });
+        };
+    }
+
     if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
         return null;
     }
     if (spellcheckerName != null) {
         return {
-            check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
+            check: (str: string, abortSignal) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
                 method: 'POST',
                 payload: {
                     spellchecker: spellcheckerName,
                     text: str,
                     ignore: ignore},
                 path: '/spellchecker',
+                abortSignal: abortSignal,
             }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
                 method: 'POST',

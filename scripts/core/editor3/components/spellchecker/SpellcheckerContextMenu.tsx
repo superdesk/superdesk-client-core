@@ -21,11 +21,20 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     stickyElementTracker: any;
     dropdownElement: any;
 
+    private reloadSpellcheckerAbortController: AbortController;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.reloadSpellcheckerAbortController = new AbortController();
+    }
+
     componentDidMount() {
         this.stickyElementTracker = new StickElementsWithTracking(this.props.targetElement, this.dropdownElement);
     }
     componentWillUnmount() {
         this.stickyElementTracker.destroy();
+        this.reloadSpellcheckerAbortController.abort();
     }
 
     onSuggestionClick(suggestion: ISpellcheckerSuggestion) {
@@ -95,11 +104,15 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         return (
                                             <li key={i}>
                                                 <button
-                                                    onMouseDown={() => action.perform(this.props.warning).then(
-                                                        () => {
-                                                            this.props.dispatch(reloadSpellcheckerWarnings());
-                                                        },
-                                                    )}
+                                                    onMouseDown={() => {
+                                                        action.perform(this.props.warning).then(() => {
+                                                            this.props.dispatch(
+                                                                reloadSpellcheckerWarnings(
+                                                                    this.reloadSpellcheckerAbortController.signal,
+                                                                ),
+                                                            );
+                                                        });
+                                                    }}
                                                     data-test-id="spellchecker-menu--action"
                                                 >
                                                     {action.label}

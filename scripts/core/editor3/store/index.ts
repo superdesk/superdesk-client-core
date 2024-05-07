@@ -154,7 +154,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
     };
 }
 
-export function initializeSpellchecker(store, spellcheck) {
+export function initializeSpellchecker(dispatch, spellcheck): Promise<void> {
     return new Promise<void>((resolve) => {
         if (spellcheck != null) {
             Promise.all([
@@ -166,7 +166,7 @@ export function initializeSpellchecker(store, spellcheck) {
             ]).then((res) => {
                 const [abbreviations] = res;
 
-                store.dispatch(setAbbreviations(abbreviations || {}));
+                dispatch(setAbbreviations(abbreviations || {}));
 
                 setTimeout(() => {
                     resolve();
@@ -234,7 +234,7 @@ export default function createEditorStore(
         getMiddlewares(),
     );
 
-    initializeSpellchecker(store, spellcheck);
+    initializeSpellchecker(store.dispatch, spellcheck);
 
     editor3Stores.push(store);
 

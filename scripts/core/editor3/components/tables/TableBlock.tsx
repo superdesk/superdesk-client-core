@@ -11,6 +11,7 @@ import {IEditorStore} from 'core/editor3/store';
 interface IProps {
     block: ContentBlock;
     readOnly: boolean;
+    spellchecking: IEditorStore['spellchecking'];
     editorState: EditorState;
     activeCell?: IActiveCell;
     setActiveCell: (
@@ -168,6 +169,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
+                                        spellchecking={this.props.spellchecking}
                                         onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onRedo={this.onRedo.bind(this)}

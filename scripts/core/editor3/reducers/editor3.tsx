@@ -99,7 +99,7 @@ export const forceUpdate = (state, keepSelection = false) => {
     };
 };
 
-function updateDecorators(
+export function updateDecorators(
     stateCurrent: IEditorStore,
     editorStateNext: EditorState,
     force: boolean = false, // required to redecorate text limit overflow after option is toggled

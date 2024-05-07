@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {EditorState, ContentBlock} from 'draft-js';
 import {TableBlock} from '../tables/TableBlock';
 import {IActiveCell} from 'superdesk-api';
+import {IEditorStore} from 'core/editor3/store';
 
 export const MULTI_LINE_QUOTE_CLASS = 'multi-line-quote';
 
@@ -11,6 +12,7 @@ interface IProps {
     block: ContentBlock;
     readOnly: boolean;
     editorState: EditorState;
+    spellchecking: IEditorStore['spellchecking'];
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
     activeCell?: IActiveCell;
     setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
@@ -35,6 +37,7 @@ export class MultiLineQuoteComponent extends React.Component<IProps> {
                 editorState={this.props.editorState}
                 setActiveCell={this.props.setActiveCell}
                 parentOnChange={this.props.parentOnChange}
+                spellchecking={this.props.spellchecking}
             />
         );
     }

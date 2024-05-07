@@ -13,6 +13,7 @@ export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckW
 export function getSpellcheckWarningsByBlock(
     spellchecker: ISpellchecker,
     editorState: EditorState,
+    abortSignal: AbortSignal,
 ): Promise<ISpellcheckWarningsByBlock> {
     const text = editorState.getCurrentContent().getPlainText();
 
@@ -35,7 +36,7 @@ export function getSpellcheckWarningsByBlock(
         lastOffset += blockLength + lineBreak;
     });
 
-    return spellchecker.check(text).then((warnings) => {
+    return spellchecker.check(text, abortSignal).then((warnings) => {
         let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
 
         warnings.forEach((warning) => {

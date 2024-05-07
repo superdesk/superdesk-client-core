@@ -57,9 +57,12 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     private spellcheckerTimeout?: number;
     private selection: SelectionState;
     private lastComputedValue: string;
+    private spellcheckAbortController: AbortController;
 
     constructor(props) {
         super(props);
+
+        this.spellcheckAbortController = new AbortController();
         this.lastComputedValue = props.value?.toString() || '';
 
         this.state = {
@@ -81,6 +84,10 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         }
     }
 
+    componentWillUnmount(): void {
+        this.spellcheckAbortController.abort();
+    }
+
     runSpellchecker() {
         if (this.spellcheckerTimeout) {
             window.clearTimeout(this.spellcheckerTimeout);
@@ -96,6 +103,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             getSpellcheckWarningsByBlock(
                 spellchecker,
                 this.state.editorState,
+                this.spellcheckAbortController.signal,
             ).then((warningsByBlock) => {
                 const spellcheckerDecorator = getSpellcheckingDecorator(
                     this.props.language,

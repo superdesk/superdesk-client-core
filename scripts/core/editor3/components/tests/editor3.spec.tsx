@@ -5,8 +5,18 @@ import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
-import {blockRenderer} from '../blockRenderer';
 import {CustomEditor3Entity} from 'core/editor3/constants';
+import {getBlockRenderer} from '../blockRenderer';
+import {IEditorStore} from 'core/editor3/store';
+
+const spellchecking: IEditorStore['spellchecking'] = {
+    enabled: false,
+    language: 'en',
+    inProgress: false,
+    warningsByBlock: {},
+};
+
+const blockRenderer = getBlockRenderer(spellchecking);
 
 const editorState = EditorState.createEmpty();
 

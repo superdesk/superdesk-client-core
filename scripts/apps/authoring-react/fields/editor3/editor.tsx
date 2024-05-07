@@ -63,6 +63,7 @@ interface IState {
 
 export class Editor extends React.PureComponent<IProps, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private unmountAbortController: AbortController;
 
     constructor(props: IProps) {
         super(props);
@@ -74,6 +75,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+        this.unmountAbortController = new AbortController();
 
         this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
         this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
@@ -128,7 +130,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
             Promise.all([
                 getAutocompleteSuggestions(this.props.editorId, this.props.language),
-                initializeSpellchecker(store, spellcheck),
+                initializeSpellchecker(store.dispatch, spellcheck),
             ]).then((res) => {
                 const [autocompleteSuggestions] = res;
 
@@ -290,12 +292,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addEditorEventListener('spellchecker__set_status', (event) => {
-                this.props.value.store.dispatch(setSpellcheckerStatus(event.detail));
+                this.props.value.store.dispatch(
+                    setSpellcheckerStatus(
+                        event.detail,
+                        this.unmountAbortController.signal,
+                    ),
+                );
             }),
         );
     }
 
     componentWillUnmount() {
+        this.unmountAbortController.abort();
         for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
             fn();
         }
