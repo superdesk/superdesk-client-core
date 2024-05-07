@@ -7,8 +7,8 @@ import {
     ISpellchecker,
     ISpellcheckerSuggestion,
 } from './interfaces';
-import {reloadSpellcheckerWarnings} from '../../actions';
 import {gettext} from 'core/utils';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 interface IProps {
     warning: ISpellcheckWarning;
@@ -106,10 +106,9 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                                 <button
                                                     onMouseDown={() => {
                                                         action.perform(this.props.warning).then(() => {
-                                                            this.props.dispatch(
-                                                                reloadSpellcheckerWarnings(
-                                                                    this.reloadSpellcheckerAbortController.signal,
-                                                                ),
+                                                            dispatchInternalEvent(
+                                                                'editor3SpellcheckerActionWasExecuted',
+                                                                null,
                                                             );
                                                         });
                                                     }}
