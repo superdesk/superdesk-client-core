@@ -184,12 +184,6 @@ export class TableCell extends React.Component<IProps, IState> {
                 if (selection.getHasFocus()) {
                     this.props.onChange(editorState);
                 }
-
-                const contentChanged = editorState.getCurrentContent() !== this.state.editorState.getCurrentContent();
-
-                if (contentChanged) {
-                    this.spellcheck();
-                }
             },
         );
     }
@@ -266,11 +260,13 @@ export class TableCell extends React.Component<IProps, IState> {
         }
     }
 
-    componentDidUpdate(prevProps: Readonly<IProps>): void {
-        if (
+    componentDidUpdate(prevProps: IProps, prevState: IState): void {
+        const contentChanged = this.state.editorState.getCurrentContent() !== prevState.editorState.getCurrentContent();
+        const spellcheckerConfigChanged =
             this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
-            || this.props.spellchecking.language !== prevProps.spellchecking.language
-        ) {
+            || this.props.spellchecking.language !== prevProps.spellchecking.language;
+
+        if (contentChanged || spellcheckerConfigChanged) {
             this.spellcheck();
         }
     }
