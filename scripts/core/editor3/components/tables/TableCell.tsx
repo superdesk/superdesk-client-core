@@ -219,14 +219,18 @@ export class TableCell extends React.Component<IProps, IState> {
                 editorState,
                 {
                     decorator: getDecorators(
-                        (replaceWordData) => {
-                            const nextState = replaceWordInEditorState(editorState, replaceWordData);
+                        {
+                            spellchecker: {
+                                acceptSuggestion: (replaceWordData) => {
+                                    const nextState = replaceWordInEditorState(editorState, replaceWordData);
 
-                            this.onChange(nextState);
+                                    this.onChange(nextState);
+                                },
+                                enabled: spellchecking.enabled,
+                                language: spellchecking.language,
+                                warnings: spellcheckWarningsByBlock,
+                            },
                         },
-                        spellchecking.enabled,
-                        spellchecking.language,
-                        spellcheckWarningsByBlock,
                     ).decorator,
                 },
             );

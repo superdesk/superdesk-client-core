@@ -98,23 +98,30 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
-export const getDecorators = (
-    acceptSpellcheckSuggestion: IAcceptSuggestion,
-    spellcheckEnabled?: boolean,
-    language?: string,
-    spellcheckWarnings?: ISpellcheckWarningsByBlock,
+interface IOptions {
+    spellchecker: {
+        acceptSuggestion: IAcceptSuggestion,
+        enabled?: boolean,
+        language?: string,
+        warnings?: ISpellcheckWarningsByBlock,
+    };
     limitConfig?: EditorLimit,
-): {decorator: CompositeDecoratorCustom; mustReApplyDecorators: boolean} => {
+}
+
+export const getDecorators = (options: IOptions) => {
+    const {limitConfig} = options;
+    const {spellchecker} = options;
+
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellcheckEnabled === true && spellcheckWarnings != null && language != null) {
+    if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
         mustReApplyDecorators = true;
 
         decorators.push(
-            getSpellcheckingDecorator(language, spellcheckWarnings, acceptSpellcheckSuggestion),
+            getSpellcheckingDecorator(spellchecker.language, spellchecker.warnings, spellchecker.acceptSuggestion),
         );
     }
 
@@ -204,7 +211,7 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators('store-based').decorator,
+        getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(

@@ -126,13 +126,15 @@ export function updateDecorators(
     */
     const spellcheckWarnings = contentChanged ? {} : stateCurrent.spellchecking?.warningsByBlock;
 
-    const result = getDecorators(
-        acceptSuggestion,
-        stateCurrent?.spellchecking?.enabled ?? false,
-        stateCurrent?.spellchecking?.language,
-        spellcheckWarnings,
-        stateCurrent.limitConfig,
-    );
+    const result = getDecorators({
+        spellchecker: {
+            acceptSuggestion: acceptSuggestion,
+            enabled: stateCurrent?.spellchecking?.enabled ?? false,
+            language: stateCurrent?.spellchecking?.language,
+            warnings: spellcheckWarnings,
+        },
+        limitConfig: stateCurrent.limitConfig,
+    });
 
     if (result.mustReApplyDecorators !== true) {
         return editorStateNext;

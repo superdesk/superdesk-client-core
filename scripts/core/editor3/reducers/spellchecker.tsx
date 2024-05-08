@@ -129,11 +129,15 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
         editorState,
         {
             decorator: getDecorators(
-                'store-based',
-                enabled,
-                language,
-                enabled ? spellcheckWarningsByBlock : null,
-                state.limitConfig,
+                {
+                    spellchecker: {
+                        acceptSuggestion: 'store-based',
+                        enabled: enabled,
+                        language: language,
+                        warnings: enabled ? spellcheckWarningsByBlock : null,
+                    },
+                    limitConfig: state.limitConfig,
+                },
             ).decorator,
         },
     );
