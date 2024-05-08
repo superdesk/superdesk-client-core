@@ -21,13 +21,22 @@ const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
 
     const type = contentState.getEntity(entityKey).getType();
 
+    const disabledSpellcheckerConfig: IEditorStore['spellchecking'] = {
+        enabled: false,
+        language: 'en',
+        inProgress: false,
+        warningsByBlock: {},
+    };
+
     function getComponent() {
         if (type === CustomEditor3Entity.MEDIA) {
             return <MediaBlock {...props} />;
         } else if (type === CustomEditor3Entity.EMBED) {
             return <EmbedBlock {...props} />;
         } else if (type === CustomEditor3Entity.TABLE) {
-            return <TableBlock {...props} toolbarStyle="table" spellchecking={spellchecking} />;
+            // Spellchecker is disabled for tables to avoid performance issues.
+            // As it is currently implemented, it would send one spellchecking request for each table cell.
+            return <TableBlock {...props} toolbarStyle="table" spellchecking={disabledSpellcheckerConfig} />;
         } else if (type === CustomEditor3Entity.MULTI_LINE_QUOTE) {
             return <MultiLineQuote {...props} spellchecking={spellchecking} />;
         } else if (type === CustomEditor3Entity.ARTICLE_EMBED) {
