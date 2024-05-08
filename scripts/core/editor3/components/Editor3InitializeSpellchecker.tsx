@@ -1,7 +1,6 @@
 import React from 'react';
 import {IEditorStore, initializeSpellchecker} from '../store';
 import ng from 'core/services/ng';
-import {isEqual} from 'lodash';
 
 interface IProps {
     spellchecking: IEditorStore['spellchecking'];
