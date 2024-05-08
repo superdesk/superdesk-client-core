@@ -179,6 +179,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     private removeListeners: Array<() => void> = [];
 
     private spellcheckAbortController: AbortController;
+    private scheduleSpellchecking: () => void;
 
     constructor(props) {
         super(props);
@@ -192,7 +193,8 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
-        this.spellcheck = debounce(this.spellcheck.bind(this), 1000);
+        this.spellcheck = this.spellcheck.bind(this);
+        this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
 
@@ -548,7 +550,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             this.props.spellchecking.enabled &&
             prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
         ) {
-            this.spellcheck();
+            this.scheduleSpellchecking();
         }
     }
 

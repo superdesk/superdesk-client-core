@@ -44,6 +44,7 @@ interface IState {
 export class TableCell extends React.Component<IProps, IState> {
     private spellcheckAbortController: AbortController;
     private eventListeners: Array<() => void>;
+    private scheduleSpellchecking: () => void;
 
     constructor(props) {
         super(props);
@@ -54,7 +55,8 @@ export class TableCell extends React.Component<IProps, IState> {
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.spellcheckAbortController = new AbortController();
 
-        this.spellcheck = throttle(this.spellcheck.bind(this), 1000, {leading: true});
+        this.spellcheck = this.spellcheck.bind(this);
+        this.scheduleSpellchecking = throttle(this.spellcheck.bind(this), 1000);
 
         this.state = {editorState: props.editorState};
 
@@ -198,7 +200,7 @@ export class TableCell extends React.Component<IProps, IState> {
         this.props.onFocus(currentStyle, selection);
     }
 
-    spellcheck(): void {
+    private spellcheck(): void {
         this.spellcheckAbortController.abort();
         this.spellcheckAbortController = new AbortController();
 
@@ -264,7 +266,7 @@ export class TableCell extends React.Component<IProps, IState> {
             this.setState(
                 {editorState: nextProps.editorState},
                 () => {
-                    this.spellcheck();
+                    this.scheduleSpellchecking();
                 },
             );
         }
@@ -277,7 +279,7 @@ export class TableCell extends React.Component<IProps, IState> {
             || this.props.spellchecking.language !== prevProps.spellchecking.language;
 
         if (contentChanged || spellcheckerConfigChanged) {
-            this.spellcheck();
+            this.scheduleSpellchecking();
         }
     }
 
