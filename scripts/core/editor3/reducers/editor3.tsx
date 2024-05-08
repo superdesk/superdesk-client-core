@@ -18,6 +18,7 @@ import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {CustomEditor3Entity} from '../constants';
 import {IArticle} from 'superdesk-api';
+import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -102,6 +103,7 @@ export const forceUpdate = (state, keepSelection = false) => {
 export function updateDecorators(
     stateCurrent: IEditorStore,
     editorStateNext: EditorState,
+    acceptSuggestion: IAcceptSuggestion,
     force: boolean = false, // required to redecorate text limit overflow after option is toggled
 ): EditorState {
     const contentChanged = stateCurrent.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
@@ -125,6 +127,7 @@ export function updateDecorators(
     const spellcheckWarnings = contentChanged ? {} : stateCurrent.spellchecking?.warningsByBlock;
 
     const result = getDecorators(
+        acceptSuggestion,
         stateCurrent?.spellchecking?.enabled ?? false,
         stateCurrent?.spellchecking?.language,
         spellcheckWarnings,
@@ -173,7 +176,7 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    let editorStateNext = updateDecorators(state, newEditorState);
+    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
 
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
@@ -552,7 +555,7 @@ const changeLimitConfig = (state: IEditorStore, limitConfig: EditorLimit) => {
 
     const redecorated: IEditorStore = {
         ...limitConfigApplied,
-        editorState: updateDecorators(limitConfigApplied, state.editorState, true),
+        editorState: updateDecorators(limitConfigApplied, state.editorState, 'store-based', true),
     };
 
     return redecorated;

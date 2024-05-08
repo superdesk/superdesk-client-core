@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import {ContentBlock, EditorState} from 'draft-js';
-import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
+import {IAcceptSuggestion, SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
 import {logger} from 'core/services/logger';
@@ -86,6 +86,7 @@ interface IState {
 export function getSpellcheckingDecorator(
     language: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock,
+    acceptSuggestion: IAcceptSuggestion,
     {disableContextMenu = false} = {},
 ) {
     const spellchecker = getSpellchecker(language);
@@ -210,6 +211,7 @@ export function getSpellcheckingDecorator(
                                     targetElement={this.wordTypoElement}
                                     warning={this.state.warning}
                                     spellchecker={spellchecker}
+                                    acceptSuggestion={acceptSuggestion}
                                 />,
                                 getElementForPortal(),
                             )

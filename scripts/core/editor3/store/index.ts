@@ -25,7 +25,6 @@ import {
 } from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
-import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links/LinkDecorator';
 import {
     getSpellcheckingDecorator,
@@ -43,6 +42,7 @@ import {
 import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
+import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -99,6 +99,7 @@ export interface IEditorStore {
 let editor3Stores = [];
 
 export const getDecorators = (
+    acceptSpellcheckSuggestion: IAcceptSuggestion,
     spellcheckEnabled?: boolean,
     language?: string,
     spellcheckWarnings?: ISpellcheckWarningsByBlock,
@@ -113,7 +114,7 @@ export const getDecorators = (
         mustReApplyDecorators = true;
 
         decorators.push(
-            getSpellcheckingDecorator(language, spellcheckWarnings),
+            getSpellcheckingDecorator(language, spellcheckWarnings, acceptSpellcheckSuggestion),
         );
     }
 
@@ -203,7 +204,7 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators().decorator,
+        getDecorators('store-based').decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(

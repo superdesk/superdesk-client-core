@@ -9,12 +9,16 @@ import {
 } from './interfaces';
 import {gettext} from 'core/utils';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {IReplaceWordData} from 'core/editor3/reducers/spellchecker';
+
+export type IAcceptSuggestion = 'store-based' | ((replaceWordData: IReplaceWordData) => void);
 
 interface IProps {
     warning: ISpellcheckWarning;
     targetElement: any;
     spellchecker: ISpellchecker;
     dispatch: any;
+    acceptSuggestion: IAcceptSuggestion;
 }
 
 export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
@@ -38,15 +42,21 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     }
 
     onSuggestionClick(suggestion: ISpellcheckerSuggestion) {
-        this.props.dispatch(
-            actions.replaceWord({
-                word: {
-                    text: this.props.warning.text,
-                    offset: this.props.warning.startOffset,
-                },
-                newWord: suggestion.text,
-            }),
-        );
+        const replaceWordData: IReplaceWordData = {
+            word: {
+                text: this.props.warning.text,
+                offset: this.props.warning.startOffset,
+            },
+            newWord: suggestion.text,
+        };
+
+        if (this.props.acceptSuggestion === 'store-based') {
+            this.props.dispatch(
+                actions.replaceWord(replaceWordData),
+            );
+        } else {
+            this.props.acceptSuggestion(replaceWordData);
+        }
     }
 
     render() {

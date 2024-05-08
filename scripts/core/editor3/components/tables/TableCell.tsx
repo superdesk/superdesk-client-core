@@ -15,6 +15,7 @@ import {getSpellcheckWarningsByBlock} from '../spellchecker/SpellcheckerDecorato
 import {isEqual, throttle} from 'lodash';
 import {getDecorators, IEditorStore} from 'core/editor3/store';
 import {addInternalEventListener} from 'core/internal-events';
+import {replaceWordInEditorState} from 'core/editor3/reducers/spellchecker';
 
 interface IProps {
     editorState: EditorState;
@@ -218,6 +219,11 @@ export class TableCell extends React.Component<IProps, IState> {
                 editorState,
                 {
                     decorator: getDecorators(
+                        (replaceWordData) => {
+                            const nextState = replaceWordInEditorState(editorState, replaceWordData);
+
+                            this.onChange(nextState);
+                        },
                         spellchecking.enabled,
                         spellchecking.language,
                         spellcheckWarningsByBlock,

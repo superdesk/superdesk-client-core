@@ -17,6 +17,7 @@ import {
 } from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
 import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSelectionForEntireContent';
 import classNames from 'classnames';
+import {replaceWordInEditorState} from 'core/editor3/reducers/spellchecker';
 
 export interface IProps {
     value: string;
@@ -108,6 +109,11 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                 const spellcheckerDecorator = getSpellcheckingDecorator(
                     this.props.language,
                     warningsByBlock,
+                    (replaceWordData) => {
+                        const nextState = replaceWordInEditorState(this.state.editorState, replaceWordData);
+
+                        this.handleEditorChange(nextState);
+                    },
                     {disableContextMenu: true},
                 );
                 const decorator = new CompositeDecorator([
