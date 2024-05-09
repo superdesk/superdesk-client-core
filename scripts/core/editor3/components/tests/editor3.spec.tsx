@@ -174,7 +174,7 @@ describe('editor3.blockRenderer', () => {
         const contentState = {getEntity: () => ({getType: () => 'not an image'})};
         const {component, editable} = blockRenderer(block);
 
-        expect(component({block, contentState})).toBe(null);
+        expect(component({block, contentState, blockProps: {spellchecking}})).toBe(null);
         expect(editable).toEqual(false);
     });
 
@@ -185,7 +185,7 @@ describe('editor3.blockRenderer', () => {
             getData: () => ({data: {html: 'abc'}}),
         })};
         const component = blockRenderer(block)
-            .component({block, contentState});
+            .component({block, contentState, blockProps: {spellchecking}});
         const store = mockStore().store as unknown as Store;
 
         expect(component).not.toBe(null);

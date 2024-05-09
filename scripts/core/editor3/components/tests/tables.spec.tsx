@@ -14,7 +14,12 @@ const spellchecking: IEditorStore['spellchecking'] = {
 };
 
 describe('editor3.component.table-block', () => {
-    beforeEach(window.module('superdesk.apps.spellcheck'));
+    beforeEach(() => {
+        window.module('superdesk.apps.spellcheck');
+
+        // init the tests module to get the actual provider
+        inject(() => { /* no-op */ });
+    });
 
     it('should render 2 rows and 6 cells', () => {
         const {block, contentState} = tableBlockAndContent();
