@@ -1441,7 +1441,80 @@ declare module 'superdesk-api' {
         [key: string]: any;
     }
 
-    export interface IVocabulary extends IBaseRestApiResponse {
+    interface IVocabularyEditorBlock extends IVocabularyStandard {
+        field_type: 'editor-block';
+        field_options?: {
+            formatting_options?: Array<string>;
+            template_value?: any;
+        };
+    }
+
+    export interface IVocabularyRelatedContent extends IVocabularyStandard {
+        field_type: 'related_content';
+        field_options?: {
+            allowed_types?: {
+                picture?: boolean;
+                audio?: boolean;
+                video?: boolean;
+            };
+            allowed_workflows?: {
+                in_progress?: boolean;
+                published?: boolean;
+            };
+            multiple_items?: {enabled: boolean; max_items: number};
+        };
+    }
+
+    interface IVocabularyText extends IVocabularyStandard {
+        field_type: 'text';
+        field_options?: {
+            single?: boolean;
+        }
+    }
+
+    export interface IVocabularyMedia extends IVocabularyStandard {
+        field_type: 'media';
+        field_options?: {
+            allowed_types?: {
+                picture?: boolean;
+                audio?: boolean;
+                video?: boolean;
+            };
+            allowed_workflows?: {
+                in_progress?: boolean;
+                published?: boolean;
+            };
+            multiple_items?: {enabled: boolean; max_items: number};
+        };
+    }
+
+    interface IVocabularyDate extends IVocabularyStandard {
+        field_type: 'date';
+    }
+
+    interface IVocabularyEmbed extends IVocabularyStandard {
+        field_type: 'embed';
+    }
+
+    interface IVocabularyUrls extends IVocabularyStandard {
+        field_type: 'urls';
+    }
+
+    interface IVocabularyCustom extends IVocabularyStandard {
+        field_type: 'custom';
+    }
+
+    export type IVocabulary =
+        IVocabularyEditorBlock
+        | IVocabularyRelatedContent
+        | IVocabularyText
+        | IVocabularyMedia
+        | IVocabularyDate
+        | IVocabularyEmbed
+        | IVocabularyUrls
+        | IVocabularyCustom;
+
+    interface IVocabularyStandard extends IBaseRestApiResponse {
         _deleted: boolean;
         display_name: string;
         helper_text?: string;
@@ -1461,28 +1534,8 @@ declare module 'superdesk-api' {
                 [key: string]: string;
             };
         };
+        field_type: null;
         schema: {};
-        field_type:
-            | 'text'
-            | 'media'
-            | 'date'
-            | 'embed'
-            | 'urls'
-            | 'related_content'
-            | 'custom';
-        field_options?: { // Used for related content fields
-            allowed_types?: {
-                picture?: boolean;
-                audio?: boolean;
-                video?: boolean;
-            };
-            allowed_workflows?: {
-                in_progress?: boolean;
-                published?: boolean;
-            };
-            multiple_items?: { enabled: boolean; max_items: number };
-            single?: boolean; // used for custom text fields
-        };
         custom_field_type?: string;
         custom_field_config?: { [key: string]: any };
         date_shortcuts?: Array<{ value: number; term: string; label: string }>;
@@ -1493,10 +1546,10 @@ declare module 'superdesk-api' {
         selection_type?: 'single selection' | 'multi selection' | 'do not show';
     }
 
-    export interface IArticleField extends IVocabulary {
+    export type IArticleField = {
         single?: boolean;
         preview?: boolean;
-    }
+    } & IVocabulary;
 
     export type IContentProfileEditorConfig = {
         [key: string]: {
