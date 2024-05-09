@@ -204,6 +204,7 @@ export function getSpellcheckingDecorator(
                         }}
                         ref={(el) => this.wordTypoElement = el}
                         data-test-id="spellchecker-warning"
+                        data-test-value={warningForDecoration.text}
                     >
                         {menuShowing ?
                             ReactDOM.createPortal(
