@@ -16,7 +16,9 @@ import {gettext} from 'core/utils';
 import {MultiLineQuoteControls} from './MultiLineQuoteControls';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IEditorStore} from 'core/editor3/store';
+import {TreeMenu} from 'superdesk-ui-framework/react';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -31,7 +33,7 @@ interface IProps extends Partial<IEditorStore> {
     toggleSuggestingMode(): void;
     showPopup(type, data): void;
     addMultiLineQuote(): void;
-    addCustomBlock(): void;
+    addCustomBlock(initialContent: RawDraftContentState): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
@@ -187,6 +189,12 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             disabled: disabled && activeCell === null,
         });
 
+        // TODO: use a vocabulary
+        const testOptions: Array<{name: string; formatting_options: Array<string>; html: string}> = [
+            {name: 'a', formatting_options: [], html: 'aaa'},
+            {name: 'b', formatting_options: [], html: 'bbb'},
+        ];
+
         if (activeCell == null) {
             return (
                 <div
@@ -248,14 +256,29 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         />
                     )}
                     {has('custom blocks') && (
-                        <IconButton
-                            onClick={() => {
-                                addCustomBlock();
-                            }}
-                            tooltip={gettext('Custom block')}
-                            iconName="plus-large"
-                            uiTheme={this.props.uiTheme}
-                        />
+                        <div style={{display: 'inline-flex'}}>
+                            <TreeMenu
+                                getOptions={() => testOptions.map((option) => ({
+                                    value: option.name,
+                                    onSelect: () => {
+                                        addCustomBlock(convertToRaw(ContentState.createFromText(option.html)));
+                                    },
+                                }))}
+                                getLabel={(item) => item}
+                                getId={(item) => item}
+                            >
+                                {(toggle) => (
+                                    <IconButton
+                                        onClick={(event) => {
+                                            toggle(event);
+                                        }}
+                                        tooltip={gettext('Custom block')}
+                                        iconName="plus-large"
+                                        uiTheme={this.props.uiTheme}
+                                    />
+                                )}
+                            </TreeMenu>
+                        </div>
                     )}
                     {has('remove format') && (
                         <SelectionButton
@@ -410,7 +433,7 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
-    addCustomBlock: () => dispatch(actions.addCustomBlock()),
+    addCustomBlock: (initialContent: RawDraftContentState) => dispatch(actions.addCustomBlock(initialContent)),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

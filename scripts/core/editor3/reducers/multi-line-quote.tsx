@@ -6,7 +6,7 @@ import {addTable} from './table';
 export function multiLineQuoteReducer(state: IEditorStore | any = {}, action) {
     switch (action.type) {
     case 'TOOLBAR_ADD_MULTI-LINE_QUOTE':
-        return addTable(state, getTableWithSingleCell(state.editorState, true), CustomEditor3Entity.MULTI_LINE_QUOTE);
+        return addTable(state, getTableWithSingleCell(state.editorState, 'editor-selection'), CustomEditor3Entity.MULTI_LINE_QUOTE);
     default:
         return state;
     }

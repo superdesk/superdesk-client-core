@@ -172,20 +172,26 @@ export function setDataForContent(
 
 export function getTableWithSingleCell(
     editorState: EditorState,
-    initializeWithSelectedText: boolean,
+    initialContent?: RawDraftContentState | 'editor-selection',
 ): IEditor3TableData {
     const initialCellData: RawDraftContentState | null = (() => {
         const contentState = editorState.getCurrentContent();
         const selectionState = editorState.getSelection();
 
-        if (initializeWithSelectedText && !selectionState.isCollapsed()) {
-            // Get user selected content
-            const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
-                .map((key) => contentState.getBlockForKey(key));
-
-            return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
-        } else {
+        if (initialContent == null) {
             return null;
+        } else if (initialContent === 'editor-selection') {
+            if (!selectionState.isCollapsed()) {
+                // Get user selected content
+                const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
+                    .map((key) => contentState.getBlockForKey(key));
+
+                return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
+            } else {
+                return null;
+            }
+        } else {
+            return initialContent;
         }
     })();
 
