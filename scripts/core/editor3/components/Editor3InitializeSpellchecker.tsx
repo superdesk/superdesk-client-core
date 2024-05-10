@@ -36,6 +36,8 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
                     this.setState({loading: false});
                 });
             });
+        } else if (this.state.loading === true) {
+            this.setState({loading: false});
         }
     }
 
