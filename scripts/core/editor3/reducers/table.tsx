@@ -3,14 +3,15 @@ import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
 import {getCell, setCell, getData, setData, IEditor3TableData} from '../helpers/table';
 import {CustomEditor3Entity} from '../constants';
+import {IEditorStore} from '../store';
 
 /**
  * @description Contains the list of table related reducers.
  */
-const table = (state = {}, action) => {
+const table = (state: IEditorStore = {} as IEditorStore, action) => {
     switch (action.type) {
     case 'TOOLBAR_ADD_TABLE':
-        return addTable(state, action.payload);
+        return addTable(state, action.payload, CustomEditor3Entity.TABLE);
     case 'TOOLBAR_ADD_ROW_AFTER':
         return addRowAfter(state);
     case 'TOOLBAR_ADD_COL_AFTER':
@@ -36,9 +37,16 @@ const table = (state = {}, action) => {
  * @param {Object} data Table data (numRows, numCols, cells).
  * @description Adds a table into the content.
  */
-const addTable = (state, data) => {
+export const addTable = (
+    state: IEditorStore,
+    data: IEditor3TableData,
+    tableLikeEntity:
+        CustomEditor3Entity.TABLE
+        | CustomEditor3Entity.MULTI_LINE_QUOTE
+        | CustomEditor3Entity.CUSTOM_BLOCK,
+) => {
     const contentState = state.editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(CustomEditor3Entity.TABLE, 'MUTABLE', {data});
+    const contentStateWithEntity = contentState.createEntity(tableLikeEntity, 'MUTABLE', {data});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     const {editorState} = insertAtomicBlockWithoutEmptyLines(

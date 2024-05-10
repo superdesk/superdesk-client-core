@@ -16,7 +16,7 @@ import {gettext} from 'core/utils';
 import {MultiLineQuoteControls} from './MultiLineQuoteControls';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IEditorStore} from 'core/editor3/store';
-import {IEditorComponentProps} from 'superdesk-api';
+import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -31,6 +31,7 @@ interface IProps extends Partial<IEditorStore> {
     toggleSuggestingMode(): void;
     showPopup(type, data): void;
     addMultiLineQuote(): void;
+    addCustomBlock(): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
@@ -168,6 +169,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             popup,
             toggleSuggestingMode,
             addMultiLineQuote,
+            addCustomBlock,
             toggleInvisibles,
             removeAllFormat,
             removeFormat,
@@ -177,7 +179,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             editorState,
         } = this.props;
 
-        const has = (opt) => editorFormat.indexOf(opt) > -1;
+        const has = (opt: RICH_FORMATTING_OPTION) => editorFormat.indexOf(opt) > -1;
         const showPopup = (type) => (data) => this.props.showPopup(type, data);
         const cx = classNames({
             'Editor3-controls': true,
@@ -242,6 +244,16 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             }}
                             tooltip={gettext('Multi-line quote')}
                             iconName="text-block"
+                            uiTheme={this.props.uiTheme}
+                        />
+                    )}
+                    {has('custom blocks') && (
+                        <IconButton
+                            onClick={() => {
+                                addCustomBlock();
+                            }}
+                            tooltip={gettext('Custom block')}
+                            iconName="plus-large"
                             uiTheme={this.props.uiTheme}
                         />
                     )}
@@ -398,6 +410,7 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
+    addCustomBlock: () => dispatch(actions.addCustomBlock()),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

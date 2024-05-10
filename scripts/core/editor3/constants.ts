@@ -10,5 +10,6 @@ export enum CustomEditor3Entity {
     EMBED = 'EMBED',
     TABLE = 'TABLE',
     MULTI_LINE_QUOTE = 'MULTI-LINE_QUOTE',
+    CUSTOM_BLOCK = 'CUSTOM_BLOCK',
     ARTICLE_EMBED = 'ARTICLE_EMBED',
 }

@@ -9,6 +9,7 @@ import {MultiLineQuote} from './multi-line-quote';
 import {CustomEditor3Entity} from '../constants';
 import {ArticleEmbed} from './article-embed/article-embed';
 import {IEditorStore} from '../store';
+import {CustomBlock} from './custom-block';
 
 const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
     const {block, contentState} = props;
@@ -41,6 +42,8 @@ const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
             return <MultiLineQuote {...props} spellchecking={spellchecking} />;
         } else if (type === CustomEditor3Entity.ARTICLE_EMBED) {
             return <ArticleEmbed {...props} />;
+        } else if (type === CustomEditor3Entity.CUSTOM_BLOCK) {
+            return <CustomBlock {...props} spellchecking={spellchecking} />;
         } else {
             return null;
         }

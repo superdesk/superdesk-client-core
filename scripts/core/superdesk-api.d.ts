@@ -2297,7 +2297,8 @@ declare module 'superdesk-api' {
         'tab as spaces' |
         'undo' |
         'redo' |
-        'multi-line quote';
+        'multi-line quote' |
+        'custom blocks';
 
     export interface IEditor3HtmlProps {
         value: string;

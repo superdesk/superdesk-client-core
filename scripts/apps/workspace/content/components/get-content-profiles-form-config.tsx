@@ -52,6 +52,7 @@ export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTI
         'bold': gettext('bold'),
         'table': gettext('table'),
         'multi-line quote': gettext('multi-line quote'),
+        'custom blocks': gettext('custom blocks'),
         'formatting marks': gettext('formatting marks'),
         'remove format': gettext('remove format'),
         'remove all format': gettext('remove all format'),

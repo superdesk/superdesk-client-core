@@ -3,11 +3,11 @@ import {CustomEditor3Entity} from '../constants';
 import {getTableWithSingleCell} from '../helpers/table';
 import {addTable} from './table';
 
-export function multiLineQuoteReducer(state: IEditorStore | any = {}, action) {
+export const customBlockReducer = (state: IEditorStore = {} as IEditorStore, action) => {
     switch (action.type) {
-    case 'TOOLBAR_ADD_MULTI-LINE_QUOTE':
-        return addTable(state, getTableWithSingleCell(state.editorState, true), CustomEditor3Entity.MULTI_LINE_QUOTE);
+    case 'TOOLBAR_ADD_CUSTOM_BLOCK':
+        return addTable(state, getTableWithSingleCell(state.editorState, true), CustomEditor3Entity.CUSTOM_BLOCK);
     default:
         return state;
     }
-}
+};

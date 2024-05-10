@@ -10,6 +10,7 @@ import {
 } from 'draft-js';
 import {OrderedSet, Map} from 'immutable';
 import {createBlockSelection} from './selection';
+import {getBlockKeys} from './selection/blockKeys';
 
 /**
  * Retrieves the editor state of the cell at row/col.
@@ -167,4 +168,33 @@ export function setDataForContent(
     newContentState.replaceEntityData(entityKey, {data});
 
     return newContentState;
+}
+
+export function getTableWithSingleCell(
+    editorState: EditorState,
+    initializeWithSelectedText: boolean,
+): IEditor3TableData {
+    const initialCellData: RawDraftContentState | null = (() => {
+        const contentState = editorState.getCurrentContent();
+        const selectionState = editorState.getSelection();
+
+        if (initializeWithSelectedText && !selectionState.isCollapsed()) {
+            // Get user selected content
+            const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
+                .map((key) => contentState.getBlockForKey(key));
+
+            return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
+        } else {
+            return null;
+        }
+    })();
+
+    const data: IEditor3TableData = {
+        cells: initialCellData == null ? [[]] : [[initialCellData]],
+        numRows: 1,
+        numCols: 1,
+        withHeader: false,
+    };
+
+    return data;
 }
