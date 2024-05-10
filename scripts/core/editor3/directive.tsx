@@ -196,6 +196,13 @@ class Editor3Directive {
              */
             value: '=',
 
+
+            /**
+             * @type {String}
+             * @description EditorValue is editorState instead of HTML.
+             */
+            outputEditorState: '=',
+
             /**
              * @type {String}
              * @description required for editor3 to be able to set metadata for fields. Mainly editor_state
@@ -330,7 +337,7 @@ class Editor3Directive {
                         pathValue || this.pathToValue
                     ]?.characterLimitMode;
 
-                let store = createEditorStore(this, ng.get('spellcheck'));
+                let store = createEditorStore(this, ng.get('spellcheck'), true);
 
                 const fieldName: string | null = (() => {
                     if (this.fieldLabel != null) {
@@ -342,10 +349,12 @@ class Editor3Directive {
                     }
                 })();
 
-                const renderEditor3 = () => {
+                const renderEditor3 = (options?: {unmount: boolean}) => {
                     const element = $element.get(0);
 
-                    ReactDOM.unmountComponentAtNode(element);
+                    if (options?.unmount) {
+                        ReactDOM.unmountComponentAtNode(element);
+                    }
 
                     const textStatistics = (
                         <Spacer h gap="8" alignItems="center" noWrap noGrow>
@@ -380,6 +389,7 @@ class Editor3Directive {
 
                     const editor3 = (
                         <Editor3
+                            uiTheme={{}}
                             scrollContainer={this.scrollContainer}
                             singleLine={this.singleLine}
                             cleanPastedHtml={this.cleanPastedHtml}
@@ -517,6 +527,12 @@ class Editor3Directive {
                     store = createEditorStore(this, ng.get('spellcheck'));
 
                     renderEditor3();
+                });
+
+                $scope.$on('formattingOptions-update', (_e, data) => {
+                    store = createEditorStore({...this, editorFormat: data.editorFormat}, ng.get('spellcheck'), true);
+
+                    renderEditor3({unmount: false});
                 });
 
                 // this is triggered from MacrosController.call

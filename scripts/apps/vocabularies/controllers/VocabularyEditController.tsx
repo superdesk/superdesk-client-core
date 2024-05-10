@@ -4,10 +4,11 @@ import _ from 'lodash';
 import {IVocabularySelectionTypes, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
-import {IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
 import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
+import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -21,6 +22,7 @@ VocabularyEditController.$inject = [
 ];
 
 interface IScope extends IScopeConfigController {
+    item?: Partial<IArticle>;
     setFormDirty: () => void;
     newItemTemplate: any;
     idRegex: string;
@@ -32,13 +34,16 @@ interface IScope extends IScopeConfigController {
     _errorUniqueness: boolean;
     errorMessage: string;
     save: () => void;
+    formattingOptionsOnChange: (options: Array<RICH_FORMATTING_OPTION>) => void;
+    requestEditor3DirectivesToGenerateHtml: Array<() => void>;
+    handleTemplateValueChange: (value: string) => void;
     requireAllowedTypesSelection: () => void;
     addItem: () => void;
     cancel: () => void;
     model: any;
     schema: any;
     schemaFields: Array<any>;
-    itemsValidation: { valid: boolean };
+    itemsValidation: {valid: boolean};
     customFieldTypes: Array<{id: string, label: string}>;
     setCustomFieldConfig: (config: any) => void;
     editForm: any;
@@ -61,16 +66,22 @@ export function VocabularyEditController(
         $scope.tab = tab;
     };
 
+    $scope.requestEditor3DirectivesToGenerateHtml = [];
+
     $scope.idRegex = idRegex;
     $scope.selectionTypes = getVocabularySelectionTypes();
 
-    if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
+    if (
+        $scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)
+        && $scope.vocabulary.field_type === 'related_content'
+    ) {
+        const vocab = $scope.vocabulary;
+
         // Insert default allowed workflows
-        if ($scope.vocabulary.field_options == null) {
-            $scope.vocabulary.field_options = {allowed_workflows: defaultAllowedWorkflows};
-        } else if ($scope.vocabulary.field_options.allowed_workflows == null) {
-            $scope.vocabulary.field_options.allowed_workflows = defaultAllowedWorkflows;
-        }
+        vocab.field_options = {
+            ...(vocab.field_options ?? {}),
+            allowed_workflows: defaultAllowedWorkflows,
+        };
     }
 
     function onSuccess(result) {
@@ -85,9 +96,9 @@ export function VocabularyEditController(
         if (angular.isDefined(response.data._issues)) {
             if (angular.isDefined(response.data._issues['validator exception'])) {
                 notify.error(gettext('Error: ' +
-                                     response.data._issues['validator exception']));
+                    response.data._issues['validator exception']));
             } else if (angular.isDefined(response.data._issues.error) &&
-                       response.data._issues.error.required_field) {
+                response.data._issues.error.required_field) {
                 let params = response.data._issues.params;
 
                 notify.error(gettext(
@@ -111,6 +122,39 @@ export function VocabularyEditController(
         return true;
     }
 
+    if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
+        $scope.item = {
+            '_id': '666d100a-2d3f-4965-b0df-5e091f9fb77b',
+            'body_html': $scope.vocabulary.field_options?.template ?? '',
+            'type': 'text',
+        };
+    }
+
+    $scope.formattingOptionsOnChange = function(options) {
+        if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
+            $scope.vocabulary.field_options = {
+                formatting_options: options,
+            };
+
+            $scope.editForm.$setDirty();
+            $scope.$applyAsync();
+
+            /**
+             * Apply current changes to item and save them to the field as html,
+             * so when formatting options are updated editor sill has the changes
+             */
+            $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => {
+                fn();
+            });
+
+            $scope.$broadcast('formattingOptions-update', {editorFormat: options});
+        }
+    };
+
+    $scope.handleTemplateChange = function(...args) {
+        console.log(args);
+    };
+
     /**
      * Save current edit modal contents on backend.
      */
@@ -119,6 +163,17 @@ export function VocabularyEditController(
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
         delete $scope.vocabulary['_deleted'];
+
+        if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
+            $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => {
+                fn();
+            });
+            $scope.vocabulary.field_options = $scope.vocabulary.field_options ?? {};
+            $scope.vocabulary.field_options = {
+                ...$scope.vocabulary.field_options,
+                template: $scope.item.body_html,
+            };
+        }
 
         if ($scope.vocabulary._id === 'crop_sizes') {
             var activeItems = _.filter($scope.vocabulary.items, (o) => o.is_active);
@@ -175,7 +230,7 @@ export function VocabularyEditController(
             return false;
         }
 
-        if ($scope.vocabulary.field_options == null || $scope.vocabulary.field_options.allowed_types == null) {
+        if ($scope.vocabulary.field_type !== 'related_content') {
             return true;
         }
 

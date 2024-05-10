@@ -582,8 +582,8 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
          * add much performance overhead if it was replaced unconditionally, but I don't want to break it
          * nor spend time on testing so I'm keeping it as is for now.
          */
-        const dropAreaEnabled =
-            this.props.editorFormat.includes('media') || this.props.editorFormat.includes('embed articles');
+        const dropAreaEnabled = this.props.editorFormat.includes('media')
+            || this.props.editorFormat.includes('embed articles');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             dropAreaEnabled ? {

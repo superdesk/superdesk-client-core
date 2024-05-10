@@ -8,8 +8,12 @@
         </div>
         <div class="modal__body modal__body--with-navigation">
             <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                <li ng-class="{'active': tab === 'general'}"><button ng-click="setTab('general')" translate>General</button></li>
-                <li ng-class="{'active': tab === 'items'}"><button ng-click="setTab('items')" translate>Items</button></li>
+                <li ng-class="{'active': tab === 'general'}">
+                    <button ng-click="setTab('general')" translate>General</button>
+                </li>
+                <li ng-class="{'active': tab === 'items'}">
+                    <button ng-click="setTab('items')" translate>Items</button>
+                </li>
             </ul>
 
             <div class="modal__navigation--content">
@@ -95,7 +99,8 @@
                             </div>
                         </div>
 
-                        <div class="form__row">
+                        <div class="form__row"
+                            ng-if="matchFieldTypeToTab('custom-editor-blocks', vocabulary.field_type) === false">
                             <div class="sd-line-input"
                                 ng-class="{'sd-line-input--invalid': vocabularyForm.$error.maxlength}">
                                 <label for="cv_helper_text" class="sd-line-input__label" translate>Helper
@@ -147,13 +152,59 @@
                             </ul>
                         </div>
 
-                        <div class="sd-line-input"
-                            ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                        <div
+                            class="sd-line-input"
+                            ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)"
+                        >
                             <sd-check ng-model="vocabulary.disable_entire_category_selection">
                                 <span translate>Disable selection of an entire category</span>
                             </sd-check>
                         </div>
 
+                        <div
+                            class="sd-line-input"
+                            ng-if="matchFieldTypeToTab('custom-editor-blocks', vocabulary.field_type)"
+                        >
+                            <label class="sd-line-input__label" translate>Formatting Options</label>
+                            <sd-formatting-options-tree-select
+                                value="vocabulary.field_options.formatting_options"
+                                fields="{body_html: {}}"
+                                field-id="'body_html'"
+                                on-change="formattingOptionsOnChange"
+                            />
+                        </div>
+                        <div
+                            ng-if="matchFieldTypeToTab('custom-editor-blocks', vocabulary.field_type)"
+                            class="fieldset main-article__fieldset"
+                        >
+                            <div
+                                class="field body"
+                                order="{{editor.body_html.order}}"
+                                sd-width="{{editor.body_html.sdWidth|| 'full'}}"
+                                ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
+                                data-test-id="authoring-field"
+                                data-test-value="body_html"
+                                tansa-proofing="false"
+                            >
+                                <div
+                                    id="title"
+                                    sd-editor3
+                                    data-path-to-value="'body_html'"
+                                    data-editor-format="vocabulary.field_options.formatting_options"
+                                    data-single-line="false"
+                                    data-scroll-container=".page-content-container--scrollable"
+                                    data-language="'en'"
+                                    data-value="item.body_html"
+                                    data-on-change="editForm.$setDirty()"
+                                    data-read-only="false"
+                                    data-item="item"
+                                    data-refresh-trigger="refreshTrigger"
+                                    data-clean-pasted-html="item.body_html"
+                                    data-test-id="field--editor-block"
+                                    data-field-id="'Custom block'"
+                                />
+                            </div>
+                        </div>
                         <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <sd-check ng-model="vocabulary.preffered_items">
                                 {{ :: 'Available in user/desk preferences' | translate }}</sd-check>

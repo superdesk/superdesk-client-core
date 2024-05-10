@@ -1445,7 +1445,7 @@ declare module 'superdesk-api' {
         field_type: 'editor-block';
         field_options?: {
             formatting_options?: Array<string>;
-            template_value?: any;
+            template?: string;
         };
     }
 
