@@ -52,8 +52,6 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.undo(state.editorState));
     case 'REDO':
         return onChange(state, EditorState.redo(state.editorState));
-    case 'SET_CUSTOM_TOOLBAR' :
-        return setCustomToolbar(state, action.payload);
     case 'SET_MULTI-LINE_QUOTE_POPUP' :
         return setMultiLinePopup(state, action.payload);
     default:
@@ -411,10 +409,5 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
 
     return onChange(state, EditorState.forceSelection(nextEditorState, selection));
 }
-
-const setCustomToolbar = (state: IEditorStore, style: IEditorStore['customToolbarStyle']): IEditorStore => ({
-    ...state,
-    customToolbarStyle: style,
-});
 
 export default toolbar;

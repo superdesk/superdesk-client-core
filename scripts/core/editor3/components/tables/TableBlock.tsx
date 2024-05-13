@@ -38,8 +38,6 @@ interface IProps {
         tableKind: ITableKind,
     ) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
-    setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
-    toolbarStyle?: IEditorStore['customToolbarStyle'];
     tableKind: ITableKind;
     className?: string;
     fullWidth?: boolean;
@@ -88,15 +86,7 @@ export class TableBlockComponent extends React.Component<IProps> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
-        // Take the latest activeCell data in order to accurately set the customToolbarStyle.
-        // The data coming from this.props.activeCell is the previous state of the activeCell
-        const updatedActiveCell = setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS(), this.props.tableKind);
-
-        if (updatedActiveCell.payload != null) {
-            this.props.setCustomToolbar(this.props.toolbarStyle);
-        } else {
-            this.props.setCustomToolbar(undefined);
-        }
+        setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS(), this.props.tableKind);
     }
 
     getCellEditorState(data, i, j): EditorState {
@@ -209,7 +199,6 @@ const mapDispatchToProps = (dispatch) => ({
     setActiveCell: (i, j, key, currentStyle, selection, tableKind: ITableKind) => dispatch(
         actions.setActiveCell(i, j, key, currentStyle, selection, tableKind),
     ),
-    setCustomToolbar: (val: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(val)),
 });
 
 const mapStateToProps = (state) => ({

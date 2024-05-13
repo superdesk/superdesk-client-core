@@ -78,7 +78,6 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell?: IActiveCell;
-    customToolbarStyle?: 'table' | 'multiLineQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;

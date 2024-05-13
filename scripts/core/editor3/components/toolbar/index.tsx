@@ -420,7 +420,6 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
-    customToolbarStyle,
 }) => ({
     editorFormat,
     activeCell,
@@ -428,7 +427,6 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
-    customToolbarStyle,
 });
 
 const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
