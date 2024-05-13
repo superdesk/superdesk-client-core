@@ -5,8 +5,23 @@ import {connect} from 'react-redux';
 import {TableCell} from './TableCell';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
-import {IActiveCell, ISetActiveCellReturnType} from 'superdesk-api';
 import {IEditorStore} from 'core/editor3/store';
+
+export type ITableKind = 'table' | 'multi-line-quote' | 'custom-block';
+
+export interface IActiveCell {
+    i: number; // row
+    j: number; // column
+    key: string;
+    currentStyle: Array<string>;
+    selection: import('draft-js').SelectionState;
+    tableKind: ITableKind;
+}
+
+export interface ISetActiveCellReturnType {
+    type: 'EDITOR_SET_CELL';
+    payload: IActiveCell;
+}
 
 interface IProps {
     block: ContentBlock;
@@ -20,10 +35,12 @@ interface IProps {
         blockKey: string,
         currentStyle: Array<string>,
         selection: any,
+        tableKind: ITableKind,
     ) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
     setCustomToolbar?(toolbarStyle: IEditorStore['customToolbarStyle']): void;
     toolbarStyle?: IEditorStore['customToolbarStyle'];
+    tableKind: ITableKind;
     className?: string;
     fullWidth?: boolean;
 }
@@ -73,7 +90,7 @@ export class TableBlockComponent extends React.Component<IProps> {
 
         // Take the latest activeCell data in order to accurately set the customToolbarStyle.
         // The data coming from this.props.activeCell is the previous state of the activeCell
-        const updatedActiveCell = setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
+        const updatedActiveCell = setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS(), this.props.tableKind);
 
         if (updatedActiveCell.payload != null) {
             this.props.setCustomToolbar(this.props.toolbarStyle);
@@ -104,7 +121,7 @@ export class TableBlockComponent extends React.Component<IProps> {
         const {setActiveCell, block} = this.props;
         const newSelection = selection.merge({hasFocus: true});
 
-        setActiveCell(i, j, block.getKey(), currentStyle, newSelection.toJS());
+        setActiveCell(i, j, block.getKey(), currentStyle, newSelection.toJS(), this.props.tableKind);
     }
 
     // onMouseDown is used in the main editor to set focus and stop table editing
@@ -128,7 +145,7 @@ export class TableBlockComponent extends React.Component<IProps> {
         }
 
         parentOnChange(newEditorState, false);
-        setActiveCell(activeCell.i, activeCell.j, block.getKey(), currentStyle, selection);
+        setActiveCell(activeCell.i, activeCell.j, block.getKey(), currentStyle, selection, this.props.tableKind);
     }
 
     onUndo() {
@@ -189,8 +206,8 @@ export class TableBlockComponent extends React.Component<IProps> {
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
-        actions.setActiveCell(i, j, key, currentStyle, selection),
+    setActiveCell: (i, j, key, currentStyle, selection, tableKind: ITableKind) => dispatch(
+        actions.setActiveCell(i, j, key, currentStyle, selection, tableKind),
     ),
     setCustomToolbar: (val: IEditorStore['customToolbarStyle']) => dispatch(actions.setCustomToolbar(val)),
 });

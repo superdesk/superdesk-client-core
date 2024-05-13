@@ -2,7 +2,7 @@ import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {logger} from 'core/services/logger';
 import {SelectionState, convertFromRaw} from 'draft-js';
-import {IArticle, ISetActiveCellReturnType} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
 import {
     CharacterLimitUiBehavior,
@@ -11,9 +11,9 @@ import {
 import {IEditorStore} from '../store';
 import {IEditorDragDropPayload} from '../reducers/editor3';
 import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {getArticleLabel, gettext} from 'core/utils';
 import {notify} from 'core/notify/notify';
 import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
+import {ISetActiveCellReturnType, ITableKind} from '../components/tables/TableBlock';
 
 /**
  * @ngdoc method
@@ -180,10 +180,10 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key, currentStyle, selection): ISetActiveCellReturnType {
+export function setActiveCell(i, j, key, currentStyle, selection, tableKind: ITableKind): ISetActiveCellReturnType {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key, currentStyle, selection},
+        payload: {i, j, key, currentStyle, selection, tableKind},
     };
 }
 

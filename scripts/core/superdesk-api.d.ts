@@ -2315,19 +2315,6 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
     }
 
-    export interface IActiveCell {
-        i: number; // row
-        j: number; // column
-        key: string;
-        currentStyle: Array<string>;
-        selection: import('draft-js').SelectionState;
-    }
-
-    export interface ISetActiveCellReturnType {
-        type: 'EDITOR_SET_CELL';
-        payload: IActiveCell;
-    }
-
     export type IAuthoringField =
         {
             type: 'plain-text';

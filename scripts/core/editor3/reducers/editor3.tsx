@@ -446,10 +446,10 @@ const setReadOnly = (state, readOnly) => ({
  * @return {Object} New state
  * @description Sets the currently being edited (active) table cell.
  */
-const setCell = (state, {i, j, key, currentStyle, selection}) => ({
+const setCell = (state, {i, j, key, currentStyle, selection, tableKind}) => ({
     ...state,
     locked: true,
-    activeCell: {i, j, key, currentStyle, selection},
+    activeCell: {i, j, key, currentStyle, selection, tableKind},
 });
 
 const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {

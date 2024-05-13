@@ -19,6 +19,7 @@ import {IEditorStore} from 'core/editor3/store';
 import {TreeMenu} from 'superdesk-ui-framework/react';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
+import {IActiveCell} from '../tables/TableBlock';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -47,6 +48,7 @@ interface IProps extends Partial<IEditorStore> {
     disabled: boolean;
     popup: any;
     uiTheme: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
+    activeCell: IActiveCell;
 }
 
 /**
@@ -162,7 +164,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
     render() {
         const {floating} = this.state;
         const {
-            customToolbarStyle,
             suggestingMode,
             editorFormat,
             invisibles,
@@ -400,12 +401,14 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
                 </div>
             );
-        } else if (customToolbarStyle === 'multiLineQuote') {
+        } else if (activeCell.tableKind === 'multi-line-quote') {
             return <MultiLineQuoteControls className={cx} />;
-        } else if (activeCell || customToolbarStyle === 'table') {
+        } else if (activeCell.tableKind === 'table') {
             return <TableControls className={cx} />;
+        } else if (activeCell.tableKind === 'custom-block') {
+            return (<div>my toolbar</div>);
         } else {
-            assertNever(customToolbarStyle);
+            assertNever(activeCell.tableKind);
         }
     }
 }

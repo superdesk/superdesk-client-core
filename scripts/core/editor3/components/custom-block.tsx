@@ -2,8 +2,7 @@ import React from 'react';
 import * as actions from '../actions';
 import {connect} from 'react-redux';
 import {EditorState, ContentBlock} from 'draft-js';
-import {TableBlock} from './tables/TableBlock';
-import {IActiveCell} from 'superdesk-api';
+import {IActiveCell, TableBlock} from './tables/TableBlock';
 import {IEditorStore} from 'core/editor3/store';
 
 export const MULTI_LINE_QUOTE_CLASS = 'multi-line-quote';
@@ -29,6 +28,7 @@ export class CustomBlockComponent extends React.Component<IProps> {
                     fullWidth
                     className={MULTI_LINE_QUOTE_CLASS}
                     toolbarStyle="multiLineQuote"
+                    tableKind="custom-block"
                     block={this.props.block}
                     readOnly={this.props.readOnly}
                     activeCell={this.props.activeCell}
