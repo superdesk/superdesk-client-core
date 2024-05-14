@@ -335,14 +335,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.getActiveWidget = () => {
-            return this.props.sideWidget?.name ?? null;
+            return this.props.sideWidget?.id ?? null;
         };
 
         widgetReactIntegration.getPinnedWidget = () => {
             const pinned = this.props.sideWidget?.pinned === true;
 
             if (pinned) {
-                return this.props.sideWidget.name;
+                return this.props.sideWidget.id;
             } else {
                 return null;
             }
@@ -1113,13 +1113,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.name ?? null,
-            toggleSideWidget: (name) => {
-                if (name == null || this.props.sideWidget?.name === name) {
+            sideWidget: this.props.sideWidget?.id ?? null,
+            toggleSideWidget: (id) => {
+                if (id == null || this.props.sideWidget?.id === id) {
                     this.props.onSideWidgetChange(null);
                 } else {
                     this.props.onSideWidgetChange({
-                        name: name,
+                        id: id,
                         pinned: false,
                     });
                 }
@@ -1229,10 +1229,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         for (let i = 0; i < widgetsCount; i++) {
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
-                const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
+                const nextWidgetName: string = this.props.getSideWidgetIdAtIndex(exposed.item, i);
 
                 this.props.onSideWidgetChange({
-                    name: nextWidgetName,
+                    id: nextWidgetName,
                     pinned: this.props.sideWidget?.pinned ?? false,
                 });
             };

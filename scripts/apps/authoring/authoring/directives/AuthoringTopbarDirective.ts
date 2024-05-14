@@ -16,11 +16,12 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
  *
  * @description Generates authoring subnav bar
  */
-AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
+AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace', '$q'];
 export function AuthoringTopbarDirective(
     TranslationService,
     privileges,
     authoringWorkspace: AuthoringWorkspaceService,
+    $q,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
@@ -83,24 +84,25 @@ export function AuthoringTopbarDirective(
              * @return {promise}
              */
             scope.saveTopbar = function() {
-                scope.saveTopbarLoading = true;
+                scope.$applyAsync(() => {
+                    scope.saveTopbarLoading = true;
+                });
 
                 // when very big articles being are saved(~14k words),
                 // the browser can't animate the loading spinner properly
                 // the delay is chosen so the spinner freezes in a visible state.
-                const timeoutDuration = 500;
+                const timeoutDuration = 600;
 
-                setTimeout(() => {
-                    for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
-                        fn();
-                    }
-
-                    return scope.save(scope.item)
-                        .finally(() => {
-                            scope.saveTopbarLoading = false;
-                            scope.$applyAsync();
-                        });
-                }, timeoutDuration);
+                return $q((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, timeoutDuration);
+                })
+                    .then(() => scope.save(scope.item))
+                    .finally(() => {
+                        scope.saveTopbarLoading = false;
+                        scope.$applyAsync();
+                    });
             };
 
             // Activate preview formatted item
