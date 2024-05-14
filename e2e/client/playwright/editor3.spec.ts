@@ -123,7 +123,7 @@ test('tables maintaining cursor position in the middle when executing "undo" act
     ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('foo');
+        .locator('[contenteditable]').first().pressSequentially('foo', {delay: 300});
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
@@ -131,7 +131,7 @@ test('tables maintaining cursor position in the middle when executing "undo" act
     await page.keyboard.press('Control+z');
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('bar');
+        .locator('[contenteditable]').first().pressSequentially('bar', {delay: 300});
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html', 'table-block')).locator('[contenteditable]').first(),
@@ -160,12 +160,12 @@ test('tables maintaining cursor position at the end when executing "undo" action
     ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('foo');
+        .locator('[contenteditable]').first().pressSequentially('foo', {delay: 300});
 
     await page.keyboard.press('Control+z'); // undo last character
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('bar');
+        .locator('[contenteditable]').first().pressSequentially('bar', {delay: 300});
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html', 'table-block')).locator('[contenteditable]').first(),
@@ -194,13 +194,13 @@ test('tables maintaining cursor position when executing "redo" action', async ({
     ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('foo');
+        .locator('[contenteditable]').first().pressSequentially('foo', {delay: 300});
 
     await page.keyboard.press('Control+z');
     await page.keyboard.press('Control+y');
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('bar');
+        .locator('[contenteditable]').first().pressSequentially('bar', {delay: 300});
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html', 'table-block')).locator('[contenteditable]').first(),
