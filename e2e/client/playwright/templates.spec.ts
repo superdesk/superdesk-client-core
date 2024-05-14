@@ -110,7 +110,7 @@ test('performing "save as" action on a template', async ({page}) => {
         'Save as template',
     );
 
-    await page.locator(s('modal-save-as-template', 'name-input')).fill('story 2.1');
+    await page.locator(s('modal-save-as-template')).getByLabel('name').fill('story 2.1');
     await page.locator(s('modal-save-as-template')).getByLabel('Desk').selectOption({label: 'Sports'});
     await page.locator(s('modal-save-as-template')).getByRole('button', {name: 'Save'}).click();
 
