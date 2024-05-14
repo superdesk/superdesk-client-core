@@ -682,7 +682,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Nav.SideBarTabs
-                                                            activeTab={sideWidget?.name ?? null}
+                                                            activeTab={sideWidget?.id ?? null}
                                                             onActiveTabChange={(val) => {
                                                                 toggleSideWidget(val);
                                                             }}
@@ -715,7 +715,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     authoringStorage,
                                                     handleUnsavedChanges,
                                                 }) => {
-                                                    const sideWidgetName = sideWidget?.name ?? null;
+                                                    const sideWidgetName = sideWidget?.id ?? null;
 
                                                     if (
                                                         sideWidgetName == null
@@ -749,7 +749,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         />
                                                     );
                                                 }}
-                                                getSideWidgetNameAtIndex={(_item, index) => sideWidgets[index].label}
+                                                getSideWidgetIdAtIndex={(_item, index) => sideWidgets[index]._id}
                                                 disableWidgetPinning
                                             />
                                         )

@@ -94,7 +94,6 @@ $editor-styleButton-size: 			3rem;
 			right: auto;
 			z-index: 10;
 			box-shadow: 0px 1px 5px rgba(0,0,0,0.4);
-			background-color: var(--sd-editor-colour__float-toolbar-bg);
 			.link-toolbar.empty {
 				display: none;
 			}
@@ -403,9 +402,10 @@ $editor-styleButton-size: 			3rem;
 .Editor3-editor {
 	cursor: text;
 	font-size: 16px;
-	line-height: 140%;
+	line-height: 1.4;
     word-break: break-word;
 	border: 1px solid var(--sd-editor-colour__controls-border);
+	border-radius: var(--b-radius--medium);
 }
 
 .Editor3-editor-single-line {
@@ -543,6 +543,7 @@ $editor-styleButton-size: 			3rem;
 	background-color: $editor-neutral-bg;
 	border-block-end: 1px solid;
 	border-bottom-color: $editor-neutral-border;
+	border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
 	line-height: 100% !important;
 
 	&.disabled {
@@ -851,10 +852,6 @@ $editor-styleButton-size: 			3rem;
 // Theme specific overrides
 
 .sd-editor--theme-turquoise, .sd-editor--theme-military {
-	.Editor3-controls, .item-association {
-		background-color: rgba(0, 0, 0, 0.03);
-		border-bottom-color: rgba(0, 0, 0, 0.1);
-	}
 	.Editor3-root, .item-association {
 		border-color: rgba(0, 0, 0, 0.1);
 	}
@@ -934,7 +931,7 @@ $editor-styleButton-size: 			3rem;
 	background-color: #f8f8f8;
 }
 
-.Editor3-single-line-style {
+.sd-input-style .Editor3-root {
 	background: var(--color-input-bg);
 	color: var(--color-text);
 	border: none;

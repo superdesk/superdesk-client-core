@@ -255,6 +255,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                                 text={gettext('Preview')}
                                                 onClick={() => {
                                                     previewAuthoringEntity(
+                                                        item,
                                                         contentProfile,
                                                         fieldsData,
                                                         gettext('version {{n}}', {n: item._current_version}),

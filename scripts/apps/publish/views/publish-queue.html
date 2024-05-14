@@ -118,7 +118,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="queue_item in publish_queue track by queue_item._id" class="{{queue_item.state| queueStatus}}" ng-click="preview(queue_item);">
+                            <tr
+                                ng-repeat="queue_item in publish_queue track by queue_item._id" class="{{queue_item.state| queueStatus}}"
+                                ng-click="preview(queue_item);"
+                                data-test-id="publish-queue-item"
+                                data-test-value="{{queue_item.headline}}"
+                            >
                                 <td>
                                     <span sd-check ng-model="queue_item.selected" ng-change="selectQueuedItem(queue_item)"></span>
                                 </td>

@@ -48,6 +48,8 @@ export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     EDITOR_BLOCK_TYPE,
     'Files',
     MIME_TYPE_SUPERDESK_TEXT_ITEM,
+    // allows dropping marked links as embeds (used by ansa)
+    'application/superdesk.compatible.embed',
 ];
 
 const VALID_MEDIA_TYPES = [
@@ -563,12 +565,6 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
-            /**
-                There is global theming and article-edit specific one.
-                When inside article-edit we always pass a theme,
-                otherwise we want to use Editor3-single-line-style for global theme styling.
-            */
-            'Editor3-single-line-style': this.props.singleLine === true || this.props.uiTheme == null,
             'no-toolbar': !showToolbar,
             'read-only': readOnly,
             'unstyled__block--invisibles': this.props.invisibles,

@@ -17,6 +17,7 @@ export class Preview extends React.PureComponent<IProps> {
         case 'manual-entry':
             return (
                 <PreviewManualEntry
+                    item={this.props.item}
                     value={value}
                     config={config}
                 />
@@ -24,6 +25,7 @@ export class Preview extends React.PureComponent<IProps> {
         case 'vocabulary':
             return (
                 <PreviewVocabulary
+                    item={this.props.item}
                     value={value}
                     config={config}
                 />
@@ -31,6 +33,7 @@ export class Preview extends React.PureComponent<IProps> {
         case 'remote-source':
             return (
                 <PreviewRemoteSource
+                    item={this.props.item}
                     value={value}
                     config={config}
                 />
@@ -38,6 +41,7 @@ export class Preview extends React.PureComponent<IProps> {
         case 'dropdown-tree':
             return (
                 <PreviewDropdownTree
+                    item={this.props.item}
                     value={value}
                     config={config}
                 />

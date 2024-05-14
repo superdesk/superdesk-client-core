@@ -29,6 +29,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
                     <FormLabel text={label} />
                 )}
                 <FieldType.previewComponent
+                    item={item}
                     value={value}
                     config={field.custom_field_config}
                 />
