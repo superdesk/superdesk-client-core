@@ -544,7 +544,15 @@ export function AuthoringService(
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function saveAuthoring(origItem: IArticle, _item: IArticle) {
+    this.save = function saveAuthoring(
+        origItem: IArticle,
+        _item: IArticle,
+        requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
+    ) {
+        for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
+            fn();
+        }
+
         return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
             angular.extend(_item, item);
 

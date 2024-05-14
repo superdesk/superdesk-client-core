@@ -4,11 +4,11 @@
 }
 
 .active {
-    [class^="big-icon-"], 
+    [class^="big-icon-"],
     [class*=" big-icon-"],
-    button:hover [class^="big-icon-"], 
+    button:hover [class^="big-icon-"],
         button:hover [class*=" big-icon-"],
-        a:hover [class^="big-icon-"], 
+        a:hover [class^="big-icon-"],
         a:hover [class*=" big-icon-"] {
         opacity: 1;
         color: white;
@@ -16,11 +16,11 @@
 }
 .sd-sidetab-menu--right {
     .active {
-        [class^="big-icon-"], 
+        [class^="big-icon-"],
         [class*=" big-icon-"],
-        button:hover [class^="big-icon-"], 
+        button:hover [class^="big-icon-"],
             button:hover [class*=" big-icon-"],
-            a:hover [class^="big-icon-"], 
+            a:hover [class^="big-icon-"],
             a:hover [class*=" big-icon-"] {
             color: var(--sd-colour-interactive--active) !important;
             opacity: 1;
@@ -166,10 +166,13 @@
 
 [class^="svg-icon-"], [class*="svg-icon-"] {
     display: inline-block;
-    width:20px;
-    height: 20px;
     background-repeat: no-repeat;
     background-size: contain;
+
+    &:not(.svg-icon-illustration) {
+        width:20px;
+        height: 20px;
+    }
 }
 
 .svg-icon-plus {

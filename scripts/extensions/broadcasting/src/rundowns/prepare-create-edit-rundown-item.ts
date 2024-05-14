@@ -16,7 +16,7 @@ const {httpRequestJsonLocal} = superdesk;
 
 interface IRundownItemActionBase extends IWithAuthoringReactKey {
     sideWidget: null | {
-        name: string;
+        id: string;
         pinned: boolean;
     };
 }
