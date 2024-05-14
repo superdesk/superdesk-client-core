@@ -171,39 +171,32 @@
                                 fields="{body_html: {}}"
                                 field-id="'body_html'"
                                 on-change="formattingOptionsOnChange"
+                                formatting-options="editorBlockFormattingOptions"
                             />
                         </div>
                         <div
+                            class="sd-line-input"
                             ng-if="matchFieldTypeToTab('custom-editor-blocks', vocabulary.field_type)"
-                            class="fieldset main-article__fieldset"
                         >
+                            <label class="sd-line-input__label" translate>Sample content</label>
                             <div
-                                class="field body"
-                                order="{{editor.body_html.order}}"
-                                sd-width="{{editor.body_html.sdWidth|| 'full'}}"
-                                ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
-                                data-test-id="authoring-field"
-                                data-test-value="body_html"
-                                tansa-proofing="false"
-                            >
-                                <div
-                                    id="title"
-                                    sd-editor3
-                                    data-path-to-value="'body_html'"
-                                    data-editor-format="vocabulary.field_options.formatting_options"
-                                    data-single-line="false"
-                                    data-scroll-container=".page-content-container--scrollable"
-                                    data-language="'en'"
-                                    data-value="item.body_html"
-                                    data-on-change="editForm.$setDirty()"
-                                    data-read-only="false"
-                                    data-item="item"
-                                    data-refresh-trigger="refreshTrigger"
-                                    data-clean-pasted-html="item.body_html"
-                                    data-test-id="field--editor-block"
-                                    data-field-id="'Custom block'"
-                                />
-                            </div>
+
+                                class="main-editor-3-style"
+                                id="title"
+                                sd-editor3
+                                data-path-to-value="'editor_block_field'"
+                                data-editor-format="vocabulary.field_options.formatting_options"
+                                data-single-line="false"
+                                data-scroll-container=".page-content-container--scrollable"
+                                data-language="'en'"
+                                data-on-change="updateUI()"
+                                data-read-only="false"
+                                editor-state="item.fields_meta['editor_block_field'].draftjsState"
+                                output-editor-state="true"
+                                data-item="item"
+                                data-refresh-trigger="refreshTrigger"
+                                data-test-id="field--editor-block"
+                            />
                         </div>
                         <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <sd-check ng-model="vocabulary.preffered_items">

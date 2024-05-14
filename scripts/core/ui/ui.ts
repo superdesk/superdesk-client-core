@@ -1293,7 +1293,7 @@ export default angular.module('superdesk.core.ui', [
         'sdFormattingOptionsTreeSelect',
         reactToAngular1(
             FormattingOptionsTreeSelect,
-            ['value', 'fieldId', 'fields', 'onChange'],
+            ['value', 'fieldId', 'fields', 'onChange', 'formattingOptions'],
         ),
     )
 

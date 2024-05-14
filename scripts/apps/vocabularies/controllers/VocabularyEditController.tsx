@@ -9,6 +9,7 @@ import {IScope as IScopeConfigController} from './VocabularyConfigController';
 import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
+import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -34,7 +35,9 @@ interface IScope extends IScopeConfigController {
     _errorUniqueness: boolean;
     errorMessage: string;
     save: () => void;
-    formattingOptionsOnChange: (options: Array<RICH_FORMATTING_OPTION>) => void;
+    formattingOptionsOnChange?: (options: Array<RICH_FORMATTING_OPTION>) => void;
+    editorBlockFormattingOptions?: Array<{value: [RICH_FORMATTING_OPTION, string]}>;
+    updateUI: () => void;
     requestEditor3DirectivesToGenerateHtml: Array<() => void>;
     handleTemplateValueChange: (value: string) => void;
     requireAllowedTypesSelection: () => void;
@@ -52,6 +55,7 @@ interface IScope extends IScopeConfigController {
 }
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
+const editorBlockFieldId = 'editor_block_field';
 
 export function VocabularyEditController(
     $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,
@@ -123,21 +127,43 @@ export function VocabularyEditController(
     }
 
     if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
-        $scope.item = {
-            '_id': '666d100a-2d3f-4965-b0df-5e091f9fb77b',
-            'body_html': $scope.vocabulary.field_options?.template ?? '',
-            'type': 'text',
-        };
-    }
+        const vocabulary = $scope.vocabulary;
 
-    $scope.formattingOptionsOnChange = function(options) {
-        if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
-            $scope.vocabulary.field_options = {
+        $scope.item = {
+            fields_meta: {
+
+                /**
+                 * Fake field, needed for compatibility with sdEditor3 directive
+                 */
+                [editorBlockFieldId]: {draftjsState: vocabulary.field_options?.template},
+            },
+        };
+
+        $scope.editorBlockFormattingOptions = (() => {
+            const excludedOptions: Set<RICH_FORMATTING_OPTION> = new Set<RICH_FORMATTING_OPTION>([
+                'multi-line quote',
+                'comments',
+                'annotation',
+                'suggestions',
+                'table',
+                'media',
+            ]);
+
+            const formattingOptions = Object.entries(getEditor3RichTextFormattingOptions())
+                .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}))
+                .filter(({value}: {value: [RICH_FORMATTING_OPTION, string]}) =>
+                    excludedOptions.has(value[0]) === false,
+                );
+
+            return formattingOptions as Array<{value: [RICH_FORMATTING_OPTION, string]}>;
+        })();
+
+        $scope.formattingOptionsOnChange = function(options) {
+            vocabulary.field_options = {
                 formatting_options: options,
             };
 
-            $scope.editForm.$setDirty();
-            $scope.$applyAsync();
+            $scope.updateUI();
 
             /**
              * Apply current changes to item and save them to the field as html,
@@ -147,13 +173,12 @@ export function VocabularyEditController(
                 fn();
             });
 
-            $scope.$broadcast('formattingOptions-update', {editorFormat: options});
-        }
-    };
-
-    $scope.handleTemplateChange = function(...args) {
-        console.log(args);
-    };
+            $scope.$broadcast('formattingOptions-update', {
+                editorFormat: options,
+                editorState: $scope.item.fields_meta[editorBlockFieldId].draftjsState,
+            });
+        };
+    }
 
     /**
      * Save current edit modal contents on backend.
@@ -171,7 +196,7 @@ export function VocabularyEditController(
             $scope.vocabulary.field_options = $scope.vocabulary.field_options ?? {};
             $scope.vocabulary.field_options = {
                 ...$scope.vocabulary.field_options,
-                template: $scope.item.body_html,
+                template: $scope.item.fields_meta?.[editorBlockFieldId].draftjsState,
             };
         }
 
@@ -286,10 +311,14 @@ export function VocabularyEditController(
         label: fields[id].label,
     }));
 
-    $scope.setCustomFieldConfig = (config) => {
-        $scope.vocabulary.custom_field_config = config;
+    $scope.updateUI = () => {
         $scope.editForm.$setDirty();
         $scope.$applyAsync();
+    };
+
+    $scope.setCustomFieldConfig = (config) => {
+        $scope.vocabulary.custom_field_config = config;
+        $scope.updateUI();
     };
 
     let placeholderElement = null;
@@ -307,8 +336,7 @@ export function VocabularyEditController(
                 schemaFields={$scope.schemaFields}
                 newItemTemplate={{...$scope.model, is_active: true}}
                 setDirty={() => {
-                    $scope.editForm.$setDirty();
-                    $scope.$apply();
+                    $scope.updateUI();
                 }}
                 setItemsValid={(valid) => {
                     $scope.itemsValidation.valid = valid;

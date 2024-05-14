@@ -530,7 +530,15 @@ class Editor3Directive {
                 });
 
                 $scope.$on('formattingOptions-update', (_e, data) => {
-                    store = createEditorStore({...this, editorFormat: data.editorFormat}, ng.get('spellcheck'), true);
+                    store = createEditorStore(
+                        {
+                            ...this,
+                            editorFormat: data.editorFormat,
+                            editorState: data.editorState,
+                        },
+                        ng.get('spellcheck'),
+                        true,
+                    );
 
                     renderEditor3({unmount: false});
                 });

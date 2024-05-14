@@ -51,9 +51,12 @@ export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Com
     }
 
     const mediaFormattingOption: RICH_FORMATTING_OPTION = 'media';
+    const multiLineQuoteFormattingOption: RICH_FORMATTING_OPTION = 'multi-line quote';
     const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
 
-    return editorProps.editorFormat.includes(mediaFormattingOption) && intersection.length > 0;
+    return editorProps.editorFormat.find(
+        (option) => option === mediaFormattingOption || option === multiLineQuoteFormattingOption,
+    ) != null && intersection.length > 0;
 }
 
 interface IProps {
