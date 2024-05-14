@@ -86,7 +86,7 @@ test('tables maintaining cursor position at the start when executing "undo" acti
     ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('foo');
+        .locator('[contenteditable]').first().pressSequentially('foo', {delay: 300});
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
@@ -94,7 +94,7 @@ test('tables maintaining cursor position at the start when executing "undo" acti
     await page.keyboard.press('Control+z');
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
-        .locator('[contenteditable]').first().pressSequentially('bar');
+        .locator('[contenteditable]').first().pressSequentially('bar', {delay: 300});
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html', 'table-block')).locator('[contenteditable]').first(),
