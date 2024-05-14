@@ -250,11 +250,11 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             }, true);
 
             scope.save = function() {
-                for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
-                    fn();
-                }
-
-                return authoring.save(scope.origItem, cloneDeep(scope.item)).then((res) => {
+                return authoring.save(
+                    scope.origItem,
+                    cloneDeep(scope.item),
+                    scope.requestEditor3DirectivesToGenerateHtml,
+                ).then((res) => {
                     scope.dirty = false;
                     InitializeMedia.initMedia(scope);
 
