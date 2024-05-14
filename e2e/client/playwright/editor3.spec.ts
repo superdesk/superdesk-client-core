@@ -65,7 +65,8 @@ test('adding word marked as a spellchecker issue to dictionary', async ({page}) 
 });
 
 /**
- * FYI undo/redo isn't working the same as in the main editor outside tables and it's not great that it's character based.
+ * FYI undo/redo isn't working the same as in the main editor outside tables
+ * and it's not great that it's character based.
  */
 test('tables maintaining cursor position at the start when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -80,7 +81,9 @@ test('tables maintaining cursor position at the start when executing "undo" acti
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'authoring-field=body_html', 'toolbar')).getByRole('button', {name: 'table'}).click();
+    await page.locator(
+        s('authoring', 'authoring-field=body_html', 'toolbar'),
+    ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo');
@@ -99,7 +102,8 @@ test('tables maintaining cursor position at the start when executing "undo" acti
 });
 
 /**
- * FYI undo/redo isn't working the same as in the main editor outside tables and it's not great that it's character based.
+ * FYI undo/redo isn't working the same as in the main editor outside tables
+ * and it's not great that it's character based.
  */
 test('tables maintaining cursor position in the middle when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -114,7 +118,9 @@ test('tables maintaining cursor position in the middle when executing "undo" act
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'authoring-field=body_html', 'toolbar')).getByRole('button', {name: 'table'}).click();
+    await page.locator(
+        s('authoring', 'authoring-field=body_html', 'toolbar'),
+    ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo');
@@ -133,7 +139,8 @@ test('tables maintaining cursor position in the middle when executing "undo" act
 });
 
 /**
- * FYI undo/redo isn't working the same as in the main editor outside tables and it's not great that it's character based.
+ * FYI undo/redo isn't working the same as in the main editor outside tables
+ * and it's not great that it's character based.
  */
 test('tables maintaining cursor position at the end when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -148,7 +155,9 @@ test('tables maintaining cursor position at the end when executing "undo" action
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'authoring-field=body_html', 'toolbar')).getByRole('button', {name: 'table'}).click();
+    await page.locator(
+        s('authoring', 'authoring-field=body_html', 'toolbar'),
+    ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo');
@@ -164,7 +173,8 @@ test('tables maintaining cursor position at the end when executing "undo" action
 });
 
 /**
- * FYI undo/redo isn't working the same as in the main editor outside tables and it's not great that it's character based.
+ * FYI undo/redo isn't working the same as in the main editor outside tables
+ * and it's not great that it's character based.
  */
 test('tables maintaining cursor position when executing "redo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -179,7 +189,9 @@ test('tables maintaining cursor position when executing "redo" action', async ({
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'authoring-field=body_html', 'toolbar')).getByRole('button', {name: 'table'}).click();
+    await page.locator(
+        s('authoring', 'authoring-field=body_html', 'toolbar'),
+    ).getByRole('button', {name: 'table'}).click();
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo');
