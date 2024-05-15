@@ -69,7 +69,7 @@ interface IProps {
 export interface IEditorStore {
     editorState: EditorState;
     searchTerm: { pattern: string; index: number; caseSensitive: boolean };
-    popup: { type: any };
+    popup: { type: any; data: any };
     readOnly: boolean;
     locked: boolean;
     showToolbar: any;

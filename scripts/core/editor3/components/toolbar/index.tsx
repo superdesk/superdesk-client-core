@@ -1,7 +1,7 @@
 import React from 'react';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
-import TableControls from './TableControls';
+import {TableControls} from './TableControls';
 import StyleButton from './StyleButton';
 import {SelectionButton} from './SelectionButton';
 import {IconButton} from './IconButton';
@@ -13,8 +13,6 @@ import * as actions from '../../actions';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
-import {MultiLineQuoteControls} from './MultiLineQuoteControls';
-import {assertNever} from 'core/helpers/typescript-helpers';
 import {IEditorStore} from 'core/editor3/store';
 import {TreeMenu} from 'superdesk-ui-framework/react';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
@@ -196,7 +194,19 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             {name: 'b', formatting_options: [], html: 'bbb'},
         ];
 
-        if (activeCell == null) {
+        if (activeCell != null) {
+            return (
+                <TableControls
+                    className={cx}
+                    tableKind={activeCell.tableKind}
+                    editorFormat={
+                        activeCell.tableKind === 'multi-line-quote'
+                            ? editorFormat.filter((option) => option !== 'quote')
+                            : editorFormat
+                    }
+                />
+            );
+        } else {
             return (
                 <div
                     className={cx}
@@ -401,14 +411,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
                 </div>
             );
-        } else if (activeCell.tableKind === 'multi-line-quote') {
-            return <MultiLineQuoteControls className={cx} />;
-        } else if (activeCell.tableKind === 'table') {
-            return <TableControls className={cx} />;
-        } else if (activeCell.tableKind === 'custom-block') {
-            return (<div>my toolbar</div>);
-        } else {
-            assertNever(activeCell.tableKind);
         }
     }
 }
