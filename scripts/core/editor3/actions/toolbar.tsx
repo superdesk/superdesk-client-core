@@ -192,6 +192,6 @@ export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
 
-export const setMultiLineQuotePopup = (type, data) => ({
-    type: 'SET_MULTI-LINE_QUOTE_POPUP', payload: {type, data},
+export const setTablePopup = (type, data) => ({
+    type: 'SET_TABLE_POPUP', payload: {type, data},
 });

@@ -52,8 +52,8 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.undo(state.editorState));
     case 'REDO':
         return onChange(state, EditorState.redo(state.editorState));
-    case 'SET_MULTI-LINE_QUOTE_POPUP' :
-        return setMultiLinePopup(state, action.payload);
+    case 'SET_TABLE_POPUP' :
+        return setTablePopup(state, action.payload);
     default:
         return state;
     }
@@ -341,7 +341,7 @@ const setPopup = (state: IEditorStore, {type, data}) => {
 
 type PopupType = keyof typeof PopupTypes;
 
-const setMultiLinePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
+const setTablePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {

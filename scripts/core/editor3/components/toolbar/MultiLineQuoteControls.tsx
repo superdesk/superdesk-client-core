@@ -17,7 +17,7 @@ interface IProps extends Partial<IEditorStore> {
     className: string;
     toggleTableStyle(): void;
     toggleTableBlockType(style: string): void;
-    setMultiLineQuotePopup(popupType: string, payload: any): void;
+    setTablePopup(popupType: string, payload: any): void;
     popup: any;
 }
 
@@ -30,7 +30,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
     editorFormat,
     toggleTableStyle,
     className,
-    setMultiLineQuotePopup,
+    setTablePopup,
     toggleTableBlockType,
     popup,
 }) => {
@@ -79,7 +79,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                 editorFormat.includes('link') && (
                     <SelectionButtonCustomEditorState
                         editorState={cellEditorState}
-                        onClick={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+                        onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
                         iconName="link"
                         tooltip={gettext('Link')}
                     />
@@ -97,7 +97,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
 
             <LinkToolbarMultiLineQuote
                 editorState={cellEditorState}
-                onEdit={(payload) => setMultiLineQuotePopup(PopupTypes.Link, payload)}
+                onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
             />
         </div>
     );
@@ -106,7 +106,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
 const mapDispatchToProps = (dispatch) => ({
     toggleTableStyle: (inlineStyle) => dispatch(actions.toggleTableStyle(inlineStyle)),
     toggleTableBlockType: (style: string) => dispatch(actions.toggleTableBlockType(style)),
-    setMultiLineQuotePopup: (type, data) => dispatch(actions.setMultiLineQuotePopup(type, data)),
+    setTablePopup: (type, data) => dispatch(actions.setTablePopup(type, data)),
 });
 
 const mapStateToProps = ({
