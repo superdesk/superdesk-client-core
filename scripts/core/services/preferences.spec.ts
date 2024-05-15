@@ -2,7 +2,6 @@
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     var preferencesService,
         testPreferences = {
