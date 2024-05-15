@@ -16,7 +16,7 @@ import {LinkToolbarMultiLineQuote} from '../links/LinkToolbar';
 interface IProps extends Partial<IEditorStore> {
     className: string;
     toggleTableStyle(): void;
-    toggleMultiLineQuoteBlockStyle(style: string): void;
+    toggleTableBlockType(style: string): void;
     setMultiLineQuotePopup(popupType: string, payload: any): void;
     popup: any;
 }
@@ -31,7 +31,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
     toggleTableStyle,
     className,
     setMultiLineQuotePopup,
-    toggleMultiLineQuoteBlockStyle,
+    toggleTableBlockType,
     popup,
 }) => {
     const {i, j, key, currentStyle, selection} = activeCell;
@@ -55,7 +55,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
                             key={type}
                             active={blockStyles[type] === blockStyle}
                             label={type}
-                            onToggle={() => toggleMultiLineQuoteBlockStyle(blockStyles[type])}
+                            onToggle={() => toggleTableBlockType(blockStyles[type])}
                             style={blockStyles[type]}
                         />
                     ))
@@ -105,7 +105,7 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
 
 const mapDispatchToProps = (dispatch) => ({
     toggleTableStyle: (inlineStyle) => dispatch(actions.toggleTableStyle(inlineStyle)),
-    toggleMultiLineQuoteBlockStyle: (style: string) => dispatch(actions.toggleMultiLineQuoteBlockStyle(style)),
+    toggleTableBlockType: (style: string) => dispatch(actions.toggleTableBlockType(style)),
     setMultiLineQuotePopup: (type, data) => dispatch(actions.setMultiLineQuotePopup(type, data)),
 });
 

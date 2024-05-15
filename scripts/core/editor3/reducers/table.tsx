@@ -23,9 +23,9 @@ const table = (state: IEditorStore = {} as IEditorStore, action) => {
     case 'TOOLBAR_TABLE_HEADER':
         return toggleTableHeader(state);
     case 'TOOLBAR_TABLE_STYLE':
-        return toggleTableStyle(state, action.payload);
-    case 'TOOLBAR_MULTI-LINE_STYLE':
-        return toggleMultiLineQuoteBlockStyle(state, action.payload);
+        return toggleTableInlineStyle(state, action.payload);
+    case 'TOOLBAR_TABLE_BLOCK_TYPE':
+        return toggleTableBlockType(state, action.payload);
     default:
         return state;
     }
@@ -233,7 +233,7 @@ const toggleTableHeader = (state) =>
  * @name toggleTableStyle
  * @description Toggles the table's style.
  */
-const toggleTableStyle = (state, inlineStyle) =>
+const toggleTableInlineStyle = (state, inlineStyle) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
@@ -250,7 +250,7 @@ const toggleTableStyle = (state, inlineStyle) =>
         },
     );
 
-const toggleMultiLineQuoteBlockStyle = (state, blockType) =>
+const toggleTableBlockType = (state, blockType) =>
     processCells(
         state,
         (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
