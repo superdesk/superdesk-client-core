@@ -3,7 +3,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('highlights', async () => {
-    test('creating new global highlights', async ({page}) => {
+    test('creating a global highlight', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -12,7 +12,7 @@ test.describe('highlights', async () => {
         await page.getByRole('button', {name: 'Create configuration'}).click();
         await page.locator(s('highlight-configuration-modal')).getByLabel('Configuration name').fill('Highlight 2');
         await page.locator(s('highlight-configuration-modal')).getByRole('button', {name: 'Save'}).click();
-        await expect(page.locator(s('highlights-list')).getByTitle('Highlight 2')).toBeVisible();
+        await expect(page.locator(s('highlights-list', 'highlights-item=Highlight 2'))).toBeVisible();
 
         await page.goto('/#/workspace');
 
@@ -25,17 +25,16 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
     });
 
-    test('creating new highlights assigned to desk', async ({page}) => {
+    test('creating a desk highlight', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/settings/highlights');
-
         await page.getByRole('button', {name: 'Create configuration'}).click();
         await page.locator(s('highlight-configuration-modal')).getByLabel('Configuration name').fill('Highlight 2');
         await page.locator(s('highlight-configuration-modal', 'desk-checkbox=Sports')).click();
         await page.locator(s('highlight-configuration-modal')).getByRole('button', {name: 'Save'}).click();
-        await expect(page.locator(s('highlights-list')).getByTitle('Highlight 2')).toBeVisible();
+        await expect(page.locator(s('highlights-list', 'highlights-item=Highlight 2'))).toBeVisible();
 
         await page.goto('/#/workspace');
 
@@ -50,7 +49,7 @@ test.describe('highlights', async () => {
         ).not.toBeVisible();
     });
 
-    test('adding item to highlight list', async ({page}) => {
+    test('adding an item to a highlights list', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -71,7 +70,7 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('articles-list', 'article-item=test sports story'))).toBeVisible();
     });
 
-    test('creating highlights package', async ({page}) => {
+    test('creating a highlights package', async ({page}) => {
         // this test requires an article created on today's date
 
         const monitoring = new Monitoring(page);
@@ -110,7 +109,7 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('monitoring-view', 'article-item=Package Highlight 2'))).toBeVisible();
     });
 
-    test('publishing highlights package', async ({page}) => {
+    test('publishing a highlights package', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -140,7 +139,7 @@ test.describe('highlights', async () => {
         ).toBeVisible();
     });
 
-    test('exporting highlights', async ({page}) => {
+    test('exporting a highlight', async ({page}) => {
         // this test requires an article created on today's date
 
         const monitoring = new Monitoring(page);

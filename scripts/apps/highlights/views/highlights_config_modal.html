@@ -9,7 +9,7 @@
             <fieldset>
                 <div class="sd-line-input sd-line-input--required sd-line-input--boxed" ng-class="{'sd-line-input--invalid' : _errorUniqueness || _errorLimits}">
                         <label class="sd-line-input__label">{{'Configuration name' | translate}}</label>
-                        <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" aria-label="Configuration name" required>
+                        <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" aria-label="{{'Configuration name' | translate}}" required>
                         <div class="sd-line-input__char-count" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></div>
                         <div ng-show="_errorLimits" class="sd-line-input__message sd-line-input__message--with-char-count"><span translate>Character limit exceeded, highlight can not be created/updated.</span></div>
                         <div ng-show="_errorUniqueness" class="sd-line-input__message"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</div>
