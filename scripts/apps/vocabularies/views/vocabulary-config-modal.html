@@ -6,7 +6,7 @@
             <h3 class="modal__heading" ng-show="!vocabulary._id"><span translate>Create</span></h3>
             <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
         </div>
-        <div class="modal__body modal__body--with-navigation">
+        <div class="modal__body modal__body--with-navigation" data-test-id="vocabulary-edit-content">
             <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                 <li ng-class="{'active': tab === 'general'}">
                     <button ng-click="setTab('general')" translate>General</button>
@@ -27,8 +27,16 @@
                             ng-class="{'sd-line-input--invalid': issues._id, 'sd-line-input--required': !vocabulary._id}"
                             ng-if="!vocabulary._links || !matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <label for="cv_id" class="sd-line-input__label" translate>ID</label>
-                            <input id="cv_id" class="sd-line-input__input" type="text" ng-model="vocabulary._id"
-                                ng-pattern="idRegex" ng-readonly="!!vocabulary._links" required>
+                            <input
+                                id="cv_id"
+                                class="sd-line-input__input"
+                                type="text"
+                                ng-model="vocabulary._id"
+                                ng-pattern="idRegex"
+                                ng-readonly="!!vocabulary._links"
+                                required
+                                data-test-id="vocabulary-edit--id"
+                            >
                             <div class="sd-line-input__message" ng-show="issues._id.unique || issues._id.deleted"
                                 translate>ID must be unique.</div>
                             <div class="sd-line-input__message" ng-show="issues._id.conflict" translate>ID conflicts
@@ -309,7 +317,7 @@
             </div>
         </div>
 
-        <div class="modal__footer">
+        <div class="modal__footer" data-test-id="vocabulary-edit-footer">
             <div class="button-group button-group--end button-group--comfort" role="group">
                 <button
                     id="cancel-edit-btn"
