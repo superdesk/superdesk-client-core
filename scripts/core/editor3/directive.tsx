@@ -15,7 +15,7 @@ import createEditorStore, {
 } from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
-import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
+import {changeEditorState, setReadOnly, changeLimitConfig, setExternalOptions} from './actions';
 
 import ng from 'core/services/ng';
 import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
@@ -196,13 +196,6 @@ class Editor3Directive {
              */
             value: '=',
 
-
-            /**
-             * @type {String}
-             * @description EditorValue is editorState instead of HTML.
-             */
-            outputEditorState: '=',
-
             /**
              * @type {String}
              * @description required for editor3 to be able to set metadata for fields. Mainly editor_state
@@ -349,12 +342,10 @@ class Editor3Directive {
                     }
                 })();
 
-                const renderEditor3 = (options?: {unmount: boolean}) => {
+                const renderEditor3 = () => {
                     const element = $element.get(0);
 
-                    if (options?.unmount) {
-                        ReactDOM.unmountComponentAtNode(element);
-                    }
+                    ReactDOM.unmountComponentAtNode(element);
 
                     const textStatistics = (
                         <Spacer h gap="8" alignItems="center" noWrap noGrow>
@@ -389,7 +380,6 @@ class Editor3Directive {
 
                     const editor3 = (
                         <Editor3
-                            uiTheme={{}}
                             scrollContainer={this.scrollContainer}
                             singleLine={this.singleLine}
                             cleanPastedHtml={this.cleanPastedHtml}
@@ -529,18 +519,8 @@ class Editor3Directive {
                     renderEditor3();
                 });
 
-                $scope.$on('formattingOptions-update', (_e, data) => {
-                    store = createEditorStore(
-                        {
-                            ...this,
-                            editorFormat: data.editorFormat,
-                            editorState: data.editorState,
-                        },
-                        ng.get('spellcheck'),
-                        true,
-                    );
-
-                    renderEditor3({unmount: false});
+                $scope.$watch('vm.editorFormat', (editorFormat) => {
+                    store.dispatch(setExternalOptions({editorFormat: editorFormat}));
                 });
 
                 // this is triggered from MacrosController.call

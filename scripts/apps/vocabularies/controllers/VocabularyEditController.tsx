@@ -10,6 +10,8 @@ import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
 import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {ContentState, convertToRaw} from 'draft-js';
+import {getObjectEntriesGeneric} from '../../../core/helpers/utils';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -23,7 +25,6 @@ VocabularyEditController.$inject = [
 ];
 
 interface IScope extends IScopeConfigController {
-    item?: Partial<IArticle>;
     setFormDirty: () => void;
     newItemTemplate: any;
     idRegex: string;
@@ -35,8 +36,13 @@ interface IScope extends IScopeConfigController {
     _errorUniqueness: boolean;
     errorMessage: string;
     save: () => void;
+
+    // custom-editor-block props START
     formattingOptionsOnChange?: (options: Array<RICH_FORMATTING_OPTION>) => void;
     editorBlockFormattingOptions?: Array<{value: [RICH_FORMATTING_OPTION, string]}>;
+    fakeItem?: Partial<IArticle>;
+    // custom-editor-block props END
+
     updateUI: () => void;
     requestEditor3DirectivesToGenerateHtml: Array<() => void>;
     handleTemplateValueChange: (value: string) => void;
@@ -56,6 +62,8 @@ interface IScope extends IScopeConfigController {
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
 const editorBlockFieldId = 'editor_block_field';
+
+type IFormattingOptionTuple = [notTranslatedOption: RICH_FORMATTING_OPTION, translatedOption: string];
 
 export function VocabularyEditController(
     $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,
@@ -99,8 +107,7 @@ export function VocabularyEditController(
     function onError(response) {
         if (angular.isDefined(response.data._issues)) {
             if (angular.isDefined(response.data._issues['validator exception'])) {
-                notify.error(gettext('Error: ' +
-                    response.data._issues['validator exception']));
+                notify.error(gettext('Error: {{ message }}', {message: response.data._issues['validator exception']}));
             } else if (angular.isDefined(response.data._issues.error) &&
                 response.data._issues.error.required_field) {
                 let params = response.data._issues.params;
@@ -129,13 +136,17 @@ export function VocabularyEditController(
     if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
         const vocabulary = $scope.vocabulary;
 
-        $scope.item = {
+        $scope.fakeItem = {
             fields_meta: {
 
                 /**
                  * Fake field, needed for compatibility with sdEditor3 directive
                  */
-                [editorBlockFieldId]: {draftjsState: vocabulary.field_options?.template},
+                [editorBlockFieldId]: {
+                    draftjsState: vocabulary.field_options?.template != null
+                        ? vocabulary.field_options.template
+                        : [convertToRaw(ContentState.createFromText(''))],
+                },
             },
         };
 
@@ -149,21 +160,25 @@ export function VocabularyEditController(
                 'media',
             ]);
 
-            const formattingOptions = Object.entries(getEditor3RichTextFormattingOptions())
-                .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}))
-                .filter(({value}: {value: [RICH_FORMATTING_OPTION, string]}) =>
-                    excludedOptions.has(value[0]) === false,
+            const formattingOptions = getObjectEntriesGeneric<RICH_FORMATTING_OPTION, string>(
+                getEditor3RichTextFormattingOptions(),
+            )
+                .filter(([notTranslatedOption]) =>
+                    excludedOptions.has(notTranslatedOption) === false,
+                )
+                .map(([notTranslatedOption, translatedOption]) =>
+                    ({value: [notTranslatedOption, translatedOption]}),
                 );
 
-            return formattingOptions as Array<{value: [RICH_FORMATTING_OPTION, string]}>;
+            return formattingOptions as Array<{value: IFormattingOptionTuple}>;
         })();
 
         $scope.formattingOptionsOnChange = function(options) {
-            vocabulary.field_options = {
-                formatting_options: options,
-            };
+            if (vocabulary.field_options == null) {
+                vocabulary.field_options = {};
+            }
 
-            $scope.updateUI();
+            vocabulary.field_options.formatting_options = options;
 
             /**
              * Apply current changes to item and save them to the field as html,
@@ -173,10 +188,7 @@ export function VocabularyEditController(
                 fn();
             });
 
-            $scope.$broadcast('formattingOptions-update', {
-                editorFormat: options,
-                editorState: $scope.item.fields_meta[editorBlockFieldId].draftjsState,
-            });
+            $scope.updateUI();
         };
     }
 
@@ -194,9 +206,14 @@ export function VocabularyEditController(
                 fn();
             });
             $scope.vocabulary.field_options = $scope.vocabulary.field_options ?? {};
+
+            /**
+             * Formatting options are updated in formattingOptionsOnChange and
+             * don't need to be updated explicitly here again.
+             */
             $scope.vocabulary.field_options = {
                 ...$scope.vocabulary.field_options,
-                template: $scope.item.fields_meta?.[editorBlockFieldId].draftjsState,
+                template: $scope.fakeItem.fields_meta?.[editorBlockFieldId].draftjsState,
             };
         }
 

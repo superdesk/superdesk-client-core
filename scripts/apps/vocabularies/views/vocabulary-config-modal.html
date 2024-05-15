@@ -168,10 +168,8 @@
                             <label class="sd-line-input__label" translate>Formatting Options</label>
                             <sd-formatting-options-tree-select
                                 value="vocabulary.field_options.formatting_options"
-                                fields="{body_html: {}}"
-                                field-id="'body_html'"
                                 on-change="formattingOptionsOnChange"
-                                formatting-options="editorBlockFormattingOptions"
+                                options="editorBlockFormattingOptions"
                             />
                         </div>
                         <div
@@ -191,9 +189,9 @@
                                 data-language="'en'"
                                 data-on-change="updateUI()"
                                 data-read-only="false"
-                                editor-state="item.fields_meta['editor_block_field'].draftjsState"
+                                editor-state="fakeItem.fields_meta['editor_block_field'].draftjsState"
                                 output-editor-state="true"
-                                data-item="item"
+                                data-item="fakeItem"
                                 data-refresh-trigger="refreshTrigger"
                                 data-test-id="field--editor-block"
                             />
