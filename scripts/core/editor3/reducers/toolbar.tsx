@@ -26,12 +26,12 @@ const toolbar = (state: IEditorStore, action) => {
         return toggleInlineStyle(state, action.payload);
     case 'TOOLBAR_APPLY_LINK':
         return applyLink(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE':
-        return applyLinkToMultiLineQuote(state, action.payload);
+    case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
+        return applyLinkOnTableCell(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
-    case 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE':
-        return removeLinkInMultiLineQuote(state);
+    case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
+        return removeLinkInTableCell(state);
     case 'TOOLBAR_REMOVE_FORMAT':
         return removeFormat(state);
     case 'TOOLBAR_REMOVE_ALL_FORMAT':
@@ -153,11 +153,7 @@ function applyChangesToTableCell(
     return onChange(state, newMainState, true);
 }
 
-/**
- * Applies the given URL to the current content selection in multi-line quote block.
- * If the selection is a link, it applies the link to the entity instead.
- */
-const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
+const applyLinkOnTableCell = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
     applyChangesToTableCell(state, (editorState) =>
         entity
             ? entityUtils.replaceSelectedEntityData(editorState, {link})
@@ -165,9 +161,9 @@ const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: 
     );
 
 /**
- * Removes the link on the entire entity under the cursor in multi-line quote block.
+ * Removes the link on the entire entity under the cursor in table cell.
  */
-const removeLinkInMultiLineQuote = (state) => {
+const removeLinkInTableCell = (state) => {
     const {activeCell, editorState: mainEditorState} = state;
 
     if (activeCell === null) {

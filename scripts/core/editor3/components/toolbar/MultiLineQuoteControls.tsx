@@ -10,8 +10,8 @@ import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
 import {blockStyles} from './BlockStyleButtons';
 import {EditorState} from 'draft-js';
-import {LinkInputMultiLineQuote} from '../links/LinkInput';
-import {LinkToolbarMultiLineQuote} from '../links/LinkToolbar';
+import {LinkInputForTableCell} from '../links/LinkInput';
+import {LinkToolbarForTableCell} from '../links/LinkToolbar';
 
 interface IProps extends Partial<IEditorStore> {
     className: string;
@@ -21,9 +21,6 @@ interface IProps extends Partial<IEditorStore> {
     popup: any;
 }
 
-/**
- * Holds the logic for multi-line quote toolbar operations.
- */
 const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
     activeCell,
     editorState,
@@ -88,14 +85,14 @@ const MultiLineQuoteControlsComponent: React.FunctionComponent<IProps> = ({
 
             {
                 popup.type === PopupTypes.Link && (
-                    <LinkInputMultiLineQuote
+                    <LinkInputForTableCell
                         data={popup.data}
                         editorState={cellEditorState}
                     />
                 )
             }
 
-            <LinkToolbarMultiLineQuote
+            <LinkToolbarForTableCell
                 editorState={cellEditorState}
                 onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
             />
