@@ -82,6 +82,7 @@ export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTIO
     'pre',
     'embed',
     'embed articles',
+    'multi-line quote',
     'media',
     'table',
 ];

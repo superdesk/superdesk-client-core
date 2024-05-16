@@ -99,7 +99,7 @@ type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
     sideWidget: null | {
-        name: string;
+        id: string;
         pinned: boolean;
     };
 }
@@ -598,7 +598,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         actions,
                                                     };
                                                 }}
-                                                getSideWidgetNameAtIndex={() => ''}
+                                                getSideWidgetIdAtIndex={() => ''}
                                                 getAuthoringPrimaryToolbarWidgets={() => []}
                                                 secondaryToolbarWidgets={[]}
                                                 disableWidgetPinning
