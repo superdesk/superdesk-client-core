@@ -1,11 +1,11 @@
-<sd-settings-view>
+<sd-settings-view ng-if="initialized">
     <div class="sd-page__main-content" sd-highlights-config>
         <div class="sd-page__header sd-page__header--white">
             <h2 class="sd-page__page-heading" translate>Highlights configurations</h2>
         </div>
         <div class="sd-page__header">
             <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
-    
+
             <span class="sd-page__element-grow"></span>
             <button class="btn btn--primary pull-right" ng-click="edit({})">
                 <i class="icon-plus-sign icon--white"></i>{{ 'Create configuration' | translate }}
