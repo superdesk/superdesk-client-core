@@ -9,7 +9,16 @@ export const customBlockReducer = (state: IEditorStore = {} as IEditorStore, act
     case 'TOOLBAR_ADD_CUSTOM_BLOCK': {
         const initialContent: RawDraftContentState = action.payload.initialContent;
 
-        return addTable(state, getTableWithSingleCell(state.editorState, initialContent), CustomEditor3Entity.CUSTOM_BLOCK);
+        return addTable(
+            state,
+            {
+                entityKind: CustomEditor3Entity.CUSTOM_BLOCK,
+                entityData: {
+                    ...getTableWithSingleCell(state.editorState, initialContent),
+                    vocabularyId: action.payload.vocabularyId,
+                },
+            },
+        );
     }
     default:
         return state;

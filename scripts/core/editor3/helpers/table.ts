@@ -118,6 +118,10 @@ export interface IEditor3TableData {
     currentStyle?: string;
 }
 
+export interface IEditor3CustomBlockData extends IEditor3TableData {
+    vocabularyId: string;
+}
+
 /**
  * @ngdoc method
  * @name setData

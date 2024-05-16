@@ -32,7 +32,7 @@ interface IProps extends Partial<IEditorStore> {
     toggleSuggestingMode(): void;
     showPopup(type, data): void;
     addMultiLineQuote(): void;
-    addCustomBlock(initialContent: RawDraftContentState): void;
+    addCustomBlock(initialContent: RawDraftContentState, vocabularyId: string): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
@@ -189,9 +189,9 @@ class ToolbarComponent extends React.Component<IProps, IState> {
         });
 
         // TODO: use a vocabulary
-        const testOptions: Array<{name: string; formatting_options: Array<string>; html: string}> = [
-            {name: 'a', formatting_options: [], html: 'aaa'},
-            {name: 'b', formatting_options: [], html: 'bbb'},
+        const testOptions: Array<{name: string; formatting_options: Array<string>; html: string; vocabularyId: string}> = [
+            {name: 'a', formatting_options: [], html: 'aaa', vocabularyId: 'a1'},
+            {name: 'b', formatting_options: [], html: 'bbb', vocabularyId: 'b1'},
         ];
 
         if (activeCell != null) {
@@ -272,7 +272,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                                 getOptions={() => testOptions.map((option) => ({
                                     value: option.name,
                                     onSelect: () => {
-                                        addCustomBlock(convertToRaw(ContentState.createFromText(option.html)));
+                                        addCustomBlock(convertToRaw(ContentState.createFromText(option.html)), option.vocabularyId);
                                     },
                                 }))}
                                 getLabel={(item) => item}
@@ -436,7 +436,8 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
-    addCustomBlock: (initialContent: RawDraftContentState) => dispatch(actions.addCustomBlock(initialContent)),
+    addCustomBlock: (initialContent: RawDraftContentState, vocabularyId: string) =>
+        dispatch(actions.addCustomBlock(initialContent, vocabularyId)),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

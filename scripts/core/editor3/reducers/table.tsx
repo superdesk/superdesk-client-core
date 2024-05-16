@@ -1,7 +1,7 @@
 import {RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWithoutEmptyLines';
-import {getCell, setCell, getData, setData, IEditor3TableData} from '../helpers/table';
+import {getCell, setCell, getData, setData, IEditor3TableData, IEditor3CustomBlockData} from '../helpers/table';
 import {CustomEditor3Entity} from '../constants';
 import {IEditorStore} from '../store';
 
@@ -10,8 +10,17 @@ import {IEditorStore} from '../store';
  */
 const table = (state: IEditorStore = {} as IEditorStore, action) => {
     switch (action.type) {
-    case 'TOOLBAR_ADD_TABLE':
-        return addTable(state, action.payload, CustomEditor3Entity.TABLE);
+    case 'TOOLBAR_ADD_TABLE': {
+        const payload: IEditor3TableData = action.payload;
+
+        return addTable(
+            state,
+            {
+                entityKind: CustomEditor3Entity.TABLE,
+                entityData: payload,
+            },
+        );
+    }
     case 'TOOLBAR_ADD_ROW_AFTER':
         return addRowAfter(state);
     case 'TOOLBAR_ADD_COL_AFTER':
@@ -39,14 +48,13 @@ const table = (state: IEditorStore = {} as IEditorStore, action) => {
  */
 export const addTable = (
     state: IEditorStore,
-    data: IEditor3TableData,
-    tableLikeEntity:
-        CustomEditor3Entity.TABLE
-        | CustomEditor3Entity.MULTI_LINE_QUOTE
-        | CustomEditor3Entity.CUSTOM_BLOCK,
+    data:
+        {entityKind: CustomEditor3Entity.TABLE; entityData: IEditor3TableData}
+        | {entityKind: CustomEditor3Entity.MULTI_LINE_QUOTE; entityData: IEditor3TableData}
+        | {entityKind: CustomEditor3Entity.CUSTOM_BLOCK; entityData: IEditor3CustomBlockData},
 ) => {
     const contentState = state.editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(tableLikeEntity, 'MUTABLE', {data});
+    const contentStateWithEntity = contentState.createEntity(data.entityKind, 'MUTABLE', {data: data.entityData});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
     const {editorState} = insertAtomicBlockWithoutEmptyLines(
