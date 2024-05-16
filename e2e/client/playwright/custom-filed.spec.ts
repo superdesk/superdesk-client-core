@@ -104,8 +104,14 @@ test('creating a custom vocabularies', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('ID', {exact: true}).fill('customvocabulary');
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom vocabulary 2');
     await page.locator(s('vocabulary-modal', 'vocabulary-tabs')).getByRole('button', {name: 'Items'}).click();
-    await page.locator(s('vocabulary-modal', 'vocabulary-modal-content')).getByRole('button', {name: 'add item'}).click();
-    await page.locator(s('vocabulary-modal', 'vocabulary-modal-content')).getByLabel('name', {exact: true}).fill('item 1');
+    await page
+        .locator(s('vocabulary-modal', 'vocabulary-modal-content'))
+        .getByRole('button', {name: 'add item'})
+        .click();
+    await page
+        .locator(s('vocabulary-modal', 'vocabulary-modal-content'))
+        .getByLabel('name', {exact: true})
+        .fill('item 1');
     await page.locator(s('vocabulary-modal', 'vocabulary-modal-content')).getByLabel('qcode').fill('item 1');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom vocabulary 2'))).toBeVisible();
