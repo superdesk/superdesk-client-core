@@ -477,7 +477,6 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                     });
                                 }
                             }}
-                            aria-label={tab.label}
                             aria-selected={this.state.activeTab === tab.value}
                         >{tab.label}</button>
                     ))

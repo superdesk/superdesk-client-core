@@ -7,12 +7,12 @@
             <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
         </div>
         <div class="modal__body modal__body--with-navigation">
-            <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+            <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)" data-test-id="vocabulary-tabs">
                 <li ng-class="{'active': tab === 'general'}"><button ng-click="setTab('general')" translate>General</button></li>
                 <li ng-class="{'active': tab === 'items'}"><button ng-click="setTab('items')" translate>Items</button></li>
             </ul>
 
-            <div class="modal__navigation--content">
+            <div class="modal__navigation--content" data-test-id="vocabulary-modal-content">
                 <ng-form name="vocabularyForm" class="vocabularyForm">
                     <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">
                         <div style="height: 100%" id="vocabulary-items-view-edit-placeholder"></div>
@@ -180,13 +180,13 @@
                                 </div>
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="form__row">
-                                        <sd-check name="field_type" aria-label="Image"
+                                        <sd-check name="field_type" aria-label="{{'Image' | translate}}"
                                             ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">
                                             {{'Image' | translate}}</sd-check>
                                         <sd-check name="field_type"
                                             ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">
                                             {{'Video' | translate}}</sd-check>
-                                        <sd-check name="field_type"  aria-label="Audio"
+                                        <sd-check name="field_type"  aria-label="{{'Audio' | translate}}"
                                             ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
                                             {{'Audio' | translate}}</sd-check>
                                     </div>

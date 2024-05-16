@@ -8,13 +8,13 @@ export class Settings {
         this.page = page;
     }
 
-    async AddFieldInContentProfile(contentProfile: string, tab: string, field: string): Promise<void> {
+    async addFieldInContentProfile(contentProfile: string, tab: string, field: string): Promise<void> {
         await this.page.locator(s(`content-profile=${contentProfile}`, 'content-profile-actions')).click();
-        await this.page.locator(s('actions--options')).getByRole('button', {name: 'Edit'}).click();
+        await this.page.locator(s('content-profile-actions--options')).getByRole('button', {name: 'Edit'}).click();
 
         await this.page
             .locator(s('content-profile-editing-modal', 'content-profile-tabs'))
-            .getByLabel(`${tab} fields`).click();
+            .getByRole('tab', {name: `${tab} fields`}).click();
         await this.page
             .locator(s('content-profile-editing-modal'))
             .getByRole('button', {name: 'Add new field'}).first().click();

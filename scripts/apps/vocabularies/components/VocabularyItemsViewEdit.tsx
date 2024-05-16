@@ -166,6 +166,7 @@ class InputField extends React.PureComponent<IPropsInputField> {
                         onChange={(event) => {
                             this.props.update(item, field.key, event.target.value);
                         }}
+                        aria-label={gettext('{{name}}', {name: field.key})}
                         data-test-id={'field--' + field.key}
                     />
                 </div>
