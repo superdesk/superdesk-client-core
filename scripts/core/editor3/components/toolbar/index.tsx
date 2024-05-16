@@ -15,9 +15,10 @@ import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
 import {TreeMenu} from 'superdesk-ui-framework/react';
-import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {IEditorComponentProps, IVocabularyEditorBlock, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 import {IActiveCell} from '../tables/TableBlock';
+import {sdApi} from 'api';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -188,12 +189,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             disabled: disabled && activeCell === null,
         });
 
-        // TODO: use a vocabulary
-        const testOptions: Array<{name: string; formatting_options: Array<string>; html: string; vocabularyId: string}> = [
-            {name: 'a', formatting_options: [], html: 'aaa', vocabularyId: 'a1'},
-            {name: 'b', formatting_options: [], html: 'bbb', vocabularyId: 'b1'},
-        ];
-
         if (activeCell != null) {
             return (
                 <TableControls
@@ -269,12 +264,21 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     {has('custom blocks') && (
                         <div style={{display: 'inline-flex'}}>
                             <TreeMenu
-                                getOptions={() => testOptions.map((option) => ({
-                                    value: option.name,
-                                    onSelect: () => {
-                                        addCustomBlock(convertToRaw(ContentState.createFromText(option.html)), option.vocabularyId);
-                                    },
-                                }))}
+                                getOptions={() => {
+                                    return sdApi.vocabularies
+                                        .getAll()
+                                        .filter((vocabulary) => vocabulary.field_type === 'editor-block')
+                                        .map((vocabulary: IVocabularyEditorBlock) => ({
+                                            value: vocabulary.display_name,
+                                            onSelect: () => {
+                                                const contentStateRaw = vocabulary.field_options?.template?.[0]
+                                                    ?? convertToRaw(ContentState.createFromText(''));
+
+                                                addCustomBlock(contentStateRaw, vocabulary._id);
+                                            },
+                                        }))
+                                        .toArray();
+                                }}
                                 getLabel={(item) => item}
                                 getId={(item) => item}
                             >
