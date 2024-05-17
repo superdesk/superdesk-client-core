@@ -16,6 +16,7 @@ export const customBlockReducer = (state: IEditorStore = {} as IEditorStore, act
                 entityData: {
                     ...getTableWithSingleCell(state.editorState, initialContent),
                     vocabularyId: action.payload.vocabularyId,
+                    label: action.payload.label,
                 },
             },
         );

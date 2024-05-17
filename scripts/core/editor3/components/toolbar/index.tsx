@@ -33,7 +33,7 @@ interface IProps extends Partial<IEditorStore> {
     toggleSuggestingMode(): void;
     showPopup(type, data): void;
     addMultiLineQuote(): void;
-    addCustomBlock(initialContent: RawDraftContentState, vocabularyId: string): void;
+    addCustomBlock(initialContent: RawDraftContentState, vocabularyId: string, label: string): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
@@ -274,7 +274,11 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                                                 const contentStateRaw = vocabulary.field_options?.template?.[0]
                                                     ?? convertToRaw(ContentState.createFromText(''));
 
-                                                addCustomBlock(contentStateRaw, vocabulary._id);
+                                                addCustomBlock(
+                                                    contentStateRaw,
+                                                    vocabulary._id,
+                                                    vocabulary.display_name,
+                                                );
                                             },
                                         }))
                                         .toArray();
@@ -440,8 +444,8 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
-    addCustomBlock: (initialContent: RawDraftContentState, vocabularyId: string) =>
-        dispatch(actions.addCustomBlock(initialContent, vocabularyId)),
+    addCustomBlock: (initialContent: RawDraftContentState, vocabularyId: string, label: string) =>
+        dispatch(actions.addCustomBlock(initialContent, vocabularyId, label)),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),

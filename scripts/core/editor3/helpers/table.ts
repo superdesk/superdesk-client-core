@@ -120,6 +120,7 @@ export interface IEditor3TableData {
 
 export interface IEditor3CustomBlockData extends IEditor3TableData {
     vocabularyId: string;
+    label: string;
 }
 
 /**
