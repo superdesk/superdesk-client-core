@@ -5,6 +5,7 @@ import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
 import {EditorState} from 'draft-js';
+import {Editor3InitializeSpellchecker} from './Editor3InitializeSpellchecker';
 
 export class Editor3Base extends React.Component<any, any> {
     static defaultProps: any;
@@ -17,9 +18,11 @@ export class Editor3Base extends React.Component<any, any> {
 
     render() {
         return (
-            <MultipleHighlights {...this.props}>
-                <Editor3Component />
-            </MultipleHighlights>
+            <Editor3InitializeSpellchecker spellchecking={this.props.spellchecking} dispatch={this.props.dispatch}>
+                <MultipleHighlights {...this.props}>
+                    <Editor3Component />
+                </MultipleHighlights>
+            </Editor3InitializeSpellchecker>
         );
     }
 }
