@@ -330,7 +330,7 @@ class Editor3Directive {
                         pathValue || this.pathToValue
                     ]?.characterLimitMode;
 
-                let store = createEditorStore(this, ng.get('spellcheck'), true);
+                let store = createEditorStore(this, ng.get('spellcheck'));
 
                 const fieldName: string | null = (() => {
                     if (this.fieldLabel != null) {
