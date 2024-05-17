@@ -3,7 +3,7 @@ import {MediaBlock} from './media/MediaBlock';
 import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables/TableBlock';
 import {ContentBlock, ContentState} from 'draft-js';
-import {DragableEditor3Block} from './media/dragable-editor3-block';
+import {DraggableEditor3Block} from './media/dragable-editor3-block';
 import {MultiLineQuote} from './multi-line-quote';
 import {CustomEditor3Entity} from '../constants';
 import {ArticleEmbed} from './article-embed/article-embed';
@@ -68,9 +68,9 @@ const BlockRendererComponent: React.FunctionComponent<IProps> = (props) => {
         return null;
     } else {
         return (
-            <DragableEditor3Block block={block}>
+            <DraggableEditor3Block block={block}>
                 {component}
-            </DragableEditor3Block>
+            </DraggableEditor3Block>
         );
     }
 };
