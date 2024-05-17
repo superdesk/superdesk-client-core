@@ -23,12 +23,13 @@ export interface ISetActiveCellReturnType {
     payload: IActiveCell;
 }
 
-interface IProps {
-    block: ContentBlock;
-    readOnly: boolean;
-    spellchecking: IEditorStore['spellchecking'];
+interface IReduxStateProps {
     editorState: EditorState;
     activeCell?: IActiveCell;
+    readOnly: IEditorStore['readOnly'];
+}
+
+interface IDispatchProps {
     setActiveCell: (
         row: number,
         col: number,
@@ -38,10 +39,17 @@ interface IProps {
         tableKind: ITableKind,
     ) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
+}
+
+interface IOwnProps {
+    block: ContentBlock;
+    spellchecking: IEditorStore['spellchecking'];
     tableKind: ITableKind;
     className?: string;
     fullWidth?: boolean;
 }
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
 
 /**
  * @ngdoc React
@@ -207,7 +215,7 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock = connect(
+export const TableBlock: React.ComponentType<IOwnProps> = connect<IReduxStateProps, IDispatchProps, IOwnProps>(
     mapStateToProps,
     mapDispatchToProps,
 )(TableBlockComponent);
