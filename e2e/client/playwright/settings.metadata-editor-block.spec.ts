@@ -9,9 +9,9 @@ test('creation and persistance of a custom block', async ({page}) => {
     await page.getByRole('button', {name: 'Add New'}).click();
 
     // Input sample data
-    await treeSelectDriver.addValue(page, 'h1');
-    await page.locator(s('vocabulary-edit-content')).getByLabel('ID').fill('test_vocabulary');
-    await page.locator(s('vocabulary-edit-content')).getByLabel('NAME').fill('test_vocabulary');
+    await treeSelectDriver('formatting-options').addValue(page, 'h1');
+    await page.locator(s('vocabulary-edit-content')).getByLabel('Id').fill('test_vocabulary');
+    await page.locator(s('vocabulary-edit-content')).getByLabel('Name').fill('test_vocabulary');
     await page.locator(s('vocabulary-edit-content', 'editor3')).getByRole('textbox').fill('test data');
 
     // Apply formatting option to sample text data
@@ -26,6 +26,6 @@ test('creation and persistance of a custom block', async ({page}) => {
     await page.locator(s('vocabulary-item=test_vocabulary', 'vocabulary-item--start-editing')).click();
 
     // Check if formatting option, sample text data
-    await expect(page.locator(s('editor3', 'formatting-option=H2'))).toBeDefined();
+    await expect(page.locator(s('editor3', 'formatting-option=H1'))).toBeVisible();
     await expect(page.locator(s('editor3')).getByRole('textbox')).toHaveText('test data');
 });
