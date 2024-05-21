@@ -27,7 +27,7 @@ export interface ISpellcheckerAction {
 
 export interface ISpellchecker {
     // text - formatting-free text, can be multiline
-    check(text: string): Promise<Array<ISpellcheckWarning>>;
+    check(text: string, abortSignal: AbortSignal): Promise<Array<ISpellcheckWarning>>;
 
     // text - formatting-free text, must be single-line
     // can be ommited if suggestions are provided in `ISpellcheckWarning`s returned from the `check` method.

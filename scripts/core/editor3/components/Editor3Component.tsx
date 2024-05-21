@@ -16,7 +16,7 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {blockRenderer} from './blockRenderer';
+import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -27,7 +27,7 @@ import UnstyledWrapper from './UnstyledWrapper';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
 import {setSpellcheckerProgress, applySpellcheck, PopupTypes} from '../actions';
-import {noop} from 'lodash';
+import {debounce} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
@@ -42,6 +42,7 @@ import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 import {isMacOS} from 'core/utils';
 import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
+import {addInternalEventListener} from 'core/internal-events';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -174,9 +175,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
     div: any;
     editor: any;
-    spellcheckCancelFn: () => void;
     onDragEnd: () => void;
-    removeListeners: Array<() => void> = [];
+    private removeListeners: Array<() => void> = [];
+
+    private spellcheckAbortController: AbortController;
+    private scheduleSpellchecking: () => void;
 
     constructor(props) {
         super(props);
@@ -191,7 +194,9 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
-        this.spellcheckCancelFn = noop;
+        this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
+
+        this.spellcheckAbortController = new AbortController();
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -203,6 +208,8 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             draggingInProgress: false,
             contentChangesAfterLastFocus: 0,
         };
+
+        this.removeListeners = [];
     }
 
     /**
@@ -215,35 +222,23 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     spellcheck() {
-        this.spellcheckCancelFn();
+        this.spellcheckAbortController.abort();
+        this.spellcheckAbortController = new AbortController();
 
-        this.spellcheckCancelFn = (() => {
-            let canceled = false;
+        if (this.props.spellchecking.inProgress !== true) {
+            this.props.dispatch(setSpellcheckerProgress(true));
+        }
 
-            setTimeout(() => {
-                if (!canceled) {
-                    if (this.props.spellchecking.inProgress !== true) {
-                        this.props.dispatch(setSpellcheckerProgress(true));
-                    }
+        const spellchecker = getSpellchecker(this.props.spellchecking.language);
 
-                    const spellchecker = getSpellchecker(this.props.spellchecking.language);
+        if (spellchecker == null) {
+            return;
+        }
 
-                    if (spellchecker == null) {
-                        return;
-                    }
-
-                    getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
-                        .then((spellcheckWarningsByBlock) => {
-                            if (!canceled) {
-                                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
-                                this.spellcheckCancelFn = noop;
-                            }
-                        });
-                }
-            }, 500);
-
-            return () => canceled = true;
-        })();
+        getSpellcheckWarningsByBlock(spellchecker, this.props.editorState, this.spellcheckAbortController.signal)
+            .then((spellcheckWarningsByBlock) => {
+                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
+            });
     }
 
     /**
@@ -518,6 +513,10 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         if (this.props.spellchecking.enabled) {
             this.spellcheck();
         }
+
+        this.removeListeners.push(
+            addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
+        );
     }
 
     handleRefs(editor) {
@@ -536,6 +535,10 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         $(this.div).off();
 
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
+
+        for (const fn of this.removeListeners) {
+            fn();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -547,7 +550,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             this.props.spellchecking.enabled &&
             prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
         ) {
-            this.spellcheck();
+            this.scheduleSpellchecking();
         }
     }
 
@@ -670,7 +673,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={blockRenderer}
+                        blockRendererFn={getBlockRenderer(this.props.spellchecking)}
                         blockStyleFn={blockStyle}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {

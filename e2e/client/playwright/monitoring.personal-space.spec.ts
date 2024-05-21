@@ -60,8 +60,8 @@ test('sending an item from personal space', async ({page}) => {
         page.locator(s('article-item=personal space article 1')),
         'Send to',
     );
-    await page.locator(s('interactive-actions-panel', 'open-popover')).click();
-    await page.locator(s('tree-select-popover')).getByRole('button', {name: 'Sports'}).click();
+    await page.locator(s('destination-select', 'open-popover')).click();
+    await page.locator(s('tree-select-popover')).locator(s('option'), {hasText: 'Sports'}).click();
     await page.locator(s('interactive-actions-panel')).locator(s('item'), {hasText: 'Working Stage'}).check();
     await page.locator(s('interactive-actions-panel', 'send')).click();
 

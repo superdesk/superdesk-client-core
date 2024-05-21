@@ -4,37 +4,27 @@ import {
     SelectionState,
     ContentBlock,
     EditorState,
-    CompositeDecorator,
     convertToRaw,
     convertFromRaw,
     RawDraftContentState,
 } from 'draft-js';
 import {OrderedSet, Map} from 'immutable';
-import {LinkDecorator} from '../components/links/LinkDecorator';
 import {createBlockSelection} from './selection';
 
 /**
- * @ngdoc method
- * @name getCell
- * @param {Array} cells The array of cells in the table
- * @param {Number} row The row of the cell in the table
- * @param {Number} col The column of the cell in the table
- * @description Retrieves the content state of the cell at row/col.
+ * Retrieves the editor state of the cell at row/col.
  */
 export function getCell(data: IEditor3TableData, row, col, currentStyle, selection): EditorState {
-    const decorator = new CompositeDecorator([LinkDecorator]);
     const {cells} = data;
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
         cellEditorState = EditorState.createWithContent(
             ContentState.createFromText(''),
-            decorator,
         );
     } else {
         cellEditorState = EditorState.createWithContent(
             convertFromRaw(cells[row][col]),
-            decorator,
         );
     }
 
