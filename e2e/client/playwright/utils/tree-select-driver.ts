@@ -16,10 +16,10 @@ export const treeSelectDriver = (dataTestId: string) => {
         /**
          * Get options that are set.
          */
-        async getValues(page: Page): Promise<Array<string>> {
-            return await page.locator(s(dataTestId, 'item')).all().then((buttons) => {
-                return Promise.all(buttons.map((button) => button.innerText()));
-            });
+        getValues(page: Page): Promise<Array<string>> {
+            return page.locator(s(dataTestId, 'item')).all().then((buttons) =>
+                Promise.all(buttons.map((button) => button.innerText())),
+            );
         },
 
         /**
