@@ -18,11 +18,8 @@ export const treeSelectDriver = (dataTestId: string) => {
          */
         async getValues(page: Page): Promise<Array<string>> {
             return await page.locator(s(dataTestId, 'item')).all().then((buttons) => {
-                return Promise.all(buttons.map((button) => button.innerText()))
+                return Promise.all(buttons.map((button) => button.innerText()));
             });
-
-            // return page.locator(s('tree-select-popover', 'options')).getByRole('button').all()
-            //     .then((buttons) => Promise.all(buttons.map((button) => button.innerText())));
         },
 
         /**
