@@ -6,11 +6,23 @@ export const treeSelectDriver = (dataTestId: string) => {
         /**
          * Get all available options.
          */
-        async getValues(page: Page): Promise<Array<string>> {
+        async getOptions(page: Page): Promise<Array<string>> {
             await page.locator(s('open-popover')).click();
 
             return page.locator(s('tree-select-popover', 'options')).getByRole('button').all()
                 .then((buttons) => Promise.all(buttons.map((button) => button.innerText())));
+        },
+
+        /**
+         * Get options that are set.
+         */
+        async getValues(page: Page): Promise<Array<string>> {
+            return await page.locator(s(dataTestId, 'item')).all().then((buttons) => {
+                return Promise.all(buttons.map((button) => button.innerText()))
+            });
+
+            // return page.locator(s('tree-select-popover', 'options')).getByRole('button').all()
+            //     .then((buttons) => Promise.all(buttons.map((button) => button.innerText())));
         },
 
         /**
@@ -25,7 +37,7 @@ export const treeSelectDriver = (dataTestId: string) => {
                             .getByRole('button', {name: new RegExp(option, 'i')})
                             .click();
                     } else if (option != null) {
-                        setOptions(option);
+                        await setOptions(option);
                     }
                 }
             };
