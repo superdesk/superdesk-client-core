@@ -114,6 +114,9 @@ test('tables maintaining cursor position in the middle when executing "undo" act
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
+    await expect(page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')))
+        .toBeVisible();
+
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
