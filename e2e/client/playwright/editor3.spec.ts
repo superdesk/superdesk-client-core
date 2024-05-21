@@ -4,9 +4,13 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {getEditor3Paragraphs} from './utils/editor3';
 
 test('accepting a spelling suggestion', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
     await restoreDatabaseSnapshot({snapshotName: 'spellchecker'});
 
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=spellchecker test'),
@@ -32,9 +36,13 @@ test('accepting a spelling suggestion', async ({page}) => {
 });
 
 test('adding word marked as a spellchecker issue to dictionary', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
     await restoreDatabaseSnapshot({snapshotName: 'spellchecker'});
 
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=spellchecker test'),
