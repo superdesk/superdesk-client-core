@@ -146,7 +146,20 @@ export class EditorService {
         if (typeof spellcheck !== 'undefined') {
             spellcheckerStores.forEach((_store) => {
                 _store.dispatch(action.setSpellcheckerLanguage(language));
-                _store.dispatch(action.setSpellcheckerStatus(spellcheck));
+                _store.dispatch(
+                    action.setSpellcheckerStatus(
+                        spellcheck,
+
+                        /**
+                         * not implemented properly because
+                         * 1. it would take a lot of time
+                         * 2. not aborting the request would probably not cause issues
+                         *  because it wasn't being aborted for a long time
+                         * 3. we'll be removing the code of angular-based authoring anyway
+                         */
+                        new AbortController().signal,
+                    ),
+                );
             });
         }
     }

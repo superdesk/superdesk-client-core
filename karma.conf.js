@@ -2,7 +2,9 @@ var path = require('path');
 var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
 
-process.env.TZ = "Europe/Prague";
+require('karma-spec-reporter');
+
+process.env.TZ = 'Europe/Prague';
 
 module.exports = function(config) {
     var webpackConfig = makeConfig(grunt);
@@ -54,7 +56,7 @@ module.exports = function(config) {
         },
 
         // test results reporter to use
-        reporters: ['dots'],
+        reporters: ['spec'],
 
         // web server port
         port: 8080,

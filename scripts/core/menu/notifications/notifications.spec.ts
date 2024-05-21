@@ -10,6 +10,7 @@ describe('user notifications', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.menu.notifications'));
     beforeEach(window.module('superdesk.apps.stream'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when(notifications));
