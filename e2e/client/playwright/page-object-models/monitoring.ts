@@ -1,4 +1,5 @@
 import {Page, Locator} from '@playwright/test';
+import {nameof} from 'core/helpers/typescript-helpers';
 import {s} from '../utils';
 
 export class Monitoring {
@@ -37,7 +38,7 @@ export class Monitoring {
             .click();
     }
 
-    async createArticleFromTemplate(template: string, options?: {slugline?: string}): Promise<void> {
+    async createArticleFromTemplate(template: string, options?: {slugline?:string, body_html?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: template}).click();
@@ -46,7 +47,13 @@ export class Monitoring {
             let keys = Object.keys(options);
 
             for (const key of keys) {
-                await this.page.locator(s('authoring', `field-${key}`)).fill(options[key]);
+                if (key === nameof<typeof options>('slugline')) {
+                    await this.page.locator(s('authoring', `field-${key}`)).fill(options[key]);
+                } else {
+                    await this.page.locator(
+                        s('authoring', `authoring-field=${key}`),
+                    ).getByRole('textbox').fill(options[key]);
+                }
             }
         }
     }
