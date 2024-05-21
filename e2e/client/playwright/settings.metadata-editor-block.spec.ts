@@ -8,6 +8,8 @@ test('creation and persistance of a custom block', async ({page}) => {
     await page.locator(s('metadata-navigation')).getByRole('button', {name: 'Custom blocks'}).click();
     await page.getByRole('button', {name: 'Add New'}).click();
 
+    await expect(page.locator(s('vocabulary-edit-content'))).toBeVisible();
+
     // Input sample data
     await treeSelectDriver('formatting-options').addValue(page, 'h1');
     await page.locator(s('vocabulary-edit-content')).getByLabel('Id').fill('test_vocabulary');
