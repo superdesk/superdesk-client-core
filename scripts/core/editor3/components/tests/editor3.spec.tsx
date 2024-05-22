@@ -5,8 +5,18 @@ import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
-import {blockRenderer} from '../blockRenderer';
 import {CustomEditor3Entity} from 'core/editor3/constants';
+import {getBlockRenderer} from '../blockRenderer';
+import {IEditorStore} from 'core/editor3/store';
+
+const spellchecking: IEditorStore['spellchecking'] = {
+    enabled: false,
+    language: 'en',
+    inProgress: false,
+    warningsByBlock: {},
+};
+
+const blockRenderer = getBlockRenderer(spellchecking);
 
 const editorState = EditorState.createEmpty();
 
@@ -164,7 +174,7 @@ describe('editor3.blockRenderer', () => {
         const contentState = {getEntity: () => ({getType: () => 'not an image'})};
         const {component, editable} = blockRenderer(block);
 
-        expect(component({block, contentState})).toBe(null);
+        expect(component({block, contentState, blockProps: {spellchecking}})).toBe(null);
         expect(editable).toEqual(false);
     });
 
@@ -175,7 +185,7 @@ describe('editor3.blockRenderer', () => {
             getData: () => ({data: {html: 'abc'}}),
         })};
         const component = blockRenderer(block)
-            .component({block, contentState});
+            .component({block, contentState, blockProps: {spellchecking}});
         const store = mockStore().store as unknown as Store;
 
         expect(component).not.toBe(null);

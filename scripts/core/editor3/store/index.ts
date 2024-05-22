@@ -25,7 +25,6 @@ import {
 } from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
-import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links/LinkDecorator';
 import {
     getSpellcheckingDecorator,
@@ -43,6 +42,7 @@ import {
 import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
+import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -98,22 +98,30 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
-export const getDecorators = (
-    spellcheckEnabled?: boolean,
-    language?: string,
-    spellcheckWarnings?: ISpellcheckWarningsByBlock,
+interface IOptions {
+    spellchecker: {
+        acceptSuggestion: IAcceptSuggestion,
+        enabled?: boolean,
+        language?: string,
+        warnings?: ISpellcheckWarningsByBlock,
+    };
     limitConfig?: EditorLimit,
-): {decorator: CompositeDecoratorCustom; mustReApplyDecorators: boolean} => {
+}
+
+export const getDecorators = (options: IOptions) => {
+    const {limitConfig} = options;
+    const {spellchecker} = options;
+
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellcheckEnabled === true && spellcheckWarnings != null && language != null) {
+    if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
         mustReApplyDecorators = true;
 
         decorators.push(
-            getSpellcheckingDecorator(language, spellcheckWarnings),
+            getSpellcheckingDecorator(spellchecker.language, spellchecker.warnings, spellchecker.acceptSuggestion),
         );
     }
 
@@ -154,7 +162,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
     };
 }
 
-export function initializeSpellchecker(store, spellcheck) {
+export function initializeSpellchecker(dispatch, spellcheck): Promise<void> {
     return new Promise<void>((resolve) => {
         if (spellcheck != null) {
             Promise.all([
@@ -166,7 +174,7 @@ export function initializeSpellchecker(store, spellcheck) {
             ]).then((res) => {
                 const [abbreviations] = res;
 
-                store.dispatch(setAbbreviations(abbreviations || {}));
+                dispatch(setAbbreviations(abbreviations || {}));
 
                 setTimeout(() => {
                     resolve();
@@ -203,7 +211,7 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators().decorator,
+        getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
@@ -234,7 +242,7 @@ export default function createEditorStore(
         getMiddlewares(),
     );
 
-    initializeSpellchecker(store, spellcheck);
+    initializeSpellchecker(store.dispatch, spellcheck);
 
     editor3Stores.push(store);
 

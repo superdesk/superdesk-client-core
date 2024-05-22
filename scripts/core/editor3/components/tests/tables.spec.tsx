@@ -2,11 +2,24 @@ import React from 'react';
 import {EditorState, ContentState} from 'draft-js';
 import {shallow, mount} from 'enzyme';
 import {tableBlockAndContent} from './utils';
-import {TableCell} from '../tables';
+import {TableCell} from '../tables/TableCell';
 import {TableBlockComponent as TableBlock} from '../tables/TableBlock';
+import {IEditorStore} from 'core/editor3/store';
+
+const spellchecking: IEditorStore['spellchecking'] = {
+    enabled: false,
+    language: 'en',
+    inProgress: false,
+    warningsByBlock: {},
+};
 
 describe('editor3.component.table-block', () => {
-    beforeEach(window.module('superdesk.apps.spellcheck'));
+    beforeEach(() => {
+        window.module('superdesk.apps.spellcheck');
+
+        // init the tests module to get the actual provider
+        inject(() => { /* no-op */ });
+    });
 
     it('should render 2 rows and 6 cells', () => {
         const {block, contentState} = tableBlockAndContent();
@@ -17,6 +30,7 @@ describe('editor3.component.table-block', () => {
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={false}
+                spellchecking={spellchecking}
             />,
         );
 
@@ -33,6 +47,7 @@ describe('editor3.component.table-block', () => {
                 editorState={EditorState.createWithContent(contentState)}
                 parentOnChange={() => { /* no-op */ }}
                 readOnly={true}
+                spellchecking={spellchecking}
             />,
         );
 
@@ -55,6 +70,7 @@ describe('editor3.component.table-cell', () => {
             <TableCell
                 fullWidth
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
+                spellchecking={spellchecking}
                 onChange={() => { /* no-op */ }}
                 readOnly={false}
                 onFocus={() => { /* no-op */ }}

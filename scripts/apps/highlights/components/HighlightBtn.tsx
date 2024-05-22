@@ -26,7 +26,7 @@ export default class HighlightBtn extends React.Component<any, any> {
 
         return React.createElement(
             'button',
-            {disabled: isMarked, onClick: this.markHighlight},
+            {disabled: isMarked, onClick: this.markHighlight, 'aria-label': highlight.label},
             React.createElement('i', {className: 'icon-star'}),
             highlight.label,
         );
