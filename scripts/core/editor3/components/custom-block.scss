@@ -1,0 +1,46 @@
+.editor3-custom-block {
+    .table-block table td {
+        border: 1px solid var(--sd-editor-colour__controls-border)!important;
+    }
+
+    .table-inside table {
+        border: 0;
+    }
+}
+
+.editor3-custom-block--label-wrapper {
+    display: flex;
+}
+
+.editor3-custom-block--label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-block-start: 1px; // make text be vertically in the center of the bounding box
+}
+
+.editor3-custom-block--drag-handle {
+    --handle-width: 10px;
+    --handle-height: 14px;
+
+    display: flex;
+    padding: 4px 8px;
+    padding-inline-start: 4px; // less padding for drag handle
+    gap: 8px;
+    align-items: center;
+    cursor: grab;
+    border-start-start-radius: 2px;
+    border-start-end-radius: 2px;
+
+    background: var(--sd-editor-colour__controls-border);
+
+    &:hover {
+        background: gray;
+    }
+
+    &:active {
+        background:var(--sd-colour-primary)
+    }
+}

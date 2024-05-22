@@ -38,41 +38,52 @@ const BlockRendererComponent: React.FunctionComponent<IProps> = (props) => {
 
     function getComponent() {
         if (type === CustomEditor3Entity.MEDIA) {
-            return <MediaBlock contentState={props.contentState} block={props.block} />;
+            return (
+                <DraggableEditor3Block block={props.block}>
+                    <MediaBlock contentState={props.contentState} block={props.block} />
+                </DraggableEditor3Block>
+            );
         } else if (type === CustomEditor3Entity.EMBED) {
-            return <EmbedBlock contentState={props.contentState} block={props.block} />;
+            return (
+                <DraggableEditor3Block block={props.block}>
+                    <EmbedBlock contentState={props.contentState} block={props.block} />
+                </DraggableEditor3Block>
+            );
         } else if (type === CustomEditor3Entity.TABLE) {
             // Spellchecker is disabled for tables to avoid performance issues.
             // As it is currently implemented, it would send one spellchecking request for each table cell.
             return (
-                <TableBlock
-                    block={props.block}
-                    spellchecking={disabledSpellcheckerConfig}
-                    tableKind="table"
-                />
+                <DraggableEditor3Block block={props.block}>
+                    <TableBlock
+                        block={props.block}
+                        spellchecking={disabledSpellcheckerConfig}
+                        tableKind="table"
+                    />
+                </DraggableEditor3Block>
             );
         } else if (type === CustomEditor3Entity.MULTI_LINE_QUOTE) {
-            return <MultiLineQuote block={props.block} spellchecking={spellchecking} />;
+            return (
+                <DraggableEditor3Block block={props.block}>
+                    <MultiLineQuote block={props.block} spellchecking={spellchecking} />
+                </DraggableEditor3Block>
+            );
         } else if (type === CustomEditor3Entity.ARTICLE_EMBED) {
-            return <ArticleEmbed contentState={props.contentState} block={props.block} />;
+            return (
+                <DraggableEditor3Block block={props.block}>
+                    <ArticleEmbed contentState={props.contentState} block={props.block} />
+                </DraggableEditor3Block>
+            );
         } else if (type === CustomEditor3Entity.CUSTOM_BLOCK) {
-            return <CustomBlock contentState={props.contentState} block={props.block} spellchecking={spellchecking} />;
+            return (
+                // uses draggable wrapper inside the component
+                <CustomBlock contentState={props.contentState} block={props.block} spellchecking={spellchecking} />
+            );
         } else {
             return null;
         }
     }
 
-    const component = getComponent();
-
-    if (component == null) {
-        return null;
-    } else {
-        return (
-            <DraggableEditor3Block block={block}>
-                {component}
-            </DraggableEditor3Block>
-        );
-    }
+    return getComponent();
 };
 
 export function getBlockRenderer(spellchecking: IEditorStore['spellchecking']) {

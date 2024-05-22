@@ -260,6 +260,10 @@ $editor-styleButton-size: 			3rem;
 				}
 			}
 
+			.DraftEditor-editorContainer [data-block="true"]:only-child {
+				border-bottom-width: 0em!important; // removing border that is usually added for drag and drop support
+			}
+
 			&__controls {
 				margin-block-end: 6px;
 
