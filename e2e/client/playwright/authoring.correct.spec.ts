@@ -35,8 +35,9 @@ test('correcting with unsaved changes', async ({page}) => {
 
     // publishing the article end
 
+    // TODO: should be 'monitoring-group=Sports / output'
     await page.locator(
-        s('monitoring-group=Sports desk output', 'article-item=test sports story'),
+        s('monitoring-group=Sports', 'article-item=test sports story'),
     ).dblclick({timeout: 10000}); // need to wait until published item appears in output
 
     await page.locator(s('authoring', 'authoring-topbar')).getByLabel('Correct').click();
@@ -50,7 +51,7 @@ test('correcting with unsaved changes', async ({page}) => {
     await page.locator(s('authoring', 'authoring-topbar')).getByRole('button', {name: 'Send Correction'}).click();
 
     await page.locator(
-        s('monitoring-group=Sports desk output', 'article-item=test sports story [corrected]'),
+        s('monitoring-group=Sports', 'article-item=test sports story [corrected]'),
     ).dblclick({timeout: 10000}); // need to wait until published item appears in output
 
     // initialize correction only to make field editable and accessible using the same selector

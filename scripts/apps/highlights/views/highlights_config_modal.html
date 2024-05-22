@@ -1,4 +1,4 @@
-<div sd-modal data-model="modalActive" data-close="cancel()" data-test-id="'highlight-configuration-modal'">
+<div sd-modal data-model="modalActive" data-close="cancel()">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!configEdit._id" translate>Create highlight configuration</h3>
         <h3 class="modal__heading" ng-show="configEdit._id" translate-params-name="configEdit.name" translate>Edit "{{name}}" highlight</h3>
@@ -9,7 +9,7 @@
             <fieldset>
                 <div class="sd-line-input sd-line-input--required sd-line-input--boxed" ng-class="{'sd-line-input--invalid' : _errorUniqueness || _errorLimits}">
                         <label class="sd-line-input__label">{{'Configuration name' | translate}}</label>
-                        <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" aria-label="{{'Configuration name' | translate}}" required>
+                        <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" required>
                         <div class="sd-line-input__char-count" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></div>
                         <div ng-show="_errorLimits" class="sd-line-input__message sd-line-input__message--with-char-count"><span translate>Character limit exceeded, highlight can not be created/updated.</span></div>
                         <div ng-show="_errorUniqueness" class="sd-line-input__message"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</div>
@@ -27,8 +27,8 @@
                     <label class="form-label form__row-label">{{'Assigned desks' | translate}}</label>
                     <div class="multi-select">
                         <ul class="simple-list simple-list--dotted simple-list--no-padding">
-                            <li ng-repeat="desk in assignedDesks" class="simple-list__item" aria-label="{{desk.name}}">
-                                <span sd-check ng-model="desk.included" data-test-id="desk-checkbox" data-test-value="{{desk.name}}"></span>
+                            <li ng-repeat="desk in assignedDesks" class="simple-list__item">
+                                <span sd-check ng-model="desk.included"></span>
                                 <span class="text" ng-click="desk.included = !desk.included">{{desk.name}}</span>
                             </li>
                         </ul>

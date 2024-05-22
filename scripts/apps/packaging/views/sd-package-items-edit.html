@@ -7,7 +7,7 @@
             <ul id="{{ group.id | uppercase}}" class="package-edit-items clearfix" data-group="{{group.id}}">
                 <li class="sort-item clearfix" ng-repeat="item in group.items">
                     <div class="item-container">
-                        <div sd-package-item-preview data-item="item" data-test-id="package-items" data-test-value="{{ item.slugline }}"></div>
+                        <div sd-package-item-preview data-item="item"></div>
                         <button class="icn-btn remove" ng-click="remove(group.id, item.residRef)"><i class="icon-close-small"></i></button>
                     </div>
                 </li>
