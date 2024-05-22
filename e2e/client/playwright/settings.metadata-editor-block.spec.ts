@@ -2,10 +2,14 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {treeSelectDriver} from './utils/tree-select-driver';
 
-test('creation and persistance of a custom block', async ({page}) => {
+test.only('creation and persistance of a custom block', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
     await page.locator(s('metadata-navigation')).getByRole('button', {name: 'Custom blocks'}).click();
+
+    // HACK - Wait for angular to load the view data
+    await page.waitForTimeout(1000);
+
     await page.getByRole('button', {name: 'Add New'}).click();
 
     await expect(page.locator(s('vocabulary-edit-content'))).toBeVisible();
