@@ -29,6 +29,8 @@ export const treeSelectDriver = (dataTestId: string) => {
             const setOptions = async (options: Array<Array<string> | string>) => {
                 for (const option of options) {
                     if (typeof option == 'string') {
+                        await page.waitForTimeout(1000);
+
                         await page.locator(s(dataTestId, 'open-popover')).click();
                         await page.locator(s('tree-select-popover'))
                             .getByRole('button', {name: new RegExp(option, 'i')})
