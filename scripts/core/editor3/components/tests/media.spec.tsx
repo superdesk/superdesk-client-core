@@ -14,6 +14,9 @@ describe('editor3.components.media-block', () => {
                 setLocked={() => ({})}
                 block={block}
                 contentState={contentState}
+                readOnly={false}
+                showTitle={false}
+                removeBlock={noop}
             />,
         );
 
@@ -32,6 +35,9 @@ describe('editor3.components.media-block', () => {
                 setLocked={() => ({})}
                 block={block}
                 contentState={contentState}
+                readOnly={false}
+                showTitle={false}
+                removeBlock={noop}
             />,
         );
 
@@ -45,3 +51,7 @@ describe('editor3.components.media-block', () => {
             {isNew: false, showMetadata: true, defaultTab: 'view'});
     });
 });
+function noop(blockKey: any): void {
+    throw new Error('Function not implemented.');
+}
+

@@ -171,7 +171,7 @@ describe('editor3.blockRenderer', () => {
 
     it('should return null as component for unrecognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
-        const contentState = {getEntity: () => ({getType: () => 'not an image'})};
+        const contentState: any = {getEntity: () => ({getType: () => 'not an image'})};
         const {component, editable} = blockRenderer(block);
 
         expect(component({block, contentState, blockProps: {spellchecking}})).toBe(null);
@@ -180,7 +180,7 @@ describe('editor3.blockRenderer', () => {
 
     it('should return non-null as component for recognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
-        const contentState = {getEntity: () => ({
+        const contentState: any = {getEntity: () => ({
             getType: () => CustomEditor3Entity.EMBED,
             getData: () => ({data: {html: 'abc'}}),
         })};
