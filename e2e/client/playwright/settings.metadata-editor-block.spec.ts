@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {treeSelectDriver} from './utils/tree-select-driver';
 
-test.only('creation and persistance of a custom block', async ({page}) => {
+test('creation and persistance of a custom block', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
     await page.locator(s('metadata-navigation')).getByRole('button', {name: 'Custom blocks'}).click();
