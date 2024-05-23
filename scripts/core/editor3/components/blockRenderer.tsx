@@ -57,7 +57,7 @@ const BlockRendererComponent: React.FunctionComponent<IProps> = (props) => {
                     <TableBlock
                         block={props.block}
                         spellchecking={disabledSpellcheckerConfig}
-                        tableKind="table"
+                        additional={{tableKind: 'table'}}
                     />
                 </DraggableEditor3Block>
             );

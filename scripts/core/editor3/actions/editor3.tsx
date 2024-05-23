@@ -13,7 +13,8 @@ import {IEditorDragDropPayload} from '../reducers/editor3';
 import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 import {notify} from 'core/notify/notify';
 import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
-import {ISetActiveCellReturnType, ITableKind} from '../components/tables/TableBlock';
+import {ISetActiveCellReturnType, IActiveCell} from '../components/tables/TableBlock';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc method
@@ -180,10 +181,10 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key, currentStyle, selection, tableKind: ITableKind): ISetActiveCellReturnType {
+export function setActiveCell(activeCell: IActiveCell): ISetActiveCellReturnType {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key, currentStyle, selection, tableKind},
+        payload: activeCell,
     };
 }
 

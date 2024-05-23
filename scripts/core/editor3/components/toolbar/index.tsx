@@ -19,6 +19,7 @@ import {IEditorComponentProps, IVocabularyEditorBlock, RICH_FORMATTING_OPTION} f
 import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 import {IActiveCell} from '../tables/TableBlock';
 import {sdApi} from 'api';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -193,12 +194,28 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             return (
                 <TableControls
                     className={cx}
-                    tableKind={activeCell.tableKind}
-                    editorFormat={
-                        activeCell.tableKind === 'multi-line-quote'
-                            ? editorFormat.filter((option) => option !== 'quote')
-                            : editorFormat
-                    }
+                    tableKind={activeCell.additional.tableKind}
+                    editorFormat={(() => {
+                        switch(activeCell.additional.tableKind) {
+                            case 'table':
+                                return editorFormat;
+                            case 'multi-line-quote':
+                                return editorFormat.filter((option) => option !== 'quote');
+                            case 'custom-block': {
+                                const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
+
+                                if (vocabulary.field_type !== 'editor-block') {
+                                    throw new Error();
+                                }
+
+                                const selectedOptions = new Set(vocabulary.field_options.formatting_options ?? []);
+
+                                return editorFormat.filter((option) => selectedOptions.has(option));
+                            }
+                            default:
+                                assertNever(activeCell.additional);
+                        }
+                    })()}
                 />
             );
         } else {

@@ -19,7 +19,7 @@ export class MultiLineQuote extends React.Component<IProps> {
             <TableBlock
                 fullWidth
                 className={MULTI_LINE_QUOTE_CLASS}
-                tableKind="multi-line-quote"
+                additional={{tableKind: 'multi-line-quote'}}
                 block={this.props.block}
                 spellchecking={this.props.spellchecking}
             />

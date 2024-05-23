@@ -9,13 +9,28 @@ import {IEditorStore} from 'core/editor3/store';
 
 export type ITableKind = 'table' | 'multi-line-quote' | 'custom-block';
 
+export interface IActiveCellTable {
+    tableKind: 'table';
+}
+
+export interface IActiveCellMultiLineQuote {
+    tableKind: 'multi-line-quote';
+}
+
+export interface IActiveCellCustomBlock {
+    tableKind: 'custom-block';
+    vocabularyId: string;
+}
+
+export type IActiveCellAdditional = IActiveCellTable | IActiveCellMultiLineQuote | IActiveCellCustomBlock;
+
 export interface IActiveCell {
     i: number; // row
     j: number; // column
     key: string;
     currentStyle: Array<string>;
     selection: import('draft-js').SelectionState;
-    tableKind: ITableKind;
+    additional: IActiveCellAdditional;
 }
 
 export interface ISetActiveCellReturnType {
@@ -30,21 +45,14 @@ interface IReduxStateProps {
 }
 
 interface IDispatchProps {
-    setActiveCell: (
-        row: number,
-        col: number,
-        blockKey: string,
-        currentStyle: Array<string>,
-        selection: any,
-        tableKind: ITableKind,
-    ) => ISetActiveCellReturnType;
+    setActiveCell: (activeCell: IActiveCell) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
 }
 
 interface IOwnProps {
     block: ContentBlock;
     spellchecking: IEditorStore['spellchecking'];
-    tableKind: ITableKind;
+    additional: IActiveCellAdditional;
     className?: string;
     fullWidth?: boolean;
 }
@@ -94,7 +102,16 @@ export class TableBlockComponent extends React.Component<IProps> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
-        setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS(), this.props.tableKind);
+        const cell: IActiveCell = {
+            i: row,
+            j: col,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: selection.toJS(),
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     getCellEditorState(data, i, j): EditorState {
@@ -119,7 +136,16 @@ export class TableBlockComponent extends React.Component<IProps> {
         const {setActiveCell, block} = this.props;
         const newSelection = selection.merge({hasFocus: true});
 
-        setActiveCell(i, j, block.getKey(), currentStyle, newSelection.toJS(), this.props.tableKind);
+        const cell: IActiveCell = {
+            i: i,
+            j: j,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: newSelection.toJS(),
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     // onMouseDown is used in the main editor to set focus and stop table editing
@@ -143,7 +169,17 @@ export class TableBlockComponent extends React.Component<IProps> {
         }
 
         parentOnChange(newEditorState, false);
-        setActiveCell(activeCell.i, activeCell.j, block.getKey(), currentStyle, selection, this.props.tableKind);
+
+        const cell: IActiveCell = {
+            i: activeCell.i,
+            j: activeCell.j,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: selection,
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     onUndo() {
@@ -204,8 +240,8 @@ export class TableBlockComponent extends React.Component<IProps> {
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (i, j, key, currentStyle, selection, tableKind: ITableKind) => dispatch(
-        actions.setActiveCell(i, j, key, currentStyle, selection, tableKind),
+    setActiveCell: (activeCell: IActiveCell) => dispatch(
+        actions.setActiveCell(activeCell),
     ),
 });
 

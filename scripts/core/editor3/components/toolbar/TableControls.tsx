@@ -179,7 +179,7 @@ const mapStateToProps = (state: IEditorStore) => ({
     popup: state.popup,
 });
 
-export const TableControls = connect<IReduxStateProps, IDispatchProps, IOwnProps>(
+export const TableControls: React.ComponentType<IOwnProps> = connect<IReduxStateProps, IDispatchProps, IOwnProps>(
     mapStateToProps,
     mapDispatchToProps,
 )(TableControlsComponent);
