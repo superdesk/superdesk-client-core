@@ -196,24 +196,24 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     className={cx}
                     tableKind={activeCell.additional.tableKind}
                     editorFormat={(() => {
-                        switch(activeCell.additional.tableKind) {
-                            case 'table':
-                                return editorFormat;
-                            case 'multi-line-quote':
-                                return editorFormat.filter((option) => option !== 'quote');
-                            case 'custom-block': {
-                                const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
+                        switch (activeCell.additional.tableKind) {
+                        case 'table':
+                            return editorFormat;
+                        case 'multi-line-quote':
+                            return editorFormat.filter((option) => option !== 'quote');
+                        case 'custom-block': {
+                            const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
 
-                                if (vocabulary.field_type !== 'editor-block') {
-                                    throw new Error();
-                                }
-
-                                const selectedOptions = new Set(vocabulary.field_options.formatting_options ?? []);
-
-                                return editorFormat.filter((option) => selectedOptions.has(option));
+                            if (vocabulary.field_type !== 'editor-block') {
+                                throw new Error();
                             }
-                            default:
-                                assertNever(activeCell.additional);
+
+                            const selectedOptions = new Set(vocabulary.field_options.formatting_options ?? []);
+
+                            return editorFormat.filter((option) => selectedOptions.has(option));
+                        }
+                        default:
+                            assertNever(activeCell.additional);
                         }
                     })()}
                 />

@@ -188,8 +188,9 @@ export function getTableWithSingleCell(
         } else if (initialContent === 'editor-selection') {
             if (!selectionState.isCollapsed()) {
                 // Get user selected content
-                const selectedBlocks = getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
-                    .map((key) => contentState.getBlockForKey(key));
+                const selectedBlocks =
+                    getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
+                        .map((key) => contentState.getBlockForKey(key));
 
                 return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
             } else {
