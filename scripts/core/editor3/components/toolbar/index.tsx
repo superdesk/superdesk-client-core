@@ -230,6 +230,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
                     }}
                     ref={this.toolbarNode}
+                    data-test-id="toolbar"
                 >
                     {/* Styles */}
                     <BlockStyleButtons />

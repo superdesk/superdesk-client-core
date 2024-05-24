@@ -41,6 +41,7 @@ interface IScope extends IScopeConfigController {
     formattingOptionsOnChange?: (options: Array<RICH_FORMATTING_OPTION>) => void;
     editorBlockFormattingOptions?: Array<{value: [RICH_FORMATTING_OPTION, string]}>;
     fakeItem?: Partial<IArticle>;
+    editorBlockFieldId?: string;
     // custom-editor-block props END
 
     updateUI: () => void;
@@ -135,6 +136,8 @@ export function VocabularyEditController(
 
     if ($scope.vocabulary.field_type === EDITOR_BLOCK_FIELD_TYPE) {
         const vocabulary = $scope.vocabulary;
+
+        $scope.editorBlockFieldId = editorBlockFieldId;
 
         $scope.fakeItem = {
             fields_meta: {

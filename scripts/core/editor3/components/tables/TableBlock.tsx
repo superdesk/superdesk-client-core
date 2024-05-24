@@ -209,6 +209,7 @@ export class TableBlockComponent extends React.Component<IProps> {
                 onMouseDown={(e) => {
                     this.onMouseDown(e);
                 }}
+                data-test-id="table-block"
             >
                 <table style={fullWidthStyle}>
                     <tbody style={fullWidthStyle}>

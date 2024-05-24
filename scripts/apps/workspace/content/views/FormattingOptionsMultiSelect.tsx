@@ -19,6 +19,7 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
 
         return (
             <TreeSelect
+                data-test-id="formatting-options"
                 kind="synchronous"
                 getId={(option) => option[0]}
                 getLabel={(option) => option[1]}
