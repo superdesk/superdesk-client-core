@@ -4,6 +4,7 @@ import insertAtomicBlockWithoutEmptyLines from '../helpers/insertAtomicBlockWith
 import {getCell, setCell, getData, setData, IEditor3TableData, IEditor3CustomBlockData} from '../helpers/table';
 import {CustomEditor3Entity} from '../constants';
 import {IEditorStore} from '../store';
+import {IActiveCell} from '../components/tables/TableBlock';
 
 /**
  * @description Contains the list of table related reducers.
@@ -72,19 +73,28 @@ export const addTable = (
  * @description Adds a row after the currently active one.
  */
 const addRowAfter = (state) =>
-    processCells(state, (prevCells, numCols, nRows, i, j, withHeader) => {
-        const numRows = nRows + 1;
-        const cells = [];
+    processCells(state, (tableData, activeCell) => {
+        const {i} = activeCell;
+        const {cells, numRows} = tableData;
 
-        prevCells.forEach((row, index) => {
-            cells.push(row);
+
+        const nextCells = [];
+
+        cells.forEach((row, index) => {
+            nextCells.push(row);
 
             if (index === i) {
-                cells.push([]);
+                nextCells.push([]);
             }
         });
 
-        return {data: {cells, numRows, numCols, withHeader}};
+        return {
+            data: {
+                ...tableData,
+                cells: nextCells,
+                numRows: numRows + 1,
+            },
+        };
     });
 
 /**
@@ -93,15 +103,23 @@ const addRowAfter = (state) =>
  * @description Removes the currently active row.
  */
 const removeRow = (state) =>
-    processCells(state, (cells, numCols, nRows, i, j, withHeader) => {
+    processCells(state, (tableData, activeCell) => {
+        const {cells} = tableData;
+        const nRows = tableData.numRows;
         let numRows = nRows;
 
         if (numRows > 1) {
-            cells.splice(i, 1);
+            cells.splice(activeCell.i, 1);
             numRows -= 1;
         }
 
-        return {data: {cells, numRows, numCols, withHeader}};
+        return {
+            data: {
+                ...tableData,
+                cells,
+                numRows,
+            },
+        };
     });
 
 /**
@@ -110,32 +128,36 @@ const removeRow = (state) =>
  * @description Adds a column after the currently active one.
  */
 const addColAfter = (state) =>
-    processCells(state, (cells, numCols, numRows, i, j, withHeader) => ({
-        data: {
-            numRows: numRows,
-            numCols: numCols + 1,
-            withHeader: withHeader,
-            cells: cells.map((_, ii) =>
-                Array.from(new Array(numCols + 1))
-                    .map((__, jj) => {
-                        if (jj === j + 1) {
+    processCells(state, (tableData, activeCell) => {
+        const {cells, numCols} = tableData;
+        const {j} = activeCell;
+
+        return {
+            data: {
+                ...tableData,
+                numCols: tableData.numCols + 1,
+                cells: cells.map((_, ii) =>
+                    Array.from(new Array(numCols + 1))
+                        .map((__, jj) => {
+                            if (jj === j + 1) {
+                                return null;
+                            }
+
+                            let orig = jj;
+
+                            if (jj > j + 1) {
+                                orig -= 1;
+                            }
+
+                            if (cells[ii] && cells[ii][orig]) {
+                                return cells[ii][orig];
+                            }
+
                             return null;
-                        }
-
-                        let orig = jj;
-
-                        if (jj > j + 1) {
-                            orig -= 1;
-                        }
-
-                        if (cells[ii] && cells[ii][orig]) {
-                            return cells[ii][orig];
-                        }
-
-                        return null;
-                    })),
-        },
-    }));
+                        })),
+            },
+        };
+    });
 
 /**
  * @ngdoc method
@@ -143,8 +165,10 @@ const addColAfter = (state) =>
  * @description Removes the currently active column.
  */
 const removeCol = (state) =>
-    processCells(state, (prevCells, nCols, numRows, i, j, withHeader) => {
-        let numCols = nCols;
+    processCells(state, (tableData, activeCell) => {
+        const {j} = activeCell;
+        const prevCells = tableData.cells;
+        let numCols = tableData.numCols;
         let cells = prevCells;
 
         if (numCols > 1) {
@@ -155,7 +179,13 @@ const removeCol = (state) =>
             });
         }
 
-        return {data: {cells, numRows, numCols, withHeader}};
+        return {
+            data: {
+                ...tableData,
+                cells,
+                numCols,
+            },
+        };
     });
 
 /**
@@ -168,18 +198,23 @@ const removeCol = (state) =>
  * @description Helper function to help process the cells in the currently active
  * table and transform the entity data to a new form, using a callback function.
  */
-export const processCells = (state, fn) => {
+export const processCells = (
+    state: IEditorStore,
+    fn: (tableData: IEditor3TableData | IEditor3CustomBlockData, activeCell: IActiveCell) =>
+        {data: IEditor3TableData | IEditor3CustomBlockData; newCurrentStyle?: any; popup?: any},
+) => {
     const {activeCell, editorState} = state;
 
     if (activeCell === null) {
         return state;
     }
 
-    const {i, j, key, currentStyle, selection} = activeCell;
+    const {key, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader} = getData(contentState, block.getKey());
-    const {data, newCurrentStyle, popup} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
+    const tableData = getData(contentState, block.getKey());
+
+    const {data, newCurrentStyle, popup} = fn(tableData, activeCell);
     const newEditorState = setData(editorState, block, data, 'change-block-data');
     let newState = state;
 
@@ -220,18 +255,13 @@ export const processCells = (state, fn) => {
 const toggleTableHeader = (state) =>
     processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle) => {
-            const newData = {
-                cells: cells,
-                numRows: numRows,
-                numCols: numCols,
-                withHeader: !withHeader,
-                currentStyle: currentStyle,
-            };
-
+        (tableData, activeCell) => {
             return {
-                data: newData,
-                newCurrentStyle: currentStyle,
+                data: {
+                    ...tableData,
+                    withHeader: !tableData.withHeader,
+                },
+                newCurrentStyle: activeCell.currentStyle,
             };
         },
     );
@@ -241,35 +271,44 @@ const toggleTableHeader = (state) =>
  * @name toggleTableStyle
  * @description Toggles the table's style.
  */
-const toggleTableInlineStyle = (state, inlineStyle) =>
-    processCells(
+const toggleTableInlineStyle = (state: IEditorStore, inlineStyle) => {
+    return processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const data = {cells, numRows, numCols, withHeader};
-            const cellStateEditor = getCell(data, i, j, currentStyle, selection);
+        (tableData, activeCell) => {
+            const {i, j, currentStyle, selection} = activeCell;
+            const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
             const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
             const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
-            const newData = setCell(data, i, j, newCellEditorState).data;
+            const tableDataNext: IEditor3TableData | IEditor3CustomBlockData =
+                setCell(tableData, i, j, newCellEditorState).data;
 
             return {
-                data: newData,
+                data: {
+                    ...tableData,
+                    ...tableDataNext,
+                },
                 newCurrentStyle: newCurrentStyle,
             };
         },
     );
+};
 
 const toggleTableBlockType = (state, blockType) =>
     processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const data: IEditor3TableData = {cells, numRows, numCols, withHeader};
-            const cellStateEditor = getCell(data, i, j, currentStyle, selection);
+        (tableData, activeCell) => {
+            const {i, j, currentStyle, selection} = activeCell;
+            const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
             const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, blockType);
             const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
-            const newData = setCell(data, i, j, newCellEditorState).data;
+            const tableDataNext: IEditor3TableData | IEditor3CustomBlockData =
+                setCell(tableData, i, j, newCellEditorState).data;
 
             return {
-                data: newData,
+                data: {
+                    ...tableData,
+                    ...tableDataNext,
+                },
                 newCurrentStyle: newCurrentStyle,
             };
         },

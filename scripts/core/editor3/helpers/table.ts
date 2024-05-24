@@ -66,7 +66,12 @@ export function getCell(data: IEditor3TableData, row, col, currentStyle, selecti
  * @description Updates data about this cell inside the entity for this atomic
  * block.
  */
-export function setCell(data: IEditor3TableData, row, col, cellEditorState: EditorState) {
+export function setCell(
+    data: IEditor3TableData | IEditor3CustomBlockData,
+    row,
+    col,
+    cellEditorState: EditorState,
+): {data: IEditor3TableData | IEditor3CustomBlockData, needUpdate: any; forceUpdate: any} {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
@@ -134,7 +139,7 @@ export interface IEditor3CustomBlockData extends IEditor3TableData {
 export function setData(
     editorState: EditorState,
     block: ContentBlock,
-    data: IEditor3TableData,
+    data: IEditor3TableData | IEditor3CustomBlockData,
     lastChangeType,
 ): EditorState {
     const contentState = editorState.getCurrentContent();

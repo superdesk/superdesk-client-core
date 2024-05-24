@@ -340,13 +340,10 @@ type PopupType = keyof typeof PopupTypes;
 const setTablePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
     processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const newData = {cells, numRows, numCols, withHeader};
-
+        (tableData, _activeCell) => {
             return {
-                ...state,
+                data: tableData,
                 popup: {type, data},
-                data: newData,
             };
         },
     );
