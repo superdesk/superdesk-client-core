@@ -11,7 +11,7 @@ import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService'
 import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
 import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {ContentState, convertToRaw} from 'draft-js';
-import {getObjectEntriesGeneric} from '../../../core/helpers/utils';
+import {getFormattingOptionsForTableLikeBlocks} from 'core/editor3/get-formatting-options-for-table';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -150,27 +150,12 @@ export function VocabularyEditController(
             },
         };
 
-        $scope.editorBlockFormattingOptions = (() => {
-            const excludedOptions: Set<RICH_FORMATTING_OPTION> = new Set<RICH_FORMATTING_OPTION>([
-                'multi-line quote',
-                'comments',
-                'annotation',
-                'suggestions',
-                'table',
-                'media',
-            ]);
+        $scope.editorBlockFormattingOptions = ((): Array<{value: IFormattingOptionTuple}> => {
+            const allFormattingOptionsTranslated = getEditor3RichTextFormattingOptions();
 
-            const formattingOptions = getObjectEntriesGeneric<RICH_FORMATTING_OPTION, string>(
-                getEditor3RichTextFormattingOptions(),
-            )
-                .filter(([notTranslatedOption]) =>
-                    excludedOptions.has(notTranslatedOption) === false,
-                )
-                .map(([notTranslatedOption, translatedOption]) =>
-                    ({value: [notTranslatedOption, translatedOption]}),
-                );
-
-            return formattingOptions as Array<{value: IFormattingOptionTuple}>;
+            return getFormattingOptionsForTableLikeBlocks().map(
+                (option) => ({value: [option, allFormattingOptionsTranslated[option]]}),
+            );
         })();
 
         $scope.formattingOptionsOnChange = function(options) {
