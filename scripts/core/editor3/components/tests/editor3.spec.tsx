@@ -193,6 +193,6 @@ describe('editor3.blockRenderer', () => {
             mount(<Provider store={store}>{component}</Provider>)
                 .childAt(0)
                 .name(),
-        ).toBe('Connect(DragableEditor3BlockComponent)');
+        ).toBe('Connect(DraggableEditor3BlockComponent)');
     });
 });
