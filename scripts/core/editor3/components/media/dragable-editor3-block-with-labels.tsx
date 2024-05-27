@@ -15,6 +15,7 @@ interface IProps {
     readOnly?: boolean; // connected
     children: React.ReactNode;
     customDragHandle?: React.ComponentType;
+    'data-test-id'?: string;
 }
 
 class DraggableEditor3BlockComponentWithInlineHandle extends React.PureComponent<IProps, IState> {
@@ -35,6 +36,7 @@ class DraggableEditor3BlockComponentWithInlineHandle extends React.PureComponent
                 onDragStart={(e) => {
                     e.dataTransfer.setData(EDITOR_BLOCK_TYPE, this.props.block.getKey());
                 }}
+                data-test-id={this.props['data-test-id']}
             >
                 <div
                     onMouseEnter={() => {

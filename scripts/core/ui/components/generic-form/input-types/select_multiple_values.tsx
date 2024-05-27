@@ -61,6 +61,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     inlineLabel
                     labelHidden
                     zIndex={1051}
+                    data-test-id={this.props.formField.component_parameters?.dataTestId}
                 />
 
                 {

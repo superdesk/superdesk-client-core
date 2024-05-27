@@ -69,7 +69,7 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
         .getType();
 
     return (
-        <div className={'table-controls ' + className}>
+        <div className={'table-controls ' + className} data-test-id="toolbar">
             {
                 tableKind === 'table' && (
                     <>
@@ -87,7 +87,7 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
                             onClick={addRowAfter}
                         >
                             <i className="icon-plus-sign" />
-                            {' '}row
+                            {' '}{gettext('row')}
                         </span>
 
                         <span
@@ -99,65 +99,68 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
 
                         <span className="Editor3-styleButton" onClick={addColAfter}>
                             <i className="icon-plus-sign" />
-                            {' '}col
+                            {' '}{gettext('column')}
                         </span>
                     </>
                 )
             }
 
             {
-                editorFormat
-                    .filter((type) => type in inlineStyles)
-                    .map((type) => (
-                        <StyleButton
-                            key={type}
-                            active={currentInlineStyle.has(inlineStyles[type])}
-                            label={type}
-                            onToggle={toggleTableStyle}
-                            style={inlineStyles[type]}
-                        />
-                    ))
-            }
+                editorFormat.map((type) => {
+                    if (type === 'link') {
+                        return (
+                            <>
+                                {
+                                    editorFormat.includes('link') && (
+                                        <SelectionButtonCustomEditorState
+                                            editorState={cellEditorState}
+                                            onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
+                                            iconName="link"
+                                            tooltip={gettext('Link')}
+                                        />
+                                    )
+                                }
 
-            {
-                editorFormat
-                    .filter((type) => type in blockStyles)
-                    .sort()
-                    .map((type) => (
-                        <StyleButton
-                            key={type}
-                            active={blockStyles[type] === blockStyle}
-                            label={type}
-                            onToggle={() => toggleTableBlockType(blockStyles[type])}
-                            style={blockStyles[type]}
-                        />
-                    ))
-            }
+                                {
+                                    popup.type === PopupTypes.Link && (
+                                        <LinkInputForTableCell
+                                            data={popup.data}
+                                            editorState={cellEditorState}
+                                        />
+                                    )
+                                }
 
-            {
-                editorFormat.includes('link') && (
-                    <SelectionButtonCustomEditorState
-                        editorState={cellEditorState}
-                        onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
-                        iconName="link"
-                        tooltip={gettext('Link')}
-                    />
-                )
+                                <LinkToolbarForTableCell
+                                    editorState={cellEditorState}
+                                    onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
+                                />
+                            </>
+                        );
+                    } else if (type in inlineStyles) {
+                        return (
+                            <StyleButton
+                                key={type}
+                                active={currentInlineStyle.has(inlineStyles[type])}
+                                label={type}
+                                onToggle={toggleTableStyle}
+                                style={inlineStyles[type]}
+                            />
+                        );
+                    } else if (type in blockStyles) {
+                        return (
+                            <StyleButton
+                                key={type}
+                                active={blockStyles[type] === blockStyle}
+                                label={type}
+                                onToggle={() => toggleTableBlockType(blockStyles[type])}
+                                style={blockStyles[type]}
+                            />
+                        );
+                    } else {
+                        return null;
+                    }
+                })
             }
-
-            {
-                popup.type === PopupTypes.Link && (
-                    <LinkInputForTableCell
-                        data={popup.data}
-                        editorState={cellEditorState}
-                    />
-                )
-            }
-
-            <LinkToolbarForTableCell
-                editorState={cellEditorState}
-                onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
-            />
         </div>
     );
 };

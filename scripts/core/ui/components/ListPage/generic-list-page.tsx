@@ -464,7 +464,7 @@ export class GenericListPageComponent<T, P>
         const showPagination = this.props.crudManager._meta.total > this.props.crudManager._items.length;
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}} data-test-id="generic-list-page">
                 <OnlyWithChildren wrapper={subNavWrapper}>
                     {
                         this.props.disallowFiltering ? null : (

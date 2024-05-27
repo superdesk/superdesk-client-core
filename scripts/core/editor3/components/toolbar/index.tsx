@@ -20,6 +20,7 @@ import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 import {IActiveCell} from '../tables/TableBlock';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {getFormattingOptionsForTableLikeBlocks} from 'core/editor3/get-formatting-options-for-table';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -208,9 +209,15 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                                 throw new Error();
                             }
 
-                            const selectedOptions = new Set(vocabulary.field_options.formatting_options ?? []);
+                            const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
 
-                            return editorFormat.filter((option) => selectedOptions.has(option));
+                            const vocabularyValues = (
+                                vocabulary.field_options.formatting_options ?? []
+                            ) as Array<RICH_FORMATTING_OPTION>;
+
+                            return vocabularyValues.filter(
+                                (option) => availableOptions.has(option as RICH_FORMATTING_OPTION),
+                            );
                         }
                         default:
                             assertNever(activeCell.additional);

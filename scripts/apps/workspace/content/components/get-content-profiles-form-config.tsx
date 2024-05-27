@@ -258,6 +258,7 @@ export function getContentProfileFormConfig(
             component_parameters: {
                 items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
                     .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
+                dataTestId: 'formatting-options-input',
             },
         };
 

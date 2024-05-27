@@ -37,6 +37,7 @@ export class CustomBlock extends React.Component<IProps> {
                         </span>
                     );
                 }}
+                data-test-id="custom-block"
             >
                 <div className="editor3-custom-block">
                     <TableBlock

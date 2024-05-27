@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
+import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
@@ -95,7 +96,7 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
                     ? (
                         <i
                             data-test-id="formatting-option"
-                            data-test-value={styleTooltips[label]}
+                            data-test-value={getEditor3RichTextFormattingOptions()[label]}
                             className={iconClass}
                         />
                     )
