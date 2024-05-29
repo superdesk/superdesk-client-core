@@ -32,7 +32,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {EDITOR_BLOCK_TYPE, formattingOptionsThatRequireDragAndDrop, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
@@ -581,9 +581,9 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
          * add much performance overhead if it was replaced unconditionally, but I don't want to break it
          * nor spend time on testing so I'm keeping it as is for now.
          */
-        const dropAreaEnabled = this.props.editorFormat.includes('media')
-            || this.props.editorFormat.includes('embed articles')
-            || this.props.editorFormat.includes('multi-line quote');
+        const dropAreaEnabled = this.props.editorFormat.some(
+            (option) => formattingOptionsThatRequireDragAndDrop.has(option),
+        );
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             dropAreaEnabled ? {
