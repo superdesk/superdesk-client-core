@@ -286,44 +286,52 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                             uiTheme={this.props.uiTheme}
                         />
                     )}
-                    {has('custom blocks') && (
-                        <div style={{display: 'inline-flex'}}>
-                            <TreeMenu
-                                getOptions={() => {
-                                    return sdApi.vocabularies
-                                        .getAll()
-                                        .filter((vocabulary) => vocabulary.field_type === 'editor-block')
-                                        .map((vocabulary: IVocabularyEditorBlock) => ({
-                                            value: vocabulary.display_name,
-                                            onSelect: () => {
-                                                const contentStateRaw = vocabulary.field_options?.template?.[0]
-                                                    ?? convertToRaw(ContentState.createFromText(''));
 
-                                                addCustomBlock(
-                                                    contentStateRaw,
-                                                    vocabulary._id,
-                                                    vocabulary.display_name,
-                                                );
-                                            },
-                                        }))
-                                        .toArray();
-                                }}
-                                getLabel={(item) => item}
-                                getId={(item) => item}
-                            >
-                                {(toggle) => (
-                                    <IconButton
-                                        onClick={(event) => {
-                                            toggle(event);
-                                        }}
-                                        tooltip={gettext('Custom block')}
-                                        iconName="plus-large"
-                                        uiTheme={this.props.uiTheme}
-                                    />
-                                )}
-                            </TreeMenu>
-                        </div>
-                    )}
+                    {(() => {
+                        const options = sdApi.vocabularies
+                            .getAll()
+                            .filter((vocabulary) => vocabulary.field_type === 'editor-block')
+                            .map((vocabulary: IVocabularyEditorBlock) => ({
+                                value: vocabulary.display_name,
+                                onSelect: () => {
+                                    const contentStateRaw = vocabulary.field_options?.template?.[0]
+                                        ?? convertToRaw(ContentState.createFromText(''));
+
+                                    addCustomBlock(
+                                        contentStateRaw,
+                                        vocabulary._id,
+                                        vocabulary.display_name,
+                                    );
+                                },
+                            }))
+                            .toArray();
+
+                        if (has('custom blocks') && options.length > 0) {
+                            return (
+                                <div style={{display: 'inline-flex'}}>
+                                    <TreeMenu
+                                        getOptions={() => options}
+                                        getLabel={(item) => item}
+                                        getId={(item) => item}
+                                    >
+                                        {(toggle) => (
+                                            <IconButton
+                                                onClick={(event) => {
+                                                    toggle(event);
+                                                }}
+                                                tooltip={gettext('Custom block')}
+                                                iconName="plus-large"
+                                                uiTheme={this.props.uiTheme}
+                                            />
+                                        )}
+                                    </TreeMenu>
+                                </div>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })()}
+
                     {has('remove format') && (
                         <SelectionButton
                             onClick={removeFormat}
