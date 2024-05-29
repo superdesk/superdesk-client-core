@@ -3,6 +3,7 @@ import {shallow, mount} from 'enzyme';
 import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
 import {PlainTextEditor} from 'core/ui/components';
+import {noop} from 'lodash';
 
 describe('editor3.components.media-block', () => {
     it('should render', () => {
@@ -51,7 +52,3 @@ describe('editor3.components.media-block', () => {
             {isNew: false, showMetadata: true, defaultTab: 'view'});
     });
 });
-function noop(blockKey: any): void {
-    throw new Error('Function not implemented.');
-}
-

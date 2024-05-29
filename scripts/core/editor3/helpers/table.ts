@@ -71,7 +71,7 @@ export function setCell(
     row,
     col,
     cellEditorState: EditorState,
-): {data: IEditor3TableData | IEditor3CustomBlockData, needUpdate: any; forceUpdate: any} {
+): {data: IEditor3TableData | IEditor3CustomBlockData, needUpdate: boolean; forceUpdate: boolean} {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
