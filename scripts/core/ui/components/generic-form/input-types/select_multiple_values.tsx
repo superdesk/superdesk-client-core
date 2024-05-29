@@ -27,6 +27,12 @@ export class SelectMultipleValues extends React.Component<IProps> {
             }
         }
 
+        const optionsLookup = new Map();
+
+        for (const item of items) {
+            optionsLookup.set(item.id, item);
+        }
+
         return (
             <div
                 className={
@@ -55,7 +61,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     onChange={(item) => {
                         this.props.onChange(item.map(({id}) => id));
                     }}
-                    value={items.filter(({id}) => (this.props.value ?? []).includes(id))}
+                    value={(this.props.value ?? []).map((id) => optionsLookup.get(id))}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
                     inlineLabel

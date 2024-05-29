@@ -11,11 +11,8 @@ interface IProps {
 
 export class FormattingOptionsTreeSelect extends React.Component<IProps> {
     render(): React.ReactNode {
-        const values = this.props.value != null
-            ? this.props.options
-                .filter((option) => this.props.value.includes(option.value[0]))
-                .map((option) => option.value)
-            : [];
+        const lookup = new Map(this.props.options.map(({value}) => value) as unknown as Array<[string, RICH_FORMATTING_OPTION]>);
+        const values: Array<[string, string]> = (this.props.value ?? []).map((id) => [id, lookup.get(id)]);
 
         return (
             <TreeSelect
