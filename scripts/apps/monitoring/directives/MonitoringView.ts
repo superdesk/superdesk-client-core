@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
+import {IDesk, ISuperdeskQuery, IUser, IOnTranslateActions} from 'superdesk-api';
 
 const PAGE_SIZE = 50;
+
+export const onTranslateActions: IOnTranslateActions = {};
 
 interface IScope extends ng.IScope {
     contentStyle: {};

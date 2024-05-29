@@ -119,6 +119,7 @@ import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
+import {onTranslateActions} from 'apps/monitoring/directives/MonitoringView';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -451,6 +452,7 @@ export function getSuperdeskApiImplementation(
             getFormFieldPreviewComponent,
         },
         authoringGeneric: {
+            onTranslateActions: onTranslateActions,
             sideWidgets: {
                 inlineComments: getInlineCommentsWidgetGeneric(),
                 comments: (

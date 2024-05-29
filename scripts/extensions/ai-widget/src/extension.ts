@@ -29,6 +29,6 @@ const extension: IExtension = {
     },
 };
 
-export {configure} from './configuration';
+export {configure, configureOnTranslate} from './configuration';
 
 export default extension;

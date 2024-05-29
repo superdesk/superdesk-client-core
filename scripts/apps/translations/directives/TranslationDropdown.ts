@@ -1,3 +1,4 @@
+import {onTranslateActions} from 'apps/monitoring/directives/MonitoringView';
 import _ from 'lodash';
 
 /**
@@ -33,6 +34,7 @@ export function TranslationDropdown(TranslationService) {
              * @param {Object} New language
              */
             scope.translateItem = function(language) {
+                onTranslateActions.onTranslateMonitoring?.();
                 TranslationService.set(scope.item, language);
             };
         },
