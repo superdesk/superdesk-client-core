@@ -17,7 +17,6 @@ import {IEditorStore} from 'core/editor3/store';
 import {TreeMenu} from 'superdesk-ui-framework/react';
 import {IEditorComponentProps, IVocabularyEditorBlock, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
-import {IActiveCell} from '../tables/TableBlock';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {getFormattingOptionsForTableLikeBlocks} from 'core/editor3/get-formatting-options-for-table';
@@ -31,26 +30,39 @@ interface IState {
     width: string | number;
 }
 
-interface IProps extends Partial<IEditorStore> {
-    toggleSuggestingMode(): void;
-    showPopup(type, data): void;
+interface IReduxStateProps {
+    editorState: IEditorStore['editorState'];
+    editorFormat: IEditorStore['editorFormat'];
+    activeCell: IEditorStore['activeCell'];
+    popup: IEditorStore['popup'];
+    suggestingMode: IEditorStore['suggestingMode'];
+    invisibles: IEditorStore['invisibles'];
+}
+
+interface IDispatchProps {
     addMultiLineQuote(): void;
+    insertMedia(): void;
+    addTable(): void;
+    removeFormat(): void;
+    showPopup(type, data): void;
     addCustomBlock(initialContent: RawDraftContentState, vocabularyId: string, label: string): void;
+    toggleSuggestingMode(): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
-    removeFormat(): void;
-    insertMedia(): void;
-    addTable(): void;
+}
+
+interface IOwnProps {
     editorWrapperElement: any;
     scrollContainer: string;
     highlightsManager: any;
     editorNode: any;
     disabled: boolean;
-    popup: any;
     uiTheme: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
-    activeCell: IActiveCell;
+    draggingInProgress: boolean;
 }
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
 
 /**
  * @ngdoc React
@@ -181,6 +193,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             addTable,
             dispatch,
             editorState,
+            draggingInProgress,
         } = this.props;
 
         const has = (opt: RICH_FORMATTING_OPTION) => editorFormat.indexOf(opt) > -1;
@@ -188,6 +201,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
         const cx = classNames({
             'Editor3-controls': true,
             'floating-toolbar': floating,
+            'floating-toolbar-invisible': floating && draggingInProgress,
             disabled: disabled && activeCell === null,
         });
 
@@ -486,6 +500,6 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     dispatch: dispatch,
 });
 
-const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
+const Toolbar: React.ComponentType<IOwnProps> = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
 
 export default Toolbar;

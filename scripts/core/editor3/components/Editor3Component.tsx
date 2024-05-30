@@ -635,19 +635,19 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                 }
             >
                 {
-                    showToolbar && this.state.draggingInProgress !== true
-                        ? (
-                            <Toolbar
-                                uiTheme={this.props.uiTheme}
-                                disabled={locked || readOnly}
-                                scrollContainer={scrollContainer}
-                                editorNode={this.editorNode}
-                                highlightsManager={this.props.highlightsManager}
-                                editorWrapperElement={this.div}
-                            />
-                        )
-                        : null
+                    showToolbar && (
+                        <Toolbar
+                            uiTheme={this.props.uiTheme}
+                            disabled={locked || readOnly}
+                            scrollContainer={scrollContainer}
+                            editorNode={this.editorNode}
+                            highlightsManager={this.props.highlightsManager}
+                            editorWrapperElement={this.div}
+                            draggingInProgress={this.state.draggingInProgress}
+                        />
+                    )
                 }
+
                 <HighlightsPopup
                     editorNode={this.editorNode}
                     editorState={editorState}

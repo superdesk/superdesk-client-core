@@ -97,6 +97,10 @@ $editor-styleButton-size: 			3rem;
 			.link-toolbar.empty {
 				display: none;
 			}
+
+			&.floating-toolbar-invisible {
+				visibility: hidden;
+			}
 		}
 
 		&.read-only {
