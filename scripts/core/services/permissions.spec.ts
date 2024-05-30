@@ -5,6 +5,7 @@ describe('PermissionsService', () => {
     beforeEach(window.module('superdesk.core.services.entity'));
     beforeEach(window.module('superdesk.core.services.server'));
     beforeEach(window.module('superdesk.core.services.permissions'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: 'http://localhost', ws: undefined}};
