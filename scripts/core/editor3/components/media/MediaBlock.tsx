@@ -22,6 +22,8 @@ function getTranslationForAssignRights(value) {
     }
 }
 
+type ICaptionField = 'description_text' | 'headline';
+
 interface IOwnProps {
     block: ContentBlock;
     contentState: ContentState;
@@ -33,9 +35,9 @@ interface IReduxStateProps {
 }
 
 interface IDispatchProps {
-    cropImage(entityKey, entityData, options): void;
-    removeBlock(blockKey): void;
-    changeCaption(entityKey, newCaption, field): void;
+    cropImage(entityKey: string, entityData: any, options: {isNew: any; showMetadata: any; defaultTab: any;}): void;
+    removeBlock(blockKey: string): void;
+    changeCaption(entityKey: string, newCaption: string, field: ICaptionField): void;
     setLocked(): void;
 }
 
@@ -115,7 +117,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
      * @name MediaBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange(value: string, field: 'description_text' | 'headline') {
+    onChange(value: string, field: ICaptionField) {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 

@@ -232,7 +232,9 @@ export class AtomicBlockParser {
         }
 
         function getHighestHeadingText(el: HTMLElement): string | null {
-            for (const tag of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) {
+            const headings: Array<keyof HTMLElementTagNameMap> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+            for (const tag of headings) {
                 const result = el.querySelector(tag);
 
                 if (result != null) {

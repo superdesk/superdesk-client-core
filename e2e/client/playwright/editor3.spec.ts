@@ -280,12 +280,12 @@ test('adding a custom block inside editor3', async ({page}) => {
         .click();
 
     await expect(
-        page.locator(s('authoring', 'authoring-field=body_html', 'custom-block')).locator('[contenteditable]').first(),
+        page.locator(s('authoring', 'authoring-field=body_html', 'custom-block')).getByRole('textbox').first(),
     ).toHaveText('custom block 1 template content');
 
     await page.locator(
         s('authoring', 'authoring-field=body_html', 'custom-block'),
-    ).locator('[contenteditable]').click();
+    ).getByRole('textbox').click();
 
     const result = await getEditor3FormattingOptions(
         page.locator(s('authoring', 'authoring-field=body_html', 'editor3')),

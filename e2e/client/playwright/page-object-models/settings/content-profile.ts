@@ -25,12 +25,10 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
         await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
-        for (const option of options.formattingOptionsToAdd) {
-            await new TreeSelectDriver(
-                this.page,
-                this.page.locator(s('formatting-options-input')),
-            ).addValue(option);
-        }
+        await new TreeSelectDriver(
+            this.page,
+            this.page.locator(s('formatting-options-input')),
+        ).setValue(options.formattingOptionsToAdd);
 
         // this is required for validation. TODO: update DB snapshot to make current items already valid
         await this.page.locator(s('generic-list-page', 'item-view-edit', 'gform-input--sdWidth')).selectOption('Full');
