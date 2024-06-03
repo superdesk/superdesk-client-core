@@ -26,12 +26,12 @@ const toolbar = (state: IEditorStore, action) => {
         return toggleInlineStyle(state, action.payload);
     case 'TOOLBAR_APPLY_LINK':
         return applyLink(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE':
-        return applyLinkToMultiLineQuote(state, action.payload);
+    case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
+        return applyLinkOnTableCell(state, action.payload);
     case 'TOOLBAR_REMOVE_LINK':
         return removeLink(state);
-    case 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE':
-        return removeLinkInMultiLineQuote(state);
+    case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
+        return removeLinkInTableCell(state);
     case 'TOOLBAR_REMOVE_FORMAT':
         return removeFormat(state);
     case 'TOOLBAR_REMOVE_ALL_FORMAT':
@@ -52,10 +52,8 @@ const toolbar = (state: IEditorStore, action) => {
         return onChange(state, EditorState.undo(state.editorState));
     case 'REDO':
         return onChange(state, EditorState.redo(state.editorState));
-    case 'SET_CUSTOM_TOOLBAR' :
-        return setCustomToolbar(state, action.payload);
-    case 'SET_MULTI-LINE_QUOTE_POPUP' :
-        return setMultiLinePopup(state, action.payload);
+    case 'SET_TABLE_POPUP' :
+        return setTablePopup(state, action.payload);
     default:
         return state;
     }
@@ -155,11 +153,7 @@ function applyChangesToTableCell(
     return onChange(state, newMainState, true);
 }
 
-/**
- * Applies the given URL to the current content selection in multi-line quote block.
- * If the selection is a link, it applies the link to the entity instead.
- */
-const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
+const applyLinkOnTableCell = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
     applyChangesToTableCell(state, (editorState) =>
         entity
             ? entityUtils.replaceSelectedEntityData(editorState, {link})
@@ -167,9 +161,9 @@ const applyLinkToMultiLineQuote = (state, {link, entity}: {link: ILink, entity: 
     );
 
 /**
- * Removes the link on the entire entity under the cursor in multi-line quote block.
+ * Removes the link on the entire entity under the cursor in table cell.
  */
-const removeLinkInMultiLineQuote = (state) => {
+const removeLinkInTableCell = (state) => {
     const {activeCell, editorState: mainEditorState} = state;
 
     if (activeCell === null) {
@@ -343,16 +337,13 @@ const setPopup = (state: IEditorStore, {type, data}) => {
 
 type PopupType = keyof typeof PopupTypes;
 
-const setMultiLinePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
+const setTablePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
     processCells(
         state,
-        (cells, numCols, numRows, i, j, withHeader, currentStyle, selection) => {
-            const newData = {cells, numRows, numCols, withHeader};
-
+        (tableData, _activeCell) => {
             return {
-                ...state,
+                data: tableData,
                 popup: {type, data},
-                data: newData,
             };
         },
     );
@@ -411,10 +402,5 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
 
     return onChange(state, EditorState.forceSelection(nextEditorState, selection));
 }
-
-const setCustomToolbar = (state: IEditorStore, style: IEditorStore['customToolbarStyle']): IEditorStore => ({
-    ...state,
-    customToolbarStyle: style,
-});
 
 export default toolbar;

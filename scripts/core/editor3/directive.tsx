@@ -15,7 +15,7 @@ import createEditorStore, {
 } from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
-import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
+import {changeEditorState, setReadOnly, changeLimitConfig, setExternalOptions} from './actions';
 
 import ng from 'core/services/ng';
 import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
@@ -517,6 +517,10 @@ class Editor3Directive {
                     store = createEditorStore(this, ng.get('spellcheck'));
 
                     renderEditor3();
+                });
+
+                $scope.$watch('vm.editorFormat', (editorFormat) => {
+                    store.dispatch(setExternalOptions({editorFormat: editorFormat}));
                 });
 
                 // this is triggered from MacrosController.call

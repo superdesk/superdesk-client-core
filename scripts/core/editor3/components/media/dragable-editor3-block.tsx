@@ -14,7 +14,7 @@ interface IState {
     displayHandle: boolean;
 }
 
-class DragableEditor3BlockComponent extends React.PureComponent<IProps, IState> {
+class DraggableEditor3BlockComponent extends React.PureComponent<IProps, IState> {
     timeoutId: number;
     constructor(props: IProps) {
         super(props);
@@ -84,6 +84,6 @@ const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
 });
 
-export const DragableEditor3Block = connect(
+export const DraggableEditor3Block = connect(
     mapStateToProps,
-)(DragableEditor3BlockComponent);
+)(DraggableEditor3BlockComponent);

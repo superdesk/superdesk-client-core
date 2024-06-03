@@ -4,13 +4,13 @@
             <h2 class="sd-page__page-heading" translate>Metadata management</h2>
             <span class="sd-page__element-grow"></span>
             <button class="btn btn--hollow btn--primary"
-                ng-click="uploadConfig()" ng-if="tab === 'vocabularies'">
+                ng-click="uploadConfig()" ng-if="tab === 'vocabularies' || tab === 'custom-editor-blocks'">
                 <i class="icon-upload icon--blue"></i>
                 <span translate>Upload Config</span>
             </button>
         </div>
 
-        <div class="sd-page__header sd-page__header--white">
+        <div data-test-id="metadata-navigation" class="sd-page__header sd-page__header--white">
             <ul class="nav nav-tabs">
                 <li ng-class="{active: tab === 'vocabularies'}">
                     <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
