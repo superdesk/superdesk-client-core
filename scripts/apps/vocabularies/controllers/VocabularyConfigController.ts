@@ -1,10 +1,11 @@
 import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
-import {IVocabulary, IVocabularyItem, IVocabularyTag} from 'superdesk-api';
+import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext, downloadFile} from 'core/utils';
 import {showModal} from '@superdesk/common';
 import {UploadConfig} from '../components/UploadConfigModal';
+import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
 
 function getOther() {
     return gettext('Other');
@@ -110,7 +111,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
     $scope.matchFieldTypeToTab = (tab, fieldType) =>
         tab === 'vocabularies' && !fieldType || fieldType &&
         (tab === 'text-fields' && fieldType === 'text' ||
-            tab === 'custom-editor-blocks' && fieldType === 'editor-block' ||
+            tab === 'custom-editor-blocks' && fieldType === EDITOR_BLOCK_FIELD_TYPE ||
             tab === 'date-fields' && fieldType === 'date' ||
             tab === 'urls-fields' && fieldType === 'urls' ||
             tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType) ||

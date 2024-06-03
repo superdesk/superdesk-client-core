@@ -219,7 +219,10 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                     {
                         this.props.editMode
                             ? (
-                                <div className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right">
+                                <div
+                                    className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
+                                    data-test-id="toolbar"
+                                >
                                     <button
                                         className="btn"
                                         onClick={this.handleCancel}

@@ -145,7 +145,6 @@
     "karma-jasmine": "^1.1.1",
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-spec-reporter": "0.0.36",
     "karma-webpack": "^2.0.13",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.13.1",

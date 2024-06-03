@@ -5,6 +5,7 @@ import * as actions from '../../actions';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
+import {noop} from 'lodash';
 
 interface IProps extends Partial<IEditorStore> {
     removeLink(): void;
@@ -69,9 +70,9 @@ const mapDispatchToProps = (dispatch) => ({
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
-const mapDispatchToPropsMultiLineQuote = (dispatch) => ({
-    removeLink: () => dispatch(actions.removeLinkFromMuliLineQuote()),
-    removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
+const mapDispatchToPropsTableCell = (dispatch) => ({
+    removeLink: () => dispatch(actions.removeLinkInTableCell()),
+    removeLinkSuggestion: () => noop, // not supported for tables
 });
 
 export const LinkToolbar = connect(
@@ -79,7 +80,7 @@ export const LinkToolbar = connect(
     mapDispatchToProps,
 )(LinkToolbarComponent);
 
-export const LinkToolbarMultiLineQuote = connect(
+export const LinkToolbarForTableCell = connect(
     mapStateToProps,
-    mapDispatchToPropsMultiLineQuote,
+    mapDispatchToPropsTableCell,
 )(LinkToolbarComponent);

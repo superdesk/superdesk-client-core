@@ -1,6 +1,6 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle, IVocabulary, IRendition} from 'superdesk-api';
+import {IArticle, IRendition, IVocabularyRelatedContent, IVocabularyMedia} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 import {getThumbnailForItem} from 'core/helpers/item';
@@ -14,7 +14,7 @@ interface IScope extends IDirectiveScope<void> {
     relatedItemsNewButton: typeof RelatedItemCreateNewButton;
     onCreated: (items: Array<IArticle>) => void;
     gettext: (text: any, params?: any) => string;
-    field: IVocabulary;
+    field: IVocabularyMedia | IVocabularyRelatedContent;
     editable: boolean;
     item: IArticle;
     loading: boolean;
