@@ -5,9 +5,14 @@ import {TreeSelect} from 'superdesk-ui-framework/react';
 
 type IProps = IInputType<Array<string>>;
 
+interface IOption {
+    id: string;
+    label: string;
+}
+
 export class SelectMultipleValues extends React.Component<IProps> {
     render() {
-        const items: Array<{id: string; label: string}> = this.props.formField.component_parameters.items;
+        const items: Array<IOption> = this.props.formField.component_parameters.items;
 
         if (this.props.previewOutput) {
             if (this.props.value == null) {
@@ -25,6 +30,12 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     <span>{itemsWithLabels.map((item) => item.label).join(', ')}</span>
                 );
             }
+        }
+
+        const optionsLookup = new Map<string, IOption>();
+
+        for (const item of items) {
+            optionsLookup.set(item.id, item);
         }
 
         return (
@@ -55,12 +66,13 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     onChange={(item) => {
                         this.props.onChange(item.map(({id}) => id));
                     }}
-                    value={items.filter(({id}) => (this.props.value ?? []).includes(id))}
+                    value={(this.props.value ?? []).map((id) => optionsLookup.get(id))}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
                     inlineLabel
                     labelHidden
                     zIndex={1051}
+                    data-test-id={this.props.formField.component_parameters?.dataTestId}
                 />
 
                 {

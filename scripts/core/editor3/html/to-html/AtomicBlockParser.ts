@@ -2,10 +2,12 @@ import {ContentState, convertFromRaw, convertToRaw, ContentBlock} from 'draft-js
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
 import {editor3StateToHtml} from './editor3StateToHtml';
-import {getData, IEditor3TableData} from 'core/editor3/helpers/table';
+import {getData, IEditor3CustomBlockData, IEditor3TableData} from 'core/editor3/helpers/table';
 import {MULTI_LINE_QUOTE_CLASS} from 'core/editor3/components/multi-line-quote/MultiLineQuote';
 import {CustomEditor3Entity} from 'core/editor3/constants';
 import {IEditorDragDropArticleEmbed} from 'core/editor3/reducers/editor3';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc class
@@ -44,7 +46,9 @@ export class AtomicBlockParser {
         const data = entity.getData();
         const rawKey = this.getRawKey(data);
 
-        switch (entity.getType()) {
+        const entityType: CustomEditor3Entity = entity.getType();
+
+        switch (entityType) {
         case CustomEditor3Entity.MEDIA:
             return this.parseMedia(data, rawKey).trim();
         case CustomEditor3Entity.EMBED:
@@ -53,6 +57,8 @@ export class AtomicBlockParser {
             return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
         case CustomEditor3Entity.MULTI_LINE_QUOTE:
             return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
+        case CustomEditor3Entity.CUSTOM_BLOCK:
+            return this.parseCustomBlock(getData(this.contentState, contentBlock.getKey())).trim();
         case CustomEditor3Entity.ARTICLE_EMBED:
             // eslint-disable-next-line no-case-declarations
             const item = (data as IEditorDragDropArticleEmbed['data']).item;
@@ -60,6 +66,7 @@ export class AtomicBlockParser {
             return `<div data-association-key="${item._id}">${item.body_html}</div>`;
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
+            assertNever(entityType);
         }
     }
 
@@ -217,5 +224,40 @@ export class AtomicBlockParser {
         html += '</div>';
 
         return html;
+    }
+
+    parseCustomBlock(data: IEditor3CustomBlockData): string {
+        if (this.disabled.indexOf('table') > -1) {
+            return '';
+        }
+
+        function getHighestHeadingText(el: HTMLElement): string | null {
+            const headings: Array<keyof HTMLElementTagNameMap> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+            for (const tag of headings) {
+                const result = el.querySelector(tag);
+
+                if (result != null) {
+                    return result.textContent;
+                }
+            }
+
+            return null;
+        }
+
+        const {cells} = data;
+        const blockName = sdApi.vocabularies.getAll().get(data.vocabularyId).display_name;
+        const cellContentState: ContentState = convertFromRaw(cells[0][0]);
+        const tableCellContentHtml = editor3StateToHtml(cellContentState);
+        const tableCellContentElement: HTMLElement =
+            new DOMParser().parseFromString(tableCellContentHtml, 'text/html').body;
+        const heading: string | null = getHighestHeadingText(tableCellContentElement);
+        const attributes = [`data-custom-block-type="${blockName}"`];
+
+        if (heading != null) {
+            attributes.push(`data-custom-block-title="${heading}"`);
+        }
+
+        return `<div ${attributes.join(' ')}>${tableCellContentHtml}</div>`;
     }
 }

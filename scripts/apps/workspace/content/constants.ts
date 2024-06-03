@@ -103,6 +103,9 @@ export const EXTRA_EDITOR_FIELDS = Object.freeze({
     media_description: {enabled: true},
 });
 
+
+export const EDITOR_BLOCK_FIELD_TYPE = 'editor-block';
+
 /**
  * Vocabulary types used for custom fields
  */
@@ -112,5 +115,6 @@ export const CUSTOM_FIELD_TYPES = [
     'media',
     'embed',
     'urls',
+    EDITOR_BLOCK_FIELD_TYPE,
     'custom',
 ];

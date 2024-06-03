@@ -7,3 +7,4 @@ export * from './table';
 export * from './highlights';
 export * from './popups';
 export * from './suggestions';
+export * from './custom-block';

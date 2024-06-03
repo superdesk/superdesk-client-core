@@ -44,20 +44,14 @@ export function applyLink(link, entity = null) {
     };
 }
 
-/**
- * Returns the action for applying links to multi-line quote selections.
- */
-export function applyLinkToMuliLineQuote(link, entity = null) {
+export function applyLinkOnTableCell(link, entity = null) {
     return {
-        type: 'TOOLBAR_APPLY_LINK_MULTI-LINE_QUOTE',
+        type: 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL',
         payload: {link, entity},
     };
 }
 
-/**
- * Returns the action for removing links from multi-line quote selections.
- */
-export const removeLinkFromMuliLineQuote = () => ({type: 'TOOLBAR_REMOVE_LINK_MULTI-LINE_QUOTE'});
+export const removeLinkInTableCell = () => ({type: 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL'});
 
 /**
  * @ngdoc method
@@ -192,10 +186,6 @@ export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
 
-export const setMultiLineQuotePopup = (type, data) => ({
-    type: 'SET_MULTI-LINE_QUOTE_POPUP', payload: {type, data},
-});
-
-export const setCustomToolbar = (style: IEditorStore['customToolbarStyle']) => ({
-    type: 'SET_CUSTOM_TOOLBAR', payload: style,
+export const setTablePopup = (type, data) => ({
+    type: 'SET_TABLE_POPUP', payload: {type, data},
 });
