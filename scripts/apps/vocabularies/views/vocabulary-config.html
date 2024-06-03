@@ -63,7 +63,7 @@
                   class="sd-list-item sd-shadow--z1"
                   ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: filterVocabulary track by vocabulary._id"
                   data-test-id="vocabulary-item"
-                  data-test-value="{{vocabulary.display_name}}"
+                  data-test-value="{{ vocabulary.display_name }}"
                 >
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">

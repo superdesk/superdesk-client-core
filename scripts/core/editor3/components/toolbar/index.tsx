@@ -1,7 +1,7 @@
 import React from 'react';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
-import TableControls from './TableControls';
+import {TableControls} from './TableControls';
 import StyleButton from './StyleButton';
 import {SelectionButton} from './SelectionButton';
 import {IconButton} from './IconButton';
@@ -13,10 +13,13 @@ import * as actions from '../../actions';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
-import {MultiLineQuoteControls} from './MultiLineQuoteControls';
-import {assertNever} from 'core/helpers/typescript-helpers';
 import {IEditorStore} from 'core/editor3/store';
-import {IEditorComponentProps} from 'superdesk-api';
+import {TreeMenu} from 'superdesk-ui-framework/react';
+import {IEditorComponentProps, IVocabularyEditorBlock, RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
+import {sdApi} from 'api';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {getFormattingOptionsForTableLikeBlocks} from 'core/editor3/get-formatting-options-for-table';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -27,24 +30,39 @@ interface IState {
     width: string | number;
 }
 
-interface IProps extends Partial<IEditorStore> {
-    toggleSuggestingMode(): void;
-    showPopup(type, data): void;
+interface IReduxStateProps {
+    editorState: IEditorStore['editorState'];
+    editorFormat: IEditorStore['editorFormat'];
+    activeCell: IEditorStore['activeCell'];
+    popup: IEditorStore['popup'];
+    suggestingMode: IEditorStore['suggestingMode'];
+    invisibles: IEditorStore['invisibles'];
+}
+
+interface IDispatchProps {
     addMultiLineQuote(): void;
+    insertMedia(): void;
+    addTable(): void;
+    removeFormat(): void;
+    showPopup(type, data): void;
+    addCustomBlock(initialContent: RawDraftContentState, vocabularyId: string, label: string): void;
+    toggleSuggestingMode(): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
     dispatch(fn: any): void;
-    removeFormat(): void;
-    insertMedia(): void;
-    addTable(): void;
+}
+
+interface IOwnProps {
     editorWrapperElement: any;
     scrollContainer: string;
     highlightsManager: any;
     editorNode: any;
     disabled: boolean;
-    popup: any;
     uiTheme: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
+    draggingInProgress: boolean;
 }
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
 
 /**
  * @ngdoc React
@@ -159,7 +177,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
     render() {
         const {floating} = this.state;
         const {
-            customToolbarStyle,
             suggestingMode,
             editorFormat,
             invisibles,
@@ -168,6 +185,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             popup,
             toggleSuggestingMode,
             addMultiLineQuote,
+            addCustomBlock,
             toggleInvisibles,
             removeAllFormat,
             removeFormat,
@@ -175,203 +193,280 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             addTable,
             dispatch,
             editorState,
+            draggingInProgress,
         } = this.props;
 
-        const has = (opt) => editorFormat.indexOf(opt) > -1;
+        const has = (opt: RICH_FORMATTING_OPTION) => editorFormat.indexOf(opt) > -1;
         const showPopup = (type) => (data) => this.props.showPopup(type, data);
         const cx = classNames({
             'Editor3-controls': true,
             'floating-toolbar': floating,
+            'floating-toolbar-invisible': floating && draggingInProgress,
             disabled: disabled && activeCell === null,
         });
 
-        if (activeCell == null) {
+        if (activeCell != null) {
             return (
-                <div
+                <TableControls
                     className={cx}
-                    style={{
-                        width: this.state.width,
-                        backgroundColor: this.props.uiTheme == null
-                            ? undefined
-                            : this.props.uiTheme.backgroundColorSecondary,
-                        color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
-                    }}
-                    ref={this.toolbarNode}
-                >
-                    {/* Styles */}
-                    <BlockStyleButtons />
-                    <InlineStyleButtons />
+                    tableKind={activeCell.additional.tableKind}
+                    editorFormat={(() => {
+                        switch (activeCell.additional.tableKind) {
+                        case 'table':
+                            return editorFormat;
+                        case 'multi-line-quote':
+                            return editorFormat.filter((option) => option !== 'quote');
+                        case 'custom-block': {
+                            const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
 
-                    {/* Formatting options */}
-                    {has('link') && (
-                        <SelectionButton
-                            onClick={showPopup(PopupTypes.Link)}
-                            iconName="link"
-                            tooltip={gettext('Link (Ctrl+K)')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('embed') && (
-                        <IconButton
-                            onClick={showPopup(PopupTypes.Embed)}
-                            iconName="code"
-                            tooltip="Embed"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('media') && (
-                        <IconButton
-                            onClick={insertMedia}
-                            tooltip={gettext('Media')}
-                            iconName="picture"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('table') && (
-                        <IconButton
-                            onClick={addTable}
-                            tooltip={gettext('Table')}
-                            iconName="table"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('multi-line quote') && (
-                        <IconButton
-                            onClick={() => {
-                                addMultiLineQuote();
-                            }}
-                            tooltip={gettext('Multi-line quote')}
-                            iconName="text-block"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('remove format') && (
-                        <SelectionButton
-                            onClick={removeFormat}
-                            precondition={!suggestingMode}
-                            key="remove-format-button"
-                            iconName="clear-format"
-                            tooltip={gettext('Remove formatting')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {(has('remove all format') && !suggestingMode) && (
-                        <IconButton
-                            onClick={removeAllFormat}
-                            key="remove-all-format-button"
-                            iconName="clear-all"
-                            tooltip={gettext('Remove all formatting')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('comments') && (
-                        <SelectionButton
-                            onClick={showPopup(PopupTypes.Comment)}
-                            precondition={
-                                this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
+                            if (vocabulary.field_type !== 'editor-block') {
+                                throw new Error();
                             }
-                            key="comment-button"
-                            iconName="comment"
-                            tooltip={gettext('Comment')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-                    {has('annotation') && (
-                        <SelectionButton
-                            onClick={showPopup(PopupTypes.Annotation)}
-                            precondition={
-                                this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
-                            }
-                            key="annotation-button"
-                            iconName="edit-line"
-                            tooltip={gettext('Annotation')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
 
-                    {has('suggestions') && (
-                        <StyleButton
-                            active={suggestingMode}
-                            label={'suggestions'}
-                            style={'suggestions'}
-                            onToggle={toggleSuggestingMode}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
+                            const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
 
-                    {has('formatting marks') && (
-                        <StyleButton
-                            active={invisibles}
-                            label={'invisibles'}
-                            style={'invisibles'}
-                            onToggle={toggleInvisibles}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
+                            const vocabularyValues = (
+                                vocabulary.field_options.formatting_options ?? []
+                            ) as Array<RICH_FORMATTING_OPTION>;
 
-                    {has('uppercase') && (
-                        <SelectionButton
-                            onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
-                            precondition={!suggestingMode}
-                            key="uppercase-button"
-                            iconName="to-uppercase"
-                            tooltip={gettext('Convert text to uppercase')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
+                            return vocabularyValues.filter(
+                                (option) => availableOptions.has(option as RICH_FORMATTING_OPTION),
+                            );
+                        }
+                        default:
+                            assertNever(activeCell.additional);
+                        }
+                    })()}
+                />
+            );
+        }
 
-                    {has('lowercase') && (
-                        <SelectionButton
-                            onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
-                            precondition={!suggestingMode}
-                            key="lowercase-button"
-                            iconName="to-lowercase"
-                            tooltip={gettext('Convert text to lowercase')}
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
+        return (
+            <div
+                className={cx}
+                style={{
+                    width: this.state.width,
+                    backgroundColor: this.props.uiTheme == null
+                        ? undefined
+                        : this.props.uiTheme.backgroundColorSecondary,
+                    color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
+                }}
+                ref={this.toolbarNode}
+                data-test-id="toolbar"
+            >
+                {/* Styles */}
+                <BlockStyleButtons />
+                <InlineStyleButtons />
 
-                    {has('undo') && (
-                        <IconButton
-                            onClick={() => {
-                                this.props.dispatch(undo());
-                            }}
-                            tooltip={gettext('Undo') + ' (ctrl + z)'}
-                            iconName="undo"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-
-                    {has('redo') && (
-                        <IconButton
-                            onClick={() => {
-                                this.props.dispatch(redo());
-                            }}
-                            tooltip={gettext('Redo') + ' (ctrl + y)'}
-                            iconName="redo"
-                            uiTheme={this.props.uiTheme}
-                        />
-                    )}
-
-                    <ToolbarPopup
-                        type={popup.type}
-                        data={popup.data}
-                        editorState={this.props.editorState}
-                        highlightsManager={this.props.highlightsManager}
+                {/* Formatting options */}
+                {has('link') && (
+                    <SelectionButton
+                        onClick={showPopup(PopupTypes.Link)}
+                        iconName="link"
+                        tooltip={gettext('Link (Ctrl+K)')}
                         uiTheme={this.props.uiTheme}
                     />
+                )}
+                {has('embed') && (
+                    <IconButton
+                        onClick={showPopup(PopupTypes.Embed)}
+                        iconName="code"
+                        tooltip="Embed"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('media') && (
+                    <IconButton
+                        onClick={insertMedia}
+                        tooltip={gettext('Media')}
+                        iconName="picture"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('table') && (
+                    <IconButton
+                        onClick={addTable}
+                        tooltip={gettext('Table')}
+                        iconName="table"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('multi-line quote') && (
+                    <IconButton
+                        onClick={() => {
+                            addMultiLineQuote();
+                        }}
+                        tooltip={gettext('Multi-line quote')}
+                        iconName="text-block"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
 
-                    {/* LinkToolbar must be the last node. */}
-                    <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
-                </div>
-            );
-        } else if (customToolbarStyle === 'multiLineQuote') {
-            return <MultiLineQuoteControls className={cx} />;
-        } else if (activeCell || customToolbarStyle === 'table') {
-            return <TableControls className={cx} />;
-        } else {
-            assertNever(customToolbarStyle);
-        }
+                {(() => {
+                    const options = sdApi.vocabularies
+                        .getAll()
+                        .filter((vocabulary) => vocabulary.field_type === 'editor-block')
+                        .map((vocabulary: IVocabularyEditorBlock) => ({
+                            value: vocabulary.display_name,
+                            onSelect: () => {
+                                const contentStateRaw = vocabulary.field_options?.template?.[0]
+                                    ?? convertToRaw(ContentState.createFromText(''));
+
+                                addCustomBlock(
+                                    contentStateRaw,
+                                    vocabulary._id,
+                                    vocabulary.display_name,
+                                );
+                            },
+                        }))
+                        .toArray();
+
+                    if (has('custom blocks') && options.length > 0) {
+                        return (
+                            <div style={{display: 'inline-flex'}}>
+                                <TreeMenu
+                                    getOptions={() => options}
+                                    getLabel={(item) => item}
+                                    getId={(item) => item}
+                                >
+                                    {(toggle) => (
+                                        <IconButton
+                                            onClick={(event) => {
+                                                toggle(event);
+                                            }}
+                                            tooltip={gettext('Custom block')}
+                                            iconName="plus-large"
+                                            uiTheme={this.props.uiTheme}
+                                        />
+                                    )}
+                                </TreeMenu>
+                            </div>
+                        );
+                    } else {
+                        return null;
+                    }
+                })()}
+
+                {has('remove format') && (
+                    <SelectionButton
+                        onClick={removeFormat}
+                        precondition={!suggestingMode}
+                        key="remove-format-button"
+                        iconName="clear-format"
+                        tooltip={gettext('Remove formatting')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {(has('remove all format') && !suggestingMode) && (
+                    <IconButton
+                        onClick={removeAllFormat}
+                        key="remove-all-format-button"
+                        iconName="clear-all"
+                        tooltip={gettext('Remove all formatting')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('comments') && (
+                    <SelectionButton
+                        onClick={showPopup(PopupTypes.Comment)}
+                        precondition={
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
+                        }
+                        key="comment-button"
+                        iconName="comment"
+                        tooltip={gettext('Comment')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('annotation') && (
+                    <SelectionButton
+                        onClick={showPopup(PopupTypes.Annotation)}
+                        precondition={
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
+                        }
+                        key="annotation-button"
+                        iconName="edit-line"
+                        tooltip={gettext('Annotation')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('suggestions') && (
+                    <StyleButton
+                        active={suggestingMode}
+                        label={'suggestions'}
+                        style={'suggestions'}
+                        onToggle={toggleSuggestingMode}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('formatting marks') && (
+                    <StyleButton
+                        active={invisibles}
+                        label={'invisibles'}
+                        style={'invisibles'}
+                        onToggle={toggleInvisibles}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('uppercase') && (
+                    <SelectionButton
+                        onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
+                        precondition={!suggestingMode}
+                        key="uppercase-button"
+                        iconName="to-uppercase"
+                        tooltip={gettext('Convert text to uppercase')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('lowercase') && (
+                    <SelectionButton
+                        onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
+                        precondition={!suggestingMode}
+                        key="lowercase-button"
+                        iconName="to-lowercase"
+                        tooltip={gettext('Convert text to lowercase')}
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('undo') && (
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(undo());
+                        }}
+                        tooltip={gettext('Undo') + ' (ctrl + z)'}
+                        iconName="undo"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                {has('redo') && (
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(redo());
+                        }}
+                        tooltip={gettext('Redo') + ' (ctrl + y)'}
+                        iconName="redo"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+
+                <ToolbarPopup
+                    type={popup.type}
+                    data={popup.data}
+                    editorState={this.props.editorState}
+                    highlightsManager={this.props.highlightsManager}
+                    uiTheme={this.props.uiTheme}
+                />
+
+                {/* LinkToolbar must be the last node. */}
+                <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
+            </div>
+        );
     }
 }
 
@@ -382,7 +477,6 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
-    customToolbarStyle,
 }) => ({
     editorFormat,
     activeCell,
@@ -390,7 +484,6 @@ const mapStateToProps = ({
     editorState,
     suggestingMode,
     invisibles,
-    customToolbarStyle,
 });
 
 const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
@@ -398,6 +491,8 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
     addTable: () => dispatch(actions.addTable()),
     addMultiLineQuote: () => dispatch(actions.addMultiLineQuote()),
+    addCustomBlock: (initialContent: RawDraftContentState, vocabularyId: string, label: string) =>
+        dispatch(actions.addCustomBlock(initialContent, vocabularyId, label)),
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),
@@ -405,6 +500,6 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     dispatch: dispatch,
 });
 
-const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
+const Toolbar: React.ComponentType<IOwnProps> = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);
 
 export default Toolbar;

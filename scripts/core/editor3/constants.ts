@@ -1,3 +1,5 @@
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+
 export const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
 /**
@@ -10,5 +12,13 @@ export enum CustomEditor3Entity {
     EMBED = 'EMBED',
     TABLE = 'TABLE',
     MULTI_LINE_QUOTE = 'MULTI-LINE_QUOTE',
+    CUSTOM_BLOCK = 'CUSTOM_BLOCK',
     ARTICLE_EMBED = 'ARTICLE_EMBED',
 }
+
+export const formattingOptionsThatRequireDragAndDrop = new Set<RICH_FORMATTING_OPTION>([
+    'media',
+    'multi-line quote',
+    'embed articles',
+    'custom blocks',
+]);

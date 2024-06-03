@@ -22,6 +22,8 @@ interface IInternalEvents {
 
     interactiveArticleActionStart: IPanelAction;
     interactiveArticleActionEnd: void;
+
+    editor3SpellcheckerActionWasExecuted: void;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(

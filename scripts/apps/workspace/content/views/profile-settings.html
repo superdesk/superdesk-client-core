@@ -34,11 +34,11 @@
                     ng-class="{inactive: !type.enabled}"
                     ng-show="(!active_only || (active_only && type.enabled)) && (contentTypeFilter == null || contentTypeFilter === type.type)"
                     data-test-id="content-profile"
-                    data-test-value="{{ type.label }}"
+                    data-test-value="{{type.label}}"
                 >
                     <div class="card-box__header">
-                        <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle data-test-id="content-profile-actions">
+                        <div class="dropdown" dropdown data-test-id="content-profile-actions-popover">
+                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }}" data-test-id="content-profile-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
                             <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="content-profile-actions--options">
@@ -135,7 +135,7 @@
     <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
-    <div class="modal__body sd-padding--0 sd-padding-t--2">
+    <div class="modal__body sd-padding--0 sd-padding-t--2" data-test-id="content-profile-edit-view">
         <form name="editForm">
             <fieldset ng-init="setNgForm(editForm)">
                 <div class="form__row form__row--flex sd-padding-x--2" style="align-items: center">
@@ -184,7 +184,7 @@
             </fieldset>
         </form>
     </div>
-    <div class="modal__footer">
+    <div class="modal__footer" data-test-id="content-profile-edit-view--footer">
         <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty || ctrl.savingInProgress" ng-click="ctrl.update()" translate>Save</button>
         <button class="btn" ng-click="ctrl.toggleEdit()" translate>Cancel</button>
     </div>

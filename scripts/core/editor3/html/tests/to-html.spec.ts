@@ -320,6 +320,13 @@ describe('core.editor3.html.to-html', () => {
 });
 
 describe('core.editor3.html.to-html.AtomicBlockParser', () => {
+    beforeEach(() => {
+        window.module('superdesk.apps.spellcheck');
+
+        // init the tests module to get the actual provider
+        inject(() => { /* no-op */ });
+    });
+
     it('should correctly parse embeds', () => {
         const {block, contentState} = testUtils.embedBlockAndContent();
         const html = new AtomicBlockParser(contentState).parse(block);

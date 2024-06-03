@@ -138,6 +138,8 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         page.startEditing(getId(item));
                     }
                 }}
+                data-test-id="field"
+                data-test-value={getLabel(item.id)}
             >
                 {
                     canAddNewField
