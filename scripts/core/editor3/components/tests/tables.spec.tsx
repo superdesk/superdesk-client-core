@@ -25,6 +25,7 @@ describe('editor3.component.table-block', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = shallow(
             <TableBlock
+                additional={{tableKind: 'table'}}
                 block={block}
                 setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
@@ -42,6 +43,7 @@ describe('editor3.component.table-block', () => {
         const {block, contentState} = tableBlockAndContent();
         const wrapper = mount(
             <TableBlock
+                additional={{tableKind: 'table'}}
                 block={block}
                 setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}

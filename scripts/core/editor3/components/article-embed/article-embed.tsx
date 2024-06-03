@@ -1,6 +1,6 @@
 import React from 'react';
 import {IconButton, Spacer} from 'superdesk-ui-framework/react';
-import {ContentBlock, ContentState, EditorState} from 'draft-js';
+import {ContentBlock, ContentState} from 'draft-js';
 import {IEditorDragDropArticleEmbed} from 'core/editor3/reducers/editor3';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {Card} from 'core/ui/components/Card';
@@ -9,8 +9,6 @@ import {getArticleLabel, gettext} from 'core/utils';
 interface IProps {
     block: ContentBlock;
     contentState: ContentState;
-    editorState: EditorState;
-    readOnly: boolean;
 }
 
 export class ArticleEmbed extends React.Component<IProps> {

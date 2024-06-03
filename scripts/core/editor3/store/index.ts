@@ -34,7 +34,7 @@ import {appConfig} from 'appConfig';
 import {
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {RICH_FORMATTING_OPTION, IActiveCell, IArticle, IDesk} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IArticle} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -43,6 +43,7 @@ import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
+import {IActiveCell} from '../components/tables/TableBlock';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -69,7 +70,7 @@ interface IProps {
 export interface IEditorStore {
     editorState: EditorState;
     searchTerm: { pattern: string; index: number; caseSensitive: boolean };
-    popup: { type: any };
+    popup: { type: any; data?: any };
     readOnly: boolean;
     locked: boolean;
     showToolbar: any;
@@ -78,7 +79,6 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell?: IActiveCell;
-    customToolbarStyle?: 'table' | 'multiLineQuote';
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
