@@ -34,6 +34,9 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         super(props);
 
         const lsSideWidget = localStorage.getItem('sideWidget');
+        const programmaticallyOpened = lsSideWidget != null
+            ? JSON.parse(lsSideWidget).activeSection === 'translations'
+            : false;
 
         this.state = {
             activeSection: lsSideWidget != null ? JSON.parse(lsSideWidget).activeSection : null,
@@ -42,12 +45,10 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
             translations: '',
             loadingSummary: true,
             loadingHeadlines: true,
-            loadingTranslations: false,
+            loadingTranslations: programmaticallyOpened,
             error: false,
             activeLanguageId: this.props.article.language,
-            programmaticallyOpened: lsSideWidget != null
-                ? JSON.parse(lsSideWidget).activeSection === 'translations'
-                : false,
+            programmaticallyOpened: programmaticallyOpened,
         };
 
         localStorage.removeItem('sideWidget');

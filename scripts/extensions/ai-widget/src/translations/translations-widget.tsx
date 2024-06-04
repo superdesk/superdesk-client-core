@@ -75,6 +75,7 @@ export default function getTranslationsWidget({
         ),
         footer: (
             <TranslationFooter
+                programmaticallyOpened={programmaticallyOpened}
                 activeLanguageId={activeLanguageId}
                 setActiveLanguage={setActiveLanguage}
                 generateTranslations={generateTranslations}
