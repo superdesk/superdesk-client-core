@@ -4,6 +4,12 @@ import {superdesk} from './superdesk';
 import {configuration} from './configuration';
 
 const extension: IExtension = {
+    exposes: {
+        get overrideTranslations() {
+            console.log(configuration.overrideTranslations)
+            return configuration.overrideTranslations;
+        },
+    },
     activate: () => {
         const hasConfiguredServices = Object.keys(configuration).length > 0;
 
@@ -24,11 +30,10 @@ const extension: IExtension = {
             },
         };
 
-
         return Promise.resolve(result);
     },
 };
 
-export {configure, configureOnTranslate} from './configuration';
+export {configure} from './configuration';
 
 export default extension;

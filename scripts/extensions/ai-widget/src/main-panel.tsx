@@ -40,6 +40,16 @@ export default function DefaultAiAssistantPanel({setSection}: IProps) {
                     <SvgIconIllustration illustration="summary" />
                 </IllustrationButton>
             )}
+            {configuration.generateTranslations != null && (
+                <IllustrationButton
+                    text={gettext('Translations')}
+                    onClick={() => {
+                        setSection('translations');
+                    }}
+                >
+                    <SvgIconIllustration illustration="translate" />
+                </IllustrationButton>
+            )}
         </div>
     );
 }

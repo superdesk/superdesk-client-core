@@ -157,7 +157,13 @@ function WidgetsManagerCtrl(
     preferencesService,
     $rootScope,
 ) {
-    $scope.active = null;
+    const lsSideWidget = localStorage.getItem('sideWidget');
+    const localStorageWidgetState = lsSideWidget != null ? JSON.parse(lsSideWidget) : null;
+    const widgetValue = lsSideWidget == null
+        ? null
+        : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
+
+    $scope.active = widgetValue != null ? widgetValue : null;
 
     preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
         this.widgetFromPreferences = preferences,
@@ -338,7 +344,7 @@ function WidgetsManagerCtrl(
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
-        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+        () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
 
     widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
     widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
@@ -391,6 +397,10 @@ function WidgetsManagerCtrl(
             $scope.autosave();
         });
     };
+
+    if (widgetValue?.component != null && localStorageWidgetState?.pinned === true) {
+        $scope.pinWidget(widgetValue);
+    }
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();

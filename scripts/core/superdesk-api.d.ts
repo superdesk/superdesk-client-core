@@ -1,7 +1,4 @@
 /* tslint:disable */
-
-import {IOnTranslateActions} from 'apps/monitoring/directives/MonitoringView';
-
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
@@ -2728,11 +2725,6 @@ declare module 'superdesk-api' {
         undefinedEqNull: boolean;
     }
 
-    export interface IOnTranslateActions {
-        onTranslateMonitoring?: () => void;
-        onTranslateAuthoring?: () => void;
-    }
-
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -2956,7 +2948,6 @@ declare module 'superdesk-api' {
             };
         };
         authoringGeneric: {
-            onTranslateActions: IOnTranslateActions;
             sideWidgets: {
                 comments: <T>(
                     getComments: (entityId: string) => Promise<Array<IComment>>,

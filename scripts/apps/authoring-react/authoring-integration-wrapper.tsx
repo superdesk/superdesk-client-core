@@ -260,9 +260,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     constructor(props: IPropsWrapper) {
         super(props);
 
+        const lsSideWidget = localStorage.getItem('sideWidget');
+
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
-            sideWidget: null,
+            sideWidget: lsSideWidget != null ? JSON.parse(lsSideWidget) : null,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);

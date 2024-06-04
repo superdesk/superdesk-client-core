@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc service
@@ -64,9 +64,8 @@ export function TranslationService(
         };
 
         api.save('translate', params).then((_item) => {
-            authoringWorkspace.open(_item);
+            sdApi.translations.aiTranslationActions(_item);
             $rootScope.$broadcast('item:translate');
-            notify.success(gettext('Item Translated'));
         });
     };
 

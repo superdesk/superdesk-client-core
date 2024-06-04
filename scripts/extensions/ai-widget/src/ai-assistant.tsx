@@ -1,13 +1,15 @@
 import React from 'react';
-import {IArticleSideWidgetComponentType} from 'superdesk-api';
+import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import {configuration} from './configuration';
 import getHeadlinesWidget from './headlines/headlines-widget';
 import getSummaryWidget from './summary/summary-widget';
 import DefaultAiAssistantPanel from './main-panel';
+import getTranslationsWidget from './translations/translations-widget';
 
-export type IAiAssistantSection = 'headlines' | 'summary' | null;
+export type IAiAssistantSection = 'headlines' | 'summary' | 'translations' | null;
+export type ITranslationLanguage = ITranslation['_id'];
 
 interface IState {
     activeSection: IAiAssistantSection;
@@ -17,28 +19,39 @@ interface IState {
      */
     loadingHeadlines: boolean;
     loadingSummary: boolean;
+    loadingTranslations: boolean;
 
     headlines: Array<string>;
     error: boolean;
     summary: string;
+    translations: string;
+    activeLanguage: ITranslationLanguage;
 }
 
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
+        const lsSideWidget = localStorage.getItem('sideWidget')
+
         this.state = {
-            activeSection: null,
+            activeSection: lsSideWidget != null ? JSON.parse(lsSideWidget).activeSection : null,
             headlines: [],
-            error: false,
+            summary: '',
+            translations: '',
             loadingSummary: true,
             loadingHeadlines: true,
-            summary: '',
+            loadingTranslations: false,
+            error: false,
+            activeLanguage: this.props.article.language,
         };
+
+        localStorage.removeItem('sideWidget');
 
         this.setError = this.setError.bind(this);
         this.generateHeadlines = this.generateHeadlines.bind(this);
         this.generateSummary = this.generateSummary.bind(this);
+        this.generateTranslations = this.generateTranslations.bind(this);
     }
 
     setError() {
@@ -53,6 +66,18 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 this.setState({
                     loadingHeadlines: false,
                     headlines: res,
+                });
+            }).catch(() => {
+                this.setError();
+            });
+    }
+
+    generateTranslations() {
+        configuration.generateTranslations?.(this.props.article, this.state.activeLanguage, superdesk)
+            .then((res) => {
+                this.setState({
+                    loadingTranslations: false,
+                    translations: res,
                 });
             }).catch(() => {
                 this.setError();
@@ -92,6 +117,26 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
             fieldsData: this.props.fieldsData,
             onFieldsDataChange: this.props.onFieldsDataChange,
         });
+        const translationsWidget = getTranslationsWidget({
+            closeActiveSection,
+            article: this.props.article,
+            error: this.state.error,
+            setActiveLanguage: (language) => {
+                this.setState({
+                    activeLanguage: language,
+                })
+            },
+            activeLanguage: this.state.activeLanguage,
+            generateTranslations: () => {
+                this.setState({
+                    loadingTranslations: true,
+                }, () => this.generateTranslations());
+            },
+            translations: this.state.translations,
+            loading: this.state.loadingTranslations,
+            fieldsData: this.props.fieldsData,
+            onFieldsDataChange: this.props.onFieldsDataChange,
+        });
         const summaryWidget = getSummaryWidget({
             closeActiveSection,
             article: this.props.article,
@@ -114,6 +159,8 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 return headlinesWidget;
             } else if (this.state.activeSection === 'summary') {
                 return summaryWidget;
+            } else if (this.state.activeSection === 'translations') {
+                return translationsWidget;
             } else {
                 return {
                     header: undefined,

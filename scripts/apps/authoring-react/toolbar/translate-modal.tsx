@@ -51,7 +51,7 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
 
     translate() {
         if (this.state.initialized) {
-            return httpRequestJsonLocal({
+            return httpRequestJsonLocal<IArticle>({
                 method: 'POST',
                 path: '/archive/translate',
                 payload: {
@@ -59,7 +59,10 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                     language: this.state.selectedLanguage,
                     guid: this.props.article._id,
                 },
-            }).then(() => this.props.closeModal());
+            }).then((item) => {
+                sdApi.translations.aiTranslationActions(item);
+                this.props.closeModal();
+            });
         }
     }
 
