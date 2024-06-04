@@ -16,7 +16,8 @@ interface IProps {
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
     setActiveLanguage: (language: ITranslationLanguage) => void;
-    activeLanguage: ITranslationLanguage;
+    activeLanguageId: ITranslationLanguage;
+    programmaticallyOpened: boolean;
 }
 
 export default function getTranslationsWidget({
@@ -29,7 +30,8 @@ export default function getTranslationsWidget({
     fieldsData,
     onFieldsDataChange,
     setActiveLanguage,
-    activeLanguage,
+    activeLanguageId,
+    programmaticallyOpened,
 }: IProps) {
     const {gettext} = superdesk.localization;
 
@@ -60,7 +62,8 @@ export default function getTranslationsWidget({
         ),
         body: (
             <TranslationsBody
-                activeLanguage={activeLanguage}
+                programmaticallyOpened={programmaticallyOpened}
+                activeLanguageId={activeLanguageId}
                 article={article}
                 error={error}
                 generateTranslation={generateTranslations}
@@ -72,7 +75,7 @@ export default function getTranslationsWidget({
         ),
         footer: (
             <TranslationFooter
-                activeLanguage={activeLanguage}
+                activeLanguageId={activeLanguageId}
                 setActiveLanguage={setActiveLanguage}
                 generateTranslations={generateTranslations}
             />

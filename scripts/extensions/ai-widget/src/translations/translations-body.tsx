@@ -25,7 +25,8 @@ interface IProps {
     generateTranslation: () => void;
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-    activeLanguage: ITranslationLanguage;
+    activeLanguageId: ITranslationLanguage;
+    programmaticallyOpened: boolean;
 }
 
 interface IState {
@@ -37,27 +38,18 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            translatedFromLanguage: this.props.activeLanguage,
-        }
-    }
-
-    componentDidUpdate(prevProps: Readonly<IProps>): void {
-        console.log(this.props.activeLanguage, prevProps.activeLanguage)
-        if (this.props.activeLanguage !== prevProps.activeLanguage) {
-            this.setState({
-                translatedFromLanguage: this.props.activeLanguage,
-            });
-        }
+            translatedFromLanguage: '',
+        };
     }
 
     componentDidMount(): void {
         if (this.props.article.translated_from != null) {
             superdesk.dataApi.findOne<IArticle>(
                 'archive',
-                this.props.article.translated_from
+                this.props.article.translated_from,
             ).then((article) => {
                 this.setState({
-                    translatedFromLanguage: article.language
+                    translatedFromLanguage: article.language,
                 });
             });
         }
@@ -92,41 +84,34 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                     <Heading type="h3" align="center">
                         {gettext('No Translations yet')}
                     </Heading>
-                    <Heading type='h6' align='center'>
+                    <Heading type="h6" align="center">
                         {gettext('Choose the language and click the translate button at the bottom')}
                     </Heading>
                 </Spacer>
-            )
+            );
         }
 
-        // Allow new article creation only if widget is opened manually
-        const showCreateNewButton = (() => {
-            const lsSideWidget = localStorage.getItem('sideWidget');
-
-            return lsSideWidget != null
-                ? JSON.parse(lsSideWidget).activeSection === 'translations'
-                : false;
-        })();
-
         return (
-            <Container gap="small" direction="column" className='sd-overflow--y-auto'>
-                <Spacer v gap="16" justifyContent='end' noGrow>
-                    <Spacer h gap="4" justifyContent='end' alignItems='center' noWrap>
+            <Container gap="small" direction="column" className="sd-overflow--y-auto">
+                <Spacer v gap="16" justifyContent="end" noGrow>
+                    <Spacer h gap="4" justifyContent="end" alignItems="center" noWrap>
                         <Label
-                            text={this.props.article.language}
-                            size='small'
+                            text={this.props.programmaticallyOpened
+                                ? this.state.translatedFromLanguage
+                                : this.props.article.language}
+                            size="small"
                         />
                         <Icon
-                            name='arrow-right'
-                            size='small'
+                            name="arrow-right"
+                            size="small"
                         />
                         <Label
-                            text={this.state.translatedFromLanguage}
-                            size='small'
+                            text={this.props.activeLanguageId}
+                            size="small"
                             type="primary"
                         />
                     </Spacer>
-                    <Text className='sd-overflow--y-auto' size="small">
+                    <Text size="small">
                         {translation}
                     </Text>
                 </Spacer>
@@ -138,7 +123,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             navigator.clipboard.writeText(translation);
                         }}
                     />
-                    {showCreateNewButton === false && (
+                    {this.props.programmaticallyOpened === false && (
                         <Button
                             onClick={() => {
                                 const currentDeskId = superdesk.entities.desk.getActiveDeskId();
@@ -153,13 +138,13 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                         };
                                     }
 
-                                    return {user: article.task.user}
+                                    return {user: article.task.user};
                                 })();
 
                                 superdesk.entities.article.createNewWithData({
                                     body_html: translation,
                                     task: taskData,
-                                    language: article.language,
+                                    language: this.props.activeLanguageId,
                                 }, article.profile);
                             }}
                             size="small"

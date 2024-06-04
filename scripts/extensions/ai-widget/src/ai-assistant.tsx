@@ -25,14 +25,15 @@ interface IState {
     error: boolean;
     summary: string;
     translations: string;
-    activeLanguage: ITranslationLanguage;
+    activeLanguageId: ITranslationLanguage;
+    programmaticallyOpened: boolean;
 }
 
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        const lsSideWidget = localStorage.getItem('sideWidget')
+        const lsSideWidget = localStorage.getItem('sideWidget');
 
         this.state = {
             activeSection: lsSideWidget != null ? JSON.parse(lsSideWidget).activeSection : null,
@@ -43,7 +44,10 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
             loadingHeadlines: true,
             loadingTranslations: false,
             error: false,
-            activeLanguage: this.props.article.language,
+            activeLanguageId: this.props.article.language,
+            programmaticallyOpened: lsSideWidget != null
+                ? JSON.parse(lsSideWidget).activeSection === 'translations'
+                : false,
         };
 
         localStorage.removeItem('sideWidget');
@@ -73,7 +77,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     generateTranslations() {
-        configuration.generateTranslations?.(this.props.article, this.state.activeLanguage, superdesk)
+        configuration.generateTranslations?.(this.props.article, this.state.activeLanguageId, superdesk)
             .then((res) => {
                 this.setState({
                     loadingTranslations: false,
@@ -123,10 +127,11 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
             error: this.state.error,
             setActiveLanguage: (language) => {
                 this.setState({
-                    activeLanguage: language,
-                })
+                    activeLanguageId: language,
+                });
             },
-            activeLanguage: this.state.activeLanguage,
+            activeLanguageId: this.state.activeLanguageId,
+            programmaticallyOpened: this.state.programmaticallyOpened,
             generateTranslations: () => {
                 this.setState({
                     loadingTranslations: true,

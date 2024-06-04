@@ -6,7 +6,6 @@ import {configuration} from './configuration';
 const extension: IExtension = {
     exposes: {
         get overrideTranslations() {
-            console.log(configuration.overrideTranslations)
             return configuration.overrideTranslations;
         },
     },
