@@ -6,6 +6,7 @@ import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-eve
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -16,12 +17,13 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
  *
  * @description Generates authoring subnav bar
  */
-AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace', '$q'];
+AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace', '$q', 'superdeskFlags'];
 export function AuthoringTopbarDirective(
     TranslationService,
     privileges,
     authoringWorkspace: AuthoringWorkspaceService,
     $q,
+    superdeskFlags
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
@@ -32,7 +34,7 @@ export function AuthoringTopbarDirective(
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
-
+            scope.monitoringHidden = superdeskFlags.flags.hideMonitoring ?? false;
             scope.saveTopbarLoading = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
@@ -145,6 +147,32 @@ export function AuthoringTopbarDirective(
             scope.$on('$destroy', () => {
                 removeSaveEventListener();
             });
+
+            scope.$watch(() => {
+                return superdeskFlags.flags.hideMonitoring;
+            }, (value) => {
+                scope.monitoringHidden = value;
+            });
+ 
+            scope.hideMonitoring = function(state, e) {
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
+
+                if (fullWidthConfig.enabled) {
+                    if (fullWidthConfig.allowed) {
+                        fullWidthConfig.onToggle(!scope.fullWidthEnabled);
+                    }
+                } else {
+                    // eslint-disable-next-line no-lonely-if
+                    if (superdeskFlags.flags.authoring && state) {
+                        e.preventDefault();
+                        superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
+                    } else {
+                        superdeskFlags.flags.hideMonitoring = false;
+                        scope.superdeskFlags = false;
+                    }
+                }
+            };
+            
         },
     };
 }

@@ -34,6 +34,7 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@superdesk/common';
+import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -43,6 +44,8 @@ function onClose() {
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
     action?: IAuthoringActionType,
+    hideMonitoring?: (state: boolean, event: React.MouseEvent<HTMLButtonElement>) => void,
+    isExpanded?: boolean,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -132,6 +135,18 @@ function getInlineToolbarActions(
                 }}
                 icon="minimize"
                 iconSize="big"
+            />
+        ),
+        availableOffline: true,
+    };
+
+    const toggleFullWidthButton: ITopBarWidget<IArticle> = {
+        group: 'start',
+        priority: 0.1,
+        component: () => (
+            <ToggleFullWidth
+                onClick={(event) => hideMonitoring(true, event)}
+                isExpanded={isExpanded}
             />
         ),
         availableOffline: true,
@@ -388,14 +403,14 @@ function getInlineToolbarActions(
     if (action === 'kill') {
         return {
             readOnly: false,
-            actions: [sendKillAction, closeIconButton, minimizeButton],
+            actions: [toggleFullWidthButton, sendKillAction, closeIconButton, minimizeButton],
         };
     }
 
     if (action === 'correct') {
         return {
             readOnly: false,
-            actions: [sendCorrectionAction, cancelAuthoringAction, minimizeButton],
+            actions: [toggleFullWidthButton, sendCorrectionAction, cancelAuthoringAction, minimizeButton],
         };
     }
 
@@ -403,7 +418,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.DRAFT:
         return {
             readOnly: false,
-            actions: [saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
+            actions: [toggleFullWidthButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
         };
 
     case ITEM_STATE.SUBMITTED:
@@ -413,6 +428,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.UNPUBLISHED:
         // eslint-disable-next-line no-case-declarations
         const actions: Array<ITopBarWidget<IArticle>> = [
+            toggleFullWidthButton,
             minimizeButton,
             closeButton,
             ...getReadOnlyAndArchivedFrom(),
@@ -634,6 +650,7 @@ function getInlineToolbarActions(
                     ),
                     availableOffline: false,
                 },
+                toggleFullWidthButton,
                 closeIconButton,
             ],
         };
@@ -657,6 +674,7 @@ function getInlineToolbarActions(
                     ),
                     availableOffline: false,
                 },
+                toggleFullWidthButton,
                 closeIconButton,
             ],
         };
@@ -666,6 +684,7 @@ function getInlineToolbarActions(
         return {
             readOnly: true,
             actions: [
+                toggleFullWidthButton,
                 updateAction,
                 correctAction,
                 takedownAction,
@@ -678,13 +697,14 @@ function getInlineToolbarActions(
     case ITEM_STATE.BEING_CORRECTED:
         return {
             readOnly: false,
-            actions: [closeIconButton, saveButton],
+            actions: [toggleFullWidthButton, closeIconButton, saveButton],
         };
 
     case ITEM_STATE.CORRECTION:
         return {
             readOnly: false,
             actions: [
+                toggleFullWidthButton, 
                 saveButton,
                 {
                     group: 'end',
@@ -710,13 +730,13 @@ function getInlineToolbarActions(
     case ITEM_STATE.KILLED:
         return {
             readOnly: true,
-            actions: [closeIconButton],
+            actions: [toggleFullWidthButton, closeIconButton],
         };
 
     case ITEM_STATE.RECALLED:
         return {
             readOnly: true,
-            actions: [closeIconButton],
+            actions: [toggleFullWidthButton, closeIconButton],
         };
     default:
         assertNever(itemState);
@@ -795,6 +815,8 @@ export function getAuthoringPrimaryToolbarWidgets(
 export interface IProps {
     action?: IAuthoringActionType;
     itemId: IArticle['_id'];
+    hideMonitoring: () => void;
+    isExpanded: boolean;
 }
 
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
@@ -806,7 +828,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action, this.props.hideMonitoring, this.props.isExpanded)}
                     authoringStorage={(() => {
                         if (this.props.action === 'kill' || this.props.action === 'takedown') {
                             return getAuthoringStorageIArticleKillOrTakedown(this.props.action);
