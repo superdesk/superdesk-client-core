@@ -13,6 +13,7 @@ import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 import {FormattingOptionsTreeSelect} from 'apps/workspace/content/views/FormattingOptionsMultiSelect';
+import {IS_WIDGET_PINNED, SIDE_WIDGET_WIDTH} from 'apps/authoring/widgets/widgets';
 
 /**
  * Gives top shadow for scroll elements
@@ -959,7 +960,12 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 handles: 'e',
                 minWidth: MONITORING_MIN_WIDTH,
                 start: function(e, ui) {
-                    workspace.resizable({maxWidth: container.width() - AUTHORING_MIN_WIDTH});
+                    const WIDGET_SIDEBAR_MENU_WIDTH = 48;
+                    const totalSize = IS_WIDGET_PINNED
+                        ? (AUTHORING_MIN_WIDTH + SIDE_WIDGET_WIDTH + WIDGET_SIDEBAR_MENU_WIDTH)
+                        : AUTHORING_MIN_WIDTH;
+
+                    workspace.resizable({maxWidth: container.width() - totalSize});
                 },
                 resize: resize,
                 stop: afterResize,
