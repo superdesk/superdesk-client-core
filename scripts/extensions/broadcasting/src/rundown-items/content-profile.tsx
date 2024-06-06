@@ -95,7 +95,7 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
-    width: 100,
+    width: 33,
 };
 
 const itemTypeField: IAuthoringFieldV2 = {
@@ -109,7 +109,7 @@ const cameraConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: CAMERA,
     multiple: true,
-    width: 100,
+    width: 33,
 };
 
 const cameraField: IAuthoringFieldV2 = {
@@ -124,7 +124,7 @@ const durationField: IAuthoringFieldV2 = {
     name: gettext('Duration'),
     fieldType: 'duration',
     fieldConfig: {
-        width: 100,
+        width: 50,
     },
 };
 
@@ -133,7 +133,7 @@ const plannedDurationField: IAuthoringFieldV2 = {
     name: gettext('Planned duration'),
     fieldType: 'duration',
     fieldConfig: {
-        width: 100,
+        width: 50,
     },
 };
 
@@ -150,7 +150,7 @@ const statusConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: STATUS_VOCABULARY_ID,
     multiple: false,
-    width: 100,
+    width: 33,
 };
 
 const statusField: IAuthoringFieldV2 = {
