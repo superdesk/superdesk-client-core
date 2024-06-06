@@ -5,8 +5,8 @@ import {configuration} from './configuration';
 
 const extension: IExtension = {
     exposes: {
-        get overrideTranslations() {
-            return configuration.overrideTranslations;
+        get translateActionIntegration(): boolean {
+            return configuration.translations?.translateActionIntegration ?? false;
         },
     },
     activate: () => {
@@ -17,15 +17,33 @@ const extension: IExtension = {
             return Promise.resolve({});
         }
 
+        const onTranslateAfter: IExtensionActivationResult['contributions'] = configuration.translations?.translateActionIntegration ? {
+                entities: {
+                    article: {
+                        onTranslateAfter: (_original, translation) => {
+                            superdesk.ui.article.edit(translation._id, {
+                                id: 'ai-widget',
+                                pinned: true,
+                                initialState: {
+                                    activeTab: 'translations',
+                                    mode: 'other',
+                                },
+                            });
+                        }
+                    }
+                }
+        } : {};
+
         const result: IExtensionActivationResult = {
             contributions: {
                 authoringSideWidgets: [{
-                    _id: 'ai-assistant',
+                    _id: 'ai-widget',
                     component: AiAssistantWidget,
                     icon: 'open-ai',
                     label: superdesk.localization.gettext('Ai Assistant'),
                     order: 2,
                 }],
+                ...onTranslateAfter,
             },
         };
 

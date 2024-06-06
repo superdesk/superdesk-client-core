@@ -11,47 +11,77 @@ import getTranslationsWidget from './translations/translations-widget';
 export type IAiAssistantSection = 'headlines' | 'summary' | 'translations' | null;
 export type ITranslationLanguage = ITranslation['_id'];
 
-interface IState {
-    activeSection: IAiAssistantSection;
-
-    /**
-     * Handle loading of each request separately,
-     */
-    loadingHeadlines: boolean;
-    loadingSummary: boolean;
-    loadingTranslations: boolean;
-
-    headlines: Array<string>;
-    error: boolean;
-    summary: string;
+interface IStateTranslationsTab {
+    activeSection: 'translations';
     translations: string;
+    loading: boolean;
+    error: boolean;
     activeLanguageId: ITranslationLanguage;
-    programmaticallyOpened: boolean;
+    isCurrentArticleTranslated: boolean;
 }
 
+interface IStateSummaryTab {
+    activeSection: 'summary';
+    summary: string;
+    loading: boolean;
+    error: boolean;
+}
+
+interface IStateHeadlinesTab {
+    activeSection: 'headlines';
+    headlines: Array<string>;
+    loading: boolean;
+    error: boolean;
+}
+
+interface IDefaultState {
+    activeSection: null;
+}
+
+type IState = IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab;
+
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    headlinesState: IStateHeadlinesTab;
+    summaryState: IStateSummaryTab;
+    translationsState: IStateTranslationsTab;
+
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        const lsSideWidget = localStorage.getItem('sideWidget');
-        const programmaticallyOpened = lsSideWidget != null
-            ? JSON.parse(lsSideWidget).activeSection === 'translations'
-            : false;
+        const isCurrentArticleTranslated = this.props.initialState?.activeTab === 'translations' ?? false;
 
-        this.state = {
-            activeSection: lsSideWidget != null ? JSON.parse(lsSideWidget).activeSection : null,
-            headlines: [],
-            summary: '',
-            translations: '',
-            loadingSummary: true,
-            loadingHeadlines: true,
-            loadingTranslations: programmaticallyOpened,
+        this.headlinesState = {
             error: false,
-            activeLanguageId: this.props.article.language,
-            programmaticallyOpened: programmaticallyOpened,
+            loading: true,
+            activeSection: 'headlines',
+            headlines: [],
         };
 
-        localStorage.removeItem('sideWidget');
+        this.summaryState = {
+            error: false,
+            loading: true,
+            activeSection: 'summary',
+            summary: '',
+        };
+
+        this.translationsState = {
+            error: false,
+            loading: isCurrentArticleTranslated,
+            activeSection: 'translations',
+            translations: '',
+            activeLanguageId: this.props.article.language,
+            isCurrentArticleTranslated: isCurrentArticleTranslated,
+        };
+
+        if (isCurrentArticleTranslated) {
+            this.state = {
+                ...this.translationsState
+            }
+        } else {
+            this.state = {
+                activeSection: null,
+            };
+        }
 
         this.setError = this.setError.bind(this);
         this.generateHeadlines = this.generateHeadlines.bind(this);
@@ -60,45 +90,92 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     setError() {
-        this.setState({
-            error: true,
-        });
+        const state = this.state;
+
+        if (state.activeSection != null) {
+            this.setState({...state, error: true, loading: false});
+        }
     }
 
     generateHeadlines() {
-        configuration.generateHeadlines?.(this.props.article, superdesk)
-            .then((res) => {
-                this.setState({
-                    loadingHeadlines: false,
-                    headlines: res,
+        const state = this.state;
+
+        if (state.activeSection === 'headlines') {
+            configuration.generateHeadlines?.(this.props.article, superdesk)
+                .then((res) => {
+                    this.setState({
+                        ...state,
+                        loading: false,
+                        headlines: res,
+                    });
+                }).catch(() => {
+                    this.setError();
                 });
-            }).catch(() => {
-                this.setError();
-            });
+        }
     }
 
     generateTranslations() {
-        configuration.generateTranslations?.(this.props.article, this.state.activeLanguageId, superdesk)
-            .then((res) => {
-                this.setState({
-                    loadingTranslations: false,
-                    translations: res,
+        const state = this.state;
+
+        if (state.activeSection === 'translations') {
+            configuration.translations?.generateTranslations?.(this.props.article, state.activeLanguageId, superdesk)
+                .then((res) => {
+                    this.setState({
+                        ...state,
+                        loading: false,
+                        translations: res,
+                    });
+                }).catch(() => {
+                    this.setError();
                 });
-            }).catch(() => {
-                this.setError();
-            });
+        }
     }
 
     generateSummary() {
-        configuration.generateSummary?.(this.props.article, superdesk)
-            .then((res) => {
-                this.setState({
-                    loadingSummary: false,
-                    summary: res,
+        const state = this.state;
+
+        if (state.activeSection === 'summary') {
+            configuration.generateSummary?.(this.props.article, superdesk)
+                .then((res) => {
+                    this.setState({
+                        ...state,
+                        loading: false,
+                        summary: res,
+                    });
+                }).catch(() => {
+                    this.setError();
                 });
-            }).catch(() => {
-                this.setError();
-            });
+        }
+    }
+
+    componentDidUpdate(_prevProps: Readonly<IArticleSideWidgetComponentType>, prevState: Readonly<IState>): void {
+        const prevSection = prevState.activeSection;
+        const newSection = this.state.activeSection;
+
+        if (prevSection !== 'headlines' && newSection === 'headlines') {
+            this.setState(this.headlinesState);
+        } else if (prevSection !== 'translations' && newSection === 'translations') {
+            this.setState(this.translationsState);
+        } else if (prevSection !== 'summary' && newSection === 'summary') {
+            this.setState(this.summaryState);
+        } else if (prevSection !== null && newSection === null) {
+            this.setState({activeSection: null});
+        }
+
+        // Persist closed tab state
+        if (prevSection === 'headlines') {
+            this.headlinesState = {
+                ...prevState
+            };
+        } else if (prevSection === 'summary') {
+            this.summaryState = {
+                ...prevState,
+            }
+        } else if (prevSection === 'translations') {
+            this.translationsState = {
+                ...prevState
+            }
+        }
     }
 
     render() {
@@ -107,66 +184,69 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         const closeActiveSection = () => {
             this.setState({activeSection: null});
         };
-        const headlinesWidget = getHeadlinesWidget({
-            closeActiveSection,
-            article: this.props.article,
-            error: this.state.error,
-            generateHeadlines: this.generateHeadlines,
-            headlines: this.state.headlines,
-            loading: this.state.loadingHeadlines,
-            reGenerateHeadlines: () => {
-                this.setState({
-                    loadingHeadlines: true,
-                }, () => this.generateHeadlines());
-            },
-            fieldsData: this.props.fieldsData,
-            onFieldsDataChange: this.props.onFieldsDataChange,
-        });
-        const translationsWidget = getTranslationsWidget({
-            closeActiveSection,
-            article: this.props.article,
-            error: this.state.error,
-            setActiveLanguage: (language) => {
-                this.setState({
-                    activeLanguageId: language,
-                });
-            },
-            activeLanguageId: this.state.activeLanguageId,
-            programmaticallyOpened: this.state.programmaticallyOpened,
-            generateTranslations: () => {
-                this.setState({
-                    loadingTranslations: true,
-                }, () => this.generateTranslations());
-            },
-            translations: this.state.translations,
-            loading: this.state.loadingTranslations,
-            fieldsData: this.props.fieldsData,
-            onFieldsDataChange: this.props.onFieldsDataChange,
-        });
-        const summaryWidget = getSummaryWidget({
-            closeActiveSection,
-            article: this.props.article,
-            error: this.state.error,
-            generateSummary: this.generateSummary,
-            summary: this.state.summary,
-            loading: this.state.loadingSummary,
-            regenerateSummary: () => {
-                this.setState({
-                    loadingSummary: true,
-                }, () => this.generateSummary());
-            },
-        });
+        const state = this.state;
+
         const currentComponent: {
             header?: JSX.Element;
             body: JSX.Element;
             footer?: JSX.Element;
         } = (() => {
-            if (this.state.activeSection === 'headlines') {
-                return headlinesWidget;
-            } else if (this.state.activeSection === 'summary') {
-                return summaryWidget;
-            } else if (this.state.activeSection === 'translations') {
-                return translationsWidget;
+            if (state.activeSection === 'headlines') {
+                return getHeadlinesWidget({
+                    closeActiveSection,
+                    article: this.props.article,
+                    error: state.error,
+                    generateHeadlines: this.generateHeadlines,
+                    headlines: state.headlines ?? [],
+                    loading: state.loading,
+                    reGenerateHeadlines: () => {
+                        this.setState({
+                            ...state,
+                            loading: true,
+                        }, () => this.generateHeadlines());
+                    },
+                    fieldsData: this.props.fieldsData,
+                    onFieldsDataChange: this.props.onFieldsDataChange,
+                });
+            } else if (state.activeSection === 'translations') {
+                return getTranslationsWidget({
+                    closeActiveSection,
+                    article: this.props.article,
+                    error: state.error,
+                    setActiveLanguage: (language) => {
+                        this.setState({
+                            ...state,
+                            activeLanguageId: language,
+                        });
+                    },
+                    activeLanguageId: state.activeLanguageId,
+                    programmaticallyOpened: state.isCurrentArticleTranslated,
+                    generateTranslations: () => {
+                        this.setState({
+                            ...state,
+                            loading: true,
+                        }, () => this.generateTranslations());
+                    },
+                    translations: state.translations,
+                    loading: state.loading,
+                    fieldsData: this.props.fieldsData,
+                    onFieldsDataChange: this.props.onFieldsDataChange,
+                });
+            } else if (state.activeSection === 'summary') {
+                return getSummaryWidget({
+                    closeActiveSection,
+                    article: this.props.article,
+                    error: state.error,
+                    generateSummary: this.generateSummary,
+                    summary: state.summary,
+                    loading: state.loading,
+                    regenerateSummary: () => {
+                        this.setState({
+                            ...state,
+                            loading: true,
+                        }, () => this.generateSummary());
+                    },
+                });;
             } else {
                 return {
                     header: undefined,

@@ -66,8 +66,8 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
                 <Spacer h gap="8" justifyContent="space-between" alignItems="end">
                     <TreeSelect
                         getId={({_id}) => _id}
-                        optionTemplate={(item) => <span>{item.label}</span>}
-                        getLabel={({label}) => gettext('To: {{ language }}', {language: label as string})}
+                        valueTemplate={({label}) => <span>{gettext('To: {{ language }}', {language: label})}</span>}
+                        getLabel={({label}) => label}
                         zIndex={1050}
                         getOptions={() => availableLanguages.map((language) => ({value: language}))}
                         kind="synchronous"

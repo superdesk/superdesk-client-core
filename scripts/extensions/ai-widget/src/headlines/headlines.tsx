@@ -77,7 +77,7 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                     'headline',
                                                     superdesk.helpers.editor3ToOperationalFormat(
                                                         {rawContentState: rawState},
-                                                        'en',
+                                                        this.props.article.language,
                                                     ),
                                                 ));
                                         } else {

@@ -1,4 +1,5 @@
 /* tslint:disable */
+
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
@@ -605,6 +606,8 @@ declare module 'superdesk-api' {
 
         getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
 
+        initialState?: any;
+
         // other props below are specific to authoring-react implementation
 
         readOnly: boolean;
@@ -752,6 +755,7 @@ declare module 'superdesk-api' {
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                     onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
+                    onTranslateAfter(original: IArticle, translation: IArticle): void;
                 };
                 ingest?: {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
@@ -2725,6 +2729,12 @@ declare module 'superdesk-api' {
         undefinedEqNull: boolean;
     }
 
+    export interface IOpenSideWidget {
+        id: string;
+        pinned?: boolean;
+        initialState?: any;
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -2751,6 +2761,10 @@ declare module 'superdesk-api' {
             article: {
                 view(id: IArticle['_id']): void;
 
+                edit(
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ): void;
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
 

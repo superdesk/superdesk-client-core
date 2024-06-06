@@ -1,6 +1,9 @@
-import _ from 'lodash';
+import _, {flatMap} from 'lodash';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {sdApi} from 'api';
+import {gettext} from 'core/utils';
+import {extensions} from 'appConfig';
+import {IExtensionActivationResult} from 'superdesk-api';
+import ng from 'core/services/ng';
 
 /**
  * @ngdoc service
@@ -64,8 +67,23 @@ export function TranslationService(
         };
 
         api.save('translate', params).then((_item) => {
-            sdApi.translations.aiTranslationActions(_item);
+            const onTranslateAfterMiddlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+                = flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+                );
+
+            if (onTranslateAfterMiddlewares.length > 0) {
+                onTranslateAfterMiddlewares.forEach((fn) => {
+                    fn(item, _item);
+                });
+            } else {
+                ng.get('authoringWorkspace').open(item);
+            }
+
             $rootScope.$broadcast('item:translate');
+            notify.success(gettext('Item Translated'));
         });
     };
 

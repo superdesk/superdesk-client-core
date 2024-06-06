@@ -9,6 +9,7 @@ import {
     IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
+    IOpenSideWidget,
 } from 'superdesk-api';
 import {
     gettext,
@@ -124,8 +125,16 @@ function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
-export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit' | 'edit-new-window'): Promise<void> {
+export function openArticle(
+    id: IArticle['_id'],
+    mode: 'view' | 'edit' | 'edit-new-window',
+    openSideWidget?: IOpenSideWidget,
+): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
+
+    if (openSideWidget?.id != null) {
+        localStorage.setItem('SIDE_WIDGET', JSON.stringify(openSideWidget));
+    }
 
     if (mode === 'edit-new-window') {
         authoringWorkspace.popupFromId(id, 'view');
@@ -365,6 +374,12 @@ export function getSuperdeskApiImplementation(
             article: {
                 view: (id: IArticle['_id']) => {
                     openArticle(id, 'view');
+                },
+                edit: (
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ) => {
+                    openArticle(id, 'edit', openSideWidget);
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});

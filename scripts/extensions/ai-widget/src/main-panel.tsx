@@ -40,7 +40,7 @@ export default function DefaultAiAssistantPanel({setSection}: IProps) {
                     <SvgIconIllustration illustration="summary" />
                 </IllustrationButton>
             )}
-            {configuration.generateTranslations != null && (
+            {configuration.translations?.generateTranslations != null && (
                 <IllustrationButton
                     text={gettext('Translations')}
                     onClick={() => {
