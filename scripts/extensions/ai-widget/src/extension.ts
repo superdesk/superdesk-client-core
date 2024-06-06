@@ -17,7 +17,8 @@ const extension: IExtension = {
             return Promise.resolve({});
         }
 
-        const onTranslateAfter: IExtensionActivationResult['contributions'] = configuration.translations?.translateActionIntegration ? {
+        const onTranslateAfter: IExtensionActivationResult['contributions'] =
+            configuration.translations?.translateActionIntegration == null ? {} : {
                 entities: {
                     article: {
                         onTranslateAfter: (_original, translation) => {
@@ -29,10 +30,10 @@ const extension: IExtension = {
                                     mode: 'other',
                                 },
                             });
-                        }
-                    }
-                }
-        } : {};
+                        },
+                    },
+                },
+            };
 
         const result: IExtensionActivationResult = {
             contributions: {

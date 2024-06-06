@@ -75,8 +75,8 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
 
         if (isCurrentArticleTranslated) {
             this.state = {
-                ...this.translationsState
-            }
+                ...this.translationsState,
+            };
         } else {
             this.state = {
                 activeSection: null,
@@ -153,28 +153,32 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         const newSection = this.state.activeSection;
 
         if (prevSection !== 'headlines' && newSection === 'headlines') {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState(this.headlinesState);
         } else if (prevSection !== 'translations' && newSection === 'translations') {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState(this.translationsState);
         } else if (prevSection !== 'summary' && newSection === 'summary') {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState(this.summaryState);
         } else if (prevSection !== null && newSection === null) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({activeSection: null});
         }
 
         // Persist closed tab state
         if (prevSection === 'headlines') {
             this.headlinesState = {
-                ...prevState
+                ...prevState,
             };
         } else if (prevSection === 'summary') {
             this.summaryState = {
                 ...prevState,
-            }
+            };
         } else if (prevSection === 'translations') {
             this.translationsState = {
-                ...prevState
-            }
+                ...prevState,
+            };
         }
     }
 
@@ -246,7 +250,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                             loading: true,
                         }, () => this.generateSummary());
                     },
-                });;
+                });
             } else {
                 return {
                     header: undefined,

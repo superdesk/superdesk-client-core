@@ -344,7 +344,6 @@ function WidgetsManagerCtrl(
         }
 
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
-        // console.log($scope.pinnedWidget.pinned, 'pinned state')
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
