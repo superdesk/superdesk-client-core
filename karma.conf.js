@@ -66,7 +66,14 @@ module.exports = function(config) {
         autoWatch: true,
 
         // Start these browsers, currently available:
-        browsers: ['ChromeHeadless'],
+        browsers: ['ChromeHeadlessCustom'],
+
+        customLaunchers: {
+            ChromeHeadlessCustom: {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox'],
+            },
+        },
 
         // Continuous Integration mode
         singleRun: false,
