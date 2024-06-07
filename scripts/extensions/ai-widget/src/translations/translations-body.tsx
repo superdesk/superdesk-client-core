@@ -166,11 +166,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                         ),
                                     ));
                             } else {
-                                superdesk.entities.article.patch(
-                                    article,
-                                    {body_html: translation},
-                                    {patchDirectlyAndOverwriteAuthoringValues: true},
-                                );
+                                superdesk.ui.article.applyChangesToEditor({...article, body_html: translation}, true);
                             }
                         }}
                         size="small"

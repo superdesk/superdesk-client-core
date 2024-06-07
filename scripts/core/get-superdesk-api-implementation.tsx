@@ -384,6 +384,9 @@ export function getSuperdeskApiImplementation(
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
                 },
+                applyChangesToEditor: (item: IArticle, setDirty?: boolean) => {
+                    dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {item, setDirty});
+                },
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },

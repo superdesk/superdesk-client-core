@@ -607,8 +607,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
-                    if (event.detail._id === this.props.itemId) {
-                        const patch = event.detail;
+                    if (event.detail.item._id === this.props.itemId) {
+                        const patch = event.detail.item;
 
                         const {state} = this;
 

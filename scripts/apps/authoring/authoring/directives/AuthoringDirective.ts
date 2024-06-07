@@ -1024,10 +1024,18 @@ export function AuthoringDirective(
             const removeListener = addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
-                    if (event.detail._id === $scope.item._id) {
-                        angular.extend($scope.item, event.detail);
-                        angular.extend($scope.origItem, event.detail);
-                        $scope.$apply();
+                    if (event.detail.item._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail.item);
+
+                        if (event.detail.setDirty == false) {
+                            angular.extend($scope.origItem, event.detail.item);
+                        }
+
+                        if (event.detail.setDirty === true) {
+                            $scope.dirty = true;
+                        }
+
+                        $scope.$applyAsync();
                         $scope.refresh();
                     }
                 },

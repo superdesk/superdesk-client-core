@@ -7,7 +7,7 @@ interface IInternalEvents {
         image: IArticle;
     };
     saveArticleInEditMode: void;
-    dangerouslyOverwriteAuthoringData: Partial<IArticle>;
+    dangerouslyOverwriteAuthoringData: {item: Partial<IArticle>; setDirty?: boolean};
     replaceAuthoringDataWithChanges: Partial<unknown>;
 
     /**

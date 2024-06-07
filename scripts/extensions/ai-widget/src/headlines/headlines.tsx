@@ -81,11 +81,7 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                     ),
                                                 ));
                                         } else {
-                                            superdesk.entities.article.patch(
-                                                article,
-                                                {headline},
-                                                {patchDirectlyAndOverwriteAuthoringValues: true},
-                                            );
+                                            superdesk.ui.article.applyChangesToEditor({...article, headline}, true);
                                         }
                                     }}
                                     type="default"
