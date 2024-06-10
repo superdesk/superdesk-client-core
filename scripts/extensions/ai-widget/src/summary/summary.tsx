@@ -24,7 +24,7 @@ interface IProps {
 
 export default class SummaryBody extends React.Component<IProps> {
     componentDidMount(): void {
-        if (this.props.summary == null) {
+        if (this.props.summary == null || this.props.summary == '') {
             this.props.generateSummary();
         }
     }

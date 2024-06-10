@@ -5,7 +5,7 @@ import {superdesk} from './superdesk';
 import {IAiAssistantSection} from './ai-assistant';
 
 interface IProps {
-    setSection: (id: IAiAssistantSection) => void;
+    setSection: (section: IAiAssistantSection) => void;
 }
 
 export default function DefaultAiAssistantPanel({setSection}: IProps) {

@@ -80,10 +80,10 @@ export function TranslationService(
                 });
             } else {
                 ng.get('authoringWorkspace').open(item);
+                notify.success(gettext('Item Translated'));
             }
 
             $rootScope.$broadcast('item:translate');
-            notify.success(gettext('Item Translated'));
         });
     };
 

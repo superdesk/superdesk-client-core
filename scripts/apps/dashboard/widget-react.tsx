@@ -29,6 +29,8 @@ export class WidgetReact extends React.PureComponent<IProps> {
                         localStorage.removeItem('SIDE_WIDGET');
 
                         return initialState;
+                    } else {
+                        return undefined;
                     }
                 })()}
 

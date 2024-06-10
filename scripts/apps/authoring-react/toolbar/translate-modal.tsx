@@ -77,9 +77,9 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                     });
                 } else {
                     ng.get('authoringWorkspace').open(item);
+                    notify.success(gettext('Item Translated'));
                 }
 
-                notify.success(gettext('Item Translated'));
                 this.props.closeModal();
             });
         }

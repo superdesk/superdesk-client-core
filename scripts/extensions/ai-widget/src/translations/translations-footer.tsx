@@ -1,14 +1,14 @@
 import React, {ReactNode} from 'react';
 import {IRestApiResponse, ITranslation} from 'superdesk-api';
 import {Spacer, Button, TreeSelect, Text, SpacerBlock} from 'superdesk-ui-framework/react';
-import {ITranslationLanguage} from '../ai-assistant';
+import {IStateTranslationsTab, ITranslationLanguage} from '../ai-assistant';
 import {superdesk} from '../superdesk';
 
 interface IProps {
     setActiveLanguage: (language: ITranslationLanguage) => void;
     activeLanguageId: ITranslationLanguage;
     generateTranslations: () => void;
-    programmaticallyOpened: boolean;
+    mode: IStateTranslationsTab['mode'];
 }
 
 type ITranslationLanguageWithLabel = Pick<ITranslation, '_id' | 'label'>;
@@ -27,10 +27,6 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
     }
 
     componentDidMount(): void {
-        if (this.props.programmaticallyOpened === true) {
-            this.props.generateTranslations();
-        }
-
         superdesk.httpRequestJsonLocal<IRestApiResponse<ITranslationLanguageWithLabel>>({
             method: 'GET',
             path: '/languages',

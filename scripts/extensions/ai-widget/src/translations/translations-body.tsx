@@ -7,7 +7,6 @@ import {
     Container,
     ButtonGroup,
     Button,
-    Text,
     Loader,
     Heading,
     Spacer,
@@ -15,7 +14,7 @@ import {
     Icon,
 } from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
-import {ITranslationLanguage} from '../ai-assistant';
+import {IStateTranslationsTab, ITranslationLanguage} from '../ai-assistant';
 
 interface IProps {
     article: IArticle;
@@ -26,11 +25,11 @@ interface IProps {
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
     activeLanguageId: ITranslationLanguage;
-    programmaticallyOpened: boolean;
+    mode: IStateTranslationsTab['mode'];
 }
 
 interface IState {
-    translatedFromLanguage: string;
+    translatedFromLanguage: string | null;
 }
 
 export default class TranslationsBody extends React.Component<IProps, IState> {
@@ -38,7 +37,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            translatedFromLanguage: '',
+            translatedFromLanguage: null,
         };
     }
 
@@ -96,9 +95,10 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                 <Spacer v gap="16" justifyContent="end" noGrow>
                     <Spacer h gap="4" justifyContent="end" alignItems="center" noWrap>
                         <Label
-                            text={this.props.programmaticallyOpened
+                            text={this.props.mode === 'other'
                                 ? this.state.translatedFromLanguage
-                                : this.props.article.language}
+                                : this.props.article.language
+                            }
                             size="small"
                         />
                         <Icon
@@ -111,9 +111,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             type="primary"
                         />
                     </Spacer>
-                    <Text size="small">
-                        {translation}
-                    </Text>
+                    <div dangerouslySetInnerHTML={{__html: translation}} />
                 </Spacer>
                 <ButtonGroup orientation="horizontal" align="center">
                     <IconButton
@@ -123,7 +121,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             navigator.clipboard.writeText(translation);
                         }}
                     />
-                    {this.props.programmaticallyOpened === false && (
+                    {this.props.mode !== 'other' && (
                         <Button
                             onClick={() => {
                                 const currentDeskId = superdesk.entities.desk.getActiveDeskId();

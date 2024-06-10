@@ -1,14 +1,9 @@
-import {IExtension, IExtensionActivationResult} from 'superdesk-api';
-import {AiAssistantWidget} from './ai-assistant';
+import {IArticle, IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {AiAssistantWidget, IStateTranslationsTab} from './ai-assistant';
 import {superdesk} from './superdesk';
 import {configuration} from './configuration';
 
 const extension: IExtension = {
-    exposes: {
-        get translateActionIntegration(): boolean {
-            return configuration.translations?.translateActionIntegration ?? false;
-        },
-    },
     activate: () => {
         const hasConfiguredServices = Object.keys(configuration).length > 0;
 
@@ -17,23 +12,24 @@ const extension: IExtension = {
             return Promise.resolve({});
         }
 
-        const onTranslateAfter: IExtensionActivationResult['contributions'] =
-            configuration.translations?.translateActionIntegration == null ? {} : {
-                entities: {
-                    article: {
-                        onTranslateAfter: (_original, translation) => {
-                            superdesk.ui.article.edit(translation._id, {
-                                id: 'ai-widget',
-                                pinned: true,
-                                initialState: {
-                                    activeTab: 'translations',
-                                    mode: 'other',
-                                },
-                            });
-                        },
-                    },
-                },
+        const onTranslateAfterIntegration = (_original: IArticle, translation: IArticle) => {
+            const initialState: IStateTranslationsTab = {
+                activeLanguageId: translation.language,
+                activeSection: 'translations',
+                error: false,
+                loading: true,
+                mode: 'other',
+                translation: '',
             };
+
+            superdesk.ui.article.edit(translation._id, {
+                id: 'ai-widget',
+                pinned: true,
+                initialState: initialState,
+            });
+
+            superdesk.ui.notify.success(superdesk.localization.gettext('Item Translated'));
+        };
 
         const result: IExtensionActivationResult = {
             contributions: {
@@ -44,7 +40,11 @@ const extension: IExtension = {
                     label: superdesk.localization.gettext('Ai Assistant'),
                     order: 2,
                 }],
-                ...onTranslateAfter,
+                entities: {
+                    article: configuration.translations?.translateActionIntegration === true ? {
+                        onTranslateAfter: onTranslateAfterIntegration,
+                    } : {},
+                },
             },
         };
 

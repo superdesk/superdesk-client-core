@@ -1,35 +1,44 @@
 import React from 'react';
-import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
+import {IArticle, IArticleSideWidgetComponentType, ITranslation, OrderedMap} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
-import {configuration} from './configuration';
-import getHeadlinesWidget from './headlines/headlines-widget';
-import getSummaryWidget from './summary/summary-widget';
 import DefaultAiAssistantPanel from './main-panel';
-import getTranslationsWidget from './translations/translations-widget';
+import SummaryWidget from './summary/summary-widget';
+import {HeadlinesWidget} from './headlines/headlines-widget';
+import TranslationsWidget from './translations/translations-widget';
 
 export type IAiAssistantSection = 'headlines' | 'summary' | 'translations' | null;
 export type ITranslationLanguage = ITranslation['_id'];
 
-interface IStateTranslationsTab {
+export interface ICommonProps<T> {
+    state: T;
+    article: IArticle;
+    setSection: (section: IAiAssistantSection) => void;
+    fieldsData?: OrderedMap<string, unknown>;
+    onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
+    setTabState: (state: IState, callbackFn?: () => void) => void;
+    children: (components: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) => JSX.Element;
+}
+
+export interface IStateTranslationsTab {
     activeSection: 'translations';
-    translations: string;
+    mode: 'other' | 'current';
+    translation: string;
     loading: boolean;
     error: boolean;
     activeLanguageId: ITranslationLanguage;
-    isCurrentArticleTranslated: boolean;
 }
 
-interface IStateSummaryTab {
+export interface IStateSummaryTab {
     activeSection: 'summary';
     summary: string;
     loading: boolean;
     error: boolean;
 }
 
-interface IStateHeadlinesTab {
+export interface IStateHeadlinesTab {
     activeSection: 'headlines';
-    headlines: Array<string>;
+    headlines: Array<string> | null;
     loading: boolean;
     error: boolean;
 }
@@ -41,111 +50,15 @@ interface IDefaultState {
 type IState = IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab;
 
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
-    headlinesState: IStateHeadlinesTab;
-    summaryState: IStateSummaryTab;
-    translationsState: IStateTranslationsTab;
+    private inactiveTabState: {
+        [KEY in NonNullable<IState['activeSection']>]?: IState;
+    };
 
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        const isCurrentArticleTranslated = this.props.initialState?.activeTab === 'translations' ?? false;
-
-        this.headlinesState = {
-            error: false,
-            loading: true,
-            activeSection: 'headlines',
-            headlines: [],
-        };
-
-        this.summaryState = {
-            error: false,
-            loading: true,
-            activeSection: 'summary',
-            summary: '',
-        };
-
-        this.translationsState = {
-            error: false,
-            loading: isCurrentArticleTranslated,
-            activeSection: 'translations',
-            translations: '',
-            activeLanguageId: this.props.article.language,
-            isCurrentArticleTranslated: isCurrentArticleTranslated,
-        };
-
-        if (isCurrentArticleTranslated) {
-            this.state = {
-                ...this.translationsState,
-            };
-        } else {
-            this.state = {
-                activeSection: null,
-            };
-        }
-
-        this.setError = this.setError.bind(this);
-        this.generateHeadlines = this.generateHeadlines.bind(this);
-        this.generateSummary = this.generateSummary.bind(this);
-        this.generateTranslations = this.generateTranslations.bind(this);
-    }
-
-    setError() {
-        const state = this.state;
-
-        if (state.activeSection != null) {
-            this.setState({...state, error: true, loading: false});
-        }
-    }
-
-    generateHeadlines() {
-        const state = this.state;
-
-        if (state.activeSection === 'headlines') {
-            configuration.generateHeadlines?.(this.props.article, superdesk)
-                .then((res) => {
-                    this.setState({
-                        ...state,
-                        loading: false,
-                        headlines: res,
-                    });
-                }).catch(() => {
-                    this.setError();
-                });
-        }
-    }
-
-    generateTranslations() {
-        const state = this.state;
-
-        if (state.activeSection === 'translations') {
-            configuration.translations?.generateTranslations?.(this.props.article, state.activeLanguageId, superdesk)
-                .then((res) => {
-                    this.setState({
-                        ...state,
-                        loading: false,
-                        translations: res,
-                    });
-                }).catch(() => {
-                    this.setError();
-                });
-        }
-    }
-
-    generateSummary() {
-        const state = this.state;
-
-        if (state.activeSection === 'summary') {
-            configuration.generateSummary?.(this.props.article, superdesk)
-                .then((res) => {
-                    this.setState({
-                        ...state,
-                        loading: false,
-                        summary: res,
-                    });
-                }).catch(() => {
-                    this.setError();
-                });
-        }
+        this.inactiveTabState = {};
+        this.state = this.props.initialState ?? {activeSection: null};
     }
 
     componentDidUpdate(_prevProps: Readonly<IArticleSideWidgetComponentType>, prevState: Readonly<IState>): void {
@@ -154,133 +67,101 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
 
         if (prevSection !== 'headlines' && newSection === 'headlines') {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.headlinesState);
+            this.setState(this.inactiveTabState['headlines'] ?? {
+                activeLanguageId: this.props.article.language,
+                activeSection: 'headlines',
+                error: false,
+                headlines: [],
+                loading: true,
+            });
         } else if (prevSection !== 'translations' && newSection === 'translations') {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.translationsState);
+            this.setState(this.inactiveTabState['translations'] ?? {
+                activeSection: 'translations',
+                activeLanguageId: this.props.article.language,
+                error: false,
+                loading: false,
+                mode: 'current',
+                translation: '',
+            });
         } else if (prevSection !== 'summary' && newSection === 'summary') {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.summaryState);
+            this.setState(this.inactiveTabState['summary'] ?? {
+                activeSection: 'summary',
+                error: false,
+                loading: true,
+                summary: '',
+            });
         } else if (prevSection !== null && newSection === null) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({activeSection: null});
         }
 
-        // Persist closed tab state
-        if (prevSection === 'headlines') {
-            this.headlinesState = {
-                ...prevState,
-            };
-        } else if (prevSection === 'summary') {
-            this.summaryState = {
-                ...prevState,
-            };
-        } else if (prevSection === 'translations') {
-            this.translationsState = {
-                ...prevState,
-            };
+        if (prevSection != null && newSection == null) {
+            this.inactiveTabState[prevSection] = {...this.state};
+        } else if (prevSection == null && newSection != null) {
+            this.inactiveTabState[newSection] = {...this.state};
         }
     }
 
     render() {
         const {gettext} = superdesk.localization;
         const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
-        const closeActiveSection = () => {
-            this.setState({activeSection: null});
-        };
         const state = this.state;
+        type IHeadlinesComponentProps = React.ComponentType<ICommonProps<IStateHeadlinesTab>>;
+        type ISummaryComponentProps = React.ComponentType<ICommonProps<IStateSummaryTab>>;
+        type ITranslationsComponentProps = React.ComponentType<ICommonProps<IStateTranslationsTab>>;
+        const componentsByTab: {
+            [KEY in NonNullable<IState['activeSection']>]: IHeadlinesComponentProps | ISummaryComponentProps | ITranslationsComponentProps;
+        } = {
+            'headlines': HeadlinesWidget,
+            'summary': SummaryWidget,
+            'translations': TranslationsWidget,
+        };
+        const CurrentComponent = state.activeSection && componentsByTab[state.activeSection];
 
-        const currentComponent: {
-            header?: JSX.Element;
-            body: JSX.Element;
-            footer?: JSX.Element;
-        } = (() => {
-            if (state.activeSection === 'headlines') {
-                return getHeadlinesWidget({
-                    closeActiveSection,
-                    article: this.props.article,
-                    error: state.error,
-                    generateHeadlines: this.generateHeadlines,
-                    headlines: state.headlines ?? [],
-                    loading: state.loading,
-                    reGenerateHeadlines: () => {
-                        this.setState({
-                            ...state,
-                            loading: true,
-                        }, () => this.generateHeadlines());
-                    },
-                    fieldsData: this.props.fieldsData,
-                    onFieldsDataChange: this.props.onFieldsDataChange,
-                });
-            } else if (state.activeSection === 'translations') {
-                return getTranslationsWidget({
-                    closeActiveSection,
-                    article: this.props.article,
-                    error: state.error,
-                    setActiveLanguage: (language) => {
-                        this.setState({
-                            ...state,
-                            activeLanguageId: language,
-                        });
-                    },
-                    activeLanguageId: state.activeLanguageId,
-                    programmaticallyOpened: state.isCurrentArticleTranslated,
-                    generateTranslations: () => {
-                        this.setState({
-                            ...state,
-                            loading: true,
-                        }, () => this.generateTranslations());
-                    },
-                    translations: state.translations,
-                    loading: state.loading,
-                    fieldsData: this.props.fieldsData,
-                    onFieldsDataChange: this.props.onFieldsDataChange,
-                });
-            } else if (state.activeSection === 'summary') {
-                return getSummaryWidget({
-                    closeActiveSection,
-                    article: this.props.article,
-                    error: state.error,
-                    generateSummary: this.generateSummary,
-                    summary: state.summary,
-                    loading: state.loading,
-                    regenerateSummary: () => {
-                        this.setState({
-                            ...state,
-                            loading: true,
-                        }, () => this.generateSummary());
-                    },
-                });
-            } else {
-                return {
-                    header: undefined,
-                    body: (
-                        <DefaultAiAssistantPanel
-                            setSection={(id) => {
-                                this.setState({
-                                    activeSection: id,
-                                });
-                            }}
-                        />
-                    ),
-                    footer: undefined,
-                };
-            }
-        })();
-
-        return (
+        return CurrentComponent != null ? (
+            <CurrentComponent
+                state={state as never}
+                setTabState={(state, callbackFn) => {
+                    this.setState(state, callbackFn);
+                }}
+                setSection={(section) => {
+                    this.setState({activeSection: section});
+                }}
+                {...this.props}
+            >
+                {({header, body, footer}) => (
+                    <AuthoringWidgetLayout
+                        header={(
+                            <Spacer v gap="0" alignItems="center">
+                                <AuthoringWidgetHeading
+                                    widgetName={gettext('Ai Assistant')}
+                                    editMode={false}
+                                />
+                                {header}
+                            </Spacer>
+                        )}
+                        body={body}
+                        footer={footer}
+                    />
+                )}
+            </CurrentComponent>
+        ) : (
             <AuthoringWidgetLayout
                 header={(
-                    <Spacer v gap="0" alignItems="center">
-                        <AuthoringWidgetHeading
-                            widgetName={gettext('Ai Assistant')}
-                            editMode={false}
-                        />
-                        {currentComponent.header}
-                    </Spacer>
+                    <AuthoringWidgetHeading
+                        widgetName={gettext('Ai Assistant')}
+                        editMode={false}
+                    />
                 )}
-                body={currentComponent.body}
-                footer={currentComponent.footer}
+                body={
+                    <DefaultAiAssistantPanel
+                        setSection={(section) => {
+                            this.setState({activeSection: section});
+                        }}
+                    />
+                }
             />
         );
     }
