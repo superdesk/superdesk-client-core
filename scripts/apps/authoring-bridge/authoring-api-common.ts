@@ -94,11 +94,7 @@ export const authoringApiCommon: IAuthoringApiCommon = {
                 } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
                     return cancelAutoSave().then(() => unlockAndClose());
                 } else if (action === IUnsavedChangesActionWithSaving.save) {
-                    if (authoringReactViewEnabled) {
-                        return save().then(() => unlockAndClose());
-                    } else {
-                        dispatchInternalEvent('saveArticleInEditMode', {callbackFn: unlockAndClose});
-                    }
+                    return save().then(() => unlockAndClose());
                 } else {
                     assertNever(action);
                 }

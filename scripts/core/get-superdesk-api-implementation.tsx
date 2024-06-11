@@ -369,8 +369,8 @@ export function getSuperdeskApiImplementation(
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
                 },
-                save: (callbackFn?: () => void) => {
-                    dispatchInternalEvent('saveArticleInEditMode', {callbackFn});
+                save: () => {
+                    dispatchInternalEvent('saveArticleInEditMode', null);
                 },
                 prepareExternalImageForDroppingToEditor,
             },
