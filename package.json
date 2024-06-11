@@ -27,6 +27,7 @@
     "Yauhen 'actionless' Kirylau"
   ],
   "main": "scripts/index.js",
+  "types": "scripts/core/superdesk-api.d.ts",
   "dependencies": {
     "@metadata/exif": "github:superdesk/exif#431066d",
     "@popperjs/core": "2.10.2",

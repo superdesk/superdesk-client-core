@@ -12,7 +12,7 @@ import {addInternalEventListener} from 'core/internal-events';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
-import _, {merge} from 'lodash';
+import _, {merge, debounce} from 'lodash';
 import postscribe from 'postscribe';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
@@ -850,9 +850,8 @@ export function AuthoringDirective(
             // default to true
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
-            $scope.autosave = function(item, timeout) {
-                $scope.dirty = true;
-                angular.extend($scope.item, item); // make sure all changes are available
+            const _autosave = debounce((timeout) => {
+                $scope.requestEditor3DirectivesToGenerateHtml?.forEach((fn) => fn());
 
                 return authoring.autosave(
                     $scope.item,
@@ -867,6 +866,12 @@ export function AuthoringDirective(
                         });
                     },
                 );
+            }, 1000);
+
+            $scope.autosave = (item, timeout) => {
+                $scope.dirty = true;
+                angular.extend($scope.item, item); // make sure all changes are available
+                _autosave(timeout);
             };
 
             $scope.sendToNextStage = function() {
