@@ -677,7 +677,6 @@ export function AuthoringDirective(
                     fn();
                 }
 
-                // run function to request html here
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
