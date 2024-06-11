@@ -7,6 +7,8 @@ import SummaryWidget from './summary/summary-widget';
 import {HeadlinesWidget} from './headlines/headlines-widget';
 import TranslationsWidget from './translations/translations-widget';
 
+const {assertNever} = superdesk.helpers;
+
 export type IAiAssistantSection = 'headlines' | 'summary' | 'translations' | null;
 export type ITranslationLanguage = ITranslation['_id'];
 
@@ -58,49 +60,53 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         super(props);
 
         this.inactiveTabState = {};
+        this.getDefaultState = this.getDefaultState.bind(this);
         this.state = this.props.initialState ?? {activeSection: null};
     }
 
-    componentDidUpdate(_prevProps: Readonly<IArticleSideWidgetComponentType>, prevState: Readonly<IState>): void {
-        const prevSection = prevState.activeSection;
-        const newSection = this.state.activeSection;
-
-        if (prevSection !== 'headlines' && newSection === 'headlines') {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.inactiveTabState['headlines'] ?? {
-                activeLanguageId: this.props.article.language,
-                activeSection: 'headlines',
-                error: false,
-                headlines: [],
-                loading: true,
-            });
-        } else if (prevSection !== 'translations' && newSection === 'translations') {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.inactiveTabState['translations'] ?? {
-                activeSection: 'translations',
-                activeLanguageId: this.props.article.language,
-                error: false,
-                loading: false,
-                mode: 'current',
-                translation: '',
-            });
-        } else if (prevSection !== 'summary' && newSection === 'summary') {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(this.inactiveTabState['summary'] ?? {
-                activeSection: 'summary',
-                error: false,
-                loading: true,
-                summary: '',
-            });
-        } else if (prevSection !== null && newSection === null) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({activeSection: null});
+    private getDefaultState(section: IAiAssistantSection): IState {
+        switch(section) {
+            case null:
+                return {activeSection: null};
+            case 'translations':
+                return {
+                    activeSection: 'translations',
+                    mode: 'current',
+                    translation: '',
+                    loading: false,
+                    error: false,
+                    activeLanguageId: this.props.article.language,
+                };
+            case 'headlines':
+                return {
+                    activeSection: 'headlines',
+                    headlines: [],
+                    error: false,
+                    loading: false,
+                }
+            case 'summary':
+                return {
+                    activeSection: 'summary',
+                    summary: '',
+                    loading: false,
+                    error: false,
+                };
+            default:
+                return assertNever(section);
         }
+    }
 
-        if (prevSection != null && newSection == null) {
-            this.inactiveTabState[prevSection] = {...this.state};
-        } else if (prevSection == null && newSection != null) {
-            this.inactiveTabState[newSection] = {...this.state};
+    private setSection(section: IAiAssistantSection) {
+        if (section == null) {
+            this.setState({activeSection: null});
+        } else {
+            const nextSectionState = this.inactiveTabState[section] ?? this.getDefaultState(section);
+
+            if (this.state.activeSection != null) {
+                this.inactiveTabState[this.state.activeSection] = this.state;
+            }
+
+            this.setState(nextSectionState);
         }
     }
 
@@ -126,9 +132,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 setTabState={(state, callbackFn) => {
                     this.setState(state, callbackFn);
                 }}
-                setSection={(section) => {
-                    this.setState({activeSection: section});
-                }}
+                setSection={this.setSection}
                 {...this.props}
             >
                 {({header, body, footer}) => (
@@ -157,9 +161,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 )}
                 body={
                     <DefaultAiAssistantPanel
-                        setSection={(section) => {
-                            this.setState({activeSection: section});
-                        }}
+                        setSection={this.setSection}
                     />
                 }
             />
