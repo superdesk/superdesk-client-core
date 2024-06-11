@@ -672,6 +672,11 @@ export function AuthoringDirective(
             $scope.close = function() {
                 _closing = true;
 
+                // Request to generate html before we pass scope variables
+                for (const fn of ($scope.requestEditor3DirectivesToGenerateHtml ?? [])) {
+                    fn();
+                }
+
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
