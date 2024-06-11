@@ -5,8 +5,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
 import {IUnsavedChangesActionWithSaving, showUnsavedChangesPrompt} from 'core/ui/components/prompt-for-unsaved-changes';
 import {IArticle} from 'superdesk-api';
-import {dispatchInternalEvent} from 'core/internal-events';
-import {appConfig, authoringReactViewEnabled} from 'appConfig';
+import {appConfig} from 'appConfig';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;
