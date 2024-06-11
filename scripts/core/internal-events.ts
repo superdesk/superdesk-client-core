@@ -6,7 +6,7 @@ interface IInternalEvents {
         field: string;
         image: IArticle;
     };
-    saveArticleInEditMode: void;
+    saveArticleInEditMode: {callbackFn?: () => void};
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
     replaceAuthoringDataWithChanges: Partial<unknown>;
 

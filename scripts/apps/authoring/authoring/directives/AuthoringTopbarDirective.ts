@@ -83,26 +83,26 @@ export function AuthoringTopbarDirective(
              * Save item
              * @return {promise}
              */
-            scope.saveTopbar = function() {
-                scope.$applyAsync(() => {
-                    scope.saveTopbarLoading = true;
-                });
+            scope.saveTopbar = function(callbackFn?: () => void) {
+                scope.saveTopbarLoading = true;
 
                 // when very big articles being are saved(~14k words),
                 // the browser can't animate the loading spinner properly
                 // the delay is chosen so the spinner freezes in a visible state.
                 const timeoutDuration = 600;
 
-                return $q((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, timeoutDuration);
-                })
-                    .then(() => scope.save(scope.item))
-                    .finally(() => {
-                        scope.saveTopbarLoading = false;
-                        scope.$applyAsync();
-                    });
+                setTimeout(() => {
+                    for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
+                        fn();
+                    }
+
+                    return scope.save(scope.item)
+                        .finally(() => {
+                            scope.saveTopbarLoading = false;
+                            scope.$applyAsync();
+                            callbackFn?.();
+                        });
+                }, timeoutDuration);
             };
 
             // Activate preview formatted item
@@ -138,8 +138,8 @@ export function AuthoringTopbarDirective(
                 setActionsFromExtensions();
             }, true);
 
-            const removeSaveEventListener = addInternalEventListener('saveArticleInEditMode', () => {
-                scope.saveTopbar();
+            const removeSaveEventListener = addInternalEventListener('saveArticleInEditMode', (e) => {
+                scope.saveTopbar(e.detail.callbackFn);
             });
 
             scope.$on('$destroy', () => {

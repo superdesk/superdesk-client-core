@@ -5,7 +5,8 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
 import {IUnsavedChangesActionWithSaving, showUnsavedChangesPrompt} from 'core/ui/components/prompt-for-unsaved-changes';
 import {IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;
@@ -93,7 +94,11 @@ export const authoringApiCommon: IAuthoringApiCommon = {
                 } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
                     return cancelAutoSave().then(() => unlockAndClose());
                 } else if (action === IUnsavedChangesActionWithSaving.save) {
-                    return save().then(() => unlockAndClose());
+                    if (authoringReactViewEnabled) {
+                        return save().then(() => unlockAndClose());
+                    } else {
+                        dispatchInternalEvent('saveArticleInEditMode', {callbackFn: unlockAndClose});
+                    }
                 } else {
                     assertNever(action);
                 }
