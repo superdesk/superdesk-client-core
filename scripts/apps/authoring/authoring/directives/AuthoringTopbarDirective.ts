@@ -7,6 +7,7 @@ import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -64,10 +65,14 @@ export function AuthoringTopbarDirective(
             function getAvailableTabs(): Array<IArticleActionInteractive> {
                 if (scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
-                } else if (scope.item.flags?.marked_for_not_publication === true) {
-                    return ['send_to'];
                 } else {
-                    return ['send_to', 'publish'];
+                    const result: Array<IArticleActionInteractive> = ['send_to'];
+
+                    if (sdApi.article.canPublish(scope.item)) {
+                        result.push('publish');
+                    }
+
+                    return result;
                 }
             }
 
