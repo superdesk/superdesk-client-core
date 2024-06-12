@@ -11,7 +11,11 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
         template: authoringReactViewEnabled
             ? (
                 '<div>' +
-                    '<sd-authoring-integration-wrapper data-action="action" data-item-id="item._id" data-hide-monitoring="hideMonitoring" data-is-expanded="isExpanded">' +
+                    '<sd-authoring-integration-wrapper ' +
+                        'data-action="action" ' +
+                        'data-item-id="item._id" ' +
+                        'data-hide-monitoring="hideMonitoring" ' +
+                        'data-is-expanded="isExpanded">' +
                     '</sd-authoring-react>' +
                 '</div>'
             )
@@ -24,9 +28,10 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
         link: function(scope) {
             scope.canPrintPreview = canPrintPreview;
             scope.isExpanded = superdeskFlags.flags.hideMonitoring;
-            
+
             scope.hideMonitoring = function(state, e) {
-                const fullWidthConfig: IFullWidthPageCapabilityConfiguration = scope.$parent.$parent.$parent.fullWidthConfig;
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.fullWidthConfig;
 
                 if (fullWidthConfig.enabled) {
                     if (fullWidthConfig.allowed) {

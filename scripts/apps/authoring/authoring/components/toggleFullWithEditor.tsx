@@ -10,20 +10,21 @@ interface IProps {
 
 export class ToggleFullWidth extends React.Component<IProps> {
     render() {
-        let classes = classNames('expand-button', {
+        const classes = classNames('expand-button', {
             'expand-button--expanded': this.props.isExpanded,
-        })
+        });
+
         return (
             <Tooltip
-                text={this.props.isExpanded ? "Revert Authoring" : "Expand Authoring"}
-                flow='right'
+                text={this.props.isExpanded ? 'Revert Authoring' : 'Expand Authoring'}
+                flow="right"
                 appendToBody={true}
             >
                 <button
                     className={classes}
                     onClick={this.props.onClick}
                 >
-                    <Icon name='chevron-left-thin' />
+                    <Icon name="chevron-left-thin" />
                 </button>
             </Tooltip>
         );

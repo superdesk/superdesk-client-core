@@ -101,7 +101,10 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
-    .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringAngularIntegration, ['itemId', 'action', 'hideMonitoring', 'isExpanded'], []))
+    .component('sdAuthoringIntegrationWrapper', reactToAngular1(
+        AuthoringAngularIntegration, ['itemId', 'action', 'hideMonitoring', 'isExpanded'],
+        [],
+    ))
     .component(
         'sdInteractiveArticleActionsPanelCombined',
         reactToAngular1(InteractiveArticleActionsPanelCombined, [

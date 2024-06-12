@@ -23,7 +23,7 @@ export function AuthoringTopbarDirective(
     privileges,
     authoringWorkspace: AuthoringWorkspaceService,
     $q,
-    superdeskFlags
+    superdeskFlags,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
@@ -153,9 +153,10 @@ export function AuthoringTopbarDirective(
             }, (value) => {
                 scope.monitoringHidden = value;
             });
- 
+
             scope.hideMonitoring = function(state, e) {
-                const fullWidthConfig: IFullWidthPageCapabilityConfiguration = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
 
                 if (fullWidthConfig.enabled) {
                     if (fullWidthConfig.allowed) {
@@ -172,7 +173,6 @@ export function AuthoringTopbarDirective(
                     }
                 }
             };
-            
         },
     };
 }

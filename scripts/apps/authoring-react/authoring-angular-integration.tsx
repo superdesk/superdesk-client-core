@@ -704,7 +704,7 @@ function getInlineToolbarActions(
         return {
             readOnly: false,
             actions: [
-                toggleFullWidthButton, 
+                toggleFullWidthButton,
                 saveButton,
                 {
                     group: 'end',
@@ -828,7 +828,12 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action, this.props.hideMonitoring, this.props.isExpanded)}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(
+                        exposed,
+                        this.props.action,
+                        this.props.hideMonitoring,
+                        this.props.isExpanded,
+                    )}
                     authoringStorage={(() => {
                         if (this.props.action === 'kill' || this.props.action === 'takedown') {
                             return getAuthoringStorageIArticleKillOrTakedown(this.props.action);
