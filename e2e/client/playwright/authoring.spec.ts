@@ -82,3 +82,52 @@ test('save button from unsaved changes modal', async ({page}) => {
     await expect(page.locator(s('authoring'))).not.toBeVisible();
     await expect(page.locator(s('monitoring-view', 'article-item=new article'))).toBeVisible();
 });
+
+test('setting embargo', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    await expect(page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    )).toBeVisible();
+
+    await expect(page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    )).not.toContainText('embargo');
+
+    await page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    ).dblclick();
+
+    await page.locator(s('authoring', 'open-send-publish-pane')).click();
+
+    const embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
+    const embargoTime = '04:00';
+
+    await page.locator(
+        s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),
+    ).pressSequentially(embargoDate);
+
+    await page.locator(
+        s('authoring', 'interactive-actions-panel', 'embargo', 'time-input'),
+    ).pressSequentially(embargoTime);
+
+    await page.locator(s('authoring', 'interactive-actions-panel')).getByRole('button', {name: 'Close'}).click();
+
+    await page.locator(s('authoring-topbar', 'save')).click();
+
+    // make sure label appears inside article item in the monitoring list
+    await expect(page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    )).toContainText('Embargo');
+
+    // make sure label appears inside metadata widget
+    await page.locator(s('authoring-widget=Info')).click();
+    await expect(page.locator(
+        s('authoring-widget-panel=Info'),
+    )).toContainText('embargo');
+});
