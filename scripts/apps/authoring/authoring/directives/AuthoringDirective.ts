@@ -107,6 +107,8 @@ export function AuthoringDirective(
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
 
+            $scope.requestEditor3DirectivesToGenerateHtml = [];
+
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
@@ -761,7 +763,7 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var _autosave = $scope.origItem._autosave || {};
+                const _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
                     var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
@@ -851,7 +853,7 @@ export function AuthoringDirective(
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
             const _autosave = debounce((timeout) => {
-                $scope.requestEditor3DirectivesToGenerateHtml?.forEach((fn) => fn());
+                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
 
                 return authoring.autosave(
                     $scope.item,
