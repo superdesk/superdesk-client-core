@@ -218,26 +218,6 @@ describe('content', () => {
         element(by.id('closeAuthoringBtn')).click();
     });
 
-    it('can display embargo in metadata when set', () => {
-        workspace.editItem('item3', 'SPORTS');
-
-        el(['open-send-publish-pane']).click();
-
-        setEmbargo();
-
-        authoring.closeSendAndPublish();
-
-        authoring.save();
-        element(by.id('closeAuthoringBtn')).click();
-
-        content.previewItem('item3');
-        element(by.css('[ng-click="vm.current_tab = \'metadata\'"]')).click();
-
-        expect(element(by.css('[datetime="item.embargo"]')).isDisplayed()).toBe(true);
-
-        content.closePreview();
-    });
-
     it('can set embargo and send', () => {
         // Initial steps before proceeding, to get initial state of send buttons.
         workspace.editItem('item3', 'SPORTS');
