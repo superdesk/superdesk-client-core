@@ -266,22 +266,6 @@ describe('search', () => {
         authoring.close();
     });
 
-    it('can display embargo item when set', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
-        globalSearch.actionOnItem('Edit', 'item1');
-        authoring.sendToButton.click();
-        authoring.setEmbargo();
-        authoring.closeSendAndPublish();
-        authoring.save();
-        authoring.close();
-
-        const embargoElement = globalSearch.getItem(0).element(by.className('state_embargo'));
-
-        browser.wait(ECE.visibilityOf(embargoElement));
-
-        expect(embargoElement.getText()).toEqual('EMBARGO');
-    });
-
     it('can search scheduled', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9');

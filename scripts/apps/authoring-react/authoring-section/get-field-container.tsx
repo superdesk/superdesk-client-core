@@ -30,22 +30,12 @@ export function getFieldContainer(
 
             return (
                 <div className={sectionClassNames?.header}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'start',
-                            alignItems: 'center',
-                        }}
-                    >
+                    <Spacer v gap="0">
                         <span
                             className={classNames(
                                 'form-label',
                                 {'form-label--invalid': validationError != null},
                             )}
-                            style={{
-                                width: '90px',
-                                justifyContent: 'end',
-                            }}
                         >
                             <Spacer h gap="8" noGrow noWrap>
                                 <span style={{textAlign: 'end'}}>
@@ -79,7 +69,7 @@ export function getFieldContainer(
                                 )
                             }
                         </div>
-                    </div>
+                    </Spacer>
                 </div>
             );
         }

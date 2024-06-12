@@ -37,6 +37,11 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
             rowWidth = rowWidth + itemWidth;
         } else {
             itemGroups.push([]);
+            if (itemWidth === 100) {
+                rowWidth = 100;
+            } else {
+                rowWidth = 0;
+            }
         }
 
         const lastGroup = itemGroups[itemGroups.length - 1];
@@ -85,13 +90,13 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px',
+                    gap: '12px',
                     padding: this.props.padding,
                 }}
             >
                 {
                     grouped.map((group, index) => (
-                        <div key={index} style={{display: 'flex', gap: '10px'}}>
+                        <div key={index} style={{display: 'flex', gap: '12px'}}>
                             {
                                 group.map((field) => {
                                     const canBeToggled = toggledFields[field.id] != null;

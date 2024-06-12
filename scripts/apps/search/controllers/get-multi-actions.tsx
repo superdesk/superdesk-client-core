@@ -224,20 +224,7 @@ export function getMultiActions(
     }
 
     function canPublishItem() {
-        return getSelectedItems().every((item) => {
-            const desk = desks.getCurrentDesk();
-
-            if (privileges.userHasPrivileges({publish: 1})
-                && !(desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk)) {
-                if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
-                    return true;
-                } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
-                    return appConfig?.features?.publishFromPersonal;
-                }
-            }
-
-            return false;
-        });
+        return getSelectedItems().every((item) => sdApi.article.canPublish(item));
     }
 
     /**
