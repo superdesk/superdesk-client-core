@@ -77,11 +77,14 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                     'headline',
                                                     superdesk.helpers.editor3ToOperationalFormat(
                                                         {rawContentState: rawState},
-                                                        this.props.article.language,
+                                                        article.language,
                                                     ),
                                                 ));
                                         } else {
-                                            superdesk.ui.article.applyChangesToEditor({...article, headline}, true);
+                                            superdesk.ui.article.applyFieldChangesToEditor(
+                                                article._id,
+                                                {key: 'headline', value: headline},
+                                            );
                                         }
                                     }}
                                     type="default"

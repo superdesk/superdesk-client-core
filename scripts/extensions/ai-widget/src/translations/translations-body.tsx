@@ -111,7 +111,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             type="primary"
                         />
                     </Spacer>
-                    <div dangerouslySetInnerHTML={{__html: translation}} />
+                    <div className='sd-text' dangerouslySetInnerHTML={{__html: translation}} />
                 </Spacer>
                 <ButtonGroup orientation="horizontal" align="center">
                     <IconButton
@@ -121,7 +121,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             navigator.clipboard.writeText(translation);
                         }}
                     />
-                    {this.props.mode !== 'other' && (
+                    {this.props.mode === 'current' && (
                         <Button
                             onClick={() => {
                                 const currentDeskId = superdesk.entities.desk.getActiveDeskId();
@@ -164,7 +164,10 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                         ),
                                     ));
                             } else {
-                                superdesk.ui.article.applyChangesToEditor({...article, body_html: translation}, true);
+                                superdesk.ui.article.applyFieldChangesToEditor(
+                                   article._id,
+                                   {key: 'body_html', value: translation},
+                                );
                             }
                         }}
                         size="small"

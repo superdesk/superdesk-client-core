@@ -61,6 +61,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
 
         this.inactiveTabState = {};
         this.getDefaultState = this.getDefaultState.bind(this);
+        this.setSection = this.setSection.bind(this);
         this.state = this.props.initialState ?? {activeSection: null};
     }
 
@@ -82,14 +83,14 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                     activeSection: 'headlines',
                     headlines: [],
                     error: false,
-                    loading: false,
+                    loading: true,
                 }
             case 'summary':
                 return {
                     activeSection: 'summary',
                     summary: '',
                     loading: false,
-                    error: false,
+                    error: true,
                 };
             default:
                 return assertNever(section);
@@ -97,14 +98,14 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     private setSection(section: IAiAssistantSection) {
+        if (this.state.activeSection != null) {
+            this.inactiveTabState[this.state.activeSection] = this.state;
+        }
+
         if (section == null) {
             this.setState({activeSection: null});
         } else {
             const nextSectionState = this.inactiveTabState[section] ?? this.getDefaultState(section);
-
-            if (this.state.activeSection != null) {
-                this.inactiveTabState[this.state.activeSection] = this.state;
-            }
 
             this.setState(nextSectionState);
         }

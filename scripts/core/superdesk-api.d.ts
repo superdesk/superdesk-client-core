@@ -2767,7 +2767,7 @@ declare module 'superdesk-api' {
                 ): void;
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
-                applyChangesToEditor(item: IArticle, setDirty?: boolean): void;
+                applyFieldChangesToEditor(itemId: IArticle['_id'], field: {key: string, value: valueof<IArticle>}): void;
                 /**
                  * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.

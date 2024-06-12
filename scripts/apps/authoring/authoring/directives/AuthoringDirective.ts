@@ -102,6 +102,7 @@ export function AuthoringDirective(
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
 
+            $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
             $scope.publishEnabled = false; // publish an item
@@ -1021,29 +1022,42 @@ export function AuthoringDirective(
                 }
             });
 
-            const removeListener = addInternalEventListener(
-                'dangerouslyOverwriteAuthoringData',
-                (event) => {
-                    if (event.detail.item._id === $scope.item._id) {
-                        angular.extend($scope.item, event.detail.item);
-
-                        if (event.detail.setDirty == false) {
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringData',
+                    (event) => {
+                        if (event.detail.item._id === $scope.item._id) {
+                            angular.extend($scope.item, event.detail.item);
                             angular.extend($scope.origItem, event.detail.item);
-                        }
 
-                        if (event.detail.setDirty === true) {
+                            $scope.$applyAsync();
+                            $scope.refresh();
+                        }
+                    },
+                ),
+            );
+
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringField',
+                    (event) => {
+                        if (event.detail.itemId === $scope.item._id) {
+                            angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
+
                             $scope.dirty = true;
+                            $scope.$applyAsync();
+                            $scope.refresh();
                         }
-
-                        $scope.$applyAsync();
-                        $scope.refresh();
-                    }
-                },
+                    },
+                ),
             );
 
             $scope.$on('$destroy', () => {
                 deregisterTansa();
-                removeListener();
+
+                for (const fn of $scope.eventListenersToRemoveOnUnmount) {
+                    fn();
+                }
             });
 
             var initEmbedFieldsValidation = () => {
