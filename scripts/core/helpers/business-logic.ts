@@ -13,3 +13,9 @@ export function getLanguageVocabulary(): IVocabulary {
 
     return allVocabularies.find((x) => x._id === 'languages');
 }
+
+export function getCustomVocabulary(): Array<IVocabulary> {
+    const allVocabularies: Array<IVocabulary> = ng.get('vocabularies').getAllVocabulariesSync();
+
+    return allVocabularies.filter((vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary));
+}
