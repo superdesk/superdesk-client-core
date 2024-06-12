@@ -18,7 +18,7 @@ export interface ICommonProps<T> {
     setSection: (section: IAiAssistantSection) => void;
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-    setTabState: (state: IState, callbackFn?: () => void) => void;
+    setTabState: (state: IState['currentTab'], callbackFn?: () => void) => void;
     children: (components: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) => JSX.Element;
 }
 
@@ -49,11 +49,13 @@ interface IDefaultState {
     activeSection: null;
 }
 
-type IState = IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab;
+type IState = {
+    currentTab: IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab
+};
 
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     private inactiveTabState: {
-        [KEY in NonNullable<IState['activeSection']>]?: IState;
+        [KEY in NonNullable<IState['currentTab']['activeSection']>]?: IState['currentTab'];
     };
 
     constructor(props: IArticleSideWidgetComponentType) {
@@ -62,13 +64,15 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         this.inactiveTabState = {};
         this.getDefaultState = this.getDefaultState.bind(this);
         this.setSection = this.setSection.bind(this);
-        this.state = this.props.initialState ?? {activeSection: null};
+        this.state = this.props.initialState != null ? {currentTab: this.props.initialState} : {currentTab: {activeSection: null}};
     }
 
-    private getDefaultState(section: IAiAssistantSection): IState {
+    private getDefaultState(section: IAiAssistantSection): IState['currentTab'] {
         switch(section) {
             case null:
-                return {activeSection: null};
+                return {
+                    activeSection: null,
+                };
             case 'translations':
                 return {
                     activeSection: 'translations',
@@ -98,16 +102,16 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     private setSection(section: IAiAssistantSection) {
-        if (this.state.activeSection != null) {
-            this.inactiveTabState[this.state.activeSection] = this.state;
+        if (this.state.currentTab.activeSection != null) {
+            this.inactiveTabState[this.state.currentTab.activeSection] = this.state.currentTab;
         }
 
         if (section == null) {
-            this.setState({activeSection: null});
+            this.setState({currentTab: {activeSection: null}});
         } else {
             const nextSectionState = this.inactiveTabState[section] ?? this.getDefaultState(section);
 
-            this.setState(nextSectionState);
+            this.setState({currentTab: nextSectionState});
         }
     }
 
@@ -119,19 +123,19 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         type ISummaryComponentProps = React.ComponentType<ICommonProps<IStateSummaryTab>>;
         type ITranslationsComponentProps = React.ComponentType<ICommonProps<IStateTranslationsTab>>;
         const componentsByTab: {
-            [KEY in NonNullable<IState['activeSection']>]: IHeadlinesComponentProps | ISummaryComponentProps | ITranslationsComponentProps;
+            [KEY in NonNullable<IState['currentTab']['activeSection']>]: IHeadlinesComponentProps | ISummaryComponentProps | ITranslationsComponentProps;
         } = {
             'headlines': HeadlinesWidget,
             'summary': SummaryWidget,
             'translations': TranslationsWidget,
         };
-        const CurrentComponent = state.activeSection && componentsByTab[state.activeSection];
+        const CurrentComponent = state.currentTab.activeSection && componentsByTab[state.currentTab.activeSection];
 
         return CurrentComponent != null ? (
             <CurrentComponent
-                state={state as never}
+                state={state.currentTab as never}
                 setTabState={(state, callbackFn) => {
-                    this.setState(state, callbackFn);
+                    this.setState({currentTab: state}, callbackFn);
                 }}
                 setSection={this.setSection}
                 {...this.props}
