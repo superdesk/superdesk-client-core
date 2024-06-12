@@ -260,11 +260,11 @@ export function VocabularyEditController(
             return false;
         }
 
-        if ($scope.vocabulary.field_type !== 'related_content') {
-            return true;
-        }
+        // `field options` only exist on related_content and media field type
+        // but we don't want to hard-code the check and maintain the condition inside `getMediaTypeKeys`
+        const vocabulary = ($scope.vocabulary as any);
 
-        const allowedTypes = $scope.vocabulary.field_options.allowed_types;
+        const allowedTypes = vocabulary.field_options.allowed_types;
         const selectedKeys = Object.keys(allowedTypes).filter((key) => allowedTypes[key] === true);
 
         return selectedKeys.length === 0;
