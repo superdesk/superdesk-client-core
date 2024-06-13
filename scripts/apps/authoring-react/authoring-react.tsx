@@ -607,8 +607,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
-                    if (event.detail._id === this.props.itemId) {
-                        const patch = event.detail;
+                    if (event.detail.item._id === this.props.itemId) {
+                        const patch = event.detail.item;
 
                         const {state} = this;
 
@@ -707,6 +707,53 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     }
                 }
             }),
+        );
+
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalEventListener(
+                'dangerouslyOverwriteAuthoringField',
+                (event) => {
+                    if (event.detail.itemId === this.props.itemId) {
+                        const patch = {[event.detail.field.key]: event.detail.field.value};
+
+                        const {state} = this;
+
+                        if (state.initialized) {
+                            if (state.itemOriginal === state.itemWithChanges) {
+                                /**
+                                 * if object references are the same before patching
+                                 * they should be the same after patching too
+                                 * in order for checking for changes to work correctly
+                                 * (reference equality is used for change detection)
+                                 */
+
+                                const patched = {
+                                    ...state.itemOriginal,
+                                    ...patch,
+                                };
+
+                                this.setState({
+                                    ...state,
+                                    itemOriginal: patched,
+                                    itemWithChanges: patched,
+                                });
+                            } else {
+                                this.setState({
+                                    ...state,
+                                    itemWithChanges: {
+                                        ...state.itemWithChanges,
+                                        ...patch,
+                                    },
+                                    itemOriginal: {
+                                        ...state.itemOriginal,
+                                        ...patch,
+                                    },
+                                });
+                            }
+                        }
+                    }
+                },
+            ),
         );
 
         /**

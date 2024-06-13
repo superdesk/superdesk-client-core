@@ -5,7 +5,7 @@ import {superdesk} from './superdesk';
 import {IAiAssistantSection} from './ai-assistant';
 
 interface IProps {
-    setSection: (id: IAiAssistantSection) => void;
+    setSection: (section: IAiAssistantSection) => void;
 }
 
 export default function DefaultAiAssistantPanel({setSection}: IProps) {
@@ -38,6 +38,16 @@ export default function DefaultAiAssistantPanel({setSection}: IProps) {
                     }}
                 >
                     <SvgIconIllustration illustration="summary" />
+                </IllustrationButton>
+            )}
+            {configuration.translations?.generateTranslations != null && (
+                <IllustrationButton
+                    text={gettext('Translations')}
+                    onClick={() => {
+                        setSection('translations');
+                    }}
+                >
+                    <SvgIconIllustration illustration="translate" />
                 </IllustrationButton>
             )}
         </div>
