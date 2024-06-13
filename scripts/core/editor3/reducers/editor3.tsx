@@ -19,6 +19,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {CustomEditor3Entity} from '../constants';
 import {IArticle} from 'superdesk-api';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
+import {IActiveCell} from '../components/tables/TableBlock';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -446,10 +447,10 @@ const setReadOnly = (state, readOnly) => ({
  * @return {Object} New state
  * @description Sets the currently being edited (active) table cell.
  */
-const setCell = (state, {i, j, key, currentStyle, selection}) => ({
+const setCell = (state, activeCell: IActiveCell) => ({
     ...state,
     locked: true,
-    activeCell: {i, j, key, currentStyle, selection},
+    activeCell,
 });
 
 const mergeEntityDataByKey = (state, {blockKey, entityKey, valuesToMerge}) => {

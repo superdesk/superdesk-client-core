@@ -43,7 +43,7 @@ $editor-styleButton-size: 			3rem;
 	}
 }
 
-.main-article {
+.main-article, .main-editor-3-style {
 	.Editor3-root {
 		border: 1px solid $editor-neutral-border;
 		font-weight: 300;
@@ -96,6 +96,10 @@ $editor-styleButton-size: 			3rem;
 			box-shadow: 0px 1px 5px rgba(0,0,0,0.4);
 			.link-toolbar.empty {
 				display: none;
+			}
+
+			&.floating-toolbar-invisible {
+				visibility: hidden;
 			}
 		}
 
@@ -258,6 +262,10 @@ $editor-styleButton-size: 			3rem;
 				tr:first-child td {
 					font-weight: 500;
 				}
+			}
+
+			.DraftEditor-editorContainer [data-block="true"]:only-child {
+				border-bottom-width: 0em!important; // removing border that is usually added for drag and drop support
 			}
 
 			&__controls {

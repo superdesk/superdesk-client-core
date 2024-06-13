@@ -6,6 +6,7 @@ import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-eve
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -46,8 +47,6 @@ export function AuthoringTopbarDirective(
                 scope.autosave(scope.item, 0);
             };
 
-            scope.requestEditor3DirectivesToGenerateHtml = [];
-
             scope.openPublishOrSendToPane = () => {
                 const availableTabs = getAvailableTabs();
                 const activeTab = getActiveTab(availableTabs);
@@ -62,10 +61,14 @@ export function AuthoringTopbarDirective(
             function getAvailableTabs(): Array<IArticleActionInteractive> {
                 if (scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
-                } else if (scope.item.flags?.marked_for_not_publication === true) {
-                    return ['send_to'];
                 } else {
-                    return ['send_to', 'publish'];
+                    const result: Array<IArticleActionInteractive> = ['send_to'];
+
+                    if (sdApi.article.canPublish(scope.item)) {
+                        result.push('publish');
+                    }
+
+                    return result;
                 }
             }
 

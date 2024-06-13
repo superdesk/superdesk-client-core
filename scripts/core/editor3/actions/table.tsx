@@ -73,9 +73,9 @@ export function toggleTableStyle(inlineStyle) {
     };
 }
 
-export function toggleMultiLineQuoteBlockStyle(style) {
+export function toggleTableBlockType(style) {
     return {
-        type: 'TOOLBAR_MULTI-LINE_STYLE',
+        type: 'TOOLBAR_TABLE_BLOCK_TYPE',
         payload: style,
     };
 }

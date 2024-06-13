@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import {gettext} from 'core/utils';
@@ -7,6 +6,7 @@ import {VideoComponent} from 'core/ui/components/video';
 import {isMediaEditable} from 'core/config';
 import * as actions from '../../actions';
 import {PlainTextEditor} from 'core/ui/components';
+import {ContentBlock, ContentState} from 'draft-js';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -22,6 +22,27 @@ function getTranslationForAssignRights(value) {
     }
 }
 
+type ICaptionField = 'description_text' | 'headline';
+
+interface IOwnProps {
+    block: ContentBlock;
+    contentState: ContentState;
+}
+
+interface IReduxStateProps {
+    readOnly: boolean;
+    showTitle: boolean;
+}
+
+interface IDispatchProps {
+    cropImage(entityKey: string, entityData: any, options: {isNew: any; showMetadata: any; defaultTab: any;}): void;
+    removeBlock(blockKey: string): void;
+    changeCaption(entityKey: string, newCaption: string, field: ICaptionField): void;
+    setLocked(): void;
+}
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -30,7 +51,7 @@ function getTranslationForAssignRights(value) {
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an image block within the editor.
  */
-export class MediaBlockComponent extends React.Component<any, any> {
+export class MediaBlockComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -96,7 +117,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
      * @name MediaBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange(value: string, field: 'description_text' | 'headline') {
+    onChange(value: string, field: ICaptionField) {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
@@ -318,18 +339,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
     }
 }
 
-MediaBlockComponent.propTypes = {
-    cropImage: PropTypes.func.isRequired,
-    removeBlock: PropTypes.func.isRequired,
-    changeCaption: PropTypes.func.isRequired,
-    setLocked: PropTypes.func.isRequired,
-    block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired,
-    showTitle: PropTypes.bool,
-    readOnly: PropTypes.bool,
-    blockProps: PropTypes.object,
-};
-
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showTitle: state.showTitle,
@@ -342,7 +351,7 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock = connect(
+export const MediaBlock: React.ComponentType<IOwnProps> = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(MediaBlockComponent);
