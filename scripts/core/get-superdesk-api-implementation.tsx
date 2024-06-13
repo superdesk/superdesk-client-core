@@ -115,7 +115,6 @@ import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
-import {getCustomFieldVocabularies, getLanguageVocabulary} from './helpers/business-logic';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
@@ -345,8 +344,9 @@ export function getSuperdeskApiImplementation(
             vocabulary: {
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
-                getCustomFieldVocabularies: getCustomFieldVocabularies,
-                getLanguageVocabulary: getLanguageVocabulary,
+                getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
+                getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
+                isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
             },
             attachment: attachmentsApi,
             users: {

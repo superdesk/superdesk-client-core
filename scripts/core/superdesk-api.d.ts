@@ -2883,6 +2883,7 @@ declare module 'superdesk-api' {
                 getVocabulary(id: string): IVocabulary;
                 getCustomFieldVocabularies(): Array<IVocabulary>;
                 getLanguageVocabulary(): IVocabulary;
+                isCustomVocabulary(vocabulary: IVocabulary): boolean;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
