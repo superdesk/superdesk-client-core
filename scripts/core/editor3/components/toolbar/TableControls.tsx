@@ -111,14 +111,12 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
                         return (
                             <>
                                 {
-                                    editorFormat.includes('link') && (
-                                        <SelectionButtonCustomEditorState
-                                            editorState={cellEditorState}
-                                            onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
-                                            iconName="link"
-                                            tooltip={gettext('Link')}
-                                        />
-                                    )
+                                    <SelectionButtonCustomEditorState
+                                        editorState={cellEditorState}
+                                        onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
+                                        iconName="link"
+                                        tooltip={gettext('Link')}
+                                    />
                                 }
 
                                 {
@@ -129,11 +127,6 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
                                         />
                                     )
                                 }
-
-                                <LinkToolbarForTableCell
-                                    editorState={cellEditorState}
-                                    onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
-                                />
                             </>
                         );
                     } else if (type in inlineStyles) {
@@ -161,6 +154,12 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
                     }
                 })
             }
+
+            {/* LinkToolbar must be the last node. */}
+            <LinkToolbarForTableCell
+                editorState={cellEditorState}
+                onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
+            />
         </div>
     );
 };
