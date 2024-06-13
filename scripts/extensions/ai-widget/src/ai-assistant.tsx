@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle, IArticleSideWidgetComponentType, ITranslation, OrderedMap} from 'superdesk-api';
+import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import DefaultAiAssistantPanel from './main-panel';
@@ -12,12 +12,9 @@ const {assertNever} = superdesk.helpers;
 export type IAiAssistantSection = 'headlines' | 'summary' | 'translations' | null;
 export type ITranslationLanguage = ITranslation['_id'];
 
-export interface ICommonProps<T> {
+export interface ICommonProps<T> extends IArticleSideWidgetComponentType {
     state: T;
-    article: IArticle;
     setSection: (section: IAiAssistantSection) => void;
-    fieldsData?: OrderedMap<string, unknown>;
-    onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
     setTabState: (state: IState['currentTab'], callbackFn?: () => void) => void;
     children: (components: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) => JSX.Element;
 }
@@ -52,6 +49,27 @@ interface IDefaultState {
 type IState = {
     currentTab: IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab
 };
+
+const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
+const {gettext} = superdesk.localization;
+
+function renderResult({header, body, footer}: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) {
+    return (
+        <AuthoringWidgetLayout
+            header={(
+                <Spacer v gap="0" alignItems="center">
+                    <AuthoringWidgetHeading
+                        widgetName={gettext('Ai Assistant')}
+                        editMode={false}
+                    />
+                    {header}
+                </Spacer>
+            )}
+            body={body}
+            footer={footer}
+        />
+    );
+}
 
 export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     private inactiveTabState: {
@@ -118,66 +136,64 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
     }
 
     render() {
-        const {gettext} = superdesk.localization;
-        const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
         const state = this.state;
 
-        type IHeadlinesComponentProps = React.ComponentType<ICommonProps<IStateHeadlinesTab>>;
-        type ISummaryComponentProps = React.ComponentType<ICommonProps<IStateSummaryTab>>;
-        type ITranslationsComponentProps = React.ComponentType<ICommonProps<IStateTranslationsTab>>;
-
-        const componentsByTab: {
-            [KEY in NonNullable<IState['currentTab']['activeSection']>]:
-                IHeadlinesComponentProps
-                | ISummaryComponentProps
-                | ITranslationsComponentProps;
-        } = {
-            'headlines': HeadlinesWidget,
-            'summary': SummaryWidget,
-            'translations': TranslationsWidget,
+        const tabManagementProps: Pick<ICommonProps<any>, 'setSection' | 'setTabState'> = {
+            setSection: this.setSection,
+            setTabState: (state, callbackFn) => {
+                this.setState({currentTab: state}, callbackFn);
+            },
         };
-        const CurrentComponent = state.currentTab.activeSection && componentsByTab[state.currentTab.activeSection];
 
-        return CurrentComponent != null ? (
-            <CurrentComponent
-                state={state.currentTab as never}
-                setTabState={(state, callbackFn) => {
-                    this.setState({currentTab: state}, callbackFn);
-                }}
-                setSection={this.setSection}
-                {...this.props}
-            >
-                {({header, body, footer}) => (
+        switch (state.currentTab.activeSection) {
+            case null:
+                return (
                     <AuthoringWidgetLayout
                         header={(
-                            <Spacer v gap="0" alignItems="center">
-                                <AuthoringWidgetHeading
-                                    widgetName={gettext('Ai Assistant')}
-                                    editMode={false}
-                                />
-                                {header}
-                            </Spacer>
+                            <AuthoringWidgetHeading
+                                widgetName={gettext('Ai Assistant')}
+                                editMode={false}
+                            />
                         )}
-                        body={body}
-                        footer={footer}
+                        body={
+                            <DefaultAiAssistantPanel
+                                setSection={this.setSection}
+                            />
+                        }
                     />
-                )}
-            </CurrentComponent>
-        ) : (
-            <AuthoringWidgetLayout
-                header={(
-                    <AuthoringWidgetHeading
-                        widgetName={gettext('Ai Assistant')}
-                        editMode={false}
-                    />
-                )}
-                body={(
-                    <DefaultAiAssistantPanel
-                        setSection={this.setSection}
-                    />
-
-                )}
-            />
-        );
+                );
+            case 'headlines':
+                return (
+                    <HeadlinesWidget
+                        state={state.currentTab}
+                        {...tabManagementProps}
+                        {...this.props}
+                    >
+                        {renderResult}
+                    </HeadlinesWidget>
+                );
+            case 'summary':
+                return (
+                    <SummaryWidget
+                        state={state.currentTab}
+                        {...tabManagementProps}
+                        {...this.props}
+                    >
+                        {renderResult}
+                    </SummaryWidget>
+                );
+            case 'translations':
+                    return (
+                        <TranslationsWidget
+                            state={state.currentTab}
+                            {...tabManagementProps}
+                            {...this.props}
+                        >
+                            {renderResult}
+                        </TranslationsWidget>
+                    );
+            default:
+                return assertNever(state.currentTab);
+        }
     }
 }
