@@ -2032,8 +2032,9 @@ declare module 'superdesk-api' {
     export interface IConfigurableAlgorithms {
         countLines?(plainText: string, lineLength: number): number;
         editor3?: {
-            /** must return final HTML that should be outputted when serializing editor state to HTML */
-            wrapCustomBlock?:(customBlockVocabulary: IVocabulary, html: string) => string;
+            customBlocks?: {
+                getAdditionalWrapperAttributes?(customBlockVocabulary: IVocabulary, html: string): Array<{name: string; value: string}>;
+            };
         }
     }
 

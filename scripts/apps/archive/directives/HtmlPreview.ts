@@ -1,3 +1,4 @@
+import {modifyHTMLBeforePreview} from 'apps/authoring/preview/field-types/html';
 import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
@@ -60,7 +61,7 @@ export function HtmlPreview($sce, $timeout) {
         templateUrl: 'scripts/apps/archive/views/html-preview.html',
         link: function(scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
-                scope.html = $sce.trustAsHtml(html);
+                scope.html = $sce.trustAsHtml(modifyHTMLBeforePreview(html));
 
                 if (window.hasOwnProperty('instgrm')) {
                     window.instgrm.Embeds.process();

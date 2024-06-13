@@ -238,10 +238,18 @@ export class AtomicBlockParser {
         const cellContentState: ContentState = convertFromRaw(cells[0][0]);
         const tableCellContentHtml = editor3StateToHtml(cellContentState);
 
-        if (configurableAlgorithms.editor3?.wrapCustomBlock != null) {
-            return configurableAlgorithms.editor3.wrapCustomBlock(vocabulary, tableCellContentHtml);
-        } else {
-            return `<div data-custom-block-type="${blockId}">${tableCellContentHtml}</div>`;
-        }
+        const attributes: Array<{name: string; value: string}> = [
+            {name: 'data-custom-block-type', value: blockId},
+            ...(
+                configurableAlgorithms.editor3?.customBlocks?.getAdditionalWrapperAttributes(
+                    vocabulary,
+                    tableCellContentHtml,
+                ) ?? []
+            ),
+        ];
+
+        const attributesString = attributes.map(({name, value}) => `${name}="${value}"`).join(' ');
+
+        return `<div ${attributesString}>${tableCellContentHtml}</div>`;
     }
 }
