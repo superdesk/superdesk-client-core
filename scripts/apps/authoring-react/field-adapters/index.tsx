@@ -26,7 +26,6 @@ import {urgency} from './urgency';
 import {priority} from './priority';
 import {getSubjectAdapter} from './subject';
 import {anpa_category} from './anpa_category';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {sdApi} from 'api';
 import {headline} from './headline';
 import {abstract} from './abstract';
@@ -181,7 +180,7 @@ export function storeEditor3ValueBase(
  * to {@link IAuthoringFieldV2}
  */
 export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>): IFieldsAdapter<IArticle> {
-    const customFieldVocabularies = getCustomFieldVocabularies();
+    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
     const adapter: IFieldsAdapter<IArticle> = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {
