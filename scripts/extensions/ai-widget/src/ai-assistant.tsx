@@ -64,40 +64,42 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         this.inactiveTabState = {};
         this.getDefaultState = this.getDefaultState.bind(this);
         this.setSection = this.setSection.bind(this);
-        this.state = this.props.initialState != null ? {currentTab: this.props.initialState} : {currentTab: {activeSection: null}};
+        this.state = this.props.initialState != null
+            ? {currentTab: this.props.initialState}
+            : {currentTab: {activeSection: null}};
     }
 
     private getDefaultState(section: IAiAssistantSection): IState['currentTab'] {
-        switch(section) {
-            case null:
-                return {
-                    activeSection: null,
-                };
-            case 'translations':
-                return {
-                    activeSection: 'translations',
-                    mode: 'current',
-                    translation: '',
-                    loading: false,
-                    error: false,
-                    activeLanguageId: this.props.article.language,
-                };
-            case 'headlines':
-                return {
-                    activeSection: 'headlines',
-                    headlines: [],
-                    error: false,
-                    loading: true,
-                }
-            case 'summary':
-                return {
-                    activeSection: 'summary',
-                    summary: '',
-                    loading: false,
-                    error: true,
-                };
-            default:
-                return assertNever(section);
+        switch (section) {
+        case null:
+            return {
+                activeSection: null,
+            };
+        case 'translations':
+            return {
+                activeSection: 'translations',
+                mode: 'current',
+                translation: '',
+                loading: false,
+                error: false,
+                activeLanguageId: this.props.article.language,
+            };
+        case 'headlines':
+            return {
+                activeSection: 'headlines',
+                headlines: [],
+                error: false,
+                loading: true,
+            };
+        case 'summary':
+            return {
+                activeSection: 'summary',
+                summary: '',
+                loading: false,
+                error: true,
+            };
+        default:
+            return assertNever(section);
         }
     }
 
@@ -119,11 +121,16 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         const {gettext} = superdesk.localization;
         const {AuthoringWidgetLayout, AuthoringWidgetHeading} = superdesk.components;
         const state = this.state;
+
         type IHeadlinesComponentProps = React.ComponentType<ICommonProps<IStateHeadlinesTab>>;
         type ISummaryComponentProps = React.ComponentType<ICommonProps<IStateSummaryTab>>;
         type ITranslationsComponentProps = React.ComponentType<ICommonProps<IStateTranslationsTab>>;
+
         const componentsByTab: {
-            [KEY in NonNullable<IState['currentTab']['activeSection']>]: IHeadlinesComponentProps | ISummaryComponentProps | ITranslationsComponentProps;
+            [KEY in NonNullable<IState['currentTab']['activeSection']>]:
+                IHeadlinesComponentProps
+                | ISummaryComponentProps
+                | ITranslationsComponentProps;
         } = {
             'headlines': HeadlinesWidget,
             'summary': SummaryWidget,
@@ -164,11 +171,12 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                         editMode={false}
                     />
                 )}
-                body={
+                body={(
                     <DefaultAiAssistantPanel
                         setSection={this.setSection}
                     />
-                }
+
+                )}
             />
         );
     }

@@ -114,7 +114,7 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
                         setTabState({
                             ...this.props.state,
                             activeLanguageId: language,
-                        })
+                        });
                     }}
                     generateTranslations={() => {
                         setTabState({
@@ -125,6 +125,6 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
                     }}
                 />
             ),
-        })
+        });
     }
 }

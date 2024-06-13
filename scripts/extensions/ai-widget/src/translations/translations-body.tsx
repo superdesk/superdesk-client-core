@@ -111,7 +111,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             type="primary"
                         />
                     </Spacer>
-                    <div className='sd-text' dangerouslySetInnerHTML={{__html: translation}} />
+                    <div className="sd-text" dangerouslySetInnerHTML={{__html: translation}} />
                 </Spacer>
                 <ButtonGroup orientation="horizontal" align="center">
                     <IconButton
@@ -165,8 +165,8 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                     ));
                             } else {
                                 superdesk.ui.article.applyFieldChangesToEditor(
-                                   article._id,
-                                   {key: 'body_html', value: translation},
+                                    article._id,
+                                    {key: 'body_html', value: translation},
                                 );
                             }
                         }}

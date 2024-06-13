@@ -100,7 +100,7 @@ export class HeadlinesWidget extends React.Component<ICommonProps<IStateHeadline
                     text={gettext('Regenerate')}
                     style="hollow"
                 />
-            )
-        })
+            ),
+        });
     }
 }
