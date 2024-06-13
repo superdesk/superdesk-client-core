@@ -2879,6 +2879,7 @@ declare module 'superdesk-api' {
                 get(id: string): Promise<IContentProfile>;
             };
             vocabulary: {
+                getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): IVocabulary;
                 getCustomFieldVocabularies(): Array<IVocabulary>;
