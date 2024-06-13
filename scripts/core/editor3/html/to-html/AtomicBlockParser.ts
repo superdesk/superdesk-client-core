@@ -8,6 +8,7 @@ import {CustomEditor3Entity} from 'core/editor3/constants';
 import {IEditorDragDropArticleEmbed} from 'core/editor3/reducers/editor3';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
+import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 
 /**
  * @ngdoc class
@@ -231,33 +232,16 @@ export class AtomicBlockParser {
             return '';
         }
 
-        function getHighestHeadingText(el: HTMLElement): string | null {
-            const headings: Array<keyof HTMLElementTagNameMap> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-
-            for (const tag of headings) {
-                const result = el.querySelector(tag);
-
-                if (result != null) {
-                    return result.textContent;
-                }
-            }
-
-            return null;
-        }
-
+        const vocabulary = sdApi.vocabularies.getAll().get(data.vocabularyId);
+        const blockId = vocabulary._id;
         const {cells} = data;
-        const blockName = sdApi.vocabularies.getAll().get(data.vocabularyId).display_name;
         const cellContentState: ContentState = convertFromRaw(cells[0][0]);
         const tableCellContentHtml = editor3StateToHtml(cellContentState);
-        const tableCellContentElement: HTMLElement =
-            new DOMParser().parseFromString(tableCellContentHtml, 'text/html').body;
-        const heading: string | null = getHighestHeadingText(tableCellContentElement);
-        const attributes = [`data-custom-block-type="${blockName}"`];
 
-        if (heading != null) {
-            attributes.push(`data-custom-block-title="${heading}"`);
+        if (configurableAlgorithms.editor3?.wrapCustomBlock != null) {
+            return configurableAlgorithms.editor3.wrapCustomBlock(vocabulary, tableCellContentHtml);
+        } else {
+            return `<div data-custom-block-type="${blockId}">${tableCellContentHtml}</div>`;
         }
-
-        return `<div ${attributes.join(' ')}>${tableCellContentHtml}</div>`;
     }
 }
