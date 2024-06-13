@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
@@ -146,54 +148,54 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         };
 
         switch (state.currentTab.activeSection) {
-            case null:
-                return (
-                    <AuthoringWidgetLayout
-                        header={(
-                            <AuthoringWidgetHeading
-                                widgetName={gettext('Ai Assistant')}
-                                editMode={false}
-                            />
-                        )}
-                        body={
-                            <DefaultAiAssistantPanel
-                                setSection={this.setSection}
-                            />
-                        }
-                    />
-                );
-            case 'headlines':
-                return (
-                    <HeadlinesWidget
-                        state={state.currentTab}
-                        {...tabManagementProps}
-                        {...this.props}
-                    >
-                        {renderResult}
-                    </HeadlinesWidget>
-                );
-            case 'summary':
-                return (
-                    <SummaryWidget
-                        state={state.currentTab}
-                        {...tabManagementProps}
-                        {...this.props}
-                    >
-                        {renderResult}
-                    </SummaryWidget>
-                );
-            case 'translations':
-                    return (
-                        <TranslationsWidget
-                            state={state.currentTab}
-                            {...tabManagementProps}
-                            {...this.props}
-                        >
-                            {renderResult}
-                        </TranslationsWidget>
-                    );
-            default:
-                return assertNever(state.currentTab);
+        case null:
+            return (
+                <AuthoringWidgetLayout
+                    header={(
+                        <AuthoringWidgetHeading
+                            widgetName={gettext('Ai Assistant')}
+                            editMode={false}
+                        />
+                    )}
+                    body={(
+                        <DefaultAiAssistantPanel
+                            setSection={this.setSection}
+                        />
+                    )}
+                />
+            );
+        case 'headlines':
+            return (
+                <HeadlinesWidget
+                    state={state.currentTab}
+                    {...tabManagementProps}
+                    {...this.props}
+                >
+                    {renderResult}
+                </HeadlinesWidget>
+            );
+        case 'summary':
+            return (
+                <SummaryWidget
+                    state={state.currentTab}
+                    {...tabManagementProps}
+                    {...this.props}
+                >
+                    {renderResult}
+                </SummaryWidget>
+            );
+        case 'translations':
+            return (
+                <TranslationsWidget
+                    state={state.currentTab}
+                    {...tabManagementProps}
+                    {...this.props}
+                >
+                    {renderResult}
+                </TranslationsWidget>
+            );
+        default:
+            return assertNever(state.currentTab);
         }
     }
 }
