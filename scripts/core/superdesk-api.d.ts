@@ -2767,6 +2767,10 @@ declare module 'superdesk-api' {
                 ): void;
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
+
+                // itemId is passed for safety, changes would only apply if
+                // the function is called when the given article is open in authoring.
+                // TODO: Drop this function when authoring angular is removed; tag: authoringReactViewEnabled
                 applyFieldChangesToEditor(itemId: IArticle['_id'], field: {key: string, value: valueof<IArticle>}): void;
                 /**
                  * Programmatically triggers saving of an article in edit mode.
