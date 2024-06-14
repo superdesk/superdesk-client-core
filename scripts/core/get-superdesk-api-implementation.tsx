@@ -342,6 +342,7 @@ export function getSuperdeskApiImplementation(
                 },
             },
             vocabulary: {
+                getAll: () => sdApi.vocabularies.getAll(),
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
                 getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
