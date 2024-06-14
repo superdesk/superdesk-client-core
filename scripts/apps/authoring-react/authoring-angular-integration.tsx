@@ -582,7 +582,7 @@ function getInlineToolbarActions(
 
         if (
             sdApi.article.isLockedInCurrentSession(item)
-            && appConfig.features.customAuthoringTopbar.toDesk === true
+            && appConfig.features?.customAuthoringTopbar?.toDesk === true
             && sdApi.article.isPersonal(item) !== true
         ) {
             actions.push({
