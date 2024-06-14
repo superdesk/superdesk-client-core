@@ -5,7 +5,7 @@ interface IProps {
     value: string;
 }
 
-export function modifyHTMLBeforePreview(html: string): string {
+export function adjustHTMLForPreview(html: string): string {
     const parsed: HTMLElement =
     new DOMParser().parseFromString(html, 'text/html').body;
 
@@ -35,7 +35,7 @@ export class HtmlPreview extends React.Component<IProps> {
         const html = this.props.value;
 
         return (
-            <div dangerouslySetInnerHTML={{__html: modifyHTMLBeforePreview(html)}} />
+            <div dangerouslySetInnerHTML={{__html: adjustHTMLForPreview(html)}} />
         );
     }
 }
