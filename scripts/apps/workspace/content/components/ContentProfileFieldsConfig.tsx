@@ -233,7 +233,7 @@ class ItemsContainerBase extends React.PureComponent {
         return (
             <div
                 className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3"
-                data-test-id="content-profile-items-list"
+                data-test-id="content-profile-fields"
             >
                 {this.props.children}
             </div>
