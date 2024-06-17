@@ -3,7 +3,6 @@ describe('ContentFiltersConfigCtrl', () => {
     var ctrl;
 
     beforeEach(window.module('superdesk.apps.content_filters'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($controller) => {
         ctrl = $controller('ContentFiltersConfigCtrl', {});

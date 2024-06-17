@@ -2,7 +2,6 @@ import {getNativeKey} from '../keyboard';
 
 describe('keyboardManager', () => {
     beforeEach(window.module('superdesk.core.keyboard'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     var km, elem, $timeout,
         options = {inputDisabled: false};

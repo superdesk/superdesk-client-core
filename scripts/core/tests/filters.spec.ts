@@ -2,7 +2,6 @@
 describe('superdesk filters', () => {
     beforeEach(window.module('superdesk.core.datetime'));
     beforeEach(window.module('superdesk.core.filters'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     describe('sort items', () => {
         it('can ignore case while sorting', inject((sortByNameFilter) => {

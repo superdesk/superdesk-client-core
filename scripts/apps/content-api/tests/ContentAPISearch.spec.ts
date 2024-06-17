@@ -5,7 +5,6 @@ describe('Content API Search', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.content-api'));
     beforeEach(window.module('superdesk.apps.search'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     /**
      * Mock some of the dependencies of the parent directives.

@@ -8,7 +8,6 @@ describe('widgets provider', () => {
             }]);
 
         window.module('superdesk.apps.dashboard.widgets', 'superdesk.apps.dashboard.widgets.tests');
-        window.module('superdesk.apps.spellcheck');
 
         // init the tests module to get the actual provider
         inject(() => { /* no-op */ });

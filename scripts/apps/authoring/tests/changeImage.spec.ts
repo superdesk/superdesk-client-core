@@ -8,7 +8,6 @@ describe('authoring ChangeImageController', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.notify'));
     beforeEach(window.module('superdesk.apps.workspace.content'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.mocks'));
 
     beforeEach(window.module(($provide) => {

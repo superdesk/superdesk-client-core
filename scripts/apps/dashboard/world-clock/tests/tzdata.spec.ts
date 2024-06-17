@@ -11,7 +11,6 @@ describe('tzdata factory', () => {
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((_$httpBackend_, _$rootScope_, _tzdata_) => {
         tzdata = _tzdata_;

@@ -6,7 +6,6 @@ describe('tasks', () => {
     beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.apps.workspace.tasks'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     describe('task controller', () => {
         var scope;
