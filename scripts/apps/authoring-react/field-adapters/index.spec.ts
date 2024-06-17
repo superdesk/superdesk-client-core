@@ -15,7 +15,9 @@ describe('field adapters', () => {
     beforeEach(() => {
         Object.assign(sdApi, {
             ...sdApi,
-            vocabularies: {},
+            vocabularies: {
+                getCustomFieldVocabularies: () => [],
+            },
         });
 
         const vocabulariesStub: Partial<typeof sdApi.vocabularies> = {
