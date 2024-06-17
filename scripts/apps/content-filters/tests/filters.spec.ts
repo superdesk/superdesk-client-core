@@ -5,7 +5,6 @@ describe('content filters', () => {
     beforeEach(window.module('superdesk.apps.content_filters'));
     beforeEach(window.module('superdesk.mocks'));
 
-
     beforeEach(inject(($rootScope, $controller, contentFilters,
         $q, api, $location, $window, notify) => {
         $scope = $rootScope.$new();
