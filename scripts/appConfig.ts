@@ -1,3 +1,4 @@
+import {merge} from 'lodash';
 import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
 
 /* globals __SUPERDESK_CONFIG__: true */
@@ -26,6 +27,9 @@ if (appConfig.features == null) {
 if (appConfig.features.autorefreshContent == null) {
     appConfig.features.autorefreshContent = true; // default to true
 }
+
+// allow e2e tests to overwrite appConfig via local storage
+Object.assign(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
