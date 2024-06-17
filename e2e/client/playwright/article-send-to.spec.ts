@@ -12,7 +12,7 @@ test.describe('sending an article', async () => {
         await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
-            page.locator(s('article-item=story 2')),
+            page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
             'Edit',
         );
 
@@ -47,7 +47,7 @@ test.describe('sending an article', async () => {
         await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
-            page.locator(s('article-item=story 2')),
+            page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
             'Edit',
         );
 
