@@ -606,6 +606,8 @@ declare module 'superdesk-api' {
 
         getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
 
+        initialState?: any;
+
         // other props below are specific to authoring-react implementation
 
         readOnly: boolean;
@@ -753,6 +755,7 @@ declare module 'superdesk-api' {
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                     onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
+                    onTranslateAfter?(original: IArticle, translation: IArticle): void;
                 };
                 ingest?: {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
@@ -2768,6 +2771,12 @@ declare module 'superdesk-api' {
         undefinedEqNull: boolean;
     }
 
+    export interface IOpenSideWidget {
+        id: string;
+        pinned?: boolean;
+        initialState?: any;
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -2794,9 +2803,17 @@ declare module 'superdesk-api' {
             article: {
                 view(id: IArticle['_id']): void;
 
+                edit(
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ): void;
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
 
+                // itemId is passed for safety, changes would only apply if
+                // the function is called when the given article is open in authoring.
+                // TODO: Drop this function when authoring angular is removed; tag: authoringReactViewEnabled
+                applyFieldChangesToEditor(itemId: IArticle['_id'], field: {key: string, value: valueof<IArticle>}): void;
                 /**
                  * Programmatically triggers saving of an article in edit mode.
                  * Runs the same code as if "save" button was clicked manually.
@@ -2863,10 +2880,12 @@ declare module 'superdesk-api' {
                 get(id: string): Promise<IContentProfile>;
             };
             vocabulary: {
+                getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): IVocabulary;
                 getCustomFieldVocabularies(): Array<IVocabulary>;
                 getLanguageVocabulary(): IVocabulary;
+                isCustomVocabulary(vocabulary: IVocabulary): boolean;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;

@@ -1,37 +1,48 @@
 import React from 'react';
-import {Button, ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
-import SummaryBody from './summary';
-import {ICommonProps, IStateSummaryTab} from '../ai-assistant';
+import TranslationsBody from './translations-body';
+import TranslationFooter from './translations-footer';
+import {ICommonProps, IStateTranslationsTab} from '../ai-assistant';
 import {configuration} from '../configuration';
 
-export default class SummaryWidget extends React.Component<ICommonProps<IStateSummaryTab>> {
-    private abortController: AbortController;
+export default class TranslationsWidget extends React.Component<ICommonProps<IStateTranslationsTab>> {
+    abortController: AbortController;
 
-    constructor(props: ICommonProps<IStateSummaryTab>) {
+    constructor(props: ICommonProps<IStateTranslationsTab>) {
         super(props);
 
         this.abortController = new AbortController();
-        this.generateSummary = this.generateSummary.bind(this);
+
+        this.generateTranslations = this.generateTranslations.bind(this);
     }
 
-    generateSummary() {
-        configuration.generateSummary?.(this.props.article, this.abortController.signal)
+    generateTranslations() {
+        configuration.translations?.generateTranslations?.(
+            this.props.article,
+            this.props.state.activeLanguageId,
+            this.abortController.signal,
+        )
             .then((res) => {
                 this.props.setTabState({
-                    activeSection: 'summary',
-                    error: false,
+                    ...this.props.state,
                     loading: false,
-                    summary: res,
+                    translation: res,
                 });
             }).catch(() => {
                 this.props.setTabState({
-                    activeSection: 'summary',
-                    error: true,
+                    ...this.props.state,
                     loading: false,
-                    summary: '',
+                    error: true,
+                    translation: '',
                 });
             });
+    }
+
+    componentDidMount(): void {
+        if (this.props.state.mode === 'other') {
+            this.generateTranslations();
+        }
     }
 
     componentWillUnmount(): void {
@@ -43,8 +54,10 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
         const {
             article,
             children,
-            state: {error, loading, summary},
+            state: {error, loading, translation, activeLanguageId, mode},
             setTabState,
+            fieldsData,
+            onFieldsDataChange,
         } = this.props;
 
         return children({
@@ -64,10 +77,10 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
                                 onClick={() => {
                                     this.props.setSection(null);
                                 }}
-                                ariaValue={gettext('Close Summary')}
+                                ariaValue={gettext('Close Translate')}
                             />
                             <Heading type="h4" align="center">
-                                {gettext('Summary')}
+                                {gettext('Translate')}
                             </Heading>
                         </Spacer>
                     </div>
@@ -75,31 +88,41 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
                 </>
             ),
             body: (
-                <SummaryBody
+                <TranslationsBody
+                    mode={mode}
+                    activeLanguageId={activeLanguageId}
                     article={article}
                     error={error}
-                    generateSummary={() => {
+                    generateTranslation={() => {
                         setTabState({
                             ...this.props.state,
                             loading: true,
                             error: false,
-                        }, () => this.generateSummary());
+                        }, () => this.generateTranslations());
                     }}
-                    summary={summary}
                     loading={loading}
+                    translation={translation}
+                    fieldsData={fieldsData}
+                    onFieldsDataChange={onFieldsDataChange}
                 />
             ),
             footer: (
-                <Button
-                    onClick={() => {
+                <TranslationFooter
+                    mode={mode}
+                    activeLanguageId={activeLanguageId}
+                    setActiveLanguage={(language) => {
+                        setTabState({
+                            ...this.props.state,
+                            activeLanguageId: language,
+                        });
+                    }}
+                    generateTranslations={() => {
                         setTabState({
                             ...this.props.state,
                             loading: true,
                             error: false,
-                        }, () => this.generateSummary());
+                        }, () => this.generateTranslations());
                     }}
-                    text={gettext('Regenerate')}
-                    style="hollow"
                 />
             ),
         });

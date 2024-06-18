@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
@@ -33,9 +33,9 @@ jobs:
         suite: [a, b]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
@@ -81,7 +81,7 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png

@@ -1,13 +1,13 @@
 import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {PreviewFieldType} from './previewFieldByType';
 import {gettext} from 'core/utils';
 import {formatDate, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
 import {appConfig} from 'appConfig';
 import {getSortedFields} from './utils';
+import {sdApi} from 'api';
 
 interface IProps {
     item: IArticle;
@@ -37,7 +37,7 @@ export class FullPreview extends React.Component<IProps, IState> {
         dispatchCustomEvent('articlePreviewStart', this.props.item);
 
         getLabelNameResolver().then((getLabel) => {
-            const customFieldVocabularies = getCustomFieldVocabularies();
+            const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
 
             this.getLabel = getLabel;
 

@@ -196,6 +196,11 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                                  * choosing a stage would not have an impact
                                                  */
                                                 hideStages={true}
+
+                                                availableDesks={sdApi.desks.getAllDesks()
+                                                    .filter((desk) => sdApi.article.canPublishOnDesk(desk.desk_type))
+                                                    .toOrderedMap()
+                                                }
                                             />
                                         </ToggleBox>
                                     )

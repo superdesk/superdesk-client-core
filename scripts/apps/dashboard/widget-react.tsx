@@ -20,6 +20,19 @@ export class WidgetReact extends React.PureComponent<IProps> {
             <Component
                 key={key}
                 article={this.props.article}
+                initialState={(() => {
+                    const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+
+                    if (localStorageWidgetState?.id === this.props.widget._id) {
+                        const initialState = localStorageWidgetState?.initialState;
+
+                        localStorage.removeItem('SIDE_WIDGET');
+
+                        return initialState;
+                    } else {
+                        return undefined;
+                    }
+                })()}
 
                 // below props are only relevant for authoring-react
                 readOnly={undefined}
