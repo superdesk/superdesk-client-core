@@ -16,16 +16,8 @@ interface IState {
 }
 
 export class WidgetReact extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {
-            widgetDisplayed: this.props.widget.active?.component ?? this.props.widget?.pinnedWidget?.component,
-        };
-    }
-
     render() {
-        const Component = this.state.widgetDisplayed;
+        const Component = this.props.widget.active?.component ?? this.props.widget?.pinnedWidget?.component,;
 
         // Ensure that widget component re-mounts if the item is locked/unlocked.
         // Avoid null key in case item is unlocked - use a random string to force it to re-mount.

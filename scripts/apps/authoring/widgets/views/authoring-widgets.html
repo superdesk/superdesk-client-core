@@ -5,7 +5,7 @@
         'right-extended': active.extended
     }"
 >
-    <!-- RIGHT SIDEBAR START -->
+    <!-- AVAILABLE WIDGETS LIST START -->
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs" data-test-id="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
@@ -31,7 +31,7 @@
             </li>
         </ul>
     </div>
-    <!-- RIGHT SIDEBAR END -->
+    <!-- AVAILABLE WIDGETS LIST END -->
     <div
         ng-if="active || pinnedWidget"
         ng-class="{
