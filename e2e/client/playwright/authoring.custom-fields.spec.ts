@@ -3,7 +3,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-async function expectFieldToBeVisibleInAuthoring(page, field) {
+async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
