@@ -43,7 +43,7 @@ export class ContentProfileSettings {
         await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
     }
 
-    async addFieldToContentProfile(
+    async addFieldsToContentProfile(
         contentProfile: string,
         fields: Array<{tabName: string; fieldId: string}>,
     ): Promise<void> {
