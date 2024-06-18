@@ -101,7 +101,7 @@ export class FileInput extends React.Component<any, any> {
                             field={field}
                             value={get(val, 'name')}
                             readOnly={true}
-                            paddingRight60={true}
+                            paddingInlineEnd60
                             autoFocus
                             tabIndex={0}
                             multiLine={false}

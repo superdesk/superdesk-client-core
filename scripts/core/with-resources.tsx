@@ -1,20 +1,33 @@
-import {groupBy} from 'lodash';
-import {IBaseRestApiResponse, ILiveResourcesProps, IResourceChange, IRestApiResponse} from 'superdesk-api';
+import React from 'react';
+import {groupBy, keyBy, omit} from 'lodash';
+import {
+    IBaseRestApiResponse,
+    ILiveResourcesProps,
+    IResourceChange,
+    IRestApiResponse,
+    ISuperdeskQuery,
+} from 'superdesk-api';
 import {fetchChangedResources} from './helpers/CrudManager';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
+import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
-export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesProps, IState> {
+/**
+ * Doesn't work with elastic search endpoints, only with mongo ones.
+ */
+class WithLiveResourcesComponent
+    extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
     private updatingRequestInProgress: boolean;
 
-    constructor(props: ILiveResourcesProps) {
+    constructor(props: ILiveResourcesProps & {onInitialized(): void}) {
         super(props);
 
         this.state = {};
@@ -77,21 +90,41 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
         );
     }
 
-    fetchItems(): void {
+    fetchItems(): Promise<void> {
         const {resources} = this.props;
 
         function toPair(resource: string, res: unknown): [string, unknown] {
             return [resource, res];
         }
 
-        Promise.all(
+        return Promise.all(
             resources.map(({resource, ids}) => {
-                return this.asyncHelpers.httpRequestJsonLocal({
-                    method: 'GET',
-                    path: ids != null
-                        ? `/${resource}?where=${JSON.stringify({_id: {$in: ids}})}`
-                        : `/${resource}`,
-                }).then((res) => toPair(resource, res));
+                const query: ISuperdeskQuery = {
+                    filter: {
+                        $and: [
+                            {_id: {$in: ids}},
+                        ],
+                    },
+                    sort: [{_updated: 'asc'}],
+                    page: 1,
+                    max_results: 200,
+                };
+
+                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
+                    prepareSuperdeskQuery(`/${resource}`, query),
+                ).then((res) => {
+                    const itemsById = keyBy(res._items, (item) => item._id);
+
+                    return toPair(
+                        resource,
+
+                        /**
+                         * Fix ordering: `query` sorts the result by `_updated`
+                         * while we need it sorted exactly in the same order as `ids` were provided
+                         */
+                        {...res, _items: ids.map((id) => itemsById[id])},
+                    );
+                });
             }),
         ).then((pairs) => {
             var data = {};
@@ -118,13 +151,19 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
 
         Promise.all(
             Object.keys(changesByResource).map((resource) => {
-                return fetchChangedResources(
+                return fetchChangedResources<IBaseRestApiResponse>(
                     resource,
                     changesByResource[resource],
                     state.data[resource]._items,
                     new Set(),
                     this.abortController.signal,
-                ).then((res: Array<IBaseRestApiResponse>) => {
+                ).then((res) => {
+                    if (res === 'requires-refetching-all') {
+                        this.fetchItems();
+
+                        return Promise.reject('will-refetch-all');
+                    }
+
                     const currentItemsResponse = state.data[resource];
                     const diff: number = currentItemsResponse._items.length - res.length;
 
@@ -150,11 +189,17 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
             this.setState({data: {...state.data, ...updates}});
 
             this.updatingRequestInProgress = false;
+        }).catch((err) => {
+            if (err !== 'will-refetch-all') {
+                throw err;
+            }
         });
     }
 
     componentDidMount() {
-        this.fetchItems();
+        this.fetchItems().then(() => {
+            this.props.onInitialized();
+        });
     }
 
     componentWillUnmount() {
@@ -171,5 +216,40 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
         } else {
             return this.props.children(this.props.resources.map(({resource}) => state.data[resource]));
         }
+    }
+}
+
+export class WithLiveResources
+    extends React.PureComponent<ILiveResourcesProps, {loading: boolean}> {
+    private smoothLoaderRef: SmoothLoaderForKey;
+
+    constructor(props: ILiveResourcesProps) {
+        super(props);
+
+        this.setLoaded = this.setLoaded.bind(this);
+    }
+
+    setLoaded() {
+        this.smoothLoaderRef.setAsLoaded();
+    }
+
+    render() {
+        const key = JSON.stringify(omit(this.props, 'children'));
+
+        return (
+            <div>
+                <SmoothLoaderForKey
+                    key_={key}
+                    ref={(ref) => {
+                        this.smoothLoaderRef = ref;
+                    }}
+                >
+                    <WithLiveResourcesComponent
+                        {...this.props}
+                        onInitialized={this.setLoaded}
+                    />
+                </SmoothLoaderForKey>
+            </div>
+        );
     }
 }

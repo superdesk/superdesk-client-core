@@ -3,7 +3,7 @@ import {FormFieldType} from './interfaces/form';
 
 export function generateFilterForServer(type: FormFieldType, value: any): any {
     switch (type) {
-    case FormFieldType.textSingleLine:
+    case FormFieldType.plainText:
         return {
             $regex: value,
             $options: 'i',
@@ -16,6 +16,9 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.select:
+    case FormFieldType.selectMultiple:
+    case FormFieldType.number:
+    case FormFieldType.duration:
         return value;
 
     case FormFieldType.textEditor3:

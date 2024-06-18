@@ -230,7 +230,9 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
         if (this.timeline.current != null) {
             const timelineStyle = window.getComputedStyle(this.timeline.current);
-            const timelinePadding = parseInt(timelineStyle.paddingLeft, 10) + parseInt(timelineStyle.paddingRight, 10);
+            const timelinePadding =
+                parseInt(timelineStyle.paddingInlineStart, 10)
+                + parseInt(timelineStyle.paddingInlineEnd, 10);
 
             timelineWidth = this.timeline.current.offsetWidth - timelinePadding;
         }
@@ -272,7 +274,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     </div>
                     <div
                         className={`${getClass('controlbars__wrapper-out')}`}
-                        style={{left: left, right: right}}
+                        style={{left: left, insetInlineEnd: right}}
                     >
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--left')}`}

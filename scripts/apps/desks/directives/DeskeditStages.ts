@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {arrayMove} from 'core/helpers/utils';
+import {arrayMove} from '@superdesk/common';
 
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
 export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {

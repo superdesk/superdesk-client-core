@@ -7,7 +7,7 @@ import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
@@ -332,10 +332,24 @@ export function UploadController(
             });
 
             if (uploadOfDisallowedFileTypesAttempted) {
-                const message = gettext('Only the following files are allowed: ')
-                    + ($scope.allowPicture ? gettext('image') : '')
-                    + ($scope.allowVideo ? ', ' + gettext('video') : '')
-                    + ($scope.allowAudio ? ', ' + gettext('audio') : '');
+                const allowedTypes = [];
+
+                if ($scope.allowPicture) {
+                    allowedTypes.push(gettext('image'));
+                }
+
+                if ($scope.allowVideo) {
+                    allowedTypes.push(gettext('video'));
+                }
+
+                if ($scope.allowAudio) {
+                    allowedTypes.push(gettext('audio'));
+                }
+
+                const message = gettext(
+                    'Only the following files are allowed: {{fileTypes}}',
+                    {fileTypes: allowedTypes.join(', ')},
+                );
 
                 notify.error(message);
             }

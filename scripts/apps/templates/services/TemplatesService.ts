@@ -88,7 +88,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         if (templateName) {
-            criteria.template_name = {$regex: templateName, $options: '-i'};
+            criteria.template_name = {$regex: templateName, $options: 'i'};
         }
 
         return $q.when(criteria)
@@ -112,45 +112,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
         if (desk) {
             criteria['$or'] = [{template_desks: {$in: [desk]}}];
-        }
-
-        if (!_.isEmpty(criteria)) {
-            params.where = JSON.stringify({
-                $and: [criteria],
-            });
-        }
-
-        return api.query('content_templates', params);
-    };
-
-    this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
-        var params: any = {
-            sort: 'template_name',
-        };
-
-        var criteria: any = {};
-
-        if (!user) {
-            return $q.when();
-        }
-
-        var deskCriteria: any = [
-            {template_desks: {$exists: false}},
-            {template_desks: []},
-        ];
-
-        if (desk) {
-            deskCriteria.push({template_desks: {$in: [desk]}});
-        }
-
-        criteria.$or = [{$or: deskCriteria}, {user: user}];
-
-        if (type !== undefined) {
-            criteria.template_type = type;
-        }
-
-        if (templateName) {
-            criteria.template_name = {$regex: templateName, $options: '-i'};
         }
 
         if (!_.isEmpty(criteria)) {

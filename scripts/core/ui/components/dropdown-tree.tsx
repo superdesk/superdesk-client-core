@@ -31,9 +31,9 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
 
         if (isGroup(item)) {
             return (
-                <div style={{paddingLeft: (20 * level + 'px')}}>
+                <div style={{paddingInlineStart: (20 * level + 'px')}}>
                     {typeof item.render === 'function' ? item.render() : null}
-                    <div style={{paddingLeft: (20 * level + 'px')}}>
+                    <div style={{paddingInlineStart: (20 * level + 'px')}}>
                         {
                             item.items.map((_item, i) => (
                                 this.renderGroupRecursive(_item, level + 1, i)
@@ -84,8 +84,8 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             style={{
                                 position: 'absolute',
                                 zIndex: 1,
-                                top: '100%',
-                                right: 0,
+                                insetBlockStart: '100%',
+                                insetInlineEnd: 0,
                             }}
                         >
                             <div

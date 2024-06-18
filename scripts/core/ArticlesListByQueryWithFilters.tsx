@@ -228,7 +228,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         };
 
         const sortFilterToolbar = (
-            <ResizeObserverComponent>
+            <ResizeObserverComponent position="relative">
                 {(dimensions) => (
                     <SubNav zIndex={4}>
                         {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
@@ -263,8 +263,6 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         },
                     };
 
-                    const elasticQuery = toElasticQuery(queryForSpecificItems);
-
                     return httpRequestJsonLocal<IRestApiResponse<Pick<IArticle, '_id' | 'state' | '_current_version'>>>(
                         {
                             method: 'GET',
@@ -273,7 +271,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                 aggregations: 0,
                                 es_highlight: 1,
                                 projections: JSON.stringify(['_id', 'state', '_current_version']),
-                                source: JSON.stringify(elasticQuery),
+                                ...toElasticQuery(queryForSpecificItems),
                             },
                         },
                     ).then((res) => {

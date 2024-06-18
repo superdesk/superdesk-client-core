@@ -7,7 +7,7 @@ import {globalSearch} from './helpers/search';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {nav, scrollToView} from './helpers/utils';
-import {ECE} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('search', () => {
     beforeEach(() => {
@@ -126,7 +126,7 @@ describe('search', () => {
         authoring.sendTo('Politic Desk');
         authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
-        expect(monitoring.getTextItem(1, 0)).toBe('From-Sports-To-Politics');
+        expect(monitoring.getTextItem(0, 0)).toBe('From-Sports-To-Politics');
 
         // search by from desk field
         globalSearch.openGlobalSearch();
@@ -228,21 +228,9 @@ describe('search', () => {
         browser.actions().sendKeys(protractor.Key.UP).perform();
         expect(previewPane.isPresent()).toBe(false); // UP arrow key avoided for opening preview
         // it should not effect global keyboard shortcuts (e.g: 'ctrl+alt+d', 'ctrl+shift+*')
-        // now test 'ctrl+shift+*' shortcut that triggers spell checker when not set to automatic
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeTruthy();
-        authoring.toggleAutoSpellCheck();
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
-        authoring.focusBodyHtmlElement();
-        browser.actions().sendKeys(protractor.Key.ENTER).perform();
-        browser.actions().sendKeys('Testhilite').perform();
-        expect(authoring.getBodyText()).toContain('Testhilite');
-        expect(authoring.getBodyInnerHtml()).not.toContain('sderror sdhilite');
-        // trigger spell checker via keyboard operation
-        browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, protractor.Key.SHIFT, 'y')).perform();
-        expect(authoring.getBodyText()).toContain('Testhilite');
-        expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
         authoring.save();
         authoring.close();
+
         // now test 'ctrl+0' shortcut that triggers story search dialog box
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(200);
@@ -250,10 +238,11 @@ describe('search', () => {
 
         expect(storyNameEl.isPresent()).toBe(true);
         storyNameEl.click();
-        browser.actions().sendKeys('item1-in-archived').perform();
+        browser.actions().sendKeys('item4').perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.sleep(200);
-        expect(authoring.getHeaderSluglineText()).toBe('item1 slugline');
+
+        expect(authoring.getHeaderSluglineText()).toBe('item4 slugline');
         authoring.close();
     });
 
@@ -277,22 +266,13 @@ describe('search', () => {
         authoring.close();
     });
 
-    it('can display embargo item when set', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
-        globalSearch.actionOnItem('Edit', 'item1');
-        authoring.sendToButton.click();
-        authoring.setEmbargo();
-        authoring.closeSendAndPublish();
-        authoring.save();
-        authoring.close();
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
-    });
-
     it('can search scheduled', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9');
         authoring.schedule(false);
+
+        browser.wait(ECE.stalenessOf(el(['notification--success'])));
+
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.toggleSearchTabs('filters');

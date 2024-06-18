@@ -31,7 +31,6 @@ describe('spellcheck', () => {
         Object.assign(appConfig, testConfig);
     });
 
-    beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.core.preferences'));

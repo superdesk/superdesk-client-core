@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import {ContentBlock, EditorState} from 'draft-js';
-import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
+import {IAcceptSuggestion, SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
 import {logger} from 'core/services/logger';
@@ -13,6 +13,7 @@ export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckW
 export function getSpellcheckWarningsByBlock(
     spellchecker: ISpellchecker,
     editorState: EditorState,
+    abortSignal: AbortSignal,
 ): Promise<ISpellcheckWarningsByBlock> {
     const text = editorState.getCurrentContent().getPlainText();
 
@@ -35,7 +36,7 @@ export function getSpellcheckWarningsByBlock(
         lastOffset += blockLength + lineBreak;
     });
 
-    return spellchecker.check(text).then((warnings) => {
+    return spellchecker.check(text, abortSignal).then((warnings) => {
         let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
 
         warnings.forEach((warning) => {
@@ -85,6 +86,7 @@ interface IState {
 export function getSpellcheckingDecorator(
     language: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock,
+    acceptSuggestion: IAcceptSuggestion,
     {disableContextMenu = false} = {},
 ) {
     const spellchecker = getSpellchecker(language);
@@ -146,10 +148,7 @@ export function getSpellcheckingDecorator(
                     return <span>{this.props.children}</span>;
                 }
 
-                // props.start isn't available in the latest release yet
-                // it's fixed in https://github.com/facebook/draft-js/commit/8000486ed6890d1f69100379d954a62ac8a4eb08
-                const {start} = this.props.children[0].props;
-                const {decoratedText} = this.props;
+                const {decoratedText, start} = this.props;
 
                 const warningForDecoration = warningsForBlock.find((warning) =>
                     warning.startOffset === start && warning.text === decoratedText);
@@ -205,6 +204,7 @@ export function getSpellcheckingDecorator(
                         }}
                         ref={(el) => this.wordTypoElement = el}
                         data-test-id="spellchecker-warning"
+                        data-test-value={warningForDecoration.text}
                     >
                         {menuShowing ?
                             ReactDOM.createPortal(
@@ -212,6 +212,7 @@ export function getSpellcheckingDecorator(
                                     targetElement={this.wordTypoElement}
                                     warning={this.state.warning}
                                     spellchecker={spellchecker}
+                                    acceptSuggestion={acceptSuggestion}
                                 />,
                                 getElementForPortal(),
                             )

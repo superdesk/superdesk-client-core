@@ -1,28 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
 import {EditorState} from 'draft-js';
+import {Editor3InitializeSpellchecker} from './Editor3InitializeSpellchecker';
 
 export class Editor3Base extends React.Component<any, any> {
-    static propTypes: any;
     static defaultProps: any;
+
+    componentDidCatch(error: Error) {
+        if (error.message.includes('Node.removeChild')) {
+            this.forceUpdate();
+        }
+    }
 
     render() {
         return (
-            <MultipleHighlights {...this.props}>
-                <Editor3Component />
-            </MultipleHighlights>
+            <Editor3InitializeSpellchecker spellchecking={this.props.spellchecking} dispatch={this.props.dispatch}>
+                <MultipleHighlights {...this.props}>
+                    <Editor3Component />
+                </MultipleHighlights>
+            </Editor3InitializeSpellchecker>
         );
     }
 }
-
-Editor3Base.propTypes = Editor3Component.propTypes = {
-    onChange: PropTypes.func,
-};
 
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
@@ -40,10 +43,16 @@ const mapStateToProps = (state) => ({
     limit: state.limitConfig?.chars,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
     onChange: (editorState: EditorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
-    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
+    showPopup: (type, data) => dispatch(actions.showPopup(type, data)),
+    dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(
+        transfer,
+        mediaType,
+        null,
+        ownProps.canAddArticleEmbed,
+    )),
     unlock: () => dispatch(actions.setLocked(false)),
     dispatch: (x) => dispatch(x),
     onCreateAddSuggestion: (chars) => dispatch(actions.createAddSuggestion(chars)),

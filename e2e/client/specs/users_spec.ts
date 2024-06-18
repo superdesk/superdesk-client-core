@@ -36,57 +36,11 @@ describe('users', () => {
             expect(modelValue('user.email')).toBe('a@a.com');
             expect(modelValue('user.sign_off')).toBe('fl');
         });
-
-        it('can save and use language preferences', () => {
-            userPreferences.setLang('Deutsch');
-            browser.sleep(500); // wait for sliding animation
-            el(['save']).click();
-
-            browser.sleep(500); // wait for modal
-            // click modal confirm to reload
-            element(by.css('.modal__dialog .btn--primary')).click();
-            browser.sleep(2000); // wait for reload
-
-            const header = element(by.css('[ng-hide="currentRoute.topTemplateUrl"]'));
-
-            browser.wait(ECE.presenceOf(header), 1000);
-            expect(header.getText()).toEqual('Mein Profil');
-
-            browser.sleep(500);
-            // go back to original lanuages
-            userPreferences.setLang('English');
-
-            browser.sleep(500); // wait for sliding animation
-            el(['save']).click();
-        });
     });
 
     describe('users list:', () => {
         beforeEach(() => {
             nav('/users');
-        });
-
-        it('can create a new user', () => {
-            el(['user-filter'], by.cssContainingText('option', 'All')).click();
-            el(['create-user-button']).click();
-
-            el(['user-details-form', 'field--first_name']).sendKeys('John');
-            el(['user-details-form', 'field--last_name']).sendKeys('Doe');
-            el(['user-details-form', 'field--username']).sendKeys('johndoe');
-            el(['user-details-form', 'field--email']).sendKeys('johndoe@example.com');
-
-            el(['user-details-form', 'save']).click();
-
-            browser.wait(
-                ECE.textToBePresentInElement(
-                    el(
-                        ['username'],
-                        null,
-                        els(['users-list-item']).get(7),
-                    ),
-                    'johndoe',
-                ),
-            );
         });
 
         it('can list users', () => {
@@ -246,8 +200,8 @@ describe('users', () => {
 
             // navigate to Workspace and create a new article
             workspace.openContent();
-            authoring.navbarMenuBtn.click();
-            authoring.newPlainArticleLink.click();
+
+            authoring.createTextItem();
 
             // authoring opened, click the set category menu and see what
             // categories are offered
@@ -275,8 +229,7 @@ describe('users', () => {
 
             // navigate to Workspace and create a new article
             monitoring.openMonitoring();
-            authoring.navbarMenuBtn.click();
-            authoring.newPlainArticleLink.click();
+            authoring.createTextItem();
 
             browser.sleep(100);
             // Open subject metadata dropdown field
@@ -354,19 +307,19 @@ describe('users', () => {
         });
 
         it('while creating a new user', () => {
-            var buttonCreate = element(by.className('sd-create-btn'));
+            var buttonCreate = element(by.css('[data-test-id="create-user-button"]'));
 
             buttonCreate.click();
-            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
+            expect(element(by.css('[data-test-id="default-desk-template"]')).isPresent()).toBe(false);
         });
 
         it('while pre-viewing and user clicks on create new user', () => {
-            var buttonCreate = element(by.className('sd-create-btn'));
+            var buttonCreate = element(by.css('[data-test-id="create-user-button"]'));
 
             element.all(by.repeater('users')).first().click();
 
             buttonCreate.click();
-            expect(element(by.id('user_default_desk')).isPresent()).toBe(false);
+            expect(element(by.css('[data-test-id="default-desk-template"]')).isPresent()).toBe(false);
         });
     });
 

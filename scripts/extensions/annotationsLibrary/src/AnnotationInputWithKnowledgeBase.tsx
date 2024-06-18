@@ -6,12 +6,15 @@ import {
     ICrudManager,
     IPropsAnnotationInputComponent,
     ISuperdesk,
+    ISortOption,
 } from 'superdesk-api';
 import {getFields} from './GetFields';
 
 interface IPropsConnected {
     conceptItems: ICrudManager<IKnowledgeBaseItem>;
 }
+
+const defaultSortOption: ISortOption = {field: 'name', direction: 'ascending'};
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
     class AnnotationInputWithKnowledgeBaseComponent
@@ -23,7 +26,7 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
 
             this.props.conceptItems.read(
                 1,
-                {field: 'name', direction: 'ascending'},
+                defaultSortOption,
                 {name: generateFilterForServer(nameField.type, this.props.annotationText)},
             );
         }
@@ -52,5 +55,6 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
         AnnotationInputWithKnowledgeBaseComponent,
         'conceptItems',
         'concept_items',
+        defaultSortOption,
     );
 }

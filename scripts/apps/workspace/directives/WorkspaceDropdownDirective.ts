@@ -78,6 +78,7 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                         }
                     })
                     .then(() => {
+                        scope.initialized = true;
                         deskNotifications.reload();
                     });
             }

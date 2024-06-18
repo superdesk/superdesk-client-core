@@ -1,4 +1,4 @@
-import {SelectionState, ContentBlock} from 'draft-js';
+import {SelectionState, ContentBlock, ContentState} from 'draft-js';
 
 export interface IPropsDecoratorChild {
     block: ContentBlock;
@@ -14,7 +14,13 @@ export interface IPropsDecoratorChild {
 }
 
 export interface IPropsDraftDecorator {
-    decoratedText: string;
-    offsetKey: string;
+    blockKey: string;
     children: Array<React.ReactElement<IPropsDecoratorChild>>;
+    contentState: ContentState;
+    decoratedText: string;
+    dir: any;
+    end: number;
+    entityKey: any;
+    offsetKey: string;
+    start: number;
 }

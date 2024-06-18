@@ -1,14 +1,20 @@
+import React from 'react';
 import {flatMap, noop} from 'lodash';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {IArticle, IContentProfile} from 'superdesk-api';
+import {IArticle, IAuthoringWidgetLayoutProps, IContentProfile} from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
+import {WidgetHeaderComponent} from './WidgetHeaderComponent';
+import {WidgetLayoutComponent} from './WidgetLayoutComponent';
 
 const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
 let PINNED_WIDGET_RESIZED = false;
+
+export let IS_WIDGET_PINNED = false;
+export const SIDE_WIDGET_WIDTH = 330;
 
 interface IWidget {
     label?: string;
@@ -92,10 +98,46 @@ function AuthoringWidgetsProvider() {
     };
 }
 
-export const widgetReactIntegration = {
+export interface IWidgetIntegrationComponentProps {
+    widgetName: string;
+    pinned: boolean;
+    widget: any;
+    editMode: boolean;
+    pinWidget(widget: any): void;
+    closeWidget(): void;
+
+    /**
+     * Only available in authoring-react.
+     * If used, widgetName will not be shown.
+     * Required for displaying multiple sections for the same widget.
+     */
+    customContent?: JSX.Element;
+}
+
+/**
+ * This was initially written for {@link AuthoringWidgetHeading} to work.
+ * Wrapper components for header/layout were later added in order to be able to use
+ * react-based layout components from ui-framework while maintaining existing markup
+ * and styles in the angular based authoring.
+ */
+interface IWidgetIntegration {
+    pinWidget(widget: any): void;
+    getActiveWidget(): any;
+    closeActiveWidget(): any;
+    getPinnedWidget(): any;
+    WidgetHeaderComponent: React.ComponentType<IWidgetIntegrationComponentProps>;
+    WidgetLayoutComponent: React.ComponentType<IAuthoringWidgetLayoutProps>;
+    disableWidgetPinning: boolean;
+}
+
+export const widgetReactIntegration: IWidgetIntegration = {
     pinWidget: noop as any,
     getActiveWidget: noop as any,
     getPinnedWidget: noop as any,
+    closeActiveWidget: noop,
+    WidgetHeaderComponent: () => null,
+    WidgetLayoutComponent: () => null,
+    disableWidgetPinning: false,
 };
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
@@ -118,7 +160,13 @@ function WidgetsManagerCtrl(
     preferencesService,
     $rootScope,
 ) {
-    $scope.active = null;
+    const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+    const localStorageWidgetState = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
+    const widgetValue = localStorageWidget == null
+        ? null
+        : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
+
+    $scope.active = widgetValue;
 
     preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
         this.widgetFromPreferences = preferences,
@@ -267,13 +315,13 @@ function WidgetsManagerCtrl(
         }
 
         if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
-            $rootScope.$broadcast('resize:monitoring', -330);
+            $rootScope.$broadcast('resize:monitoring', -SIDE_WIDGET_WIDTH);
 
             PINNED_WIDGET_RESIZED = true;
         }
 
         if (!widget || $scope.pinnedWidget === widget) {
-            $rootScope.$broadcast('resize:monitoring', 330);
+            $rootScope.$broadcast('resize:monitoring', SIDE_WIDGET_WIDTH);
 
             angular.element('body').removeClass('main-section--pinned-tabs');
 
@@ -294,10 +342,17 @@ function WidgetsManagerCtrl(
 
             this.updateUserPreferences(widget);
         }
+
+        IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
+    widgetReactIntegration.getPinnedWidget =
+        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+
+    widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
+    widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
 
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];
@@ -347,6 +402,10 @@ function WidgetsManagerCtrl(
             $scope.autosave();
         });
     };
+
+    if (widgetValue?.component != null && localStorageWidgetState?.pinned === true) {
+        $scope.pinWidget(widgetValue);
+    }
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();

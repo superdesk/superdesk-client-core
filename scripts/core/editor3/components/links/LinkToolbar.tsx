@@ -1,13 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
-
 import * as actions from '../../actions';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
 import {gettext} from 'core/utils';
+import {IEditorStore} from 'core/editor3/store';
+import {noop} from 'lodash';
 
-export class LinkToolbarComponent extends React.Component<any, any> {
+interface IProps extends Partial<IEditorStore> {
+    removeLink(): void;
+    removeLinkSuggestion?(): void;
+    onEdit(link: any): void;
+}
+
+export class LinkToolbarComponent extends React.Component<IProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -22,7 +28,7 @@ export class LinkToolbarComponent extends React.Component<any, any> {
      * @name LinkToolbar#onSubmit
      * @description Callback when delete link.
      */
-    onRemove(linkType) {
+    onRemove() {
         const {suggestingMode, removeLinkSuggestion, removeLink} = this.props;
 
         suggestingMode ? removeLinkSuggestion() : removeLink();
@@ -57,25 +63,24 @@ export class LinkToolbarComponent extends React.Component<any, any> {
     }
 }
 
-LinkToolbarComponent.propTypes = {
-    editorState: PropTypes.object,
-    suggestingMode: PropTypes.bool,
-    removeLink: PropTypes.func,
-    removeLinkSuggestion: PropTypes.func,
-    onEdit: PropTypes.func,
-};
-
-const mapStateToProps = (state) => ({
-    editorState: state.editorState,
-    suggestingMode: state.suggestingMode,
-});
+const mapStateToProps = ({suggestingMode}: IEditorStore['suggestingMode']) => ({suggestingMode});
 
 const mapDispatchToProps = (dispatch) => ({
     removeLink: () => dispatch(actions.removeLink()),
     removeLinkSuggestion: () => dispatch(actions.removeLinkSuggestion()),
 });
 
+const mapDispatchToPropsTableCell = (dispatch) => ({
+    removeLink: () => dispatch(actions.removeLinkInTableCell()),
+    removeLinkSuggestion: () => noop, // not supported for tables
+});
+
 export const LinkToolbar = connect(
     mapStateToProps,
     mapDispatchToProps,
+)(LinkToolbarComponent);
+
+export const LinkToolbarForTableCell = connect(
+    mapStateToProps,
+    mapDispatchToPropsTableCell,
 )(LinkToolbarComponent);

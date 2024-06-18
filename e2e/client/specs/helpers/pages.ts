@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, $, $$, promise as wdpromise} from 'protractor';

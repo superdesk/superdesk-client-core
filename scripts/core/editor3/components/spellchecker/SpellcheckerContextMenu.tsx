@@ -7,37 +7,56 @@ import {
     ISpellchecker,
     ISpellcheckerSuggestion,
 } from './interfaces';
-import {reloadSpellcheckerWarnings} from '../../actions';
 import {gettext} from 'core/utils';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {IReplaceWordData} from 'core/editor3/reducers/spellchecker';
+
+export type IAcceptSuggestion = 'store-based' | ((replaceWordData: IReplaceWordData) => void);
 
 interface IProps {
     warning: ISpellcheckWarning;
     targetElement: any;
     spellchecker: ISpellchecker;
     dispatch: any;
+    acceptSuggestion: IAcceptSuggestion;
 }
 
 export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     stickyElementTracker: any;
     dropdownElement: any;
 
+    private reloadSpellcheckerAbortController: AbortController;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.reloadSpellcheckerAbortController = new AbortController();
+    }
+
     componentDidMount() {
         this.stickyElementTracker = new StickElementsWithTracking(this.props.targetElement, this.dropdownElement);
     }
     componentWillUnmount() {
         this.stickyElementTracker.destroy();
+        this.reloadSpellcheckerAbortController.abort();
     }
 
     onSuggestionClick(suggestion: ISpellcheckerSuggestion) {
-        this.props.dispatch(
-            actions.replaceWord({
-                word: {
-                    text: this.props.warning.text,
-                    offset: this.props.warning.startOffset,
-                },
-                newWord: suggestion.text,
-            }),
-        );
+        const replaceWordData: IReplaceWordData = {
+            word: {
+                text: this.props.warning.text,
+                offset: this.props.warning.startOffset,
+            },
+            newWord: suggestion.text,
+        };
+
+        if (this.props.acceptSuggestion === 'store-based') {
+            this.props.dispatch(
+                actions.replaceWord(replaceWordData),
+            );
+        } else {
+            this.props.acceptSuggestion(replaceWordData);
+        }
     }
 
     render() {
@@ -95,11 +114,14 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         return (
                                             <li key={i}>
                                                 <button
-                                                    onMouseDown={() => action.perform(this.props.warning).then(
-                                                        () => {
-                                                            this.props.dispatch(reloadSpellcheckerWarnings());
-                                                        },
-                                                    )}
+                                                    onMouseDown={() => {
+                                                        action.perform(this.props.warning).then(() => {
+                                                            dispatchInternalEvent(
+                                                                'editor3SpellcheckerActionWasExecuted',
+                                                                null,
+                                                            );
+                                                        });
+                                                    }}
                                                     data-test-id="spellchecker-menu--action"
                                                 >
                                                     {action.label}

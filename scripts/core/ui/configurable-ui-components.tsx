@@ -5,4 +5,5 @@ import {IConfigurableUiComponents} from 'superdesk-api';
 export const CC: IConfigurableUiComponents = {
     UserAvatar: null,
     AuthoringAttachmentsWidget: null,
+    AuthoringAttachmentsDiffView: null,
 };

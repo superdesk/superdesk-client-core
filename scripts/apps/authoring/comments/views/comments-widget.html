@@ -1,4 +1,4 @@
-<div ng-controller="CommentsWidgetCtrl" class="sd-wrap-helper">
+<div ng-controller="CommentsWidgetCtrl" class="sd-wrap-helper" data-test-id="comments-widget">
     <ul class="widget-content__main boxed-list sd-padding-all--2">
         <li ng-repeat="comment in comments" class="boxed-list__item boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': comment._id === active}">
             <div class="boxed-list__item-media">
@@ -32,10 +32,28 @@
     <div class="widget-content__footer add-comment">
         <form name="commentsForm">
             <div sd-user-mention></div>
-            <textarea class="new-comment" sd-auto-height ng-model="text" mentio id="mentio-users" ng-keyup="saveOnEnter($event)"></textarea>
+            <textarea
+                class="new-comment"
+                sd-auto-height
+                ng-model="text"
+                mentio
+                id="mentio-users"
+                ng-keyup="saveOnEnter($event)"
+                data-test-id="new-comment-input"
+            ></textarea>
             <div class="actions">
                 <div class="pull-left post"><input type="checkbox" ng-model="saveEnterFlag"> <span translate>Post on 'Enter'</span></div>
-                <button id="comment-post" class="btn btn--primary pull-right" ng-click="save()" ng-show="!saveEnterFlag" ng-disabled='!text' translate>Post</button>
+                <button
+                    id="comment-post"
+                    class="btn btn--primary pull-right"
+                    ng-click="save()"
+                    ng-show="!saveEnterFlag"
+                    ng-disabled='!text'
+                    translate
+                    data-test-id="new-comment-submit"
+                >
+                    Post
+                </button>
                 <button class="btn pull-right" ng-click="cancel()" ng-show="!saveEnterFlag" translate>Cancel</button>
             </div>
         </form>

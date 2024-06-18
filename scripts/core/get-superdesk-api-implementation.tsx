@@ -7,9 +7,19 @@ import {
     IEvents,
     IStage,
     IUser,
+    IBaseRestApiResponse,
+    IPatchResponseExtraFields,
+    IOpenSideWidget,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
-import {getGenericHttpEntityListPageComponent} from './ui/components/ListPage/generic-list-page';
+import {
+    gettext,
+    gettextPlural,
+    stripBaseRestApiFields,
+    stripHtmlTags,
+    stripLockingFields,
+    getProjectedFieldsArticle,
+    getArticleLabel,
+} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -32,23 +42,19 @@ import {
     numberToString,
     notNullOrUndefined,
     nameof,
+    isNullOrUndefined,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
-import {downloadBlob} from './helpers/utils';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
-import {memoize} from 'lodash';
-import {Modal} from './ui/components/Modal/Modal';
-import {ModalHeader} from './ui/components/Modal/ModalHeader';
-import {ModalBody} from './ui/components/Modal/ModalBody';
-import {ModalFooter} from './ui/components/Modal/ModalFooter';
+import {memoize, omit} from 'lodash';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
-import {showModal} from './services/modalService';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
+import {MoreActionsButton} from './ui/components/MoreActionsButton';
 import {
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
@@ -63,9 +69,9 @@ import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
-import {Spacer} from './ui/components/Spacer';
-import {appConfig} from 'appConfig';
-import {httpRequestJsonLocal} from './helpers/network';
+import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -80,23 +86,69 @@ import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
-import {WidgetHeading} from 'apps/dashboard/widget-heading';
+import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
+import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
+import {patchArticle} from 'api/article-patch';
 import {connectCrudManagerHttp} from './helpers/crud-manager-http';
 import {GenericArrayListPageComponent} from './helpers/generic-array-list-page-component';
+import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {Center} from './ui/components/Center';
+import {InputLabel} from './ui/components/input-label';
+import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-from-query';
+import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
+import {DateTime} from './ui/components/DateTime';
+import {AuthoringReact} from 'apps/authoring-react/authoring-react';
+import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilities/compute-editor3-output';
+import {getContentStateFromHtml} from './editor3/html/from-html';
+import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/inline-comments';
+import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/comments';
+import {
+    isLockedInOtherSession,
+    isLockedInCurrentSession,
+    LockInfoHttp,
+    LockInfo,
+} from 'apps/authoring-react/subcomponents/lock-info-generic';
+import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
+import {showPopup} from './ui/components/popupNew';
+import {Card} from './ui/components/Card';
+import {getTextColor} from './helpers/utils';
+import {showModal} from '@superdesk/common';
+import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
+import {toElasticQuery} from './query-formatting';
+import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
+import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
-export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
+export function openArticle(
+    id: IArticle['_id'],
+    mode: 'view' | 'edit' | 'edit-new-window',
+    openSideWidget?: IOpenSideWidget,
+): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
 
-    if (document.querySelector('[sd-monitoring-view]') == null) {
-        // redirect if outside monitoring view
-        setUrlPage('/workspace/monitoring');
+    if (openSideWidget?.id != null) {
+        localStorage.setItem('SIDE_WIDGET', JSON.stringify(openSideWidget));
     }
 
-    authoringWorkspace.edit({_id: id}, mode);
+    if (mode === 'edit-new-window') {
+        authoringWorkspace.popupFromId(id, 'view');
+    } else {
+        const {currentPathStartsWith} = sdApi.navigation;
+
+        if (
+            currentPathStartsWith(['workspace']) !== true
+            && currentPathStartsWith(['search']) !== true
+        ) {
+            setUrlPage('/workspace/monitoring');
+        }
+
+        authoringWorkspace.edit({_id: id}, mode);
+    }
 
     return Promise.resolve();
 }
@@ -164,12 +216,8 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export function isLockedInCurrentSession(article: IArticle): boolean {
+export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
-}
-
-export function isLockedInOtherSession(article: IArticle): boolean {
-    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
 export const formatDate = (date: Date | string) => (
@@ -177,6 +225,10 @@ export const formatDate = (date: Date | string) => (
         .tz(appConfig.default_timezone)
         .format(appConfig.view.dateformat)
 );
+
+export function dateToServerString(date: Date) {
+    return date.toISOString().slice(0, 19) + '+0000';
+}
 
 export function getRelativeOrAbsoluteDateTime(
     datetimeString: string,
@@ -193,6 +245,16 @@ export function getRelativeOrAbsoluteDateTime(
     return datetime
         .tz(appConfig.default_timezone)
         .format(format);
+}
+
+export function fixPatchRequest<T extends {}>(entity: T): T {
+    return stripLockingFields(stripBaseRestApiFields(entity)) as unknown as T;
+}
+
+export function fixPatchResponse<T extends IBaseRestApiResponse>(
+    entity: T & IPatchResponseExtraFields,
+): T {
+    return omit(entity, ['_status']) as unknown as T;
 }
 
 // imported from planning
@@ -219,9 +281,22 @@ export function getSuperdeskApiImplementation(
             stringToNumber,
             numberToString,
             notNullOrUndefined,
+            isNullOrUndefined,
             nameof: nameof,
+            stripBaseRestApiFields,
+            fixPatchRequest,
+            fixPatchResponse,
+            computeEditor3Output,
+            editor3ToOperationalFormat: editor3ToOperationalFormat,
+            getContentStateFromHtml: (html) => getContentStateFromHtml(html),
+            tryLocking,
+            tryUnlocking,
+            superdeskToElasticQuery: toElasticQuery,
+            getArticleLabel,
         },
         httpRequestJsonLocal,
+        httpRequestRawLocal,
+        httpRequestVoidLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
@@ -229,38 +304,15 @@ export function getSuperdeskApiImplementation(
                 isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
                 isLockedInOtherSession: sdApi.article.isLockedInOtherSession,
-                patch: (article, patch, dangerousOptions) => {
-                    const onPatchBeforeMiddlewares = Object.values(extensions)
-                        .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
-                        .filter((middleware) => middleware != null);
-
-                    return onPatchBeforeMiddlewares.reduce(
-                        (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
-                        Promise.resolve(patch),
-                    ).then((patchFinal) => {
-                        return dataApi.patchRaw<IArticle>(
-                            // distinction between handling published and non-published items
-                            // should be removed: SDESK-4687
-                            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
-                            article._id,
-                            article._etag,
-                            patchFinal,
-                        ).then((res) => {
-                            if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
-                                dispatchInternalEvent(
-                                    'dangerouslyOverwriteAuthoringData',
-                                    {...patch, _etag: res._etag, _id: res._id},
-                                );
-                            }
-                        });
-                    }).catch((err) => {
-                        if (err instanceof Error) {
-                            logger.error(err);
-                        }
-                    });
-                },
+                patch: patchArticle,
+                createNewWithData: sdApi.article.createNewWithData,
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
+                itemAction: (article) => sdApi.article.itemAction(article),
+                getProjectedFieldsArticle: getProjectedFieldsArticle,
+                getLabelNameResolver: getLabelNameResolver,
+                getSortedFields: getSortedFields,
+                getSortedFieldsFiltered: getSortedFieldsFiltered,
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
@@ -268,6 +320,7 @@ export function getSuperdeskApiImplementation(
                         .then((response) => response._items),
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
+                getDeskById: sdApi.desks.getDeskById,
             },
             contentProfile: {
                 get: (id) => {
@@ -289,8 +342,12 @@ export function getSuperdeskApiImplementation(
                 },
             },
             vocabulary: {
+                getAll: () => sdApi.vocabularies.getAll(),
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
-                getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
+                getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
+                getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
+                getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
+                isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
             },
             attachment: attachmentsApi,
             users: {
@@ -305,32 +362,52 @@ export function getSuperdeskApiImplementation(
                         .then((response) => response._items)
                 ),
             },
+            templates: {
+                getUserTemplates: sdApi.templates.getUserTemplates,
+            },
         },
         state: applicationState,
         instance: {
             config,
+            authoringReactViewEnabled,
         },
         ui: {
             article: {
                 view: (id: IArticle['_id']) => {
                     openArticle(id, 'view');
                 },
+                edit: (
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ) => {
+                    openArticle(id, 'edit', openSideWidget);
+                },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
+                },
+                applyFieldChangesToEditor: (
+                    itemId: IArticle['_id'],
+                    field: {key: string, value: valueof<IArticle>},
+                ) => {
+                    dispatchInternalEvent('dangerouslyOverwriteAuthoringField', {
+                        field,
+                        itemId,
+                    });
                 },
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);
                 },
                 prepareExternalImageForDroppingToEditor,
             },
+            showModal: (Component: React.ComponentType<{closeModal(): void}>, containerClass?: string) => {
+                return showModal(Component, containerClass);
+            },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string, title?: string) => new Promise((resolve) => {
-                modal.confirm(message, title ?? gettext('Cancel'))
-                    .then(() => resolve(true))
-                    .catch(() => resolve(false));
+            confirm: (message: string, title?: string) => showConfirmationPrompt({
+                title: title ?? gettext('Confirm'),
+                message,
             }),
             showIgnoreCancelSaveDialog,
-            showModal,
             notify: notify,
             framework: {
                 getLocaleForDatePicker,
@@ -341,6 +418,8 @@ export function getSuperdeskApiImplementation(
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
             connectCrudManagerHttp: connectCrudManagerHttp,
+            getVirtualListFromQuery: () => VirtualListFromQuery,
+            SelectFromEndpoint,
             ListItem,
             ListItemColumn,
             ListItemRow,
@@ -358,24 +437,35 @@ export function getSuperdeskApiImplementation(
             Alert,
             Figure,
             DropZone,
-            Modal,
-            ModalHeader,
-            ModalBody,
-            ModalFooter,
             Badge,
+            MoreActionsButton,
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,
             GroupLabel,
+            InputLabel,
             TopMenuDropdownButton,
             Icon,
             IconBig,
+            getAuthoringComponent: () => AuthoringReact,
+            getLockInfoHttpComponent: () => LockInfoHttp,
+            getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
+            Center,
             Spacer,
+            SpacerBlock,
+            SpacerInlineFlex,
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
             Editor3Html,
-            WidgetHeading,
+            AuthoringWidgetHeading,
+            AuthoringWidgetLayout,
+            DateTime,
+            Card,
+            showPopup,
+            authoring: {
+                PreviewFieldType,
+            },
         },
         forms: {
             FormFieldType,
@@ -384,6 +474,16 @@ export function getSuperdeskApiImplementation(
             isIFormGroup,
             isIFormField,
             getFormFieldPreviewComponent,
+        },
+        authoringGeneric: {
+            sideWidgets: {
+                inlineComments: getInlineCommentsWidgetGeneric(),
+                comments: (
+                    getComments,
+                    addComment,
+                    isAllowed,
+                ) => getCommentsWidgetGeneric(getComments, addComment, isAllowed),
+            },
         },
         localization: {
             gettext: (message, params) => gettext(message, params),
@@ -403,7 +503,7 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
-            hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
+            hasPrivilege: (privilege: string) => sdApi.user.hasPrivilege(privilege),
         },
         preferences: {
             get: (key) => {
@@ -429,7 +529,7 @@ export function getSuperdeskApiImplementation(
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
             getSessionId: () => session.sessionId,
-            getCurrentUserId: () => session.identity._id,
+            getCurrentUserId: () => sdApi.user.getCurrentUserId(),
         },
         browser: {
             location: {
@@ -444,18 +544,18 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
-            dateToServerString: (date: Date) => {
-                return date.toISOString().slice(0, 19) + '+0000';
-            },
+            dateToServerString,
             memoize: memoizeLocal,
             generatePatch,
             stripHtmlTags,
             getLinesCount,
-            downloadBlob,
             throttleAndCombineArray,
             querySelectorParent,
             arrayToTree,
             treeToArray,
+            isLockedInOtherSession,
+            isLockedInCurrentSession,
+            getTextColor,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

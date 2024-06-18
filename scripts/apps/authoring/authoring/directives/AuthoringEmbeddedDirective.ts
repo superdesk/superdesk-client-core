@@ -1,13 +1,21 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
-import {appConfig} from 'appConfig';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {canPrintPreview} from 'apps/search/helpers';
 
 AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(api, notify, $filter) {
     return {
-        templateUrl: 'scripts/apps/authoring/views/authoring.html',
+        template: authoringReactViewEnabled
+            ? (
+                '<div>' +
+                    '<sd-authoring-integration-wrapper data-action="action" data-item-id="item._id">' +
+                    '</sd-authoring-react>' +
+                '</div>'
+            )
+            : undefined,
+        templateUrl: authoringReactViewEnabled ? undefined : 'scripts/apps/authoring/views/authoring.html',
         scope: {
             item: '=',
             action: '=',

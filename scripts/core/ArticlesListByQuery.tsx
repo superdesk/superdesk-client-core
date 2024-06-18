@@ -46,14 +46,13 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
 
     loadItems(from, to): Promise<IRestApiResponse<any>> {
         const pageSize = to - from;
+        const page = from === 0 ? 1 : Math.ceil(from / pageSize);
 
         const withPagination = {
             ...this.props.query,
-            page: Math.floor(from / pageSize),
+            page: page,
             max_results: pageSize,
         };
-
-        const query = toElasticQuery(withPagination);
 
         return this.props.setLoading(true).then(() => {
             return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
@@ -63,7 +62,7 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                     aggregations: 0,
                     es_highlight: 1,
                     projections: JSON.stringify(ng.get('search').getProjectedFields()),
-                    source: JSON.stringify(query),
+                    ...toElasticQuery(withPagination),
                 },
             }).then((res) => {
                 return new Promise((resolve) => {

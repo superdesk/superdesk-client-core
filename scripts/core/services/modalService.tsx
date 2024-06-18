@@ -1,33 +1,101 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
-import Button from 'core/ui/components/Button';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
+import {showModal} from '@superdesk/common';
+import {Button, Modal} from 'superdesk-ui-framework/react';
 
-export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> => {
-    const el = document.createElement('div');
+function prepareAndPrint() {
+    document.body.classList.add('prepare-to-print');
 
-    document.body.appendChild(el);
+    const afterPrintFns: Array<() => void> = [
+        () => document.body.classList.remove('prepare-to-print'),
+    ];
 
-    const closeModal = () => {
-        ReactDOM.unmountComponentAtNode(el);
-        el.remove();
+    const afterPrint = () => {
+        afterPrintFns.forEach((fn) => fn());
     };
 
-    ReactDOM.render(
-        (
-            <Component closeModal={closeModal} />
-        ),
-        el,
-    );
+    if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
 
-    return Promise.resolve();
-};
+        const handler = (mql) => {
+            if (!mql.matches) {
+                afterPrint();
+            }
+        };
+
+        mediaQueryList.addListener(handler);
+        afterPrintFns.push(() => mediaQueryList.removeListener(handler));
+    }
+
+    window.onafterprint = afterPrint;
+
+    window.print();
+}
+
+export interface IPropsPrintableModal {
+    closeModal(): void;
+    showPrintDialog(): void;
+    Wrapper: React.ComponentType<{toolbar: React.ReactNode, contentSections: Array<React.ReactNode>}>;
+}
+
+const pageBreak = (
+    <div>
+        <div style={{pageBreakAfter: 'always'}} />
+        <hr className="no-print" />
+    </div>
+);
+
+/*
+ * Usage example:
+    <Wrapper
+        toolbar={(
+            <button onClick={showPrintDialog}>print</button>
+        )}
+        contentSections={[
+            <div>printable content goes here</div>,
+            <div>each content section starts on a new page</div>,
+        ]}
+    />
+ */
+export function showPrintableModal(
+    Component: React.ComponentType<IPropsPrintableModal>,
+) {
+    showModal(({closeModal}) => {
+        return (
+            <Component
+                Wrapper={({toolbar, contentSections}) => (
+                    <div className="sd-full-preview">
+                        <div className="sd-full-preview--header no-print">
+                            {toolbar}
+                        </div>
+
+                        <div className="sd-full-preview--content-wrapper">
+                            {
+                                contentSections.map((section, i) => {
+                                    return (
+                                        <div key={i}>
+                                            { // always start a new article on a new page in print mode
+                                                i > 0 && pageBreak
+                                            }
+
+                                            <div className="sd-full-preview--content">
+                                                {section}
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            }
+                        </div>
+                    </div>
+                )}
+                closeModal={closeModal}
+                showPrintDialog={() => prepareAndPrint()}
+            />
+        );
+    }, 'print-container');
+}
 
 function getErrorsModal(
     title: string,
@@ -37,26 +105,28 @@ function getErrorsModal(
     return class ErrorsModal extends React.PureComponent<{closeModal(): void}> {
         render() {
             return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>{title}</ModalHeader>
-                    <ModalBody>
-                        {
-                            description == null ? null : (
-                                <h3>{description}</h3>
-                            )
-                        }
+                <Modal
+                    visible
+                    zIndex={1050}
+                    size="small"
+                    position="top"
+                    onHide={this.props.closeModal}
+                    headerTemplate={title}
+                    footerTemplate={
+                        <Button type="primary" text={gettext('Ok')} onClick={this.props.closeModal} />
+                    }
+                >
+                    {
+                        description == null ? null : (
+                            <h3>{description}</h3>
+                        )
+                    }
 
-                        {
-                            errors.map((message, i) => (
-                                <p key={i}>{message}</p>
-                            ))
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.props.closeModal}>
-                            {gettext('Ok')}
-                        </Button>
-                    </ModalFooter>
+                    {
+                        errors.map((message, i) => (
+                            <p key={i}>{message}</p>
+                        ))
+                    }
                 </Modal>
             );
         }
@@ -148,9 +218,12 @@ export default angular.module('superdesk.core.services.modal', [
         }
 
         this.confirm = function() {
+            // eslint-disable-next-line prefer-rest-params
             if (typeof arguments[0] === 'object' && arguments.length === 1) {
+                // eslint-disable-next-line prefer-rest-params
                 return confirmConfigurationObject.apply(this, arguments);
             } else {
+                // eslint-disable-next-line prefer-rest-params
                 return confirmArgumentsList.apply(this, arguments);
             }
         };
@@ -159,10 +232,10 @@ export default angular.module('superdesk.core.services.modal', [
             return confirmConfigurationObject.call(this, {...options, cancelText: null});
         };
 
-        this.createCustomModal = function() {
+        this.createCustomModal = function(dataTestId) {
             return new Promise((resolve) => {
                 $modal.open({
-                    template: '<div id="custom-modal-placeholder"></div>',
+                    template: `<div id="custom-modal-placeholder" data-test-id="${dataTestId}"></div>`,
                     controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
                         resolve({
                             openModal: (reactComponent) => {

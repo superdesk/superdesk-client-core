@@ -72,3 +72,10 @@ export function toggleTableStyle(inlineStyle) {
         payload: inlineStyle,
     };
 }
+
+export function toggleTableBlockType(style) {
+    return {
+        type: 'TOOLBAR_TABLE_BLOCK_TYPE',
+        payload: style,
+    };
+}

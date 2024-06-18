@@ -46,7 +46,7 @@
                         </div>
 
                         <h2 class="subnav__page-title sd-flex-no-grow sd-empty" ng-hide="monitoring.singleGroup.singleViewType !== 'desk' && type === 'monitoring'">
-                            <div class="sd-padding-x--2 sd-check-button__group">
+                            <div class="sd-padding-x--2 sd-check-button__group sd-flex--nowrap sd-flex--grow-0">
                                 <sd-check
                                     ng-repeat="(id, group) in aggregate.personalGroups"
                                     type="radio"
@@ -71,10 +71,13 @@
                         </h2>
 
                         <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader" ng-class="{'subnav__stage-group--ui-responsive': aggregate.monitoringSearch}">
-                            <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
-                            <span class="stage-group__split">/</span>
+                            <!-- There was label duplication in the case when you select a stage so I removed the elements responsible for showing the label of the desk
+                                only in the case when you select a stage, because I'm not sure if there's other cases where we need this information to be shown.
+                            -->
+                            <span ng-if="monitoring.singleGroup.type == null" class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
+                            <span ng-if="monitoring.singleGroup.type == null" class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
-                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
+                                <button style="white-space: nowrap;" class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
                                     <li><div class="dropdown__menu-label" translate>Stages</div></li>
                                     <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
@@ -113,38 +116,33 @@
                                     <i class="icon-repeat"></i>
                                 </button>
                             </div>
-                            <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()" aria-label="{{ 'Monitoring settings' | translate }}">
+                            <button
+                                class="navbtn strict"
+                                ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'"
+                                ng-click="aggregate.edit()"
+                                aria-label="{{ 'Monitoring settings' | translate }}"
+                                data-test-id="monitoring-settings-button"
+                            >
                                 <i class="icon-settings"></i>
                             </button>
 
-                            <div
+                            <sd-monitoring-filtering-buttons
                                 ng-if="type === 'monitoring' && activeDeskId != null"
-                                style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
-                            >
-                                <sd-monitoring-filtering-buttons
-                                    desk-id="activeDeskId"
-                                    toggle-filter="aggregate.toggleCustomFilter"
-                                    set-filter="aggregate.setCustomFilter"
-                                    is-filter-active="aggregate.isCustomFilterActive"
-                                    active-filters="aggregate.activeFilters.customFilters"
-                                    add-resource-updated-event-listener="addResourceUpdatedEventListener"
-                                ></sd-monitoring-filtering-buttons>
-                            </div>
+                                desk-id="activeDeskId"
+                                toggle-filter="aggregate.toggleCustomFilter"
+                                set-filter="aggregate.setCustomFilter"
+                                is-filter-active="aggregate.isCustomFilterActive"
+                                active-filters="aggregate.activeFilters.customFilters"
+                                add-resource-updated-event-listener="addResourceUpdatedEventListener"
+                            ></sd-monitoring-filtering-buttons>
 
-                            <div ng-if="disableMonitoringCreateItem == null" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
-                                <div ngf-drop="openUpload($files)" ngf-multiple="true">
-                                    <button
-                                        class="navbtn dropdown__toggle sd-create-btn"
-                                        dropdown__toggle
-                                        aria-label="{{ 'Create new item' | translate }}"
-                                        data-test-id="content-create"
-                                    ></button>
-                                </div>
-                                <div
-                                    sd-content-create
-                                    class="dropdown__menu dropdown__menu--has-head-foot pull-right"
-                                    data-test-id="content-create-dropdown"
-                                ></div>
+                            <div
+                                ng-if="disableMonitoringCreateItem == null"
+                                class="navbtn navbtn--white"
+                                sd-tooltip="{{ 'Create new item' | translate }}"
+                                flow="left"
+                            >
+                                <sd-content-create></sd-content-create>
                             </div>
                         </div>
                     </div>
@@ -180,9 +178,11 @@
                         <div sd-item-sortbar class="sortbar-container"></div>
 
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
-                            <button area-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}" 
-                                    dropdown__toggle 
-                                    class="navbtn dropdown__toggle">
+                            <button
+                                aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
+                                dropdown__toggle
+                                class="navbtn dropdown__toggle"
+                            >
                                 <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i>
                             </button>
                             <ul class="dropdown__menu">
@@ -332,9 +332,8 @@
                          data-show-history-tab="monitoring.showHistoryTab"></div>
 
             </div>
-            <div sd-send-item
-                 data-item="null"
-                 data-mode="{{type}}"></div>
+
+            <sd-interactive-article-actions-panel-combined location="'list-view'"></sd-interactive-article-actions-panel-combined>
         </div>
 
         <div sd-aggregate-settings

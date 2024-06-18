@@ -4,9 +4,11 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {IVocabulary, IContentProfile} from 'superdesk-api';
+import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
 import {IPackagesService} from 'types/Services/Packages';
 import {isMediaType} from 'core/helpers/item';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc service
@@ -40,12 +42,10 @@ ContentService.$inject = [
     '$q',
     '$rootScope',
     'session',
-    'send',
     'renditions',
-    'modal',
 ];
 export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
-    $filter, $q, $rootScope, session, send, renditions, modal) {
+    $filter, $q, $rootScope, session, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -104,6 +104,13 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * Create new item using given template
      *
      * @param {Object} template
+     *
+     * @param initializeAsUpdated
+     * If an item is created, but closed without changes, it gets removed
+     * it doesn't work well when creating item and adding as related immediately
+     * user might want to go back and update the item later.
+     * To avoid the item getting removed it is initialized with a higher version
+     *
      * @return {Promise}
      */
     this.createItemFromTemplate = function(template, initializeAsUpdated) {
@@ -165,24 +172,21 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @param {Boolean} includeDisabled
      * @return {Promise}
      */
-    this.getTypes = function(includeDisabled) {
-        // eslint-disable-next-line consistent-this
-        var getTypesFnThis = this;
-        var params = {};
+    this.getTypes = function(type?: IContentProfile['type'] | null, includeDisabled?) {
+        var params: {where?: any} = {};
 
         if (!includeDisabled) {
             params = {where: {enabled: true}};
         }
 
-        // cache when fetching all types
-        return api.getAll('content_types', params, !!includeDisabled).then((result) => {
-            getTypesFnThis.types = result.sort((a, b) => b.priority - a.priority, // with higher priority goes up
-            );
-            return getTypesFnThis.types;
-        }, (reason) => {
-            getTypesFnThis.types = [];
-            return getTypesFnThis.types;
-        });
+        if (type != null) {
+            params.where = params.where ?? {};
+
+            params.where.type = type;
+        }
+
+        return api.getAll('content_types', params, !!includeDisabled)
+            .then((result) => result.sort((a, b) => b.priority - a.priority));
     };
 
     /**
@@ -191,7 +195,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @return {Promise}
      */
     this.getTypesLookup = function() {
-        return this.getTypes(true).then((profiles) => {
+        return this.getTypes(null, true).then((profiles) => {
             var lookup = {};
 
             profiles.forEach((profile) => {
@@ -231,11 +235,8 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @param {String} contentType
      * @return {Object}
      */
-    this.schema = function(profile, contentType) {
-        const schema = get(profile, 'schema',
-            get(appConfig.schema, contentType, constant.DEFAULT_SCHEMA));
-
-        return angular.extend({}, schema);
+    this.schema = function(profile: IContentProfile, contentType) {
+        return angular.extend({}, profile.schema);
     };
 
     /**
@@ -245,11 +246,8 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @param {String} contentType
      * @return {Object}
      */
-    this.editor = function(profile, contentType) {
-        const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.GET_DEFAULT_EDITOR()));
-
-        return angular.extend({}, editor);
+    this.editor = function(profile: IContentProfile, contentType) {
+        return angular.extend({}, profile.editor);
     };
 
     /**
@@ -267,7 +265,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     /**
      * Get fields with preview enabled
      */
-    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IVocabulary>): Array<IVocabulary> =>
         editor == null || fields == null ? []
             : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 
@@ -279,14 +277,14 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @return {Promise}
      */
     this.getDeskProfiles = function(desk, profileId) {
-        return this.getTypes().then((profiles) => !desk || isEmpty(desk.content_profiles) ?
+        return this.getTypes('text').then((profiles) => !desk || isEmpty(desk.content_profiles) ?
             profiles :
             profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
         );
     };
 
-    this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
-    this.contentProfileEditor = angular.extend({}, constant.GET_DEFAULT_EDITOR(), constant.EXTRA_EDITOR_FIELDS);
+    this.contentProfileSchema = angular.extend({}, constant.EXTRA_SCHEMA_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.EXTRA_EDITOR_FIELDS);
 
     $rootScope.$on('vocabularies:updated', resetFields);
 
@@ -349,7 +347,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
-                return send.validateAndSend(item);
+                return sdApi.article.fetchItemsToCurrentDesk([item]).then((res) => res[0]);
             }
 
             if (item.archive_item != null) {
@@ -366,29 +364,39 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     /**
      * Setup authoring scope for item
      */
-    this.setupAuthoring = (profileId, scope, item) => {
-        if (profileId) {
+    this.setupAuthoring = (profileId, scope, item: IArticle) => {
+        if (item.type === 'composite') {
+            return Promise.resolve({editor: {}, schema: {}, fields: []});
+        } else {
+            if (profileId == null) {
+                throw new Error('profile ID must be provided');
+            }
+
             return this.getType(profileId).then((profile) => {
                 scope.schema = this.schema(profile, item.type);
                 scope.editor = this.editor(profile, item.type);
                 scope.fields = this.fields(profile);
-                return profile;
-            });
-        } else {
-            return this.getCustomFields().then(() => {
-                scope.schema = this.schema(null, get(item, 'type', 'text'));
-                scope.editor = this.editor(null, get(item, 'type', 'text'));
 
-                // sign_off field used to always be hidden for media items in authoring, but was visible in preview
-                // to fix the inconsistency, I am making it read only so it's displayed in both places,
-                // but not editable, to keep it similar to past behaviour.
-                // In the future when we drop support for default profiles, this setting should be applied to
-                // customer configurations and removed from here.
-                if (isMediaType(item) && scope.schema.sign_off != null) {
-                    scope.schema.sign_off.readonly = true;
+                /**
+                 * order is used for tabindex in angular based authoring
+                 * since every field has a tabindex there
+                 * tab order breaks when tabindex is zero
+                 * because zero means DOM order
+                 *
+                 * order is incremented by one for every field here
+                 * to prevent tabindex being zero for one element
+                 *
+                 * this would no longer be needed in react based authoring because tabindex is not used there
+                 *
+                 * #ANGULAR_AUTHORING
+                 */
+                for (const key of Object.keys(scope.editor)) {
+                    if (scope.editor[key]?.order != null) {
+                        scope.editor[key].order++;
+                    }
                 }
 
-                scope.fields = this.fields({editor: scope.editor});
+                return profile;
             });
         }
     };

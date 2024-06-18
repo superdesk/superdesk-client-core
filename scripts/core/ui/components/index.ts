@@ -7,13 +7,11 @@ import * as Form from './Form';
 import * as ColumnBox from './ColumnBox/';
 import * as SlideInPanel from './SlideInPanel';
 import SearchBox from './SearchBox';
-import DateTime from './DateTime';
 import PanelInfo from './PanelInfo';
 import {CollapseBox} from './CollapseBox';
 import TermsList from './TermsList';
 import * as Popup from './Popup';
 import SearchBar from './SearchBar/';
-import {ToggleBox} from './ToggleBox/';
 import Toggle from './Toggle';
 import SearchField from './SearchField/';
 import Button from './Button';
@@ -26,6 +24,7 @@ import {DropdownMenuDivider} from './dropdown-menu-divider';
 import {NavTabs} from './nav-tabs';
 import {DropZone} from './drop-zone';
 import {PlainTextEditor} from './PlainTextEditor/PlainTextEditor';
+import UserPopup from './UserPopup';
 
 export {
     List,
@@ -35,7 +34,6 @@ export {
     SearchBox,
     Preview,
     Form,
-    DateTime,
     PanelInfo,
     CollapseBox,
     ColumnBox,
@@ -43,7 +41,6 @@ export {
     TermsList,
     Popup,
     SearchBar,
-    ToggleBox,
     Toggle,
     SearchField,
     Button,
@@ -56,4 +53,5 @@ export {
     NavTabs,
     DropZone,
     PlainTextEditor,
+    UserPopup,
 };

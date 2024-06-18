@@ -1,6 +1,5 @@
 
 import React from 'react';
-import classNames from 'classnames';
 import {IPropsWidgetHeading} from 'superdesk-api';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 
@@ -10,46 +9,27 @@ import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
  *
  * It also encapsulates widget actions like pinning
  * without exposing the implementation details to extensions.
+ *
+ * !!! Can't use React.PureComponent because it gets props from outside
  */
-export class WidgetHeading extends React.PureComponent<IPropsWidgetHeading> {
+export class AuthoringWidgetHeading extends React.Component<IPropsWidgetHeading> {
     render() {
         const widget = widgetReactIntegration.getActiveWidget();
-        const {pinWidget} = widgetReactIntegration;
+        const pinned = widgetReactIntegration.getPinnedWidget() === this.props.widgetName;
+        const {pinWidget, WidgetHeaderComponent} = widgetReactIntegration;
 
         return (
-            <div className="widget-header">
-                <div className="widget-title widget-heading--title">
-                    <span>{this.props.widgetName}</span>
-                    <span>
-                        <button
-                            className={
-                                classNames(
-                                    'sd-widget-pin icn-btn',
-                                    {
-                                        'sd-widget-pinned': widget.pinned,
-                                        'active': widget.pinned,
-                                    },
-                                )
-                            }
-                            onClick={() => {
-                                pinWidget(widget);
-                            }}
-                        >
-                            <i className="icon-pin" />
-                        </button>
-                    </span>
-                </div>
-
-                {
-                    this.props.editMode && (
-                        <div
-                            className="widget__sliding-toolbar widget__sliding-toolbar--right widget-heading--children"
-                        >
-                            {this.props.children}
-                        </div>
-                    )
-                }
-            </div>
+            <WidgetHeaderComponent
+                pinWidget={pinWidget}
+                pinned={pinned}
+                widget={widget}
+                widgetName={this.props.widgetName}
+                editMode={this.props.editMode}
+                closeWidget={() => widgetReactIntegration.closeActiveWidget()}
+                customContent={this.props.customContent}
+            >
+                {this.props.children}
+            </WidgetHeaderComponent>
         );
     }
 }

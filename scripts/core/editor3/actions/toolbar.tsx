@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {IEditorStore} from '../store';
 
 /**
  * @ngdoc method
@@ -42,6 +43,15 @@ export function applyLink(link, entity = null) {
         payload: {link, entity},
     };
 }
+
+export function applyLinkOnTableCell(link, entity = null) {
+    return {
+        type: 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL',
+        payload: {link, entity},
+    };
+}
+
+export const removeLinkInTableCell = () => ({type: 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL'});
 
 /**
  * @ngdoc method
@@ -175,3 +185,7 @@ export function redo() {
 export function toggleInvisibles() {
     return {type: 'TOOLBAR_TOGGLE_INVISIBLES'};
 }
+
+export const setTablePopup = (type, data) => ({
+    type: 'SET_TABLE_POPUP', payload: {type, data},
+});

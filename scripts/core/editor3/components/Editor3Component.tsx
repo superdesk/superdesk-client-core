@@ -16,7 +16,7 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {blockRenderer} from './blockRenderer';
+import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -26,31 +26,31 @@ import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
-import {setSpellcheckerProgress, applySpellcheck} from '../actions';
-import {noop} from 'lodash';
+import {setSpellcheckerProgress, applySpellcheck, PopupTypes} from '../actions';
+import {debounce} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE} from '../constants';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {EDITOR_BLOCK_TYPE, formattingOptionsThatRequireDragAndDrop, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
+import {isMacOS} from 'core/utils';
+import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
+import {addInternalEventListener} from 'core/internal-events';
 
-const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
-    'application/superdesk.item.picture',
-    'application/superdesk.item.graphic',
-    'application/superdesk.item.video',
-    'application/superdesk.item.audio',
-];
-
-const EVENT_TYPES_TRIGGER_DROP_ZONE = [
+export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     EDITOR_BLOCK_TYPE,
     'Files',
+    MIME_TYPE_SUPERDESK_TEXT_ITEM,
+    // allows dropping marked links as embeds (used by ansa)
+    'application/superdesk.compatible.embed',
 ];
 
 const VALID_MEDIA_TYPES = [
@@ -73,12 +73,6 @@ const editor3AutocompleteClassName = 'editor3-autocomplete';
  */
 export function getValidMediaType(event) {
     return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
-}
-
-export function dragEventShouldShowDropZone(event) {
-    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
-
-    return intersection.length > 0;
 }
 
 // caret position isn't displayed if a boolean is returned while dragging text
@@ -111,7 +105,7 @@ export function canDropMedia(e, editorConfig): undefined | boolean {
     }
 }
 
-interface IProps {
+export interface IPropsEditor3Component {
     readOnly?: boolean;
     locked?: boolean;
     loading?: boolean;
@@ -119,6 +113,7 @@ interface IProps {
     editorState?: EditorState;
     scrollContainer?: string;
     singleLine?: boolean;
+    plainText?: boolean;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     tabindex?: number;
     suggestingMode?: boolean;
@@ -141,6 +136,9 @@ interface IProps {
     onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+    canAddArticleEmbed?: (srcId: string) => Promise<typeof canAddArticleEmbed>;
+    uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
+    showPopup?(type: any, data: any): void;
 }
 
 interface IState {
@@ -165,7 +163,7 @@ interface IState {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps, IState> {
+export class Editor3Component extends React.Component<IPropsEditor3Component, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -177,9 +175,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
     div: any;
     editor: any;
-    spellcheckCancelFn: () => void;
     onDragEnd: () => void;
-    removeListeners: Array<() => void> = [];
+    private removeListeners: Array<() => void> = [];
+
+    private spellcheckAbortController: AbortController;
+    private scheduleSpellchecking: () => void;
 
     constructor(props) {
         super(props);
@@ -194,7 +194,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
-        this.spellcheckCancelFn = noop;
+        this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
+
+        this.spellcheckAbortController = new AbortController();
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -206,6 +208,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
             draggingInProgress: false,
             contentChangesAfterLastFocus: 0,
         };
+
+        this.removeListeners = [];
     }
 
     /**
@@ -218,35 +222,23 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     spellcheck() {
-        this.spellcheckCancelFn();
+        this.spellcheckAbortController.abort();
+        this.spellcheckAbortController = new AbortController();
 
-        this.spellcheckCancelFn = (() => {
-            let canceled = false;
+        if (this.props.spellchecking.inProgress !== true) {
+            this.props.dispatch(setSpellcheckerProgress(true));
+        }
 
-            setTimeout(() => {
-                if (!canceled) {
-                    if (this.props.spellchecking.inProgress !== true) {
-                        this.props.dispatch(setSpellcheckerProgress(true));
-                    }
+        const spellchecker = getSpellchecker(this.props.spellchecking.language);
 
-                    const spellchecker = getSpellchecker(this.props.spellchecking.language);
+        if (spellchecker == null) {
+            return;
+        }
 
-                    if (spellchecker == null) {
-                        return;
-                    }
-
-                    getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
-                        .then((spellcheckWarningsByBlock) => {
-                            if (!canceled) {
-                                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
-                                this.spellcheckCancelFn = noop;
-                            }
-                        });
-                }
-            }, 500);
-
-            return () => canceled = true;
-        })();
+        getSpellcheckWarningsByBlock(spellchecker, this.props.editorState, this.spellcheckAbortController.signal)
+            .then((spellcheckWarningsByBlock) => {
+                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
+            });
     }
 
     /**
@@ -277,7 +269,20 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey} = e;
+        const {key, shiftKey, ctrlKey, metaKey} = e;
+        const selectionState = this.props.editorState.getSelection();
+        const modifierKey = isMacOS() ? metaKey : ctrlKey;
+
+        if (
+            key === 'k'
+            && modifierKey
+            && this.props.editorFormat.includes('link')
+            && selectionState.isCollapsed() !== true
+        ) {
+            this.props.showPopup(PopupTypes.Link, selectionState);
+            e.preventDefault();
+            return '';
+        }
 
         if (key === 'ArrowDown' || key === 'ArrowUp') {
             const autocompleteEl = document.querySelector(`.${editor3AutocompleteClassName}`) as HTMLElement | null;
@@ -300,10 +305,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         // ctrl + X
         if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
-            const {editorState} = this.props;
-            const selection = editorState.getSelection();
-
-            if (!selection.isCollapsed()) {
+            if (!selectionState.isCollapsed()) {
                 document.execCommand('copy'); // add selected text to clipboard
                 return 'delete';
             }
@@ -511,6 +513,10 @@ export class Editor3Component extends React.Component<IProps, IState> {
         if (this.props.spellchecking.enabled) {
             this.spellcheck();
         }
+
+        this.removeListeners.push(
+            addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
+        );
     }
 
     handleRefs(editor) {
@@ -521,6 +527,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         // eslint-disable-next-line react/no-find-dom-node
         this.editorNode.current = this.editor === null ?
             undefined :
+            // eslint-disable-next-line react/no-find-dom-node
             ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
     }
 
@@ -528,6 +535,10 @@ export class Editor3Component extends React.Component<IProps, IState> {
         $(this.div).off();
 
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
+
+        for (const fn of this.removeListeners) {
+            fn();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -539,7 +550,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
             this.props.spellchecking.enabled &&
             prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
         ) {
-            this.spellcheck();
+            this.scheduleSpellchecking();
         }
     }
 
@@ -562,10 +573,20 @@ export class Editor3Component extends React.Component<IProps, IState> {
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.includes('media');
+        /**
+         * INFO: I can't remember exactly, but I think this was done for performance reasons
+         * so if nothing can be dropped(based on config), we don't even replace rendering of unstyled blocks
+         * to listen for drop events.
+         * I've briefly looked at the component we're supplying for replacement and it doesn't look like it would
+         * add much performance overhead if it was replaced unconditionally, but I don't want to break it
+         * nor spend time on testing so I'm keeping it as is for now.
+         */
+        const dropAreaEnabled = this.props.editorFormat.some(
+            (option) => formattingOptionsThatRequireDragAndDrop.has(option),
+        );
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
-            mediaEnabled ? {
+            dropAreaEnabled ? {
                 unstyled: {
                     element: UnstyledBlock,
                     aliasedElements: ['p'],
@@ -597,6 +618,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         });
                     }
                 }}
+                data-test-id="editor3"
 
                 // "dragend" event won't fire if an item is dropped inside draft-js field
                 // it's handled there separately
@@ -604,27 +626,47 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 onFocus={() => {
                     this.setState({contentChangesAfterLastFocus: 0});
                 }}
+                style={
+                    this.props.uiTheme == null
+                        ? undefined
+                        : {
+                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                        }
+                }
             >
                 {
-                    showToolbar && this.state.draggingInProgress !== true
-                        ? (
-                            <Toolbar
-                                disabled={locked || readOnly}
-                                scrollContainer={scrollContainer}
-                                editorNode={this.editorNode}
-                                highlightsManager={this.props.highlightsManager}
-                                editorWrapperElement={this.div}
-                            />
-                        )
-                        : null
+                    showToolbar && (
+                        <Toolbar
+                            uiTheme={this.props.uiTheme}
+                            disabled={locked || readOnly}
+                            scrollContainer={scrollContainer}
+                            editorNode={this.editorNode}
+                            highlightsManager={this.props.highlightsManager}
+                            editorWrapperElement={this.div}
+                            draggingInProgress={this.state.draggingInProgress}
+                        />
+                    )
                 }
+
                 <HighlightsPopup
                     editorNode={this.editorNode}
                     editorState={editorState}
                     highlightsManager={this.props.highlightsManager}
                     onChange={this.props.onChange}
                 />
-                <div className="focus-screen" onMouseDown={this.focus}>
+                <div
+                    className="focus-screen"
+                    onMouseDown={this.focus}
+                    style={
+                        this.props.uiTheme == null
+                            ? {}
+                            : {
+                                fontSize: this.props.uiTheme.fontSize,
+                                color: this.props.uiTheme.textColor,
+                                fontFamily: this.props.uiTheme.fontFamily,
+                            }
+                    }
+                >
                     <Editor
                         editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
@@ -632,7 +674,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={blockRenderer}
+                        blockRendererFn={getBlockRenderer(this.props.spellchecking)}
                         blockStyleFn={blockStyle}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
@@ -689,6 +731,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
+    plainText: false,
     cleanPastedHtml: false,
     editorFormat: [],
 };

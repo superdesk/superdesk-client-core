@@ -9,27 +9,18 @@ import {
 } from 'draft-js';
 import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
 import {
-    getDraftSelectionForEntireContent,
-} from './getDraftSelectionForEntireContent';
-import {
     getHighlightData,
     getHighlightTypeFromStyleName,
     initializeHighlights,
     styleNameBelongsToHighlight,
 } from './highlights';
-import {
-    getUniqueStyleNamesInDraftSelection,
-} from './getUniqueStyleNamesInDraftSelection';
 import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
+import {getUniqueStyleNames} from './getUniqueStyleNamesInDraftSelection';
 
-function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
+export function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
-
-    const allStyleNames = getUniqueStyleNamesInDraftSelection(
-        editorState,
-        getDraftSelectionForEntireContent(editorState),
-    );
+    const allStyleNames = getUniqueStyleNames(editorState.getCurrentContent());
 
     return allStyleNames
         .filter(styleNameBelongsToHighlight)
@@ -101,7 +92,7 @@ export function setAllCustomDataForEditor__deprecated(editorState, value) {
     return editorStateWithSelectionRestored;
 }
 
-export function getAllCustomDataFromEditor(editorState) {
+export function getAllCustomDataFromEditor(editorState: EditorState) {
     return editorState
         .getCurrentContent()
         .getFirstBlock()
@@ -123,6 +114,16 @@ export function setCustomDataForEditor__deprecated(editorState, key, value) {
     }
 
     return setAllCustomDataForEditor__deprecated(editorState, Map().set(key, value));
+}
+
+export function getCustomEditor3Data(
+    contentState: ContentState,
+    dataKey: keyof typeof editor3DataKeys,
+): Array<any> {
+    return contentState
+        .getFirstBlock()
+        .getData()
+        .get(dataKey);
 }
 
 export function getCustomDataFromEditor(editorState, key) {

@@ -1,13 +1,20 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {logger} from 'core/services/logger';
-import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
+import {SelectionState, convertFromRaw} from 'draft-js';
 import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {IEditorStore} from '../store';
+import {IEditorDragDropPayload} from '../reducers/editor3';
+import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {notify} from 'core/notify/notify';
+import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
+import {ISetActiveCellReturnType, IActiveCell} from '../components/tables/TableBlock';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc method
@@ -63,17 +70,50 @@ export function handleEditorTab(e) {
     };
 }
 
-/**
- * @ngdoc method
- * @name dragDrop
- * @param {DataTransfer} transfer
- * @return {String} mediaType
- * @return {String} blockKey
- * @description Creates the editor drop action.
- */
-export function dragDrop(transfer, mediaType, blockKey = null) {
-    if (mediaType === 'Files') {
-        return insertMedia(transfer.files);
+const canAddArticleEmbedDefault: ReturnType<typeof canAddArticleEmbed> = Promise.resolve({
+    ok: false,
+    error: gettext('Embedding is not allowed for this editor'),
+});
+
+export function dragDrop(
+    dataTransfer: DataTransfer,
+    type: string,
+    blockKey: string | null,
+    _canAddArticleEmbed?: (srcId: string) => ReturnType<typeof canAddArticleEmbed>,
+) {
+    if (type === 'Files') {
+        return insertMedia(dataTransfer.files);
+    } else if (type === MIME_TYPE_SUPERDESK_TEXT_ITEM) {
+        const partialArticle: IArticle = JSON.parse(dataTransfer.getData(type));
+
+        return (dispatch) => {
+            dispatch({type: 'EDITOR_LOADING', payload: true});
+
+            const canEmbedArticle = _canAddArticleEmbed ?? (() => canAddArticleEmbedDefault);
+
+            return canEmbedArticle(partialArticle._id).then((res) => {
+                if (res.ok === true) {
+                    const payload: IEditorDragDropPayload = {
+                        data: {
+                            item: res.src,
+                        },
+                        blockKey,
+                        contentType: 'article-embed',
+                    };
+
+                    const action = {
+                        type: 'EDITOR_DRAG_DROP',
+                        payload: payload,
+                    };
+
+                    dispatch(action);
+                } else {
+                    notify.error(res.error);
+                }
+            }).finally(() => {
+                dispatch({type: 'EDITOR_LOADING', payload: false});
+            });
+        };
     }
 
     return (dispatch) => {
@@ -81,14 +121,22 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
 
         dispatch({type: 'EDITOR_LOADING', payload: true});
 
-        const item: IArticle = JSON.parse(transfer.getData(mediaType));
+        const item: IArticle = JSON.parse(dataTransfer.getData(type));
 
         return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
-                dispatch({
+                const payload: IEditorDragDropPayload = {
+                    data,
+                    blockKey,
+                    contentType: 'media',
+                };
+
+                const action = {
                     type: 'EDITOR_DRAG_DROP',
-                    payload: {data, blockKey},
-                });
+                    payload: payload,
+                };
+
+                dispatch(action);
             })
             .finally(() => {
                 dispatch({type: 'EDITOR_LOADING', payload: false});
@@ -133,10 +181,10 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key, currentStyle, selection) {
+export function setActiveCell(activeCell: IActiveCell): ISetActiveCellReturnType {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key, currentStyle, selection},
+        payload: activeCell,
     };
 }
 
@@ -179,8 +227,8 @@ export function setHtmlFromTansa(html, simpleReplace) {
     };
 }
 
-export const setEditorStateFromItem = (item: IArticle, field: string) => {
-    const rawState = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
+export const setEditorStateFromItem = (item: IArticle, fieldId: string) => {
+    const rawState = getFieldMetadata(item, fieldId, fieldsMetaKeys.draftjsState);
     const contentState = convertFromRaw(rawState);
 
     return {
@@ -237,7 +285,7 @@ export function changeCase(changeTo: ITextCase, selection: SelectionState) {
     };
 }
 
-export type EditorLimit = { ui: CharacterLimitUiBehavior, chars: number };
+export type EditorLimit = {ui: CharacterLimitUiBehavior, chars: number};
 export function changeLimitConfig(payload: EditorLimit) {
     const config = payload.ui ? payload : {...payload, ui: DEFAULT_UI_FOR_EDITOR_LIMIT};
 
@@ -251,5 +299,15 @@ export function autocomplete(value: string) {
     return {
         type: 'EDITOR_AUTOCOMPLETE',
         payload: {value},
+    };
+}
+
+export type IActionPayloadSetExternalOptions =
+    Partial<Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>>;
+
+export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
+    return {
+        type: 'SET_EXTERNAL_OPTIONS',
+        payload,
     };
 }

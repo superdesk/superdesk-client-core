@@ -1,20 +1,63 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
-import {TableCell} from '.';
+import {TableCell} from './TableCell';
 import {EditorState, SelectionState, ContentBlock} from 'draft-js';
 import {getCell, setCell, getData, setData} from '../../helpers/table';
+import {IEditorStore} from 'core/editor3/store';
 
-interface IProps {
-    block: ContentBlock;
-    readOnly: boolean;
+export type ITableKind = 'table' | 'multi-line-quote' | 'custom-block';
+
+export interface IActiveCellTable {
+    tableKind: 'table';
+}
+
+export interface IActiveCellMultiLineQuote {
+    tableKind: 'multi-line-quote';
+}
+
+export interface IActiveCellCustomBlock {
+    tableKind: 'custom-block';
+    vocabularyId: string;
+}
+
+export type IActiveCellAdditional = IActiveCellTable | IActiveCellMultiLineQuote | IActiveCellCustomBlock;
+
+export interface IActiveCell {
+    i: number; // row
+    j: number; // column
+    key: string;
+    currentStyle: Array<string>;
+    selection: import('draft-js').SelectionState;
+    additional: IActiveCellAdditional;
+}
+
+export interface ISetActiveCellReturnType {
+    type: 'EDITOR_SET_CELL';
+    payload: IActiveCell;
+}
+
+interface IReduxStateProps {
     editorState: EditorState;
-    activeCell?: any;
-    setActiveCell: (row: number, col: number, blockKey: string, currentStyle: Array<string>, selection: any) => void;
+    activeCell?: IActiveCell;
+    readOnly: IEditorStore['readOnly'];
+}
+
+interface IDispatchProps {
+    setActiveCell: (activeCell: IActiveCell) => ISetActiveCellReturnType;
     parentOnChange: (newEditorState: EditorState, force: boolean) => void;
 }
+
+interface IOwnProps {
+    block: ContentBlock;
+    spellchecking: IEditorStore['spellchecking'];
+    additional: IActiveCellAdditional;
+    className?: string;
+    fullWidth?: boolean;
+}
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
 
 /**
  * @ngdoc React
@@ -59,7 +102,16 @@ export class TableBlockComponent extends React.Component<IProps> {
             parentOnChange(newEditorState, forceUpdate);
         }
 
-        setActiveCell(row, col, block.getKey(), currentStyle, selection.toJS());
+        const cell: IActiveCell = {
+            i: row,
+            j: col,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: selection.toJS(),
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     getCellEditorState(data, i, j): EditorState {
@@ -84,7 +136,16 @@ export class TableBlockComponent extends React.Component<IProps> {
         const {setActiveCell, block} = this.props;
         const newSelection = selection.merge({hasFocus: true});
 
-        setActiveCell(i, j, block.getKey(), currentStyle, newSelection.toJS());
+        const cell: IActiveCell = {
+            i: i,
+            j: j,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: newSelection.toJS(),
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     // onMouseDown is used in the main editor to set focus and stop table editing
@@ -108,7 +169,17 @@ export class TableBlockComponent extends React.Component<IProps> {
         }
 
         parentOnChange(newEditorState, false);
-        setActiveCell(activeCell.i, activeCell.j, block.getKey(), currentStyle, selection);
+
+        const cell: IActiveCell = {
+            i: activeCell.i,
+            j: activeCell.j,
+            key: block.getKey(),
+            currentStyle: currentStyle,
+            selection: selection,
+            additional: this.props.additional,
+        };
+
+        setActiveCell(cell);
     }
 
     onUndo() {
@@ -122,27 +193,39 @@ export class TableBlockComponent extends React.Component<IProps> {
     render() {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
+        const cx = this.props.className != null
+            ? this.props.className
+            : classNames('table-inside', {
+                'table-block': true,
+                'table-header': withHeader,
+            });
 
-        const cx = classNames('table-inside', {
-            'table-block': true,
-            'table-header': withHeader,
-        });
+        const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
 
         return (
-            <div className={cx} onMouseDown={this.onMouseDown}>
-                <table>
-                    <tbody>
+            <div
+                style={fullWidthStyle}
+                className={cx}
+                onMouseDown={(e) => {
+                    this.onMouseDown(e);
+                }}
+                data-test-id="table-block"
+            >
+                <table style={fullWidthStyle}>
+                    <tbody style={fullWidthStyle}>
                         {Array.from(new Array(numRows)).map((_, i) => (
-                            <tr key={`col-${i}-${numRows}-${numCols}`}>
+                            <tr style={fullWidthStyle} key={`col-${i}-${numRows}-${numCols}`}>
                                 {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
+                                        fullWidth={Object.keys(fullWidthStyle).length > 0}
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
                                         editorState={this.getCellEditorState(data, i, j)}
+                                        spellchecking={this.props.spellchecking}
                                         onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onRedo={this.onRedo.bind(this)}
-                                        onFocus={this.onFocus.bind(this, i, j)}
+                                        onFocus={(styles, selection) => this.onFocus(i, j, styles, selection)}
                                     />
                                 ),
                                 )}
@@ -158,8 +241,8 @@ export class TableBlockComponent extends React.Component<IProps> {
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (i, j, key, currentStyle, selection) => dispatch(
-        actions.setActiveCell(i, j, key, currentStyle, selection),
+    setActiveCell: (activeCell: IActiveCell) => dispatch(
+        actions.setActiveCell(activeCell),
     ),
 });
 
@@ -169,7 +252,7 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock = connect(
+export const TableBlock: React.ComponentType<IOwnProps> = connect<IReduxStateProps, IDispatchProps, IOwnProps>(
     mapStateToProps,
     mapDispatchToProps,
 )(TableBlockComponent);

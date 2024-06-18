@@ -1,44 +1,40 @@
+/* eslint-disable react/no-multi-comp */
 /* eslint-disable complexity */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {EditorState} from 'draft-js';
-import {Store} from 'redux';
+import {convertToRaw, EditorState} from 'draft-js';
+import {AnyAction, Store} from 'redux';
 
 import {Editor3} from './components';
-import createEditorStore from './store';
+import createEditorStore, {
+    generateAnnotations,
+    IEditorStore,
+    prepareEditor3StateForExport,
+    syncAssociations,
+} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
-import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
+import {changeEditorState, setReadOnly, changeLimitConfig, setExternalOptions} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION, IRestApiResponse} from 'superdesk-api';
+import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {
-    CHARACTER_LIMIT_UI_PREF,
+    CharacterCountConfigButton,
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {appConfig} from 'appConfig';
-
-function getAutocompleteSuggestions(field: string, language: string): Promise<Array<string>> {
-    const supportedFields = ['slugline'];
-
-    if (
-        appConfig.archive_autocomplete
-        && supportedFields.includes(field)
-    ) {
-        return httpRequestJsonLocal({
-            method: 'GET',
-            path: `/archive_autocomplete?field=${field}&language=${language}`,
-        }).then((res: IRestApiResponse<{value: string}>) => {
-            return res._items.map(({value}) => value);
-        });
-    } else {
-        return Promise.resolve([]);
-    }
-}
+import {fieldsMetaKeys, FIELD_KEY_SEPARATOR, setFieldMetadata} from './helpers/fieldsMeta';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
+import {getAutocompleteSuggestions} from 'core/helpers/editor';
+import {findParentScope, gettext} from '../utils';
+import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
+import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
+import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-statistics-connected';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
+import {Spacer} from 'core/ui/components/Spacer';
+import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 
 /**
  * @ngdoc directive
@@ -52,7 +48,68 @@ function getAutocompleteSuggestions(field: string, language: string): Promise<Ar
  */
 export const sdEditor3 = () => new Editor3Directive();
 
-export const EditorStore = React.createContext<Store>(null);
+// used in HighlightsPopup
+export const ReactContextForEditor3 = React.createContext<Store>(null);
+
+function generateHtml(
+    store: Store<IEditorStore, AnyAction>,
+    item: IArticle,
+    pathToValue: string,
+) {
+    const state = store.getState();
+    const {editorState} = state;
+    const contentState = editorState.getCurrentContent();
+
+    if (pathToValue == null || pathToValue.length < 1) {
+        throw new Error('pathToValue is required');
+    }
+
+    const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
+    const rawState = convertToRaw(contentStatePreparedForExport);
+
+    setFieldMetadata(
+        item,
+        pathToValue,
+        fieldsMetaKeys.draftjsState,
+        rawState,
+    );
+
+    if (pathToValue === 'body_html') {
+        syncAssociations(item, rawState);
+    }
+
+    // example: "extra.customField"
+    const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
+
+    let objectToUpdate =
+        pathToValueArray.length < 2
+            ? item
+            : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
+                if (obj[pathSegment] == null) {
+                    obj[pathSegment] = {};
+                }
+
+                return obj[pathSegment];
+            }, item);
+
+    const fieldName = pathToValueArray[pathToValueArray.length - 1];
+
+    const plainText = state.plainText === true || state.singleLine === true;
+
+    if (plainText) {
+        objectToUpdate[
+            fieldName
+        ] = contentStatePreparedForExport.getPlainText();
+    } else {
+        objectToUpdate[fieldName] = editor3StateToHtml(
+            contentStatePreparedForExport,
+        );
+
+        copyEmbeddedArticlesIntoAssociations(contentStatePreparedForExport, item);
+
+        generateAnnotations(item);
+    }
+}
 
 class Editor3Directive {
     scope: any;
@@ -64,6 +121,7 @@ class Editor3Directive {
     readOnly: any;
     findReplaceTarget: any;
     singleLine: any;
+    plainText?: boolean;
     debounce: any;
     bindToValue: any;
     tabindex: any;
@@ -79,6 +137,15 @@ class Editor3Directive {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
+    fieldId?: string;
+
+    // In most cases a function is called to get the label by ID. This is only required for custom fields.
+    fieldLabel?: string;
+    required?: boolean;
+    validationError?: string;
+    validateCharacters?: boolean;
+    headerStyles?: boolean;
+    helperText: string;
 
     constructor() {
         this.scope = {};
@@ -202,6 +269,26 @@ class Editor3Directive {
             cleanPastedHtml: '=?',
 
             limit: '=?',
+
+            /**
+             * @type {String}
+             * @description Force the output to be plain text and not contain any html.
+             */
+            plainText: '=?',
+
+            fieldId: '=',
+
+            fieldLabel: '=',
+
+            required: '=',
+
+            validationError: '=',
+
+            validateCharacters: '=',
+
+            headerStyles: '=',
+
+            helperText: '=',
         };
     }
 
@@ -217,9 +304,10 @@ class Editor3Directive {
         Promise.all([
             ng.get('preferencesService').get(),
             getAutocompleteSuggestions(this.pathToValue, this.language),
+            getLabelNameResolver(),
         ])
             .then((res) => {
-                const [userPreferences, autocompleteSuggestions] = res;
+                const [userPreferences, autocompleteSuggestions, getLabel] = res;
 
                 // defaults
                 this.language = this.language || 'en';
@@ -227,6 +315,7 @@ class Editor3Directive {
                 this.findReplaceTarget =
                     typeof this.findReplaceTarget !== 'undefined';
                 this.singleLine = this.singleLine || false;
+                this.plainText = this.plainText || false;
                 this.debounce = parseInt(this.debounce || '100', 10);
                 this.bindToValue = this.bindToValue || false;
                 this.tabindex = this.tabindex || 0;
@@ -237,27 +326,155 @@ class Editor3Directive {
                 this.svc = {};
                 this.limit = this.limit || null;
                 this.limitBehavior =
-                    userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
+                    userPreferences[AUTHORING_FIELD_PREFERENCES]?.[
                         pathValue || this.pathToValue
-                    ];
+                    ]?.characterLimitMode;
 
                 let store = createEditorStore(this, ng.get('spellcheck'));
+
+                const fieldName: string | null = (() => {
+                    if (this.fieldLabel != null) {
+                        return this.fieldLabel;
+                    } else if (this.fieldId == null) {
+                        return null;
+                    } else {
+                        return getLabel(this.fieldId);
+                    }
+                })();
 
                 const renderEditor3 = () => {
                     const element = $element.get(0);
 
                     ReactDOM.unmountComponentAtNode(element);
 
+                    const textStatistics = (
+                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
+                            <TextStatisticsConnected />
+
+                            {
+                                this.limit != null && (
+                                    <CharacterCountConfigButton field={this.fieldId} />
+                                )
+                            }
+                        </Spacer>
+                    );
+
+                    const validationErrors = (() => {
+                        if (this.validationError != null) {
+                            return (
+                                <div
+                                    className="disallowed-char-error"
+                                    style={{float: 'none', margin: 0}}
+                                >
+                                    {this.validationError}
+                                </div>
+                            );
+                        } else if (this.validateCharacters != null) {
+                            return (
+                                <div>
+                                    <ValidateCharactersConnected fieldId={this.fieldId} />
+                                </div>
+                            );
+                        }
+                    })();
+
+                    const editor3 = (
+                        <Editor3
+                            scrollContainer={this.scrollContainer}
+                            singleLine={this.singleLine}
+                            cleanPastedHtml={this.cleanPastedHtml}
+                            autocompleteSuggestions={autocompleteSuggestions}
+                            plainText={this.plainText}
+                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
+                        />
+                    );
+
+                    const getTemplateForBody = () => {
+                        const labelStyle: React.CSSProperties = {
+                            marginBlockEnd: 0,
+                        };
+
+                        if (this.validationError != null) {
+                            labelStyle.backgroundColor = 'red';
+                        }
+
+                        return (
+                            <div>
+                                <div style={{marginBlockEnd: 15}}>
+                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
+                                            <div className="field__label" style={labelStyle}>{fieldName}</div>
+
+                                            {this.required && (
+                                                <span className="sd-required">{gettext('Required')}</span>
+                                            )}
+                                        </Spacer>
+
+                                        {textStatistics}
+                                    </Spacer>
+
+                                    {validationErrors}
+                                </div>
+                                {editor3}
+
+                                <div className="sd-editor__info-text">{this.helperText}</div>
+                            </div>
+                        );
+                    };
+
+                    const getTemplateForHeader = () => {
+                        return (
+                            <div style={{display: 'flex'}} className="sd-input-style">
+                                <div className="authoring-header__item-label">
+                                    {fieldName}
+                                    {this.required && (
+                                        <span>
+                                            &nbsp;
+                                            <span
+                                                aria-label={gettext('required')}
+                                                style={{color: 'red', fontSize: 12}}
+                                            >
+                                                *
+                                            </span>
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div style={{flexGrow: 1}}>
+                                    <div>
+                                        {editor3}
+                                    </div>
+
+                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                        {
+                                            validationErrors ?? (
+                                                <span
+                                                    className="authoring-header__hint"
+                                                    style={{margin: 0}}
+                                                >
+                                                    {this.helperText}
+                                                </span>
+                                            )}
+                                        {textStatistics}
+                                    </Spacer>
+                                </div>
+                            </div>
+                        );
+                    };
+
                     ReactDOM.render(
                         <Provider store={store}>
-                            <EditorStore.Provider value={store}>
-                                <Editor3
-                                    scrollContainer={this.scrollContainer}
-                                    singleLine={this.singleLine}
-                                    cleanPastedHtml={this.cleanPastedHtml}
-                                    autocompleteSuggestions={autocompleteSuggestions}
-                                />
-                            </EditorStore.Provider>
+                            <ReactContextForEditor3.Provider value={store}>
+                                {(() => {
+                                    if (fieldName != null && this.headerStyles === true) {
+                                        return getTemplateForHeader();
+                                    } else if (fieldName != null && this.headerStyles !== true) {
+                                        return getTemplateForBody();
+                                    } else {
+                                        return editor3;
+                                    }
+                                })()}
+                            </ReactContextForEditor3.Provider>
                         </Provider>,
                         element,
                     );
@@ -279,7 +496,15 @@ class Editor3Directive {
                             'insert-characters',
                         );
 
-                        store.dispatch(changeEditorState(editorState));
+                        /**
+                         * `onChange` handler needs to be skipped, because it is converting
+                         * `editorState` to text or HTML and removes diff markup in the process.
+                         * It then writes the result to item field and this triggers
+                         * this exact watch with `newValue` without diff markup.
+                         */
+                        const skipOnChangeHandler = true;
+
+                        store.dispatch(changeEditorState(editorState, false, skipOnChangeHandler));
                     });
                 }
 
@@ -292,6 +517,10 @@ class Editor3Directive {
                     store = createEditorStore(this, ng.get('spellcheck'));
 
                     renderEditor3();
+                });
+
+                $scope.$watch('vm.editorFormat', (editorFormat) => {
+                    store.dispatch(setExternalOptions({editorFormat: editorFormat}));
                 });
 
                 // this is triggered from MacrosController.call
@@ -330,6 +559,13 @@ class Editor3Directive {
                     }
                 });
 
+                // when validation status changes, increment `refreshTrigger` which will cause editor3 to re-render
+                $scope.$watch('vm.validationError', (val, old) => {
+                    if (val !== old) {
+                        this.refreshTrigger++;
+                    }
+                });
+
                 // bind the directive limit attribute bi-directionally between Angular and Redux.
                 $scope.$watch('vm.limit', (val, old) => {
                     // tslint:disable-next-line:triple-equals
@@ -354,9 +590,9 @@ class Editor3Directive {
                         'changeUserPreferences',
                         (event) => {
                             const limitBehavior =
-                                event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
+                                event.detail?.[AUTHORING_FIELD_PREFERENCES]?.[
                                     pathValue || this.pathToValue
-                                ];
+                                ]?.characterLimitMode;
 
                             if (limitBehavior) {
                                 this.limitBehavior = limitBehavior;
@@ -390,6 +626,13 @@ class Editor3Directive {
                 ng.waitForServicesToBeAvailable().then(() => {
                     renderEditor3();
                 });
+
+                (findParentScope(
+                    $scope,
+                    (_scope) => _scope['requestEditor3DirectivesToGenerateHtml'] != null,
+                ) as any)?.requestEditor3DirectivesToGenerateHtml?.push(
+                    () => generateHtml(store, this.item, this.pathToValue),
+                );
             });
     }
 }

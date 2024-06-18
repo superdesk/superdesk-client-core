@@ -24,7 +24,10 @@ module.exports = function makeConfig(grunt) {
     const apps = sdConfig.importApps || sdConfig.apps || [];
 
     // include only 'superdesk-core' and valid modules inside node_modules
-    let validModules = ['superdesk-core'].concat(apps);
+    let validModules = [
+        'superdesk-core',
+        'planning', // on fireq we store superdesk-planning in linked `planning` folder
+    ].concat(apps);
 
     const jQueryModule = getModuleDir('jquery');
 
@@ -46,9 +49,6 @@ module.exports = function makeConfig(grunt) {
                 jQuery: jQueryModule,
                 'window.jQuery': jQueryModule,
                 moment: 'moment',
-                // MediumEditor needs to be globally available, because
-                // its plugins will not be able to find it otherwise.
-                MediumEditor: 'medium-editor',
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
@@ -71,6 +71,13 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+                /**
+                 * Ensure that react is loaded only once.
+                 * external apps(planning, analytics, ui-framework) may try loading their own react,
+                 * especially when linked with npm in development mode.
+                 */
+                react: getModuleDir('react'),
+                'react-dom': getModuleDir('react-dom'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
@@ -95,10 +102,12 @@ module.exports = function makeConfig(grunt) {
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
-                        return !validModules.some(
+                        const exclude = !validModules.some(
                             (app) =>
                                 absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
                         );
+
+                        return exclude;
                     },
                     loader: 'ts-loader',
                     options: {
@@ -231,9 +240,6 @@ function getDefaults(grunt) {
         features: {
             // tansa spellchecker
             useTansaProofing: false,
-
-            // replace editor2
-            onlyEditor3: false,
         },
 
         // workspace defaults

@@ -10,7 +10,7 @@ export class Page extends React.PureComponent<{title: string}> {
                     <div className="sd-page__header sd-page__header--white">
                         <h2 className="sd-page__page-heading">{title}</h2>
                     </div>
-                    <div className="sd-page__flex-helper">
+                    <div className="sd-page__flex-helper" style={{overflowY: 'auto'}}>
                         {children}
                     </div>
                 </section>

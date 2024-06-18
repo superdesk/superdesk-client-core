@@ -275,8 +275,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
-                                        label={gettext('Name')}
                                         type="text"
+                                        label={gettext('Name')}
                                         value={updates.name ?? ''}
                                         required={true}
                                         onChange={this.onChange.name}
@@ -287,8 +287,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
-                                        label={gettext('Description')}
                                         type="text"
+                                        label={gettext('Description')}
                                         value={updates.description ?? ''}
                                         onChange={this.onChange.description}
                                         disabled={false}

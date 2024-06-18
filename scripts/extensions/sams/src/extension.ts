@@ -20,15 +20,11 @@ const extension: IExtension = {
                     showTopMenu: true,
                     showSideMenu: true,
                     addToMainMenu: false,
-                }],
-
-                workspaceMenuItems: [{
-                    label: gettext('SAMS'),
-                    href: '/workspace/sams',
-                    icon: 'picture',
-                    shortcut: 'ctrl+alt+s',
-                    order: 1000,
-                    privileges: ['sams'],
+                    addToSideMenu: superdesk.privileges.hasPrivilege('sams') ? {
+                        icon: 'picture',
+                        keyBinding: 'ctrl+alt+s',
+                        order: 1000,
+                    } : undefined,
                 }],
             },
         };

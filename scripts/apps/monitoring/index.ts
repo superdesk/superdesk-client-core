@@ -67,6 +67,8 @@ angular.module('superdesk.apps.monitoring', [
                 'activeFilters',
                 'addResourceUpdatedEventListener',
             ],
+            [],
+            'display:contents',
         ),
     )
     .directive('sdMonitoringGroup', directive.MonitoringGroup)

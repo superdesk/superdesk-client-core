@@ -1,25 +1,25 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor, WebElementPromise, ElementFinder} from 'protractor';
+import {element, browser, by, protractor, ElementFinder} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
+import {TreeSelectDriver} from './helpers/tree-select-driver';
 import {desks} from './helpers/desks';
 import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 function createItem(headline: string) {
-    el(['content-create']).click();
-    el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-    el(['select-template'], by.buttonText('editor3 template')).click();
+    authoring.createTextItemFromTemplate('editor3 template');
+
     browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
     el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(headline);
 
     browser.sleep(300); // wait for debouncing
-    el(['authoring-topbar', 'save']).click();
+    authoring.save();
     el(['authoring-topbar', 'close']).click();
 }
 
@@ -249,7 +249,6 @@ describe('monitoring', () => {
     it('configure a saved search from other user', () => {
         monitoring.openMonitoring();
         workspace.createWorkspace('My Workspace');
-        browser.sleep(500);
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
         monitoring.toggleGlobalSearch(3);
@@ -406,7 +405,7 @@ describe('monitoring', () => {
         authoring.close();
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
         browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
@@ -421,7 +420,7 @@ describe('monitoring', () => {
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
         el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
         browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
@@ -473,8 +472,10 @@ describe('monitoring', () => {
 
     it('can start content upload', () => {
         monitoring.openMonitoring();
-        monitoring.openCreateMenu();
-        monitoring.startUpload();
+
+        el(['content-create']).click();
+        el(['content-create-dropdown', 'upload-media']).click();
+
         expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();
     });
 
@@ -667,7 +668,7 @@ describe('monitoring', () => {
 
         monitoring.fetchAndOpen(0, 5);
 
-        expect(authoring.save_button.isDisplayed()).toBe(true);
+        browser.wait(ECE.visibilityOf(authoring.save_button));
     });
 
     it('can display desk content in desk single view with their respective titles', () => {
@@ -773,7 +774,6 @@ describe('monitoring', () => {
         monitoring.saveSettings();
 
         monitoring.openMonitoring();
-        browser.sleep(3000); // wait for monitoring groups to load
 
         expect(monitoring.getTextItem(1, 2)).toBe('item6');
 
@@ -791,7 +791,9 @@ describe('monitoring', () => {
 
         monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
-        expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
+
+        // check if multi select is closed
+        browser.wait(ECE.not(ECE.presenceOf(element(by.id('multi-select-count')))), 500);
     });
 
     it('can view published duplicated item in duplicate tab of non-published original item', () => {
@@ -839,18 +841,23 @@ describe('monitoring', () => {
         authoring.duplicateTo('Sports Desk', 'one');
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
-        var dropdownSelected = monitoring.getSendToDropdown();
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Sports Desk']);
 
-        browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
         monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
-
-        dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
 
         browser.sleep(500);
-        expect(dropdownSelected.getText()).toEqual('Politic Desk');
+
+        expect(
+            new TreeSelectDriver(
+                el(['interactive-actions-panel', 'destination-select']),
+            ).getValue(),
+        ).toEqual(['Politic Desk']);
     });
 
     it('can view published item as readonly when opened', () => {
@@ -866,11 +873,10 @@ describe('monitoring', () => {
         monitoring.actionOnItem('Open', 4, 0);
         expect(authoring.save_button.isPresent()).toBe(false); // Save button hidden for publish item
 
-        var textField = element(by.className('text-editor'));
-        // expect contenteditable=true attribute is missing/null for text-editor field,
-        // hence editing is disabled for published item
+        const bodyHtml = element(by.css('.field.body [contenteditable]'));
 
-        expect(textField.getAttribute('contenteditable')).toBe(null);
+        expect(bodyHtml.isPresent()).toBe(true);
+        expect(bodyHtml.getAttribute('contenteditable')).toBe('false');
     });
 
     it('closes preview when an item is opened for editing', () => {
@@ -898,27 +904,31 @@ describe('monitoring', () => {
     it('Can create items from templates', () => {
         const slugline = 'slugline template';
         const editorsNote = 'test editor\'s note for template';
+        const newTemplateName = 'template 1234';
 
         monitoring.openMonitoring();
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('Plain text')).click();
+
+        authoring.createTextItemFromTemplate('plain text');
 
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
         el(['authoring', 'field-slugline']).sendKeys(slugline);
         el(['authoring', 'field-editors-note']).sendKeys(editorsNote);
         browser.sleep(500); // input debouncing
-        el(['authoring', 'save']).click();
+        authoring.save();
 
         el(['authoring', 'actions-button']).click();
         el(['authoring', 'actions-list']).element(by.buttonText('Save as template')).click();
+
+        el(['save-as-template', 'name-input']).clear();
+        el(['save-as-template', 'name-input']).sendKeys(newTemplateName);
+
         el(['create-template-modal--save']).click();
+
         el(['authoring', 'close']).click();
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
 
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        el(['select-template'], by.buttonText(slugline)).click();
+        authoring.createTextItemFromTemplate(newTemplateName);
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
@@ -1302,7 +1312,7 @@ describe('unsaved changes', () => {
 
         monitoring.actionOnItem('Spike Item', 0, 0);
 
-        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+        monitoring.expectSaveChangesDialog();
     });
 
     it('warns before closing article from open articles bar', () => {
@@ -1310,7 +1320,7 @@ describe('unsaved changes', () => {
 
         createItem('item 1');
 
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0), 3000);
 
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -1318,14 +1328,13 @@ describe('unsaved changes', () => {
 
         browser.sleep(300); // wait for autosave
 
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 1));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 1), 3000);
 
         el(['opened-articles-bar', 'item', 'close']).click();
 
-        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+        monitoring.expectSaveChangesDialog();
+        monitoring.ignoreSaveChangesDialog();
 
-        el(['modal-footer'], by.buttonText('Ignore')).click();
-
-        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0), 3000);
     });
 });

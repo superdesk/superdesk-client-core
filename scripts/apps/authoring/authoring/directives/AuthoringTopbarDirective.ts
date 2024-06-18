@@ -1,10 +1,12 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {IArticleAction} from 'superdesk-api';
+import {IAuthoringAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {addInternalEventListener} from 'core/internal-events';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -15,32 +17,29 @@ import {ITEM_STATE} from 'apps/archive/constants';
  *
  * @description Generates authoring subnav bar
  */
-AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
+AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace', '$q'];
 export function AuthoringTopbarDirective(
     TranslationService,
     privileges,
     authoringWorkspace: AuthoringWorkspaceService,
+    $q,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             function setActionsFromExtensions() {
-                scope.articleActionsFromExtensions = [];
-
-                getArticleActionsFromExtensions(scope.item).then((articleActions) => {
-                    scope.articleActionsFromExtensions = articleActions;
-                });
+                scope.articleActionsFromExtensions = getArticleActionsFromExtensions(scope.item);
             }
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
-            scope.saveDisabled = false;
+            scope.saveTopbarLoading = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
             scope.isCorrection = (item) => appConfig?.corrections_workflow
-                && item.state === ITEM_STATE.CORRECTION && scope.action === 'correct';
+                && item.state === ITEM_STATE.CORRECTION && scope.action === 'edit';
 
             scope.handleArticleChange = (article) => {
                 Object.assign(scope.item, article);
@@ -48,15 +47,64 @@ export function AuthoringTopbarDirective(
                 scope.autosave(scope.item, 0);
             };
 
+            scope.openPublishOrSendToPane = () => {
+                const availableTabs = getAvailableTabs();
+                const activeTab = getActiveTab(availableTabs);
+
+                dispatchInternalEvent('interactiveArticleActionStart', {
+                    items: [scope.item],
+                    tabs: availableTabs,
+                    activeTab: activeTab,
+                });
+            };
+
+            function getAvailableTabs(): Array<IArticleActionInteractive> {
+                if (scope.isCorrection(scope.item)) {
+                    return ['send_to', 'correct'];
+                } else {
+                    const result: Array<IArticleActionInteractive> = ['send_to'];
+
+                    if (sdApi.article.canPublish(scope.item)) {
+                        result.push('publish');
+                    }
+
+                    return result;
+                }
+            }
+
+            function getActiveTab(availableTabs: Array<IArticleActionInteractive>): IArticleActionInteractive {
+                if (availableTabs.includes('correct')) {
+                    return 'correct';
+                } else if (availableTabs.includes('publish')) {
+                    return 'publish';
+                } else {
+                    return availableTabs[0];
+                }
+            }
+
             /*
              * Save item
              * @return {promise}
              */
             scope.saveTopbar = function() {
-                scope.saveDisabled = true;
-                return scope.save(scope.item)
+                scope.$applyAsync(() => {
+                    scope.saveTopbarLoading = true;
+                });
+
+                // when very big articles being are saved(~14k words),
+                // the browser can't animate the loading spinner properly
+                // the delay is chosen so the spinner freezes in a visible state.
+                const timeoutDuration = 600;
+
+                return $q((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, timeoutDuration);
+                })
+                    .then(() => scope.save(scope.item))
                     .finally(() => {
-                        scope.saveDisabled = false;
+                        scope.saveTopbarLoading = false;
+                        scope.$applyAsync();
                     });
             };
 
@@ -78,7 +126,7 @@ export function AuthoringTopbarDirective(
                 return TranslationService.checkAvailability(scope.item);
             };
 
-            scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
+            scope.triggerActionFromExtension = (actionToTrigger: IAuthoringAction) => {
                 actionToTrigger.onTrigger();
             };
 

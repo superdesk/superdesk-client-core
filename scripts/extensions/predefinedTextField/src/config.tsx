@@ -1,6 +1,7 @@
+/* eslint-disable react/no-multi-comp */
 import * as React from 'react';
-import {IConfigComponentProps, IFormField, IFormGroup, IGenericListPageComponent} from 'superdesk-api';
-import {IPredefinedFieldConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
+import {IConfigComponentProps, IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
+import {IConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
 import {Tag, Checkbox} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
@@ -20,7 +21,7 @@ const {FormFieldType} = superdesk.forms;
 
 const nameField: IFormField = {
     label: gettext('Title'),
-    type: FormFieldType.textSingleLine,
+    type: FormFieldType.plainText,
     field: nameof<IPredefinedFieldOption>('title'),
     required: true,
 };
@@ -32,28 +33,12 @@ const definitionField: IFormField = {
     required: true,
 };
 
-export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentProps<IPredefinedFieldConfig>> {
+class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IPredefinedFieldOption>> {
     render() {
-        const formConfig: IFormGroup = {
-            direction: 'vertical',
-            type: 'inline',
-            form: [
-                nameField,
-                definitionField,
-            ],
-        };
+        const {item, page, getId, index} = this.props;
 
-        const GenericArrayListPageComponent = getGenericArrayListPageComponent<IPredefinedFieldOption>();
-
-        const value = this.props.config?.options ?? [];
-        const getId = (item: IPredefinedFieldOption) => item._id;
-
-        const renderRow = (
-            key: string,
-            item: IPredefinedFieldOption,
-            page: IGenericListPageComponent<IPredefinedFieldOption>,
-        ) => (
-            <ListItem key={key} onClick={() => page.openPreview(getId(item))}>
+        return (
+            <ListItem key={index} onClick={() => page.openPreview(getId(item))}>
                 <ListItemColumn bold noBorder>
                     {getFormFieldPreviewComponent(item, nameField)}
                 </ListItemColumn>
@@ -87,6 +72,24 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
                 </ListItemActionsMenu>
             </ListItem>
         );
+    }
+}
+
+export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
+    render() {
+        const formConfig: IFormGroup = {
+            direction: 'vertical',
+            type: 'inline',
+            form: [
+                nameField,
+                definitionField,
+            ],
+        };
+
+        const GenericArrayListPageComponent = getGenericArrayListPageComponent<IPredefinedFieldOption, never>();
+
+        const value = this.props.config?.options ?? [];
+        const getId = (item: IPredefinedFieldOption) => item._id;
 
         const extensionConfig: IExtensionConfigurationOptions = superdesk.getExtensionConfig();
         const availablePlaceholders =
@@ -121,8 +124,8 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
 
                 <GenericArrayListPageComponent
                     defaultSortOption={{field: nameof<IPredefinedFieldOption>('title'), direction: 'ascending'}}
-                    formConfig={formConfig}
-                    renderRow={renderRow}
+                    getFormConfig={() => formConfig}
+                    ItemComponent={ItemComponent}
                     defaultFilters={{}}
                     disallowSorting
                     disallowFiltering
@@ -135,7 +138,7 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
                         });
                     }}
                     onChange={(val) => {
-                        const nextConfig: IPredefinedFieldConfig = {
+                        const nextConfig: IConfig = {
                             ...this.props.config,
                             options: val,
                         };

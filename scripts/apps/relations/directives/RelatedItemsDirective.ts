@@ -1,18 +1,20 @@
-import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle, IArticleField, IRendition} from 'superdesk-api';
+import {IArticle, IRendition, IVocabularyRelatedContent, IVocabularyMedia} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 import {getThumbnailForItem} from 'core/helpers/item';
+import {RelatedItemCreateNewButton} from './related-items-create-new-button';
+import {getSuperdeskType} from 'utils/dragging';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
+    relatedItemsNewButton: typeof RelatedItemCreateNewButton;
     onCreated: (items: Array<IArticle>) => void;
     gettext: (text: any, params?: any) => string;
-    field: IArticleField;
+    field: IVocabularyMedia | IVocabularyRelatedContent;
     editable: boolean;
     item: IArticle;
     loading: boolean;
@@ -355,6 +357,8 @@ export function RelatedItemsDirective(
             scope.$on('$destroy', () => {
                 removeEventListeners.forEach((removeFn) => removeFn());
             });
+
+            scope.relatedItemsNewButton = RelatedItemCreateNewButton;
         },
     };
 }

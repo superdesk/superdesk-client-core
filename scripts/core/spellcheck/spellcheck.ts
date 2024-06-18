@@ -86,7 +86,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
             });
         }
 
-        return dict;
+        return $q.resolve(dict);
     }
 
     /*
@@ -389,7 +389,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      * @param {String} word
      */
     this.ignoreWord = ignoreWord;
-    function ignoreWord(word) {
+    function ignoreWord(word): void {
         getItemIgnored()[word] = 1;
     }
 
@@ -430,9 +430,11 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      * @param {String} word
      * @param {String} isBeingIgnored
      */
-    this.addWord = function addWord(word, isBeingIgnored) {
+    this.addWord = function addWord(word, isBeingIgnored): Promise<any> {
         if (isBeingIgnored) {
-            return ignoreWord(word);
+            ignoreWord(word);
+
+            return Promise.resolve();
         } else {
             return addWordToUserDictionary(word);
         }

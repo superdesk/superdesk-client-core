@@ -1,6 +1,7 @@
-import {Modifier, EditorState, EditorChangeType, SelectionState} from 'draft-js';
+import {Modifier, EditorState, EditorChangeType, SelectionState, ContentState} from 'draft-js';
 import {getData, setDataForContent, getCell, setCell} from './table';
 import {escapeRegExp} from 'core/utils';
+import {CustomEditor3Entity} from '../constants';
 
 /**
  * @name clearHighlights
@@ -59,7 +60,7 @@ export const forEachBlock = (content, cb) => {
 
         let blockIndex = -1;
 
-        if (entity != null && entity.getType() === 'TABLE') {
+        if (entity != null && entity.getType() === CustomEditor3Entity.TABLE) {
             ({newContent, blockIndex} = forEachBlockInTable(newContent, block, blockIndex, cb));
         } else {
             newContent = cb(++blockIndex, block, newContent);
@@ -215,7 +216,7 @@ const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex
     return {newContent, matchIndex};
 };
 
-// create reg exp from pattern if neede
+// create reg exp from pattern if needed
 const getRegExp = ({pattern, caseSensitive}) =>
     typeof pattern === 'string' ? new RegExp(escapeRegExp(pattern), 'g' + (caseSensitive ? '' : 'i')) : pattern;
 
@@ -245,3 +246,59 @@ const createSelection = (key: string, start: number, end: number): SelectionStat
         anchorOffset: start,
         focusOffset: end,
     }) as SelectionState;
+
+export function replaceAllForEachBlock(
+    contentState: ContentState,
+    regex: RegExp, // a global regex must be passed
+    replaceWith: string,
+): ContentState {
+    let result: ContentState = contentState;
+
+    for (const block of contentState.getBlocksAsArray()) {
+        const blockKey = block.getKey();
+
+        const matches: Array<{index: number; text: string}> =
+            Array.from(block.getText().matchAll(regex))
+                .map((match) => ({index: match.index, text: match[0]}));
+
+        let offsetCorrection = 0;
+
+        const correctOffset = (n) => n + offsetCorrection;
+
+        for (const match of matches) {
+            const anchorOffset = correctOffset(match.index);
+            const focusOffset = correctOffset(match.index + match.text.length);
+            const rangeToReplace = new SelectionState({
+                anchorKey: blockKey,
+                anchorOffset,
+                focusKey: blockKey,
+                focusOffset,
+            });
+
+            const firstCharStyle = block.getInlineStyleAt(anchorOffset);
+
+            let consistentStyle = true;
+
+            for (let i = anchorOffset + 1; i <= focusOffset; i++) {
+                const charStyles = block.getInlineStyleAt(i);
+
+                // eslint-disable-next-line max-depth
+                if (charStyles.equals(firstCharStyle) !== true) {
+                    consistentStyle = false;
+                    break;
+                }
+            }
+
+            result = Modifier.replaceText(
+                result,
+                rangeToReplace,
+                replaceWith,
+                consistentStyle ? firstCharStyle : undefined,
+            );
+
+            offsetCorrection += replaceWith.length - match.text.length;
+        }
+    }
+
+    return result;
+}

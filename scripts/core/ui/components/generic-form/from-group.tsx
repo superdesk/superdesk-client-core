@@ -6,16 +6,16 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {FormGroupWrapper} from './form-group-wrapper';
 import {IFormGroup} from 'superdesk-api';
 
-interface IProps {
+interface IProps<T> {
     formConfig: IFormGroup;
-    item: {[key: string]: any};
+    item: Partial<T>;
     editMode: boolean;
     issues: {[field: string]: Array<string>};
-    handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>): void;
+    handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>): void;
 }
 
 // The component is recursive!
-export class FormViewEdit extends React.Component<IProps> {
+export class FormViewEdit<T> extends React.Component<IProps<T>> {
     render() {
         const group: IFormGroup = this.props.formConfig;
 
@@ -47,7 +47,7 @@ export class FormViewEdit extends React.Component<IProps> {
                                     issues={this.props.issues[item.field] || []}
                                     previewOutput={false}
                                     onChange={
-                                        (nextValue, fieldName?: string) =>
+                                        (nextValue, fieldName?) =>
                                             this.props.handleFieldChange(
                                                 item.field != null ? item.field : fieldName,
                                                 nextValue,

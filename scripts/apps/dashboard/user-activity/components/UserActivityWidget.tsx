@@ -333,7 +333,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
 
         return (
             <div className="widget-container">
-                <div className="main-list" style={{top: 0}}>
+                <div className="main-list" style={{insetBlockStart: 0}}>
                     {this.props.header ? (
                         <div className="widget-header">
                             <h3 className="widget-title">
@@ -346,12 +346,13 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                     >
                         <form className="search-box__content">
                             <SelectUser
-                                selectedUserId={this.props.user?._id}
+                                selectedUserId={this.props.user?._id ?? null}
                                 autoFocus={false}
                                 onSelect={(user) => {
                                     this.props.onUserChange(user);
                                 }}
                                 horizontalSpacing={true}
+                                clearable={false}
                             />
                         </form>
                     </div>

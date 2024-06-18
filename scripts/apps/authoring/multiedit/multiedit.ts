@@ -14,6 +14,8 @@ import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
 import {InitializeMedia} from '../authoring/services/InitializeMediaService';
+import {sdApi} from 'api';
+import {notify} from 'core/notify/notify';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -53,9 +55,25 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     };
 
     this.exit = function(item) {
-        this.items = [];
-        this.updateItems();
-        $location.url(referrer.getReferrerUrl());
+        let someFailed = false;
+
+        Promise.all(
+            this.items
+                .filter((item) => item.article != null)
+                .map((item) => sdApi.article.unlock(item.article)
+                    .catch(() => {
+                        someFailed = true;
+                        return Promise.resolve();
+                    })),
+        ).then(() => {
+            if (someFailed) {
+                notify.error(gettext('Some articles failed to unlock'));
+            }
+
+            this.items = [];
+            this.updateItems();
+            $location.url(referrer.getReferrerUrl());
+        });
     };
 
     this.open = function() {
@@ -182,8 +200,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
-            const MEDIA_TYPES = ['video', 'picture', 'audio'];
-            var mediaFields = {};
+            scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
@@ -233,7 +250,11 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             }, true);
 
             scope.save = function() {
-                return authoring.save(scope.origItem, cloneDeep(scope.item)).then((res) => {
+                return authoring.save(
+                    scope.origItem,
+                    cloneDeep(scope.item),
+                    scope.requestEditor3DirectivesToGenerateHtml,
+                ).then((res) => {
                     scope.dirty = false;
                     InitializeMedia.initMedia(scope);
 

@@ -2,7 +2,7 @@ import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
-import {getCustomDecorator, IEditorStore} from '../store';
+import {getDecorators, IEditorStore} from '../store';
 import {ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
 const spellchecker = (state: IEditorStore, action) => {
@@ -28,6 +28,58 @@ export interface IReplaceWordData {
         offset: number;
     };
     newWord: string;
+}
+
+export function replaceWordInEditorState(editorState: EditorState, replaceWordData: IReplaceWordData): EditorState {
+    const {word, newWord} = replaceWordData;
+    const selection = editorState.getSelection();
+    const newSelection = selection.merge({
+        anchorOffset: word.offset + newWord.length,
+        focusOffset: word.offset + newWord.length,
+        hasFocus: true,
+    });
+    let newContent = editorState.getCurrentContent();
+    const block = newContent.getBlockForKey(selection.getStartKey());
+    const length = word.text.length < newWord.length ? word.text.length : newWord.length;
+
+    for (let i = 0; i < length; i++) {
+        const characterSelection = selection.merge({
+            anchorOffset: word.offset + i,
+            focusOffset: word.offset + i + 1,
+            hasFocus: true,
+        });
+        const inlineStyle = block.getInlineStyleAt(word.offset + i);
+
+        newContent = Modifier.replaceText(newContent, characterSelection, newWord[i], inlineStyle);
+    }
+
+    if (word.text.length < newWord.length) {
+        // insert remaining text
+        const insertSelection = selection.merge({
+            anchorOffset: word.offset + word.text.length,
+            focusOffset: word.offset + word.text.length,
+        });
+        const text = newWord.substring(word.text.length);
+        const inlineStyle = block.getInlineStyleAt(word.offset + word.text.length - 1);
+
+        newContent = Modifier.replaceText(newContent, insertSelection, text, inlineStyle);
+    }
+
+    if (word.text.length > newWord.length) {
+        // delete extra text
+        const deleteSelection = selection.merge({
+            anchorOffset: word.offset + newWord.length,
+            focusOffset: word.offset + word.text.length,
+        });
+
+        newContent = Modifier.replaceText(newContent, deleteSelection, '');
+    }
+
+    let newState = EditorState.push(editorState, newContent, 'spellcheck-change');
+
+    newState = EditorState.acceptSelection(newState, newSelection);
+
+    return newState;
 }
 
 /**
@@ -57,52 +109,7 @@ export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChan
 
         return createAddSuggestion(state, {text: newWord, data: data}, wordSelection);
     } else {
-        const selection = editorState.getSelection();
-        const newSelection = selection.merge({
-            anchorOffset: word.offset + newWord.length,
-            focusOffset: word.offset + newWord.length,
-            hasFocus: true,
-        });
-        let newContent = editorState.getCurrentContent();
-        const block = newContent.getBlockForKey(selection.getStartKey());
-        const length = word.text.length < newWord.length ? word.text.length : newWord.length;
-
-        for (let i = 0; i < length; i++) {
-            const characterSelection = selection.merge({
-                anchorOffset: word.offset + i,
-                focusOffset: word.offset + i + 1,
-                hasFocus: true,
-            });
-            const inlineStyle = block.getInlineStyleAt(word.offset + i);
-
-            newContent = Modifier.replaceText(newContent, characterSelection, newWord[i], inlineStyle);
-        }
-
-        if (word.text.length < newWord.length) {
-            // insert remaining text
-            const insertSelection = selection.merge({
-                anchorOffset: word.offset + word.text.length,
-                focusOffset: word.offset + word.text.length,
-            });
-            const text = newWord.substring(word.text.length);
-            const inlineStyle = block.getInlineStyleAt(word.offset + word.text.length - 1);
-
-            newContent = Modifier.replaceText(newContent, insertSelection, text, inlineStyle);
-        }
-
-        if (word.text.length > newWord.length) {
-            // delete extra text
-            const deleteSelection = selection.merge({
-                anchorOffset: word.offset + newWord.length,
-                focusOffset: word.offset + word.text.length,
-            });
-
-            newContent = Modifier.replaceText(newContent, deleteSelection, '');
-        }
-
-        let newState = EditorState.push(editorState, newContent, 'spellcheck-change');
-
-        newState = EditorState.acceptSelection(newState, newSelection);
+        const newState = replaceWordInEditorState(editorState, replaceWordData);
 
         if (skipOnChange) {
             return {
@@ -120,7 +127,19 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
 
     const nextEditorState = EditorState.set(
         editorState,
-        {decorator: enabled ? getCustomDecorator(language, spellcheckWarningsByBlock) : getCustomDecorator()},
+        {
+            decorator: getDecorators(
+                {
+                    spellchecker: {
+                        acceptSuggestion: 'store-based',
+                        enabled: enabled,
+                        language: language,
+                        warnings: enabled ? spellcheckWarningsByBlock : null,
+                    },
+                    limitConfig: state.limitConfig,
+                },
+            ).decorator,
+        },
     );
 
     return {

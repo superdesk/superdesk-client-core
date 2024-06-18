@@ -1,4 +1,5 @@
 import * as React from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -697,7 +698,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     <div className="sd-photo-preview__video-inner">
                                         <div
                                             className="sd-photo-preview__video-container"
-                                            style={{marginTop: '2rem'}}
+                                            style={{marginBlockStart: '2rem'}}
                                             ref={this.setVideoContainerSize}
                                         >
                                             <video
@@ -711,7 +712,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     height: `${videoHeight}px`,
                                                     // chrome will add extra position for react crop if video has
                                                     // margin top, even if margin of those two are equal
-                                                    marginTop: 0,
+                                                    marginBlockStart: 0,
                                                 }}
                                                 className={getClass('rotate__transition')}
                                                 onTransitionEnd={this.handleRotateTransitionEnd}

@@ -1,4 +1,13 @@
-<div ng-if="notifications && default_incoming" id="deskNotifications" sd-tooltip="{{ :: 'Notifications' | translate }}" flow="left" class="dropdown monitoring-dropdown" ng-class="{'dropdown--align-right': !viewColumn}" dropdown>
+<div
+    ng-if="notifications && default_incoming"
+    id="deskNotifications"
+    sd-tooltip="{{ :: 'Notifications' | translate }}"
+    flow="left"
+    class="dropdown monitoring-dropdown"
+    ng-class="{'dropdown--align-right': !viewColumn}"
+    dropdown
+    data-test-id="desk-notifications"
+>
     <button class="notification-label" dropdown__toggle>
         <span class="notification-count">{{ notificationCount }}</span>
     </button>

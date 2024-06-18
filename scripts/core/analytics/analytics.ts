@@ -31,6 +31,7 @@ function GoogleTracking(config) {
 
         i.GoogleAnalyticsObject = r;
         i[r] = i[r] || function() {
+            // eslint-disable-next-line prefer-rest-params
             (i[r].q = i[r].q || []).push(arguments);
         };
         i[r].l = 1 * Number(new Date());

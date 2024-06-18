@@ -4,48 +4,15 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
-import {showModal, showErrorsModal} from 'core/services/modalService';
+import {showErrorsModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
-import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware} from '../index';
-import {dataApi} from 'core/helpers/CrudManager';
-
-export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promise<IArticle> {
-    return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
-        .then(() => {
-            const onUpdateFromExtensions = Object.values(extensions).map(
-                (extension) => extension.activationResult?.contributions?.authoring?.onUpdateBefore,
-            ).filter((updateFn) => updateFn != null);
-
-            return (
-                onUpdateFromExtensions.length < 1
-                    ? Promise.resolve(item)
-                    : onUpdateFromExtensions
-                        .reduce(
-                            (current, next) => current.then(
-                                (result) => next(orig._autosave ?? orig, result),
-                            ),
-                            Promise.resolve(item),
-                        )
-                        .then((nextItem) => angular.extend(item, nextItem))
-            );
-        });
-}
-
-export function runAfterUpdateEvent(previous: IArticle, current: IArticle) {
-    const onUpdateAfterFromExtensions = Object.values(extensions).map(
-        (extension) => extension.activationResult?.contributions?.authoring?.onUpdateAfter,
-    ).filter((fn) => fn != null);
-
-    onUpdateAfterFromExtensions.forEach((fn) => {
-        fn(previous, current);
-    });
-}
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -121,11 +88,46 @@ interface Iparams {
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
-AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks',
-    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal', 'archiveService'];
-export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, familyService, modal, archiveService) {
+AuthoringService.$inject = [
+    '$q',
+    '$location',
+    'api',
+    'lock',
+    'autosave',
+    'confirm',
+    'privileges',
+    'desks',
+    'superdeskFlags',
+    'notify',
+    'session',
+    '$injector',
+    'moment',
+    'familyService',
+    'archiveService',
+    '$rootScope',
+];
+
+export function AuthoringService(
+    $q,
+    $location,
+    api,
+    lock,
+    autosave,
+    confirm,
+    privileges,
+    desks,
+    superdeskFlags,
+    notify,
+    session,
+    $injector,
+    moment,
+    familyService,
+    archiveService,
+    $rootScope,
+) {
     var self = this;
+
+    const isEditable = (item: Readonly<Partial<IArticle>>) => lock.isLockedInCurrentSession(item);
 
     // TODO: have to trap desk update event for refereshing users desks.
     this.userDesks = [];
@@ -279,42 +281,34 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             });
 
     /**
-     * Close an item
-     *
-     *   and save it if dirty, unlock if editable, and remove from work queue at all times
+     * * close an item and save it if dirty
+     * * unlock if editable
+     * * remove from work queue at all times
+     * * (is called after publishing)
      *
      * @param {Object} diff
      * @param {Object} orig
      * @param {boolean} isDirty $scope dirty status.
      */
-    this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
-        var promise = $q.when();
-
-        if (this.isEditable(diff)) {
-            if (isDirty) {
-                if (!_.includes(['published', 'corrected'], orig.state)) {
-                    promise = confirm.confirm()
-                        .then(angular.bind(this, function save() {
-                            return this.save(orig, diff);
-                        }), () => // ignore saving
-                            $q.when('ignore'));
-                } else {
-                    promise = $q.when('ignore');
-                }
-            }
-
-            promise = promise.then(function unlock(cancelType) {
-                if (cancelType && cancelType === 'ignore') {
-                    autosave.drop(orig);
-                }
-
-                if (!closeItem) {
-                    return lock.unlock(diff);
-                }
-            });
-        }
-
-        return promise;
+    this.close = function closeAuthoring(
+        diff: Readonly<Partial<IArticle>>,
+        orig: Readonly<IArticle>,
+        isDirty: boolean,
+        doClose: () => void,
+    ): Promise<void> {
+        return authoringApiCommon.closeAuthoring(
+            orig,
+            isDirty,
+            () => this.save(orig, diff),
+            () => lock.unlock(diff),
+            () => new Promise((resolve) => {
+                autosave.drop(orig);
+                resolve();
+            }),
+            doClose,
+        ).then(() => {
+            $rootScope.$applyAsync(); // update angular UI
+        });
     };
 
     /**
@@ -329,7 +323,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.publishConfirmation = function publishAuthoring(orig, diff, isDirty, action) {
         var promise = $q.when();
 
-        if (this.isEditable(diff) && isDirty) {
+        if (isEditable(diff) && isDirty) {
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
                     return true;
@@ -374,7 +368,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
     };
 
-    this.publish = function publish(orig, diff, action = 'publish', publishingWarningsConfirmed = false,
+    this.publish = function publish(
+        orig,
+        diff,
+        action: 'publish' | 'correct' = 'publish',
+        publishingWarningsConfirmed = false,
         {notifyErrors}: IPublishOptions = {notifyErrors: false},
     ) {
         let extDiff = helpers.extendItem({}, diff);
@@ -518,7 +516,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var promise = $q.when();
 
         if (isDirty) {
-            if (this.isEditable(diff)) {
+            if (isEditable(diff)) {
                 promise = confirm.confirmSaveWork(message)
                     .then(angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
@@ -546,8 +544,18 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function saveAuthoring(origItem, _item) {
-        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => {
+    this.save = function saveAuthoring(
+        origItem: IArticle,
+        _item: IArticle,
+        requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
+    ) {
+        for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
+            fn();
+        }
+
+        return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
+            angular.extend(_item, item);
+
             var diff = helpers.extendItem({}, item);
             // Finding if all the keys are dirty for real
 
@@ -576,9 +584,14 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             helpers.filterDefaultValues(diff, origItem);
 
             if (_.size(diff) > 0) {
-                return api.save('archive', origItem, diff, {},
-                    {publish_from_personal: publishFromPersonal}).then((__item) => {
-                    runAfterUpdateEvent(origItem, __item);
+                return api.save(
+                    'archive',
+                    origItem,
+                    diff,
+                    {},
+                    {publish_from_personal: publishFromPersonal}, // DUPLICATED IN authoring-react/data-layer.ts
+                ).then((__item) => {
+                    authoringApiCommon.saveAfter(__item, origItem);
 
                     if (origItem.type === 'picture') {
                         item._etag = __item._etag;
@@ -621,14 +634,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         });
     };
 
-    /**
-     * Test if an item is editable
-     *
-     * @param {Object} item
-     */
-    this.isEditable = function isEditable(item) {
-        return lock.isLockedInCurrentSession(item);
-    };
+    this.isEditable = isEditable;
 
     /**
      * Unlock an item - callback for item:unlock event

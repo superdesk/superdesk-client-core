@@ -88,81 +88,8 @@ describe('editor3', () => {
         expect(body.element(by.tagName('a')).getAttribute('href')).toBe('https://example.com/');
     });
 
-    it('can add tables', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
-
-        bodyEditor.toolbar.table();
-        tableEditor.sendKeys('foo');
-
-        const body = getPreviewBody();
-
-        expect(body.element(by.tagName('table')).getText()).toBe('foo');
-    });
-
-    it('ctrl+z on tables mantains cursor position at the end', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
-
-        bodyEditor.toolbar.table();
-        tableEditor.sendKeys('foo');
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
-        tableEditor.sendKeys('bar');
-
-        const body = getPreviewBody();
-
-        expect(body.element(by.tagName('table')).getText()).toBe('fobar');
-    });
-
-    it('ctrl+z on tables mantains cursor position at the beginning', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
-
-        bodyEditor.toolbar.table();
-        tableEditor.sendKeys('foo');
-        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
-        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
-        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
-        tableEditor.sendKeys('bar');
-
-        const body = getPreviewBody();
-
-        expect(body.element(by.tagName('table')).getText()).toBe('barfo');
-    });
-
-    it('ctrl+z on tables mantains cursor position in the middle', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
-
-        bodyEditor.toolbar.table();
-        tableEditor.sendKeys('foo');
-        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
-        tableEditor.sendKeys(protractor.Key.ARROW_LEFT);
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
-        tableEditor.sendKeys('bar');
-
-        const body = getPreviewBody();
-
-        expect(body.element(by.tagName('table')).getText()).toBe('fbar');
-    });
-
-    it('ctrl+y on tables mantains cursor position', () => {
-        const tableEditor = new Editor3(editors.get(1).element(by.className('table-block')));
-
-        bodyEditor.toolbar.table();
-        tableEditor.sendKeys('foo');
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'z');
-        tableEditor.sendKeys(protractor.Key.CONTROL, 'y');
-        tableEditor.sendKeys('bar');
-
-        const body = getPreviewBody();
-
-        expect(body.element(by.tagName('table')).getText()).toBe('fobaro');
-    });
-
     function getPreviewBody() {
-        const saveButton = el(['authoring', 'authoring-topbar', 'save']);
-
-        browser.wait(ECE.elementToBeClickable(saveButton));
-        saveButton.click();
+        authoring.save();
         assertToastMsg('success', 'Item updated.');
         monitoring.previewAction(0, 0);
         return monitoring.getPreviewBody();

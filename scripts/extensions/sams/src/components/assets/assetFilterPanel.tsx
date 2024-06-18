@@ -12,7 +12,6 @@ import {
     Autocomplete,
     Button,
     DatePicker,
-    FormLabel,
     Input,
     Option,
     Select,
@@ -124,6 +123,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
     removeTag(value: IAssetTag) {
         this.setState((preState) => {
             const tags: Array<IAssetTag> = preState.localSearchParams.tags!;
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const index = this.state.localSearchParams.tags?.indexOf(value)!;
 
             tags.splice(index, 1);
@@ -239,8 +240,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Name')}
                                         type="text"
+                                        label={gettext('Name')}
                                         value={this.state.localSearchParams.name ?? ''}
                                         onChange={this.onChange.name}
                                     />
@@ -249,8 +250,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Filename')}
                                         type="text"
+                                        label={gettext('Filename')}
                                         value={this.state.localSearchParams.filename ?? ''}
                                         onChange={this.onChange.filename}
                                     />
@@ -259,8 +260,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
-                                        label={gettext('Description')}
                                         type="text"
+                                        label={gettext('Description')}
                                         value={this.state.localSearchParams.description ?? ''}
                                         onChange={this.onChange.description}
                                     />
@@ -345,8 +346,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             </FormGroup>
                             <FormGroup>
                                 <FormItem>
-                                    <FormLabel text={gettext('Uploaded From:')} />
                                     <DatePicker
+                                        label={gettext('Uploaded From:')}
                                         value={this.state.localSearchParams.dateFrom ?? null}
                                         onChange={this.onChange.dateFrom}
                                         dateFormat={config.view.dateformat}
@@ -354,8 +355,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                     />
                                 </FormItem>
                                 <FormItem>
-                                    <FormLabel text={gettext('Uploaded To:')} />
                                     <DatePicker
+                                        label={gettext('Uploaded To:')}
                                         value={this.state.localSearchParams.dateTo ?? null}
                                         onChange={this.onChange.dateTo}
                                         dateFormat={config.view.dateformat}

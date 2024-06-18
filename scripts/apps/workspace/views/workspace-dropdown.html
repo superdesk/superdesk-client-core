@@ -1,6 +1,6 @@
 <h1 id="workspace-heading" class="a11y-only"><span translate>Workspace:</span> {{ selected.name }}</h1>
 <div id="workspace-dropdown" class="dropdown navbtn">
-    <button data-toggle="dropdown" class="dropdown__toggle {{workspaceType}} pull-left" data-test-id="monitoring--selected-desk">
+    <button data-toggle="dropdown" class="dropdown__toggle {{workspaceType}} pull-left" data-test-id="monitoring--selected-desk" ng-if="initialized">
         <span class="name" ng-if="selected.name">{{ selected.name | uppercase }}</span>
         <span class="name" ng-if="!selected" translate>Select Workspace</span>
         <span class="name" ng-if="selected && !selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
@@ -26,7 +26,7 @@
             </button>
         </li>
         <li>
-            <button class="action-btn" ng-click="createWorkspace()">
+            <button class="action-btn" ng-click="createWorkspace()" aria-label="{{ :: 'create new workspace' | translate">
                 <i class="icon-plus-sign icon--blue"></i>
                 <span class="circle"></span>
                 {{ :: 'CREATE NEW WORKSPACE' | translate }}

@@ -2,6 +2,16 @@ import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
 import {getTemplateFilters} from '../constants';
 import {dataApi} from 'core/helpers/CrudManager';
+import {IArticle} from 'superdesk-api';
+import {authoringReactViewEnabled} from 'appConfig';
+
+const defaultTemplate: Partial<IArticle> = {
+    type: 'text',
+    headline: '',
+    abstract: '',
+    byline: '',
+    body_html: '',
+};
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'session', 'lodash'];
@@ -35,8 +45,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 selectDesk(null);
             });
 
-            content.getTypes().then(() => {
-                $scope.content_types = content.types;
+            content.getTypes('text').then((contentTypes) => {
+                $scope.content_types = contentTypes;
             });
 
             /*
@@ -73,6 +83,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 desk.selected = !desk.selected;
                 $scope.onDeskToggle(desk);
             };
+
+            $scope.authoringReactViewEnabled = authoringReactViewEnabled;
 
             /*
              * Called on desk toggle on multiple desk selection
@@ -141,14 +153,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 if ($scope.template.template_type === 'create') {
                     $scope.template_desk = null;
                 }
-            };
-
-            $scope.templatesFilter = function(templateType) {
-                if ($scope.template._id && $scope.template.template_type === 'kill') {
-                    return templateType._id === 'kill';
-                }
-
-                return templateType._id !== 'kill';
             };
 
             /*
@@ -220,7 +224,13 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 return !_.has($scope.error, 'template_name') && !_.has($scope.error, 'template_type');
             }
 
+            $scope.requestEditor3DirectivesToGenerateHtml = [];
+
             $scope.save = function() {
+                for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
+                    fn();
+                }
+
                 $scope.template.schedule.cron_list = [];
                 _.forEach($scope.cron_times, (time) => {
                     $scope.template.schedule.cron_list.push(time.substring(3, 5) + ' ' + time.substring(0, 2) +
@@ -271,12 +281,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
-                $scope.template.data = $scope.origTemplate.data || {
-                    headline: '',
-                    abstract: '',
-                    byline: '',
-                    body_html: '',
-                };
+                $scope.template.data = $scope.origTemplate.data || defaultTemplate;
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
                     $scope.template.template_desks[0] : '';
@@ -296,7 +301,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, $scope, $scope.item);
+                if ($scope.item != null) {
+                    content.setupAuthoring(profile, $scope, $scope.item);
+                }
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {

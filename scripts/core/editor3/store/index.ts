@@ -2,48 +2,48 @@
 import {
     EditorState,
     convertFromRaw,
-    convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator,
 } from 'draft-js';
-import {createStore} from 'redux';
+import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
-    forceUpdate,
     setAbbreviations,
     EditorLimit,
 } from '../actions';
 import {
     fieldsMetaKeys,
-    setFieldMetadata,
     getFieldMetadata,
     FIELD_KEY_SEPARATOR,
 } from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
-import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
+import {getAnnotationsFromContentState, getAnnotationsFromItem} from '../helpers/editor3CustomData';
 import {
     initializeHighlights,
     prepareHighlightsForExport,
 } from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
-import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links/LinkDecorator';
 import {
     getSpellcheckingDecorator,
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
-import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {
+    formattingOptionsUnsafeToParseFromHTML,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {RICH_FORMATTING_OPTION, IArticle} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {getMiddlewares} from 'core/redux-utils';
+import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
+import {CompositeDecoratorCustom} from './composite-decorator-custom';
+import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
+import {IActiveCell} from '../components/tables/TableBlock';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -55,6 +55,7 @@ interface IProps {
     onChange?: any;
     readOnly?: any;
     singleLine?: any;
+    plainText?: any;
     tabindex?: any;
     showTitle?: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -69,14 +70,15 @@ interface IProps {
 export interface IEditorStore {
     editorState: EditorState;
     searchTerm: { pattern: string; index: number; caseSensitive: boolean };
-    popup: { type: any };
-    readOnly: any;
+    popup: { type: any; data?: any };
+    readOnly: boolean;
     locked: boolean;
     showToolbar: any;
     singleLine: any;
+    plainText: boolean;
     tabindex: any;
     showTitle: any;
-    activeCell: any;
+    activeCell?: IActiveCell;
     editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
@@ -96,20 +98,91 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
-export const getCustomDecorator = (
-    language?: string,
-    spellcheckWarnings: ISpellcheckWarningsByBlock = null,
-) => {
+interface IOptions {
+    spellchecker: {
+        acceptSuggestion: IAcceptSuggestion,
+        enabled?: boolean,
+        language?: string,
+        warnings?: ISpellcheckWarningsByBlock,
+    };
+    limitConfig?: EditorLimit,
+}
+
+export const getDecorators = (options: IOptions) => {
+    const {limitConfig} = options;
+    const {spellchecker} = options;
+
+    // improve performance by not replacing decorators when possible.
+    let mustReApplyDecorators = false;
+
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellcheckWarnings != null && language != null) {
+    if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
+        mustReApplyDecorators = true;
+
         decorators.push(
-            getSpellcheckingDecorator(language, spellcheckWarnings),
+            getSpellcheckingDecorator(spellchecker.language, spellchecker.warnings, spellchecker.acceptSuggestion),
         );
     }
 
-    return new CompositeDecorator(decorators);
+    if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+        mustReApplyDecorators = true;
+
+        decorators.push(
+            getTextLimitHighlightDecorator(limitConfig.chars),
+        );
+    }
+
+    return {
+        decorator: new CompositeDecoratorCustom(decorators),
+        mustReApplyDecorators,
+    };
 };
+
+/**
+ * @param spellcheck ng service or null
+ */
+export function getInitialSpellcheckerData(spellcheck, language: string): IEditorStore['spellchecking'] {
+    const spellcheckerDisabledInConfig = appConfig.features?.useTansaProofing === true;
+
+    if (spellcheck != null) {
+        if (!spellcheckerDisabledInConfig) {
+            spellcheck.setLanguage(language);
+        }
+    }
+
+    return {
+        language: language,
+        enabled:
+            !spellcheckerDisabledInConfig &&
+            spellcheck &&
+            spellcheck.isAutoSpellchecker,
+        inProgress: false,
+        warningsByBlock: {},
+    };
+}
+
+export function initializeSpellchecker(dispatch, spellcheck): Promise<void> {
+    return new Promise<void>((resolve) => {
+        if (spellcheck != null) {
+            Promise.all([
+                spellcheck.getAbbreviationsDict(),
+
+                // after we have the dictionary, force update the editor to highlight typos
+                // if another action is dispatched, `dispatch(forceUpdate())` isn't needed
+                spellcheck.getDict(),
+            ]).then((res) => {
+                const [abbreviations] = res;
+
+                dispatch(setAbbreviations(abbreviations || {}));
+
+                setTimeout(() => {
+                    resolve();
+                });
+            });
+        }
+    });
+}
 
 /**
  * @name createEditorStore
@@ -122,20 +195,7 @@ export default function createEditorStore(
     props: IProps,
     spellcheck,
     isReact = false,
-) {
-    const spellcheckerDisabledInConfig =
-        get(appConfig, 'features.useTansaProofing') === true;
-    let disableSpellchecker = true;
-
-    if (spellcheck != null) {
-        disableSpellchecker =
-            spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
-
-        if (!spellcheckerDisabledInConfig) {
-            spellcheck.setLanguage(props.language);
-        }
-    }
-
+): Store<IEditorStore> {
     const content = getInitialContent(props);
 
     const onChangeValue = isReact
@@ -151,12 +211,10 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getCustomDecorator(),
+        getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
     );
 
-    editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
-
-    const store = createStore<IEditorStore, any, any, any>(
+    const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
         reducers,
         {
             editorState,
@@ -166,21 +224,14 @@ export default function createEditorStore(
             locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
             showToolbar: (props.editorFormat || []).length > 0,
             singleLine: props.singleLine,
+            plainText: props.plainText,
             tabindex: props.tabindex,
             showTitle: props.showTitle,
             activeCell: null, // currently focused table cell
             editorFormat: props.editorFormat || [],
             onChangeValue: onChangeValue,
             item: props.item,
-            spellchecking: {
-                language: props.language,
-                enabled:
-                    !spellcheckerDisabledInConfig &&
-                    spellcheck &&
-                    spellcheck.isAutoSpellchecker,
-                inProgress: false,
-                warningsByBlock: {},
-            },
+            spellchecking: getInitialSpellcheckerData(spellcheck, props.language),
             suggestingMode: false,
             invisibles: false,
             svc: props.svc,
@@ -191,13 +242,7 @@ export default function createEditorStore(
         getMiddlewares(),
     );
 
-    if (spellcheck != null) {
-        // after we have the dictionary, force update the editor to highlight typos
-        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
-        spellcheck.getAbbreviationsDict().then((abbreviations) => {
-            store.dispatch(setAbbreviations(abbreviations || {}));
-        });
-    }
+    initializeSpellchecker(store.dispatch, spellcheck);
 
     editor3Stores.push(store);
 
@@ -212,80 +257,43 @@ export function unsetStore() {
     return editor3Stores = [];
 }
 
+export function getAnnotationsForField(item: IArticle, fieldId: string) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromItem(item, fieldId),
+    );
+}
+
+export function getAnnotationsForStorage(contentState: ContentState) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromContentState(contentState),
+    );
+}
+
 /**
  * Generate item annotations field
  *
  * @param {Object} item
  */
-function generateAnnotations(item) {
+export function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
         getAnnotationsFromItem(item, 'body_html'),
     );
 }
 
-/**
- * @name onChange
- * @params {ContentState} contentState New editor content state.
- * @params {Boolean} plainText If this is true, the editor content will be text instead of html
- * @description Triggered whenever the state of the editor changes. It takes the
- * current content states and updates the values of the host controller. This function
- * is bound to the controller, so 'this' points to controller attributes.
- */
-export function onChange(contentState, {plainText = false} = {}) {
-    const pathToValue = this.pathToValue;
-
-    if (pathToValue == null || pathToValue.length < 1) {
-        throw new Error('pathToValue is required');
-    }
-
+export function prepareEditor3StateForExport(contentState: ContentState): ContentState {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const contentStateCleaned = removeInlineStyles(
         contentState,
         decorativeStyles,
     );
-    const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
+
+    return prepareHighlightsForExport(
         EditorState.createWithContent(contentStateCleaned),
     ).getCurrentContent();
-    const rawState = convertToRaw(contentStateHighlightsReadyForExport);
+}
 
-    setFieldMetadata(
-        this.item,
-        pathToValue,
-        fieldsMetaKeys.draftjsState,
-        rawState,
-    );
-
-    if (pathToValue === 'body_html') {
-        syncAssociations(this.item, rawState);
-    }
-
-    // example: "extra.customField"
-    const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
-
-    let objectToUpdate =
-        pathToValueArray.length < 2
-            ? this.item
-            : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
-                if (obj[pathSegment] == null) {
-                    obj[pathSegment] = {};
-                }
-
-                return obj[pathSegment];
-            }, this.item);
-
-    const fieldName = pathToValueArray[pathToValueArray.length - 1];
-
-    if (plainText) {
-        objectToUpdate[
-            fieldName
-        ] = contentStateHighlightsReadyForExport.getPlainText();
-    } else {
-        objectToUpdate[fieldName] = editor3StateToHtml(
-            contentStateHighlightsReadyForExport,
-        );
-        generateAnnotations(this.item);
-    }
-
+// `this` points to Editor3Directive
+export function onChange() {
     // call on change with scope updated
     this.$rootScope.$applyAsync(() => {
         this.onChange();
@@ -318,7 +326,7 @@ export function getInitialContent(props): ContentState {
     );
 
     /**
-     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * To avoid synchronization issues between html/plaintext values and draftjs object,
      * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
      */
     if (hasUnsafeFormattingOptions) {
@@ -351,11 +359,8 @@ export function getInitialContent(props): ContentState {
 
 /**
  * Sync editor embeds in item.associations
- *
- * @param {Object} item
- * @param {RawDraftContentState} rawState
  */
-function syncAssociations(item, rawState) {
+export function syncAssociations(item: IArticle, rawState: RawDraftContentState): void {
     const associations = Object.assign({}, item.associations);
 
     Object.keys(associations).forEach((key) => {

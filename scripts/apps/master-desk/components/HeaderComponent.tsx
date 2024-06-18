@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
 import {
     CheckButtonGroup,
-    RadioGroup,
+    RadioButtonGroup,
     Switch,
     Dropdown,
     NavButton,
@@ -193,9 +193,9 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </button>
                     ) : null}
 
-                    <ButtonGroup align="start" padded={true}>
+                    <ButtonGroup align="end" padded={true}>
                         <CheckButtonGroup>
-                            <RadioGroup
+                            <RadioButtonGroup
                                 value={this.props.activeTab}
                                 options={tabs}
                                 onChange={(value: IMasterDeskTab) => this.changeTab(value)}

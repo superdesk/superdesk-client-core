@@ -35,6 +35,7 @@ interface IScope extends ng.IScope {
     articleEdit: any;
     dirty: boolean;
     extra: any;
+    refreshTrigger: number;
     autosave(item: any): any;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
@@ -85,8 +86,6 @@ ArticleEditDirective.$inject = [
     '$filter',
     'superdesk',
     'session',
-    'history',
-    '$interpolate',
     'suggest',
     'renditions',
 ];
@@ -96,8 +95,6 @@ export function ArticleEditDirective(
     $filter,
     superdesk,
     session,
-    history,
-    $interpolate,
     suggest,
     renditions,
 ) {
@@ -147,15 +144,6 @@ export function ArticleEditDirective(
                     }
                 });
 
-                // watch item and save every change in history in order to perform undo/redo later
-                // ONLY for editor2 (with blocks)
-                try {
-                    angular.module('superdesk.apps.editor2');
-                    history.watch('item', mainEditScope || scope);
-                } catch (e) {
-                    // no-op
-                }
-
                 scope.$on('History.undone', triggerAutosave);
                 scope.$on('History.redone', triggerAutosave);
 
@@ -166,6 +154,19 @@ export function ArticleEditDirective(
                         });
                     }
                 }
+
+                // Needed only for #ANGULAR_AUTHORING. In authoring react we have a generic
+                // event ('resource:updated') which listens to all item changes.
+                scope.$on('author_approval:updated', (_event, extra) => {
+                    if (extra.item_id === scope.item?._id) {
+                        if (scope.item.extra == null) {
+                            scope.item.extra = {};
+                        }
+
+                        scope.item.extra.publish_sign_off = extra.new_sign_off;
+                        scope.$apply();
+                    }
+                });
 
                 scope.$watch('item.language', () => {
                     scope.monthNames = getMonthNamesShort(scope.item.language ?? appConfig.default_language)
@@ -422,7 +423,10 @@ export function ArticleEditDirective(
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
+                        scope.refresh();
                     }
+
+                    scope.refresh(); // reload footer editorState from HTML that was set here
 
                     // first option should always be selected, as multiple helplines could be added in footer
                     _.defer(() => {

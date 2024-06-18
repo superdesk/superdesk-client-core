@@ -1,0 +1,10 @@
+{
+    "extends": "superdesk-code-style/tsconfig-strict",
+    "ts-node": {
+        "files": true // needed for mocha to recognize src/typings/refs.d.ts
+    },
+    "compilerOptions": {
+        "outDir": "./dist/src",
+        "declaration": true,
+    }
+}

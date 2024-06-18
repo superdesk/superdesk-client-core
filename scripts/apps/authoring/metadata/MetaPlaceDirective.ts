@@ -35,6 +35,9 @@ export default function MetaPlaceDirective(places: IPlacesService) {
                     })
                     .catch(() => {
                         scope.loading = false;
+                    })
+                    .finally(() => {
+                        scope.$applyAsync();
                     });
             };
 

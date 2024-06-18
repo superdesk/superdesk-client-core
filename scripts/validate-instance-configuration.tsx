@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 const modalHeader = (
     <span

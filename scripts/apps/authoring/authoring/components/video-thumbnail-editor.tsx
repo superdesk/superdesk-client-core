@@ -16,8 +16,8 @@ const RENDITION_MAPPING = {
 };
 
 export class VideoThumbnailEditor extends React.Component<IProps> {
-    handleFiles(files: FileList) {
-        this.uploadFile(files.item(0));
+    handleFiles(files: Array<File>) {
+        this.uploadFile(files[0]);
     }
 
     uploadFile(file: File) {
@@ -80,7 +80,7 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
                 }}
                 onDrop={(event) => {
                     event.preventDefault();
-                    this.handleFiles(event.dataTransfer.files);
+                    this.handleFiles(Array.from(event.dataTransfer.files));
                 }}
             >
                 {showFigure && (

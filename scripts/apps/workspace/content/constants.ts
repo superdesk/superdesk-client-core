@@ -1,68 +1,6 @@
 import {gettext} from 'core/utils';
 import {IStage} from 'superdesk-api';
 import {ICard} from 'apps/monitoring/services/CardsService';
-import {SplitFilter} from 'apps/monitoring/filters';
-
-// http://docs.python-cerberus.org/en/stable/usage.html
-export const DEFAULT_SCHEMA = Object.freeze({
-    slugline: {maxlength: 24, type: 'string', required: true},
-    relatedItems: {},
-    genre: {type: 'list'},
-    anpa_take_key: {type: 'string'},
-    place: {type: 'list'},
-    priority: {type: 'integer'},
-    urgency: {type: 'integer'},
-    anpa_category: {type: 'list', required: true},
-    subject: {type: 'list', required: true},
-    company_codes: {type: 'list'},
-    ednote: {type: 'string'},
-    headline: {maxlength: 42, type: 'string', required: true},
-    sms: {maxlength: 160, type: 'string'},
-    abstract: {maxlength: 160, type: 'string'},
-    body_html: {required: true, type: 'string'},
-    byline: {type: 'string'},
-    dateline: {type: 'dict', required: true},
-    sign_off: {type: 'string'},
-    footer: {},
-    body_footer: {type: 'string'},
-});
-
-export function GET_DEFAULT_EDITOR() {
-    // editor2 is being deprecated, but many tests depend on it.
-    const editor3enabled = window['superdesk_e2e_tests_running'] !== true;
-
-    return Object.freeze({
-        slugline: {order: 1, sdWidth: 'full', enabled: true},
-        genre: {order: 2, sdWidth: 'half', enabled: true},
-        anpa_take_key: {order: 3, sdWidth: 'half', enabled: true},
-        place: {order: 4, sdWidth: 'half', enabled: true},
-        priority: {order: 5, sdWidth: 'quarter', enabled: true},
-        urgency: {order: 6, sdWidth: 'quarter', enabled: true},
-        anpa_category: {order: 7, sdWidth: 'full', enabled: true},
-        subject: {order: 8, sdWidth: 'full', enabled: true},
-        company_codes: {order: 9, sdWidth: 'full', enabled: true},
-        ednote: {order: 10, sdWidth: 'full', enabled: true},
-        headline: {order: 11, formatOptions: ['underline', 'link', 'bold'], editor3: editor3enabled, enabled: true},
-        sms: {order: 12, enabled: true},
-        abstract: {
-            order: 13,
-            formatOptions: ['bold', 'italic', 'underline', 'link'],
-            enabled: true,
-            editor3: editor3enabled,
-        },
-        byline: {order: 14, enabled: true},
-        dateline: {order: 15, enabled: true},
-        body_html: {
-            order: 16,
-            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'link', 'embed', 'media'],
-            enabled: true,
-            editor3: editor3enabled,
-        },
-        footer: {order: 17, enabled: true},
-        body_footer: {order: 18, enabled: true},
-        sign_off: {order: 19, enabled: true},
-    });
-}
 
 // labelMap maps schema entry keys to their display names.
 export const GET_LABEL_MAP = () => ({
@@ -155,11 +93,6 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 }
 
-export const CV_ALIAS = Object.freeze({
-    locators: 'place',
-    categories: 'anpa_category',
-});
-
 export const EXTRA_SCHEMA_FIELDS = Object.freeze({
     feature_media: {},
     media_description: {},
@@ -170,6 +103,9 @@ export const EXTRA_EDITOR_FIELDS = Object.freeze({
     media_description: {enabled: true},
 });
 
+
+export const EDITOR_BLOCK_FIELD_TYPE = 'editor-block';
+
 /**
  * Vocabulary types used for custom fields
  */
@@ -179,5 +115,6 @@ export const CUSTOM_FIELD_TYPES = [
     'media',
     'embed',
     'urls',
+    EDITOR_BLOCK_FIELD_TYPE,
     'custom',
 ];

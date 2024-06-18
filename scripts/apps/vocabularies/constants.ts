@@ -1,6 +1,17 @@
 import {gettext} from 'core/utils';
 
-export function getMediaTypes() {
+interface IMediaType {
+    GALLERY: {
+        id: 'media';
+        label: string;
+    };
+    RELATED_CONTENT: {
+        id: 'related_content';
+        label: string;
+    }
+}
+
+export function getMediaTypes(): IMediaType {
     return {
         GALLERY: {
             id: 'media',

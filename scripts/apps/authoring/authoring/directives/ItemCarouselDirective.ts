@@ -2,11 +2,12 @@ import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
-import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
 import {getAssociationsByFieldId} from '../controllers/AssociationController';
 import {IArticle} from 'superdesk-api';
+import {getSuperdeskType} from 'utils/dragging';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -186,6 +187,16 @@ export function ItemCarouselDirective(notify, relationsService) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
+            const addDragOverClass = () => {
+                elem.find('figure').addClass('dragover');
+                elem.find('button.item-association').addClass('dragover');
+            };
+
+            const removeDragOverClass = () => {
+                elem.find('figure').removeClass('dragover');
+                elem.find('button.item-association').removeClass('dragover');
+            };
+
             function canUploadItems(uploadsCount: number = 0): boolean {
                 const mediaItemsForCurrentField = getAssociationsByFieldId(scope.item.associations, scope.field._id);
                 const currentUploads = mediaItemsForCurrentField.length;
@@ -208,6 +219,11 @@ export function ItemCarouselDirective(notify, relationsService) {
                 elem.on('dragover', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
+                    addDragOverClass();
+                });
+
+                elem.on('dragleave', () => {
+                    removeDragOverClass();
                 });
 
                 elem.on('drop dragdrop', (event) => {
@@ -219,9 +235,13 @@ export function ItemCarouselDirective(notify, relationsService) {
                     event.stopPropagation();
 
                     const type: string = getSuperdeskType(event, false);
-                    const item: IArticle = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+
+                    const jsonData = event.originalEvent.dataTransfer.getData(type);
+                    const item: IArticle = angular.fromJson(jsonData !== '' ? jsonData : '{}');
+
                     const isWorkflowAllowed: boolean = relationsService.itemHasAllowedStatus(item, scope.field);
 
+                    removeDragOverClass();
                     if (!isWorkflowAllowed) {
                         notify.error(gettext(
                             'The following status is not allowed in this field: {{status}}',

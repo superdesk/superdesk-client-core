@@ -12,13 +12,18 @@ e2e-test-results
 templates-cache.generated.js
 styles/extension-styles.generated.css
 e2e/client/specs/**/*.js
+
+# playwright
+e2e/client/test-results/
+e2e/client/playwright-report/
+e2e/client/playwright/.cache/
+
 .env
 npm-debug.log
 index.html
 yarn-error.log
 
 .history/
-.github
 
 # VIM related files
 *.swo

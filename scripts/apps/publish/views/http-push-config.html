@@ -11,5 +11,5 @@
 </div>
 <div class="sd-line-input">
     <label class="sd-line-input__label" for="secret_token" translate>Secret Token</label>
-    <input class="sd-line-input__input" type="text" id="secret_token" placeholder="{{ :: 'Secret Token'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)">
+    <input class="sd-line-input__input" type="text" id="secret_token" placeholder="{{ :: 'Set and hidden thereafter'|translate }}" ng-model="destination.config.secret_token" ng-change="$parent.setConfig(destination)" autocomplete="off">
 </div>

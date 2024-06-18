@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
@@ -21,6 +21,8 @@ jobs:
 
     - run: npm ci
     - run: npm run test
+      env:
+        TZ: "Europe/Prague"
 
   e2e:
     runs-on: ubuntu-latest
@@ -31,26 +33,47 @@ jobs:
         suite: [a, b]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
 
     - name: Start e2e server
       run: |
-        docker-compose pull
-        docker-compose build
-        docker-compose up -d
+        docker compose pull
+        docker compose build
+        docker compose up -d
       working-directory: e2e/server
 
     - name: Build client
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
 
+    # playwright start
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: e2e/client
+
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: e2e/client
+
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: e2e/client/playwright-report/
+        retention-days: 30
+
+    # playwright end
+
+    # protractor start
+
     - name: Protractor
-      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
+      run: npx protractor-flake --parser standard  --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
@@ -58,7 +81,14 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png
+
+    # protractor end
+
+    - name: Server Logs
+      if: ${{ failure() }}
+      run: docker compose logs superdesk
+      working-directory: e2e/server

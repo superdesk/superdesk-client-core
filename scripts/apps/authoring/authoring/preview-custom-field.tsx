@@ -2,14 +2,14 @@ import React from 'react';
 import {get, isEmpty} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IArticleField} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {FormLabel} from 'superdesk-ui-framework/react';
+import {IArticle, IVocabulary} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    field: IArticleField;
+    field: IVocabulary;
 }
 
 export class PreviewCustomField extends React.PureComponent<IProps> {
@@ -19,7 +19,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
         const FieldType = getField(field.custom_field_type);
         const label = getLabelForFieldId(field._id, [field]);
 
-        if (FieldType == null || isEmpty(value)) {
+        if (FieldType == null || (typeof value !== 'boolean' && isEmpty(value))) {
             return null;
         }
 
@@ -31,6 +31,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
                 <FieldType.previewComponent
                     item={item}
                     value={value}
+                    config={field.custom_field_config}
                 />
             </div>
         );

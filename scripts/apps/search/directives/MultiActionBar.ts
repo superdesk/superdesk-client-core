@@ -13,13 +13,11 @@ interface IScope extends ng.IScope {
     spike: any;
     publish: any;
     state: any;
-    printPreview: Array<IArticle>;
     toggleDisplay(): void;
     hideMultiActionBar(): void;
     hideMultiActionBar(): void;
     getActions(articles: Array<IArticle>): Array<IArticleActionBulkExtended>;
     isOpenItemType(type: any): boolean;
-    closePrintPreview(): void;
 }
 
 export function isOpenItemType(type) {
@@ -59,12 +57,6 @@ export function MultiActionBar(
             scope.multi = multi;
             scope.display = true;
             scope.$watch(multi.getItems, detectType);
-
-            scope.printPreview = [];
-
-            scope.closePrintPreview = () => {
-                scope.printPreview = [];
-            };
 
             scope.$watch('multi.count', () => {
                 scope.display = true;

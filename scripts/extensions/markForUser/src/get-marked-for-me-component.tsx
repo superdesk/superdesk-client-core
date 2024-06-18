@@ -124,7 +124,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                     groups={desksInOrder.map((deskId) => ({
                         render: () => (
                             <GroupLabel>
-                                <Badge type="highlight" marginRight={6}>{itemsByDesk[deskId].length}</Badge>
+                                <Badge type="highlight" marginInlineEnd={6}>{itemsByDesk[deskId].length}</Badge>
                                 {desks.find(({_id}) => _id === deskId)!.name}
                             </GroupLabel>
                         ),
@@ -145,7 +145,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                         >
                             <Badge
                                 type={hasItemsMarked ? 'highlight' : 'default'}
-                                marginRight={8}
+                                marginInlineEnd={8}
                             >
                                 {articles._items.length}
                             </Badge>
@@ -156,7 +156,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                         return (
                             <button
                                 key={key}
-                                style={{display: 'block', width: '100%', padding: 0, textAlign: 'left'}}
+                                style={{display: 'block', width: '100%', padding: 0, textAlign: 'start'}}
                                 className={getClass('article-in-dropdown')}
                                 onClick={() => {
                                     closeDropdown();
@@ -168,7 +168,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                             </button>
                         );
                     }}
-                    wrapperStyles={{width: 430, padding: 15, paddingTop: 0}}
+                    wrapperStyles={{width: 430, padding: 15, paddingBlockStart: 0}}
                     data-test-id="marked-for-me-dropdown"
                 />
             );

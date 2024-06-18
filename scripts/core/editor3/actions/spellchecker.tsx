@@ -13,15 +13,15 @@ export function replaceWord(data: IReplaceWordData) {
     };
 }
 
-export function setSpellcheckerStatus(enabled: boolean) {
+export function setSpellcheckerStatus(enabled: boolean, abortSignal: AbortSignal): any {
     if (enabled) {
-        return reloadSpellcheckerWarnings();
+        return reloadSpellcheckerWarnings(abortSignal);
     } else {
         return disableSpellchecker();
     }
 }
 
-export function reloadSpellcheckerWarnings() {
+export function reloadSpellcheckerWarnings(abortSignal: AbortSignal) {
     return function(dispatch, getState) {
         const state: IEditorStore = getState();
         const spellchecker = getSpellchecker(state.spellchecking.language);
@@ -30,7 +30,11 @@ export function reloadSpellcheckerWarnings() {
             return;
         }
 
-        getSpellcheckWarningsByBlock(spellchecker, getState().editorState).then((spellcheckWarningsByBlock) => {
+        getSpellcheckWarningsByBlock(
+            spellchecker,
+            getState().editorState,
+            abortSignal,
+        ).then((spellcheckWarningsByBlock) => {
             dispatch(applySpellcheck(spellcheckWarningsByBlock));
         });
     };

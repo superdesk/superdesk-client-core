@@ -106,6 +106,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
         this.setState((preState: IState) => {
             const tags: Array<{name: string, code: string}> = preState.tags!;
             const newTag: any = value!;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const index = this.state.tags?.indexOf(newTag)!;
 
             tags.splice(index, 1);
@@ -186,8 +187,8 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     <FormGroup>
                         <FormRow>
                             <Input
-                                label={gettext('Name')}
                                 type="text"
+                                label={gettext('Name')}
                                 required={true}
                                 value={this.props.asset.name ?? ''}
                                 onChange={this.onChange.name}
@@ -200,8 +201,8 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     <FormGroup>
                         <FormRow>
                             <Input
-                                label={gettext('Description')}
                                 type="text"
+                                label={gettext('Description')}
                                 value={this.props.asset.description ?? ''}
                                 onChange={this.onChange.description}
                                 disabled={this.props.disabled === true}

@@ -6,7 +6,7 @@ import {get} from 'lodash';
 
 import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
-import {gettext} from 'core/utils';
+import {getArticleLabel, gettext} from 'core/utils';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
@@ -22,6 +22,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {IRelatedEntities} from 'core/getRelatedEntities';
+import {dragStart} from 'utils/dragging';
 
 export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -251,7 +252,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     onDragStart(event) {
-        ng.get('dragitem').start(event, this.props.item);
+        dragStart(event, this.props.item);
     }
 
     toggleNested(event) {
@@ -271,15 +272,17 @@ export class Item extends React.Component<IProps, IState> {
         httpRequestJsonLocal<{_items: Array<IArticle>}>({
             method: 'GET',
             path: '/published',
-            urlParams: {source: JSON.stringify({
-                query: {
-                    bool: {
-                        must: {term: {family_id: item.archive_item.family_id}},
-                        must_not: {term: {_id: item.item_id}},
+            urlParams: {
+                source: {
+                    query: {
+                        bool: {
+                            must: {term: {family_id: item.archive_item.family_id}},
+                            must_not: {term: {_id: item.item_id}},
+                        },
                     },
+                    sort: [{'versioncreated': 'desc'}],
                 },
-                sort: [{'versioncreated': 'desc'}],
-            })},
+            },
         }).then((data) => {
             this.setState({loading: false, nested: data._items});
         }).catch(() => {
@@ -480,6 +483,7 @@ export class Item extends React.Component<IProps, IState> {
                 draggable: !this.props.isNested,
                 tabIndex: 0,
                 'data-test-id': 'article-item',
+                'data-test-value': getArticleLabel(item),
             },
             (
                 <div

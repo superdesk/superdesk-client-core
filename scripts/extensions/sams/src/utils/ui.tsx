@@ -2,6 +2,8 @@
 import * as React from 'react';
 import {Provider} from 'react-redux';
 
+import {showModal} from '@superdesk/common';
+
 // Types
 import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT, IAssetItem, RENDITION} from '../interfaces';
 import {superdeskApi} from '../apis';
@@ -22,7 +24,7 @@ export function showModalConnectedToStore<T = any>(
         return Promise.reject('SAMS store has not been initialised');
     }
 
-    return superdeskApi.ui.showModal(
+    return showModal(
         ({closeModal}) => (
             <Provider store={store}>
                 <Component closeModal={closeModal} {...props ?? {}} />
@@ -121,7 +123,8 @@ export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
 export function getAssetRenditionDimension(asset: IAssetItem, rendition: RENDITION) {
     const {gettext} = superdeskApi.localization;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const dimensions = asset.renditions.find((r) => r?.name === rendition)?.params!;
 
-    return gettext('{{width}} * {{height}}', {width: dimensions?.width, height: dimensions?.height});
+    return gettext('{{width}} * {{height}}', {width: dimensions.width, height: dimensions.height});
 }

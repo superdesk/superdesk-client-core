@@ -14,7 +14,7 @@
     .notification-list {
         li {
           .date {
-              margin-top: 3px !important;
+              margin-block-start: 3px !important;
           }
           .content {
               padding: 0 0 0 40px;
@@ -63,7 +63,7 @@
         }
     }
     .add-comment {
-        border-top: 1px solid var(--sd-colour-line--light);
+        border-block-start: 1px solid var(--sd-colour-line--light);
         padding: 10px;
         box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.12);
         form {
@@ -80,13 +80,13 @@
         }
         .actions {
             height: 30px;
-            margin-top: 10px;
+            margin-block-start: 10px;
             .post {
-                margin-top: 5px;
+                margin-block-start: 5px;
                 .sd-checkbox {
                     vertical-align: middle;
-                    margin-top: -2px;
-                    margin-right: 0;
+                    margin-block-start: -2px;
+                    margin-inline-end: 0;
                 }
             }
         }

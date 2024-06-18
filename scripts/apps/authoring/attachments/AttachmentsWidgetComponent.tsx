@@ -5,7 +5,7 @@ import * as React from 'react';
 import {AttachmentsList} from './AttachmentsList';
 import {AttachmentsEditorModal} from './AttachmentsEditorModal';
 
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 import {gettext} from 'core/utils';
 import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
@@ -70,7 +70,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 saveAttachment={(original, updates) => {
                     attachmentsApi.save(original, updates)
                         .then((updated) => {
-                            this.props.updateAttachment(updated);
+                            this.props.onAttachmentUpdated(updated);
                             closeModal();
                         });
                 }}
@@ -79,9 +79,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
     }
 
     render() {
-        const showUpload = this.props.attachments.length < appConfig.attachments_max_files &&
-            this.props.isLockedByMe &&
-            !this.props.readOnly;
+        const showUpload = this.props.attachments.length < appConfig.attachments_max_files && !this.props.readOnly;
 
         return (
             <div
@@ -108,7 +106,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
 
                         <button
                             className="btn btn--hollow"
-                            disabled={this.props.readOnly || this.props.editable === false}
+                            disabled={this.props.readOnly}
                             onClick={this.showFileUploadModal}
                         >
                             {gettext('Attach files')}
@@ -119,7 +117,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 {!(showUpload && this.props.isWidget === false) ? null : (
                     <button
                         className="item-association"
-                        disabled={this.props.readOnly || this.props.editable === false}
+                        disabled={this.props.readOnly}
                         onClick={this.showFileUploadModal}
                     >
                         <div className="subtext">

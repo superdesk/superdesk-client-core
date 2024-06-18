@@ -4,36 +4,28 @@ import {
     SelectionState,
     ContentBlock,
     EditorState,
-    CompositeDecorator,
     convertToRaw,
     convertFromRaw,
+    RawDraftContentState,
 } from 'draft-js';
 import {OrderedSet, Map} from 'immutable';
-import {LinkDecorator} from '../components/links/LinkDecorator';
 import {createBlockSelection} from './selection';
+import {getBlockKeys} from './selection/blockKeys';
 
 /**
- * @ngdoc method
- * @name getCell
- * @param {Array} cells The array of cells in the table
- * @param {Number} row The row of the cell in the table
- * @param {Number} col The column of the cell in the table
- * @description Retrieves the content state of the cell at row/col.
+ * Retrieves the editor state of the cell at row/col.
  */
-export function getCell(data, row, col, currentStyle, selection) {
-    const decorator = new CompositeDecorator([LinkDecorator]);
+export function getCell(data: IEditor3TableData, row, col, currentStyle, selection): EditorState {
     const {cells} = data;
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
         cellEditorState = EditorState.createWithContent(
             ContentState.createFromText(''),
-            decorator,
         );
     } else {
         cellEditorState = EditorState.createWithContent(
             convertFromRaw(cells[row][col]),
-            decorator,
         );
     }
 
@@ -74,7 +66,12 @@ export function getCell(data, row, col, currentStyle, selection) {
  * @description Updates data about this cell inside the entity for this atomic
  * block.
  */
-export function setCell(data, row, col, cellEditorState: EditorState) {
+export function setCell(
+    data: IEditor3TableData | IEditor3CustomBlockData,
+    row,
+    col,
+    cellEditorState: EditorState,
+): {data: IEditor3TableData | IEditor3CustomBlockData, needUpdate: boolean; forceUpdate: boolean} {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
@@ -109,7 +106,6 @@ export function getData(contentState: ContentState, blockKey: string) {
     const block = contentState.getBlockForKey(blockKey);
     const entityKey = block.getEntityAt(0);
     const {data} = contentState.getEntity(entityKey).getData();
-
     const blockData = block.getData().get('data');
 
     if (!blockData && data) {
@@ -117,6 +113,19 @@ export function getData(contentState: ContentState, blockKey: string) {
     }
 
     return JSON.parse(blockData);
+}
+
+export interface IEditor3TableData {
+    cells: Array<Array<RawDraftContentState>>;
+    numRows: number;
+    numCols: number;
+    withHeader: boolean;
+    currentStyle?: string;
+}
+
+export interface IEditor3CustomBlockData extends IEditor3TableData {
+    vocabularyId: string;
+    label: string;
 }
 
 /**
@@ -130,14 +139,12 @@ export function getData(contentState: ContentState, blockKey: string) {
 export function setData(
     editorState: EditorState,
     block: ContentBlock,
-    data,
+    data: IEditor3TableData | IEditor3CustomBlockData,
     lastChangeType,
 ): EditorState {
     const contentState = editorState.getCurrentContent();
     const selection = createBlockSelection(editorState, block);
-
     const newContentState = setDataForContent(contentState, selection, block, data);
-
     const newEditorState = EditorState.push(
         editorState,
         newContentState,
@@ -159,7 +166,7 @@ export function setDataForContent(
     contentState: ContentState,
     selection: SelectionState,
     block: ContentBlock,
-    data,
+    data: IEditor3TableData,
 ): ContentState {
     const entityKey = block.getEntityAt(0);
     const newContentState = Modifier.setBlockData(
@@ -171,4 +178,40 @@ export function setDataForContent(
     newContentState.replaceEntityData(entityKey, {data});
 
     return newContentState;
+}
+
+export function getTableWithSingleCell(
+    editorState: EditorState,
+    initialContent?: RawDraftContentState | 'editor-selection',
+): IEditor3TableData {
+    const initialCellData: RawDraftContentState | null = (() => {
+        const contentState = editorState.getCurrentContent();
+        const selectionState = editorState.getSelection();
+
+        if (initialContent == null) {
+            return null;
+        } else if (initialContent === 'editor-selection') {
+            if (!selectionState.isCollapsed()) {
+                // Get user selected content
+                const selectedBlocks =
+                    getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
+                        .map((key) => contentState.getBlockForKey(key));
+
+                return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
+            } else {
+                return null;
+            }
+        } else {
+            return initialContent;
+        }
+    })();
+
+    const data: IEditor3TableData = {
+        cells: initialCellData == null ? [[]] : [[initialCellData]],
+        numRows: 1,
+        numCols: 1,
+        withHeader: false,
+    };
+
+    return data;
 }

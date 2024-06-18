@@ -1,16 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {Editor, RichUtils, getDefaultKeyBinding, DraftHandleValue, SelectionState, EditorState} from 'draft-js';
+import {
+    Editor,
+    RichUtils,
+    getDefaultKeyBinding,
+    DraftHandleValue,
+    SelectionState,
+    EditorState,
+    convertToRaw,
+} from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {customStyleMap} from '../customStyleMap';
+import {getSpellchecker} from '../spellchecker/default-spellcheckers';
+import {getSpellcheckWarningsByBlock} from '../spellchecker/SpellcheckerDecorator';
+import {isEqual, throttle} from 'lodash';
+import {getDecorators, IEditorStore} from 'core/editor3/store';
+import {addInternalEventListener} from 'core/internal-events';
+import {replaceWordInEditorState} from 'core/editor3/reducers/spellchecker';
 
 interface IProps {
     editorState: EditorState;
+    spellchecking: IEditorStore['spellchecking'];
     readOnly: boolean;
     onChange: (e: EditorState) => void;
     onUndo: () => void;
     onRedo: () => void;
     onFocus: (styles: Array<string>, selection: SelectionState) => void;
+    fullWidth?: boolean;
 }
 
 interface IState {
@@ -27,6 +42,10 @@ interface IState {
  * @description Handles a cell in the table, as well as the containing editor.
  */
 export class TableCell extends React.Component<IProps, IState> {
+    private spellcheckAbortController: AbortController;
+    private eventListeners: Array<() => void>;
+    private scheduleSpellchecking: () => void;
+
     constructor(props) {
         super(props);
 
@@ -34,8 +53,14 @@ export class TableCell extends React.Component<IProps, IState> {
         this.onFocus = this.onFocus.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.spellcheckAbortController = new AbortController();
+
+        this.spellcheck = this.spellcheck.bind(this);
+        this.scheduleSpellchecking = throttle(this.spellcheck.bind(this), 1000);
 
         this.state = {editorState: props.editorState};
+
+        this.eventListeners = [];
     }
 
     /**
@@ -58,12 +83,6 @@ export class TableCell extends React.Component<IProps, IState> {
         }
 
         return getDefaultKeyBinding(e);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            editorState: nextProps.editorState,
-        });
     }
 
     /**
@@ -162,14 +181,13 @@ export class TableCell extends React.Component<IProps, IState> {
     onChange(editorState: EditorState) {
         const selection = editorState.getSelection();
 
-        if (!selection.getHasFocus()) {
-            this.setState({editorState});
-
-            return;
-        }
-
-        this.setState({editorState},
-            () => this.props.onChange(editorState),
+        this.setState(
+            {editorState},
+            () => {
+                if (selection.getHasFocus()) {
+                    this.props.onChange(editorState);
+                }
+            },
         );
     }
 
@@ -182,12 +200,103 @@ export class TableCell extends React.Component<IProps, IState> {
         this.props.onFocus(currentStyle, selection);
     }
 
+    private spellcheck(): void {
+        this.spellcheckAbortController.abort();
+        this.spellcheckAbortController = new AbortController();
+
+        const {editorState} = this.state;
+        const {spellchecking} = this.props;
+        const spellchecker = getSpellchecker(spellchecking.language);
+
+        (
+            spellchecker == null ?
+                Promise.resolve({}) // if spellchecker is no longer available, clear marked ranges
+                : getSpellcheckWarningsByBlock(
+                    spellchecker,
+                    editorState,
+                    this.spellcheckAbortController.signal,
+                )
+        ).then((spellcheckWarningsByBlock) => {
+            const nextEditorState = EditorState.set(
+                editorState,
+                {
+                    decorator: getDecorators(
+                        {
+                            spellchecker: {
+                                acceptSuggestion: (replaceWordData) => {
+                                    const nextState = replaceWordInEditorState(editorState, replaceWordData);
+
+                                    this.onChange(nextState);
+                                },
+                                enabled: spellchecking.enabled,
+                                language: spellchecking.language,
+                                warnings: spellcheckWarningsByBlock,
+                            },
+                        },
+                    ).decorator,
+                },
+            );
+
+            this.onChange(nextEditorState);
+        });
+    }
+
+    componentDidMount(): void {
+        // it needs to run unconditionally on mount to apply decorators even if spellchecking is off
+        this.spellcheck();
+
+        this.eventListeners.push(
+            addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
+        );
+    }
+
+    componentWillUnmount(): void {
+        for (const unregisterEventListener of this.eventListeners) {
+            unregisterEventListener();
+        }
+    }
+
+    componentWillReceiveProps(nextProps: IProps) {
+        const contentChanged = !isEqual(
+            convertToRaw(this.state.editorState.getCurrentContent()),
+            convertToRaw(nextProps.editorState.getCurrentContent()),
+        );
+
+        if (contentChanged) {
+            this.setState(
+                {editorState: nextProps.editorState},
+                () => {
+                    this.scheduleSpellchecking();
+                },
+            );
+        }
+    }
+
+    componentDidUpdate(prevProps: IProps, prevState: IState): void {
+        const contentChanged = this.state.editorState.getCurrentContent() !== prevState.editorState.getCurrentContent();
+        const spellcheckerConfigChanged =
+            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
+            || this.props.spellchecking.language !== prevProps.spellchecking.language;
+
+        if (contentChanged || spellcheckerConfigChanged) {
+            this.scheduleSpellchecking();
+        }
+    }
+
     render() {
         const {editorState} = this.state;
         const {readOnly} = this.props;
+        const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
 
         return (
-            <td onClick={(event) => event.stopPropagation()}>
+            <td
+                // Disabling to prevent misbehavior and bugs when dragging & dropping text
+                onDragStart={(e) => {
+                    e.preventDefault();
+                }}
+                style={fullWidthStyle}
+                onClick={(event) => event.stopPropagation()}
+            >
                 <Editor
                     onFocus={this.onFocus}
                     editorState={editorState}

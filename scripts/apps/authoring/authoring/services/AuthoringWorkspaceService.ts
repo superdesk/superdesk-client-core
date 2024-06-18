@@ -1,8 +1,8 @@
 import {includes} from 'lodash';
-import {IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
-
-export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
+import {IArticle, IAuthoringActionType} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+import {sdApi} from 'api';
+import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 
 /**
  * @ngdoc service
@@ -22,7 +22,7 @@ export class AuthoringWorkspaceService {
     private $window: any;
 
     item: any;
-    action: IAuthoringAction;
+    action: IAuthoringActionType;
     state: any;
 
     widgetVisibilityCheckerFuntions: Array<(arg) => Promise<boolean>>;
@@ -31,11 +31,10 @@ export class AuthoringWorkspaceService {
     authoringTopBarButtonsToHide: {};
     displayAuthoringHeaderCollapedByDefault: any;
 
-    constructor($location, superdeskFlags, authoring, send, suggest, $rootScope, search, $window) {
+    constructor($location, superdeskFlags, authoring, suggest, $rootScope, search, $window) {
         this.$location = $location;
         this.superdeskFlags = superdeskFlags;
         this.authoring = authoring;
-        this.send = send;
         this.suggest = suggest;
         this.$rootScope = $rootScope;
         this.search = search;
@@ -48,7 +47,7 @@ export class AuthoringWorkspaceService {
         this.widgetVisibilityCheckerFuntions = [];
 
         // plugin support
-        this.authoringTopBarAdditionalButtons = {},
+        this.authoringTopBarAdditionalButtons = {};
         this.authoringTopBarButtonsToHide = {};
         this.displayAuthoringHeaderCollapedByDefault = null;
 
@@ -73,6 +72,7 @@ export class AuthoringWorkspaceService {
         this.addAutosave = this.addAutosave.bind(this);
         this.update = this.update.bind(this);
         this.popup = this.popup.bind(this);
+        this.popupFromId = this.popupFromId.bind(this);
         this.sendRowViewEvents = this.sendRowViewEvents.bind(this);
 
         this.init();
@@ -100,20 +100,9 @@ export class AuthoringWorkspaceService {
      */
     edit(
         item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
-        action?: IAuthoringAction,
+        action?: IAuthoringActionType,
     ) {
-        if (item) {
-            // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (
-                item._type === 'externalsource'
-                && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
-            ) {
-                return;
-            }
-            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
-        } else {
-            this.close();
-        }
+        return sdApi.article.edit(item, action);
     }
 
     /**
@@ -150,7 +139,9 @@ export class AuthoringWorkspaceService {
         }
 
         if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
-            this.send.validateAndSend(item).then(_open);
+            sdApi.article.fetchItemsToCurrentDesk([item]).then((res) => {
+                _open(res[0]);
+            });
         } else {
             _open(item);
         }
@@ -166,6 +157,8 @@ export class AuthoringWorkspaceService {
             window.close();
         }
 
+        const item = this.item; // save before value is cleared
+
         this.suggest.setActive(false);
         this.item = null;
         this.action = null;
@@ -175,6 +168,16 @@ export class AuthoringWorkspaceService {
 
         this.saveState();
         this.sendRowViewEvents();
+
+        // Run onCloseAfter API hook
+        setTimeout(() => {
+            Object.values(extensions)
+                .map((extension) => extension.activationResult?.contributions?.authoring?.onCloseAfter)
+                .filter(notNullOrUndefined)
+                .forEach((fn) => {
+                    fn(item);
+                });
+        });
     }
 
     kill(item) {
@@ -246,14 +249,18 @@ export class AuthoringWorkspaceService {
      * @param {string} action
      */
     popup(item, action) {
+        this.popupFromId(item._id, action);
+    }
+
+    popupFromId(id: IArticle['_id'], action) {
         const host = this.$location.host();
         const port = this.$location.port();
         const proto = this.$location.protocol();
         const baseURL = `${proto}://${host}${port !== 80 ? ':' + port : ''}`;
 
         this.$window.open(
-            `${baseURL}/#/workspace/monitoring?item=${item._id}&action=${action}&popup`,
-            item._id,
+            `${baseURL}/#/workspace/monitoring?item=${id}&action=${action}&popup`,
+            id,
         );
     }
 
@@ -300,7 +307,7 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action: IAuthoringAction, repo?, state?) {
+    private authoringOpen(itemId, action: IAuthoringActionType, repo?, state?) {
         return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
                 this.item = item;
@@ -317,7 +324,6 @@ AuthoringWorkspaceService.$inject = [
     '$location',
     'superdeskFlags',
     'authoring',
-    'send',
     'suggest',
     '$rootScope',
     'search',

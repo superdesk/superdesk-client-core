@@ -24,7 +24,7 @@
         <div class="preferences__content">
             <ul class="simple-list simple-list--comfortable simple-list--fixedW-large simple-list--users">
                 <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
-                    <h3 id="feature-preview" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3">Feature preview</h3>
+                    <h3 id="feature-preview" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>Feature preview</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
                         <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t sd-padding--2">
                             <li class="simple-list__item simple-list__item--stacked">
@@ -40,7 +40,7 @@
                 </li>
 
                 <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
-                    <h3 id="view-formats" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3">View formats</h3>
+                    <h3 id="view-formats" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>View formats</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
                         <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light">Select the prefered default view format for specific areas of Superdesks interface. The sections 
                             will always open in the selected view format, but can be always changed using the view option dropdown in each section.</p>
@@ -148,7 +148,7 @@
                                    title="{{:: 'Select default categories only' | translate}}"
                                    translate>default</a>
                             </div>
-                            <div class="sd-check__group">
+                            <div class="sd-check__group sd-check__group--grid">
                                 <span ng-repeat="cat in categories track by cat.qcode">
                                     <sd-check ng-model="cat.selected"
                                         label-position="inside"

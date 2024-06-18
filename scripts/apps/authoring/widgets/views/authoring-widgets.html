@@ -40,7 +40,7 @@
         'active-right': active,
         'right-extended': active.extended}">
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
-        <ul class="navigation-tabs">
+        <ul class="navigation-tabs" data-test-id="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
                 ng-class="{active: widget === active, pinned: widget.pinned}">
                 <a class="sd-sidetab-menu__btn" type="submit"
@@ -49,7 +49,10 @@
                     id="{{ :: widget._id }}"
                     title="{{widget.label}}"
                     sd-hotkey="{{generateHotkey($index+1)}}"
-                    sd-hotkey-options="{global: true}">
+                    sd-hotkey-options="{global: true}"
+                    data-test-id="authoring-widget"
+                    data-test-value="{{widget.label}}"
+                >
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
 
                     <span class="sd-sidetab-menu__info-label badge badge--primary"
@@ -63,7 +66,10 @@
     </div>
 
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
-        ng-if="active && !isWidgetLocked(active) && !active.pinned">
+        ng-if="active && !isWidgetLocked(active) && !active.pinned"
+        data-test-id="authoring-widget-panel"
+        data-test-value="{{active.label}}"
+    >
         <section class="tabcontent" ng-init="widget=active">
             <!--
                 react based widgets use WidgetHeading component

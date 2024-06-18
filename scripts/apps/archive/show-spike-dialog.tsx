@@ -1,14 +1,11 @@
 /* eslint-disable indent */
 
 import React from 'react';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {onSpikeMiddlewareResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 export function showSpikeDialog<T>(
     modal: any,
@@ -43,35 +40,47 @@ export function showSpikeDialog<T>(
         if (skipConfirmationPrompt && warnings.length < 1) {
             doSpike();
         } else {
-            modal.createCustomModal()
+            modal.createCustomModal('spike-modal')
                 .then(({openModal, closeModal}) => {
                     openModal(
-                        <Modal>
-                            <ModalHeader>{gettext('Confirm')}</ModalHeader>
-                            <ModalBody>
-                                <div>{promptForConfirmationMessage}</div>
-                                {
-                                    warnings.length < 1 ? null : (
-                                        <ul style={{listStyle: 'initial', paddingLeft: 40}}>
-                                            {
-                                                warnings.map(({text}, i) => <li key={i}>{text}</li>)
-                                            }
-                                        </ul>
-                                    )
-                                }
-                            </ModalBody>
-                            <ModalFooter>
-                                <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
-                                <button
-                                    className="btn btn--primary"
-                                    onClick={() => {
-                                        doSpike();
-                                        closeModal();
-                                    }}
-                                >
-                                    {gettext('Spike')}
-                                </button>
-                            </ModalFooter>
+                        <Modal
+                            visible
+                            zIndex={1050}
+                            size="small"
+                            position="top"
+                            headerTemplate={
+                                gettext('Confirm')
+                            }
+                            footerTemplate={
+                                (
+                                    <ButtonGroup align="end">
+                                        <Button
+                                            type="default"
+                                            text={gettext('Cancel')}
+                                            onClick={closeModal}
+                                        />
+                                        <Button
+                                            type="primary"
+                                            text={gettext('Spike')}
+                                            onClick={() => {
+                                                doSpike();
+                                                closeModal();
+                                            }}
+                                        />
+                                    </ButtonGroup>
+                                )
+                            }
+                        >
+                            <div>{promptForConfirmationMessage}</div>
+                            {
+                                warnings.length < 1 ? null : (
+                                    <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
+                                        {
+                                            warnings.map(({text}, i) => <li key={i}>{text}</li>)
+                                        }
+                                    </ul>
+                                )
+                            }
                         </Modal>,
                     );
                 });
