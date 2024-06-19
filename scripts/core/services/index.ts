@@ -7,7 +7,6 @@
  */
 import './translate';
 import './preferencesService';
-import './permissionsService';
 import './data';
 import './entity';
 import './server';

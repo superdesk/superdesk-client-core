@@ -7,7 +7,6 @@ import './CheckAllDirective';
 import './SwitchInvertedDirective';
 import './SelectDirective';
 import './SelectPopupDirective';
-import './PermissionsDirective';
 import './SortableDirective';
 import './DroppableDirective';
 import './DraggableDirective';
@@ -39,7 +38,6 @@ export default angular
         'superdesk.core.directives.switchInverted',
         'superdesk.core.directives.select',
         'superdesk.core.directives.selectPopup',
-        'superdesk.core.directives.permissions',
         'superdesk.core.directives.sortable',
         'superdesk.core.directives.draggable',
         'superdesk.core.directives.droppable',
