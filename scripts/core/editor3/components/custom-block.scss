@@ -1,6 +1,8 @@
 .editor3-custom-block {
     .table-block table td {
-        border: 1px solid var(--sd-editor-colour__controls-border)!important;
+        border: 1px solid var(--sd-editor-colour__controls-border) !important;
+        border-radius: 0 var(--b-radius--large) var(--b-radius--large);
+        padding: var(--space--1-5) !important;
     }
 
     .table-inside table {
@@ -15,7 +17,6 @@
 .editor3-custom-block--label {
     font-size: 11px;
     font-weight: 500;
-    color: var(--color-text);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     padding-block-start: 1px; // make text be vertically in the center of the bounding box
@@ -26,21 +27,22 @@
     --handle-height: 14px;
 
     display: flex;
-    padding: 4px 8px;
-    padding-inline-start: 4px; // less padding for drag handle
-    gap: 8px;
+    padding: var(--space--0-5) var(--space--1);
+    gap: var(--gap-1);
     align-items: center;
     cursor: grab;
-    border-start-start-radius: 2px;
-    border-start-end-radius: 2px;
-
+    border-start-start-radius: var(--b-radius--medium);
+    border-start-end-radius: var(--b-radius--medium);
     background: var(--sd-editor-colour__controls-border);
-
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    color: currentColor;
     &:hover {
-        background: gray;
+        opacity: 1;
     }
-
     &:active {
-        background:var(--sd-colour-primary);
+        background-color: var(--sd-colour-interactive);
+        color: white;
+
     }
 }

@@ -15,6 +15,13 @@ function isCustomFieldVocabulary(vocabulary: IVocabulary): boolean {
     return vocabulary.field_type != null || vocabulary.custom_field_type != null;
 }
 
+/**
+ * custom means any vocabulary that is not used as a field type
+ */
+function isCustomVocabulary(vocabulary: IVocabulary): boolean {
+    return vocabulary.field_type == null && vocabulary.service != null;
+}
+
 function getVocabularyItemLabel(term: IVocabularyItem, item: IArticle): string {
     if (!term) {
         return 'None';
@@ -81,10 +88,17 @@ function isSelectionVocabulary(vocabulary: IVocabulary): boolean {
     );
 }
 
+function getCustomFieldVocabularies(): Array<IVocabulary> {
+    return getAll().filter((vocabulary) => isCustomFieldVocabulary(vocabulary)).toArray();
+}
+
+
 interface IVocabulariesApi {
     getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
+    getCustomFieldVocabularies(): Array<IVocabulary>;
     isCustomFieldVocabulary: (vocabulary: IVocabulary) => boolean;
     isSelectionVocabulary: (vocabulary: IVocabulary) => boolean;
+    isCustomVocabulary: (vocabulary: IVocabulary) => boolean;
     getVocabularyItemLabel: (term: IVocabularyItem, item: IArticle) => string;
     getVocabularyItemsPreview: (
         array: Array<IVocabularyItem>,
@@ -106,4 +120,6 @@ export const vocabularies: IVocabulariesApi = {
     getVocabularyItemLabel,
     getVocabularyItemsPreview,
     vocabularyItemsToString,
+    isCustomVocabulary,
+    getCustomFieldVocabularies,
 };

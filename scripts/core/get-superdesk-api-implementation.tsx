@@ -9,6 +9,7 @@ import {
     IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
+    IOpenSideWidget,
 } from 'superdesk-api';
 import {
     gettext,
@@ -114,7 +115,6 @@ import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
-import {getCustomFieldVocabularies, getLanguageVocabulary} from './helpers/business-logic';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
@@ -124,8 +124,16 @@ function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
-export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit' | 'edit-new-window'): Promise<void> {
+export function openArticle(
+    id: IArticle['_id'],
+    mode: 'view' | 'edit' | 'edit-new-window',
+    openSideWidget?: IOpenSideWidget,
+): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
+
+    if (openSideWidget?.id != null) {
+        localStorage.setItem('SIDE_WIDGET', JSON.stringify(openSideWidget));
+    }
 
     if (mode === 'edit-new-window') {
         authoringWorkspace.popupFromId(id, 'view');
@@ -334,10 +342,12 @@ export function getSuperdeskApiImplementation(
                 },
             },
             vocabulary: {
+                getAll: () => sdApi.vocabularies.getAll(),
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
-                getCustomFieldVocabularies: getCustomFieldVocabularies,
-                getLanguageVocabulary: getLanguageVocabulary,
+                getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
+                getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
+                isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
             },
             attachment: attachmentsApi,
             users: {
@@ -366,8 +376,23 @@ export function getSuperdeskApiImplementation(
                 view: (id: IArticle['_id']) => {
                     openArticle(id, 'view');
                 },
+                edit: (
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ) => {
+                    openArticle(id, 'edit', openSideWidget);
+                },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
+                },
+                applyFieldChangesToEditor: (
+                    itemId: IArticle['_id'],
+                    field: {key: string, value: valueof<IArticle>},
+                ) => {
+                    dispatchInternalEvent('dangerouslyOverwriteAuthoringField', {
+                        field,
+                        itemId,
+                    });
                 },
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);

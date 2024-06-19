@@ -13,6 +13,9 @@ const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
 let PINNED_WIDGET_RESIZED = false;
 
+export let IS_WIDGET_PINNED = false;
+export const SIDE_WIDGET_WIDTH = 330;
+
 interface IWidget {
     label?: string;
     icon?: string;
@@ -157,7 +160,13 @@ function WidgetsManagerCtrl(
     preferencesService,
     $rootScope,
 ) {
-    $scope.active = null;
+    const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+    const localStorageWidgetState = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
+    const widgetValue = localStorageWidget == null
+        ? null
+        : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
+
+    $scope.active = widgetValue;
 
     preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
         this.widgetFromPreferences = preferences,
@@ -234,7 +243,7 @@ function WidgetsManagerCtrl(
                 });
 
                 if (this.widgetFromPreferences) {
-                    let widgetFromPreferences = $scope.widgets.find((widget) =>
+                    let widgetFromPreferences = $scope.widgets?.find((widget) =>
                         widget._id === this.widgetFromPreferences._id);
 
                     if (widgetFromPreferences) {
@@ -306,13 +315,13 @@ function WidgetsManagerCtrl(
         }
 
         if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
-            $rootScope.$broadcast('resize:monitoring', -330);
+            $rootScope.$broadcast('resize:monitoring', -SIDE_WIDGET_WIDTH);
 
             PINNED_WIDGET_RESIZED = true;
         }
 
         if (!widget || $scope.pinnedWidget === widget) {
-            $rootScope.$broadcast('resize:monitoring', 330);
+            $rootScope.$broadcast('resize:monitoring', SIDE_WIDGET_WIDTH);
 
             angular.element('body').removeClass('main-section--pinned-tabs');
 
@@ -329,16 +338,19 @@ function WidgetsManagerCtrl(
         } else {
             angular.element('body').addClass('main-section--pinned-tabs');
             $scope.pinnedWidget = widget;
+            $scope.active = widget;
             widget.pinned = true;
 
             this.updateUserPreferences(widget);
         }
+
+        IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
-        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+        () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
 
     widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
     widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
@@ -366,7 +378,11 @@ function WidgetsManagerCtrl(
             $scope.active.afterClose($scope);
         }
 
-        $scope.active = null;
+        if ($scope.pinnedWidget != null) {
+            $scope.active = $scope.pinnedWidget;
+        } else {
+            $scope.active = null;
+        }
     };
 
     // activate widget based on query string
@@ -391,6 +407,10 @@ function WidgetsManagerCtrl(
             $scope.autosave();
         });
     };
+
+    if (widgetValue?.component != null && localStorageWidgetState?.pinned === true) {
+        $scope.pinWidget(widgetValue);
+    }
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();
