@@ -9,27 +9,18 @@ import {
 } from 'draft-js';
 import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
 import {
-    getDraftSelectionForEntireContent,
-} from './getDraftSelectionForEntireContent';
-import {
     getHighlightData,
     getHighlightTypeFromStyleName,
     initializeHighlights,
     styleNameBelongsToHighlight,
 } from './highlights';
-import {
-    getUniqueStyleNamesInDraftSelection,
-} from './getUniqueStyleNamesInDraftSelection';
 import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
+import {getUniqueStyleNames} from './getUniqueStyleNamesInDraftSelection';
 
 export function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
-
-    const allStyleNames = getUniqueStyleNamesInDraftSelection(
-        editorState,
-        getDraftSelectionForEntireContent(editorState),
-    );
+    const allStyleNames = getUniqueStyleNames(editorState.getCurrentContent());
 
     return allStyleNames
         .filter(styleNameBelongsToHighlight)

@@ -12,7 +12,7 @@ import {addInternalEventListener} from 'core/internal-events';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
-import _, {merge} from 'lodash';
+import _, {merge, debounce} from 'lodash';
 import postscribe from 'postscribe';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
@@ -102,10 +102,13 @@ export function AuthoringDirective(
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
 
+            $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
+
+            $scope.requestEditor3DirectivesToGenerateHtml = [];
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -766,7 +769,7 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var _autosave = $scope.origItem._autosave || {};
+                const _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
                     var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
@@ -855,9 +858,8 @@ export function AuthoringDirective(
             // default to true
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
-            $scope.autosave = function(item, timeout) {
-                $scope.dirty = true;
-                angular.extend($scope.item, item); // make sure all changes are available
+            const _autosave = debounce((timeout) => {
+                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
 
                 return authoring.autosave(
                     $scope.item,
@@ -872,6 +874,12 @@ export function AuthoringDirective(
                         });
                     },
                 );
+            }, 1000);
+
+            $scope.autosave = (item, timeout) => {
+                $scope.dirty = true;
+                angular.extend($scope.item, item); // make sure all changes are available
+                _autosave(timeout);
             };
 
             $scope.sendToNextStage = function() {
@@ -1026,21 +1034,42 @@ export function AuthoringDirective(
                 }
             });
 
-            const removeListener = addInternalEventListener(
-                'dangerouslyOverwriteAuthoringData',
-                (event) => {
-                    if (event.detail._id === $scope.item._id) {
-                        angular.extend($scope.item, event.detail);
-                        angular.extend($scope.origItem, event.detail);
-                        $scope.$apply();
-                        $scope.refresh();
-                    }
-                },
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringData',
+                    (event) => {
+                        if (event.detail.item._id === $scope.item._id) {
+                            angular.extend($scope.item, event.detail.item);
+                            angular.extend($scope.origItem, event.detail.item);
+
+                            $scope.$applyAsync();
+                            $scope.refresh();
+                        }
+                    },
+                ),
+            );
+
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringField',
+                    (event) => {
+                        if (event.detail.itemId === $scope.item._id) {
+                            angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
+
+                            $scope.dirty = true;
+                            $scope.$applyAsync();
+                            $scope.refresh();
+                        }
+                    },
+                ),
             );
 
             $scope.$on('$destroy', () => {
                 deregisterTansa();
-                removeListener();
+
+                for (const fn of $scope.eventListenersToRemoveOnUnmount) {
+                    fn();
+                }
             });
 
             var initEmbedFieldsValidation = () => {

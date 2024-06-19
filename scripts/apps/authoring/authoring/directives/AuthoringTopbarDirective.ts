@@ -49,8 +49,6 @@ export function AuthoringTopbarDirective(
                 scope.autosave(scope.item, 0);
             };
 
-            scope.requestEditor3DirectivesToGenerateHtml = [];
-
             scope.openPublishOrSendToPane = () => {
                 const availableTabs = getAvailableTabs();
                 const activeTab = getActiveTab(availableTabs);

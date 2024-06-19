@@ -1026,7 +1026,7 @@ function addCommentsForServer(editorState) {
  * @description highlightsStyleMap is not stored on the server and needs to be generated
  * If it were stored, changing highights' styles wouldn't be possible for already existing highlights
  */
-function applyHighlightsStyleMap(editorState) {
+function applyHighlightsStyleMap(editorState): EditorState {
     const highlights = getCustomDataFromEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS);
 
     if (highlights === undefined || highlights.highlightsData === undefined) {
