@@ -104,14 +104,14 @@ function RelatedItemController(
         .then((items) => {
             if (items && items._items && items._items.length > 1) {
                 $scope.options.existingRelations = items._items;
-                $scope.widget.configurable = false;
+                $scope.active.configurable = false;
                 $scope.options.searchEnabled = false;
-                $scope.widget.label = gettext('Related Items');
+                $scope.active.label = gettext('Related Items');
             } else {
                 $scope.options.existingRelations = false;
-                $scope.widget.configurable = true;
+                $scope.active.configurable = true;
                 $scope.options.searchEnabled = true;
-                $scope.widget.label = gettext('Relate an item');
+                $scope.active.label = gettext('Relate an item');
             }
         })
         .finally(() => {
@@ -242,16 +242,16 @@ function RelatedItemController(
     }, true);
 
     function reset() {
-        if ($scope.widget && $scope.widget.configuration) {
-            $scope.widget.configuration.modificationDateAfter = storage.getItem('modificationDateAfter') || 'today';
-            $scope.widget.configuration.sluglineMatch = storage.getItem('sluglineMatch') || 'EXACT';
+        if ($scope.active && $scope.active.configuration) {
+            $scope.active.configuration.modificationDateAfter = storage.getItem('modificationDateAfter') || 'today';
+            $scope.active.configuration.sluglineMatch = storage.getItem('sluglineMatch') || 'EXACT';
         }
     }
 
-    if ($scope.widget) {
-        $scope.widget.save = function() {
-            storage.setItem('sluglineMatch', $scope.widget.configuration.sluglineMatch);
-            storage.setItem('modificationDateAfter', $scope.widget.configuration.modificationDateAfter);
+    if ($scope.active) {
+        $scope.active.save = function() {
+            storage.setItem('sluglineMatch', $scope.active.configuration.sluglineMatch);
+            storage.setItem('modificationDateAfter', $scope.active.configuration.modificationDateAfter);
         };
     }
 
