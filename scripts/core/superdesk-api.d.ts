@@ -2034,10 +2034,11 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableAlgorithms {
         countLines?(plainText: string, lineLength: number): number;
-    }
-
-    export interface IConfigurableAlgorithms {
-        countLines?(plainText: string, lineLength: number): number;
+        editor3?: {
+            customBlocks?: {
+                getAdditionalWrapperAttributes?(customBlockVocabulary: IVocabulary, html: string): Array<{name: string; value: string}>;
+            };
+        }
     }
 
     export interface IListItemProps {

@@ -243,7 +243,7 @@ function WidgetsManagerCtrl(
                 });
 
                 if (this.widgetFromPreferences) {
-                    let widgetFromPreferences = $scope.widgets.find((widget) =>
+                    let widgetFromPreferences = $scope.widgets?.find((widget) =>
                         widget._id === this.widgetFromPreferences._id);
 
                     if (widgetFromPreferences) {
@@ -338,6 +338,7 @@ function WidgetsManagerCtrl(
         } else {
             angular.element('body').addClass('main-section--pinned-tabs');
             $scope.pinnedWidget = widget;
+            $scope.active = widget;
             widget.pinned = true;
 
             this.updateUserPreferences(widget);
@@ -349,7 +350,7 @@ function WidgetsManagerCtrl(
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
-        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+        () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
 
     widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
     widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
@@ -377,7 +378,11 @@ function WidgetsManagerCtrl(
             $scope.active.afterClose($scope);
         }
 
-        $scope.active = null;
+        if ($scope.pinnedWidget != null) {
+            $scope.active = $scope.pinnedWidget;
+        } else {
+            $scope.active = null;
+        }
     };
 
     // activate widget based on query string
