@@ -27,7 +27,7 @@ Before considering contributions to the Superdesk client, please make sure to re
 
 To configure the build, the `superdesk.config.js` file must export a function that returns the configuration object. The configuration object can contain the keys described belowed. Dot-notation is used to illustrate the depth and group of a certain key. We use a function instead of a simple JSON object to allow the convenience of using grunt flags, as well as give access to environment variables for more diverse configurations.
 
-##### Server
+#### Server
 
 - `server.url` - superdesk rest api server url
 - `server.ws` - superdesk websocket server url
