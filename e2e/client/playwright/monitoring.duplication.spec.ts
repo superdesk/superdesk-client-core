@@ -7,7 +7,6 @@ test('duplicate in place action', async ({page}) => {
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
     await restoreDatabaseSnapshot();
-
     await page.goto('/#/workspace/monitoring');
 
     await monitoring.selectDeskOrWorkspace('Sports');
@@ -30,7 +29,6 @@ test('duplicate to personal space action', async ({page}) => {
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 
     await restoreDatabaseSnapshot();
-
     await page.goto('/#/workspace/personal');
 
     await expect(page.locator(s('list-item-placeholder'))).toBeVisible();
@@ -39,6 +37,7 @@ test('duplicate to personal space action', async ({page}) => {
     const itemCountInPersonalSpace = await page.locator(s('article-item')).count();
 
     await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.executeActionOnMonitoringItem(
