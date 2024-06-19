@@ -14,8 +14,8 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
                     '<sd-authoring-integration-wrapper ' +
                         'data-action="action" ' +
                         'data-item-id="item._id" ' +
-                        'data-hide-monitoring="hideMonitoring" ' +
-                        'data-is-expanded="isExpanded">' +
+                        'data-set-full-width="setFullWidth" ' +
+                        'data-full-width="fullWidth">' +
                     '</sd-authoring-react>' +
                 '</div>'
             )
@@ -27,8 +27,12 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
         },
         link: function(scope) {
             scope.canPrintPreview = canPrintPreview;
-            scope.isExpanded = superdeskFlags.flags.hideMonitoring;
+            scope.fullWidth = superdeskFlags.flags.hideMonitoring;
+            scope.setFullWidth = () => {
+                scope.hideMonitoring(true, new Event('click'));
+            }
 
+            // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
             scope.hideMonitoring = function(state, e) {
                 const fullWidthConfig: IFullWidthPageCapabilityConfiguration
                     = scope.$parent.$parent.$parent.fullWidthConfig;
@@ -42,7 +46,7 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
                     if (superdeskFlags.flags.authoring && state) {
                         e.preventDefault();
                         superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
-                        scope.isExpanded = superdeskFlags.flags.hideMonitoring;
+                        scope.fullWidth = superdeskFlags.flags.hideMonitoring;
                         scope.$applyAsync();
                     } else {
                         superdeskFlags.flags.hideMonitoring = false;

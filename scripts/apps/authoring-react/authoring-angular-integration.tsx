@@ -44,8 +44,8 @@ function onClose() {
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
     action?: IAuthoringActionType,
-    hideMonitoring?: (state: boolean, event: React.MouseEvent<HTMLButtonElement>) => void,
-    isExpanded?: boolean,
+    setFullWidth?: () => void,
+    fullWidth?: boolean,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -145,8 +145,8 @@ function getInlineToolbarActions(
         priority: 0.1,
         component: () => (
             <ToggleFullWidth
-                onClick={(event) => hideMonitoring(true, event)}
-                isExpanded={isExpanded}
+                onClick={() => setFullWidth()}
+                isExpanded={fullWidth}
             />
         ),
         availableOffline: true,
@@ -815,8 +815,8 @@ export function getAuthoringPrimaryToolbarWidgets(
 export interface IProps {
     action?: IAuthoringActionType;
     itemId: IArticle['_id'];
-    hideMonitoring: () => void;
-    isExpanded: boolean;
+    setFullWidth: () => void;
+    fullWidth: boolean;
 }
 
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
@@ -831,8 +831,8 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(
                         exposed,
                         this.props.action,
-                        this.props.hideMonitoring,
-                        this.props.isExpanded,
+                        this.props.setFullWidth,
+                        this.props.fullWidth,
                     )}
                     authoringStorage={(() => {
                         if (this.props.action === 'kill' || this.props.action === 'takedown') {

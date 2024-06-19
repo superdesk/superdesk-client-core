@@ -35,7 +35,7 @@ export function AuthoringTopbarDirective(
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
-            scope.monitoringHidden = superdeskFlags.flags.hideMonitoring ?? false;
+            scope.fullWidth = superdeskFlags.flags.hideMonitoring ?? false;
             scope.saveTopbarLoading = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
@@ -154,9 +154,14 @@ export function AuthoringTopbarDirective(
             scope.$watch(() => {
                 return superdeskFlags.flags.hideMonitoring;
             }, (value) => {
-                scope.monitoringHidden = value;
+                scope.fullWidth = value;
             });
 
+            scope.setFullWidth = () => {
+                scope.hideMonitoring(true, new Event('click'));
+            }
+
+            // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
             scope.hideMonitoring = function(state, e) {
                 const fullWidthConfig: IFullWidthPageCapabilityConfiguration
                     = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
