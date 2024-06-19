@@ -22,6 +22,7 @@ module.exports = function(config) {
             'karma-ng-html2js-preprocessor',
             'karma-sourcemap-loader',
             'karma-webpack',
+            'karma-spec-reporter',
         ],
 
         preprocessors: {
@@ -54,7 +55,8 @@ module.exports = function(config) {
         },
 
         // test results reporter to use
-        reporters: ['dots'],
+        // options: 'progress', 'dots', 'spec'(via "karma-spec-reporter" package)
+        reporters: ['spec'],
 
         // web server port
         port: 8080,
