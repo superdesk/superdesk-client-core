@@ -2149,6 +2149,7 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
         valueTemplate?: React.ComponentType<{option: IUser}>;
         clearable: boolean;
+        getItems: (searchString: string) => Promise<Array<IUser>>;
     }
 
     export interface IDropdownTreeGroup<T> {
