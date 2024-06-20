@@ -158,7 +158,9 @@ export function AuthoringTopbarDirective(
             });
 
             scope.setFullWidth = () => {
-                scope.hideMonitoring(true, new Event('click'));
+                scope.$applyAsync(() => {
+                    scope.hideMonitoring(true, new Event('click'));
+                })
             }
 
             // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.

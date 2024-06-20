@@ -145,8 +145,8 @@ function getInlineToolbarActions(
         priority: 0.1,
         component: () => (
             <ToggleFullWidth
-                onClick={() => setFullWidth()}
-                isExpanded={fullWidth}
+                setFullWidth={() => setFullWidth()}
+                fullWidth={fullWidth}
             />
         ),
         availableOffline: true,

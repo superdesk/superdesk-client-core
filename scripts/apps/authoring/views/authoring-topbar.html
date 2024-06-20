@@ -5,7 +5,7 @@
   sd-media-query min-width="880"
   data-test-id="authoring-topbar"
 >
-    <toggle-full-width ng-click="setFullWidth()" ng-href="#{{ :: item.href }}" is-expanded="fullWidth"></toggle-full-width>
+    <toggle-full-width set-full-width="setFullWidth" full-width="fullWidth"></toggle-full-width>
     <sd-authoring-topbar-react
       article="item"
       action="action"

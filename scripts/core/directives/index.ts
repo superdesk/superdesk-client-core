@@ -66,5 +66,5 @@ export default angular
     )
     .component(
         'toggleFullWidth',
-        reactToAngular1(ToggleFullWidth, ['isExpanded', 'onClick']),
+        reactToAngular1(ToggleFullWidth, ['fullWidth', 'setFullWidth']),
     );
