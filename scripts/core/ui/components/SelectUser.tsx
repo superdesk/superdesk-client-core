@@ -7,7 +7,6 @@ import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {sdApi} from 'api';
-import {debounce} from 'lodash';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
