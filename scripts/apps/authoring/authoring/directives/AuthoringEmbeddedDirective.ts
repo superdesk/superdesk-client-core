@@ -30,7 +30,7 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
             scope.fullWidth = superdeskFlags.flags.hideMonitoring;
             scope.setFullWidth = () => {
                 scope.hideMonitoring(true, new Event('click'));
-            }
+            };
 
             // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
             scope.hideMonitoring = function(state, e) {
