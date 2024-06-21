@@ -6,6 +6,8 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
+import {sdApi} from 'api';
+import {debounce} from 'lodash';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
@@ -115,15 +117,20 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 label={gettext('Select a user')}
                 inlineLabel={true}
                 labelHidden={true}
-                getItems={this.props.getItems != null ? this.props.getItems : (searchString) => {
+                getItems={(searchString) => {
                     this.abortController?.abort();
                     this.abortController = new AbortController();
 
-                    const query = JSON.stringify(
-                        searchString != null && searchString.length > 0
-                            ? getUserSearchMongoQuery(searchString)
-                            : {},
-                    );
+                    const desk = sdApi.desks.getDeskById(this.props.deskId);
+                    const deskMemberIds = (desk?.members ?? []).map((member) => member.user);
+                    const query = {
+                        $and: [
+                            this.props.deskId != null ? {_id: {$in: deskMemberIds}} : {},
+                            searchString != null && searchString.length > 0
+                                ? getUserSearchMongoQuery(searchString)
+                                : {},
+                        ],
+                    };
 
                     // Wrapping into additional promise in order to avoid having to handle rejected promise
                     // in `SelectWithTemplate` component. The component takes a generic promise
