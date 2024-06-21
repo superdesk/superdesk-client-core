@@ -149,15 +149,16 @@ describe('preferences error handling', () => {
         $httpBackend.expectGET('/preferences/sess2').respond({});
     }));
 
-    it('can reload on session expiry', inject((preferencesService, session, $rootScope, $httpBackend) => {
-        var success = jasmine.createSpy('success');
+    it('can reload on session expiry', (done) => inject((preferencesService, session, $rootScope, $httpBackend) => {
         var error = jasmine.createSpy('error');
 
-        preferencesService.get().then(success, error);
+        preferencesService.get().then(() => {
+            expect(error).not.toHaveBeenCalled();
+
+            done();
+        }, error);
         $rootScope.$digest();
         session.sessionId = 'sess2';
         $httpBackend.flush();
-        expect(success).toHaveBeenCalled();
-        expect(error).not.toHaveBeenCalled();
     }));
 });
