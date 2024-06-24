@@ -20,7 +20,13 @@ describe('spellcheck', () => {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(() => {
+    beforeEach(inject((dictionaries, spellcheck, $q, preferencesService) => {
+        window.module('superdesk.core.editor3');
+        window.module('superdesk.apps.spellcheck');
+        window.module('superdesk.core.preferences');
+        window.module('superdesk.apps.vocabularies');
+        window.module('superdesk.apps.searchProviders');
+
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
             server: {url: undefined, ws: undefined},
             iframely: {key: '123'},
@@ -29,15 +35,7 @@ describe('spellcheck', () => {
         };
 
         Object.assign(appConfig, testConfig);
-    });
 
-    beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.spellcheck'));
-    beforeEach(window.module('superdesk.core.preferences'));
-    beforeEach(window.module('superdesk.apps.vocabularies'));
-    beforeEach(window.module('superdesk.apps.searchProviders'));
-
-    beforeEach(inject((dictionaries, spellcheck, $q, preferencesService) => {
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([
             {_id: 'foo', content: DICT},
             {_id: 'bar', content: {bar: 1}},
