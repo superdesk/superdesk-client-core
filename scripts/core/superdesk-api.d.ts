@@ -1334,7 +1334,7 @@ declare module 'superdesk-api' {
     export interface IDesk extends IBaseRestApiResponse {
         name: string;
         description?: string;
-        members: Array<IUser['_id']>;
+        members: Array<{user: IUser['_id']}>;
         incoming_stage: IStage['_id'];
         working_stage: IStage['_id'];
         content_expiry?: number;
@@ -2149,6 +2149,7 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
         valueTemplate?: React.ComponentType<{option: IUser}>;
         clearable: boolean;
+        deskId?: string
     }
 
     export interface IDropdownTreeGroup<T> {
