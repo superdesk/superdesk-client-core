@@ -46,7 +46,7 @@ export function getSpellchecker(language: string): ISpellchecker {
         fr: 'grammalecte',
         nl: 'leuven_dutch',
         en: 'languagetool',
-        sv: 'languagetool',
+        sv_SE: 'languagetool',
     })[language];
     const ignore = spellcheck.getIgnoredWords();
 
