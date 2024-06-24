@@ -81,12 +81,6 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
     }
 
     componentDidUpdate(prevProps: IPropsSelectUser) {
-        if (prevProps.deskId !== this.props.deskId) {
-            this.setState({
-                selectedUser: null,
-            });
-        }
-
         if (prevProps.selectedUserId !== this.props.selectedUserId) {
             // state.user needs to be updated if props.selectedUserId changes
             if (this.props.selectedUserId == null) {
