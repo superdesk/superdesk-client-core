@@ -18,6 +18,7 @@ import {PhoneHomeModalDirective} from './PhoneHomeModalDirective';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {UserOrganisationAvatar} from 'apps/users/components/OrganisationAvatar';
+import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
 
 /**
  * @ngdoc module
@@ -60,4 +61,8 @@ export default angular
     .component(
         'sdOrganisationAvatar',
         reactToAngular1(UserOrganisationAvatar, ['size']),
+    )
+    .component(
+        'toggleFullWidth',
+        reactToAngular1(ToggleFullWidth, ['fullWidth', 'setFullWidth']),
     );
