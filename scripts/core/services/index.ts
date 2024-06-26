@@ -27,7 +27,6 @@ angular.module('superdesk.core.services', [
     'superdesk.core.services.dragdrop',
     'superdesk.core.services.server',
     'superdesk.core.services.entity',
-    'superdesk.core.services.permissions',
     'superdesk.core.services.storage',
     'superdesk.core.services.pageTitle',
 ])
