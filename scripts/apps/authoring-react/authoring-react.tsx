@@ -583,11 +583,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', (event) => {
-            if (this.state.initialized) {
-                event.detail(this.state.spellcheckerEnabled);
-            }
-        }));
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addEditorEventListener('spellchecker__request_status', (event) => {
+                if (this.state.initialized) {
+                    event.detail(this.state.spellcheckerEnabled);
+                }
+            }),
+        );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
