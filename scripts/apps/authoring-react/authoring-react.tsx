@@ -583,9 +583,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
+        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', (event) => {
             if (this.state.initialized) {
-                dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
+                event.detail(this.state.spellcheckerEnabled);
             }
         }));
 
