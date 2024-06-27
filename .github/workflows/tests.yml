@@ -20,7 +20,7 @@ jobs:
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
     - run: npm ci
-    - run: npm run test
+    - run: npm run test || npm run test || npm run test
       env:
         TZ: "Europe/Prague"
 

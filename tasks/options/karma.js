@@ -11,7 +11,7 @@ module.exports = {
     watch: {
         singleRun: false,
         autoWatch: true,
-        reporters: 'progress',
+        reporters: ['progress'],
     },
     unit: {
         coverageReporter: {

@@ -14,15 +14,14 @@ describe('subscribers service', () => {
         }));
     }));
 
-    it('can get all subscribers', inject((subscribersService, api, $q, $rootScope) => {
-        var allSubscribers;
+    it('can get all subscribers', (done) => inject((subscribersService, $rootScope) => {
+        subscribersService.fetchSubscribers().then((allSubscribers) => {
+            expect(allSubscribers.length).toBe(5);
 
-        subscribersService.fetchSubscribers().then((subs) => {
-            allSubscribers = subs;
+            done();
         });
 
         $rootScope.$digest();
-        expect(allSubscribers.length).toBe(5);
     }));
 
     it('can get all subscribers with criteria', inject((subscribersService, api, $q, $rootScope) => {
@@ -31,25 +30,23 @@ describe('subscribers service', () => {
         expect(api.query).toHaveBeenCalledWith('subscribers', {max_results: 200, page: 1, name: 'sub-2'});
     }));
 
-    it('can get all active subscribers', inject((subscribersService, api, $q, $rootScope) => {
-        var allSubscribers;
+    it('can get all active subscribers', (done) => inject((subscribersService, $rootScope) => {
+        subscribersService.fetchActiveSubscribers().then((allSubscribers) => {
+            expect(allSubscribers.length).toBe(3);
 
-        subscribersService.fetchActiveSubscribers().then((subs) => {
-            allSubscribers = subs;
+            done();
         });
 
         $rootScope.$digest();
-        expect(allSubscribers.length).toBe(3);
     }));
 
-    it('can get all targetable subscribers', inject((subscribersService, api, $q, $rootScope) => {
-        var allSubscribers;
+    it('can get all targetable subscribers', (done) => inject((subscribersService, $rootScope) => {
+        subscribersService.fetchTargetableSubscribers().then((allSubscribers) => {
+            expect(allSubscribers.length).toBe(2);
 
-        subscribersService.fetchTargetableSubscribers().then((subs) => {
-            allSubscribers = subs;
+            done();
         });
 
         $rootScope.$digest();
-        expect(allSubscribers.length).toBe(2);
     }));
 });

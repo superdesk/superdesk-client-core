@@ -1,4 +1,5 @@
 import {defineConfig, devices} from '@playwright/test';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -40,7 +41,7 @@ export default defineConfig({
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: 'playwright/.auth/user.json',
+                storageState: path.join(__dirname, './playwright/.auth/user.json'),
             },
         },
 

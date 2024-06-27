@@ -15,8 +15,8 @@ describe('Reload Service', () => {
 
     var rootScope, reloadService, msg;
 
-    beforeEach(() => {
-        inject(($rootScope, _reloadService_, session, $q, api, preferencesService, desks, $window) => {
+    beforeEach((done) => {
+        inject(($rootScope, _reloadService_, session, $q, preferencesService, desks) => {
             rootScope = $rootScope;
             reloadService = _reloadService_;
             session.start({}, USER);
@@ -31,12 +31,14 @@ describe('Reload Service', () => {
 
             desks.fetchCurrentUserDesks().then((_userDesks) => {
                 reloadService.userDesks = _userDesks;
+
+                // eslint-disable-next-line jasmine/no-expect-in-setup-teardown
+                expect(reloadService.userDesks.length).toBe(2);
+
+                done();
             });
 
             rootScope.$apply();
-
-            // eslint-disable-next-line jasmine/no-expect-in-setup-teardown
-            expect(reloadService.userDesks.length).toBe(2);
         });
     });
 

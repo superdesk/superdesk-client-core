@@ -57,7 +57,7 @@ describe('superdesk.apps.authoring.metadata', () => {
             expect(metadata.cvs[1]).toEqual({_id: 'bar', display_name: 'Bar'});
         }));
 
-        it('can get list of vocabularies for authoring header', inject((metadata, $q, $rootScope) => {
+        it('can get list of vocabularies for authoring header', (done) => inject((metadata, $q, $rootScope) => {
             spyOn(metadata, 'fetchMetadataValues').and.returnValue($q.when());
             metadata.cvs = [
                 {_id: 'a', items: [{name: 'a', service: {a: 1}}], service: {all: 1}},
@@ -69,12 +69,14 @@ describe('superdesk.apps.authoring.metadata', () => {
             metadata.getCustomVocabulariesForArticleHeader([], {a: 1, b: 1, c: 1, d: 1}, {})
                 .then((cvs) => {
                     expect(['b']).toEqual(cvs.map((cv) => cv._id));
+
+                    done();
                 });
 
             $rootScope.$digest();
         }));
 
-        it('can get list of all vocabularies for authoring header', inject((metadata, $q, $rootScope) => {
+        it('can get list of all vocabularies for authoring header', (done) => inject((metadata, $q, $rootScope) => {
             spyOn(metadata, 'fetchMetadataValues').and.returnValue($q.when());
             metadata.cvs = [
                 {_id: 'a', items: [{name: 'a', service: {a: 1}}], service: {all: 1}},
@@ -86,6 +88,7 @@ describe('superdesk.apps.authoring.metadata', () => {
             metadata.getAllCustomVocabulariesForArticleHeader({a: 1, b: 1, c: 1, d: 1}, {})
                 .then(({customVocabulariesForArticleHeader: cvs}) => {
                     expect(['a', 'b', 'c']).toEqual(cvs.map((cv) => cv._id));
+                    done();
                 });
 
             $rootScope.$digest();

@@ -11,16 +11,18 @@ describe('user import', () => {
         expect(api.save).toHaveBeenCalledWith('import_profile', model);
     }));
 
-    it('can return an error', inject(($q, $rootScope, userImport, api) => {
-        var success = jasmine.createSpy('success'),
-            error = jasmine.createSpy('error');
+    it('can return an error', (done) => inject(($q, $rootScope, userImport, api) => {
+        const success = jasmine.createSpy('success');
 
         spyOn(api, 'save').and.returnValue($q.reject({status: 404, data: {_message: 'test'}}));
 
-        userImport.importUser({}).then(success, error);
-        $rootScope.$digest();
+        userImport.importUser({}).then(success, (res) => {
+            expect(res).toEqual({profile_to_import: 1, message: 'test'});
+            expect(success).not.toHaveBeenCalled();
 
-        expect(success).not.toHaveBeenCalled();
-        expect(error).toHaveBeenCalledWith({profile_to_import: 1, message: 'test'});
+            done();
+        });
+
+        $rootScope.$digest();
     }));
 });

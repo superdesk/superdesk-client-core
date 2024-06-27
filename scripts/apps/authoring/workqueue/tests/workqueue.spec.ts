@@ -19,8 +19,7 @@ describe('workqueue', () => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));
     }));
 
-    it('loads locked items of current user', inject((workqueue, api, session, $q, $rootScope) => {
-        var items;
+    it('loads locked items of current user', (done) => inject((workqueue, api, session, $q, $rootScope) => {
         const query = {
             source: {
                 query: {
@@ -38,15 +37,17 @@ describe('workqueue', () => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{}]}));
 
         workqueue.fetch().then(() => {
-            items = workqueue.items;
+            const items = workqueue.items;
+
+            expect(items.length).toBe(1);
+            expect(items).toBe(workqueue.items);
+            expect(api.query).toHaveBeenCalledWith('workqueue', query);
+            expect(session.getIdentity).toHaveBeenCalled();
+
+            done();
         });
 
         $rootScope.$apply();
-
-        expect(items.length).toBe(1);
-        expect(items).toBe(workqueue.items);
-        expect(api.query).toHaveBeenCalledWith('workqueue', query);
-        expect(session.getIdentity).toHaveBeenCalled();
     }));
 
     it('can update single item', inject((workqueue, api, $q, $rootScope) => {
