@@ -112,6 +112,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         return (
             <SelectWithTemplate
+                key={this.props.deskId}
                 label={gettext('Select a user')}
                 inlineLabel={true}
                 labelHidden={true}
