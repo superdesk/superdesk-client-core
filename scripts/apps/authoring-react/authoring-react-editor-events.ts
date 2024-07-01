@@ -52,7 +52,7 @@ interface IAuthoringReactEditorEvents {
         article: IArticle;
     };
 
-    spellchecker__request_status: null;
+    spellchecker__request_status: (enabled: boolean) => void;
     spellchecker__set_status: boolean;
 }
 
