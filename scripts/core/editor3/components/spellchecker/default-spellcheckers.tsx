@@ -68,13 +68,14 @@ export function getSpellchecker(language: string): ISpellchecker {
     }
     if (spellcheckerName != null) {
         return {
-            check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
+            check: (str: string, abortSignal) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
                 method: 'POST',
                 payload: {
                     spellchecker: spellcheckerName,
                     text: str,
                     ignore: ignore},
                 path: '/spellchecker',
+                abortSignal: abortSignal,
             }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
                 method: 'POST',

@@ -12,7 +12,7 @@ import {addInternalEventListener} from 'core/internal-events';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
-import _, {merge} from 'lodash';
+import _, {merge, debounce} from 'lodash';
 import postscribe from 'postscribe';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
@@ -102,10 +102,13 @@ export function AuthoringDirective(
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
 
+            $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
+
+            $scope.requestEditor3DirectivesToGenerateHtml = [];
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -268,7 +271,11 @@ export function AuthoringDirective(
              * Create a new version
              */
             $scope.save = function() {
-                return authoring.save($scope.origItem, $scope.item).then((res) => {
+                return authoring.save(
+                    $scope.origItem,
+                    $scope.item,
+                    $scope.requestEditor3DirectivesToGenerateHtml,
+                ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
 
@@ -542,36 +549,54 @@ export function AuthoringDirective(
              * in $scope.
              */
             $scope.publish = function() {
-                if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
-                    modal.alert({
-                        headerText: gettext('Resolving suggestions'),
-                        bodyText: gettext(
-                            'Article cannot be published. Please accept or reject all suggestions first.',
-                        ),
+                $scope.$applyAsync(() => {
+                    $scope.loading = true;
+                });
+
+                return $q((resolve) => {
+                    // delay required for loading state to render
+                    // before possibly long operation (with huge articles)
+                    setTimeout(() => {
+                        for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
+                            fn();
+                        }
+
+                        resolve();
                     });
+                }).then(() => {
+                    if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
+                        modal.alert({
+                            headerText: gettext('Resolving suggestions'),
+                            bodyText: gettext(
+                                'Article cannot be published. Please accept or reject all suggestions first.',
+                            ),
+                        });
 
-                    return Promise.reject();
-                }
+                        return $q.reject();
+                    }
 
-                if (helpers.itemHasUnresolvedComments($scope.item)) {
-                    modal.confirm({
-                        bodyText: gettext(
-                            'This article contains unresolved comments.'
-                            + 'Click on Cancel to go back to editing to'
-                            + 'resolve those comments or OK to ignore and proceed with publishing',
-                        ),
-                        headerText: gettext('Resolving comments'),
-                        okText: gettext('Ok'),
-                        cancelText: gettext('Cancel'),
-                    }).then((ok) => ok ? performPublish() : false);
+                    if (helpers.itemHasUnresolvedComments($scope.item)) {
+                        modal.confirm({
+                            bodyText: gettext(
+                                'This article contains unresolved comments.'
+                                + 'Click on Cancel to go back to editing to'
+                                + 'resolve those comments or OK to ignore and proceed with publishing',
+                            ),
+                            headerText: gettext('Resolving comments'),
+                            okText: gettext('Ok'),
+                            cancelText: gettext('Cancel'),
+                        }).then((ok) => ok ? performPublish() : false);
 
-                    return Promise.reject();
-                }
+                        return $q.reject();
+                    }
 
-                return performPublish();
+                    return performPublish();
+                }).finally(() => {
+                    $scope.loading = false;
+                });
             };
 
-            function performPublish() {
+            function performPublish(): Promise<any> {
                 if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
 
@@ -597,7 +622,7 @@ export function AuthoringDirective(
                     return publishItem($scope.origItem, $scope.item);
                 }
 
-                return false;
+                return $q.reject(false);
             }
 
             $scope.showCustomButtons = () => {
@@ -649,6 +674,11 @@ export function AuthoringDirective(
              */
             $scope.close = function() {
                 _closing = true;
+
+                // Request to generate html before we pass scope variables
+                for (const fn of ($scope.requestEditor3DirectivesToGenerateHtml ?? [])) {
+                    fn();
+                }
 
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
@@ -739,7 +769,7 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var _autosave = $scope.origItem._autosave || {};
+                const _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
                     var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
@@ -828,9 +858,8 @@ export function AuthoringDirective(
             // default to true
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
-            $scope.autosave = function(item, timeout) {
-                $scope.dirty = true;
-                angular.extend($scope.item, item); // make sure all changes are available
+            const _autosave = debounce((timeout) => {
+                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
 
                 return authoring.autosave(
                     $scope.item,
@@ -845,6 +874,12 @@ export function AuthoringDirective(
                         });
                     },
                 );
+            }, 1000);
+
+            $scope.autosave = (item, timeout) => {
+                $scope.dirty = true;
+                angular.extend($scope.item, item); // make sure all changes are available
+                _autosave(timeout);
             };
 
             $scope.sendToNextStage = function() {
@@ -999,20 +1034,42 @@ export function AuthoringDirective(
                 }
             });
 
-            const removeListener = addInternalEventListener(
-                'dangerouslyOverwriteAuthoringData',
-                (event) => {
-                    if (event.detail._id === $scope.item._id) {
-                        angular.extend($scope.item, event.detail);
-                        angular.extend($scope.origItem, event.detail);
-                        $scope.$apply();
-                    }
-                },
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringData',
+                    (event) => {
+                        if (event.detail.item._id === $scope.item._id) {
+                            angular.extend($scope.item, event.detail.item);
+                            angular.extend($scope.origItem, event.detail.item);
+
+                            $scope.$applyAsync();
+                            $scope.refresh();
+                        }
+                    },
+                ),
+            );
+
+            $scope.eventListenersToRemoveOnUnmount.push(
+                addInternalEventListener(
+                    'dangerouslyOverwriteAuthoringField',
+                    (event) => {
+                        if (event.detail.itemId === $scope.item._id) {
+                            angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
+
+                            $scope.dirty = true;
+                            $scope.$applyAsync();
+                            $scope.refresh();
+                        }
+                    },
+                ),
             );
 
             $scope.$on('$destroy', () => {
                 deregisterTansa();
-                removeListener();
+
+                for (const fn of $scope.eventListenersToRemoveOnUnmount) {
+                    fn();
+                }
             });
 
             var initEmbedFieldsValidation = () => {

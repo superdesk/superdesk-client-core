@@ -4,22 +4,31 @@ import {QumuWidget, isQumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
 import {loadIframelyEmbedJs} from './loadIframely';
-import {debounce} from 'lodash';
+import {debounce, noop} from 'lodash';
 import {gettext} from 'core/utils';
 import {processEmbedCode} from '../../actions';
 import {ContentBlock, ContentState} from 'draft-js';
 import {connect} from 'react-redux';
+import {IEditorStore} from 'core/editor3/store';
 
 // debounce to avoid multiple widget load calls on initial load
 // when it gets executed for every embed block
 const loadIframely = debounce(loadIframelyEmbedJs, 100);
 
-interface IProps {
+interface IOwnProps {
     contentState: ContentState;
     block: ContentBlock;
+}
+
+interface IReduxStateProps {
     readOnly: boolean;
+}
+
+interface IDispatchProps {
     dispatch(action): void;
 }
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
 
 /**
  * @ngdoc React
@@ -195,8 +204,10 @@ export class EmbedBlockComponent extends React.Component<IProps> {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: IEditorStore): IReduxStateProps => ({
     readOnly: state.readOnly,
 });
 
-export const EmbedBlock = connect(mapStateToProps)(EmbedBlockComponent);
+export const EmbedBlock: React.ComponentType<IOwnProps> = connect<IReduxStateProps, IOwnProps, IDispatchProps>(
+    mapStateToProps,
+)(EmbedBlockComponent);

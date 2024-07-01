@@ -1,11 +1,15 @@
-import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
+import {ContentState} from 'draft-js';
 
-export const getUniqueStyleNamesInDraftSelection = (editorState, selection) => Object.keys(
-    getDraftCharacterListForSelection(editorState, selection)
-        .reduce((obj, item) => {
-            item.getStyle().forEach((styleName) => {
-                obj[styleName] = true;
+export const getUniqueStyleNames = (contentState: ContentState) => {
+    const styles = {};
+
+    contentState.getBlockMap().forEach((block) => {
+        block.getCharacterList().forEach((char) => {
+            char.getStyle().forEach((styleName) => {
+                styles[styleName] = true;
             });
-            return obj;
-        }, {}),
-);
+        });
+    });
+
+    return Object.keys(styles);
+};

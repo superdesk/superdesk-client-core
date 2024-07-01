@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
+import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
@@ -91,7 +92,16 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
                 onMouseDown={this.onToggle}
                 style={this.props.uiTheme == null ? undefined : {color: this.props.uiTheme.textColor}}
             >
-                {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
+                {iconClass
+                    ? (
+                        <i
+                            data-test-id="formatting-option"
+                            data-test-value={getEditor3RichTextFormattingOptions()[label]}
+                            className={iconClass}
+                        />
+                    )
+                    : <b>{label}</b>
+                }
             </span>
         );
     }

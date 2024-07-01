@@ -3,8 +3,12 @@ import {sdApi} from 'api';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {IArticle, IRestApiResponse, ITranslation} from 'superdesk-api';
+import {IArticle, IExtensionActivationResult, IRestApiResponse, ITranslation} from 'superdesk-api';
 import {Button, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {notify} from 'core/notify/notify';
+import {extensions} from 'appConfig';
+import {flatMap} from 'lodash';
+import ng from 'core/services/ng';
 
 interface IProps {
     article: IArticle;
@@ -51,7 +55,7 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
 
     translate() {
         if (this.state.initialized) {
-            return httpRequestJsonLocal({
+            return httpRequestJsonLocal<IArticle>({
                 method: 'POST',
                 path: '/archive/translate',
                 payload: {
@@ -59,7 +63,25 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                     language: this.state.selectedLanguage,
                     guid: this.props.article._id,
                 },
-            }).then(() => this.props.closeModal());
+            }).then((item) => {
+                const onTranslateAfterMiddlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+                = flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+                );
+
+                if (onTranslateAfterMiddlewares.length > 0) {
+                    onTranslateAfterMiddlewares.forEach((fn) => {
+                        fn(this.props.article, item);
+                    });
+                } else {
+                    ng.get('authoringWorkspace').open(item);
+                    notify.success(gettext('Item Translated'));
+                }
+
+                this.props.closeModal();
+            });
         }
     }
 

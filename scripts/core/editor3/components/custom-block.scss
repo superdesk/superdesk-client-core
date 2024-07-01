@@ -1,0 +1,48 @@
+.editor3-custom-block {
+    .table-block table td {
+        border: 1px solid var(--sd-editor-colour__controls-border) !important;
+        border-radius: 0 var(--b-radius--large) var(--b-radius--large);
+        padding: var(--space--1-5) !important;
+    }
+
+    .table-inside table {
+        border: 0;
+    }
+}
+
+.editor3-custom-block--label-wrapper {
+    display: flex;
+}
+
+.editor3-custom-block--label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-block-start: 1px; // make text be vertically in the center of the bounding box
+}
+
+.editor3-custom-block--drag-handle {
+    --handle-width: 10px;
+    --handle-height: 14px;
+
+    display: flex;
+    padding: var(--space--0-5) var(--space--1);
+    gap: var(--gap-1);
+    align-items: center;
+    cursor: grab;
+    border-start-start-radius: var(--b-radius--medium);
+    border-start-end-radius: var(--b-radius--medium);
+    background: var(--sd-editor-colour__controls-border);
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    color: currentColor;
+    &:hover {
+        opacity: 1;
+    }
+    &:active {
+        background-color: var(--sd-colour-interactive);
+        color: white;
+
+    }
+}

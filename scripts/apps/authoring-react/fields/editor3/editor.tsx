@@ -63,6 +63,7 @@ interface IState {
 
 export class Editor extends React.PureComponent<IProps, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private unmountAbortController: AbortController;
 
     constructor(props: IProps) {
         super(props);
@@ -74,6 +75,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+        this.unmountAbortController = new AbortController();
 
         this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
         this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
@@ -117,46 +119,33 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         const store = this.props.value.store;
 
-        const spellcheck = ng.get('spellcheck');
+        this.syncPropsWithReduxStore();
 
-        spellcheck.getDictionary(this.props.language).then((dict) => {
-            spellcheck.isActiveDictionary = !!dict.length;
-            spellcheck.setLanguage(this.props.language);
-            spellcheck.setSpellcheckerStatus(true);
+        getAutocompleteSuggestions(this.props.editorId, this.props.language).then((autocompleteSuggestions) => {
+            this.setState({ready: true, autocompleteSuggestions});
 
-            this.syncPropsWithReduxStore();
+            /**
+             * If `spellchecker__set_status` is dispatched on `componentDidMount` in AuthoringReact,
+             * the event is fired before this component mounts and starts listening to the event.
+             * Because of this, requesting status explicitly is needed.
+             */
+            dispatchEditorEvent('spellchecker__request_status', null);
 
-            Promise.all([
-                getAutocompleteSuggestions(this.props.editorId, this.props.language),
-                initializeSpellchecker(store, spellcheck),
-            ]).then((res) => {
-                const [autocompleteSuggestions] = res;
+            /**
+             * Avoid triggering `onChange` when nothing has actually changed.
+             * Spellchecker modifies inline styles (instead of being implemented as a decorator)
+             * and thus makes it impossible to check in a performant manner whether there
+             * were any actual changes when comparing 2 content states.
+             */
+            setTimeout(() => {
+                store.subscribe(() => {
+                    const contentState = store.getState().editorState.getCurrentContent();
 
-                this.setState({ready: true, autocompleteSuggestions});
-
-                /**
-                 * If `spellchecker__set_status` is dispatched on `componentDidMount` in AuthoringReact,
-                 * the event is fired before this component mounts and starts listening to the event.
-                 * Because of this, requesting status explicitly is needed.
-                 */
-                dispatchEditorEvent('spellchecker__request_status', null);
-
-                /**
-                 * Avoid triggering `onChange` when nothing has actually changed.
-                 * Spellchecker modifies inline styles (instead of being implemented as a decorator)
-                 * and thus makes it impossible to check in a performant manner whether there
-                 * were any actual changes when comparing 2 content states.
-                 */
-                setTimeout(() => {
-                    store.subscribe(() => {
-                        const contentState = store.getState().editorState.getCurrentContent();
-
-                        if (this.props.value.contentState !== contentState) {
-                            this.props.onChange({store, contentState});
-                        }
-                    });
-                }, 1000);
-            });
+                    if (this.props.value.contentState !== contentState) {
+                        this.props.onChange({store, contentState});
+                    }
+                });
+            }, 1000);
         });
     }
 
@@ -290,12 +279,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addEditorEventListener('spellchecker__set_status', (event) => {
-                this.props.value.store.dispatch(setSpellcheckerStatus(event.detail));
+                this.props.value.store.dispatch(
+                    setSpellcheckerStatus(
+                        event.detail,
+                        this.unmountAbortController.signal,
+                    ),
+                );
             }),
         );
     }
 
     componentWillUnmount() {
+        this.unmountAbortController.abort();
         for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
             fn();
         }
@@ -407,7 +402,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const HelperComponent = this.props.config.helperComponent;
 
         return (
-            <Container miniToolbar={miniToolbar}>
+            <Container miniToolbar={miniToolbar} sectionClassNames={{header: 'sd-input-style'}}>
                 {
                     HelperComponent != null && (
                         <HelperComponent

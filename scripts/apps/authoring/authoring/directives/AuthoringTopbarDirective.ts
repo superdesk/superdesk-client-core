@@ -6,6 +6,8 @@ import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-eve
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -16,11 +18,13 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
  *
  * @description Generates authoring subnav bar
  */
-AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
+AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace', '$q', 'superdeskFlags'];
 export function AuthoringTopbarDirective(
     TranslationService,
     privileges,
     authoringWorkspace: AuthoringWorkspaceService,
+    $q,
+    superdeskFlags,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
@@ -31,7 +35,7 @@ export function AuthoringTopbarDirective(
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
-
+            scope.fullWidth = superdeskFlags.flags.hideMonitoring ?? false;
             scope.saveTopbarLoading = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
@@ -44,8 +48,6 @@ export function AuthoringTopbarDirective(
 
                 scope.autosave(scope.item, 0);
             };
-
-            scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.openPublishOrSendToPane = () => {
                 const availableTabs = getAvailableTabs();
@@ -61,10 +63,14 @@ export function AuthoringTopbarDirective(
             function getAvailableTabs(): Array<IArticleActionInteractive> {
                 if (scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
-                } else if (scope.item.flags?.marked_for_not_publication === true) {
-                    return ['send_to'];
                 } else {
-                    return ['send_to', 'publish'];
+                    const result: Array<IArticleActionInteractive> = ['send_to'];
+
+                    if (sdApi.article.canPublish(scope.item)) {
+                        result.push('publish');
+                    }
+
+                    return result;
                 }
             }
 
@@ -83,24 +89,25 @@ export function AuthoringTopbarDirective(
              * @return {promise}
              */
             scope.saveTopbar = function() {
-                scope.saveTopbarLoading = true;
+                scope.$applyAsync(() => {
+                    scope.saveTopbarLoading = true;
+                });
 
                 // when very big articles being are saved(~14k words),
                 // the browser can't animate the loading spinner properly
                 // the delay is chosen so the spinner freezes in a visible state.
-                const timeoutDuration = 500;
+                const timeoutDuration = 600;
 
-                setTimeout(() => {
-                    for (const fn of scope.requestEditor3DirectivesToGenerateHtml) {
-                        fn();
-                    }
-
-                    return scope.save(scope.item)
-                        .finally(() => {
-                            scope.saveTopbarLoading = false;
-                            scope.$applyAsync();
-                        });
-                }, timeoutDuration);
+                return $q((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, timeoutDuration);
+                })
+                    .then(() => scope.save(scope.item))
+                    .finally(() => {
+                        scope.saveTopbarLoading = false;
+                        scope.$applyAsync();
+                    });
             };
 
             // Activate preview formatted item
@@ -143,6 +150,39 @@ export function AuthoringTopbarDirective(
             scope.$on('$destroy', () => {
                 removeSaveEventListener();
             });
+
+            scope.$watch(() => {
+                return superdeskFlags.flags.hideMonitoring;
+            }, (value) => {
+                scope.fullWidth = value;
+            });
+
+            scope.setFullWidth = () => {
+                scope.$applyAsync(() => {
+                    scope.hideMonitoring(true, new Event('click'));
+                });
+            };
+
+            // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
+            scope.hideMonitoring = function(state, e) {
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
+
+                if (fullWidthConfig.enabled) {
+                    if (fullWidthConfig.allowed) {
+                        fullWidthConfig.onToggle(!scope.fullWidthEnabled);
+                    }
+                } else {
+                    // eslint-disable-next-line no-lonely-if
+                    if (superdeskFlags.flags.authoring && state) {
+                        e.preventDefault();
+                        superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
+                    } else {
+                        superdeskFlags.flags.hideMonitoring = false;
+                        scope.superdeskFlags = false;
+                    }
+                }
+            };
         },
     };
 }

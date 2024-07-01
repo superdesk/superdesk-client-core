@@ -2,7 +2,7 @@ import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {logger} from 'core/services/logger';
 import {SelectionState, convertFromRaw} from 'draft-js';
-import {IArticle, ISetActiveCellReturnType} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
 import {
     CharacterLimitUiBehavior,
@@ -11,9 +11,10 @@ import {
 import {IEditorStore} from '../store';
 import {IEditorDragDropPayload} from '../reducers/editor3';
 import {MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {getArticleLabel, gettext} from 'core/utils';
 import {notify} from 'core/notify/notify';
 import {canAddArticleEmbed} from '../components/article-embed/can-add-article-embed';
+import {ISetActiveCellReturnType, IActiveCell} from '../components/tables/TableBlock';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc method
@@ -94,9 +95,7 @@ export function dragDrop(
                 if (res.ok === true) {
                     const payload: IEditorDragDropPayload = {
                         data: {
-                            id: res.src._id,
-                            name: getArticleLabel(res.src),
-                            html: res.src.body_html ?? '',
+                            item: res.src,
                         },
                         blockKey,
                         contentType: 'article-embed',
@@ -182,10 +181,10 @@ export function setReadOnly(v) {
  * @name setActiveCell
  * @description Sets the active table and cell inside the editor.
  */
-export function setActiveCell(i, j, key, currentStyle, selection): ISetActiveCellReturnType {
+export function setActiveCell(activeCell: IActiveCell): ISetActiveCellReturnType {
     return {
         type: 'EDITOR_SET_CELL',
-        payload: {i, j, key, currentStyle, selection},
+        payload: activeCell,
     };
 }
 
@@ -304,7 +303,7 @@ export function autocomplete(value: string) {
 }
 
 export type IActionPayloadSetExternalOptions =
-    Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>;
+    Partial<Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>>;
 
 export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
     return {

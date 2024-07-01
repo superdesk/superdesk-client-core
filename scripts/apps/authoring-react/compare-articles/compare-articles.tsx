@@ -169,6 +169,7 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                                 primaryColumnShown && (
                                     <div style={scrollableColumnCss}>
                                         <PreviewAuthoringItem
+                                            item={entity1}
                                             profile={profile1}
                                             fieldsData={fieldsData1}
                                             fieldPadding={fieldPadding}
@@ -181,6 +182,7 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                                 secondaryColumnShown && (
                                     <div style={scrollableColumnCss}>
                                         <PreviewAuthoringItem
+                                            item={entity2}
                                             profile={profile2}
                                             fieldsData={fieldsData2}
                                             fieldPadding={fieldPadding}
@@ -197,6 +199,8 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                                             profile2={profile2}
                                             fieldsData1={fieldsData1}
                                             fieldsData2={fieldsData2}
+                                            item1={entity1}
+                                            item2={entity2}
                                             fieldPadding={fieldPadding}
                                         />
                                     </div>

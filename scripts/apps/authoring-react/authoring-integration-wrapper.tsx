@@ -249,7 +249,7 @@ interface IPropsWrapper extends IProps {
 interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: null | {
-        name: string;
+        id: string;
         pinned: boolean;
     };
 }
@@ -260,9 +260,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     constructor(props: IPropsWrapper) {
         super(props);
 
+        const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
-            sideWidget: null,
+            sideWidget: localStorageWidget != null ? JSON.parse(localStorageWidget) : null,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -313,7 +315,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         icon: widget.icon,
                         size: 'big',
                         tooltip: widget.label,
-                        id: widget.label,
+                        id: widget._id,
                     };
 
                     return tab;
@@ -321,11 +323,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.sideWidget?.name}
+                    activeTab={this.state.sideWidget?.id}
                     onActiveTabChange={(val) => {
                         this.setState({
                             sideWidget: {
-                                name: val,
+                                id: val,
                                 pinned: this.state.sideWidget?.pinned ?? false,
                             },
                         });
@@ -483,8 +485,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
                             secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
                             validateBeforeSaving={false}
-                            getSideWidgetNameAtIndex={(article, index) => {
-                                return getWidgetsFromExtensions(article)[index].label;
+                            getSideWidgetIdAtIndex={(article, index) => {
+                                return getWidgetsFromExtensions(article)[index]._id;
                             }}
                         />
                     );

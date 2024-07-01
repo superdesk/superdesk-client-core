@@ -675,6 +675,7 @@ $slide-pane-width: 400px;
     transition: right 0.3s ease-in-out;
     border-radius: var(--b-radius--x-large);
     margin: 12px 0;
+    z-index: 1050;
     &.show {
         inset-inline-end: 12px;
     }

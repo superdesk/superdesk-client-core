@@ -3,14 +3,19 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {canPrintPreview} from 'apps/search/helpers';
+import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
-AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
-export function AuthoringEmbeddedDirective(api, notify, $filter) {
+AuthoringEmbeddedDirective.$inject = ['superdeskFlags', 'api', 'notify', '$filter'];
+export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter) {
     return {
         template: authoringReactViewEnabled
             ? (
                 '<div>' +
-                    '<sd-authoring-integration-wrapper data-action="action" data-item-id="item._id">' +
+                    '<sd-authoring-integration-wrapper ' +
+                        'data-action="action" ' +
+                        'data-item-id="item._id" ' +
+                        'data-set-full-width="setFullWidth" ' +
+                        'data-full-width="fullWidth">' +
                     '</sd-authoring-react>' +
                 '</div>'
             )
@@ -22,6 +27,32 @@ export function AuthoringEmbeddedDirective(api, notify, $filter) {
         },
         link: function(scope) {
             scope.canPrintPreview = canPrintPreview;
+            scope.fullWidth = superdeskFlags.flags.hideMonitoring;
+            scope.setFullWidth = () => {
+                scope.hideMonitoring(true, new Event('click'));
+            };
+
+            // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
+            scope.hideMonitoring = function(state, e) {
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.fullWidthConfig;
+
+                if (fullWidthConfig.enabled) {
+                    if (fullWidthConfig.allowed) {
+                        fullWidthConfig.onToggle(!scope.fullWidthEnabled);
+                    }
+                } else {
+                    // eslint-disable-next-line no-lonely-if
+                    if (superdeskFlags.flags.authoring && state) {
+                        e.preventDefault();
+                        superdeskFlags.flags.hideMonitoring = !superdeskFlags.flags.hideMonitoring;
+                        scope.fullWidth = superdeskFlags.flags.hideMonitoring;
+                        scope.$applyAsync();
+                    } else {
+                        superdeskFlags.flags.hideMonitoring = false;
+                    }
+                }
+            };
 
             function overrideEdnote(template) {
                 /* Override Editor note with given template or default one

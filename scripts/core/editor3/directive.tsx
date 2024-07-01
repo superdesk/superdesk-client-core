@@ -15,7 +15,7 @@ import createEditorStore, {
 } from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
-import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
+import {changeEditorState, setReadOnly, changeLimitConfig, setExternalOptions} from './actions';
 
 import ng from 'core/services/ng';
 import {IArticle, RICH_FORMATTING_OPTION} from 'superdesk-api';
@@ -34,6 +34,7 @@ import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
 import {Spacer} from 'core/ui/components/Spacer';
+import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 
 /**
  * @ngdoc directive
@@ -103,6 +104,9 @@ function generateHtml(
         objectToUpdate[fieldName] = editor3StateToHtml(
             contentStatePreparedForExport,
         );
+
+        copyEmbeddedArticlesIntoAssociations(contentStatePreparedForExport, item);
+
         generateAnnotations(item);
     }
 }
@@ -420,7 +424,7 @@ class Editor3Directive {
 
                     const getTemplateForHeader = () => {
                         return (
-                            <div style={{display: 'flex'}}>
+                            <div style={{display: 'flex'}} className="sd-input-style">
                                 <div className="authoring-header__item-label">
                                     {fieldName}
                                     {this.required && (
@@ -513,6 +517,10 @@ class Editor3Directive {
                     store = createEditorStore(this, ng.get('spellcheck'));
 
                     renderEditor3();
+                });
+
+                $scope.$watch('vm.editorFormat', (editorFormat) => {
+                    store.dispatch(setExternalOptions({editorFormat: editorFormat}));
                 });
 
                 // this is triggered from MacrosController.call

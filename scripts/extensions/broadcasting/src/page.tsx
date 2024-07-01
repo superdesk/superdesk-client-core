@@ -134,7 +134,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     : {
                         ...rundownItemActionNext,
                         sideWidget: {
-                            name: sidePanel,
+                            id: sidePanel,
                             pinned: false,
                         },
                     };
@@ -394,7 +394,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     <Layout.OverlayPanel />
                                 </Layout.LayoutContainer>
 
-                                <Layout.ContentSplitter visible={true} />
+                                <Layout.ContentSplitter visible={true} disabled />
                             </React.Fragment>
                         )
                     }
