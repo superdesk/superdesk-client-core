@@ -1,5 +1,5 @@
 <form name="editForm">
-    <div sd-modal data-model="vocabulary" class="modal--x-large">
+    <div sd-modal data-model="vocabulary" class="modal--x-large" data-test-id="'vocabulary-modal'">
         <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{vocabulary.display_name}}
             </h3>
@@ -7,7 +7,7 @@
             <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
         </div>
         <div class="modal__body modal__body--with-navigation" data-test-id="vocabulary-edit-content">
-            <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+            <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)" data-test-id="vocabulary-tabs">
                 <li ng-class="{'active': tab === 'general'}">
                     <button ng-click="setTab('general')" translate>General</button>
                 </li>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
 
-            <div class="modal__navigation--content">
+            <div class="modal__navigation--content" data-test-id="vocabulary-modal-content">
                 <ng-form name="vocabularyForm" class="vocabularyForm">
                     <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">
                         <div style="height: 100%" id="vocabulary-items-view-edit-placeholder"></div>
@@ -36,6 +36,7 @@
                                 ng-readonly="!!vocabulary._links"
                                 required
                                 data-test-id="vocabulary-edit--id"
+                                aria-label="{{'ID' | translate}}"
                             >
                             <div class="sd-line-input__message" ng-show="issues._id.unique || issues._id.deleted"
                                 translate>ID must be unique.</div>
@@ -221,7 +222,7 @@
                             <div class="form__row form__row--inner form__row--flex">
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
-                                        <select class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
+                                        <select id="field-media-type" class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
                                             <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
                                             </option>
                                         </select>
@@ -229,13 +230,13 @@
                                 </div>
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="form__row">
-                                        <sd-check name="field_type"
+                                        <sd-check name="field_type" aria-label="{{'Image' | translate}}"
                                             ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">
                                             {{'Image' | translate}}</sd-check>
                                         <sd-check name="field_type"
                                             ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">
                                             {{'Video' | translate}}</sd-check>
-                                        <sd-check name="field_type"
+                                        <sd-check name="field_type"  aria-label="{{'Audio' | translate}}"
                                             ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
                                             {{'Audio' | translate}}</sd-check>
                                     </div>

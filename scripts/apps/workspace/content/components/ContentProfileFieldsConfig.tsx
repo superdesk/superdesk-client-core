@@ -119,6 +119,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
             availableIds,
             selectedSection,
         } = this.props.wrapper.additionalProps;
+        const itemLabel = getLabel(item.id);
         const isLast = index === page.getItemsCount() - 1;
         const canAddNewField =
             availableIds.length > 0
@@ -164,9 +165,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         : null
                 }
 
-                <div className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                <div
+                    className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border"
+                    data-test-id="content-profile-item"
+                    data-test-value={itemLabel}
+                >
                     <span className="sd-overflow-ellipsis sd-list-item__text-strong">
-                        {getLabel(item.id)}
+                        {itemLabel}
                     </span>
                 </div>
 
@@ -226,7 +231,10 @@ class ItemComponent extends React.PureComponent<IPropsItem> {
 class ItemsContainerBase extends React.PureComponent {
     render() {
         return (
-            <div className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3">
+            <div
+                className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3"
+                data-test-id="content-profile-fields"
+            >
                 {this.props.children}
             </div>
         );
@@ -451,7 +459,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
         }
 
         const tabs = (
-            <div className="sd-nav-tabs">
+            <div className="sd-nav-tabs" data-test-id="content-profile-tabs">
                 {
                     getTabs().map((tab) => (
                         <button
