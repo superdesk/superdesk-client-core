@@ -623,17 +623,17 @@ describe('authoring', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery--upload-placeholder"]'))));
+        expect(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 0)()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
         assertToastMsg('success', 'Item updated.');
         waitForToastMsgDisappear('success', 'Item updated.');
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 1));
 
-        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        hover(element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')));
         el(['media-gallery-image--edit']).click();
         el(['done']).click(); // click done without making any changes
 
@@ -645,12 +645,12 @@ describe('authoring', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery--upload-placeholder"]'))));
+        expect(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 0)()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 1));
     });
 
     it('Can remove an image from media gallery', () => {
@@ -664,16 +664,16 @@ describe('authoring', () => {
 
         templateBtn.click();
 
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery--upload-placeholder"]'))));
+        expect(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 0)()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-red.jpg'));
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 1));
 
-        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
-        el(['authoring-field--media-gallery', 'media-gallery-image--remove']).click();
+        hover(element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')));
+        element(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image--remove"]')).click();
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0));
+        browser.wait(ECE.hasElementCount(element.all(by.css('[data-test-id="authoring-field"][data-test-value="Image gallery 33"] [data-test-id="media-gallery-image"]')), 0));
     });
 });
