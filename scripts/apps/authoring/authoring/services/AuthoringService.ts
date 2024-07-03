@@ -548,13 +548,13 @@ export function AuthoringService(
         origItem: IArticle,
         __item: IArticle,
         requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
-        cloneAfterGenerateHtml?: boolean,
+        cloneAfterGeneratingHtml?: boolean,
     ) {
         for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
             fn();
         }
 
-        const _item = cloneAfterGenerateHtml === true ? cloneDeep(__item) : __item;
+        const _item = cloneAfterGeneratingHtml === true ? cloneDeep(__item) : __item;
 
         return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
             angular.extend(_item, item);
@@ -607,8 +607,6 @@ export function AuthoringService(
 
                     authoringWorkspace.update(origItem);
 
-                    console.log(__item, '__item'); // monitoring good, multiedit bad one
-                    
                     return origItem;
                 });
             }
