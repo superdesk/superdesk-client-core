@@ -163,7 +163,7 @@
     "test": "npm run lint && npm run unit && node tasks/verify-client-api-changes.js",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
     "unit": "karma start --single-run",
-    "lint": "tsc -p scripts --noEmit && eslint --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
+    "lint": "tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "server": "grunt server",
     "dev": "npm run server"

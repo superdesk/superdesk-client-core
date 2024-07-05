@@ -351,6 +351,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                                         groupedOrdered.map((group, i) => {
                                             return (
                                                 <ToggleBox
+                                                    variant="simple"
                                                     key={i}
                                                     initiallyOpen={group.initiallyOpen}
                                                     title={group.groupName}
