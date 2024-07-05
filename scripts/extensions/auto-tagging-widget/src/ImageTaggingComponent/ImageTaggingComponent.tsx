@@ -271,6 +271,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
 
         return (
             <ToggleBox
+                variant='simple'
                 className="toggle-box--circle"
                 title={
                     isLoading
