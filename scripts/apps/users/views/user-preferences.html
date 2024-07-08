@@ -78,6 +78,14 @@
                                 <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
                                 <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
                             </div>
+                            <div sd-info-item ng-show="preferences['assignment:notification']">
+                                <span ng-hide="preferences['assignment:notification'].allowed" sd-switch ng-model="preferences['assignment:notification'].enabled"></span>
+                                <label>{{ :: preferences['assignment:notification'].label | translate }}</label>
+                            </div>
+                            <div sd-info-item ng-show="preferences['mark_for_user:notification']">
+                                <span ng-hide="preferences['mark_for_user:notification'].allowed" sd-switch ng-model="preferences['mark_for_user:notification'].enabled"></span>
+                                <label>{{ :: preferences['mark_for_user:notification'].label | translate }}</label>
+                            </div>
                             <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
                                 <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
                                 <label>{{ :: preferences['slack:notification'].label | translate }}</label>
