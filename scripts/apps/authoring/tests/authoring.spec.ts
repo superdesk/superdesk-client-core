@@ -57,7 +57,7 @@ describe('authoring', () => {
     }));
 
     it('can open an item',
-        inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
+        (done) => inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
             var _item,
                 lockedItem = angular.extend({_locked: false}, ITEM);
 
@@ -67,14 +67,16 @@ describe('authoring', () => {
 
             $injector.invoke(superdesk.activity('authoring').resolve.item).then((resolvedItem) => {
                 _item = resolvedItem;
+
+                expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
+                expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
+                expect(autosave.open).toHaveBeenCalledWith(lockedItem);
+                expect(_item.guid).toBe(GUID);
+
+                done();
             });
 
             $rootScope.$digest();
-
-            expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
-            expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
-            expect(autosave.open).toHaveBeenCalledWith(lockedItem);
-            expect(_item.guid).toBe(GUID);
         }));
 
     it('does lock item only once',
@@ -150,20 +152,22 @@ describe('authoring', () => {
         expect(scope.item.slugline).toBe('');
     }));
 
-    it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
+    it('can reject publishing on error', (done) => inject((api, $q, $rootScope, authoring, lock) => {
         let success = jasmine.createSpy('success');
-        let error = jasmine.createSpy('error');
 
         spyOn(api, 'update').and.returnValue($q.reject('err'));
         spyOn(lock, 'unlock').and.returnValue();
 
-        authoring.publish({}, {}).then(success, error);
-        $rootScope.$digest();
+        authoring.publish({}, {}).then(success, (error) => {
+            expect(api.update).toHaveBeenCalled();
+            expect(lock.unlock).not.toHaveBeenCalled();
+            expect(success).not.toHaveBeenCalled();
+            expect(error).toBe('err');
 
-        expect(api.update).toHaveBeenCalled();
-        expect(lock.unlock).not.toHaveBeenCalled();
-        expect(success).not.toHaveBeenCalled();
-        expect(error).toHaveBeenCalledWith('err');
+            done();
+        });
+
+        $rootScope.$digest();
     }));
 
     /**
@@ -1916,23 +1920,22 @@ describe('authoring themes', () => {
         expect(authThemes.save).toHaveBeenCalledWith('proofreadTheme', darkTheme);
     }));
 
-    it('can get normal theme', inject((authThemes, $rootScope) => {
-        var theme = null;
+    it('can get normal theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('theme').then((theme) => {
+            expect(theme).not.toBe(null);
 
-        authThemes.get('theme').then((_theme) => {
-            theme = _theme;
+            done();
         });
+
         $rootScope.$digest();
-        expect(theme).not.toBe(null);
     }));
 
-    it('can get proofread theme', inject((authThemes, $rootScope) => {
-        var proofreadTheme = null;
-
-        authThemes.get('proofreadTheme').then((_theme) => {
-            proofreadTheme = _theme;
+    it('can get proofread theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('proofreadTheme').then((proofreadTheme) => {
+            expect(proofreadTheme).not.toBe(null);
+            done();
         });
+
         $rootScope.$digest();
-        expect(proofreadTheme).not.toBe(null);
     }));
 });
