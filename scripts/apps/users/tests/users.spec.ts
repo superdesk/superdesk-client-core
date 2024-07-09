@@ -51,15 +51,15 @@ describe('userlist service', () => {
         });
     }));
 
-    it('can fetch users', inject((userList, $rootScope) => {
-        var res = null;
-
+    it('can fetch users', (done) => inject((userList, $rootScope) => {
         userList.get()
-            .then((result) => {
-                res = result;
+            .then((res) => {
+                expect(res).toEqual({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
+
+                done();
             });
+
         $rootScope.$digest();
-        expect(res).toEqual({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
     }));
 
     it('can return users from cache', inject((userList, $rootScope, api) => {
@@ -74,15 +74,15 @@ describe('userlist service', () => {
         expect(spy).not.toHaveBeenCalled();
     }));
 
-    it('can fetch single user', inject((userList, $rootScope) => {
-        var res = null;
-
+    it('can fetch single user', (done) => inject((userList, $rootScope) => {
         userList.getUser(1)
-            .then((result) => {
-                res = result;
+            .then((res) => {
+                expect(res).toEqual({_id: 1});
+
+                done();
             });
+
         $rootScope.$digest();
-        expect(res).toEqual({_id: 1});
     }));
 
     it('can return single user from default cacher', inject((userList, $rootScope, api) => {
