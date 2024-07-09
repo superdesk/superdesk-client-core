@@ -57,6 +57,8 @@ test.describe('Multiedit', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
+        await monitoring.selectDeskOrWorkspace('Sports');
+
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story')),
             'Edit',
