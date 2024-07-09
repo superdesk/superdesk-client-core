@@ -187,6 +187,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                 {
                                     template != null && (
                                         <DatePickerISO
+                                            required
                                             dateFormat={superdesk.instance.config.view.dateformat}
                                             label={gettext('Airtime')}
                                             value={this.state.airTime ?? ''}

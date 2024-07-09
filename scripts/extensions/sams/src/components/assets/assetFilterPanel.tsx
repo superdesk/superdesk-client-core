@@ -347,6 +347,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <DatePicker
+                                        required
                                         label={gettext('Uploaded From:')}
                                         value={this.state.localSearchParams.dateFrom ?? null}
                                         onChange={this.onChange.dateFrom}
@@ -356,6 +357,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                 </FormItem>
                                 <FormItem>
                                     <DatePicker
+                                        required
                                         label={gettext('Uploaded To:')}
                                         value={this.state.localSearchParams.dateTo ?? null}
                                         onChange={this.onChange.dateTo}

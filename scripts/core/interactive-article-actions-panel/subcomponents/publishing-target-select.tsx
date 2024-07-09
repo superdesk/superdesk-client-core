@@ -102,7 +102,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
     render() {
         return this.state.loading === false && (
-            <ToggleBox title={gettext('Target')} initiallyOpen>
+            <ToggleBox variant="simple" title={gettext('Target')} initiallyOpen>
                 <FormLabel text={gettext('Target subscribers')} />
 
                 <div style={{paddingBlockStart: 5}}>

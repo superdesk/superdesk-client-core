@@ -52,6 +52,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     label=""
                     inlineLabel
                     labelHidden
+                    required={this.props.required}
                     value={value}
                     onChange={(val) => {
                         this.props.onChange(val);

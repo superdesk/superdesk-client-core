@@ -148,7 +148,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
 
         return (
             <Spacer v gap="8" noWrap alignItems="stretch">
-                <ToggleBox title={gettext('Compare versions')} initiallyOpen margin="none">
+                <ToggleBox variant="simple" title={gettext('Compare versions')} initiallyOpen margin="none">
                     <Spacer h gap="16">
                         <SelectFilterable
                             items={versions}
