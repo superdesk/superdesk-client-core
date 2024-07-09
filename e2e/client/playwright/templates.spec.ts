@@ -25,7 +25,7 @@ test('editing template name', async ({page}) => {
     await page.locator(s('template-edit-view')).getByPlaceholder('template name').fill('story 1.1');
     await page.locator(s('template-edit-view')).getByRole('button', {name: 'Save'}).click();
 
-    await expect(page.locator(s('template-content', 'content-template=story 1.1'))).toBeVisible({timeout: 10000});
+    await expect(page.locator(s('template-content', 'content-template=story 1.1'))).toBeVisible();
 });
 
 test('removing template', async ({page}) => {
