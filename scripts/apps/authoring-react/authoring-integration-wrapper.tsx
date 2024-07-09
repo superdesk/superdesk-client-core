@@ -239,6 +239,8 @@ interface IPropsWrapper extends IProps {
         fieldsData: IFieldsData,
         computeLatestEntity: IExposedFromAuthoring<IArticle>['getLatestItem'],
     ): IFieldsData;
+
+    autoFocus?: boolean; // defaults to true
 }
 
 /**
@@ -488,6 +490,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             getSideWidgetIdAtIndex={(article, index) => {
                                 return getWidgetsFromExtensions(article)[index]._id;
                             }}
+                            autoFocus={this.props.autoFocus}
                         />
                     );
                 }}

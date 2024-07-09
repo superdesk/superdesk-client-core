@@ -234,6 +234,8 @@ declare module 'superdesk-api' {
         headerCollapsed?: boolean; // initial value
 
         themingEnabled?: boolean; // only works with article; default false
+
+        autoFocus?: boolean; // defaults to true; will focus first input
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments

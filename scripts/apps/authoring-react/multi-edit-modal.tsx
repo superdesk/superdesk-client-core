@@ -241,6 +241,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                 getInlineToolbarActions={(options) =>
                                                     this.getInlineToolbarActions(options, availableArticles)
                                                 }
+                                                autoFocus={false}
                                             />
                                         </div>
                                     </Spacer>
