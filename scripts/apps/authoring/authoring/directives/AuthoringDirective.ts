@@ -1056,6 +1056,10 @@ export function AuthoringDirective(
                         if (event.detail.itemId === $scope.item._id) {
                             angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
 
+                            if ($scope.item.fields_meta != null) {
+                                delete $scope.item.fields_meta[event.detail.field.key];
+                            }
+
                             $scope.dirty = true;
                             $scope.$applyAsync();
                             $scope.refresh();
