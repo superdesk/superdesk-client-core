@@ -21,55 +21,51 @@ describe('dictionaries', () => {
             ]}});
     }));
 
-    it('can get dictionaries for given language', inject((api, dictionaries, $q, $rootScope) => {
+    it('can get dictionaries for given language', (done) => inject((api, dictionaries, $q, $rootScope) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
         spyOn(api, 'find').and.returnValue($q.when({}));
 
-        var items;
-
-        dictionaries.getActive(LANG).then((_items) => {
-            items = _items;
-        });
-
-        $rootScope.$digest();
-
-        expect(items.length).toBe(1);
-        expect(api.query).toHaveBeenCalledWith('dictionaries', {
-            projection: {content: 0},
-            where: {$and:
-            [{$or: [{language_id: LANG}]},
-                {is_active: {$in: ['true', null]}},
-                {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                {$or: [{user: USER_ID}, {user: {$exists: false}}]}],
-            },
-        });
-        expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
-    }));
-
-    it('can get dictionaries for given language and the base language',
-        inject((api, dictionaries, $q, $rootScope) => {
-            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
-            spyOn(api, 'find').and.returnValue($q.when({}));
-
-            var items;
-
-            dictionaries.getActive('en-US', 'en').then((_items) => {
-                items = _items;
-            });
-
-            $rootScope.$digest();
-
+        dictionaries.getActive(LANG).then((items) => {
             expect(items.length).toBe(1);
             expect(api.query).toHaveBeenCalledWith('dictionaries', {
                 projection: {content: 0},
                 where: {$and:
-                [{$or: [{language_id: 'en-US'}, {language_id: 'en'}]},
+                [{$or: [{language_id: LANG}]},
                     {is_active: {$in: ['true', null]}},
                     {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                     {$or: [{user: USER_ID}, {user: {$exists: false}}]}],
                 },
             });
             expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
+
+            done();
+        });
+
+        $rootScope.$digest();
+    }));
+
+    it('can get dictionaries for given language and the base language',
+        (done) => inject((api, dictionaries, $q, $rootScope) => {
+            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
+            spyOn(api, 'find').and.returnValue($q.when({}));
+
+            dictionaries.getActive('en-US', 'en').then((items) => {
+                expect(items.length).toBe(1);
+                expect(api.query).toHaveBeenCalledWith('dictionaries', {
+                    projection: {content: 0},
+                    where: {$and:
+                    [{$or: [{language_id: 'en-US'}, {language_id: 'en'}]},
+                        {is_active: {$in: ['true', null]}},
+                        {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
+                        {$or: [{user: USER_ID}, {user: {$exists: false}}]}],
+                    },
+                });
+                expect(api.find).toHaveBeenCalledWith('dictionaries', 1);
+
+                done();
+            });
+
+            $rootScope.$digest();
         }));
 
     it('can get and update user dictionary', inject((api, dictionaries, $q, $rootScope) => {

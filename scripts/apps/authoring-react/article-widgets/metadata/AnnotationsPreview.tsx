@@ -17,7 +17,7 @@ export class AnnotationsPreview extends React.Component<IProps> {
         return (
             <div>
                 <div dangerouslySetInnerHTML={{__html: article.archive_description}} />
-                <ToggleBox title={gettext('Annotations')}>
+                <ToggleBox variant="simple" title={gettext('Annotations')}>
                     {
                         (article.annotations?.length ?? 0) > 0 && (
                             getAllAnnotations(article).map((annotation) => (

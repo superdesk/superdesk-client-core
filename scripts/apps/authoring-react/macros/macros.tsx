@@ -17,7 +17,7 @@ import {Button} from 'superdesk-ui-framework/react/components/Button';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {generatePatch} from 'core/patch';
-import {ToggleBox} from 'superdesk-ui-framework/react/components/Togglebox';
+import {ToggleBox} from 'superdesk-ui-framework/react';
 import {Switch} from 'superdesk-ui-framework/react/components/Switch';
 import {omitFields} from '../data-layer';
 import {assertNever, nameof} from 'core/helpers/typescript-helpers';
@@ -351,6 +351,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                                         groupedOrdered.map((group, i) => {
                                             return (
                                                 <ToggleBox
+                                                    variant="simple"
                                                     key={i}
                                                     initiallyOpen={group.initiallyOpen}
                                                     title={group.groupName}

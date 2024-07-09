@@ -546,12 +546,15 @@ export function AuthoringService(
      */
     this.save = function saveAuthoring(
         origItem: IArticle,
-        _item: IArticle,
+        __item: IArticle,
         requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
+        cloneAfterGeneratingHtml?: boolean,
     ) {
         for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
             fn();
         }
+
+        const _item = cloneAfterGeneratingHtml === true ? cloneDeep(__item) : __item;
 
         return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
             angular.extend(_item, item);
@@ -603,6 +606,7 @@ export function AuthoringService(
                     const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
                     authoringWorkspace.update(origItem);
+
                     return origItem;
                 });
             }

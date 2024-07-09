@@ -72,6 +72,7 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                     <Form.FormItem>
                         <Spacer h gap="4" justifyContent="space-between">
                             <DatePickerISO
+                                required
                                 label={gettext('Airtime date from')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 value={filters.airtime_date?.gte ?? ''}
@@ -86,6 +87,7 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                             />
 
                             <DatePickerISO
+                                required
                                 label={gettext('Airtime date to')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 value={filters.airtime_date?.lte ?? ''}
