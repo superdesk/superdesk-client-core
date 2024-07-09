@@ -307,52 +307,52 @@ export function AuthoringHeaderDirective(
             const loadingStartTimestamp = Date.now();
             let lastElementCount = null;
 
-            // /**
-            //  * Use interval to approximately determine when fields have loaded.
-            //  */
-            // const interval = setInterval(() => {
-            //     if (Date.now() - loadingStartTimestamp > 5000) {
-            //         // stop trying after 5s
-            //         // there might not be inputs in authoring header configured
-            //         clearInterval(interval);
-            //     } else {
-            //         const elements = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')];
+            /**
+             * Use interval to approximately determine when fields have loaded.
+             */
+            const interval = setInterval(() => {
+                if (Date.now() - loadingStartTimestamp > 5000) {
+                    // stop trying after 5s
+                    // there might not be inputs in authoring header configured
+                    clearInterval(interval);
+                } else {
+                    const elements = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')];
 
-            //         if (elements.length < 1) {
-            //             return;
-            //         } else if (lastElementCount == null) {
-            //             lastElementCount = elements.length;
+                    if (elements.length < 1) {
+                        return;
+                    } else if (lastElementCount == null) {
+                        lastElementCount = elements.length;
 
-            //             return;
-            //         } else if (lastElementCount !== elements.length) {
-            //             lastElementCount = elements.length;
+                        return;
+                    } else if (lastElementCount !== elements.length) {
+                        lastElementCount = elements.length;
 
-            //             return;
-            //         } else {
-            //             clearInterval(interval);
-            //         }
+                        return;
+                    } else {
+                        clearInterval(interval);
+                    }
 
-            //         if (scope.action === 'correct') {
-            //             elem.find('#ednote').focus();
-            //         } else {
-            //             const sorted = elements
-            //                 .map((el) => {
-            //                     const orderEl = el.closest('[order]');
+                    if (scope.action === 'correct') {
+                        elem.find('#ednote').focus();
+                    } else {
+                        const sorted = elements
+                            .map((el) => {
+                                const orderEl = el.closest('[order]');
 
-            //                     return {
-            //                         input: el,
-            //                         order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
-            //                     };
-            //                 })
-            //                 .filter(({order}) => order != null)
-            //                 .sort((a, b) => a.order - b.order);
+                                return {
+                                    input: el,
+                                    order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
+                                };
+                            })
+                            .filter(({order}) => order != null)
+                            .sort((a, b) => a.order - b.order);
 
-            //             if (sorted.length > 0) {
-            //                 sorted[0].input.focus();
-            //             }
-            //         }
-            //     }
-            // }, 100);
+                        if (sorted.length > 0) {
+                            sorted[0].input.focus();
+                        }
+                    }
+                }
+            }, 100);
         },
     };
 }
