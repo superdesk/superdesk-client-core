@@ -10,20 +10,18 @@ describe('request service', () => {
     }));
     beforeEach(window.module('superdesk.core.upload'));
 
-    it('can resend $http request', inject((request, $httpBackend) => {
+    it('can resend $http request', (done) => inject((request, $httpBackend) => {
         var config = {url: 'test', method: 'GET'};
 
         $httpBackend.expectGET('test').respond('data');
 
-        var response;
+        request.resend(config).then((response) => {
+            expect(response.status).toBe(200);
 
-        request.resend(config).then((_response) => {
-            response = _response;
+            done();
         });
 
         $httpBackend.flush();
-
-        expect(response.status).toBe(200);
     }));
 
     it('can resend upload request', inject((request, upload) => {

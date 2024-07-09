@@ -29,41 +29,38 @@ describe('auth service', () => {
         spyOn(api.users, 'getById').and.returnValue($q.when({username: 'foo'}));
     }));
 
-    it('can login', inject((auth, session, $httpBackend, $rootScope) => {
-        const success = jasmine.createSpy('authenticated');
-
+    it('can login', (done) => inject((auth, session, $httpBackend, $rootScope) => {
         $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {user: 'foo', token: 'bar'});
 
         expect(session.identity).toBe(null);
         expect(session.token).toBe(null);
 
-        auth.login('admin', 'admin').then(success);
+        auth.login('admin', 'admin').then(() => {
+            expect(session.start).toHaveBeenCalled();
+
+            done();
+        });
 
         $rootScope.$apply();
         $httpBackend.flush();
         $rootScope.$apply();
 
-        expect(session.start).toHaveBeenCalled();
-        expect(success).toHaveBeenCalled();
         $httpBackend.verifyNoOutstandingExpectation();
     }));
 
-    it('checks credentials', inject((auth, $httpBackend, $rootScope) => {
-        var resolved = false, rejected = false;
+    it('checks credentials', (done) => inject((auth, $httpBackend, $rootScope) => {
+        const onSuccess = jasmine.createSpy('onSuccess');
 
         $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(403, {});
 
-        auth.login('wrong', 'credentials').then(() => {
-            resolved = true;
-        }, () => {
-            rejected = true;
+        auth.login('wrong', 'credentials').then(onSuccess, () => {
+            expect(onSuccess).not.toHaveBeenCalled();
+
+            done();
         });
 
         $httpBackend.flush();
         $rootScope.$apply();
-
-        expect(resolved).toBe(false);
-        expect(rejected).toBe(true);
     }));
 
     it('handles oauth login', inject((auth, session, $http, $rootScope) => {

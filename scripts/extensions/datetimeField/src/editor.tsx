@@ -59,6 +59,7 @@ export class Editor extends React.PureComponent<IProps> {
 
                         <Spacer h gap="8" noGrow>
                             <DatePickerISO
+                                required
                                 labelHidden
                                 inlineLabel
                                 label={gettext('Date')}
