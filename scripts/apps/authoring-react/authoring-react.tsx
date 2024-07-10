@@ -564,7 +564,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             this.setState(initialState);
 
-            if (this.componentRef != null) {
+            if (this.componentRef != null && this.props.autoFocus !== false) {
                 this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
         });
