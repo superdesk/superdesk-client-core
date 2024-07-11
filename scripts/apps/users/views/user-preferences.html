@@ -71,20 +71,35 @@
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
                         <div class="sd-switch__group sd-switch__group--vertical">
                             <div sd-info-item>
-                                <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                                <span
+                                    ng-hide="preferences['email:notification'].allowed"
+                                    sd-switch
+                                    ng-model="preferences['email:notification'].enabled"
+                                    ng-change="toggleParentNotification()">
+                                </span>
                                 <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                            </div>
+                            <div sd-info-item ng-show="preferences['assignment:notification']" class="item ms-1 ps-5">
+                                <span 
+                                    ng-hide="preferences['assignment:notification'].allowed"
+                                    sd-switch
+                                    ng-model="preferences['assignment:notification'].enabled"
+                                    ng-change="toggleChildNotification('assignment:notification')">
+                                </span>
+                                <label>{{ preferences['assignment:notification'].label }}</label>
+                            </div>
+                            <div sd-info-item ng-show="preferences['mark_for_user:notification']" class="item ms-1 ps-5">
+                            <span 
+                                ng-hide="preferences['mark_for_user:notification'].allowed"
+                                sd-switch
+                                ng-model="preferences['mark_for_user:notification'].enabled"
+                                ng-change="toggleChildNotification('mark_for_user:notification')">
+                            </span>
+                                <label>{{ preferences['mark_for_user:notification'].label }}</label>
                             </div>
                             <div sd-info-item>
                                 <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
                                 <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
-                            </div>
-                            <div sd-info-item ng-show="preferences['assignment:notification']">
-                                <span ng-hide="preferences['assignment:notification'].allowed" sd-switch ng-model="preferences['assignment:notification'].enabled"></span>
-                                <label>{{ preferences['assignment:notification'].label }}</label>
-                            </div>
-                            <div sd-info-item ng-show="preferences['mark_for_user:notification']">
-                                <span ng-hide="preferences['mark_for_user:notification'].allowed" sd-switch ng-model="preferences['mark_for_user:notification'].enabled"></span>
-                                <label>{{ preferences['mark_for_user:notification'].label }}</label>
                             </div>
                             <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
                                 <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
