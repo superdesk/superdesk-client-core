@@ -60,10 +60,11 @@ export function UserPreferencesDirective(
 
             scope.toggleParentNotification = function() {
                 const parentEnabled = scope.preferences['email:notification'].enabled;
+
                 scope.preferences['assignment:notification'].enabled = parentEnabled;
                 scope.preferences['mark_for_user:notification'].enabled = parentEnabled;
             };
-        
+
             scope.toggleChildNotification = function(child) {
                 if (scope.preferences[child].enabled) {
                     // Turn on parent if any child is turned on
@@ -72,6 +73,7 @@ export function UserPreferencesDirective(
                     // Check if all children are off
                     const allChildrenOff = !scope.preferences['assignment:notification'].enabled &&
                                            !scope.preferences['mark_for_user:notification'].enabled;
+
                     if (allChildrenOff) {
                         // Turn off parent if all children are off
                         scope.preferences['email:notification'].enabled = false;
