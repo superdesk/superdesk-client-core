@@ -66,8 +66,10 @@
             </div>
         </div>
         <div class="modal__body-footer">
-            <button class="btn" ng-click="cancel()" translate>Cancel</button>
-            <button class="btn btn--primary" ng-click="save(editRuleset)" ng-disabled="!rulesetForm.$valid || !rulesetForm.$dirty" translate>Save</button>
+            <div class="button-group button-group--end button-group--comfort" role="group">
+                <button class="btn" ng-click="cancel()" translate>Cancel</button>
+                <button class="btn btn--primary" ng-click="save(editRuleset)" ng-disabled="!rulesetForm.$valid || !rulesetForm.$dirty" translate>Save</button>
+            </div>
         </div>
     </form>
 </div>
