@@ -388,7 +388,7 @@ export function ArticleEditDirective(
                                     scope.articleEdit.$setDirty();
                                 }
                             } else {
-                                scope.save();
+                                scope.save({reloadEditor3: true});
                             }
                         })
                         .finally(() => {

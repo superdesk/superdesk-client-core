@@ -160,7 +160,7 @@
                         <div class="modal__sliding-toolbar" ng-if="metadata.isDirty">
                             <div class="sliding-toolbar__inner"></div>
                             <a class="btn" ng-click="cancelMetadataChanges()" translate>Cancel</a>
-                            <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
+                            <a class="btn btn--primary" data-test-id="apply-metadata-button" ng-click="applyMetadataChanges()" translate>Apply</a>
                         </div>
 
                         <div sd-media-metadata-editor

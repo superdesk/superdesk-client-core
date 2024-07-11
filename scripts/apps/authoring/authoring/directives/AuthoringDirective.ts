@@ -95,12 +95,9 @@ export function AuthoringDirective(
             $scope.tabsPinned = false;
 
             var _closing;
-            var mediaFields = {};
             var userDesks;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
-            const MEDIA_TYPES = ['video', 'picture', 'audio'];
-            const isPersonalSpace = $location.path() === '/workspace/personal';
 
             $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
@@ -187,7 +184,7 @@ export function AuthoringDirective(
             function getCurrentTemplate() {
                 const item: IArticle | null = $scope.item;
 
-                if (item.type === 'composite') {
+                if (item.type !== 'text') {
                     $scope.currentTemplate = {};
                 } else {
                     if (typeof item?.template !== 'string') {
@@ -270,11 +267,11 @@ export function AuthoringDirective(
             /**
              * Create a new version
              */
-            $scope.save = function() {
+            $scope.save = function({reloadEditor3 = false} = {}) {
                 return authoring.save(
                     $scope.origItem,
                     $scope.item,
-                    $scope.requestEditor3DirectivesToGenerateHtml,
+                    reloadEditor3 ? [] : $scope.requestEditor3DirectivesToGenerateHtml,
                 ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
