@@ -880,8 +880,10 @@ export function AuthoringDirective(
             };
 
             $scope.autosaveNow = () => {
-                _autosave(0);
-                _autosave.flush();
+                if ($scope.dirty) {
+                    _autosave(0);
+                    _autosave.flush();
+                }
             };
 
             $scope.sendToNextStage = function() {
