@@ -1,9 +1,10 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s, sleep} from './utils';
 import {MediaEditor} from './page-object-models/media-editor';
+import {Authoring} from './page-object-models/authoring';
 
-test.setTimeout(15000);
+test.setTimeout(30000);
 
 /**
  * upload a picture
@@ -15,6 +16,7 @@ test('edit picture metadata in modal', async ({page}) => {
 
     const monitoring = new Monitoring(page);
     const mediaEditor = new MediaEditor(page);
+    const authoring = new Authoring(page);
 
     await page.goto('/#/workspace/monitoring');
 
@@ -26,6 +28,7 @@ test('edit picture metadata in modal', async ({page}) => {
 
     await expect(mediaEditor.field('headline')).toContainText('The Headline');
 
+    await mediaEditor.field('headline').fill('');
     await mediaEditor.field('headline').fill('picture');
 
     await mediaEditor.startUpload();
@@ -35,11 +38,18 @@ test('edit picture metadata in modal', async ({page}) => {
         'Edit',
     );
 
-    await page.locator(s('image-overlay')).hover();
-    await page.locator(s('edit-metadata')).click();
+    await authoring.openMediaMetadataEditor();
 
     await mediaEditor.field('description_text').fill('test description');
     await mediaEditor.saveMetadata();
 
-    await expect(page.locator(s('authoring', 'field--description_text'))).toContainText('test description');
+    await expect(authoring.field('description_text')).toContainText('test description');
+
+    await authoring.field('description_text').fill('new description');
+
+    await authoring.waitForAutosave();
+
+    await authoring.openMediaMetadataEditor();
+
+    await expect(mediaEditor.field('description_text')).toContainText('new description');
 });

@@ -21,4 +21,18 @@ export class Authoring {
             .getByRole('button', {name: actionPath[actionPath.length - 1]})
             .click();
     }
+
+
+    async openMediaMetadataEditor() {
+        await this.page.locator(s('image-overlay')).hover();
+        await this.page.locator(s('edit-metadata')).click();
+    }
+
+    field(field: string) {
+        return this.page.locator(s('authoring', 'field--' + field)).getByRole('textbox');
+    }
+
+    async waitForAutosave() {
+        await this.page.waitForResponse(/\/api\/archive_autosave/);
+    }
 }
