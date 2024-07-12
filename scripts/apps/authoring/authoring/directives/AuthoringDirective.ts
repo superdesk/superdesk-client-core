@@ -554,9 +554,7 @@ export function AuthoringDirective(
                     // delay required for loading state to render
                     // before possibly long operation (with huge articles)
                     setTimeout(() => {
-                        for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
-                            fn();
-                        }
+                        $scope.syncEditor();
 
                         resolve();
                     });
@@ -673,9 +671,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // Request to generate html before we pass scope variables
-                for (const fn of ($scope.requestEditor3DirectivesToGenerateHtml ?? [])) {
-                    fn();
-                }
+                $scope.syncEditor();
 
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
@@ -856,7 +852,7 @@ export function AuthoringDirective(
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
             const _autosave = debounce((timeout) => {
-                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
+                $scope.syncEditor();
 
                 return authoring.autosave(
                     $scope.item,
@@ -879,11 +875,8 @@ export function AuthoringDirective(
                 _autosave(timeout);
             };
 
-            $scope.autosaveNow = () => {
-                if ($scope.dirty) {
-                    _autosave(0);
-                    _autosave.flush();
-                }
+            $scope.syncEditor = () => {
+                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
             };
 
             $scope.sendToNextStage = function() {
