@@ -29,14 +29,7 @@ function uploadMedia(imagePathAbsolute) {
     el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
         .sendKeys('image headline');
     el(['media-metadata-editor', 'field--slugline'], by.tagName('[contenteditable]'))
-        .sendKeys('image headline');
-    el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]'))
-        .sendKeys('image alt text');
-
-    selectFromMetaTermsDropdown('anpa_category', ['Finance']);
-
-    selectFromMetaTermsDropdown('subject', ['arts, culture and entertainment', 'archaeology']);
-
+        .sendKeys('image slugline');
     el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]'))
         .sendKeys('image description');
 
