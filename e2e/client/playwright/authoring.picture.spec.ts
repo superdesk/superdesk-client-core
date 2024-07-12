@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s, sleep} from './utils';
+import {restoreDatabaseSnapshot} from './utils';
 import {MediaEditor} from './page-object-models/media-editor';
 import {Authoring} from './page-object-models/authoring';
 
@@ -33,10 +33,7 @@ test('edit picture metadata in modal', async ({page}) => {
 
     await mediaEditor.startUpload();
 
-    await monitoring.executeActionOnMonitoringItem(
-        page.locator(s('article-item=picture')),
-        'Edit',
-    );
+    await monitoring.executeActionOnMonitoringItem(monitoring.listArticle('picture'), 'Edit');
 
     await authoring.openMediaMetadataEditor();
 
@@ -46,8 +43,6 @@ test('edit picture metadata in modal', async ({page}) => {
     await expect(authoring.field('description_text')).toContainText('test description');
 
     await authoring.field('description_text').fill('new description');
-
-    await authoring.waitForAutosave();
 
     await authoring.openMediaMetadataEditor();
 

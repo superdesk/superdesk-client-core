@@ -879,6 +879,11 @@ export function AuthoringDirective(
                 _autosave(timeout);
             };
 
+            $scope.autosaveNow = () => {
+                _autosave(0);
+                _autosave.flush();
+            };
+
             $scope.sendToNextStage = function() {
                 sdApi.article.sendItemToNextStage($scope.item).then(() => {
                     $scope.$applyAsync();

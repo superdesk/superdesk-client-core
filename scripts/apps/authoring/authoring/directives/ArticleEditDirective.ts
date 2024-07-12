@@ -37,6 +37,7 @@ interface IScope extends ng.IScope {
     extra: any;
     refreshTrigger: number;
     autosave(item: any): any;
+    autosaveNow(): void;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
     resetNumberOfDays(dateline: any, datelineMonth?: any): void;
@@ -342,6 +343,8 @@ export function ArticleEditDirective(
                  * @description Opens the Change Image Controller to modify the image metadata.
                  */
                 scope.editMedia = (defaultTab = 'view') => {
+                    scope.autosaveNow();
+
                     let showTabs = [];
 
                     scope.mediaLoading = true;
