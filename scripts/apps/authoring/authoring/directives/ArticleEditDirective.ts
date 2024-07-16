@@ -343,6 +343,8 @@ export function ArticleEditDirective(
                  * @description Opens the Change Image Controller to modify the image metadata.
                  */
                 scope.editMedia = (defaultTab = 'view') => {
+                    // generate html before opening the modal to make
+                    // any changes done in the authoring visible there
                     scope.generateHtml();
 
                     let showTabs = [];
