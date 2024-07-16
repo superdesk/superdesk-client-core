@@ -28,7 +28,7 @@ import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
-import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedThroughAction, widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
@@ -328,9 +328,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
+            const pinWidget = !(this.props.sideWidget?.pinned ?? false);
+            const update = {
+                type: 'string',
+                _id: pinWidget ? this.props.sideWidget.id : null,
+            };
+
+            closedThroughAction.closed = false;
+            sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
             this.props.onSideWidgetChange({
                 ...this.props.sideWidget,
-                pinned: !(this.props.sideWidget?.pinned ?? false),
+                pinned: pinWidget,
             });
         };
 
@@ -349,6 +357,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
+            closedThroughAction.closed = true;
             this.props.onSideWidgetChange(null);
         };
 

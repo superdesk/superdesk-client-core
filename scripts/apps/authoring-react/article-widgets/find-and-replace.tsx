@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticleSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -11,9 +11,7 @@ import {throttle} from 'lodash';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Find and Replace');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+type IProps = IArticleSideWidgetComponentType;
 
 interface IState {
     findValue: string;
@@ -32,7 +30,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             findValue: '',
             replaceValue: '',
             caseSensitive: false,

@@ -1,6 +1,6 @@
 import ng from 'core/services/ng';
 
-function get(key: string) {
+function get(key: string): {type: string; _id: string} {
     const preferencesService = ng.get('preferencesService');
 
     return preferencesService.getSync(key);

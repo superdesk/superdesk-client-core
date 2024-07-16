@@ -635,7 +635,7 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentType<IArticleSideWidgetComponentType>;
+        component: React.PureComponent<IArticleSideWidgetComponentType, any>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
