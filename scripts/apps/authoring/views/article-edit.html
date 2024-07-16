@@ -279,8 +279,10 @@
      sd-validation-error="error.media"
      data-required="schema.media.required"
      tabindex="{{editor.media.order}}"
-     sd-width="{{editor.media.sdWidth|| 'full'}}">
-
+     sd-width="{{editor.media.sdWidth|| 'full'}}"
+     data-test-id="authoring-field"
+     data-test-value="media"
+>
     <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
         <div class="media-item__item">
             <div class="item-association item-association--preview">

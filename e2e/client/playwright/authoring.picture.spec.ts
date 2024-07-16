@@ -11,7 +11,7 @@ test.setTimeout(30000);
  * edit metadata
  * test metadata changes from modal are visible in the editor
  */
-test('edit picture metadata in modal', async ({page}) => {
+test('media metadata editor', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
@@ -28,7 +28,7 @@ test('edit picture metadata in modal', async ({page}) => {
 
     await expect(mediaEditor.field('headline')).toContainText('The Headline');
 
-    await mediaEditor.field('headline').fill('');
+    await mediaEditor.field('headline').clear();
     await mediaEditor.field('headline').fill('picture');
 
     await mediaEditor.startUpload();

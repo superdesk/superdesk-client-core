@@ -267,11 +267,11 @@ export function AuthoringDirective(
             /**
              * Create a new version
              */
-            $scope.save = function({reloadEditor3 = false} = {}) {
+            $scope.save = function({generateHtml = true} = {}) {
                 return authoring.save(
                     $scope.origItem,
                     $scope.item,
-                    reloadEditor3 ? [] : $scope.requestEditor3DirectivesToGenerateHtml,
+                    generateHtml ? $scope.requestEditor3DirectivesToGenerateHtml : [],
                 ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
@@ -554,7 +554,7 @@ export function AuthoringDirective(
                     // delay required for loading state to render
                     // before possibly long operation (with huge articles)
                     setTimeout(() => {
-                        $scope.syncEditor();
+                        $scope.generateHtml();
 
                         resolve();
                     });
@@ -671,7 +671,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // Request to generate html before we pass scope variables
-                $scope.syncEditor();
+                $scope.generateHtml();
 
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
@@ -852,7 +852,7 @@ export function AuthoringDirective(
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
             const _autosave = debounce((timeout) => {
-                $scope.syncEditor();
+                $scope.generateHtml();
 
                 return authoring.autosave(
                     $scope.item,
@@ -875,7 +875,7 @@ export function AuthoringDirective(
                 _autosave(timeout);
             };
 
-            $scope.syncEditor = () => {
+            $scope.generateHtml = () => {
                 $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
             };
 

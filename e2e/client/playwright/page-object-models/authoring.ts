@@ -22,17 +22,12 @@ export class Authoring {
             .click();
     }
 
-
-    async openMediaMetadataEditor() {
-        await this.page.locator(s('image-overlay')).hover();
-        await this.page.locator(s('edit-metadata')).click();
+    async openMediaMetadataEditor(field: string = 'media') {
+        await this.page.locator(s(`authoring-field=${field}`, 'image-overlay')).hover();
+        await this.page.locator(s(`authoring-field=${field}`, 'edit-metadata')).click();
     }
 
     field(field: string) {
         return this.page.locator(s('authoring', 'field--' + field)).getByRole('textbox');
-    }
-
-    async waitForAutosave() {
-        await this.page.waitForResponse(/\/api\/archive_autosave/);
     }
 }
