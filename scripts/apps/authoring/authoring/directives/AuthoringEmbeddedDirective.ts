@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {canPrintPreview} from 'apps/search/helpers';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
+import {closedThroughAction} from 'apps/authoring/widgets/widgets';
 
 AuthoringEmbeddedDirective.$inject = ['superdeskFlags', 'api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter) {
@@ -29,6 +30,7 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
             scope.canPrintPreview = canPrintPreview;
             scope.fullWidth = superdeskFlags.flags.hideMonitoring;
             scope.setFullWidth = () => {
+                closedThroughAction.closed = false;
                 scope.hideMonitoring(true, new Event('click'));
             };
 

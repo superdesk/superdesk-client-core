@@ -8,6 +8,7 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 import {sdApi} from 'api';
+import {closedThroughAction} from 'apps/authoring/widgets/widgets';
 
 /**
  * @ngdoc directive
@@ -159,6 +160,7 @@ export function AuthoringTopbarDirective(
 
             scope.setFullWidth = () => {
                 scope.$applyAsync(() => {
+                    closedThroughAction.closed = false;
                     scope.hideMonitoring(true, new Event('click'));
                 });
             };

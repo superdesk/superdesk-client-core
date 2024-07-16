@@ -85,13 +85,17 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         this.getDefaultState = this.getDefaultState.bind(this);
         this.setSection = this.setSection.bind(this);
         this.state = this.props.initialState != null
-            ? {currentTab: this.props.initialState}
+            ? this.props.initialState
             : {currentTab: {activeSection: null}};
     }
 
     private getDefaultState(section: IAiAssistantSection): IState['currentTab'] {
         switch (section) {
         case null:
+            return {
+                activeSection: null,
+            };
+        case undefined:
             return {
                 activeSection: null,
             };

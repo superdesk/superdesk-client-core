@@ -9,7 +9,7 @@ import {appConfig, extensions} from 'appConfig';
 import {WidgetHeaderComponent} from './WidgetHeaderComponent';
 import {WidgetLayoutComponent} from './WidgetLayoutComponent';
 
-const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
+export const PINNED_WIDGET_USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
 let PINNED_WIDGET_RESIZED = false;
 
@@ -140,6 +140,8 @@ export const widgetReactIntegration: IWidgetIntegration = {
     disableWidgetPinning: false,
 };
 
+export let closedThroughAction = {closed: true};
+
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
     '$injector', 'preferencesService', '$rootScope'];
@@ -168,7 +170,7 @@ function WidgetsManagerCtrl(
 
     $scope.active = widgetValue;
 
-    preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
+    preferencesService.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS).then((preferences) =>
         this.widgetFromPreferences = preferences,
     );
 
@@ -358,7 +360,7 @@ function WidgetsManagerCtrl(
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];
 
-        update[USER_PREFERENCE_SETTINGS] = {
+        update[PINNED_WIDGET_USER_PREFERENCE_SETTINGS] = {
             type: 'string',
             _id: widget ? widget._id : null,
         };
@@ -374,6 +376,8 @@ function WidgetsManagerCtrl(
     };
 
     $scope.closeWidget = function() {
+        closedThroughAction.closed = true;
+
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
             $scope.active.afterClose($scope);
         }
