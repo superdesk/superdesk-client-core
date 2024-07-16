@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     IArticleSideWidget,
+    IArticleSideWidgetComponentType,
     IExtensionActivationResult,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -14,16 +15,12 @@ import {VersionsTab} from './versions-tab';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Versions and item history');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 interface IState {
     selectedTab: 'versions' | 'history';
 }
 
-class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = {

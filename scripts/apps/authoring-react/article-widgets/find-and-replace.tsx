@@ -11,8 +11,6 @@ import {throttle} from 'lodash';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Find and Replace');
 
-type IProps = IArticleSideWidgetComponentType;
-
 interface IState {
     findValue: string;
     replaceValue: string;
@@ -24,10 +22,10 @@ interface IState {
  */
 export const editorId = 'body_html';
 
-class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
+class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     private scheduleHighlightingOfMatches: () => void;
 
-    constructor(props: IProps) {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = this.props.initialState ?? {

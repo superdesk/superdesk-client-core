@@ -1,6 +1,6 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IArticle, IArticleSideWidget, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -14,10 +14,6 @@ interface IState {
     packages: Array<IArticle> | null |'no-packages';
 }
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 const getLabel = () => gettext('Packages');
 
 function openPackage(packageItem: IArticle): void {
@@ -28,7 +24,7 @@ function openPackage(packageItem: IArticle): void {
     }
 }
 
-class PackagesWidget extends React.Component<IProps, IState> {
+class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
     constructor(props) {
         super(props);
 

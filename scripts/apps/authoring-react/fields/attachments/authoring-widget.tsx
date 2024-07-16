@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAttachment, IAttachmentsValueOperational, IArticleSideWidget, IRestApiResponse} from 'superdesk-api';
+import {IAttachment, IAttachmentsValueOperational, IArticleSideWidget, IRestApiResponse, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from 'apps/authoring/attachments/AttachmentsWidgetComponent';
 import {isUploadValid} from 'apps/authoring/attachments/AttachmentsWidget';
@@ -9,8 +9,6 @@ import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {getWidgetLabel} from '.';
 
-type IProps = React.ComponentProps<IArticleSideWidget['component']>;
-
 /**
  * ID is hardcoded.
  * To handle this case, it would be better to have an option in the UI to allow
@@ -19,8 +17,8 @@ type IProps = React.ComponentProps<IArticleSideWidget['component']>;
  */
 const fieldId = 'attachments';
 
-export class AuthoringAttachmentsWidget extends React.PureComponent<IProps> {
-    constructor(props: IProps) {
+export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.getAttachments = this.getAttachments.bind(this);

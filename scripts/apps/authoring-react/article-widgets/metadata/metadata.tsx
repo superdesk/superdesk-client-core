@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IVocabularyItem} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType, IExtensionActivationResult, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -18,16 +18,12 @@ import {AnnotationsPreview} from './AnnotationsPreview';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 interface IState {
     languages: Array<ILanguage>;
 }
 
-class MetadataWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = {

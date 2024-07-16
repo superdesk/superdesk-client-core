@@ -1,17 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IArticleSideWidget, IComment, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType, IComment, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
-class Component extends React.PureComponent<IProps> {
+class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <CommentsWidget

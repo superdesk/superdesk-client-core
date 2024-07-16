@@ -1,7 +1,7 @@
 import React from 'react';
 import {RelativeDate} from 'core/datetime/relativeDate';
 import {state as State} from 'apps/search/components/fields/state';
-import {IArticle, IArticleSideWidget, IExtensionActivationResult} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType, IExtensionActivationResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -13,11 +13,7 @@ import {TranslationsBody} from './TranslationsBody';
 
 const getLabel = () => gettext('Translations');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
-class Translations extends React.Component<IProps> {
+class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout

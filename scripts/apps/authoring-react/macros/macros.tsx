@@ -2,6 +2,7 @@ import React from 'react';
 import {
     IArticle,
     IArticleSideWidget,
+    IArticleSideWidgetComponentType,
     IContentProfileV2,
     IEditor3ValueOperational,
     IExtensionActivationResult,
@@ -32,10 +33,6 @@ import {notify} from 'core/notify/notify';
 
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
 
 const getLabel = () => gettext('Macros widget');
 
@@ -238,8 +235,8 @@ function getMacroProcessor(
     }
 }
 
-class MacrosWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = {
