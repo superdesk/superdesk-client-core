@@ -15,6 +15,10 @@ test.describe('Multiedit', async () => {
         await page
             .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
             .getByRole('textbox')
+            .clear();
+        await page
+            .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
+            .getByRole('textbox')
             .fill('test sports story 1.1');
         await page.locator(s('multiedit-screen', 'multiedit-article=test sports story')).hover();
         await page
@@ -22,6 +26,10 @@ test.describe('Multiedit', async () => {
             .getByRole('button', {name: 'save'})
             .click();
 
+        await page
+            .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
+            .getByRole('textbox')
+            .clear();
         await page
             .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
             .getByRole('textbox')
