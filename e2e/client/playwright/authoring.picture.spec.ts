@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 import {MediaEditor} from './page-object-models/media-editor';
-import {Authoring} from './page-object-models/authoring';
+import {PictureAuthoring} from './page-object-models/authoring';
 
 test.setTimeout(30000);
 
@@ -16,7 +16,7 @@ test('media metadata editor', async ({page}) => {
 
     const monitoring = new Monitoring(page);
     const mediaEditor = new MediaEditor(page);
-    const authoring = new Authoring(page);
+    const pictureAuthoring = new PictureAuthoring(page);
 
     await page.goto('/#/workspace/monitoring');
 
@@ -35,16 +35,16 @@ test('media metadata editor', async ({page}) => {
 
     await monitoring.executeActionOnMonitoringItem(monitoring.listArticle('picture'), 'Edit');
 
-    await authoring.openMediaMetadataEditor();
+    await pictureAuthoring.openMetadataEditor();
 
     await mediaEditor.field('description_text').fill('test description');
     await mediaEditor.saveMetadata();
 
-    await expect(authoring.field('description_text')).toContainText('test description');
+    await expect(pictureAuthoring.field('description_text')).toContainText('test description');
 
-    await authoring.field('description_text').fill('new description');
+    await pictureAuthoring.field('description_text').fill('new description');
 
-    await authoring.openMediaMetadataEditor();
+    await pictureAuthoring.openMetadataEditor();
 
     await expect(mediaEditor.field('description_text')).toContainText('new description');
 });

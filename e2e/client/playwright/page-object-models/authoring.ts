@@ -2,7 +2,7 @@ import {Page} from '@playwright/test';
 import {s} from '../utils';
 
 export class Authoring {
-    private page: Page;
+    protected page: Page;
 
     constructor(page: Page) {
         this.page = page;
@@ -22,12 +22,14 @@ export class Authoring {
             .click();
     }
 
-    async openMediaMetadataEditor(field: string = 'media') {
-        await this.page.locator(s(`authoring-field=${field}`, 'image-overlay')).hover();
-        await this.page.locator(s(`authoring-field=${field}`, 'edit-metadata')).click();
-    }
-
     field(field: string) {
         return this.page.locator(s('authoring', 'field--' + field)).getByRole('textbox');
+    }
+}
+
+export class PictureAuthoring extends Authoring {
+    async openMetadataEditor() {
+        await this.page.locator(s('authoring-field=media', 'image-overlay')).hover();
+        await this.page.locator(s('authoring-field=media', 'edit-metadata')).click();
     }
 }
