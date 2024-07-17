@@ -8,7 +8,6 @@ interface IProps {
 }
 
 export default class EmailNotificationPreferences extends React.PureComponent<IProps, any> {
-
     render(): React.ReactNode {
         const notificationsFromExtensions: {[key: string]: {type: string}} = {};
         const preferences = ng.get('preferencesService');
@@ -33,7 +32,7 @@ export default class EmailNotificationPreferences extends React.PureComponent<IP
                             }}
                             checked={preferences?.[key]?.enabled}
                         />
-                    )
+                    );
                 })}
             </CheckGroup>
         );

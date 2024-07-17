@@ -79,7 +79,7 @@ angular.module('superdesk.apps.search', [
         reactToAngular1(
             EmailNotificationPreferences,
             ['toggleEmailNotification'],
-        )
+        ),
     )
 
     .component(

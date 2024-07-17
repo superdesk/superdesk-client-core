@@ -71,7 +71,7 @@ const extension: IExtension = {
                         },
                         'mark_for_user:notification': {
                             type: 'email',
-                        }
+                        },
                     },
                     entities: {
                         article: {

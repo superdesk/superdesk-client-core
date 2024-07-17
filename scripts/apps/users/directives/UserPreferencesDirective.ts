@@ -458,7 +458,7 @@ export function UserPreferencesDirective(
                     }
 
                     patchObject[key] = Object.assign(val, scope.preferences[key]);
-                })
+                });
 
                 if (orig['editor:theme'] != null) {
                     patchObject['editor:theme'] = {
