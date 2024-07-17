@@ -1,11 +1,9 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
-
-const THEME_LIGHT = 'light-ui';
 
 /**
  * @ngdoc directive
@@ -56,29 +54,47 @@ export function UserPreferencesDirective(
              */
 
             scope.preferencesLoaded = false;
-            var orig; // original preferences, before any changes
+            var orig: {[key: string]: any}; // original preferences, before any changes
 
-            scope.toggleParentNotification = function() {
-                const parentEnabled = scope.preferences['email:notification'].enabled;
+            scope.emailNotificationsFromExtensions = {};
 
-                scope.preferences['assignment:notification'].enabled = parentEnabled;
-                scope.preferences['mark_for_user:notification'].enabled = parentEnabled;
-            };
-
-            scope.toggleChildNotification = function(child) {
-                if (scope.preferences[child].enabled) {
-                    // Turn on parent if any child is turned on
-                    scope.preferences['email:notification'].enabled = true;
-                } else {
-                    // Check if all children are off
-                    const allChildrenOff = !scope.preferences['assignment:notification'].enabled &&
-                                           !scope.preferences['mark_for_user:notification'].enabled;
-
-                    if (allChildrenOff) {
-                        // Turn off parent if all children are off
-                        scope.preferences['email:notification'].enabled = false;
+            for (const extension of Object.values(extensions)) {
+                for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                    if (value.type === 'email') {
+                        scope.emailNotificationsFromExtensions[key] = value;
                     }
                 }
+            }
+
+            scope.toggleEmailGroupNotifications = function() {
+                const isGroupEnabled = scope.preferences['email:notification'].enabled;
+
+                Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
+                    scope.preferences[notificationId].enabled = isGroupEnabled;
+                });
+
+                scope.userPrefs.$setDirty();
+                scope.$applyAsync();
+            };
+
+            scope.toggleEmailNotification = function(notificationId: string) {
+                if (scope.preferences[notificationId]?.enabled == true) {
+                    scope.preferences[notificationId].enabled = false;
+                } else {
+                    scope.preferences[notificationId].enabled = true;
+                }
+
+                const notificationsForGroupAreOff = Object.keys(scope.emailNotificationsFromExtensions)
+                    .some((notificationId) => scope.preferences?.[notificationId]?.enabled == true);
+
+                if (notificationsForGroupAreOff == false) {
+                    scope.preferences['email:notification'].enabled = false;
+                } else {
+                    scope.preferences['email:notification'].enabled = true;
+                }
+
+                scope.userPrefs.$setDirty();
+                scope.$applyAsync();
             };
 
             preferencesService.get(null, true).then((result) => {
@@ -418,9 +434,9 @@ export function UserPreferencesDirective(
             * @return {Object}
             */
             function createPatchObject() {
-                var p = {};
+                var patchObject = {};
 
-                _.each(orig, (val, key) => {
+                Object.entries(orig).forEach(([key, val]) => {
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
 
@@ -441,11 +457,11 @@ export function UserPreferencesDirective(
                         });
                     }
 
-                    p[key] = _.extend(val, scope.preferences[key]);
-                });
+                    patchObject[key] = Object.assign(val, scope.preferences[key]);
+                })
 
                 if (orig['editor:theme'] != null) {
-                    p['editor:theme'] = {
+                    patchObject['editor:theme'] = {
                         ...orig['editor:theme'],
                         theme: JSON.stringify(authThemes.syncWithApplicationTheme(
                             scope.activeTheme,
@@ -456,7 +472,7 @@ export function UserPreferencesDirective(
                     };
                 }
 
-                return p;
+                return patchObject;
             }
         },
     };

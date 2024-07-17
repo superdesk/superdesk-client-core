@@ -10,6 +10,7 @@ import {MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {SearchPanelWidgets} from './components/search-panel-widgets';
 import {PreviewSubject} from './components/preview-subject';
+import EmailNotificationPreferences from 'apps/users/components/EmailNotificationPreferences';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -71,6 +72,14 @@ angular.module('superdesk.apps.search', [
             MultiActionBarReact,
             ['articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
         ),
+    )
+
+    .component(
+        'sdNotificationsList',
+        reactToAngular1(
+            EmailNotificationPreferences,
+            ['toggleEmailNotification'],
+        )
     )
 
     .component(
