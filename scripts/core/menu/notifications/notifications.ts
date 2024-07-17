@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {extensions} from 'appConfig';
-import {IExtensionActivationResult} from 'superdesk-api';
+import {IDesktopNotification} from 'superdesk-api';
 import {logger} from 'core/services/logger';
 import emptyState from 'superdesk-ui-framework/dist/empty-state--small-2.svg';
 
@@ -296,17 +296,19 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                     scope.emptyState = emptyState;
 
                     // merged from all extensions
-                    const notificationsKeyed: IExtensionActivationResult['contributions']['notifications'] = {};
+                    const notificationsKeyed: {[key: string]: IDesktopNotification['handler']} = {};
 
                     for (const extension of Object.values(extensions)) {
-                        if (
-                            extension.activationResult.contributions != null
-                            && extension.activationResult.contributions.notifications != null
-                        ) {
-                            for (const key in extension.activationResult.contributions.notifications) {
+                        const notificationsFromExtensions = extension.activationResult.contributions?.notifications;
+
+                        if (notificationsFromExtensions != null) {
+                            for (const key in notificationsFromExtensions) {
                                 if (notificationsKeyed[key] == null) {
-                                    notificationsKeyed[key] =
-                                        extension.activationResult.contributions.notifications[key];
+                                    const notificationValue = notificationsFromExtensions[key];
+
+                                    if (notificationValue.type == 'desktop') {
+                                        notificationsKeyed[key] = notificationValue.handler;
+                                    }
                                 } else {
                                     logger.error(new Error(`Notification key ${key} already registered.`));
                                 }

@@ -708,7 +708,7 @@ declare module 'superdesk-api' {
         type: 'email';
     }
 
-    interface IDesktopNotification {
+    export interface IDesktopNotification {
         type: 'desktop';
         label: string;
         handler: (notification: any) => {
