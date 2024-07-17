@@ -28,7 +28,11 @@ import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
-import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedThroughAction, widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {
+    PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+    closedThroughAction,
+    widgetReactIntegration,
+} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';

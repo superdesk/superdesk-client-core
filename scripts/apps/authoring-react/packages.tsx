@@ -1,6 +1,11 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+    IRestApiResponse,
+} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';

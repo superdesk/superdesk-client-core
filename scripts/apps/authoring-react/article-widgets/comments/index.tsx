@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IArticleSideWidget, IArticleSideWidgetComponentType, IComment, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType, IComment, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
 import {httpRequestJsonLocal} from 'core/helpers/network';

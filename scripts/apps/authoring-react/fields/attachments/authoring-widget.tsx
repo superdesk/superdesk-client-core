@@ -1,5 +1,10 @@
 import React from 'react';
-import {IAttachment, IAttachmentsValueOperational, IArticleSideWidget, IRestApiResponse, IArticleSideWidgetComponentType} from 'superdesk-api';
+import {
+    IAttachment,
+    IAttachmentsValueOperational,
+    IRestApiResponse,
+    IArticleSideWidgetComponentType,
+} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from 'apps/authoring/attachments/AttachmentsWidgetComponent';
 import {isUploadValid} from 'apps/authoring/attachments/AttachmentsWidget';

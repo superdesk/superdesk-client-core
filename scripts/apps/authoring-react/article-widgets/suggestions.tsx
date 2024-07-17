@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IUser, IEditor3ValueOperational, IArticleSideWidgetComponentType} from 'superdesk-api';
+import {IArticleSideWidget, IUser, IEditor3ValueOperational, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';

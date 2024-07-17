@@ -352,7 +352,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     onActiveTabChange={(val) => {
                         if (val == null && closedThroughAction.closed == false) {
                             closedThroughAction.closed = true;
-                        };
+                        }
 
                         const widgetFromPreferences = sdApi.preferences.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS);
 
@@ -480,38 +480,39 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 sideWidget,
                                 onItemChange,
                             }, readOnly) => {
-                                const OpenWidgetComponent = (() => {
-                                    if (panelState.active === true) {
-                                        return () => (
-                                            <InteractiveArticleActionsPanel
-                                                items={panelState.items}
-                                                tabs={panelState.tabs}
-                                                activeTab={panelState.activeTab}
-                                                handleUnsavedChanges={
-                                                    () => handleUnsavedChanges().then((res) => [res])
-                                                }
-                                                onClose={panelActions.closePanel}
-                                                markupV2
-                                            />
-                                        );
-                                    } else if (sideWidget != null) {
-                                        return getWidgetsFromExtensions(item).find((widget) => sideWidget === widget._id)?.component;
-                                    } else {
-                                        return null;
-                                    }
-                                })();
+                                if (panelState.active === true) {
+                                    return (
+                                        <InteractiveArticleActionsPanel
+                                            items={panelState.items}
+                                            tabs={panelState.tabs}
+                                            activeTab={panelState.activeTab}
+                                            handleUnsavedChanges={
+                                                () => handleUnsavedChanges().then((res) => [res])
+                                            }
+                                            onClose={panelActions.closePanel}
+                                            markupV2
+                                        />
+                                    );
+                                }
 
-                                if (OpenWidgetComponent == null) {
+                                if (sideWidget == null) {
                                     return null;
                                 }
 
+                                const WidgetComponent = getWidgetsFromExtensions(item)
+                                    .find((widget) => sideWidget === widget._id)?.component;
+
                                 return (
-                                    <WidgetStatePersistanceHOC pinned={!this.state.sideWidget.pinned} sideWidgetId={sideWidget}>
+                                    <WidgetStatePersistanceHOC
+                                        pinned={!this.state.sideWidget.pinned}
+                                        sideWidgetId={sideWidget}
+                                    >
                                         {(widgetRef) => (
-                                            <OpenWidgetComponent
+                                            <WidgetComponent
                                                 ref={widgetRef}
                                                 initialState={(() => {
-                                                    const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+                                                    const localStorageWidgetState =
+                                                        JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
 
                                                     if (
                                                         localStorageWidgetState == null

@@ -12,13 +12,24 @@ interface IProps {
     pinned: boolean;
 }
 
-export class WidgetStatePersistanceHOC extends React.PureComponent<IProps, any> {
+interface IState {
+    mounted: boolean;
+}
+
+export class WidgetStatePersistanceHOC extends React.PureComponent<IProps, IState> {
     private widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType, any>>;
 
     constructor(props: IProps) {
         super(props);
 
+        this.state = {
+            mounted: false,
+        };
         this.widgetRef = React.createRef<React.PureComponent<IArticleSideWidgetComponentType, any>>();
+    }
+
+    componentDidMount(): void {
+        this.setState({mounted: true});
     }
 
     componentWillUnmount(): void {
@@ -34,6 +45,6 @@ export class WidgetStatePersistanceHOC extends React.PureComponent<IProps, any> 
     }
 
     render(): React.ReactNode {
-        return this.props.children(this.widgetRef);
+        return this.state.mounted ? this.props.children(this.widgetRef) : <></>;
     }
 }

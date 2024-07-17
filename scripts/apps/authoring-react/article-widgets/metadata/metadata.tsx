@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {IArticleSideWidget, IArticleSideWidgetComponentType, IExtensionActivationResult, IVocabularyItem} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';

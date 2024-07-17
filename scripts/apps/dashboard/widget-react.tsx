@@ -3,7 +3,11 @@ import {widgetState} from 'apps/authoring-react/widget-persistance-hoc';
 import {closedThroughAction} from 'apps/authoring/widgets/widgets';
 import {noop} from 'lodash';
 import React, {RefObject} from 'react';
-import {IArticle, IArticleSideWidget} from 'superdesk-api';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+} from 'superdesk-api';
 
 interface IProps {
     widget: {
@@ -13,10 +17,8 @@ interface IProps {
     article: IArticle;
 }
 
-type ISideWidgetType = IProps['widget']['active']['component'];
-
 export class WidgetReact extends React.PureComponent<IProps> {
-    widgetRef: RefObject<React.PureComponent<ISideWidgetType['props'], ISideWidgetType['state']>>;
+    widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType>>;
 
     constructor(props) {
         super(props);
@@ -54,7 +56,7 @@ export class WidgetReact extends React.PureComponent<IProps> {
                     const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
 
                     if (localStorageWidgetState == null && closedThroughAction.closed === false) {
-                        const prevWidgetState = widgetState[this.props.widget.active._id]
+                        const prevWidgetState = widgetState[this.props.widget.active._id];
 
                         if (prevWidgetState != null) {
                             return prevWidgetState;
