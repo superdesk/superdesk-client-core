@@ -5,7 +5,7 @@
         <a href="" class="icn-btn close" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
-        <form name="editForm">
+        <form name="editForm" class="d-contents">
             <div class="modal__body-header">
                 <ul class="nav-tabs">
                     <li ng-class="{'nav-tabs__tab--active': modalTab === 'details'}" class="nav-tabs__tab">
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </form>
-        <div class="modal__body-footer">
+        <div class="modal__footer">
             <button class="btn" ng-click="cancel()" translate>Cancel</button>
             <button class="btn btn--primary" ng-click="save()" ng-disabled="editForm.$invalid || !editForm.$dirty" translate>Save</button>
         </div>
