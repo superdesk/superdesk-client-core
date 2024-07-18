@@ -83,14 +83,15 @@ export function UserPreferencesDirective(
             };
 
             scope.toggleEmailNotification = function(notificationId: string) {
+                const enabledUpdate = !(scope.preferences[notificationId]?.enabled ?? false);
+
                 scope.preferences[notificationId] = {
                     ...(scope.preferences[notificationId] ?? {}),
-                    enabled: !(scope.preferences[notificationId]?.enabled ?? false),
+                    enabled: enabledUpdate,
                 };
-
                 scope.extensionsNotifications[notificationId] = {
                     ...scope.extensionsNotifications[notificationId],
-                    enabled: scope.preferences[notificationId].enabled,
+                    enabled: enabledUpdate,
                 };
 
                 const notificationsForGroupAreOff = Object.keys(scope.extensionsNotifications)
