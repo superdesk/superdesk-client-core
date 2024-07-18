@@ -78,7 +78,7 @@ angular.module('superdesk.apps.search', [
         'sdNotificationsList',
         reactToAngular1(
             EmailNotificationPreferences,
-            ['toggleEmailNotification'],
+            ['toggleEmailNotification', 'preferences'],
         ),
     )
 
