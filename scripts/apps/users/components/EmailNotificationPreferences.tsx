@@ -9,7 +9,7 @@ interface IProps {
 export default class EmailNotificationPreferences extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
-            <CheckGroup orientation='vertical'>
+            <CheckGroup orientation="vertical">
                 {Object.entries(this.props.preferences ?? []).map(([key, value]) => {
                     return (
                         <Checkbox

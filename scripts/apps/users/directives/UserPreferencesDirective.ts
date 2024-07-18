@@ -96,7 +96,7 @@ export function UserPreferencesDirective(
                 const notificationsForGroupAreOff = Object.keys(scope.extensionsNotifications)
                     .some((notificationId) => scope.preferences?.[notificationId]?.enabled == true);
 
-                scope.preferences['email:notification'].enabled = notificationsForGroupAreOff
+                scope.preferences['email:notification'].enabled = notificationsForGroupAreOff;
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
