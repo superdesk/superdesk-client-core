@@ -9,8 +9,9 @@
     get-icon-for-item-type="getIconForItemType"
     get-progress="getProgress"
     on-remove-item="onRemoveItem"
-    upload-in-progress="saving">
-    
+    upload-in-progress="saving",
+    data-test-id="file-upload"
+>
     <sd-multi-edit-select-desk>
         <div ng-if="deskSelectionAllowed === true && desks !== null" class="dropdown dropdown--boxed" dropdown is-open="isOpen">
             <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false">
@@ -35,7 +36,7 @@
                 <div class="upload__info-icon"></div>
                 <h3 class="upload__info-heading" translate>Drag Your Files Here</h3>
                 <div class="upload__info-label" translate>or</div>
-                <button ng-click="invokeImagesInput()" data-test-id="select-file-btn" class="btn btn--hollow upload__info-button" translate>Select them from folder</button>
+                <button ng-click="invokeImagesInput()" data-test-id="select-file-button" class="btn btn--hollow upload__info-button" translate>Select them from folder</button>
                 <input ng-if="uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" class="hide" data-test-id="image-upload-input">
                 <input ng-if="!uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" multiple class="hide" data-test-id="image-upload-input">
             </div>
