@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticleSideWidget, IArticle, IExtensionActivationResult, IArticleSideWidgetComponentType} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {Button} from 'superdesk-ui-framework';
 import {sdApi} from 'api';
 import {gettext} from 'core/utils';

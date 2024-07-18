@@ -332,17 +332,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
-            const pinWidget = !(this.props.sideWidget?.pinned ?? false);
+            const widgetPinned = !(this.props.sideWidget?.pinned ?? false);
             const update = {
                 type: 'string',
-                _id: pinWidget ? this.props.sideWidget.id : null,
+                _id: widgetPinned ? this.props.sideWidget.id : null,
             };
 
             closedThroughAction.closed = false;
             sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
             this.props.onSideWidgetChange({
                 ...this.props.sideWidget,
-                pinned: pinWidget,
+                pinned: widgetPinned,
             });
         };
 

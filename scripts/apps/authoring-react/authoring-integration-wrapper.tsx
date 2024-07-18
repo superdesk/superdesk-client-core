@@ -354,12 +354,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             closedThroughAction.closed = true;
                         }
 
-                        const widgetFromPreferences = sdApi.preferences.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS);
-
                         const isWidgetPinned = (() => {
-                            if (widgetFromPreferences._id == val) {
-                                return true;
-                            } else if (this.state.sideWidget?.id == val && this.state.sideWidget.id != null) {
+                            if (this.state.sideWidget?.id == val && this.state.sideWidget.id != null) {
                                 return this.state.sideWidget.pinned;
                             }
 

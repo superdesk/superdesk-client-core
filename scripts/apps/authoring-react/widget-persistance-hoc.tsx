@@ -9,7 +9,6 @@ interface IProps {
         widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType>>,
     ) => JSX.Element | Array<JSX.Element>;
     sideWidgetId: string;
-    pinned: boolean;
 }
 
 interface IState {
@@ -45,6 +44,6 @@ export class WidgetStatePersistanceHOC extends React.PureComponent<IProps, IStat
     }
 
     render(): React.ReactNode {
-        return this.state.mounted ? this.props.children(this.widgetRef) : <></>;
+        return this.state.mounted ? this.props.children(this.widgetRef) : null;
     }
 }
