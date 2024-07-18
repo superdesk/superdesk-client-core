@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {noop} from 'lodash';
 import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
-import {s} from './../../../../e2e/client/playwright/utils';
+import {s} from 'core/helpers/testUtils';
 
 const getPromise = () => Promise.resolve({});
 
