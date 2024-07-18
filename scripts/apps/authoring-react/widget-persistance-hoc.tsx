@@ -15,7 +15,7 @@ interface IState {
     mounted: boolean;
 }
 
-export class WidgetStatePersistanceHOC extends React.PureComponent<IProps, IState> {
+export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IState> {
     private widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType, any>>;
 
     constructor(props: IProps) {

@@ -45,7 +45,7 @@ import {ui} from 'core/ui-utils';
 import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
-import {WidgetStatePersistanceHOC, widgetState} from './widget-persistance-hoc';
+import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedThroughAction} from 'apps/authoring/widgets/widgets';
 
 function getAuthoringActionsFromExtensions(
@@ -499,10 +499,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     .find((widget) => sideWidget === widget._id)?.component;
 
                                 return (
-                                    <WidgetStatePersistanceHOC
-                                        pinned={!this.state.sideWidget.pinned}
-                                        sideWidgetId={sideWidget}
-                                    >
+                                    <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
                                         {(widgetRef) => (
                                             <WidgetComponent
                                                 ref={widgetRef}
@@ -541,7 +538,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                 onItemChange={onItemChange}
                                             />
                                         )}
-                                    </WidgetStatePersistanceHOC>
+                                    </WidgetStatePersistenceHOC>
                                 );
                             }}
                             getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
