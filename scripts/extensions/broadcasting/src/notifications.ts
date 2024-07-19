@@ -21,7 +21,7 @@ export const notifications: IExtensionNotifications = {
     'rundown-item-comment': {
         label: gettext('Open item'),
         type: 'desktop',
-        handler: (notification) => ({
+        handler: (notification: IRundownItemCommentNotification) => ({
             body: notification.message,
             actions: [{
                 label: gettext('Open item'),
