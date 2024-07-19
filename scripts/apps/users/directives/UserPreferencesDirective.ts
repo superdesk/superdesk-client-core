@@ -94,10 +94,10 @@ export function UserPreferencesDirective(
                     enabled: enabledUpdate,
                 };
 
-                const allFalse = Object.values(scope.emailNotificationsFromExtensions)
+                const notificationsForGroupAreOff = Object.values(scope.emailNotificationsFromExtensions)
                     .every((value: any) => value?.enabled == false);
 
-                scope.preferences['email:notification'].enabled = !allFalse;
+                scope.preferences['email:notification'].enabled = !notificationsForGroupAreOff;
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
