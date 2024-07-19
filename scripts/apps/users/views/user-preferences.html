@@ -81,11 +81,11 @@
                             </div>
 
                             <div class="item ms-1 ps-5">
-                                <sd-notifications-list
-                                    data-preferences="extensionsNotifications"
+                                <sd-email-notifications-list
+                                    data-preferences="emailNotificationsFromExtensions"
                                     data-toggle-email-notification="toggleEmailNotification"
                                 >
-                                </sd-notifications-list>
+                                </sd-email-notifications-list>
                             </div>
                             <div sd-info-item>
                                 <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>

@@ -56,13 +56,13 @@ export function UserPreferencesDirective(
             scope.preferencesLoaded = false;
             var orig: {[key: string]: any}; // original preferences, before any changes
 
-            scope.extensionsNotifications = {};
+            scope.emailNotificationsFromExtensions = {};
 
             for (const extension of Object.values(extensions)) {
                 for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
                     if (value.type === 'email') {
                         preferencesService.registerUserPreference(key, 1);
-                        scope.extensionsNotifications[key] = preferencesService.getSync(key);
+                        scope.emailNotificationsFromExtensions[key] = preferencesService.getSync(key);
                     }
                 }
             }
@@ -70,10 +70,10 @@ export function UserPreferencesDirective(
             scope.toggleEmailGroupNotifications = function() {
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
 
-                Object.keys(scope.extensionsNotifications).forEach((notificationId) => {
+                Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
                     scope.preferences[notificationId].enabled = isGroupEnabled;
-                    scope.extensionsNotifications[notificationId] = {
-                        ...scope.extensionsNotifications[notificationId],
+                    scope.emailNotificationsFromExtensions[notificationId] = {
+                        ...scope.emailNotificationsFromExtensions[notificationId],
                         enabled: isGroupEnabled,
                     };
                 });
@@ -89,15 +89,15 @@ export function UserPreferencesDirective(
                     ...(scope.preferences[notificationId] ?? {}),
                     enabled: enabledUpdate,
                 };
-                scope.extensionsNotifications[notificationId] = {
-                    ...scope.extensionsNotifications[notificationId],
+                scope.emailNotificationsFromExtensions[notificationId] = {
+                    ...scope.emailNotificationsFromExtensions[notificationId],
                     enabled: enabledUpdate,
                 };
 
-                const notificationsForGroupAreOff = Object.keys(scope.extensionsNotifications)
-                    .some((notificationId) => scope.preferences?.[notificationId]?.enabled == true);
+                const allFalse = Object.values(scope.emailNotificationsFromExtensions)
+                    .every((value: any) => value?.enabled == false);
 
-                scope.preferences['email:notification'].enabled = notificationsForGroupAreOff;
+                scope.preferences['email:notification'].enabled = !allFalse;
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();

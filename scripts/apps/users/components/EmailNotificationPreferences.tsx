@@ -6,7 +6,7 @@ interface IProps {
     preferences?: {[key: string]: any};
 }
 
-export default class EmailNotificationPreferences extends React.PureComponent<IProps> {
+export class EmailNotificationPreferences extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
             <CheckGroup orientation="vertical">
