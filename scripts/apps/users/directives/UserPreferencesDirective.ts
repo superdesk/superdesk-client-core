@@ -67,7 +67,7 @@ export function UserPreferencesDirective(
                         }
                     }
                 }
-            }
+            };
 
             scope.buildNotificationsFromExtensions();
 
