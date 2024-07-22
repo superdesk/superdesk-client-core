@@ -58,14 +58,18 @@ export function UserPreferencesDirective(
 
             scope.emailNotificationsFromExtensions = {};
 
-            for (const extension of Object.values(extensions)) {
-                for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
-                    if (value.type === 'email') {
-                        preferencesService.registerUserPreference(key, 1);
-                        scope.emailNotificationsFromExtensions[key] = preferencesService.getSync(key);
+            scope.buildNotificationsFromExtensions = function() {
+                for (const extension of Object.values(extensions)) {
+                    for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                        if (value.type === 'email') {
+                            preferencesService.registerUserPreference(key, 1);
+                            scope.emailNotificationsFromExtensions[key] = preferencesService.getSync(key);
+                        }
                     }
                 }
             }
+
+            scope.buildNotificationsFromExtensions();
 
             scope.toggleEmailGroupNotifications = function() {
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
@@ -289,6 +293,8 @@ export function UserPreferencesDirective(
                         scope.preferences[key] = _.create(val);
                     }
                 });
+
+                scope.buildNotificationsFromExtensions();
 
                 // metadata service initialization is needed if its
                 // values object is undefined or any of the needed
