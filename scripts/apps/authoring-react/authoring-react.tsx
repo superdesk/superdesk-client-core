@@ -30,7 +30,7 @@ import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
-    closedThroughAction,
+    closedOnRender,
     widgetReactIntegration,
 } from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
@@ -338,7 +338,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 _id: widgetPinned ? this.props.sideWidget.id : null,
             };
 
-            closedThroughAction.closed = false;
+            closedOnRender.closed = true;
             sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
             this.props.onSideWidgetChange({
                 ...this.props.sideWidget,
@@ -355,13 +355,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             if (pinned) {
                 return this.props.sideWidget.id;
-            } else {
-                return null;
             }
+
+            return null;
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
-            closedThroughAction.closed = true;
+            closedOnRender.closed = true;
             this.props.onSideWidgetChange(null);
         };
 

@@ -10,6 +10,7 @@ import {throttle} from 'lodash';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Find and Replace');
+const FIND_AND_REPLACE_WIDGET_ID = 'find-and-replace-widget';
 
 interface IState {
     findValue: string;
@@ -65,6 +66,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={FIND_AND_REPLACE_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -161,7 +163,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
 
 export function getFindAndReplaceWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'find-and-replace-widget',
+        _id: FIND_AND_REPLACE_WIDGET_ID,
         label: getLabel(),
         order: 1,
         icon: 'find-replace',

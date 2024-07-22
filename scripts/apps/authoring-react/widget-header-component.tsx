@@ -15,6 +15,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
 
         return (
             <Layout.PanelHeader
+                disabled={pinned}
                 title={customContent == null ? this.props.widgetName : ''}
                 onClose={() => this.props.closeWidget()}
                 iconButtons={widgetReactIntegration.disableWidgetPinning == null

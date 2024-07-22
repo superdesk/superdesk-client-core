@@ -216,7 +216,7 @@ declare module 'superdesk-api' {
 
         sideWidget: null | {
             id: string;
-            pinned: boolean;
+            pinned?: boolean;
         };
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
@@ -2084,6 +2084,7 @@ declare module 'superdesk-api' {
     export interface IPropsWidgetHeading {
         widgetName: string;
         editMode: boolean;
+        widgetId: string;
 
         // will only work for authoring-react
         customContent?: JSX.Element;

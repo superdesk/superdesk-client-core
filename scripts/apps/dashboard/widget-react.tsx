@@ -1,6 +1,6 @@
 
 import {widgetState} from 'apps/authoring-react/widget-persistance-hoc';
-import {closedThroughAction} from 'apps/authoring/widgets/widgets';
+import {closedOnRender} from 'apps/authoring/widgets/widgets';
 import {noop} from 'lodash';
 import React, {RefObject} from 'react';
 import {
@@ -33,11 +33,13 @@ export class WidgetReact extends React.PureComponent<IProps> {
         // Reset widgetState if widget was closed through a function, or
         // if it wasn't pinned and got closed from re-rendering
         if (
-            closedThroughAction.closed === true ||
-            (closedThroughAction.closed === false && this.props.widget.pinnedWidget == null)
+            closedOnRender.closed === false ||
+            (closedOnRender.closed === true && this.props.widget.pinnedWidget == null)
         ) {
             delete widgetState[this.props.widget.active._id];
         }
+
+        closedOnRender.closed = true;
     }
 
     render() {
@@ -55,7 +57,7 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 initialState={(() => {
                     const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
 
-                    if (localStorageWidgetState == null && closedThroughAction.closed === false) {
+                    if (localStorageWidgetState == null && closedOnRender.closed === true) {
                         const prevWidgetState = widgetState[this.props.widget.active._id];
 
                         if (prevWidgetState != null) {

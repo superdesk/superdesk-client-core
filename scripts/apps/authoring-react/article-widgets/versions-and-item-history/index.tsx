@@ -18,6 +18,7 @@ const getLabel = () => gettext('Versions and item history');
 interface IState {
     selectedTab: 'versions' | 'history';
 }
+const VERSIONS_AND_HISTORY_WIDGET_ID = 'versions-and-item-history';
 
 class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {
@@ -33,6 +34,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={VERSIONS_AND_HISTORY_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                         customContent={(
@@ -70,7 +72,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
 
 export function getVersionsAndItemHistoryWidget() {
     const widget: IArticleSideWidget = {
-        _id: 'versions-and-item-history',
+        _id: VERSIONS_AND_HISTORY_WIDGET_ID,
         label: getLabel(),
         order: 4,
         icon: 'history',

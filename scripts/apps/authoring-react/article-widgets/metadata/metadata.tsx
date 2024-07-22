@@ -17,6 +17,7 @@ import {AnnotationsPreview} from './AnnotationsPreview';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
+const METADATA_WIDGET_ID = 'metadata-widget';
 
 interface IState {
     languages: Array<ILanguage>;
@@ -95,6 +96,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={METADATA_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -144,7 +146,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             label={gettext('Usage terms').toUpperCase()}
                             inlineLabel
                             type="text"
-                            value={usageterms}
+                            value={usageterms ?? ''}
                             onChange={(value) => {
                                 onItemChange({
                                     ...article,
@@ -461,7 +463,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
 export function getMetadataWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'metadata-widget',
+        _id: METADATA_WIDGET_ID,
         label: getLabel(),
         order: 1,
         icon: 'info',

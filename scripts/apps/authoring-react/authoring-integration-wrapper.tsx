@@ -46,7 +46,7 @@ import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
-import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedThroughAction} from 'apps/authoring/widgets/widgets';
+import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedOnRender} from 'apps/authoring/widgets/widgets';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -251,7 +251,7 @@ interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: null | {
         id: string;
-        pinned: boolean;
+        pinned?: boolean;
     };
 }
 
@@ -346,17 +346,20 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     return tab;
                 });
 
+            const {sideWidget} = this.state;
+
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.sideWidget?.id}
+                    disabled={sideWidget?.pinned}
+                    activeTab={sideWidget?.id}
                     onActiveTabChange={(val) => {
-                        if (val == null && closedThroughAction.closed == false) {
-                            closedThroughAction.closed = true;
+                        if (val == null && closedOnRender.closed == true) {
+                            closedOnRender.closed = false;
                         }
 
                         const isWidgetPinned = (() => {
-                            if (this.state.sideWidget?.id == val && this.state.sideWidget.id != null) {
-                                return this.state.sideWidget.pinned;
+                            if (sideWidget?.id === val && sideWidget.id != null) {
+                                return sideWidget.pinned;
                             }
 
                             return false;
@@ -509,7 +512,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                                     if (
                                                         localStorageWidgetState == null
-                                                        && closedThroughAction.closed === false
+                                                        && closedOnRender.closed === true
                                                         && widgetState[this.state.sideWidget.id] != null
                                                     ) {
                                                         return widgetState[this.state.sideWidget.id];

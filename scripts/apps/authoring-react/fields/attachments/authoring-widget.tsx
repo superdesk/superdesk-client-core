@@ -12,7 +12,7 @@ import {WithLiveResources} from 'core/with-resources';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
-import {getWidgetLabel} from '.';
+import {ATTACHMENTS_WIDGET_ID, getWidgetLabel} from '.';
 
 /**
  * ID is hardcoded.
@@ -72,6 +72,7 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={ATTACHMENTS_WIDGET_ID}
                         widgetName={getWidgetLabel()}
                         editMode={false}
                     />

@@ -140,7 +140,10 @@ export const widgetReactIntegration: IWidgetIntegration = {
     disableWidgetPinning: false,
 };
 
-export let closedThroughAction = {closed: true};
+/**
+ * Used for controlling when a widget is closed intentionally by a user action
+ */
+export let closedOnRender = {closed: false};
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
@@ -376,7 +379,7 @@ function WidgetsManagerCtrl(
     };
 
     $scope.closeWidget = function() {
-        closedThroughAction.closed = true;
+        closedOnRender.closed = false;
 
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
             $scope.active.afterClose($scope);

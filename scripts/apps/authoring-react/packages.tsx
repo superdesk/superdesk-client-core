@@ -29,6 +29,8 @@ function openPackage(packageItem: IArticle): void {
     }
 }
 
+const PACKAGES_WIDGET_ID = 'packages-widget';
+
 class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
     constructor(props) {
         super(props);
@@ -80,6 +82,7 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={PACKAGES_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -119,7 +122,7 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
 
 export function getPackagesWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'packages-widget',
+        _id: PACKAGES_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'package',

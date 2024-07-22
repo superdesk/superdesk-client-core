@@ -8,6 +8,7 @@ import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Demo widget');
+const DEMO_WIDGET_ID = 'demo-widget';
 
 class DemoWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
@@ -15,6 +16,7 @@ class DemoWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={DEMO_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -43,7 +45,7 @@ class DemoWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
 
 export function getDemoWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'demo-widget',
+        _id: DEMO_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'info',

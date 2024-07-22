@@ -235,11 +235,13 @@ function getMacroProcessor(
     }
 }
 
+const MACROS_WIDGET_ID = 'macros-widget';
+
 class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             macros: null,
             displayGrouped: false,
             currentMacro: null,
@@ -252,8 +254,9 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
             const groupedMacros = groupBy(frontendMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
 
             this.setState({
-                macros: frontendMacros,
-                displayGrouped: Object.keys(groupedMacros).length > 0 ? true : null,
+                macros: this.props.initialState?.frontendMacros ?? frontendMacros,
+                displayGrouped: this.props.initialState?.displayGrouped ??
+                    Object.keys(groupedMacros).length > 0 ? true : null,
             });
         });
     }
@@ -326,6 +329,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={MACROS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -384,7 +388,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
 export function getMacrosWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'macros-widget',
+        _id: MACROS_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'macro',

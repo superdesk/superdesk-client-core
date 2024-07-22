@@ -16,6 +16,7 @@ import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Resolved suggestions');
+const SUGGESTIONS_WIDGET_ID = 'editor3-suggestions-widget';
 
 interface ISuggestion {
     resolutionInfo: {
@@ -213,6 +214,7 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={SUGGESTIONS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -226,7 +228,7 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
 
 export function getSuggestionsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'editor3-suggestions-widget',
+        _id: SUGGESTIONS_WIDGET_ID,
         label: getLabel(),
         order: 3,
         icon: 'suggestion',

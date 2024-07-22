@@ -1,4 +1,4 @@
-import {closedThroughAction} from 'apps/authoring/widgets/widgets';
+import {closedOnRender} from 'apps/authoring/widgets/widgets';
 import React, {RefObject} from 'react';
 import {IArticleSideWidgetComponentType} from 'superdesk-api';
 
@@ -38,7 +38,7 @@ export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IStat
 
         // Reset widgetState if widget was closed through a function, or
         // if it wasn't pinned and got closed from re-rendering
-        if (closedThroughAction.closed === true) {
+        if (closedOnRender.closed === false) {
             delete widgetState[this.props.sideWidgetId];
         }
     }
