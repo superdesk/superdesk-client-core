@@ -238,7 +238,6 @@ export function UserPreferencesDirective(
                 var buckets, // names of the needed metadata buckets
                     initNeeded; // metadata service init needed?
 
-                scope.
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (val.label && val.category) {
