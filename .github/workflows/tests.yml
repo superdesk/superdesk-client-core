@@ -90,5 +90,5 @@ jobs:
 
     - name: Server Logs
       if: ${{ failure() }}
-      run: docker compose logs superdesk
+      run: docker compose logs server
       working-directory: e2e/server
