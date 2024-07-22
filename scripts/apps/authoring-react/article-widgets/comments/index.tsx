@@ -11,6 +11,7 @@ class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <CommentsWidget
+                initialState={this.props.initialState}
                 entityId={this.props.article._id}
                 readOnly={this.props.readOnly}
                 contentProfile={this.props.contentProfile}

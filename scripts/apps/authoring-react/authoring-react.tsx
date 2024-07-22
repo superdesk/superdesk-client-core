@@ -361,7 +361,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
-            closedOnRender.closed = true;
+            closedOnRender.closed = false;
             this.props.onSideWidgetChange(null);
         };
 

@@ -580,6 +580,7 @@ declare module 'superdesk-api' {
     export interface IGenericSidebarComponentProps<T> {
         entityId: string;
         readOnly: boolean;
+        initialState?: any;
         contentProfile: IContentProfileV2;
         fieldsData: OrderedMap<string, unknown>;
         authoringStorage: IAuthoringStorage<T>;

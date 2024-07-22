@@ -54,7 +54,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
     constructor(props: IProps<T>) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             comments: null,
             newCommentMessage: '',
             saveOnEnter: false,
@@ -65,6 +65,10 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
     }
 
     componentDidMount() {
+        if (this.props.initialState != null) {
+            return;
+        }
+
         Promise.all([
             this.loadDeskSuggestions(),
             this.loadUsers(),

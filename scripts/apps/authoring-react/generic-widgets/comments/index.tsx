@@ -16,6 +16,7 @@ export function getCommentsWidgetGeneric<T>(
         render() {
             return (
                 <CommentsWidget
+                    initialState={this.props.initialState}
                     entityId={this.props.entityId}
                     readOnly={this.props.readOnly}
                     contentProfile={this.props.contentProfile}

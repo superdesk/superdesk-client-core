@@ -249,14 +249,17 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
     }
 
     componentDidMount(): void {
+        if (this.props.initialState != null) {
+            return;
+        }
+
         getAllMacros().then((macros) => {
             const frontendMacros = macros._items.filter((x) => x.access_type === 'frontend');
             const groupedMacros = groupBy(frontendMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
 
             this.setState({
-                macros: this.props.initialState?.frontendMacros ?? frontendMacros,
-                displayGrouped: this.props.initialState?.displayGrouped ??
-                    Object.keys(groupedMacros).length > 0 ? true : null,
+                macros: frontendMacros,
+                displayGrouped: Object.keys(groupedMacros).length > 0 ? true : false,
             });
         });
     }

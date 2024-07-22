@@ -2,7 +2,6 @@ import React from 'react';
 import {
     IArticleSideWidget,
     IArticleSideWidgetComponentType,
-    IExtensionActivationResult,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -24,9 +23,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
     constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        this.state = {
-            selectedTab: 'versions',
-        };
+        this.state = this.props.initialState ?? {selectedTab: 'versions'};
     }
 
     render() {

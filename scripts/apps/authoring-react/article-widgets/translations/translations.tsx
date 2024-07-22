@@ -27,6 +27,7 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
                 )}
                 body={(
                     <TranslationsBody
+                        initialState={this.props.initialState}
                         item={this.props.article}
                         wrapperTemplate={
                             ({children}) =>
