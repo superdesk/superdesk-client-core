@@ -1,4 +1,3 @@
-
 import {widgetState} from 'apps/authoring-react/widget-persistance-hoc';
 import {closedOnRender} from 'apps/authoring/widgets/widgets';
 import {noop} from 'lodash';

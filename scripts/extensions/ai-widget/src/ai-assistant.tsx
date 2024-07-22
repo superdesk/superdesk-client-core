@@ -8,6 +8,7 @@ import DefaultAiAssistantPanel from './main-panel';
 import SummaryWidget from './summary/summary-widget';
 import {HeadlinesWidget} from './headlines/headlines-widget';
 import TranslationsWidget from './translations/translations-widget';
+import {AI_WIDGET_ID} from './extension';
 
 const {assertNever} = superdesk.helpers;
 
@@ -61,6 +62,7 @@ function renderResult({header, body, footer}: {header?: JSX.Element, body: JSX.E
             header={(
                 <Spacer v gap="0" alignItems="center">
                     <AuthoringWidgetHeading
+                        widgetId={AI_WIDGET_ID}
                         widgetName={gettext('Ai Assistant')}
                         editMode={false}
                     />
@@ -85,7 +87,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         this.getDefaultState = this.getDefaultState.bind(this);
         this.setSection = this.setSection.bind(this);
         this.state = this.props.initialState != null
-            ? this.props.initialState
+            ? {currentTab: this.props.initialState}
             : {currentTab: {activeSection: null}};
     }
 
@@ -154,6 +156,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 <AuthoringWidgetLayout
                     header={(
                         <AuthoringWidgetHeading
+                            widgetId={AI_WIDGET_ID}
                             widgetName={gettext('Ai Assistant')}
                             editMode={false}
                         />
