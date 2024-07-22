@@ -15,6 +15,8 @@ interface IState {
     mounted: boolean;
 }
 
+// Functionality to persist widget state between re-renders. Solves issues related to widget state being lost when switching between different authoring views.
+// Uses `ref` to get widget's state, stores it in `widgetState` variable. `closedOnRender` is used in different cases, and controls whether to restore widgetState or not.
 export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IState> {
     private widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType, any>>;
 
