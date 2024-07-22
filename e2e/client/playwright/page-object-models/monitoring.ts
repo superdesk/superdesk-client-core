@@ -50,4 +50,13 @@ export class Monitoring {
             }
         }
     }
+
+    async openMediaUploadView(): Promise<void> {
+        await this.page.locator(s('content-create')).click();
+        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'Upload media'}).click();
+    }
+
+    getArticleLocator(headline: string): Locator {
+        return this.page.locator(s('article-item=' + headline));
+    }
 }

@@ -95,12 +95,9 @@ export function AuthoringDirective(
             $scope.tabsPinned = false;
 
             var _closing;
-            var mediaFields = {};
             var userDesks;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
-            const MEDIA_TYPES = ['video', 'picture', 'audio'];
-            const isPersonalSpace = $location.path() === '/workspace/personal';
 
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
@@ -186,7 +183,7 @@ export function AuthoringDirective(
             function getCurrentTemplate() {
                 const item: IArticle | null = $scope.item;
 
-                if (item.type === 'composite') {
+                if (item.type !== 'text') {
                     $scope.currentTemplate = {};
                 } else {
                     if (typeof item?.template !== 'string') {
@@ -269,11 +266,11 @@ export function AuthoringDirective(
             /**
              * Create a new version
              */
-            $scope.save = function() {
+            $scope.save = function({generateHtml = true} = {}) {
                 return authoring.save(
                     $scope.origItem,
                     $scope.item,
-                    $scope.requestEditor3DirectivesToGenerateHtml,
+                    generateHtml ? $scope.requestEditor3DirectivesToGenerateHtml : [],
                 ).then((res) => {
                     $scope.dirty = false;
                     _.merge($scope.item, res);
@@ -556,9 +553,7 @@ export function AuthoringDirective(
                     // delay required for loading state to render
                     // before possibly long operation (with huge articles)
                     setTimeout(() => {
-                        for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
-                            fn();
-                        }
+                        $scope.generateHtml();
 
                         resolve();
                     });
@@ -675,9 +670,7 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // Request to generate html before we pass scope variables
-                for (const fn of ($scope.requestEditor3DirectivesToGenerateHtml ?? [])) {
-                    fn();
-                }
+                $scope.generateHtml();
 
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
@@ -858,7 +851,7 @@ export function AuthoringDirective(
             $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
             const _autosave = debounce((timeout) => {
-                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
+                $scope.generateHtml();
 
                 return authoring.autosave(
                     $scope.item,
@@ -879,6 +872,10 @@ export function AuthoringDirective(
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
                 _autosave(timeout);
+            };
+
+            $scope.generateHtml = () => {
+                $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
             };
 
             $scope.sendToNextStage = function() {
