@@ -3050,7 +3050,7 @@ declare module 'superdesk-api' {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             formatDate(date: Date | string): string;
-            formatDateTime(date: Date): string;
+            formatDateTime(date: Date, keepLocalTime?: boolean): string;
             longFormatDateTime(date: Date | string): string;
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,

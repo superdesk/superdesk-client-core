@@ -489,9 +489,9 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date) => {
+            formatDateTime: (date: Date, keepLocalTime?: boolean) => {
                 return moment(date)
-                    .tz(appConfig.default_timezone)
+                    .tz(appConfig.default_timezone, keepLocalTime)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
             longFormatDateTime: (date: Date | string) => {
