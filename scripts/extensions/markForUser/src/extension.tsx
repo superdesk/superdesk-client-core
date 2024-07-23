@@ -69,7 +69,7 @@ const extension: IExtension = {
                                 }],
                             }),
                         },
-                        'mark_for_user:notification': {
+                        'email:notification:mark_for_user': {
                             type: 'email',
                         },
                     },
