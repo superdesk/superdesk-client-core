@@ -457,15 +457,33 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date) => {
-                return moment(date)
-                    .tz(appConfig.default_timezone)
-                    .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+            formatDateTime: (date: Date, timezoneId?: string) => {
+                if (timezoneId != null) {
+                    return moment(date)
+                        .tz(timezoneId)
+                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+                } else {
+                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+                    const keepLocalTime = timezone === 'browser';
+
+                    return moment(date)
+                        .tz(appConfig.default_timezone, keepLocalTime)
+                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+                }
             },
-            longFormatDateTime: (date: Date | string) => {
-                return moment(date)
-                    .tz(appConfig.default_timezone)
-                    .format(appConfig.longDateFormat || 'LLL');
+            longFormatDateTime: (date: Date | string, timezoneId?: string) => {
+                if (timezoneId != null) {
+                    return moment(date)
+                        .tz(timezoneId)
+                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+                } else {
+                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+                    const keepLocalTime = timezone === 'browser';
+
+                    return moment(date)
+                        .tz(appConfig.default_timezone, keepLocalTime)
+                        .format(appConfig.longDateFormat || 'LLL');
+                }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
