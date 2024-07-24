@@ -2971,8 +2971,8 @@ declare module 'superdesk-api' {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             formatDate(date: Date | string): string;
-            formatDateTime(date: Date): string;
-            longFormatDateTime(date: Date | string): string;
+            formatDateTime(date: Date, timezoneId?: string): string;
+            longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
@@ -3244,6 +3244,9 @@ declare module 'superdesk-api' {
         view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: string;
+
+            // determines whether browser or server timezone is used for outputting date and time in user interface
+            timezone?: 'browser' | 'server'; // defaults to browser
         };
         user: {
             sign_off_mapping?: string;
