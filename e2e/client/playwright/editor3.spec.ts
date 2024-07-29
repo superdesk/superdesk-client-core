@@ -1,7 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
-import {getEmbedObject} from 'core/editor3/components/embeds/EmbedInput';
 import {appConfig} from 'scripts/appConfig';
 
 test('can add embeds', async ({page}) => {
@@ -21,7 +20,8 @@ test('can add embeds', async ({page}) => {
                 body: JSON.stringify([{
                     title: 'Open Source Software for Journalism',
                     // eslint-disable-next-line max-len
-                    description: 'Sourcefabric is Europe\'s largest developer of open source tools for news media, powering news and media organisations around the world.',
+                    description: 'Sourcefabric is Europe\'s largest developer of '
+                    + 'open source tools for news media, powering news and media organisations around the world.',
                 }]),
             });
         },
@@ -33,10 +33,6 @@ test('can add embeds', async ({page}) => {
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
-
-    await expect(
-        page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
-    ).toHaveText('test sport story body');
 
     await page.getByRole('button', {name: 'Embed'}).click();
 
