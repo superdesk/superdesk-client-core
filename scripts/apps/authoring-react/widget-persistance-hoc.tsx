@@ -1,4 +1,4 @@
-import {closedOnRender} from 'apps/authoring/widgets/widgets';
+import {closedIntentionally} from 'apps/authoring/widgets/widgets';
 import React, {RefObject} from 'react';
 import {IArticleSideWidgetComponentType} from 'superdesk-api';
 
@@ -15,8 +15,8 @@ interface IState {
     mounted: boolean;
 }
 
-// Functionality to persist widget state between re-renders. Solves issues related to widget state being lost when switching between different authoring views.
-// Uses `ref` to get widget's state, stores it in `widgetState` variable. `closedOnRender` is used in different cases, and controls whether to restore widgetState or not.
+// Functionality to persist widget state between re-renders. Solves changes in widget state lost when switching between full width view, and normal view.
+// Uses `ref` to get widget's state, stores it in `widgetState` variable. `closedIntentionally` is used in different cases, and controls whether to restore widgetState or not.
 export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IState> {
     private widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType, any>>;
 
@@ -40,7 +40,7 @@ export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IStat
 
         // Reset widgetState if widget was closed through a function, or
         // if it wasn't pinned and got closed from re-rendering
-        if (closedOnRender.closed === false) {
+        if (closedIntentionally.value === false) {
             delete widgetState[this.props.sideWidgetId];
         }
     }

@@ -143,7 +143,7 @@ export const widgetReactIntegration: IWidgetIntegration = {
 /**
  * Used for controlling when a widget is closed intentionally by a user action
  */
-export let closedOnRender = {closed: false};
+export let closedIntentionally = {value: false};
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
@@ -379,7 +379,7 @@ function WidgetsManagerCtrl(
     };
 
     $scope.closeWidget = function() {
-        closedOnRender.closed = false;
+        closedIntentionally.value = false;
 
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
             $scope.active.afterClose($scope);

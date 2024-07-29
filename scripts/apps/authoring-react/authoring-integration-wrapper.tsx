@@ -46,7 +46,7 @@ import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
-import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedOnRender} from 'apps/authoring/widgets/widgets';
+import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -279,7 +279,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     componentDidUpdate(_prevProps: IPropsWrapper, prevState: IState): void {
-        if (this.state.sideWidget?.id != prevState.sideWidget?.id) {
+        if (this.state.sideWidget?.id != null && this.state.sideWidget?.id != prevState.sideWidget?.id) {
             this.loadWidgetFromPreferences();
         }
     }
@@ -352,13 +352,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 <Nav.SideBarTabs
                     disabled={sideWidget?.pinned}
                     activeTab={sideWidget?.id}
-                    onActiveTabChange={(val) => {
-                        if (val == null && closedOnRender.closed == true) {
-                            closedOnRender.closed = false;
+                    onActiveTabChange={(nextWidgetId) => {
+                        if (nextWidgetId == null && closedIntentionally.value == true) {
+                            closedIntentionally.value = false;
                         }
 
                         const isWidgetPinned = (() => {
-                            if (sideWidget?.id === val && sideWidget.id != null) {
+                            if (sideWidget?.id != null && sideWidget.id === nextWidgetId) {
                                 return sideWidget.pinned;
                             }
 
@@ -366,8 +366,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         })();
 
                         this.setState({
-                            sideWidget: {
-                                id: val,
+                            sideWidget: nextWidgetId == null ? null : {
+                                id: nextWidgetId,
                                 pinned: isWidgetPinned,
                             },
                         });
@@ -510,23 +510,34 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                     const localStorageWidgetState =
                                                         JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
 
+                                                    if (localStorageWidgetState?.id != null) {
+                                                        const initialState = localStorageWidgetState?.initialState;
+
+                                                        sdApi.preferences.update(
+                                                            PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+                                                            {type: 'string', _id: localStorageWidgetState?.id}
+                                                        );
+
+                                                        // Once a user switches the widget, authoring gets
+                                                        // re-rendered 3-4 times, causing this logic to run more than once.
+                                                        // To prevent wrong widget state its deleted after 5 seconds.
+                                                        setTimeout(() => {
+                                                            localStorage.removeItem('SIDE_WIDGET');
+                                                        }, 5000)
+
+                                                        closedIntentionally.value = false;
+                                                        return initialState;
+                                                    }
+
                                                     if (
                                                         localStorageWidgetState == null
-                                                        && closedOnRender.closed === true
+                                                        && closedIntentionally.value === true
                                                         && widgetState[this.state.sideWidget.id] != null
                                                     ) {
                                                         return widgetState[this.state.sideWidget.id];
                                                     }
 
-                                                    if (localStorageWidgetState?.id === (this.state.sideWidget.id)) {
-                                                        const initialState = localStorageWidgetState?.initialState;
-
-                                                        localStorage.removeItem('SIDE_WIDGET');
-
-                                                        return initialState;
-                                                    } else {
-                                                        return undefined;
-                                                    }
+                                                    return undefined;
                                                 })()}
                                                 article={item}
                                                 getLatestArticle={getLatestItem}
