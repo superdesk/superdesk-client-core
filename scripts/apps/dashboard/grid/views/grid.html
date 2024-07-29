@@ -1,6 +1,6 @@
 <div class="gridster" ng-class="{editmode: status}">
-    <ul class="dash-grid">
-        <li ng-repeat="widget in widgets" sd-grid-item class="gs_w">
+    <ul class="dash-grid" data-test-id="widget-grid">
+        <li ng-repeat="widget in widgets" sd-grid-item class="gs_w" data-test-id="widget" data-test-value="{{ widget._id }}">
             <div sd-widget data-widget="widget" data-configurable="configurable" data-save="save()"><div ng-include="widget.template"></div></div>
         </li>
     </ul>

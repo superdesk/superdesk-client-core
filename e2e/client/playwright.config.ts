@@ -1,4 +1,5 @@
 import {defineConfig, devices} from '@playwright/test';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -30,6 +31,8 @@ export default defineConfig({
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
+
+        screenshot: 'only-on-failure',
     },
 
     /* Configure projects for major browsers */
@@ -38,7 +41,7 @@ export default defineConfig({
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: 'playwright/.auth/user.json',
+                storageState: path.join(__dirname, './playwright/.auth/user.json'),
             },
         },
 

@@ -57,7 +57,7 @@ describe('authoring', () => {
     }));
 
     it('can open an item',
-        inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
+        (done) => inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
             var _item,
                 lockedItem = angular.extend({_locked: false}, ITEM);
 
@@ -67,14 +67,16 @@ describe('authoring', () => {
 
             $injector.invoke(superdesk.activity('authoring').resolve.item).then((resolvedItem) => {
                 _item = resolvedItem;
+
+                expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
+                expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
+                expect(autosave.open).toHaveBeenCalledWith(lockedItem);
+                expect(_item.guid).toBe(GUID);
+
+                done();
             });
 
             $rootScope.$digest();
-
-            expect(api.find).toHaveBeenCalledWith('archive', GUID, jasmine.any(Object));
-            expect(lock.lock).toHaveBeenCalledWith(ITEM, false, undefined);
-            expect(autosave.open).toHaveBeenCalledWith(lockedItem);
-            expect(_item.guid).toBe(GUID);
         }));
 
     it('does lock item only once',
@@ -150,208 +152,22 @@ describe('authoring', () => {
         expect(scope.item.slugline).toBe('');
     }));
 
-    it('confirm the associated media not called',
-        inject((api, $q, $rootScope, confirm) => {
-            let item = {
-                _id: 'test',
-                headline: 'headline',
-                profile: '123',
-            };
-
-            let rewriteOf = {
-                _id: 'rewriteOf',
-                headline: 'rewrite',
-                profile: '123',
-                associations: {
-                    featuremedia: {
-
-                    },
-                },
-            };
-
-            let defered = $q.defer();
-
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    editFeaturedImage: 1,
-                },
-            };
-
-            Object.assign(appConfig, testConfig);
-
-            spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
-            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            let scope = startAuthoring(item, 'edit');
-
-            scope.publish();
-            $rootScope.$digest();
-            expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
-            expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
-        }));
-
-    it('confirm the associated media not called if not rewrite_of',
-        inject((api, $q, $rootScope, confirm) => {
-            let item = {
-                _id: 'test',
-                headline: 'headline',
-                profile: '123',
-            };
-
-            let rewriteOf = {
-                _id: 'rewriteOf',
-                headline: 'rewrite',
-                profile: '123',
-                associations: {
-                    featuremedia: {
-
-                    },
-                },
-            };
-
-            let defered = $q.defer();
-
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    editFeaturedImage: 1,
-                    confirmMediaOnUpdate: 1,
-                },
-            };
-
-            Object.assign(appConfig, testConfig);
-
-            spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
-            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            let scope = startAuthoring(item, 'edit');
-
-            scope.publish();
-            $rootScope.$digest();
-            expect(confirm.confirmFeatureMedia).not.toHaveBeenCalled();
-            expect(api.find).not.toHaveBeenCalledWith('archive', 'rewriteOf');
-        }));
-
-    it('confirm the associated media called if rewrite_of but no associated media on edited item',
-        (done) => inject((api, $q, $rootScope, confirm, authoring) => {
-            let item = {
-                _id: 'test',
-                headline: 'headline',
-                rewrite_of: 'rewriteOf',
-                profile: '123',
-            };
-
-            let rewriteOf = {
-                _id: 'rewriteOf',
-                headline: 'rewrite',
-                associations: {
-                    featuremedia: {
-
-                    },
-                },
-                profile: '123',
-            };
-
-            let defered = $q.defer();
-
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    editFeaturedImage: 1,
-                    confirmMediaOnUpdate: 1,
-                },
-            };
-
-            Object.assign(appConfig, testConfig);
-
-            spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
-            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            spyOn(authoring, 'autosave').and.returnValue(Promise.resolve(item));
-            spyOn(authoring, 'publish').and.returnValue(item);
-            let scope = startAuthoring(item, 'edit');
-
-            scope.publish();
-            $rootScope.$digest();
-
-            setTimeout(() => { // let onPublishMiddlewares promise resolve
-                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-                defered.resolve(rewriteOf);
-                $rootScope.$digest();
-                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-
-                setTimeout(() => { // let applyMiddleware promise resolve
-                    expect(authoring.autosave).toHaveBeenCalled();
-                    expect(authoring.publish).not.toHaveBeenCalled();
-                    done();
-                }, 10);
-            }, 10);
-        }));
-
-    it('confirm the associated media but do not use the associated media',
-        (done) => inject((api, $q, $rootScope, confirm, authoring) => {
-            let item = {
-                _id: 'test',
-                rewrite_of: 'rewriteOf',
-                profile: '123',
-            };
-
-            let rewriteOf = {
-                _id: 'rewriteOf',
-                associations: {
-                    featuremedia: {
-                        test: 'test',
-                    },
-                },
-                profile: '123',
-            };
-
-            let defered = $q.defer();
-
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    editFeaturedImage: 1,
-                    confirmMediaOnUpdate: 1,
-                },
-            };
-
-            Object.assign(appConfig, testConfig);
-
-            spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
-            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            spyOn(authoring, 'autosave').and.returnValue({});
-            spyOn(authoring, 'publish').and.returnValue({});
-            let scope = startAuthoring(item, 'edit');
-
-            scope.publish();
-            $rootScope.$digest();
-            setTimeout(() => { // let onPublishMiddlewares promise resolve
-                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-                defered.resolve({});
-                $rootScope.$digest();
-                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-
-                setTimeout(() => { // let applyMiddleware promise resolve
-                    expect(authoring.publish).toHaveBeenCalled();
-                    expect(authoring.autosave).not.toHaveBeenCalled();
-                    done();
-                }, 10);
-            }, 10);
-        }));
-
-    it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
+    it('can reject publishing on error', (done) => inject((api, $q, $rootScope, authoring, lock) => {
         let success = jasmine.createSpy('success');
-        let error = jasmine.createSpy('error');
 
         spyOn(api, 'update').and.returnValue($q.reject('err'));
         spyOn(lock, 'unlock').and.returnValue();
 
-        authoring.publish({}, {}).then(success, error);
-        $rootScope.$digest();
+        authoring.publish({}, {}).then(success, (error) => {
+            expect(api.update).toHaveBeenCalled();
+            expect(lock.unlock).not.toHaveBeenCalled();
+            expect(success).not.toHaveBeenCalled();
+            expect(error).toBe('err');
 
-        expect(api.update).toHaveBeenCalled();
-        expect(lock.unlock).not.toHaveBeenCalled();
-        expect(success).not.toHaveBeenCalled();
-        expect(error).toHaveBeenCalledWith('err');
+            done();
+        });
+
+        $rootScope.$digest();
     }));
 
     /**
@@ -385,7 +201,6 @@ describe('authoring', () => {
             spyOn(confirm, 'confirm').and.returnValue(confirmDefer.promise);
             spyOn(confirm, 'confirmPublish').and.returnValue(confirmDefer.promise);
             spyOn(confirm, 'confirmSaveWork').and.returnValue(confirmDefer.promise);
-            spyOn(confirm, 'confirmFeatureMedia').and.returnValue(confirmDefer.promise);
             spyOn(lock, 'unlock').and.returnValue($q.when());
         }));
 
@@ -2105,23 +1920,22 @@ describe('authoring themes', () => {
         expect(authThemes.save).toHaveBeenCalledWith('proofreadTheme', darkTheme);
     }));
 
-    it('can get normal theme', inject((authThemes, $rootScope) => {
-        var theme = null;
+    it('can get normal theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('theme').then((theme) => {
+            expect(theme).not.toBe(null);
 
-        authThemes.get('theme').then((_theme) => {
-            theme = _theme;
+            done();
         });
+
         $rootScope.$digest();
-        expect(theme).not.toBe(null);
     }));
 
-    it('can get proofread theme', inject((authThemes, $rootScope) => {
-        var proofreadTheme = null;
-
-        authThemes.get('proofreadTheme').then((_theme) => {
-            proofreadTheme = _theme;
+    it('can get proofread theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('proofreadTheme').then((proofreadTheme) => {
+            expect(proofreadTheme).not.toBe(null);
+            done();
         });
+
         $rootScope.$digest();
-        expect(proofreadTheme).not.toBe(null);
     }));
 });

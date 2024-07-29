@@ -23,8 +23,10 @@ export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, 
         data-test-id="icon-button"
         data-test-value={tooltip}
         data-sd-tooltip={tooltip}
+        aria-label={tooltip}
         className="Editor3-styleButton"
         style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
+        role="button"
     >
         <span role="button" onClick={onClick}><i className={`icon-${iconName}`} /></span>
     </div>

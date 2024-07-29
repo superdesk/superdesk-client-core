@@ -31,6 +31,10 @@ export function pick<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...ke
     return picked;
 }
 
+export function getObjectEntriesGeneric<KEY extends string, VALUE>(obj: any): Array<[KEY, VALUE]> {
+    return Object.entries(obj) as Array<[KEY, VALUE]>;
+}
+
 // type-safe alternative to lodash.omit
 export function omit<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...keysToOmit: Array<K>): Omit<T, K> {
     const keys = new Set<string>();
@@ -80,13 +84,13 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
     const properties = pick(
         item,
         'margin',
-        'marginTop',
-        'marginRight',
-        'marginBottom',
+        'marginBlockStart',
+        'marginInlineEnd',
+        'marginBlockEnd',
         'padding',
-        'paddingTop',
-        'paddingRight',
-        'paddingBottom',
+        'paddingBlockStart',
+        'paddingInlineEnd',
+        'paddingBlockEnd',
     );
 
     const propertiesShallowCopy = {...properties};

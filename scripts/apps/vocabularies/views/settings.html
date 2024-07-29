@@ -4,19 +4,22 @@
             <h2 class="sd-page__page-heading" translate>Metadata management</h2>
             <span class="sd-page__element-grow"></span>
             <button class="btn btn--hollow btn--primary"
-                ng-click="uploadConfig()" ng-if="tab === 'vocabularies'">
+                ng-click="uploadConfig()" ng-if="tab === 'vocabularies' || tab === 'custom-editor-blocks'">
                 <i class="icon-upload icon--blue"></i>
                 <span translate>Upload Config</span>
             </button>
         </div>
-            
-        <div class="sd-page__header sd-page__header--white">
-            <ul class="nav nav-tabs">
+
+        <div class="sd-page__header sd-page__header--white"  data-test-id="metadata-navigation">
+            <ul class="nav nav-tabs" data-test-id="metadata-tabs">
                 <li ng-class="{active: tab === 'vocabularies'}">
                     <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
                 </li>
                 <li ng-class="{active: tab === 'text-fields'}">
                     <button ng-click="tab = 'text-fields'" translate>Custom text fields</button>
+                </li>
+                <li ng-class="{active: tab === 'custom-editor-blocks'}">
+                    <button ng-click="tab = 'custom-editor-blocks'" translate>Custom blocks</button>
                 </li>
                 <li ng-class="{active: tab === 'date-fields'}">
                     <button ng-click="tab = 'date-fields'" translate>Custom date fields</button>
@@ -35,7 +38,7 @@
                 </li>
             </ul>
         </div>
-        
+
         <div class="sd-page__flex-helper" sd-vocabulary-config data-tab="tab"></div>
     </div>
 </sd-settings-view>

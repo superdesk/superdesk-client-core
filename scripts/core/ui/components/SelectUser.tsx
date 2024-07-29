@@ -6,6 +6,7 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
+import {sdApi} from 'api';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
@@ -112,6 +113,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         return (
             <SelectWithTemplate
+                key={this.props.deskId}
                 label={gettext('Select a user')}
                 inlineLabel={true}
                 labelHidden={true}
@@ -119,11 +121,23 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                     this.abortController?.abort();
                     this.abortController = new AbortController();
 
-                    const query = JSON.stringify(
-                        searchString != null && searchString.length > 0
-                            ? getUserSearchMongoQuery(searchString)
-                            : {},
-                    );
+                    let query = {$and: []};
+                    const desk = sdApi.desks.getDeskById(this.props.deskId);
+                    const deskMemberIds = (desk?.members ?? []).map((member) => member.user);
+
+                    if (this.props.deskId != null && this.props.deskId != '') {
+                        query.$and.push({_id: {$in: deskMemberIds}});
+                    }
+
+                    if (searchString != null && searchString.length > 0) {
+                        query.$and.push(getUserSearchMongoQuery(searchString));
+                    }
+
+                    const urlParams = {max_results: 50};
+
+                    if (query.$and.length > 0) {
+                        urlParams['where'] = query;
+                    }
 
                     // Wrapping into additional promise in order to avoid having to handle rejected promise
                     // in `SelectWithTemplate` component. The component takes a generic promise
@@ -133,10 +147,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                         httpRequestJsonLocal<IRestApiResponse<IUser>>({
                             method: 'GET',
                             path: '/users',
-                            urlParams: {
-                                where: query,
-                                max_results: 50,
-                            },
+                            urlParams,
                             abortSignal: this.abortController.signal,
                         }).then((res) => {
                             resolve(res._items);

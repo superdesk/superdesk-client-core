@@ -31,7 +31,7 @@ const cellStyle: React.CSSProperties = {
     background: 'white',
     width: '100%',
     height: '100%',
-    marginRight: 8,
+    marginInlineEnd: 8,
 };
 
 interface IStateLoading {
@@ -142,8 +142,8 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                         <tr
                             style={{
                                 ...rowStyle,
-                                marginRight: 8,
-                                paddingBottom: 8,
+                                marginInlineEnd: 8,
+                                paddingBlockEnd: 8,
                             }}
                         >
                             <th style={columnStyle}>
@@ -182,6 +182,7 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                         >
                             <td style={cellStyle}>
                                 <PreviewAuthoringItem
+                                    item={entity2}
                                     fieldsData={fieldsData2}
                                     profile={profile2}
                                     fieldPadding={ITEM_PADDING}
@@ -189,6 +190,7 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                             </td>
                             <td style={cellStyle}>
                                 <PreviewAuthoringItem
+                                    item={entity1}
                                     fieldsData={fieldsData1}
                                     profile={profile1}
                                     fieldPadding={ITEM_PADDING}
@@ -201,6 +203,8 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                                     profile2={profile1}
                                     fieldsData1={fieldsData2}
                                     fieldsData2={fieldsData1}
+                                    item1={entity2}
+                                    item2={entity1}
                                     fieldPadding={ITEM_PADDING}
                                 />
                             </td>

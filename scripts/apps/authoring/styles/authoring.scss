@@ -722,10 +722,12 @@ $authoring-toolbar-spacing: 10px;
 .char-count-base {
     font-size: 11px;
     font-style: italic;
-    color: $grayLight;
+    color: var(--sd-editor-colour__txt);
+    opacity: 0.6;
 
     &.error {
         color: $red;
+        opacity: 1;
     }
 }
 

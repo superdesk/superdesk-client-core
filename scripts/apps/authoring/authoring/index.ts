@@ -1,4 +1,4 @@
-import 'angular-history/history';
+import 'libs/angular-history/history';
 
 import * as svc from './services';
 import * as directive from './directives';
@@ -101,7 +101,10 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
-    .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringAngularIntegration, ['itemId', 'action'], []))
+    .component('sdAuthoringIntegrationWrapper', reactToAngular1(
+        AuthoringAngularIntegration, ['itemId', 'action', 'setFullWidth', 'fullWidth'],
+        [],
+    ))
     .component(
         'sdInteractiveArticleActionsPanelCombined',
         reactToAngular1(InteractiveArticleActionsPanelCombined, [

@@ -3,6 +3,7 @@ import {shallow, mount} from 'enzyme';
 import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
 import {PlainTextEditor} from 'core/ui/components';
+import {noop} from 'lodash';
 
 describe('editor3.components.media-block', () => {
     it('should render', () => {
@@ -14,6 +15,9 @@ describe('editor3.components.media-block', () => {
                 setLocked={() => ({})}
                 block={block}
                 contentState={contentState}
+                readOnly={false}
+                showTitle={false}
+                removeBlock={noop}
             />,
         );
 
@@ -32,6 +36,9 @@ describe('editor3.components.media-block', () => {
                 setLocked={() => ({})}
                 block={block}
                 contentState={contentState}
+                readOnly={false}
+                showTitle={false}
+                removeBlock={noop}
             />,
         );
 

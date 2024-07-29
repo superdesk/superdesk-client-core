@@ -19,6 +19,7 @@ import {authoring} from './helpers/authoring';
 import {el, ECE, els, hover, selectFilesForUpload} from '@superdesk/end-to-end-testing-helpers';
 import {getAbsoluteFilePath} from './utils';
 import {selectFromMetaTermsDropdown} from './helpers/dropdown-terms';
+import {s} from './../playwright/utils';
 
 function uploadMedia(imagePathAbsolute) {
     el(['media-gallery--upload-placeholder']).click();
@@ -29,14 +30,7 @@ function uploadMedia(imagePathAbsolute) {
     el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
         .sendKeys('image headline');
     el(['media-metadata-editor', 'field--slugline'], by.tagName('[contenteditable]'))
-        .sendKeys('image headline');
-    el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]'))
-        .sendKeys('image alt text');
-
-    selectFromMetaTermsDropdown('anpa_category', ['Finance']);
-
-    selectFromMetaTermsDropdown('subject', ['arts, culture and entertainment', 'archaeology']);
-
+        .sendKeys('image slugline');
     el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]'))
         .sendKeys('image description');
 
@@ -623,17 +617,25 @@ describe('authoring', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(
+            element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),
+        ));
+        expect(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            0,
+        )()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
         assertToastMsg('success', 'Item updated.');
         waitForToastMsgDisappear('success', 'Item updated.');
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            1,
+        ));
 
-        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        hover(element(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))));
         el(['media-gallery-image--edit']).click();
         el(['done']).click(); // click done without making any changes
 
@@ -645,12 +647,20 @@ describe('authoring', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(
+            element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),
+        ));
+        expect(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            0,
+        )()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            1,
+        ));
     });
 
     it('Can remove an image from media gallery', () => {
@@ -664,16 +674,29 @@ describe('authoring', () => {
 
         templateBtn.click();
 
-        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
-        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+        browser.wait(ECE.visibilityOf(
+            element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),
+        ));
+        expect(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            0,
+        )()).toBe(true);
 
         uploadMedia(getAbsoluteFilePath('test-files/image-red.jpg'));
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+        browser.wait(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            1,
+        ));
 
-        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
-        el(['authoring-field--media-gallery', 'media-gallery-image--remove']).click();
+        hover(element(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))));
+        element(
+            by.css(s('authoring-field=Image gallery 33', 'media-gallery-image--remove')),
+        ).click();
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0));
+        browser.wait(ECE.hasElementCount(
+            element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
+            0,
+        ));
     });
 });

@@ -26,29 +26,19 @@ export function getFieldContainer(
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'start',
-                            alignItems: 'center',
-                        }}
-                    >
+                <div className={sectionClassNames?.header}>
+                    <Spacer v gap="0">
                         <span
                             className={classNames(
                                 'form-label',
                                 {'form-label--invalid': validationError != null},
                             )}
-                            style={{
-                                width: '90px',
-                                justifyContent: 'end',
-                            }}
                         >
-                            <Spacer h gap="8" noGrow>
-                                <span>
+                            <Spacer h gap="8" noGrow noWrap>
+                                <span style={{textAlign: 'end'}}>
                                     {field.fieldConfig.required && (
                                         <span
                                             className="sd-font-size--x-small"
@@ -79,7 +69,7 @@ export function getFieldContainer(
                                 )
                             }
                         </div>
-                    </div>
+                    </Spacer>
                 </div>
             );
         }
@@ -87,10 +77,10 @@ export function getFieldContainer(
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <div>
+                <div className={sectionClassNames?.content}>
                     <div
                         style={{
                             display: 'flex',

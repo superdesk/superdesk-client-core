@@ -34,7 +34,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    paddingBottom: 10,
+                    paddingBlockEnd: 10,
                 }}
             >
                 <div style={{padding: 10}}>

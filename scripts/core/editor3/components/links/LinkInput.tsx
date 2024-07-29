@@ -9,13 +9,15 @@ import {
     hidePopups,
     createLinkSuggestion,
     changeLinkSuggestion,
-    applyLinkToMuliLineQuote,
+    applyLinkOnTableCell,
 } from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
 import {IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import {noop} from 'lodash';
 
 /**
  * @ngdoc React
@@ -114,7 +116,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
 
             link = {href: url};
-            if (!isLocalDomain && localDomains != null) {
+            if ((appConfig.linksBlankTarget === true) || (!isLocalDomain && localDomains != null)) {
                 link.target = '_blank';
             }
         } else if (linkType === linkTypes.attachement) {
@@ -278,9 +280,9 @@ const mapStateToPropsNoEditorState = (state) => ({
     suggestingMode: state.suggestingMode,
 });
 
-export const LinkInputMultiLineQuote = connect(mapStateToPropsNoEditorState, {
-    applyLink: applyLinkToMuliLineQuote,
+export const LinkInputForTableCell = connect(mapStateToPropsNoEditorState, {
+    applyLink: applyLinkOnTableCell,
     hidePopups,
-    createLinkSuggestion,
-    changeLinkSuggestion,
+    createLinkSuggestion: noop, // not supported for tables
+    changeLinkSuggestion: noop, // not supported for tables
 })(LinkInputComponentWithDependenciesLoaded);

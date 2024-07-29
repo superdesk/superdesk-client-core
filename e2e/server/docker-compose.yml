@@ -1,3 +1,4 @@
+name: superdesk-client-core_e2e
 version: "3.2"
 services:
     redis:
@@ -22,7 +23,7 @@ services:
         command: --replSet rs0
 
     elastic:
-        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
         ports:
             - "9200:9200"
         networks:
@@ -33,7 +34,7 @@ services:
         tmpfs:
             - /usr/share/elasticsearch/data
 
-    superdesk:
+    server:
         build: .
         ports:
             - "5000:5000"
@@ -51,8 +52,10 @@ services:
             - WEB_WORKERS=2
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
+            - CELERY_ALWAYS_EAGER=true
         volumes:
           - ./dump:/opt/superdesk/dump:rw
+        user: 1000:1000
 
 networks:
     e2e:

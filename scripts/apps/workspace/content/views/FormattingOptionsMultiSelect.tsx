@@ -1,48 +1,32 @@
 import React from 'react';
 import {TreeSelect} from 'superdesk-ui-framework/react';
-import {IArticleField} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {
-    getEditor3RichTextFormattingOptions,
-    getEditor3PlainTextFormattingOptions,
-    HAS_RICH_FORMATTING_OPTIONS,
-} from '../components/get-content-profiles-form-config';
 
 interface IProps {
     value: Array<string> | null;
-    fieldId: string;
-    fields: Dictionary<string, IArticleField>;
-    onChange(value: Array<string>, fieldId: string): void;
+    onChange(value: Array<string>): void;
+    options: Array<{value: [RICH_FORMATTING_OPTION, string]}>;
 }
 
 export class FormattingOptionsTreeSelect extends React.Component<IProps> {
     render(): React.ReactNode {
-        const {fields, fieldId} = this.props;
+        const lookup: Map<RICH_FORMATTING_OPTION, string> = new Map(
+            this.props.options.map(({value}) => value),
+        );
 
-        const isCustomPlainTextField = typeof fields[fieldId] === 'object' && fields[fieldId].field_type === 'text';
-        const isRichOrCustomTextField =
-            Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) || isCustomPlainTextField;
-        const formattingOptions = Object.entries(
-            isRichOrCustomTextField
-                ? getEditor3RichTextFormattingOptions()
-                : getEditor3PlainTextFormattingOptions(),
-        )
-            .map(([notTranslatedOption, translatedOption]) => ({value: [notTranslatedOption, translatedOption]}));
-
-        const values = this.props.value != null
-            ? formattingOptions
-                .filter((option) => this.props.value.includes(option.value[0]))
-                .map((option) => option.value)
-            : [];
+        const values: Array<[RICH_FORMATTING_OPTION, string]> =
+            (this.props.value ?? []).map((id: RICH_FORMATTING_OPTION) => [id, lookup.get(id)]);
 
         return (
             <TreeSelect
+                data-test-id="formatting-options"
                 kind="synchronous"
                 getId={(option) => option[0]}
                 getLabel={(option) => option[1]}
-                getOptions={() => formattingOptions}
+                getOptions={() => this.props.options}
                 onChange={(newFormattingOptions) => {
-                    this.props.onChange(newFormattingOptions.map((option) => option[0]), this.props.fieldId);
+                    this.props.onChange(newFormattingOptions.map((option) => option[0]));
                 }}
                 value={values}
                 allowMultiple

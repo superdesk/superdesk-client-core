@@ -79,6 +79,7 @@ export class Editor extends React.PureComponent<IProps> {
                         label=""
                         labelHidden
                         inlineLabel
+                        required
                         value={this.props.value?.date}
                         onChange={(dateString) => {
                             this.props.onChange({

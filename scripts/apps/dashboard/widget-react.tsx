@@ -4,13 +4,20 @@ import React from 'react';
 import {IArticle, IArticleSideWidget} from 'superdesk-api';
 
 interface IProps {
-    widget: IArticleSideWidget;
+    widget: {
+        active: IArticleSideWidget;
+        pinnedWidget: IArticleSideWidget;
+    };
     article: IArticle;
 }
 
-export class WidgetReact extends React.PureComponent<IProps> {
+interface IState {
+    widgetDisplayed: IArticleSideWidget['component'];
+}
+
+export class WidgetReact extends React.PureComponent<IProps, IState> {
     render() {
-        const Component = this.props.widget.component;
+        const Component = this.props.widget.active?.component ?? this.props.widget?.pinnedWidget?.component;
 
         // Ensure that widget component re-mounts if the item is locked/unlocked.
         // Avoid null key in case item is unlocked - use a random string to force it to re-mount.
@@ -20,6 +27,20 @@ export class WidgetReact extends React.PureComponent<IProps> {
             <Component
                 key={key}
                 article={this.props.article}
+                initialState={(() => {
+                    const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+
+                    if (localStorageWidgetState?.id
+                        === (this.props.widget.active?._id ?? this.props.widget.pinnedWidget._id)) {
+                        const initialState = localStorageWidgetState?.initialState;
+
+                        localStorage.removeItem('SIDE_WIDGET');
+
+                        return initialState;
+                    } else {
+                        return undefined;
+                    }
+                })()}
 
                 // below props are only relevant for authoring-react
                 readOnly={undefined}

@@ -66,20 +66,30 @@ export const isIngested = (item: IArticle) =>
     item.state === ITEM_STATE.INGESTED;
 
 function canPublish(item: IArticle): boolean {
-    const deskId = item?.task?.desk;
-
-    if (deskId == null) {
+    if (
+        sdApi.user.hasPrivilege('publish') !== true
+        || item.flags?.marked_for_not_publication === true
+        || item.state === 'draft'
+    ) {
         return false;
     }
 
-    const desk = sdApi.desks.getAllDesks().get(deskId);
+    const $location = ng.get('$location');
 
-    if (desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk === true) {
+    if ($location.path() === '/workspace/personal' && appConfig?.features?.publishFromPersonal !== true) {
         return false;
-    }
+    } else {
+        const deskId = item?.task?.desk;
 
-    if (sdApi.user.hasPrivilege('publish') !== true) {
-        return false;
+        if (deskId == null) {
+            return false;
+        }
+
+        const desk = sdApi.desks.getAllDesks().get(deskId);
+
+        if (desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk === true) {
+            return false;
+        }
     }
 
     return true;
@@ -214,6 +224,13 @@ function createNewUsingDeskTemplate(): void {
                 openArticle(item._id, 'edit');
             });
     });
+}
+
+function createNewWithData(data: Partial<IArticle>, contentProfileId: string): void {
+    dataApi.create('archive', {type: 'text', ...data, profile: contentProfileId})
+        .then((item) => {
+            openArticle(item._id, 'edit');
+        });
 }
 
 /**
@@ -556,6 +573,7 @@ interface IArticleApi {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
 
     createNewUsingDeskTemplate(): void;
+    createNewWithData(data: Partial<IArticle>, contentProfileId: string): void;
     getWorkQueueItems(): Array<IArticle>;
     rewrite(item: IArticle): void;
     canPublishOnDesk(deskType: string): boolean;
@@ -618,6 +636,7 @@ export const article: IArticleApi = {
     lock,
     unlock,
     createNewUsingDeskTemplate,
+    createNewWithData,
     getWorkQueueItems,
     get,
     canPublishOnDesk,

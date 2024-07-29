@@ -335,14 +335,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.getActiveWidget = () => {
-            return this.props.sideWidget?.name ?? null;
+            return this.props.sideWidget?.id ?? null;
         };
 
         widgetReactIntegration.getPinnedWidget = () => {
             const pinned = this.props.sideWidget?.pinned === true;
 
             if (pinned) {
-                return this.props.sideWidget.name;
+                return this.props.sideWidget.id;
             } else {
                 return null;
             }
@@ -564,7 +564,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             this.setState(initialState);
 
-            if (this.componentRef != null) {
+            if (this.componentRef != null && this.props.autoFocus !== false) {
                 this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
         });
@@ -607,8 +607,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
-                    if (event.detail._id === this.props.itemId) {
-                        const patch = event.detail;
+                    if (event.detail.item._id === this.props.itemId) {
+                        const patch = event.detail.item;
 
                         const {state} = this;
 
@@ -707,6 +707,53 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     }
                 }
             }),
+        );
+
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalEventListener(
+                'dangerouslyOverwriteAuthoringField',
+                (event) => {
+                    if (event.detail.itemId === this.props.itemId) {
+                        const patch = {[event.detail.field.key]: event.detail.field.value};
+
+                        const {state} = this;
+
+                        if (state.initialized) {
+                            if (state.itemOriginal === state.itemWithChanges) {
+                                /**
+                                 * if object references are the same before patching
+                                 * they should be the same after patching too
+                                 * in order for checking for changes to work correctly
+                                 * (reference equality is used for change detection)
+                                 */
+
+                                const patched = {
+                                    ...state.itemOriginal,
+                                    ...patch,
+                                };
+
+                                this.setState({
+                                    ...state,
+                                    itemOriginal: patched,
+                                    itemWithChanges: patched,
+                                });
+                            } else {
+                                this.setState({
+                                    ...state,
+                                    itemWithChanges: {
+                                        ...state.itemWithChanges,
+                                        ...patch,
+                                    },
+                                    itemOriginal: {
+                                        ...state.itemOriginal,
+                                        ...patch,
+                                    },
+                                });
+                            }
+                        }
+                    }
+                },
+            ),
         );
 
         /**
@@ -1113,13 +1160,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.name ?? null,
-            toggleSideWidget: (name) => {
-                if (name == null || this.props.sideWidget?.name === name) {
+            sideWidget: this.props.sideWidget?.id ?? null,
+            toggleSideWidget: (id) => {
+                if (id == null || this.props.sideWidget?.id === id) {
                     this.props.onSideWidgetChange(null);
                 } else {
                     this.props.onSideWidgetChange({
-                        name: name,
+                        id: id,
                         pinned: false,
                     });
                 }
@@ -1229,10 +1276,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         for (let i = 0; i < widgetsCount; i++) {
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
-                const nextWidgetName: string = this.props.getSideWidgetNameAtIndex(exposed.item, i);
+                const nextWidgetName: string = this.props.getSideWidgetIdAtIndex(exposed.item, i);
 
                 this.props.onSideWidgetChange({
-                    name: nextWidgetName,
+                    id: nextWidgetName,
                     pinned: this.props.sideWidget?.pinned ?? false,
                 });
             };
@@ -1257,6 +1304,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const printPreviewAction = (() => {
             const execute = () => {
                 previewAuthoringEntity(
+                    state.itemWithChanges,
                     state.profile,
                     state.fieldsDataWithChanges,
                 );
@@ -1349,7 +1397,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 <React.Fragment>
                                                     <div
                                                         style={{
-                                                            paddingRight: 16,
+                                                            paddingInlineEnd: 16,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             gap: 8,

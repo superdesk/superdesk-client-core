@@ -1,116 +1,187 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {inlineStyles} from '../../helpers/inlineStyles';
 import {getData, getCell} from '../../helpers/table';
+import {ITableKind} from '../tables/TableBlock';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {blockStyles} from './BlockStyleButtons';
+import {SelectionButtonCustomEditorState} from './SelectionButton';
+import {gettext} from 'core/utils';
+import {LinkToolbarForTableCell} from '../links/LinkToolbar';
+import {PopupTypes} from '../../actions';
+import {LinkInputForTableCell} from '../links/LinkInput';
+import {IEditorStore} from 'core/editor3/store';
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name TableControlsComponent
- * @param {Function} addRowAfter
- * @param {Function} addColAfter
- * @param {Function} removeRow
- * @param {Function} removeCol
- * @description Holds the toolbar for table operations.
- */
-const TableControlsComponent: React.StatelessComponent<any> = ({
-    addRowAfter,
-    addColAfter,
-    removeRow,
-    removeCol,
-    activeCell,
-    editorState,
-    editorFormat,
-    toggleTableHead,
-    toggleTableStyle,
-    className,
-}) => {
+interface IOwnProps {
+    className: string;
+    tableKind: ITableKind;
+    editorFormat: Array<RICH_FORMATTING_OPTION>;
+}
+
+interface IDispatchProps {
+    addRowAfter(): void;
+    addColAfter(): void;
+    removeRow(): void;
+    removeCol(): void;
+    toggleTableHead(): void;
+    toggleTableStyle(inlineStyle: any): void;
+    toggleTableBlockType(type:any): void;
+    setTablePopup(type:any, data: any): void;
+}
+
+interface IReduxStateProps {
+    activeCell: IEditorStore['activeCell'];
+    editorState: IEditorStore['editorState'];
+    popup: IEditorStore['popup'];
+}
+
+type IProps = IOwnProps & IReduxStateProps & IDispatchProps;
+
+const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
+    const {
+        addRowAfter,
+        addColAfter,
+        removeRow,
+        removeCol,
+        activeCell,
+        popup,
+        editorState,
+        editorFormat,
+        toggleTableHead,
+        toggleTableStyle,
+        toggleTableBlockType,
+        setTablePopup,
+        className,
+        tableKind,
+    } = props;
+
     const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const data = getData(contentState, key);
     const {withHeader} = data;
     const cellEditorState = getCell(data, i, j, currentStyle, selection);
     const currentInlineStyle = cellEditorState.getCurrentInlineStyle();
+    const blockStyle = cellEditorState
+        .getCurrentContent()
+        .getBlockForKey(cellEditorState.getSelection().getStartKey())
+        .getType();
 
     return (
-        <div className={'table-controls ' + className}>
-            <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
+        <div className={'table-controls ' + className} data-test-id="toolbar">
+            {
+                tableKind === 'table' && (
+                    <>
+                        <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
 
-            <span
-                className="Editor3-styleButton Editor3-styleButton--short"
-                onClick={removeRow}
-            >
-                <i className="icon-minus-sign" />
-            </span>
+                        <span
+                            className="Editor3-styleButton Editor3-styleButton--short"
+                            onClick={removeRow}
+                        >
+                            <i className="icon-minus-sign" />
+                        </span>
 
-            <span
-                className="Editor3-styleButton"
-                onClick={addRowAfter}
-            >
-                <i className="icon-plus-sign" />
-                {' '}row
-            </span>
+                        <span
+                            className="Editor3-styleButton"
+                            onClick={addRowAfter}
+                        >
+                            <i className="icon-plus-sign" />
+                            {' '}{gettext('row')}
+                        </span>
 
-            <span
-                className="Editor3-styleButton Editor3-styleButton--short"
-                onClick={removeCol}
-            >
-                <i className="icon-minus-sign" />
-            </span>
+                        <span
+                            className="Editor3-styleButton Editor3-styleButton--short"
+                            onClick={removeCol}
+                        >
+                            <i className="icon-minus-sign" />
+                        </span>
 
-            <span className="Editor3-styleButton" onClick={addColAfter}>
-                <i className="icon-plus-sign" />
-                {' '}col
-            </span>
+                        <span className="Editor3-styleButton" onClick={addColAfter}>
+                            <i className="icon-plus-sign" />
+                            {' '}{gettext('column')}
+                        </span>
+                    </>
+                )
+            }
 
             {
-                editorFormat
-                    .filter((type) => type in inlineStyles)
-                    .map((type) => (
-                        <StyleButton
-                            key={type}
-                            active={currentInlineStyle.has(inlineStyles[type])}
-                            label={type}
-                            onToggle={toggleTableStyle}
-                            style={inlineStyles[type]}
-                        />
-                    ))
+                editorFormat.map((type) => {
+                    if (type === 'link') {
+                        return (
+                            <>
+                                {
+                                    <SelectionButtonCustomEditorState
+                                        editorState={cellEditorState}
+                                        onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
+                                        iconName="link"
+                                        tooltip={gettext('Link')}
+                                    />
+                                }
+
+                                {
+                                    popup.type === PopupTypes.Link && (
+                                        <LinkInputForTableCell
+                                            data={popup.data}
+                                            editorState={cellEditorState}
+                                        />
+                                    )
+                                }
+                            </>
+                        );
+                    } else if (type in inlineStyles) {
+                        return (
+                            <StyleButton
+                                key={type}
+                                active={currentInlineStyle.has(inlineStyles[type])}
+                                label={type}
+                                onToggle={toggleTableStyle}
+                                style={inlineStyles[type]}
+                            />
+                        );
+                    } else if (type in blockStyles) {
+                        return (
+                            <StyleButton
+                                key={type}
+                                active={blockStyles[type] === blockStyle}
+                                label={type}
+                                onToggle={() => toggleTableBlockType(blockStyles[type])}
+                                style={blockStyles[type]}
+                            />
+                        );
+                    } else {
+                        return null;
+                    }
+                })
             }
+
+            {/* LinkToolbar must be the last node. */}
+            <LinkToolbarForTableCell
+                editorState={cellEditorState}
+                onEdit={(payload) => setTablePopup(PopupTypes.Link, payload)}
+            />
         </div>
     );
 };
 
-TableControlsComponent.propTypes = {
-    addRowAfter: PropTypes.func,
-    addColAfter: PropTypes.func,
-    removeRow: PropTypes.func,
-    removeCol: PropTypes.func,
-    activeCell: PropTypes.object.isRequired,
-    editorState: PropTypes.object,
-    editorFormat: PropTypes.array,
-    toggleTableHead: PropTypes.func,
-    toggleTableStyle: PropTypes.func,
-    className: PropTypes.string,
-};
-
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch): IDispatchProps => ({
     addRowAfter: () => dispatch(actions.addRowAfter()),
     addColAfter: () => dispatch(actions.addColAfter()),
     removeRow: () => dispatch(actions.removeRow()),
     removeCol: () => dispatch(actions.removeCol()),
     toggleTableHead: () => dispatch(actions.toggleTableHeader()),
     toggleTableStyle: (inlineStyle) => dispatch(actions.toggleTableStyle(inlineStyle)),
+    toggleTableBlockType: (type) => dispatch(actions.toggleTableBlockType(type)),
+    setTablePopup: (type, data) => dispatch(actions.setTablePopup(type, data)),
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: IEditorStore) => ({
     activeCell: state.activeCell,
     editorState: state.editorState,
-    editorFormat: state.editorFormat,
+    popup: state.popup,
 });
 
-const TableControls = connect(mapStateToProps, mapDispatchToProps)(TableControlsComponent);
-
-export default TableControls;
+export const TableControls: React.ComponentType<IOwnProps> = connect<IReduxStateProps, IDispatchProps, IOwnProps>(
+    mapStateToProps,
+    mapDispatchToProps,
+)(TableControlsComponent);

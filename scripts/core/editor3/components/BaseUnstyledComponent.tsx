@@ -10,8 +10,7 @@ import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
-import {EDITOR_BLOCK_TYPE, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {EDITOR_BLOCK_TYPE, formattingOptionsThatRequireDragAndDrop, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
 import {notify} from 'core/notify/notify';
 import {articleEmbedsConfigured} from './article-embed/can-add-article-embed';
 import {gettext} from 'core/utils';
@@ -45,15 +44,16 @@ function isHtmlTextAndShouldCreateEmbed(event, mediaType, editorProps): boolean 
     return embedShouldBeCreated(html, editorProps);
 }
 
-export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Component) {
+export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Component): boolean {
     if (event.dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
         return articleEmbedsConfigured(editorProps);
     }
 
-    const mediaFormattingOption: RICH_FORMATTING_OPTION = 'media';
     const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
 
-    return editorProps.editorFormat.includes(mediaFormattingOption) && intersection.length > 0;
+    return editorProps.editorFormat.some(
+        (option) => formattingOptionsThatRequireDragAndDrop.has(option),
+    ) && intersection.length > 0;
 }
 
 interface IProps {
@@ -124,15 +124,14 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
             ) {
                 getEmbedObject(link)
                     .then((oEmbed) => {
-                        if (oEmbed) {
-                            this.props.dispatch(embed(oEmbed, blockKey));
-                            handled = true;
-                        }
+                        this.props.dispatch(embed(oEmbed, blockKey));
                     })
                     .catch((err) => {
-                        notify.error(err.description ?? gettext('An unknown error ocurred.'));
-                        handled = false;
+                        notify.error(err.description ?? gettext('This link is not embeddable.'));
                     });
+
+                // Condition was handled regardless of the getEmbedObject result
+                handled = true;
             } else if (isHtmlTextAndShouldCreateEmbed(event, mediaType, this.props.editorProps)) {
                 this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
                 handled = true;

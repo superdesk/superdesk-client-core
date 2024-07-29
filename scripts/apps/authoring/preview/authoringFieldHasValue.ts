@@ -1,4 +1,4 @@
-import {IAuthoringField} from './types';
+import {IAuthoringField} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 function hasValueString(str: string | undefined): boolean {

@@ -10,14 +10,12 @@ import {createStore} from 'redux';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
-        const noop = () => ({});
         const {block, contentState} = embedBlockAndContent();
         const wrapper = mount(
             <Provider store={createStore(() => ({}), {})}>
                 <EmbedBlock
                     block={block}
                     contentState={contentState}
-                    blockProps={{readOnly: false, dispatch: noop}}
                 />
             </Provider>,
         );

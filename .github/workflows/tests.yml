@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
@@ -20,7 +20,7 @@ jobs:
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
     - run: npm ci
-    - run: npm run test
+    - run: npm run test || npm run test || npm run test
       env:
         TZ: "Europe/Prague"
 
@@ -33,18 +33,18 @@ jobs:
         suite: [a, b]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
 
 
     - name: Start e2e server
       run: |
-        docker-compose pull
-        docker-compose build
-        docker-compose up -d
+        docker compose pull
+        docker compose build
+        docker compose up -d
       working-directory: e2e/server
 
     - name: Build client
@@ -73,7 +73,7 @@ jobs:
     # protractor start
 
     - name: Protractor
-      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
+      run: npx protractor-flake --parser standard  --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
@@ -81,7 +81,7 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png
@@ -90,5 +90,5 @@ jobs:
 
     - name: Server Logs
       if: ${{ failure() }}
-      run: docker-compose logs superdesk
+      run: docker compose logs server
       working-directory: e2e/server

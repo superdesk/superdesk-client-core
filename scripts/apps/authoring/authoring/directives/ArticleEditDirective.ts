@@ -37,6 +37,7 @@ interface IScope extends ng.IScope {
     extra: any;
     refreshTrigger: number;
     autosave(item: any): any;
+    generateHtml(): void;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
     resetNumberOfDays(dateline: any, datelineMonth?: any): void;
@@ -155,7 +156,7 @@ export function ArticleEditDirective(
                     }
                 }
 
-                // Needed only for authoring Angular. In authoring react we have a generic
+                // Needed only for #ANGULAR_AUTHORING. In authoring react we have a generic
                 // event ('resource:updated') which listens to all item changes.
                 scope.$on('author_approval:updated', (_event, extra) => {
                     if (extra.item_id === scope.item?._id) {
@@ -342,6 +343,10 @@ export function ArticleEditDirective(
                  * @description Opens the Change Image Controller to modify the image metadata.
                  */
                 scope.editMedia = (defaultTab = 'view') => {
+                    // generate html before opening the modal to make
+                    // any changes done in the authoring visible there
+                    scope.generateHtml();
+
                     let showTabs = [];
 
                     scope.mediaLoading = true;
@@ -388,7 +393,7 @@ export function ArticleEditDirective(
                                     scope.articleEdit.$setDirty();
                                 }
                             } else {
-                                scope.save();
+                                scope.save({generateHtml: false});
                             }
                         })
                         .finally(() => {

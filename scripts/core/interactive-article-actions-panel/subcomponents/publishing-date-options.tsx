@@ -85,7 +85,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <div>
                             {
                                 canSetEmbargo && (
-                                    <ToggleBox title={gettext('Embargo')} initiallyOpen>
+                                    <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
                                         <DateTimePicker
                                             value={embargo}
                                             onChange={(val) => {
@@ -103,7 +103,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
 
                             {
                                 canSetPublishSchedule && (
-                                    <ToggleBox title={gettext('Publish schedule')} initiallyOpen>
+                                    <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
                                         <DateTimePicker
                                             value={publishSchedule}
                                             onChange={(val) => {
@@ -121,7 +121,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
 
                             {
                                 (embargo != null || publishSchedule != null) && (
-                                    <ToggleBox title={gettext('Time zone')} initiallyOpen>
+                                    <ToggleBox variant="simple" title={gettext('Time zone')} initiallyOpen>
                                         <TimeZonePicker
                                             value={timeZone}
                                             onChange={(val) => {
@@ -134,7 +134,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
 
                                         {
                                             timeZone == null && (
-                                                <div style={{paddingTop: 5}}>
+                                                <div style={{paddingBlockStart: 5}}>
                                                     {gettext('If not set, the UTC+0 time zone is assumed.')}
                                                 </div>
                                             )

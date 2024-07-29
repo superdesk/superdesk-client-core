@@ -42,7 +42,7 @@
                 <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
                     <h3 id="view-formats" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>View formats</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
-                        <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light">Select the prefered default view format for specific areas of Superdesks interface. The sections 
+                        <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light">Select the prefered default view format for specific areas of Superdesks interface. The sections
                             will always open in the selected view format, but can be always changed using the view option dropdown in each section.</p>
                         <ul class="simple-list simple-list--compact simple-list--dotted  sd-margin-t--3 sd-margin-b--0 sd-padding-b--0">
                             <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start"
@@ -71,8 +71,21 @@
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
                         <div class="sd-switch__group sd-switch__group--vertical">
                             <div sd-info-item>
-                                <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                                <span
+                                    ng-hide="preferences['email:notification'].allowed"
+                                    sd-switch
+                                    ng-model="preferences['email:notification'].enabled"
+                                    ng-change="toggleEmailGroupNotifications()">
+                                </span>
                                 <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                            </div>
+
+                            <div class="item ms-1 ps-5">
+                                <sd-email-notifications-list
+                                    data-preferences="emailNotificationsFromExtensions"
+                                    data-toggle-email-notification="toggleEmailNotification"
+                                >
+                                </sd-email-notifications-list>
                             </div>
                             <div sd-info-item>
                                 <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
@@ -104,7 +117,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="sd-display--contents" sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
                             <label class="form-label">{{ :: preferences['article:default:place'].label | translate}}</label>
                             <div class="form__group form__group--default form__group--mb-3">
@@ -136,13 +149,13 @@
                                    title="{{:: 'Select all categories' | translate}}"
                                    translate>all</a>
                                 <div class="button-group__divider button-group__divider--small button-group__divider--border"></div>
-        
+
                                 <a ng-click="checkNone()"
                                    class="btn btn--primary btn--text-only"
                                    title="{{:: 'Clear all selected' | translate}}"
                                    translate>none</a>
                                 <div class="button-group__divider button-group__divider--small button-group__divider--border"></div>
-        
+
                                 <a ng-click="checkDefault()"
                                    class="btn btn--primary btn--text-only"
                                    title="{{:: 'Select default categories only' | translate}}"
@@ -418,7 +431,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                     </div>
                 </li>
 

@@ -1,5 +1,5 @@
 import {zipObject} from 'lodash';
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabularyMedia, IVocabularyRelatedContent} from 'superdesk-api';
 import {isPublished, isIngested} from 'apps/archive/utils';
 import {gettext} from 'core/utils';
 
@@ -79,7 +79,7 @@ export function RelationsService(api, $q) {
         })).then((values) => zipObject(relatedItemsKeys, values));
     };
 
-    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabulary) {
+    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabularyRelatedContent | IVocabularyMedia) {
         return validateWorkflow(item, field?.field_options?.allowed_workflows ?? {}).result;
     };
 }

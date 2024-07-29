@@ -1,5 +1,4 @@
-import {IArticle, IVocabulary} from 'superdesk-api';
-import {IAuthoringField} from './types';
+import {IArticle, IVocabulary, IAuthoringField} from 'superdesk-api';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {getRelatedArticles, getRelatedMedia} from '../authoring/controllers/AssociationController';
 
@@ -98,7 +97,7 @@ export function getAuthoringField(
             return {
                 type: 'subjects',
                 id: fieldId,
-                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: _id[1]})),
+                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: (_id?.[1] ?? name)})),
             };
 
         case 'keywords':

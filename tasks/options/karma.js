@@ -3,15 +3,15 @@ module.exports = {
         configFile: 'karma.conf.js',
         singleRun: true,
         autoWatch: false,
-        reporters: ['dots'],
+        reporters: ['spec'],
     },
     single: {
-        reporters: 'dots',
+        reporters: 'spec',
     },
     watch: {
         singleRun: false,
         autoWatch: true,
-        reporters: 'dots',
+        reporters: ['progress'],
     },
     unit: {
         coverageReporter: {
@@ -20,10 +20,10 @@ module.exports = {
         },
     },
     travis: {
-        reporters: ['dots'],
+        reporters: ['spec'],
     },
     bamboo: {
         browsers: ['PhantomJS'],
-        reporters: ['dots', 'junit'],
+        reporters: ['spec', 'junit'],
     },
 };
