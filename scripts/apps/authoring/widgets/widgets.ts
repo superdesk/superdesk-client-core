@@ -141,7 +141,8 @@ export const widgetReactIntegration: IWidgetIntegration = {
 };
 
 /**
- * Used for controlling when a widget is closed intentionally by a user action
+ * Used for controlling when a widget is closed intentionally by a user action.
+ * When switching to full view mode authoring re-renders causing the widget to close unintentionally.
  */
 export let closedIntentionally = {value: false};
 
