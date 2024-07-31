@@ -5,6 +5,7 @@ const elasticEndpoints = [
     '/archive',
     '/rundowns',
     '/rundown_items',
+    '/events',
 ];
 
 export function prepareSuperdeskQuery(
