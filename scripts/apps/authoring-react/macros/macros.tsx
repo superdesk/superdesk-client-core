@@ -259,7 +259,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
             this.setState({
                 macros: frontendMacros,
-                displayGrouped: Object.keys(groupedMacros).length > 0 ? true : false,
+                displayGrouped: Object.keys(groupedMacros).length > 0,
             });
         });
     }

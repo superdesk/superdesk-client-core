@@ -515,15 +515,16 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                                         sdApi.preferences.update(
                                                             PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
-                                                            {type: 'string', _id: localStorageWidgetState?.id}
+                                                            {type: 'string', _id: localStorageWidgetState?.id},
                                                         );
 
                                                         // Once a user switches the widget, authoring gets
-                                                        // re-rendered 3-4 times, causing this logic to run more than once.
-                                                        // To prevent wrong widget state its deleted after 5 seconds.
+                                                        // re-rendered 3-4 times, causing this logic to run more
+                                                        // than once. To prevent wrong widget state its
+                                                        // deleted after 5 seconds.
                                                         setTimeout(() => {
                                                             localStorage.removeItem('SIDE_WIDGET');
-                                                        }, 5000)
+                                                        }, 5000);
 
                                                         closedIntentionally.value = false;
                                                         return initialState;

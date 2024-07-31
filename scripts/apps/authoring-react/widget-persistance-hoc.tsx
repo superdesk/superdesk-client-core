@@ -15,8 +15,10 @@ interface IState {
     mounted: boolean;
 }
 
-// Functionality to persist widget state between re-renders. Solves changes in widget state lost when switching between full width view, and normal view.
-// Uses `ref` to get widget's state, stores it in `widgetState` variable. `closedIntentionally` is used in different cases, and controls whether to restore widgetState or not.
+// Functionality to persist widget state between re-renders.
+// Solves changes in widget state lost when switching between full width view, and normal view.
+// Uses `ref` to get widget's state, stores it in `widgetState` variable.
+// `closedIntentionally` is used in different cases, and controls whether to restore widgetState or not.
 export class WidgetStatePersistenceHOC extends React.PureComponent<IProps, IState> {
     private widgetRef: RefObject<React.PureComponent<IArticleSideWidgetComponentType, any>>;
 
