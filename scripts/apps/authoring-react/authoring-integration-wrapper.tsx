@@ -2,7 +2,6 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -34,8 +33,6 @@ import {
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
-import {dispatchInternalEvent} from 'core/internal-events';
-import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@superdesk/common';
 import {ExportModal} from './toolbar/export-modal';
@@ -48,6 +45,8 @@ import {ui} from 'core/ui-utils';
 import {MultiEditToolbarAction} from './toolbar/multi-edit-toolbar-action';
 import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
+import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
+import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -252,7 +251,7 @@ interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: null | {
         id: string;
-        pinned: boolean;
+        pinned?: boolean;
     };
 }
 
@@ -272,6 +271,30 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
         this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.loadWidgetFromPreferences = this.loadWidgetFromPreferences.bind(this);
+    }
+
+    componentDidMount(): void {
+        this.loadWidgetFromPreferences();
+    }
+
+    componentDidUpdate(_prevProps: IPropsWrapper, prevState: IState): void {
+        if (this.state.sideWidget?.id != null && this.state.sideWidget?.id != prevState.sideWidget?.id) {
+            this.loadWidgetFromPreferences();
+        }
+    }
+
+    private loadWidgetFromPreferences() {
+        const pinnedWidgetPreference = sdApi.preferences.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS);
+
+        if (pinnedWidgetPreference?._id != null) {
+            this.setState({
+                sideWidget: {
+                    id: pinnedWidgetPreference._id,
+                    pinned: true,
+                },
+            });
+        }
     }
 
     public toggleSidebar() {
@@ -323,14 +346,29 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     return tab;
                 });
 
+            const {sideWidget} = this.state;
+
             return (
                 <Nav.SideBarTabs
-                    activeTab={this.state.sideWidget?.id}
-                    onActiveTabChange={(val) => {
+                    disabled={sideWidget?.pinned}
+                    activeTab={sideWidget?.id}
+                    onActiveTabChange={(nextWidgetId) => {
+                        if (nextWidgetId == null && closedIntentionally.value == true) {
+                            closedIntentionally.value = false;
+                        }
+
+                        const isWidgetPinned = (() => {
+                            if (sideWidget?.id != null && sideWidget.id === nextWidgetId) {
+                                return sideWidget.pinned;
+                            }
+
+                            return false;
+                        })();
+
                         this.setState({
-                            sideWidget: {
-                                id: val,
-                                pinned: this.state.sideWidget?.pinned ?? false,
+                            sideWidget: nextWidgetId == null ? null : {
+                                id: nextWidgetId,
+                                pinned: isWidgetPinned,
                             },
                         });
                     }}
@@ -441,48 +479,82 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 sideWidget,
                                 onItemChange,
                             }, readOnly) => {
-                                const OpenWidgetComponent = (() => {
-                                    if (panelState.active === true) {
-                                        return () => (
-                                            <InteractiveArticleActionsPanel
-                                                items={panelState.items}
-                                                tabs={panelState.tabs}
-                                                activeTab={panelState.activeTab}
-                                                handleUnsavedChanges={
-                                                    () => handleUnsavedChanges().then((res) => [res])
-                                                }
-                                                onClose={panelActions.closePanel}
-                                                markupV2
-                                            />
-                                        );
-                                    } else if (sideWidget != null) {
-                                        return getWidgetsFromExtensions(item).find(
-                                            ({_id}) => sideWidget === _id,
-                                        ).component;
-                                    } else {
-                                        return null;
-                                    }
-                                })();
-
-                                if (OpenWidgetComponent == null) {
-                                    return null;
-                                } else {
+                                if (panelState.active === true) {
                                     return (
-                                        <OpenWidgetComponent
-                                            article={item}
-                                            getLatestArticle={getLatestItem}
-                                            contentProfile={contentProfile}
-                                            fieldsData={fieldsData}
-                                            authoringStorage={authoringStorage}
-                                            fieldsAdapter={fieldsAdapter}
-                                            storageAdapter={storageAdapter}
-                                            onFieldsDataChange={handleFieldsDataChange}
-                                            readOnly={readOnly}
-                                            handleUnsavedChanges={() => handleUnsavedChanges()}
-                                            onItemChange={onItemChange}
+                                        <InteractiveArticleActionsPanel
+                                            items={panelState.items}
+                                            tabs={panelState.tabs}
+                                            activeTab={panelState.activeTab}
+                                            handleUnsavedChanges={
+                                                () => handleUnsavedChanges().then((res) => [res])
+                                            }
+                                            onClose={panelActions.closePanel}
+                                            markupV2
                                         />
                                     );
                                 }
+
+                                if (sideWidget == null) {
+                                    return null;
+                                }
+
+                                const WidgetComponent = getWidgetsFromExtensions(item)
+                                    .find((widget) => sideWidget === widget._id)?.component;
+
+                                return (
+                                    <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
+                                        {(widgetRef) => (
+                                            <WidgetComponent
+                                                ref={widgetRef}
+                                                initialState={(() => {
+                                                    const localStorageWidgetState =
+                                                        JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+
+                                                    if (localStorageWidgetState?.id != null) {
+                                                        const initialState = localStorageWidgetState?.initialState;
+
+                                                        sdApi.preferences.update(
+                                                            PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+                                                            {type: 'string', _id: localStorageWidgetState?.id},
+                                                        );
+
+                                                        // Once a user switches the widget, authoring gets
+                                                        // re-rendered 3-4 times, causing this logic to run more
+                                                        // than once. To prevent wrong widget state its
+                                                        // deleted after 5 seconds.
+                                                        setTimeout(() => {
+                                                            localStorage.removeItem('SIDE_WIDGET');
+                                                        }, 5000);
+
+                                                        closedIntentionally.value = false;
+                                                        return initialState;
+                                                    }
+
+                                                    if (
+                                                        localStorageWidgetState == null
+                                                        && closedIntentionally.value === true
+                                                        && widgetState[this.state.sideWidget.id] != null
+                                                    ) {
+                                                        return widgetState[this.state.sideWidget.id];
+                                                    }
+
+                                                    return undefined;
+                                                })()}
+                                                article={item}
+                                                getLatestArticle={getLatestItem}
+                                                contentProfile={contentProfile}
+                                                fieldsData={fieldsData}
+                                                authoringStorage={authoringStorage}
+                                                fieldsAdapter={fieldsAdapter}
+                                                storageAdapter={storageAdapter}
+                                                onFieldsDataChange={handleFieldsDataChange}
+                                                readOnly={readOnly}
+                                                handleUnsavedChanges={() => handleUnsavedChanges()}
+                                                onItemChange={onItemChange}
+                                            />
+                                        )}
+                                    </WidgetStatePersistenceHOC>
+                                );
                             }}
                             getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
                             secondaryToolbarWidgets={secondaryToolbarWidgetsReady}

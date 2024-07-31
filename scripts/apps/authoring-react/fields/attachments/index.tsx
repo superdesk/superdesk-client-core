@@ -23,6 +23,7 @@ export function getWidgetLabel(): string {
 }
 
 export const ATTACHMENTS_FIELD_ID = 'attachments';
+export const ATTACHMENTS_WIDGET_ID = 'attachments';
 
 export function getAttachmentsField(): IAttachmentsField {
     const field: IAttachmentsField = {
@@ -40,7 +41,7 @@ export function getAttachmentsField(): IAttachmentsField {
         contributions: {
             authoringSideWidgets: [
                 {
-                    _id: 'attachments',
+                    _id: ATTACHMENTS_WIDGET_ID,
                     label: getWidgetLabel(),
                     component: AuthoringAttachmentsWidget,
                     order: 5,

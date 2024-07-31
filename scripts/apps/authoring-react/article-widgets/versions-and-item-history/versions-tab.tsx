@@ -6,6 +6,7 @@ import {
     IRestApiResponse,
     IDesk,
     IStage,
+    IArticleSideWidgetComponentType,
 } from 'superdesk-api';
 import {gettext, getArticleLabel} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -32,10 +33,6 @@ const loadingState: IState = {
     selectedForComparison: {from: null, to: null},
 };
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 interface IState {
     versions: Array<IArticle> | 'loading';
     desks: Map<string, IDesk>;
@@ -43,8 +40,8 @@ interface IState {
     selectedForComparison?: {from: IArticle; to: IArticle};
 }
 
-export class VersionsTab extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = loadingState;

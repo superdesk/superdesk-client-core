@@ -8,6 +8,7 @@ import DefaultAiAssistantPanel from './main-panel';
 import SummaryWidget from './summary/summary-widget';
 import {HeadlinesWidget} from './headlines/headlines-widget';
 import TranslationsWidget from './translations/translations-widget';
+import {AI_WIDGET_ID} from './extension';
 
 const {assertNever} = superdesk.helpers;
 
@@ -17,7 +18,7 @@ export type ITranslationLanguage = ITranslation['_id'];
 export interface ICommonProps<T> extends IArticleSideWidgetComponentType {
     state: T;
     setSection: (section: IAiAssistantSection) => void;
-    setTabState: (state: IState['currentTab'], callbackFn?: () => void) => void;
+    setTabState: (state: IStateAiWidget['currentTab'], callbackFn?: () => void) => void;
     children: (components: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) => JSX.Element;
 }
 
@@ -48,7 +49,7 @@ interface IDefaultState {
     activeSection: null;
 }
 
-type IState = {
+export type IStateAiWidget = {
     currentTab: IDefaultState | IStateTranslationsTab | IStateSummaryTab | IStateHeadlinesTab
 };
 
@@ -61,6 +62,7 @@ function renderResult({header, body, footer}: {header?: JSX.Element, body: JSX.E
             header={(
                 <Spacer v gap="0" alignItems="center">
                     <AuthoringWidgetHeading
+                        widgetId={AI_WIDGET_ID}
                         widgetName={gettext('Ai Assistant')}
                         editMode={false}
                     />
@@ -73,9 +75,9 @@ function renderResult({header, body, footer}: {header?: JSX.Element, body: JSX.E
     );
 }
 
-export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetComponentType, IStateAiWidget> {
     private inactiveTabState: {
-        [KEY in NonNullable<IState['currentTab']['activeSection']>]?: IState['currentTab'];
+        [KEY in NonNullable<IStateAiWidget['currentTab']['activeSection']>]?: IStateAiWidget['currentTab'];
     };
 
     constructor(props: IArticleSideWidgetComponentType) {
@@ -84,14 +86,14 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         this.inactiveTabState = {};
         this.getDefaultState = this.getDefaultState.bind(this);
         this.setSection = this.setSection.bind(this);
-        this.state = this.props.initialState != null
-            ? {currentTab: this.props.initialState}
-            : {currentTab: {activeSection: null}};
+
+        this.state = this.props.initialState ?? {currentTab: {activeSection: null}};
     }
 
-    private getDefaultState(section: IAiAssistantSection): IState['currentTab'] {
+    private getDefaultState(section: IAiAssistantSection): IStateAiWidget['currentTab'] {
         switch (section) {
         case null:
+        case undefined:
             return {
                 activeSection: null,
             };
@@ -153,6 +155,7 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
                 <AuthoringWidgetLayout
                     header={(
                         <AuthoringWidgetHeading
+                            widgetId={AI_WIDGET_ID}
                             widgetName={gettext('Ai Assistant')}
                             editMode={false}
                         />
