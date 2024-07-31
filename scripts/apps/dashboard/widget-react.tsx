@@ -68,10 +68,12 @@ export class WidgetReact extends React.PureComponent<IProps> {
 
                         if (prevWidgetState != null) {
                             return prevWidgetState;
+                        } else {
+                            return undefined;
                         }
+                    } else {
+                        return undefined;
                     }
-
-                    return undefined;
                 })()}
 
                 // below props are only relevant for authoring-react
