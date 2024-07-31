@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
-import {appConfig} from 'appConfig';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location'];
 export function ArchiveService(desks, session, api, $q, search, $location) {
@@ -81,8 +81,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      *  @return {Object} the list of archive items
      */
     this.getRelatedItems = function(item, fromDateTime) {
-        var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
-            .format(appConfig.view.dateformat);
+        var beforeDateTime = formatDate(fromDateTime || moment().subtract(1, 'days'));
         var params: any = {};
 
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match

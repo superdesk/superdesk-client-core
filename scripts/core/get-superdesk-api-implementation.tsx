@@ -220,11 +220,39 @@ export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date | string) => (
-    moment(date)
-        .tz(appConfig.default_timezone)
-        .format(appConfig.view.dateformat)
-);
+export const formatDate = (date: Date | string | moment.Moment, timezoneId?: string): string => {
+    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+
+    if (timezoneId != null) {
+        return momentDate
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return momentDate
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.view.dateformat);
+    }
+};
+
+export const longFormatDate = (date: Date | string | moment.Moment, timezoneId?: string): string => {
+    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+
+    if (timezoneId != null) {
+        return momentDate
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return momentDate
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.longDateFormat || 'LLL');
+    }
+};
 
 export function dateToServerString(date: Date) {
     return date.toISOString().slice(0, 19) + '+0000';

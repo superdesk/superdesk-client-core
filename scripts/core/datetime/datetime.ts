@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
 import {IArticle} from 'superdesk-api';
+import {formatDate, longFormatDate} from 'core/get-superdesk-api-implementation';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -106,23 +107,36 @@ export function scheduledFormat(__item: IArticle): {short: string, long: string}
 
     const item = __item.archive_item ?? __item;
 
-    const datetime = item?.schedule_settings?.time_zone == null
-        ? moment(item.publish_schedule).tz(browserTimezone)
-        : moment.tz(
-            item.publish_schedule.replace('+0000', ''),
-            item.schedule_settings.time_zone,
-        ).tz(browserTimezone);
+    const datetime: {moment: moment.Moment, str: string} = (() => {
+        if (item?.schedule_settings?.time_zone == null) {
+            const momentObj = moment(item.publish_schedule).tz(browserTimezone);
+
+            return {
+                moment: momentObj,
+                str: formatDate(momentObj),
+            };
+        } else {
+            const momentObj = moment
+                .tz(item.publish_schedule.replace('+0000', ''), item.schedule_settings.time_zone)
+                .tz(browserTimezone);
+
+            return {
+                moment: momentObj,
+                str: formatDate(momentObj),
+            };
+        }
+    })();
 
     var now = moment();
 
-    const _date = datetime.format(appConfig.view.dateformat || 'MM/DD'),
-        _time = datetime.format(appConfig.view.timeformat || 'hh:mm');
+    const _date = datetime.str,
+        _time = datetime.moment.format(appConfig.view.timeformat);
 
-    let short = isSameDay(datetime, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
+    let short = isSameDay(datetime.moment, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
 
     return {
         short: short,
-        long: longFormat(datetime),
+        long: longFormatDate(datetime.moment),
     };
 }
 

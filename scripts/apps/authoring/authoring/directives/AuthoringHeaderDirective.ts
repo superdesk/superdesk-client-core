@@ -10,6 +10,7 @@ import {translateArticleType, gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {slideUpDown} from 'core/ui/slide-up-down';
 import {runBeforeUpdateMiddlware} from '../services/authoring-helpers';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -194,8 +195,7 @@ export function AuthoringHeaderDirective(
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
                     // get the midnight based on the default timezone not the user timezone.
-                    var fromDateTime = moment().tz(appConfig.default_timezone)
-                        .format(appConfig.view.dateformat);
+                    var fromDateTime = formatDate(moment());
 
                     archiveService.getRelatedItems(scope.item, fromDateTime)
                         .then((items) => {
