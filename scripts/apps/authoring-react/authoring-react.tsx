@@ -28,7 +28,11 @@ import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
-import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {
+    PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+    closedIntentionally,
+    widgetReactIntegration,
+} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
@@ -328,9 +332,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
+            const widgetPinned = !(this.props.sideWidget?.pinned ?? false);
+            const update = {
+                type: 'string',
+                _id: widgetPinned ? this.props.sideWidget.id : null,
+            };
+
+            closedIntentionally.value = true;
+            sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
             this.props.onSideWidgetChange({
                 ...this.props.sideWidget,
-                pinned: !(this.props.sideWidget?.pinned ?? false),
+                pinned: widgetPinned,
             });
         };
 
@@ -343,12 +355,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             if (pinned) {
                 return this.props.sideWidget.id;
-            } else {
-                return null;
             }
+
+            return null;
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
+            closedIntentionally.value = false;
             this.props.onSideWidgetChange(null);
         };
 
@@ -564,7 +577,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             this.setState(initialState);
 
-            if (this.componentRef != null) {
+            if (this.componentRef != null && this.props.autoFocus !== false) {
                 this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
         });

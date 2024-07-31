@@ -24,10 +24,11 @@
     </div>
 
     <div sd-modal data-model="editRole">
-        <div class="modal__header">
-            <button class="modal__close pull-right" ng-click="cancel()"><i class="icon-close-small"></i></button>
+        <div class="modal__header modal__header--flex">
+            
             <h3 class="modal__heading" ng-show="editRole._id" translate>Edit Role</h3>
-            <h3 class="modal__heading" ng-show="!editRole._id" translate>New Role</h3>                        
+            <h3 class="modal__heading" ng-show="!editRole._id" translate>New Role</h3>
+            <button class="icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></button>                        
         </div>
         <div class="modal__body">
             <form name="roleForm">

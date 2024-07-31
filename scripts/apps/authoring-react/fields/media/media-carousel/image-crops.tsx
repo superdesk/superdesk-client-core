@@ -28,7 +28,7 @@ export class ImageCrops extends React.PureComponent<IProps> {
 
         return (
             <Wrapper>
-                <ToggleBox title={gettext('Show/hide crops')} margin="none">
+                <ToggleBox variant="simple" title={gettext('Show/hide crops')} margin="none">
                     <div className="image-crops-container">
                         {
                             cropSizes

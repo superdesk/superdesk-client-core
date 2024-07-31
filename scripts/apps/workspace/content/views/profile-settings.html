@@ -38,10 +38,10 @@
                 >
                     <div class="card-box__header">
                         <div class="dropdown" dropdown data-test-id="content-profile-actions-popover">
-                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }}">
+                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }}" data-test-id="content-profile-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
-                            <ul class="dropdown__menu more-activity-menu pull-right">
+                            <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="content-profile-actions--options">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
                                 <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
@@ -74,8 +74,9 @@
 
 <!-- Create profile modal -->
 <div sd-modal class="modal--large" data-model="creating" data-close="ctrl.toggleCreate()">
-    <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate>Add New Content Profile</h3>
+        <a href="" class="icn-btn" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
         <form name="createForm">
@@ -125,13 +126,13 @@
         </form>
     </div>
     <div class="modal__footer">
-        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid || new.type == null" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
         <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
+        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid || new.type == null" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
     </div>
 </div>
 <!-- END Create profile modal -->
 <!-- Edit profile modal -->
-<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()">
+<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()" data-test-id="'content-profile-editing-modal'">
     <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
@@ -185,8 +186,8 @@
         </form>
     </div>
     <div class="modal__footer" data-test-id="content-profile-edit-view--footer">
-        <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty || ctrl.savingInProgress" ng-click="ctrl.update()" translate>Save</button>
         <button class="btn" ng-click="ctrl.toggleEdit()" translate>Cancel</button>
+        <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty || ctrl.savingInProgress" ng-click="ctrl.update()" translate>Save</button>
     </div>
     <!-- END Edit profile modal -->
 </div>

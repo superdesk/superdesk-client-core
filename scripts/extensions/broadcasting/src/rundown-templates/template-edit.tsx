@@ -100,7 +100,7 @@ type IProps = IPropsEditable | IPropsReadOnly;
 interface IState {
     sideWidget: null | {
         id: string;
-        pinned: boolean;
+        pinned?: boolean;
     };
 }
 

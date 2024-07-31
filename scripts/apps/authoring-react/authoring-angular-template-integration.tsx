@@ -24,6 +24,7 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
 
                         return fieldsData;
                     }}
+                    autoFocus={false}
                 />
             </div>
         );

@@ -42,4 +42,31 @@ export class ContentProfileSettings {
         // wait for saving to finish and modal to close
         await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
     }
+
+    async addFieldsToContentProfile(
+        contentProfile: string,
+        fields: Array<{tabName: string; fieldId: string}>,
+    ): Promise<void> {
+        await this.page.locator(s(`content-profile=${contentProfile}`, 'content-profile-actions')).click();
+        await this.page.locator(s('content-profile-actions--options')).getByRole('button', {name: 'Edit'}).click();
+
+        for (const field of fields) {
+            await this.page
+                .locator(s('content-profile-editing-modal', 'content-profile-tabs'))
+                .getByRole('tab', {name: `${field.tabName} fields`}).click();
+            await this.page
+                .locator(s('content-profile-editing-modal'))
+                .getByRole('button', {name: 'Add new field'}).first().click();
+            await this.page.locator(s('tree-menu-popover')).getByRole('button', {name: field.fieldId}).click();
+
+            await this.page.locator(s('item-view-edit', 'gform-input--sdWidth')).selectOption('full');
+            await this.page.locator(s('item-view-edit')).getByRole('button', {name: 'apply'}).click();
+
+            await expect(
+                this.page.locator(s('content-profile-editing-modal', `content-profile-item=${field.fieldId}`)),
+            ).toBeVisible();
+        }
+
+        await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
+    }
 }

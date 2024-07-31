@@ -19,107 +19,144 @@ describe('superdesk.apps.workspace.content', () => {
             spyOn(preferencesService, 'update').and.returnValue(true);
         }));
 
-        it('can create plain text items', inject((api, content, $rootScope) => {
-            content.createItem('text').then(done);
+        it('can create plain text items', (done) => inject((api, content, $rootScope) => {
+            content.createItem('text').then((result) => {
+                expect(result).toEqual(ITEM);
+                expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
+
+                done();
+            });
+
             $rootScope.$digest();
-            expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
-            expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, packages: IPackagesService, desks, session, $rootScope) => {
+        it('can create packages', (done) => inject((api, packages: IPackagesService, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
                 .and
                 .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-            packages.createEmptyPackage().then(done);
+            packages.createEmptyPackage().then((result) => {
+                expect(result).toEqual(ITEM);
+
+                expect(api.save).toHaveBeenCalledWith(
+                    'archive',
+                    {
+                        headline: '',
+                        slugline: '',
+                        description_text: '',
+                        type: 'composite',
+                        groups: [
+                            {
+                                role: 'grpRole:NEP',
+                                refs: [{idRef: 'main', label: 'main'}],
+                                id: 'root',
+                            },
+                            {
+                                refs: [],
+                                id: 'main',
+                                role: 'grpRole:main',
+                            },
+                        ],
+                        version: 0,
+                        task: {desk: '1', stage: '2', user: '1'},
+                    },
+                );
+
+                done();
+            });
+
             $rootScope.$digest();
-            expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
-                description_text: '', type: 'composite',
-                groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
-                    {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
-                task: {desk: '1', stage: '2', user: '1'}});
-            expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages from items', inject((api, content, session, desks, $rootScope) => {
+        it('can create packages from items', (done) => inject((api, content, session, desks, $rootScope) => {
             session.identity = {_id: '1'};
 
             spyOn(desks, 'getCurrentDesk')
                 .and
                 .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-            content.createPackageFromItems({data: 123}).then(done);
+            content.createPackageFromItems({data: 123}).then(() => {
+                expect(api.save).toHaveBeenCalledWith('archive', {
+                    headline: '', slugline: '',
+                    description_text: '',
+                    state: 'draft',
+                    type: 'composite',
+                    version: 0,
+                    task: {desk: '1', stage: '2', user: '1'},
+                    groups: [
+                        {role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
+                        {refs: [{headline: '', residRef: undefined, location: 'archive',
+                            slugline: '', renditions: {}, itemClass: '', type: ''}],
+                        id: 'main', role: 'grpRole:main'}]});
+
+                done();
+            });
+
             $rootScope.$digest();
-            expect(api.save).toHaveBeenCalledWith('archive', {
-                headline: '', slugline: '',
-                description_text: '',
-                state: 'draft',
-                type: 'composite',
-                version: 0,
-                task: {desk: '1', stage: '2', user: '1'},
-                groups: [
-                    {role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
-                    {refs: [{headline: '', residRef: undefined, location: 'archive',
-                        slugline: '', renditions: {}, itemClass: '', type: ''}],
-                    id: 'main', role: 'grpRole:main'}]});
         }));
 
-        it('can fetch content types', inject((api, content, $rootScope, $q) => {
+        it('can fetch content types', (done) => inject((api, content, $rootScope, $q) => {
             var types = [{_id: 'foo'}];
 
             spyOn(api, 'getAll').and.returnValue($q.when(types));
-            var success = jasmine.createSpy('ok');
 
-            content.getTypes().then(success);
+            content.getTypes().then((result) => {
+                expect(result).toEqual(types);
+
+                expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
+
+                done();
+            });
+
             $rootScope.$digest();
-            expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
-            expect(success).toHaveBeenCalledWith(types);
         }));
 
-        it('can fetch content types and filter by desk', inject((content, $rootScope, $q) => {
+        it('can fetch content types and filter by desk', (done) => inject((content, $rootScope, $q) => {
             spyOn(content, 'getTypes').and.returnValue($q.when([
                 {_id: 'foo'},
                 {_id: 'bar'},
                 {_id: 'baz'},
             ]));
 
-            var profiles;
+            content.getDeskProfiles({content_profiles: {bar: 1}}, 'baz').then((profiles) => {
+                expect(profiles.length).toBe(2);
+                expect(profiles[0]._id).toBe('bar');
+                expect(profiles[1]._id).toBe('baz');
 
-            content.getDeskProfiles({content_profiles: {bar: 1}}, 'baz').then((_profiles) => {
-                profiles = _profiles;
+                done();
             });
 
             $rootScope.$digest();
-            expect(profiles.length).toBe(2);
-            expect(profiles[0]._id).toBe('bar');
-            expect(profiles[1]._id).toBe('baz');
         }));
 
-        it('can generate content types lookup dict', inject((content, $q, $rootScope) => {
+        it('can generate content types lookup dict', (done) => inject((content, $q, $rootScope) => {
             spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
-            var lookup;
 
-            content.getTypesLookup().then((_lookup) => {
-                lookup = _lookup;
+            content.getTypesLookup().then((lookup) => {
+                expect(lookup.foo.name).toBe('Foo');
+
+                done();
             });
 
             $rootScope.$digest();
-            expect(lookup.foo.name).toBe('Foo');
         }));
 
-        it('can get content type', inject((api, content, $rootScope, $q) => {
+        it('can get content type', (done) => inject((api, content, $rootScope, $q) => {
             var type = {_id: 'foo'};
 
             spyOn(api, 'getAll').and.returnValue($q.when([]));
             spyOn(api, 'find').and.returnValue($q.when(type));
-            var success = jasmine.createSpy('ok');
 
-            content.getType('foo').then(success);
+            content.getType('foo').then((res) => {
+                expect(res).toEqual(type);
+
+                expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
+
+                done();
+            });
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
-            expect(success).toHaveBeenCalledWith(type);
         }));
 
         it('can filter custom fields per profile', inject((content) => {

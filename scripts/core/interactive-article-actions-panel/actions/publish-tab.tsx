@@ -171,7 +171,7 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                             <div style={childrenStyle}>
                                 {
                                     publishFromEnabled && (
-                                        <ToggleBox title={gettext('From')} initiallyOpen>
+                                        <ToggleBox variant="simple" title={gettext('From')} initiallyOpen>
                                             <DestinationSelect
                                                 value={this.state.selectedDestination}
                                                 onChange={(value) => {

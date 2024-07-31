@@ -38,20 +38,18 @@ describe('workspace', () => {
         expect(ctrl.widgets[0].name).toBe('foo');
     }));
 
-    it('can fetch workspaces for current user', inject((workspaces, api, session, $q, $rootScope) => {
+    it('can fetch workspaces for current user', (done) => inject((workspaces, api, session, $rootScope) => {
         spyOn(api, 'query').and.returnValue({_items: []});
         session.testUser('foo');
 
-        var items;
+        workspaces.queryUserWorkspaces().then((items) => {
+            expect(items).toEqual([]);
+            expect(api.query).toHaveBeenCalledWith('workspaces', {where: {user: 'foo'}});
 
-        workspaces.queryUserWorkspaces().then((_items) => {
-            items = _items;
+            done();
         });
 
         $rootScope.$digest();
-
-        expect(items).toEqual([]);
-        expect(api.query).toHaveBeenCalledWith('workspaces', {where: {user: 'foo'}});
     }));
 
     describe('active workspace', () => {
