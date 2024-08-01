@@ -1,16 +1,19 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
+import {Authoring} from './page-object-models/authoring';
+import {Multiedit} from './page-object-models/multiedit';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('Multiedit', async () => {
-    test('Can edit articles in multiedit', async ({page}) => {
+    test('editing articles in multiedit', async ({page}) => {
         const monitoring = new Monitoring(page);
+        const multiedit = new Multiedit(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await monitoring.executeMultiAction(['test sports story', 'story 2'], 'Multi-edit');
+        await monitoring.executeMultiAction('Multi-edit', ['test sports story', 'story 2']);
 
         await page
             .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
@@ -21,10 +24,7 @@ test.describe('Multiedit', async () => {
             .getByRole('textbox')
             .fill('test sports story 1.1');
         await page.locator(s('multiedit-screen', 'multiedit-article=test sports story')).hover();
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=test sports story'))
-            .getByRole('button', {name: 'save'})
-            .click();
+        await multiedit.save('test sports story');
 
         await page
             .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
@@ -35,10 +35,7 @@ test.describe('Multiedit', async () => {
             .getByRole('textbox')
             .fill('story 2.1');
         await page.locator(s('multiedit-screen', 'multiedit-article=story 2')).hover();
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=story 2'))
-            .getByRole('button', {name: 'save'})
-            .click();
+        await multiedit.save('story 2');
 
         await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'exit'}).click();
 
@@ -59,8 +56,9 @@ test.describe('Multiedit', async () => {
         ).toHaveText('story 2.1');
     });
 
-    test('Can remove article in multiedit', async ({page}) => {
+    test('removing an article in multiedit', async ({page}) => {
         const monitoring = new Monitoring(page);
+        const authoring = new Authoring(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
@@ -71,7 +69,7 @@ test.describe('Multiedit', async () => {
             page.locator(s('article-item=test sports story')),
             'Edit',
         );
-        await monitoring.executeActionInEditor(
+        await authoring.executeActionInEditor(
             'Multiedit',
             'OK',
         );
