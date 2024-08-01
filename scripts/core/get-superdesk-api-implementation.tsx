@@ -237,6 +237,21 @@ export const formatDate = (date: Date | string | moment.Moment, timezoneId?: str
     }
 };
 
+export const formatDateTime = (date: Date, timezoneId?: string) => {
+    if (timezoneId != null) {
+        return moment(date)
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return moment(date)
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    }
+};
+
 export const longFormatDate = (date: Date | string | moment.Moment, timezoneId?: string): string => {
     const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
 
@@ -517,20 +532,7 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date, timezoneId?: string) => {
-                if (timezoneId != null) {
-                    return moment(date)
-                        .tz(timezoneId)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                } else {
-                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
-                    const keepLocalTime = timezone === 'browser';
-
-                    return moment(date)
-                        .tz(appConfig.default_timezone, keepLocalTime)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                }
-            },
+            formatDateTime: formatDateTime,
             longFormatDateTime: (date: Date | string, timezoneId?: string) => {
                 if (timezoneId != null) {
                     return moment(date)

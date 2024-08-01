@@ -25,6 +25,7 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -420,8 +421,6 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
             newItem.sms_message = '';
 
             const {override_ednote_for_corrections, override_ednote_template} = appConfig;
-
-            const {formatDateTime} = superdesk.localization;
 
             const date = formatDateTime(newItem.versioncreated);
 
