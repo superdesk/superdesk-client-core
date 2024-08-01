@@ -25,7 +25,6 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
-import {superdesk} from './../../../scripts/extensions/datetimeField/src/superdesk';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
