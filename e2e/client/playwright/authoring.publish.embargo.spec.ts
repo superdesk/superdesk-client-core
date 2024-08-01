@@ -1,5 +1,4 @@
 import {test, expect} from '@playwright/test';
-import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {getStorageState} from './utils/storage-state';
 
@@ -10,11 +9,7 @@ test.use({
 test('disabling publish embargo by adjusting instance configuration', async ({page}) => {
     await restoreDatabaseSnapshot();
 
-    const monitoring = new Monitoring(page);
-
     await page.goto('/#/workspace/monitoring');
-
-    await monitoring.selectDeskOrWorkspace('Sports');
 
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),

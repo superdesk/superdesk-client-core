@@ -8,8 +8,6 @@ test('spiking and unspiking an article', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    await monitoring.selectDeskOrWorkspace('Sports');
-
     // spike article
     await monitoring.executeActionOnMonitoringItem(
         page.locator(s('article-item=story 2')),

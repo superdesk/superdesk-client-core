@@ -9,7 +9,6 @@ test('duplicate in place action', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    await monitoring.selectDeskOrWorkspace('Sports');
     await expect(page.locator(articleSelector)).toHaveCount(1);
 
     const initialItemsCountAcrossAllStages = await page.locator(s('article-item')).count();
@@ -37,9 +36,7 @@ test('duplicate to personal space action', async ({page}) => {
     const itemCountInPersonalSpace = await page.locator(s('article-item')).count();
 
     await page.goto('/#/workspace/monitoring');
-    await monitoring.selectDeskOrWorkspace('Sports');
 
-    await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.executeActionOnMonitoringItem(
         page.locator(articleSelector),
         'Duplicate',

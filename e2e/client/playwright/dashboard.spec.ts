@@ -8,8 +8,6 @@ test('adding a widget to a dashboard', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace');
 
-    await monitoring.selectDeskOrWorkspace('Sports');
-
     await expect(
         page.locator(s('widget-grid', 'widget=world-clock')),
     ).not.toBeVisible();

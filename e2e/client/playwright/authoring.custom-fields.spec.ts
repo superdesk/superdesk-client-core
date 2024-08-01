@@ -7,7 +7,6 @@ async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
-    await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.createArticleFromTemplate('story');
     await expect(page.locator(s('authoring', `authoring-field=${field}`))).toBeVisible();
 }
