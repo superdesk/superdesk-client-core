@@ -1,13 +1,13 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {Authoring} from './page-object-models/authoring';
-import {Multiedit} from './page-object-models/multiedit';
+import {MultiEdit} from './page-object-models/multiedit';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('Multiedit', async () => {
     test('editing articles in multi-edit mode', async ({page}) => {
         const monitoring = new Monitoring(page);
-        const multiedit = new Multiedit(page);
+        const multiedit = new MultiEdit(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
@@ -23,7 +23,7 @@ test.describe('Multiedit', async () => {
             .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
             .getByRole('textbox')
             .fill('test sports story 1.1');
-        await page.locator(s('multiedit-screen', 'multiedit-article=test sports story')).hover();
+
         await multiedit.save('test sports story');
 
         await page
@@ -34,7 +34,7 @@ test.describe('Multiedit', async () => {
             .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
             .getByRole('textbox')
             .fill('story 2.1');
-        await page.locator(s('multiedit-screen', 'multiedit-article=story 2')).hover();
+
         await multiedit.save('story 2');
 
         await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'exit'}).click();
