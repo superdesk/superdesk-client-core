@@ -64,16 +64,10 @@ export class WidgetReact extends React.PureComponent<IProps> {
 
                         return initialState;
                     } else if (closedIntentionally.value === true) {
-                        const prevWidgetState = widgetState[this.props.widget.active._id];
-
-                        if (prevWidgetState != null) {
-                            return prevWidgetState;
-                        } else {
-                            return undefined;
-                        }
-                    } else {
-                        return undefined;
+                        return widgetState[this.props.widget.active._id];
                     }
+
+                    return undefined;
                 })()}
 
                 // below props are only relevant for authoring-react
