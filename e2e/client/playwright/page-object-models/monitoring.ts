@@ -38,7 +38,7 @@ export class Monitoring {
             .click();
     }
 
-    async executeMultiAction(action: string, articleNames: Array<string>): Promise<void> {
+    async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
         for (const selectedArticle of articleNames) {
             await this.page.locator(s(`article-item=${selectedArticle}`, 'item-type-and-multi-select')).hover();
             await this.page.locator(s(`article-item=${selectedArticle}`, 'multi-select-checkbox')).check();

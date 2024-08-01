@@ -5,7 +5,7 @@ import {Multiedit} from './page-object-models/multiedit';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('Multiedit', async () => {
-    test('editing articles in multiedit', async ({page}) => {
+    test('editing articles in multi-edit mode', async ({page}) => {
         const monitoring = new Monitoring(page);
         const multiedit = new Multiedit(page);
 
@@ -13,7 +13,7 @@ test.describe('Multiedit', async () => {
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await monitoring.executeMultiAction('Multi-edit', ['test sports story', 'story 2']);
+        await monitoring.executeBulkAction('Multi-edit', ['test sports story', 'story 2']);
 
         await page
             .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
@@ -56,7 +56,7 @@ test.describe('Multiedit', async () => {
         ).toHaveText('story 2.1');
     });
 
-    test('removing an article in multiedit', async ({page}) => {
+    test('removing an article from multi-edit view', async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 
