@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
 import {IArticle} from 'superdesk-api';
-import {formatDate, longFormatDate} from 'core/get-superdesk-api-implementation';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -136,7 +136,7 @@ export function scheduledFormat(__item: IArticle): {short: string, long: string}
 
     return {
         short: short,
-        long: longFormatDate(datetime.moment),
+        long: formatDate(datetime.moment, {longFormat: true}),
     };
 }
 

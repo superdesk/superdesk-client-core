@@ -20,6 +20,10 @@ if (appConfig.view.timeformat == null) {
     appConfig.view.timeformat = 'hh:mm'; // 24h format
 }
 
+if (appConfig.longDateFormat == null) {
+    appConfig.longDateFormat = 'LLL';
+}
+
 if (appConfig.ui == null) {
     appConfig.ui = {};
 
