@@ -11,6 +11,7 @@ test.describe('Multiedit', async () => {
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeBulkAction('Multi-edit', ['test sports story', 'story 2']);
 
@@ -61,6 +62,8 @@ test.describe('Multiedit', async () => {
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
+
+        await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story')),

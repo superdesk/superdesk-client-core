@@ -72,5 +72,6 @@ test('sending an item from personal space', async ({page}) => {
 
     // go to monitoring and check visibility of article
     await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
     await expect(page.locator(s('monitoring-view', 'monitoring-group=Sports / Working Stage'))).toBeVisible();
 });

@@ -5,7 +5,11 @@ import {restoreDatabaseSnapshot, s} from './utils';
 test('applying "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
 
+    const monitoring = new Monitoring(page);
+
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
@@ -41,6 +45,8 @@ test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
+    await monitoring.selectDeskOrWorkspace('Sports');
+
     // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
 
@@ -65,6 +71,8 @@ test('save button from unsaved changes modal', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
+    await monitoring.selectDeskOrWorkspace('Sports');
+
     // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
 
@@ -76,8 +84,12 @@ test('save button from unsaved changes modal', async ({page}) => {
 });
 
 test('setting embargo', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await expect(page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),

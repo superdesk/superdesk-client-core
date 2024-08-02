@@ -8,6 +8,7 @@ test.describe('article versions', async () => {
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=story 2')),

@@ -16,6 +16,7 @@ test.describe('highlights', async () => {
 
         await page.goto('/#/workspace');
 
+        await monitoring.selectDeskOrWorkspace('Sports');
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
 
@@ -37,6 +38,7 @@ test.describe('highlights', async () => {
 
         await page.goto('/#/workspace');
 
+        await monitoring.selectDeskOrWorkspace('Sports');
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
 
@@ -53,6 +55,7 @@ test.describe('highlights', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
+        await monitoring.selectDeskOrWorkspace('Sports');
         await expect(page.locator(s('article-item=test sports story', 'highlights-indicator'))).not.toBeVisible();
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story')),
@@ -76,6 +79,7 @@ test.describe('highlights', async () => {
         await page.goto('/#/workspace/monitoring');
 
         // create fresh article
+        await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1'});
         await page.locator(s('authoring-topbar', 'save')).click();
 
@@ -111,6 +115,7 @@ test.describe('highlights', async () => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
+        await monitoring.selectDeskOrWorkspace('Sports');
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=Package Highlight 1')),
         ).toBeVisible();
@@ -143,6 +148,7 @@ test.describe('highlights', async () => {
         await page.goto('/#/workspace/monitoring');
 
         // create fresh article
+        await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1', body_html: 'body html article'});
         await page.locator(s('authoring-topbar', 'save')).click();
 

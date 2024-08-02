@@ -9,6 +9,7 @@ test.describe('sending an article', async () => {
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
@@ -43,6 +44,7 @@ test.describe('sending an article', async () => {
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),

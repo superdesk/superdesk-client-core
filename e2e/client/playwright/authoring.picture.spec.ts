@@ -22,6 +22,7 @@ test('media metadata editor', async ({page}) => {
 
     await page.goto('/#/workspace/monitoring');
 
+    await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.openMediaUploadView();
 
     await upload.selectFile('iptc-photo.jpg');

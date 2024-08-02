@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.setTimeout(50000);
@@ -17,7 +18,11 @@ test('correcting with unsaved changes', async ({page}) => {
 
     await restoreDatabaseSnapshot();
 
+    const monitoring = new Monitoring(page);
+
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     // publishing the article start
 

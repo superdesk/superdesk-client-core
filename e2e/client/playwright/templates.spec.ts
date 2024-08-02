@@ -68,6 +68,8 @@ test('assigning template to a desk', async ({page}) => {
 });
 
 test('default content template', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/desks');
 
@@ -77,6 +79,7 @@ test('default content template', async ({page}) => {
     await page.locator(s('desk-config-modal')).getByRole('button', {name: 'done'}).click();
 
     await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
     await page.locator(s('content-create')).click();
     await expect(page.locator(s('content-create-dropdown', 'default-desk-template'))).toHaveText('story 2');
 });
@@ -86,6 +89,8 @@ test('new article prefilling with content set in template', async ({page}) => {
 
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await monitoring.createArticleFromTemplate('story 2');
     await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('article 1');
@@ -97,6 +102,7 @@ test('performing "save as" action on a template', async ({page}) => {
 
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
 
     await monitoring.createArticleFromTemplate('story 2', {slugline: 'article 1'});
 
