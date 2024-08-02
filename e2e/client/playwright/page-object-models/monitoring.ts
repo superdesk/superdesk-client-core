@@ -15,6 +15,7 @@ export class Monitoring {
         const selectedDeskText = await deskSelectDropdown.textContent();
 
         if (selectedDeskText.toLocaleLowerCase().includes(deskName.toLocaleLowerCase()) !== true) {
+            console.log('selectDeskOrWorkspace.selectedDeskText', selectedDeskText);
             await deskSelectDropdown.click();
             await this.page.locator(`${s('monitoring--select-desk-options')} button`, {hasText: deskName}).click();
         }
