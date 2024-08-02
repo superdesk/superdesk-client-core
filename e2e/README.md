@@ -85,4 +85,12 @@ await page.locator(s('authoring', 'comments-widget', 'submit')).click();
 
 ### Known issues
 
-* Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
+#### Viewport
+
+Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
+
+#### Current desk
+
+There is an issue with Superdesk that does not reproduce locally where upon openiing monitoring view, a workspace is selected instead of a default "Sports" desk. If that happens, use the following helper in your test to ensure a correct desk is selected.
+
+`await monitoring.selectDeskOrWorkspace('Sports');`
