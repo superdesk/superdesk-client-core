@@ -1,6 +1,25 @@
 import {test, expect} from '@playwright/test';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s, withTestContext} from './utils';
 import {Monitoring} from './page-object-models/monitoring';
+
+test('adding a desk', async ({page}) => {
+    await restoreDatabaseSnapshot();
+
+    await page.goto('/#/settings/desks');
+
+    await page.locator(s('add-new-desk')).click();
+
+    await withTestContext('desk-config-modal', async ({cs}) => {
+        await page.locator(cs('field--name')).fill('desk 7');
+        await page.locator(cs('field--source')).fill('from desk 7');
+        await page.locator(cs('field--default-content-template')).selectOption('story 2');
+        await page.locator(cs('field--default-content-profile')).selectOption('Story');
+        await page.locator(cs('field--desk-type')).selectOption('production');
+        await page.locator(cs('done')).click();
+    });
+
+    await expect(page.locator(s('desk--desk 7'))).toBeVisible();
+});
 
 /**
  * when a desk is mentioned in article comments,

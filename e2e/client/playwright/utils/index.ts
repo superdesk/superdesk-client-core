@@ -50,3 +50,36 @@ export function sleep(ms: number): Promise<void> {
         setTimeout(resolve, ms);
     });
 }
+
+/**
+ * A helper to make code shorter, but maintain selector scoping.
+ *
+ * Without this helper:
+ *
+ * ```
+ * await page.locator(s('desk-config-modal', 'field--name')).fill('desk 7');
+ * await page.locator(s('desk-config-modal', 'field--source')).fill('desk 7');
+ * await page.locator(s('desk-config-modal')).getByRole('button', {name: 'test'}).click();
+ * ```
+ *
+ * With this helper:
+ * ```
+ * await withTestContext('desk-config-modal', async ({cs}) => {
+ *      await page.locator(cs('field--name')).fill('desk 7');
+ *      await page.locator(cs('field--source')).fill('from desk 7');
+ *      await page.locator(cs()).getByRole('button', {name: 'test'}).click();
+ * });
+ */
+export function withTestContext(
+    selector: string,
+    callback: (
+        options: {
+            // cs - contextualized selector
+            cs: (...testIds: Array<string>) => string;
+        }
+    ) => Promise<void>,
+): Promise<void> {
+    const getTestSelectorWithContext = (...testIds: Array<string>) => getTestSelector(selector, ...testIds);
+
+    return callback({cs: getTestSelectorWithContext});
+}
