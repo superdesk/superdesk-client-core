@@ -29,7 +29,7 @@ Most tests run against `main` database snapshot (`e2e/server/dump/full/main`). T
 5. install python dependencies - `pip install -Ur requirements.txt`
 
 6. restore main dump `python manage.py storage:restore main`
-7. remove the dump you just restored `rm -r server/dump/full/main`
+7. remove the dump you just restored `rm -r dump/full/main`
 8. open superdesk in the browser and do the changes you need(best not to remove/rename things because it might break other tests)
 9. regenerate `main` dump from your existing database state `python manage.py storage:dump --name main`
 10. in case you make a mistake, undo the removal of the main dump and continue from step 6.
