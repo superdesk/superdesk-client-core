@@ -48,8 +48,7 @@ const extension: IExtension = {
                     },
                     notifications: {
                         'item:marked': {
-                            label: gettext('open item'),
-                            settingsLabel: gettext('Send Mark for User notifications'),
+                            name: gettext('Mark for User'),
                             handler: (notification: any) => ({
                                 body: notification.message,
                                 actions: [{

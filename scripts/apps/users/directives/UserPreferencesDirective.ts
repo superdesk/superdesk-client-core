@@ -66,7 +66,7 @@ export function UserPreferencesDirective(
                             preferencesService.getSync('notifications')[key] ?? {
                                 email: true,
                                 default: true,
-                                label: value.settingsLabel,
+                                label: gettext('Send {{ name }} notifications', {name: value.name}),
                             };
                     }
                 }
