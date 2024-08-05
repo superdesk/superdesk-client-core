@@ -2,6 +2,7 @@ import React from 'react';
 import {
     IArticle,
     IArticleSideWidget,
+    IArticleSideWidgetComponentType,
     IContentProfileV2,
     IEditor3ValueOperational,
     IExtensionActivationResult,
@@ -32,10 +33,6 @@ import {notify} from 'core/notify/notify';
 
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
 
 const getLabel = () => gettext('Macros widget');
 
@@ -238,11 +235,13 @@ function getMacroProcessor(
     }
 }
 
-class MacrosWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+const MACROS_WIDGET_ID = 'macros-widget';
+
+class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             macros: null,
             displayGrouped: false,
             currentMacro: null,
@@ -250,13 +249,17 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount(): void {
+        if (this.props.initialState != null) {
+            return;
+        }
+
         getAllMacros().then((macros) => {
             const frontendMacros = macros._items.filter((x) => x.access_type === 'frontend');
             const groupedMacros = groupBy(frontendMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
 
             this.setState({
                 macros: frontendMacros,
-                displayGrouped: Object.keys(groupedMacros).length > 0 ? true : null,
+                displayGrouped: Object.keys(groupedMacros).length > 0,
             });
         });
     }
@@ -329,6 +332,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={MACROS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -387,7 +391,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
 export function getMacrosWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'macros-widget',
+        _id: MACROS_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'macro',

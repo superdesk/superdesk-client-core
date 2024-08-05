@@ -145,6 +145,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     initPreferences(preferences);
                     return preferences;
                 }
+
+                return preferencesPromise;
             }
 
             /**

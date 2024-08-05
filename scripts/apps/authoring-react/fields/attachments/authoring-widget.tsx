@@ -1,5 +1,10 @@
 import React from 'react';
-import {IAttachment, IAttachmentsValueOperational, IArticleSideWidget, IRestApiResponse} from 'superdesk-api';
+import {
+    IAttachment,
+    IAttachmentsValueOperational,
+    IRestApiResponse,
+    IArticleSideWidgetComponentType,
+} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from 'apps/authoring/attachments/AttachmentsWidgetComponent';
 import {isUploadValid} from 'apps/authoring/attachments/AttachmentsWidget';
@@ -7,9 +12,7 @@ import {WithLiveResources} from 'core/with-resources';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
-import {getWidgetLabel} from '.';
-
-type IProps = React.ComponentProps<IArticleSideWidget['component']>;
+import {ATTACHMENTS_WIDGET_ID, getWidgetLabel} from '.';
 
 /**
  * ID is hardcoded.
@@ -19,8 +22,8 @@ type IProps = React.ComponentProps<IArticleSideWidget['component']>;
  */
 const fieldId = 'attachments';
 
-export class AuthoringAttachmentsWidget extends React.PureComponent<IProps> {
-    constructor(props: IProps) {
+export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.getAttachments = this.getAttachments.bind(this);
@@ -69,6 +72,7 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IProps> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={ATTACHMENTS_WIDGET_ID}
                         widgetName={getWidgetLabel()}
                         editMode={false}
                     />

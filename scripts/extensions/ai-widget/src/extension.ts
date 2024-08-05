@@ -1,7 +1,9 @@
 import {IArticle, IExtension, IExtensionActivationResult} from 'superdesk-api';
-import {AiAssistantWidget, IStateTranslationsTab} from './ai-assistant';
+import {AiAssistantWidget, IStateAiWidget} from './ai-assistant';
 import {superdesk} from './superdesk';
 import {configuration} from './configuration';
+
+export const AI_WIDGET_ID = 'ai-widget';
 
 const extension: IExtension = {
     activate: () => {
@@ -13,17 +15,19 @@ const extension: IExtension = {
         }
 
         const onTranslateAfterIntegration = (_original: IArticle, translation: IArticle) => {
-            const initialState: IStateTranslationsTab = {
-                activeLanguageId: translation.language,
-                activeSection: 'translations',
-                error: false,
-                loading: true,
-                mode: 'other',
-                translation: '',
+            const initialState: IStateAiWidget = {
+                currentTab: {
+                    activeLanguageId: translation.language,
+                    activeSection: 'translations',
+                    error: false,
+                    loading: true,
+                    mode: 'other',
+                    translation: '',
+                },
             };
 
             superdesk.ui.article.edit(translation._id, {
-                id: 'ai-widget',
+                id: AI_WIDGET_ID,
                 pinned: true,
                 initialState: initialState,
             });
@@ -34,7 +38,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 authoringSideWidgets: [{
-                    _id: 'ai-widget',
+                    _id: AI_WIDGET_ID,
                     component: AiAssistantWidget,
                     icon: 'open-ai',
                     label: superdesk.localization.gettext('Ai Assistant'),

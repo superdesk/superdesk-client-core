@@ -190,13 +190,13 @@ describe('vocabularies', () => {
 
                 wrapper.update();
 
-                wrapper.find(s(['vocabulary-items-view-edit', 'field--name']))
+                wrapper.find(s('vocabulary-items-view-edit', 'vocabulary-item-field=name'))
                     .simulate('change', {target: {value: 'abc'}});
 
                 setTimeout(() => {
                     expect(onSetItemValidSpy).toHaveBeenCalledWith(false);
 
-                    wrapper.find(s(['vocabulary-items-view-edit', 'field--qcode']))
+                    wrapper.find(s('vocabulary-items-view-edit', 'vocabulary-item-field=qcode'))
                         .simulate('change', {target: {value: 'abc'}});
 
                     setTimeout(() => {
@@ -229,7 +229,7 @@ describe('vocabularies', () => {
 
                 expect(instance.getItemsForSaving().length).toBe(1);
 
-                wrapper.find(s(['vocabulary-items-view-edit', 'remove']))
+                wrapper.find(s('vocabulary-items-view-edit', 'remove'))
                     .simulate('click');
 
                 expect(instance.getItemsForSaving().length).toBe(0);

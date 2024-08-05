@@ -216,7 +216,7 @@ declare module 'superdesk-api' {
 
         sideWidget: null | {
             id: string;
-            pinned: boolean;
+            pinned?: boolean;
         };
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
@@ -580,6 +580,7 @@ declare module 'superdesk-api' {
     export interface IGenericSidebarComponentProps<T> {
         entityId: string;
         readOnly: boolean;
+        initialState?: any;
         contentProfile: IContentProfileV2;
         fieldsData: OrderedMap<string, unknown>;
         authoringStorage: IAuthoringStorage<T>;
@@ -635,7 +636,7 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentType<IArticleSideWidgetComponentType>;
+        component: React.ComponentClass<IArticleSideWidgetComponentType>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
@@ -704,6 +705,19 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
+    interface IEmailNotification {
+        type: 'email';
+    }
+
+    export interface IDesktopNotification {
+        type: 'desktop';
+        label: string;
+        handler: (notification: any) => {
+            body: string;
+            actions: Array<{label: string; onClick: () => void;}>;
+        };
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -742,10 +756,7 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: (notification) => {
-                    body: string;
-                    actions: Array<{label: string; onClick(): void;}>;
-                };
+                [id: string]: IEmailNotification | IDesktopNotification;
             };
             entities?: {
                 article?: {
@@ -2084,6 +2095,7 @@ declare module 'superdesk-api' {
     export interface IPropsWidgetHeading {
         widgetName: string;
         editMode: boolean;
+        widgetId: string;
 
         // will only work for authoring-react
         customContent?: JSX.Element;
@@ -3040,8 +3052,8 @@ declare module 'superdesk-api' {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             formatDate(date: Date | string): string;
-            formatDateTime(date: Date): string;
-            longFormatDateTime(date: Date | string): string;
+            formatDateTime(date: Date, timezoneId?: string): string;
+            longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
@@ -3313,6 +3325,9 @@ declare module 'superdesk-api' {
         view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: string;
+
+            // determines whether browser or server timezone is used for outputting date and time in user interface
+            timezone?: 'browser' | 'server'; // defaults to browser
         };
         user: {
             sign_off_mapping?: string;

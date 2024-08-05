@@ -1,8 +1,8 @@
-import {Page} from '@playwright/test';
+import {Locator, Page} from '@playwright/test';
 import {s} from '../utils';
 
 export class Authoring {
-    private page: Page;
+    protected page: Page;
 
     constructor(page: Page) {
         this.page = page;
@@ -20,5 +20,16 @@ export class Authoring {
         await this.page.locator(s('actions-list'))
             .getByRole('button', {name: actionPath[actionPath.length - 1]})
             .click();
+    }
+
+    field(field: string): Locator {
+        return this.page.locator(s('authoring', field)).getByRole('textbox');
+    }
+}
+
+export class PictureAuthoring extends Authoring {
+    async openMetadataEditor(): Promise<void> {
+        await this.page.locator(s('authoring-field=media', 'image-overlay')).hover();
+        await this.page.locator(s('authoring-field=media', 'edit-metadata')).click();
     }
 }

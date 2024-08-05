@@ -1,11 +1,9 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
-
-const THEME_LIGHT = 'light-ui';
 
 /**
  * @ngdoc directive
@@ -56,7 +54,58 @@ export function UserPreferencesDirective(
              */
 
             scope.preferencesLoaded = false;
-            var orig; // original preferences, before any changes
+            var orig: {[key: string]: any}; // original preferences, before any changes
+
+            scope.emailNotificationsFromExtensions = {};
+
+            scope.buildNotificationsFromExtensions = function() {
+                for (const extension of Object.values(extensions)) {
+                    for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                        if (value.type === 'email') {
+                            preferencesService.registerUserPreference(key, 1);
+                            scope.emailNotificationsFromExtensions[key] = preferencesService.getSync(key);
+                        }
+                    }
+                }
+            };
+
+            scope.buildNotificationsFromExtensions();
+
+            scope.toggleEmailGroupNotifications = function() {
+                const isGroupEnabled = scope.preferences['email:notification'].enabled;
+
+                Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
+                    scope.preferences[notificationId].enabled = isGroupEnabled;
+                    scope.emailNotificationsFromExtensions[notificationId] = {
+                        ...scope.emailNotificationsFromExtensions[notificationId],
+                        enabled: isGroupEnabled,
+                    };
+                });
+
+                scope.userPrefs.$setDirty();
+                scope.$applyAsync();
+            };
+
+            scope.toggleEmailNotification = function(notificationId: string) {
+                const enabledUpdate = !(scope.preferences[notificationId]?.enabled ?? false);
+
+                scope.preferences[notificationId] = {
+                    ...(scope.preferences[notificationId] ?? {}),
+                    enabled: enabledUpdate,
+                };
+                scope.emailNotificationsFromExtensions[notificationId] = {
+                    ...scope.emailNotificationsFromExtensions[notificationId],
+                    enabled: enabledUpdate,
+                };
+
+                const notificationsForGroupAreOff = Object.values(scope.emailNotificationsFromExtensions)
+                    .every((value: any) => value?.enabled == false);
+
+                scope.preferences['email:notification'].enabled = !notificationsForGroupAreOff;
+
+                scope.userPrefs.$setDirty();
+                scope.$applyAsync();
+            };
 
             preferencesService.get(null, true).then((result) => {
                 orig = result;
@@ -245,6 +294,8 @@ export function UserPreferencesDirective(
                     }
                 });
 
+                scope.buildNotificationsFromExtensions();
+
                 // metadata service initialization is needed if its
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
@@ -395,9 +446,9 @@ export function UserPreferencesDirective(
             * @return {Object}
             */
             function createPatchObject() {
-                var p = {};
+                var patchObject = {};
 
-                _.each(orig, (val, key) => {
+                Object.entries(orig).forEach(([key, val]) => {
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
 
@@ -418,11 +469,11 @@ export function UserPreferencesDirective(
                         });
                     }
 
-                    p[key] = _.extend(val, scope.preferences[key]);
+                    patchObject[key] = Object.assign(val, scope.preferences[key]);
                 });
 
                 if (orig['editor:theme'] != null) {
-                    p['editor:theme'] = {
+                    patchObject['editor:theme'] = {
                         ...orig['editor:theme'],
                         theme: JSON.stringify(authThemes.syncWithApplicationTheme(
                             scope.activeTheme,
@@ -433,7 +484,7 @@ export function UserPreferencesDirective(
                     };
                 }
 
-                return p;
+                return patchObject;
             }
         },
     };

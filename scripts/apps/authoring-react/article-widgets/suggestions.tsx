@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IUser, IEditor3ValueOperational} from 'superdesk-api';
+import {IArticleSideWidget, IUser, IEditor3ValueOperational, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -16,10 +16,7 @@ import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Resolved suggestions');
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+const SUGGESTIONS_WIDGET_ID = 'editor3-suggestions-widget';
 
 interface ISuggestion {
     resolutionInfo: {
@@ -139,8 +136,8 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
     }
 }
 
-class SuggestionsWidget extends React.PureComponent<IProps> {
-    constructor(props: IProps) {
+class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.getEditor3Fields = this.getEditor3Fields.bind(this);
@@ -217,6 +214,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={SUGGESTIONS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -230,7 +228,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
 
 export function getSuggestionsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'editor3-suggestions-widget',
+        _id: SUGGESTIONS_WIDGET_ID,
         label: getLabel(),
         order: 3,
         icon: 'suggestion',
