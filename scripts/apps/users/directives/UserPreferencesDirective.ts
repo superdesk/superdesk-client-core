@@ -70,7 +70,9 @@ export function UserPreferencesDirective(
                             };
                     }
                 }
-            }
+            };
+
+            scope.buildNotificationsFromExtensions();
 
             scope.buildNotificationsFromExtensions(false);
 
@@ -299,6 +301,8 @@ export function UserPreferencesDirective(
                         scope.preferences[key] = _.create(val);
                     }
                 });
+
+                scope.buildNotificationsFromExtensions();
 
                 // metadata service initialization is needed if its
                 // values object is undefined or any of the needed
