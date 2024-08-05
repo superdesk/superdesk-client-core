@@ -13,11 +13,11 @@ if (appConfig.shortTimeFormat == null) {
 }
 
 if (appConfig.view.dateformat == null) {
-    appConfig.view.dateformat = 'MM/DD'; // 24h format
+    appConfig.view.dateformat = 'MM/DD';
 }
 
 if (appConfig.view.timeformat == null) {
-    appConfig.view.timeformat = 'hh:mm'; // 24h format
+    appConfig.view.timeformat = 'hh:mm';
 }
 
 if (appConfig.longDateFormat == null) {

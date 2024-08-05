@@ -21,9 +21,6 @@ const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 *
 * @param {String} d iso format datetime
 */
-export function longFormat(d: string | moment.Moment): string {
-    return moment(d).format(LONG_FORMAT);
-}
 
 export function serverFormat(d: string | moment.Moment): string {
     return moment(d).utc().format(SERVER_FORMAT);
@@ -165,7 +162,7 @@ function DateTimeService() {
         return m.format(DATE_FORMAT);
     };
 
-    this.longFormat = longFormat;
+    this.longFormat = (date) => formatDate(date, {longFormat: true});
 }
 
 DateTimeHelperService.$inject = [];

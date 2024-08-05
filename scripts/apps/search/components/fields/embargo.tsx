@@ -1,8 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import {gettext} from 'core/utils';
-import {longFormat} from 'core/datetime/datetime';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
     render() {
@@ -23,7 +23,7 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
                 key="embargo"
                 className="state-label state_embargo"
                 title={embargoed != null ? (
-                    gettext('Embargo until {{date}}', {date: longFormat(embargoed)})
+                    gettext('Embargo until {{date}}', {date: formatDate(embargoed, {longFormat: true})})
                 ) : (
                     gettext('Embargo: {{text}}', {text: embargoedText})
                 )}
