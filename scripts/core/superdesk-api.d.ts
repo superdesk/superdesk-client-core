@@ -706,16 +706,7 @@ declare module 'superdesk-api' {
     }
 
     interface IEmailNotification {
-        type: 'email';
-    }
 
-    export interface IDesktopNotification {
-        type: 'desktop';
-        label: string;
-        handler: (notification: any) => {
-            body: string;
-            actions: Array<{label: string; onClick: () => void;}>;
-        };
     }
 
     export interface IExtensionActivationResult {
@@ -756,7 +747,14 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: IEmailNotification | IDesktopNotification;
+                [id: string]: {
+                    label: string;
+                    settingsLabel: string;
+                    handler: (notification: any) => {
+                        body: string;
+                        actions: Array<{label: string; onClick: () => void;}>;
+                    };
+                };
             };
             entities?: {
                 article?: {

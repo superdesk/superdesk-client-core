@@ -43,6 +43,7 @@ export function UserPreferencesDirective(
         link: function(scope, element, attrs) {
             const userLang = getUserInterfaceLanguage().replace('_', '-');
             const body = angular.element('body');
+            const NOTIFICATIONS_KEY = 'notifications';
 
             scope.activeNavigation = null;
 
@@ -58,23 +59,29 @@ export function UserPreferencesDirective(
 
             scope.emailNotificationsFromExtensions = {};
 
-            for (const extension of Object.values(extensions)) {
-                for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
-                    if (value.type === 'email') {
-                        preferencesService.registerUserPreference(key, 1);
-                        scope.emailNotificationsFromExtensions[key] = preferencesService.getSync(key);
+            scope.buildNotificationsFromExtensions = function(rebuild: boolean) {
+                for (const extension of Object.values(extensions)) {
+                    for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                        scope.emailNotificationsFromExtensions[key] =
+                            preferencesService.getSync('notifications')[key] ?? {
+                                email: true,
+                                default: true,
+                                label: value.settingsLabel,
+                            };
                     }
                 }
             }
+
+            scope.buildNotificationsFromExtensions(false);
 
             scope.toggleEmailGroupNotifications = function() {
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
 
                 Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
-                    scope.preferences[notificationId].enabled = isGroupEnabled;
+                    scope.preferences[NOTIFICATIONS_KEY][notificationId].email = isGroupEnabled;
                     scope.emailNotificationsFromExtensions[notificationId] = {
                         ...scope.emailNotificationsFromExtensions[notificationId],
-                        enabled: isGroupEnabled,
+                        email: isGroupEnabled,
                     };
                 });
 
@@ -83,19 +90,15 @@ export function UserPreferencesDirective(
             };
 
             scope.toggleEmailNotification = function(notificationId: string) {
-                const enabledUpdate = !(scope.preferences[notificationId]?.enabled ?? false);
+                const emailEnabledUpdate = !(scope.preferences[NOTIFICATIONS_KEY][notificationId]?.email ?? false);
 
-                scope.preferences[notificationId] = {
-                    ...(scope.preferences[notificationId] ?? {}),
-                    enabled: enabledUpdate,
-                };
                 scope.emailNotificationsFromExtensions[notificationId] = {
                     ...scope.emailNotificationsFromExtensions[notificationId],
-                    enabled: enabledUpdate,
+                    email: emailEnabledUpdate,
                 };
 
                 const notificationsForGroupAreOff = Object.values(scope.emailNotificationsFromExtensions)
-                    .every((value: any) => value?.enabled == false);
+                    .every((value: any) => value?.email == false);
 
                 scope.preferences['email:notification'].enabled = !notificationsForGroupAreOff;
 
@@ -115,6 +118,7 @@ export function UserPreferencesDirective(
             scope.cancel = function() {
                 scope.userPrefs.$setPristine();
                 buildPreferences(orig);
+                scope.buildNotificationsFromExtensions();
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
             };
@@ -143,6 +147,8 @@ export function UserPreferencesDirective(
             * @method save
             */
             scope.save = function() {
+                scope.preferences[NOTIFICATIONS_KEY] = scope.emailNotificationsFromExtensions;
+
                 preSaveCategoriesCheck()
                     .then(() => {
                         var update = createPatchObject();
@@ -155,7 +161,7 @@ export function UserPreferencesDirective(
                         });
                     }, () => $q.reject('canceledByModal'))
                     .then((preferences) => {
-                    // ask for browser permission if desktop notification is enable
+                        // ask for browser permission if desktop notification is enable
                         if (_.get(preferences, 'desktop:notification.enabled')) {
                             preferencesService.desktopNotification.requestPermission();
                         }
@@ -285,6 +291,10 @@ export function UserPreferencesDirective(
 
                 scope.preferences = {};
                 _.each(data, (val, key) => {
+                    if (key == NOTIFICATIONS_KEY) {
+                        scope.preferences[key] = val;
+                    }
+
                     if (val.label && val.category) {
                         scope.preferences[key] = _.create(val);
                     }

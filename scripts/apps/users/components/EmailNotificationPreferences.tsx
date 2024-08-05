@@ -3,7 +3,7 @@ import {CheckGroup, Checkbox} from 'superdesk-ui-framework/react';
 
 interface IProps {
     toggleEmailNotification: (notificationId: string) => void;
-    preferences?: {[key: string]: any};
+    preferences?: {[key: string]: {label: string; email?: boolean; default?: boolean;}};
 }
 
 export class EmailNotificationPreferences extends React.PureComponent<IProps> {
@@ -17,7 +17,7 @@ export class EmailNotificationPreferences extends React.PureComponent<IProps> {
                         onChange={() => {
                             this.props.toggleEmailNotification(key);
                         }}
-                        checked={value?.enabled ?? value?.default ?? false}
+                        checked={value?.email ?? value?.default ?? false}
                     />
                 ))}
             </CheckGroup>
