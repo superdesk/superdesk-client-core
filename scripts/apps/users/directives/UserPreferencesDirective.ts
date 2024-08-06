@@ -63,7 +63,7 @@ export function UserPreferencesDirective(
                 for (const extension of Object.values(extensions)) {
                     for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
                         scope.emailNotificationsFromExtensions[key] =
-                            preferencesService.getSync('notifications')[key] ?? {
+                            preferencesService.getSync('notifications')?.[key] ?? {
                                 email: true,
                                 default: true,
                                 label: gettext('Send {{ name }} notifications', {name: value.name}),
