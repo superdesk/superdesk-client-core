@@ -37,7 +37,8 @@ test('can add embeds', async ({page}) => {
 
     page.locator(s('toolbar', 'formatting-option')).getByRole('button', {name: 'Embed'}).click();
 
-    await page.locator(s('embed-controls')).getByPlaceholder('Enter URL or code to embed').fill('https://sourcefabric.org');
+    await page.locator(s('embed-controls')).getByPlaceholder('Enter URL or code to embed')
+        .fill('https://sourcefabric.org');
 
     await page.locator(s('embed-controls', 'submit')).click();
     await expect(
