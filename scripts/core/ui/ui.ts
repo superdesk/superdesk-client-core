@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {difference, filter, mapValues, sortBy, union, without} from 'lodash';
+import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {Spinner} from 'superdesk-ui-framework/react';
+import {Spinner, IconPicker} from 'superdesk-ui-framework/react';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
@@ -1307,6 +1307,13 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             Spinner,
             ['size'],
+        ),
+    )
+
+    .component('sdIconPicker',
+        reactToAngular1(
+            IconPicker,
+            ['value', 'onChange'],
         ),
     )
 

@@ -139,12 +139,12 @@
     <div class="modal__body sd-padding--0 sd-padding-t--2" data-test-id="content-profile-edit-view">
         <form name="editForm">
             <fieldset ng-init="setNgForm(editForm)">
-                <div class="form__row form__row--flex sd-padding-x--2" style="align-items: center">
+                <div class="form__row form__row--flex sd-padding-x--2" style="align-items: start">
                     <div class="form__row-item sd-flex-no-grow">
-                        <i class="icon--2x {{getContentProfileIconByProfileType(editing.form.type)}}"></i>
+                        <sd-icon-picker data-value="editing.form.icon" data-on-change="ctrl.onIconChange"></sd-icon-picker>
                     </div>
                     <div class="form__row-item">
-                        <div class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
+                        <div class="sd-line-input sd-line-input--boxed" style="padding-block-start: 16px;" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                             <label class="sd-line-input__label" translate>Label</label>
                             <input type="text" name="label" class="sd-line-input__input" ng-model="editing.form.label" required ng-maxlength="40"/>
                             <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
