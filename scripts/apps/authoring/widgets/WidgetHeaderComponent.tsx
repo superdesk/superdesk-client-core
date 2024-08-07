@@ -10,6 +10,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
         const {
             widget,
             pinWidget,
+            pinned,
         } = this.props;
 
         return (
@@ -27,6 +28,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                                     },
                                 )
                             }
+                            disabled={pinned}
                             onClick={() => {
                                 pinWidget(widget);
                             }}

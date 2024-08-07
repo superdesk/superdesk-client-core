@@ -5,6 +5,8 @@ import CommentsWidget from './CommentsWidget';
 
 type IProps<T> = React.ComponentProps<IGenericSideWidget<T>['component']>;
 
+export const COMMENTS_WIDGET_GENERIC_ID = 'comments-widget-generic';
+
 export function getCommentsWidgetGeneric<T>(
     getComments: (entityId: string) => Promise<Array<IComment>>,
     addComment: (entityId: string, text: string) => Promise<void>,
@@ -14,6 +16,7 @@ export function getCommentsWidgetGeneric<T>(
         render() {
             return (
                 <CommentsWidget
+                    initialState={this.props.initialState}
                     entityId={this.props.entityId}
                     readOnly={this.props.readOnly}
                     contentProfile={this.props.contentProfile}
@@ -31,7 +34,7 @@ export function getCommentsWidgetGeneric<T>(
     }
 
     const widget: IGenericSideWidget<T> = {
-        _id: 'comments-widget-generic',
+        _id: COMMENTS_WIDGET_GENERIC_ID,
         label: gettext('Comments'),
         order: 2,
         icon: 'chat',
