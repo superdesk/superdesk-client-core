@@ -21,7 +21,6 @@ test('can add embeds', async ({page}) => {
             route.fulfill({
                 body: JSON.stringify([{
                     title: 'Open Source Software for Journalism',
-                    // eslint-disable-next-line max-len
                     description: 'Sourcefabric is Europe\'s largest developer of '
                     + 'open source tools for news media, powering news and media organisations around the world.',
                 }]),

@@ -20,7 +20,6 @@ interface IProps {
 export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, tooltip, uiTheme}) => (
     <div
         data-flow={'down'}
-        data-test-id="icon-button"
         data-test-value={tooltip}
         data-sd-tooltip={tooltip}
         aria-label={tooltip}
