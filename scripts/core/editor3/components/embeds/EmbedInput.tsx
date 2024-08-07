@@ -140,7 +140,7 @@ export class EmbedInputComponent extends React.Component<IProps, any> {
         const {error} = this.state;
 
         return (
-            <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
+            <form data-test-id="embed-controls" onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
                 <OverlayTrigger
                     overlay={(
                         <Tooltip id="create_new_embed_tooltip">

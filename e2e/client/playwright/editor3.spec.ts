@@ -36,9 +36,9 @@ test('can add embeds', async ({page}) => {
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.getByRole('button', {name: 'Embed'}).click();
+    page.locator(s('toolbar', 'formatting-option')).getByRole('button', {name: 'Embed'}).click();
 
-    await page.getByPlaceholder('Enter URL or code to embed').type('https://sourcefabric.org');
+    await page.locator(s('embed-controls')).getByPlaceholder('Enter URL or code to embed').fill('https://sourcefabric.org');
 
     await page.locator(s('embed-controls', 'submit')).click();
     await expect(
