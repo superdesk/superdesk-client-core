@@ -705,10 +705,6 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
-    interface IEmailNotification {
-
-    }
-
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
