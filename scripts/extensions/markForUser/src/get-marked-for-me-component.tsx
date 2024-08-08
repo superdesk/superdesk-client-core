@@ -72,10 +72,6 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
             });
 
             this.removeMarkedListener = superdesk.addWebsocketMessageListener('item:marked', this.queryAndSetArticles);
-            this.removeUnmarkedListener = superdesk.addWebsocketMessageListener(
-                'item:unmarked',
-                this.queryAndSetArticles,
-            );
         }
         componentWillUnmount() {
             this.removeMarkedListener();

@@ -5,6 +5,8 @@ import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 
+const EMAIL_NOTIFICATION_DEFAULT = true;
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.users
@@ -64,7 +66,7 @@ export function UserPreferencesDirective(
                     for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
                         scope.emailNotificationsFromExtensions[key] =
                             preferencesService.getSync('notifications')?.[key] ?? {
-                                email: true,
+                                email: EMAIL_NOTIFICATION_DEFAULT,
                                 label: gettext('Send {{ name }} notifications', {name: value.name}),
                             };
                     }
@@ -77,7 +79,9 @@ export function UserPreferencesDirective(
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
 
                 Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
-                    scope.preferences[NOTIFICATIONS_KEY][notificationId].email = isGroupEnabled;
+                    scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
+                        email: isGroupEnabled
+                    };
                     scope.emailNotificationsFromExtensions[notificationId] = {
                         ...scope.emailNotificationsFromExtensions[notificationId],
                         email: isGroupEnabled,
@@ -89,7 +93,19 @@ export function UserPreferencesDirective(
             };
 
             scope.toggleEmailNotification = function(notificationId: string) {
-                const emailEnabledUpdate = !(scope.preferences[NOTIFICATIONS_KEY][notificationId]?.email ?? false);
+                const emailEnabledUpdate = (() => {
+                    const settingFromPreferences = scope.preferences[NOTIFICATIONS_KEY][notificationId]?.email;
+
+                    if (settingFromPreferences != null && scope.userPrefs?.$dirty === true) {
+                        return !scope.emailNotificationsFromExtensions[notificationId].email;
+                    } else if (settingFromPreferences != null && scope.userPrefs?.$dirty === false) {
+                        return !settingFromPreferences;
+                    } else if (settingFromPreferences == null) {
+                        return !scope.emailNotificationsFromExtensions[notificationId].email;
+                    }
+
+                    return EMAIL_NOTIFICATION_DEFAULT;
+                })();
 
                 scope.emailNotificationsFromExtensions[notificationId] = {
                     ...scope.emailNotificationsFromExtensions[notificationId],
@@ -288,13 +304,19 @@ export function UserPreferencesDirective(
                 var buckets, // names of the needed metadata buckets
                     initNeeded; // metadata service init needed?
 
+                const notificationsFromExtensions = new Set(Object.keys(scope.emailNotificationsFromExtensions));
+
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (key == NOTIFICATIONS_KEY) {
                         scope.preferences[key] = val;
                     }
 
-                    if (val.label && val.category) {
+                    if (
+                        !notificationsFromExtensions.has(key)
+                        && val.label
+                        && val.category
+                    ) {
                         scope.preferences[key] = _.create(val);
                     }
                 });
@@ -454,6 +476,10 @@ export function UserPreferencesDirective(
                 var patchObject = {};
 
                 Object.entries(orig).forEach(([key, val]) => {
+                    if (Object.keys(scope.emailNotificationsFromExtensions).find((key1) => key1 === key)) {
+                        return;
+                    }
+
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
 
