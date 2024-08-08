@@ -1414,6 +1414,14 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        user_preferences: {
+            notifications: {
+                [key: string]: {
+                    email: boolean;
+                    desktop: boolean;
+                };
+            };
+        };
         last_activity_at?: string;
     }
 

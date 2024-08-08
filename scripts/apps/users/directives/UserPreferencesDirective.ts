@@ -5,8 +5,6 @@ import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 
-const EMAIL_NOTIFICATION_DEFAULT = true;
-
 /**
  * @ngdoc directive
  * @module superdesk.apps.users
@@ -59,63 +57,25 @@ export function UserPreferencesDirective(
             scope.preferencesLoaded = false;
             var orig: {[key: string]: any}; // original preferences, before any changes
 
-            scope.emailNotificationsFromExtensions = {};
-
-            scope.buildNotificationsFromExtensions = function() {
-                for (const extension of Object.values(extensions)) {
-                    for (const [key, value] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
-                        scope.emailNotificationsFromExtensions[key] =
-                            preferencesService.getSync('notifications')?.[key] ?? {
-                                email: EMAIL_NOTIFICATION_DEFAULT,
-                                label: gettext('Send {{ name }} notifications', {name: value.name}),
-                            };
-                    }
-                }
-            };
-
-            scope.buildNotificationsFromExtensions();
-
+            // email:notification toggling happens via `ng-model` in a template
+            // this function only updates child notifications
             scope.toggleEmailGroupNotifications = function() {
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
 
-                Object.keys(scope.emailNotificationsFromExtensions).forEach((notificationId) => {
-                    scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
-                        email: isGroupEnabled
-                    };
-                    scope.emailNotificationsFromExtensions[notificationId] = {
-                        ...scope.emailNotificationsFromExtensions[notificationId],
-                        email: isGroupEnabled,
-                    };
-                });
+                for (const notificationId of Object.keys(scope.preferences.notifications)) {
+                    scope.preferences[NOTIFICATIONS_KEY][notificationId].email = isGroupEnabled;
+                }
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
             };
 
             scope.toggleEmailNotification = function(notificationId: string) {
-                const emailEnabledUpdate = (() => {
-                    const settingFromPreferences = scope.preferences[NOTIFICATIONS_KEY][notificationId]?.email;
+                scope.preferences[NOTIFICATIONS_KEY][notificationId].email =
+                    !scope.preferences[NOTIFICATIONS_KEY][notificationId].email;
 
-                    if (settingFromPreferences != null && scope.userPrefs?.$dirty === true) {
-                        return !scope.emailNotificationsFromExtensions[notificationId].email;
-                    } else if (settingFromPreferences != null && scope.userPrefs?.$dirty === false) {
-                        return !settingFromPreferences;
-                    } else if (settingFromPreferences == null) {
-                        return !scope.emailNotificationsFromExtensions[notificationId].email;
-                    }
-
-                    return EMAIL_NOTIFICATION_DEFAULT;
-                })();
-
-                scope.emailNotificationsFromExtensions[notificationId] = {
-                    ...scope.emailNotificationsFromExtensions[notificationId],
-                    email: emailEnabledUpdate,
-                };
-
-                const notificationsForGroupAreOff = Object.values(scope.emailNotificationsFromExtensions)
-                    .every((value: any) => value?.email == false);
-
-                scope.preferences['email:notification'].enabled = !notificationsForGroupAreOff;
+                scope.preferences['email:notification'].enabled =
+                    Object.values(scope.preferences[NOTIFICATIONS_KEY]).some((value: any) => value.email === true);
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
@@ -133,7 +93,6 @@ export function UserPreferencesDirective(
             scope.cancel = function() {
                 scope.userPrefs.$setPristine();
                 buildPreferences(orig);
-                scope.buildNotificationsFromExtensions();
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
             };
@@ -162,8 +121,6 @@ export function UserPreferencesDirective(
             * @method save
             */
             scope.save = function() {
-                scope.preferences[NOTIFICATIONS_KEY] = scope.emailNotificationsFromExtensions;
-
                 preSaveCategoriesCheck()
                     .then(() => {
                         var update = createPatchObject();
@@ -304,24 +261,12 @@ export function UserPreferencesDirective(
                 var buckets, // names of the needed metadata buckets
                     initNeeded; // metadata service init needed?
 
-                const notificationsFromExtensions = new Set(Object.keys(scope.emailNotificationsFromExtensions));
-
                 scope.preferences = {};
                 _.each(data, (val, key) => {
-                    if (key == NOTIFICATIONS_KEY) {
-                        scope.preferences[key] = val;
-                    }
-
-                    if (
-                        !notificationsFromExtensions.has(key)
-                        && val.label
-                        && val.category
-                    ) {
+                    if (val.label && val.category) {
                         scope.preferences[key] = _.create(val);
                     }
                 });
-
-                scope.buildNotificationsFromExtensions();
 
                 // metadata service initialization is needed if its
                 // values object is undefined or any of the needed
@@ -427,6 +372,25 @@ export function UserPreferencesDirective(
 
                 scope.calendars = helperData.event_calendars;
 
+                scope.notificationLabels = {};
+
+                if (scope.preferences[NOTIFICATIONS_KEY] == null) {
+                    scope.preferences[NOTIFICATIONS_KEY] = {};
+                }
+
+                for (const extension of Object.values(extensions)) {
+                    for (const [notificationId, notification] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                        if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
+                            scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
+                                email: true,
+                                desktop: false,
+                            };
+                        }
+
+                        scope.notificationLabels[notificationId] = notification.name;
+                    }
+                }
+
                 scope.preferencesLoaded = true;
             }
 
@@ -476,10 +440,6 @@ export function UserPreferencesDirective(
                 var patchObject = {};
 
                 Object.entries(orig).forEach(([key, val]) => {
-                    if (Object.keys(scope.emailNotificationsFromExtensions).find((key1) => key1 === key)) {
-                        return;
-                    }
-
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
 
