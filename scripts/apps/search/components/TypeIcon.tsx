@@ -1,7 +1,9 @@
 import React from 'react';
 import {gettext} from 'core/utils';
+import {dataStore} from 'data-store';
 
 interface IProps {
+    contentProfileId: string;
     type: string;
     highlight?: boolean;
     'aria-hidden'?: boolean;
@@ -12,7 +14,21 @@ interface IProps {
  */
 export class TypeIcon extends React.PureComponent<IProps> {
     render() {
-        const {type, highlight} = this.props;
+        const {type, highlight, contentProfileId} = this.props;
+
+        if (contentProfileId != null) {
+            const profile = dataStore.contentProfiles.get(contentProfileId);
+
+            if (profile.icon != null) {
+                return (
+                    <i
+                        className={'icon-' + profile.icon}
+                        aria-label={gettext('Content profile: {{name}}', {name: profile.label})}
+                        aria-hidden={this.props['aria-hidden'] ?? false}
+                    />
+                );
+            }
+        }
 
         if (type === 'composite' && highlight) {
             return (
