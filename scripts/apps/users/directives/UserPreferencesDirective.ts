@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
+import {omit, pick} from 'lodash';
 
 /**
  * @ngdoc directive
@@ -46,14 +47,22 @@ export function UserPreferencesDirective(
             const NOTIFICATIONS_KEY = 'notifications';
 
             scope.activeNavigation = null;
-
             scope.activeTheme = localStorage.getItem('theme');
+            const registeredNotifications = (() => {
+                const fromExtensions = {};
+                for (const extension of Object.values(extensions)) {
+                    for (const [notificationId, notification] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
+                        fromExtensions[notificationId] = notification;
+                    }
+                }
+
+                return fromExtensions;
+            })();
 
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
              * directives which depend on scope variables might fail to load properly.
              */
-
             scope.preferencesLoaded = false;
             var orig: {[key: string]: any}; // original preferences, before any changes
 
@@ -85,6 +94,7 @@ export function UserPreferencesDirective(
                 orig = result;
                 buildPreferences(orig);
 
+                scope.originalNotifications = JSON.parse(JSON.stringify(scope.preferences[NOTIFICATIONS_KEY]));
                 scope.datelineSource = session.identity.dateline_source;
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
                 scope.featurePreview = scope.preferences['feature:preview'];
@@ -95,6 +105,7 @@ export function UserPreferencesDirective(
                 buildPreferences(orig);
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
+                scope.preferences[NOTIFICATIONS_KEY] = JSON.parse(JSON.stringify(scope.originalNotifications));
             };
 
             scope.goTo = function(id) {
@@ -263,7 +274,15 @@ export function UserPreferencesDirective(
 
                 scope.preferences = {};
                 _.each(data, (val, key) => {
-                    if (val.label && val.category) {
+                    if (key == NOTIFICATIONS_KEY) {
+                        scope.preferences[NOTIFICATIONS_KEY] = pick(
+                            // Remove unwanted properties
+                            omit(val, 'type', 'schema'),
+
+                            // Get notifications coming only from registered extensions
+                            ...(Object.keys(registeredNotifications ?? [])),
+                        );
+                    } else if (val.label && val.category) {
                         scope.preferences[key] = _.create(val);
                     }
                 });
