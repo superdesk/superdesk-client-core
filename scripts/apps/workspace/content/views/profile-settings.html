@@ -49,7 +49,8 @@
                             </ul>
                         </div>
                         <div class="card-box__heading sd-d-flex sd-flex-align-items-center">
-                            <i class="icon--white sd-margin-r--1 {{getContentProfileIconByProfileType(type.type)}}"></i>
+                            <i ng-if="type.icon == null" class="icon--white sd-margin-r--1 {{getContentProfileIconByProfileType(type.type)}}"></i>
+                            <i ng-if="type.icon != null" class="icon--white sd-margin-r--1 icon-{{type.icon}}"></i>
                             {{ type.label}}
                         </div>
                     </div>
