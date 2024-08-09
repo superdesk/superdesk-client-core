@@ -4,7 +4,8 @@ import {gettext} from 'core/utils';
 import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
-import {omit, pick} from 'lodash';
+import {cloneDeep, pick} from 'lodash';
+import {IExtensionActivationResult} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -48,15 +49,16 @@ export function UserPreferencesDirective(
 
             scope.activeNavigation = null;
             scope.activeTheme = localStorage.getItem('theme');
-            const registeredNotifications = (() => {
-                const fromExtensions = {};
+            const registeredNotifications: IExtensionActivationResult['contributions']['notifications'] = (() => {
+                const result = {};
+
                 for (const extension of Object.values(extensions)) {
                     for (const [notificationId, notification] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
-                        fromExtensions[notificationId] = notification;
+                        result[notificationId] = notification;
                     }
                 }
 
-                return fromExtensions;
+                return result;
             })();
 
             /*
@@ -92,9 +94,8 @@ export function UserPreferencesDirective(
 
             preferencesService.get(null, true).then((result) => {
                 orig = result;
-                buildPreferences(orig);
+                buildPreferences(cloneDeep(result));
 
-                scope.originalNotifications = JSON.parse(JSON.stringify(scope.preferences[NOTIFICATIONS_KEY]));
                 scope.datelineSource = session.identity.dateline_source;
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
                 scope.featurePreview = scope.preferences['feature:preview'];
@@ -102,10 +103,9 @@ export function UserPreferencesDirective(
 
             scope.cancel = function() {
                 scope.userPrefs.$setPristine();
-                buildPreferences(orig);
+                buildPreferences(cloneDeep(orig));
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
-                scope.preferences[NOTIFICATIONS_KEY] = JSON.parse(JSON.stringify(scope.originalNotifications));
             };
 
             scope.goTo = function(id) {
@@ -275,13 +275,7 @@ export function UserPreferencesDirective(
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (key == NOTIFICATIONS_KEY) {
-                        scope.preferences[NOTIFICATIONS_KEY] = pick(
-                            // Remove unwanted properties
-                            omit(val, 'type', 'schema'),
-
-                            // Get notifications coming only from registered extensions
-                            ...(Object.keys(registeredNotifications ?? [])),
-                        );
+                        scope.preferences[NOTIFICATIONS_KEY] = pick(val, Object.keys(registeredNotifications));
                     } else if (val.label && val.category) {
                         scope.preferences[key] = _.create(val);
                     }
@@ -397,17 +391,15 @@ export function UserPreferencesDirective(
                     scope.preferences[NOTIFICATIONS_KEY] = {};
                 }
 
-                for (const extension of Object.values(extensions)) {
-                    for (const [notificationId, notification] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
-                        if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
-                            scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
-                                email: true,
-                                desktop: false,
-                            };
-                        }
-
-                        scope.notificationLabels[notificationId] = notification.name;
+                for (const [notificationId, notification] of Object.entries(registeredNotifications)) {
+                    if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
+                        scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
+                            email: true,
+                            desktop: false,
+                        };
                     }
+
+                    scope.notificationLabels[notificationId] = notification.name;
                 }
 
                 scope.preferencesLoaded = true;
