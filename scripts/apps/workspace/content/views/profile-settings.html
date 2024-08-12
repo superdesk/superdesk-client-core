@@ -44,13 +44,13 @@
                             <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="content-profile-actions--options">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
-                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}" aria-label="Edit"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                                 <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                             </ul>
                         </div>
                         <div class="card-box__heading sd-d-flex sd-flex-align-items-center">
                             <i ng-if="type.icon == null" class="icon--white sd-margin-r--1 {{getContentProfileIconByProfileType(type.type)}}"></i>
-                            <i ng-if="type.icon != null" class="icon--white sd-margin-r--1 icon-{{type.icon}}"></i>
+                            <i ng-if="type.icon != null" class="icon--white sd-margin-r--1 icon-{{type.icon}}" data-test-id="icon" data-test-value="{{type.icon}}"></i>
                             {{ type.label}}
                         </div>
                     </div>

@@ -25,6 +25,8 @@ export class TypeIcon extends React.PureComponent<IProps> {
                         className={'icon-' + profile.icon}
                         aria-label={gettext('Content profile: {{name}}', {name: profile.label})}
                         aria-hidden={this.props['aria-hidden'] ?? false}
+                        data-test-id="type-icon"
+                        data-test-value={profile.icon}
                     />
                 );
             }
@@ -36,6 +38,7 @@ export class TypeIcon extends React.PureComponent<IProps> {
                     className={'filetype-icon-highlight-pack'}
                     aria-label={gettext('Article Type {{type}}', {type})}
                     aria-hidden={this.props['aria-hidden'] ?? false}
+                    data-test-id="type-icon"
                 />
             );
         }
@@ -46,6 +49,8 @@ export class TypeIcon extends React.PureComponent<IProps> {
                 title={gettext('Article Type: {{type}}', {type})}
                 aria-label={gettext('Article Type {{type}}', {type})}
                 aria-hidden={this.props['aria-hidden'] ?? false}
+                data-test-id="type-icon"
+                data-test-value={type}
             />
         );
     }
