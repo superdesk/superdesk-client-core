@@ -395,7 +395,7 @@ export function UserPreferencesDirective(
                     if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
                         scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
                             email: true,
-                            desktop: false,
+                            desktop: true,
                         };
                     }
 
