@@ -25,6 +25,7 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
+    createItem: (template: string) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -991,6 +992,17 @@ class Monitoring {
 
         this.getPackageItemLabel = function(index) {
             return element.all(by.id('package-item-label')).get(index);
+        };
+
+        this.createItem = (buttonText: string) => {
+            const plusButton = el(['content-create']);
+            const itemButton = el(['content-create-dropdown']).element(by.buttonText(buttonText));
+
+            browser.wait(ECE.elementToBeClickable(plusButton), 1000);
+            plusButton.click();
+
+            browser.wait(ECE.elementToBeClickable(itemButton), 1000);
+            itemButton.click();
         };
     }
 }
