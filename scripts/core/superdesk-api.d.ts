@@ -3717,5 +3717,9 @@ declare module 'superdesk-api' {
         /** original source of the data, eg. wikidata */
         original_source?: string;
         parent?: string;
+
+        // AI generated subjects
+        creator?: string;
+        relevance?: number;
     }
 }
