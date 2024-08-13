@@ -5,7 +5,6 @@ import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo, IListViewFie
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
-import {IScope} from 'angular';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
@@ -129,18 +128,6 @@ export function getProjectedFieldsArticle(): Array<string> {
     });
 
     return Array.from(projectedFields);
-}
-
-export function findParentScope(scope: IScope, predicate: (scope: IScope) => boolean): IScope | null {
-    let current = scope.$parent;
-
-    while (current != null) {
-        if (predicate(current) === true) {
-            return current;
-        } else {
-            current = current.$parent;
-        }
-    }
 }
 
 /**
