@@ -57,8 +57,7 @@ describe('authoring', () => {
 
     it('authoring operations', () => {
         // allows to create a new empty package
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'create-package']).click();
+        monitoring.createItem('Create package');
 
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
         authoring.close();
@@ -614,8 +613,7 @@ describe('authoring', () => {
 
     it('Not modifying crops will not trigger an article change', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        monitoring.createItem('editor3 template');
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
@@ -636,8 +634,7 @@ describe('authoring', () => {
 
     it('Can add an image with default crops to media gallery', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        monitoring.createItem('editor3 template');
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
@@ -649,13 +646,7 @@ describe('authoring', () => {
     it('Can remove an image from media gallery', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
 
-        el(['content-create']).click();
-
-        const templateBtn = el(['content-create-dropdown']).element(by.buttonText('editor3 template'));
-
-        browser.wait(ECE.elementToBeClickable(templateBtn));
-
-        templateBtn.click();
+        monitoring.createItem('editor3 template');
 
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);

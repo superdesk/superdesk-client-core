@@ -63,7 +63,7 @@ describe('editor3', () => {
         monitoring.openMonitoring();
         monitoring.selectDesk('xeditor3');
         monitoring.createFromDeskTemplate();
-        browser.wait(ECE.presenceOf(editors.get(0)));
+        browser.wait(ECE.presenceOf(editors.get(0)), 2000);
     });
 
     it('can edit headline', () => {

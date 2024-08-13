@@ -25,6 +25,7 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
+    createItem: (template: string) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -171,8 +172,14 @@ class Monitoring {
          * Create new item using desk template
          */
         this.createFromDeskTemplate = () => {
-            el(['content-create']).click();
-            el(['content-create-dropdown', 'default-desk-template']).click();
+            const createButton = el(['content-create']);
+            const templateButton = el(['content-create-dropdown', 'default-desk-template']);
+
+            browser.wait(ECE.elementToBeClickable(createButton), 1000);
+            createButton.click();
+
+            browser.wait(ECE.elementToBeClickable(templateButton), 1000);
+            templateButton.click();
         };
 
         this.getGroup = function(group: number) {
@@ -991,6 +998,17 @@ class Monitoring {
 
         this.getPackageItemLabel = function(index) {
             return element.all(by.id('package-item-label')).get(index);
+        };
+
+        this.createItem = (buttonText: string) => {
+            const plusButton = el(['content-create']);
+            const itemButton = el(['content-create-dropdown']).element(by.buttonText(buttonText));
+
+            browser.wait(ECE.elementToBeClickable(plusButton), 2000);
+            plusButton.click();
+
+            browser.wait(ECE.elementToBeClickable(itemButton), 2000, `Button '${buttonText}' is not clickable`);
+            itemButton.click();
         };
     }
 }
