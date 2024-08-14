@@ -3,6 +3,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {Authoring} from './page-object-models/authoring';
 import {MultiEdit} from './page-object-models/multiedit';
 import {restoreDatabaseSnapshot, s} from './utils';
+import {clearInput} from './utils/inputs';
 
 test.describe('Multiedit', async () => {
     test('editing articles in multi-edit mode', async ({page}) => {
@@ -15,10 +16,12 @@ test.describe('Multiedit', async () => {
 
         await monitoring.executeBulkAction('Multi-edit', ['test sports story', 'story 2']);
 
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
-            .getByRole('textbox')
-            .clear();
+        await clearInput(
+            page,
+            page.locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
+                .getByRole('textbox'),
+        );
+
         await page
             .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
             .getByRole('textbox')
@@ -26,10 +29,12 @@ test.describe('Multiedit', async () => {
 
         await multiedit.save('test sports story');
 
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
-            .getByRole('textbox')
-            .clear();
+        await clearInput(
+            page,
+            page.locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
+                .getByRole('textbox'),
+        );
+
         await page
             .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
             .getByRole('textbox')
