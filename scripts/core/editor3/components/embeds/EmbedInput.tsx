@@ -141,7 +141,7 @@ export class EmbedInputComponent extends React.Component<IProps, any> {
 
         return (
             <form
-                data-test-id="embed-controls"
+                data-test-id="embed-form"
                 onSubmit={this.onSubmit}
                 className="embed-dialog"
                 onKeyUp={this.onKeyUp}
