@@ -4,6 +4,47 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {getEditor3FormattingOptions, getEditor3Paragraphs} from './utils/editor3';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
+test('can add embeds', async ({page}) => {
+    await restoreDatabaseSnapshot();
+
+    const monitoring = new Monitoring(page);
+
+    const requestRoute = 'https://sourcefabric.org';
+
+    await page.route(
+        `https://iframe.ly/api/oembed?callback=?&url=
+        ${requestRoute}
+        &api_key="mock_api_key"
+        &omit_script=true&iframe=true`,
+        (route) => {
+            route.fulfill({
+                body: JSON.stringify([{
+                    title: 'Open Source Software for Journalism',
+                    description: 'Sourcefabric is Europe\'s largest developer of '
+                    + 'open source tools for news media, powering news and media organisations around the world.',
+                }]),
+            });
+        },
+    );
+    await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    await page.locator(
+        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
+    ).dblclick();
+
+    page.locator(s('toolbar')).getByRole('button', {name: 'Embed'}).click();
+
+    await page.locator(s('embed-form')).getByPlaceholder('Enter URL or code to embed')
+        .fill('https://sourcefabric.org');
+
+    await page.locator(s('embed-controls', 'submit')).click();
+    await expect(
+        page.locator(s('authoring', 'authoring-field=body_html')).getByText('https://sourcefabric.org'),
+    ).toBeDefined();
+});
+
 test('accepting a spelling suggestion', async ({page}) => {
     const monitoring = new Monitoring(page);
 

@@ -26,6 +26,6 @@ export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, 
         style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
         role="button"
     >
-        <span onClick={onClick}><i className={`icon-${iconName}`} /></span>
+        <span role="button" onClick={onClick}><i className={`icon-${iconName}`} /></span>
     </div>
 );
