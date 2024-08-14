@@ -705,19 +705,6 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
-    interface IEmailNotification {
-        type: 'email';
-    }
-
-    export interface IDesktopNotification {
-        type: 'desktop';
-        label: string;
-        handler: (notification: any) => {
-            body: string;
-            actions: Array<{label: string; onClick: () => void;}>;
-        };
-    }
-
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -756,7 +743,13 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: IEmailNotification | IDesktopNotification;
+                [id: string]: {
+                    name: string;
+                    handler?: (notification: any) => {
+                        body: string;
+                        actions: Array<{label: string; onClick: () => void;}>;
+                    };
+                };
             };
             entities?: {
                 article?: {
@@ -1421,6 +1414,14 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        user_preferences: {
+            notifications: {
+                [key: string]: {
+                    email: boolean;
+                    desktop: boolean;
+                };
+            };
+        };
         last_activity_at?: string;
     }
 
