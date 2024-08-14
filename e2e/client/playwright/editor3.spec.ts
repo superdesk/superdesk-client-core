@@ -3,7 +3,6 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {getEditor3FormattingOptions, getEditor3Paragraphs} from './utils/editor3';
 import {TreeSelectDriver} from './utils/tree-select-driver';
-import {appConfig} from 'scripts/appConfig';
 
 test('can add embeds', async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -15,7 +14,7 @@ test('can add embeds', async ({page}) => {
     await page.route(
         `https://iframe.ly/api/oembed?callback=?&url=
         ${requestRoute}
-        &api_key=${appConfig.iframely.key}
+        &api_key="mock_api_key"
         &omit_script=true&iframe=true`,
         (route) => {
             route.fulfill({
