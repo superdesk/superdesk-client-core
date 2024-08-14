@@ -6,8 +6,6 @@ test('content profile icon', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
-    await page.goto('/#/settings/content-profiles');
-
 
     // expect an article to have a regular text icon
 
