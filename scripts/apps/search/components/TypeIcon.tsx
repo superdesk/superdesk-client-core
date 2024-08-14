@@ -19,7 +19,7 @@ export class TypeIcon extends React.PureComponent<IProps> {
         if (contentProfileId != null) {
             const profile = dataStore.contentProfiles.get(contentProfileId);
 
-            if (profile.icon != null) {
+            if (profile?.icon != null) {
                 return (
                     <i
                         className={'icon-' + profile.icon}
