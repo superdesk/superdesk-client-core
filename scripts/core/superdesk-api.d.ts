@@ -216,7 +216,7 @@ declare module 'superdesk-api' {
 
         sideWidget: null | {
             id: string;
-            pinned: boolean;
+            pinned?: boolean;
         };
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
@@ -580,6 +580,7 @@ declare module 'superdesk-api' {
     export interface IGenericSidebarComponentProps<T> {
         entityId: string;
         readOnly: boolean;
+        initialState?: any;
         contentProfile: IContentProfileV2;
         fieldsData: OrderedMap<string, unknown>;
         authoringStorage: IAuthoringStorage<T>;
@@ -635,7 +636,7 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentType<IArticleSideWidgetComponentType>;
+        component: React.ComponentClass<IArticleSideWidgetComponentType>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
@@ -704,19 +705,6 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
-    interface IEmailNotification {
-        type: 'email';
-    }
-
-    export interface IDesktopNotification {
-        type: 'desktop';
-        label: string;
-        handler: (notification: any) => {
-            body: string;
-            actions: Array<{label: string; onClick: () => void;}>;
-        };
-    }
-
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -755,7 +743,13 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: IEmailNotification | IDesktopNotification;
+                [id: string]: {
+                    name: string;
+                    handler?: (notification: any) => {
+                        body: string;
+                        actions: Array<{label: string; onClick: () => void;}>;
+                    };
+                };
             };
             entities?: {
                 article?: {
@@ -1420,6 +1414,14 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        user_preferences: {
+            notifications: {
+                [key: string]: {
+                    email: boolean;
+                    desktop: boolean;
+                };
+            };
+        };
         last_activity_at?: string;
     }
 
@@ -2094,6 +2096,7 @@ declare module 'superdesk-api' {
     export interface IPropsWidgetHeading {
         widgetName: string;
         editMode: boolean;
+        widgetId: string;
 
         // will only work for authoring-react
         customContent?: JSX.Element;

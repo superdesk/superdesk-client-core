@@ -19,6 +19,7 @@ import {MentionsInput, Mention} from 'react-mentions';
 import mentionsStyle from './mention.style';
 import {Comment} from './Comment';
 import {IDeskSuggestion, IUserSuggestion, IUserSuggestionData} from './interfaces';
+import {COMMENTS_WIDGET_GENERIC_ID} from '.';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
@@ -53,7 +54,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
     constructor(props: IProps<T>) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             comments: null,
             newCommentMessage: '',
             saveOnEnter: false,
@@ -64,6 +65,10 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
     }
 
     componentDidMount() {
+        if (this.props.initialState != null) {
+            return;
+        }
+
         Promise.all([
             this.loadDeskSuggestions(),
             this.loadUsers(),
@@ -221,6 +226,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={COMMENTS_WIDGET_GENERIC_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />

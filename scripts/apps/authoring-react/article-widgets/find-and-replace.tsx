@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticleSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -10,10 +10,7 @@ import {throttle} from 'lodash';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Find and Replace');
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+const FIND_AND_REPLACE_WIDGET_ID = 'find-and-replace-widget';
 
 interface IState {
     findValue: string;
@@ -26,13 +23,13 @@ interface IState {
  */
 export const editorId = 'body_html';
 
-class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
+class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     private scheduleHighlightingOfMatches: () => void;
 
-    constructor(props: IProps) {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        this.state = {
+        this.state = this.props.initialState ?? {
             findValue: '',
             replaceValue: '',
             caseSensitive: false,
@@ -69,6 +66,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={FIND_AND_REPLACE_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -165,7 +163,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
 
 export function getFindAndReplaceWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'find-and-replace-widget',
+        _id: FIND_AND_REPLACE_WIDGET_ID,
         label: getLabel(),
         order: 1,
         icon: 'find-replace',
