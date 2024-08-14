@@ -119,6 +119,7 @@ import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -291,8 +292,9 @@ export function getSuperdeskApiImplementation(
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
-            superdeskToElasticQuery: toElasticQuery,
             getArticleLabel,
+            superdeskToElasticQuery: toElasticQuery,
+            prepareSuperdeskQuery: prepareSuperdeskQuery,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,

@@ -2952,7 +2952,17 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
+
+            /**
+             * @deprecated
+             * use prepareSuperdeskQuery
+             */
             superdeskToElasticQuery(q: ISuperdeskQuery): {q?: string, source: string};
+
+            /**
+             * endpoint must start with `/` e.g. '/archive'
+             */
+            prepareSuperdeskQuery(endpoint: string, query: ISuperdeskQuery): IHttpRequestOptionsLocal & {method: 'GET'};
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
