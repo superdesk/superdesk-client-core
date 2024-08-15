@@ -153,7 +153,20 @@
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
                             <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
                                 <span ng-if="fileType.type === 'all'" class="toggle-button__text toggle-button__text--all">{{ fileType.label }}</span>
-                                <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" title="{{ fileType.label }}"></i>
+                                <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href=""
+                                ng-repeat="profile in aggregate.activeProfiles"
+                                ng-if="profile.icon != null"
+                                ng-click="aggregate.toggleContentProfileFilter(profile)"
+                                class="toggle-button"
+                                ng-class="{'toggle-button--active': aggregate.isContentProfileFilterActive(profile._id)}"
+                                title="{{ profile.label }}"
+                                aria-label="{{ profile.label }}"
+                            >
+                                <i class="toggle-button__icon icon-{{profile.icon}}" aria-hidden="true"></i>
                             </a>
                         </div>
 

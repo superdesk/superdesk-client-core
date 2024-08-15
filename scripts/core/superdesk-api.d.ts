@@ -1601,9 +1601,9 @@ declare module 'superdesk-api' {
         package = 'package',
     }
 
-    export interface IContentProfile {
-        _id: string;
+    export interface IContentProfile extends IBaseRestApiResponse {
         type: keyof typeof IContentProfileType;
+        icon?: string;
         label: string;
         description: string;
         schema: Object;
@@ -2460,7 +2460,7 @@ declare module 'superdesk-api' {
 
     type IRequestFactory = () => IDataRequestParams;
 
-    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+    type IResponseHandler<T> = (res: IRestApiResponse<T>) => any;
 
     export type IAuthoringActionType =
         'view'
@@ -2528,7 +2528,11 @@ declare module 'superdesk-api' {
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<T>;
-        createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
+        createProvider: <T extends IBaseRestApiResponse>(
+            requestFactory: IRequestFactory,
+            responseHandler: IResponseHandler<T>,
+            listenTo?: IListenTo,
+        ) => IDataProvider;
     }
 
     // EVENTS
@@ -2893,7 +2897,7 @@ declare module 'superdesk-api' {
                 };
             };
             contentProfile: {
-                get(id: string): Promise<IContentProfile>;
+                get(id: string): IContentProfile;
             };
             vocabulary: {
                 getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;

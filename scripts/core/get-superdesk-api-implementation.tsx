@@ -46,7 +46,7 @@ import {
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
-import {memoize, omit} from 'lodash';
+import {omit} from 'lodash';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
@@ -121,10 +121,6 @@ import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/u
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 
-function getContentType(id): Promise<IContentProfile> {
-    return dataApi.findOne('content_types', id);
-}
-
 export function openArticle(
     id: IArticle['_id'],
     mode: 'view' | 'edit' | 'edit-new-window',
@@ -153,9 +149,6 @@ export function openArticle(
 
     return Promise.resolve();
 }
-
-const getContentTypeMemoized = memoize(getContentType);
-let getContentTypeMemoizedLastCall: number = 0; // unix time
 
 export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
@@ -355,23 +348,7 @@ export function getSuperdeskApiImplementation(
                 getDeskById: sdApi.desks.getDeskById,
             },
             contentProfile: {
-                get: (id) => {
-                    // Adding simple caching since the function will be called multiple times per second.
-
-                    // TODO: implement synchronous API(and a cache) for accessing
-                    // most user settings including content profiles.
-
-                    const timestamp = Date.now();
-
-                    // cache for 5 seconds
-                    if (timestamp - getContentTypeMemoizedLastCall > 5000) {
-                        getContentTypeMemoized.cache.clear();
-                    }
-
-                    getContentTypeMemoizedLastCall = timestamp;
-
-                    return getContentTypeMemoized(id);
-                },
+                get: (id) => sdApi.contentProfiles.get(id),
             },
             vocabulary: {
                 getAll: () => sdApi.vocabularies.getAll(),

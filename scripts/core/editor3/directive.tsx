@@ -27,7 +27,7 @@ import {
 import {fieldsMetaKeys, FIELD_KEY_SEPARATOR, setFieldMetadata} from './helpers/fieldsMeta';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
-import {findParentScope, gettext} from '../utils';
+import {gettext} from '../utils';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 import {canAddArticleEmbed} from './components/article-embed/can-add-article-embed';
 import {TextStatisticsConnected} from 'apps/authoring/authoring/components/text-statistics-connected';
@@ -35,6 +35,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateCharactersConnected';
 import {Spacer} from 'core/ui/components/Spacer';
 import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
+import {findParentScope} from 'core/find-parent-scope';
 
 /**
  * @ngdoc directive

@@ -21,6 +21,7 @@ export class ListItemsComponent extends React.Component<IProps, {}> {
                             <TypeIcon
                                 type={item.type}
                                 highlight={item.highlight}
+                                contentProfileId={item.profile}
                             />
                         </div>
                         <div className="content-item__urgency-field">
