@@ -3062,7 +3062,7 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
-            formatDate(date: Date | string): string;
+            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?:boolean}): string;
             formatDateTime(date: Date, timezoneId?: string): string;
             longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(

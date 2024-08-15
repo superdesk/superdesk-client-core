@@ -12,6 +12,18 @@ if (appConfig.shortTimeFormat == null) {
     appConfig.shortTimeFormat = 'HH:mm'; // 24h format
 }
 
+if (appConfig.view.dateformat == null) {
+    appConfig.view.dateformat = 'MM/DD';
+}
+
+if (appConfig.view.timeformat == null) {
+    appConfig.view.timeformat = 'hh:mm';
+}
+
+if (appConfig.longDateFormat == null) {
+    appConfig.longDateFormat = 'LLL';
+}
+
 if (appConfig.ui == null) {
     appConfig.ui = {};
 

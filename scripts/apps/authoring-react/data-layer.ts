@@ -25,7 +25,7 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
-import moment from 'moment';
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -421,8 +421,8 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
             newItem.sms_message = '';
 
             const {override_ednote_for_corrections, override_ednote_template} = appConfig;
-            const date = moment(newItem.versioncreated)
-                .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+
+            const date = formatDateTime(newItem.versioncreated);
 
             if (override_ednote_for_corrections && override_ednote_template == null) {
                 const lineBreak = '\r\n\r\n';

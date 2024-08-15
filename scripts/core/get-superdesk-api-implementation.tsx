@@ -221,11 +221,41 @@ export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date | string) => (
-    moment(date)
-        .tz(appConfig.default_timezone)
-        .format(appConfig.view.dateformat)
-);
+export const formatDate = (
+    date: Date | string | moment.Moment,
+    options?: {timezoneId?: string; longFormat?:boolean},
+): string => {
+    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+    const dateFormat = options.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
+
+    if (options.timezoneId != null) {
+        return momentDate
+            .tz(options.timezoneId)
+            .format(dateFormat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return momentDate
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(dateFormat);
+    }
+};
+
+export const formatDateTime = (date: Date, timezoneId?: string) => {
+    if (timezoneId != null) {
+        return moment(date)
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return moment(date)
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    }
+};
 
 export function dateToServerString(date: Date) {
     return date.toISOString().slice(0, 19) + '+0000';
@@ -491,20 +521,7 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date, timezoneId?: string) => {
-                if (timezoneId != null) {
-                    return moment(date)
-                        .tz(timezoneId)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                } else {
-                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
-                    const keepLocalTime = timezone === 'browser';
-
-                    return moment(date)
-                        .tz(appConfig.default_timezone, keepLocalTime)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                }
-            },
+            formatDateTime: formatDateTime,
             longFormatDateTime: (date: Date | string, timezoneId?: string) => {
                 if (timezoneId != null) {
                     return moment(date)
