@@ -705,6 +705,19 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
+    interface IEmailNotification {
+        type: 'email';
+    }
+
+    interface IDesktopNotification {
+        type: 'desktop';
+        label: string;
+        handler: (notification: any) => {
+            body: string;
+            actions: Array<{label: string; onClick: () => void;}>;
+        };
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -743,9 +756,8 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: {
-                    name?: string;
-                    label?: string;
+                [id: string]: IDesktopNotification | IEmailNotification | {
+                    name: string;
                     handler?: (notification: any) => {
                         body: string;
                         actions: Array<{label: string; onClick: () => void;}>;
