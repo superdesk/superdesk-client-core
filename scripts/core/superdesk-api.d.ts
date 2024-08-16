@@ -744,7 +744,8 @@ declare module 'superdesk-api' {
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
                 [id: string]: {
-                    name: string;
+                    name?: string;
+                    label?: string;
                     handler?: (notification: any) => {
                         body: string;
                         actions: Array<{label: string; onClick: () => void;}>;
