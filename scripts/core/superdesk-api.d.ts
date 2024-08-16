@@ -705,10 +705,18 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions.
+     * Use the `name, handler` one
+     */
     interface IEmailNotification {
         type: 'email';
     }
 
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions.
+     * Use the `name, handler` one
+     */
     interface IDesktopNotification {
         type: 'desktop';
         label: string;
