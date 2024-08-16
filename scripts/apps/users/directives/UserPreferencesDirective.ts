@@ -5,7 +5,7 @@ import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 import {cloneDeep, pick} from 'lodash';
-import {IExtensionActivationResult} from 'superdesk-api';
+import {IExtensionActivationResult, IMultiChannelNotification} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -391,7 +391,10 @@ export function UserPreferencesDirective(
                     scope.preferences[NOTIFICATIONS_KEY] = {};
                 }
 
-                for (const [notificationId, notification] of Object.entries(registeredNotifications)) {
+                for (
+                    const [notificationId, notification]
+                    of Object.entries(registeredNotifications) as Array<[string, IMultiChannelNotification]>
+                ) {
                     if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
                         scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
                             email: true,
