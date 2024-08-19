@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IWidgetIntegrationComponentProps} from './widgets';
+import {gettext} from 'core/utils';
 
 /**
  * Uses markup/styles from angular-based authoring and is intended to be rendered there.
@@ -32,6 +33,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                             onClick={() => {
                                 pinWidget(widget);
                             }}
+                            aria-label={gettext('Pin/Unpin')}
                         >
                             <i className="icon-pin" />
                         </button>
