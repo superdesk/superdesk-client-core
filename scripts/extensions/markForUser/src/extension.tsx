@@ -48,8 +48,7 @@ const extension: IExtension = {
                     },
                     notifications: {
                         'item:marked': {
-                            type: 'desktop',
-                            label: gettext('open item'),
+                            name: gettext('Mark for User'),
                             handler: (notification: any) => ({
                                 body: notification.message,
                                 actions: [{
@@ -57,20 +56,6 @@ const extension: IExtension = {
                                     onClick: () => superdesk.ui.article.view(notification.item),
                                 }],
                             }),
-                        },
-                        'item:unmarked': {
-                            label: gettext('open item'),
-                            type: 'desktop',
-                            handler: (notification: any) => ({
-                                body: notification.message,
-                                actions: [{
-                                    label: gettext('open item'),
-                                    onClick: () => superdesk.ui.article.view(notification.item),
-                                }],
-                            }),
-                        },
-                        'mark_for_user:notification': {
-                            type: 'email',
                         },
                     },
                     entities: {

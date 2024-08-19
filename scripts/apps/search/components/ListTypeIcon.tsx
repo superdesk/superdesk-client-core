@@ -64,6 +64,7 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                         : (
                             <TypeIcon
                                 type={this.props.item.type}
+                                contentProfileId={this.props.item.profile}
                                 highlight={this.props.item.highlight}
                                 aria-hidden={true}
                             />

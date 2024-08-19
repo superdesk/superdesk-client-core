@@ -705,14 +705,28 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions. Use IMultiChannelNotification
+     */
     interface IEmailNotification {
         type: 'email';
     }
 
-    export interface IDesktopNotification {
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions. Use IMultiChannelNotification
+     */
+    interface IDesktopNotification {
         type: 'desktop';
         label: string;
         handler: (notification: any) => {
+            body: string;
+            actions: Array<{label: string; onClick: () => void;}>;
+        };
+    }
+
+    interface IMultiChannelNotification {
+        name: string;
+        handler?: (notification: any) => {
             body: string;
             actions: Array<{label: string; onClick: () => void;}>;
         };
@@ -756,7 +770,7 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: IEmailNotification | IDesktopNotification;
+                [id: string]: IDesktopNotification | IEmailNotification | IMultiChannelNotification;
             };
             entities?: {
                 article?: {
@@ -1421,6 +1435,14 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        user_preferences: {
+            notifications: {
+                [key: string]: {
+                    email: boolean;
+                    desktop: boolean;
+                };
+            };
+        };
         last_activity_at?: string;
     }
 
@@ -1600,9 +1622,9 @@ declare module 'superdesk-api' {
         package = 'package',
     }
 
-    export interface IContentProfile {
-        _id: string;
+    export interface IContentProfile extends IBaseRestApiResponse {
         type: keyof typeof IContentProfileType;
+        icon?: string;
         label: string;
         description: string;
         schema: Object;
@@ -2459,7 +2481,7 @@ declare module 'superdesk-api' {
 
     type IRequestFactory = () => IDataRequestParams;
 
-    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+    type IResponseHandler<T> = (res: IRestApiResponse<T>) => any;
 
     export type IAuthoringActionType =
         'view'
@@ -2527,7 +2549,11 @@ declare module 'superdesk-api' {
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<T>;
-        createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
+        createProvider: <T extends IBaseRestApiResponse>(
+            requestFactory: IRequestFactory,
+            responseHandler: IResponseHandler<T>,
+            listenTo?: IListenTo,
+        ) => IDataProvider;
     }
 
     // EVENTS
@@ -2892,7 +2918,7 @@ declare module 'superdesk-api' {
                 };
             };
             contentProfile: {
-                get(id: string): Promise<IContentProfile>;
+                get(id: string): IContentProfile;
             };
             vocabulary: {
                 getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
@@ -2951,7 +2977,17 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
+
+            /**
+             * @deprecated
+             * use prepareSuperdeskQuery
+             */
             superdeskToElasticQuery(q: ISuperdeskQuery): {q?: string, source: string};
+
+            /**
+             * endpoint must start with `/` e.g. '/archive'
+             */
+            prepareSuperdeskQuery(endpoint: string, query: ISuperdeskQuery): IHttpRequestOptionsLocal & {method: 'GET'};
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -3051,7 +3087,7 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
-            formatDate(date: Date | string): string;
+            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?:boolean}): string;
             formatDateTime(date: Date, timezoneId?: string): string;
             longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(

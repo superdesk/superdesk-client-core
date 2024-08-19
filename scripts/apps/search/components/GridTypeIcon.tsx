@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {TypeIcon} from './index';
 import classNames from 'classnames';
 import {IArticle} from 'superdesk-api';
@@ -10,25 +9,12 @@ interface IProps {
     swimlane?: any;
 }
 
-export const GridTypeIcon: React.StatelessComponent<IProps> = (props) => {
-    if (props.photoGrid) {
-        return React.createElement('span',
-            {className: classNames('sd-grid-item__type-icn',
-                {swimlane: props.swimlane},
-            )},
-            React.createElement(TypeIcon, {type: props.item.type}),
-        );
-    }
+export const GridTypeIcon: React.FunctionComponent<IProps> = (props) => {
+    const className = props.photoGrid ? classNames('sd-grid-item__type-icn', {swimlane: props.swimlane}) : undefined;
 
-    return React.createElement(
-        'span',
-        {},
-        React.createElement(TypeIcon, {type: props.item.type}),
+    return (
+        <span className={className}>
+            <TypeIcon type={props.item.type} contentProfileId={props.item.profile} />
+        </span>
     );
-};
-
-GridTypeIcon.propTypes = {
-    swimlane: PropTypes.any,
-    item: PropTypes.any,
-    photoGrid: PropTypes.bool,
 };

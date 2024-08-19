@@ -1,10 +1,10 @@
 import {IContentProfile} from 'superdesk-api';
-import ng from 'core/services/ng';
+import {dataStore} from 'data-store';
 
 interface IContentProfilesApi {
-    get(id: IContentProfile['_id']): Promise<IContentProfile>;
+    get(id: IContentProfile['_id']): IContentProfile;
 }
 
 export const contentProfiles: IContentProfilesApi = {
-    get: (id) => ng.get('content').getType(id),
+    get: (id) => dataStore.contentProfiles.get(id),
 };
