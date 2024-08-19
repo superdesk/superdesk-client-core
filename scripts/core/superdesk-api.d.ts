@@ -705,6 +705,33 @@ declare module 'superdesk-api' {
         preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions. Use IMultiChannelNotification
+     */
+    interface IEmailNotification {
+        type: 'email';
+    }
+
+    /**
+     * @deprecated This interface is deprecated and will be removed in future versions. Use IMultiChannelNotification
+     */
+    interface IDesktopNotification {
+        type: 'desktop';
+        label: string;
+        handler: (notification: any) => {
+            body: string;
+            actions: Array<{label: string; onClick: () => void;}>;
+        };
+    }
+
+    interface IMultiChannelNotification {
+        name: string;
+        handler?: (notification: any) => {
+            body: string;
+            actions: Array<{label: string; onClick: () => void;}>;
+        };
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -743,13 +770,7 @@ declare module 'superdesk-api' {
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
-                [id: string]: {
-                    name: string;
-                    handler?: (notification: any) => {
-                        body: string;
-                        actions: Array<{label: string; onClick: () => void;}>;
-                    };
-                };
+                [id: string]: IDesktopNotification | IEmailNotification | IMultiChannelNotification;
             };
             entities?: {
                 article?: {
