@@ -311,9 +311,9 @@ function canPublishOnDesk(deskType: string): boolean {
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
-        && sdApi.navigation.isPersonalSpace()
+        && !sdApi.navigation.isPersonalSpace()
         && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
-        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
 }
 
 function showCloseAndContinue(item: IArticle, dirty: boolean): boolean {
