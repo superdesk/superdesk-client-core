@@ -63,7 +63,7 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
+        name: playwright-report-${{ matrix.suite }}
         path: e2e/client/test-results
 
     # playwright end
