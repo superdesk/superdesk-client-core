@@ -186,10 +186,6 @@ export function CardsService(search, session, desks, $location) {
                 query.filter({bool: {must}});
             }
         }
-
-        if (appConfig.features.nestedItemsInOutputStage) {
-            query.setOption('hidePreviousVersions', true);
-        }
     }
 
     function filterQueryByCardFileType(query, card: ICard) {
@@ -263,6 +259,10 @@ export function CardsService(search, session, desks, $location) {
         if (queryString) {
             query.filter({query: {query_string: {query: queryString, lenient: true}}});
             criteria.es_highlight = search.getElasticHighlight();
+        }
+
+        if (appConfig.features.nestedItemsInOutputStage) {
+            query.setOption('hidePreviousVersions', true);
         }
 
         criteria.source = query.getCriteria();
