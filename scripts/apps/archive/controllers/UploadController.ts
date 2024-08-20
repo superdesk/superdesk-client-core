@@ -8,6 +8,7 @@ import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@superdesk/common';
+import {sdApi} from 'api';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
@@ -102,7 +103,7 @@ export function UploadController(
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
     $scope.parent = $scope.locals?.data?.parent || null;
-    $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
+    $scope.deskSelectionAllowed = !sdApi.navigation.isPersonalSpace() && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
 
     if ($scope.deskSelectionAllowed === true) {

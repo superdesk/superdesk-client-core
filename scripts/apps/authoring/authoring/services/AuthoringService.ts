@@ -13,6 +13,7 @@ import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {sdApi} from 'api';
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -377,7 +378,7 @@ export function AuthoringService(
     ) {
         let extDiff = helpers.extendItem({}, diff);
 
-        if (extDiff['task'] && $location.path() !== '/workspace/personal') {
+        if (extDiff['task'] && !sdApi.navigation.isPersonalSpace()) {
             delete extDiff['task'];
         }
 
@@ -811,7 +812,7 @@ export function AuthoringService(
     this._updateGeneralActions = function(currentItem, action) {
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
-        let isPersonalSpace = $location.path() === '/workspace/personal';
+        const isPersonalSpace = sdApi.navigation.isPersonalSpace();
 
         action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem)
             && !isCorrection(currentItem);
