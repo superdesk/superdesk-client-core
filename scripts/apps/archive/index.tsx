@@ -468,7 +468,7 @@ function spikeActivity(data, modal, $location, multi,
     });
 
     function _spike() {
-        if ($location.path() === '/workspace/personal') {
+        if (sdApi.navigation.isPersonalSpace()) {
             return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
                 .then(() => sdApi.article.doSpike(data.item));
         }

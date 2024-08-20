@@ -74,9 +74,7 @@ function canPublish(item: IArticle): boolean {
         return false;
     }
 
-    const $location = ng.get('$location');
-
-    if ($location.path() === '/workspace/personal' && appConfig?.features?.publishFromPersonal !== true) {
+    if (sdApi.navigation.isPersonalSpace() && appConfig?.features?.publishFromPersonal !== true) {
         return false;
     } else {
         const deskId = item?.task?.desk;
