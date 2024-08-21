@@ -323,6 +323,11 @@ export function AuthoringDirective(
             };
 
             function _previewHighlight(_id) {
+                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
+                    $scope.highlight_preview = res;
+                }).catch((err) => {
+                    $scope.highlight_preview = err;
+                });
             }
 
             if ($scope.origItem.highlight) {
