@@ -23,6 +23,7 @@ import {InitializeMedia} from '../services/InitializeMediaService';
 import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
+import notify from 'core/notify/notify';
 
 /**
  * @ngdoc directive
@@ -233,7 +234,7 @@ export function AuthoringDirective(
                             sdApi.navigation.isPersonalSpace(),
                         );
 
-                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
+                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
@@ -322,11 +323,6 @@ export function AuthoringDirective(
             };
 
             function _previewHighlight(_id) {
-                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
-                    $scope.highlight_preview = res;
-                }).catch((err) => {
-                    $scope.highlight_preview = err;
-                });
             }
 
             if ($scope.origItem.highlight) {
