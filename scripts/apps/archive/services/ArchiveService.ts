@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import {appConfig} from 'appConfig';
+import {sdApi} from 'api';
 
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location'];
 export function ArchiveService(desks, session, api, $q, search, $location) {
@@ -11,7 +12,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {Object} desk when passed the item will be assigned to this desk instead of user's activeDesk.
      */
     this.addTaskToArticle = function(item, desk = desks.getCurrentDesk()) {
-        if ((!item.task || !item.task.desk) && desk && $location.path() !== '/workspace/personal') {
+        if ((!item.task || !item.task.desk) && desk && !sdApi.navigation.isPersonalSpace()) {
             item.task = {desk: desk._id, stage: desk.working_stage, user: session.identity._id};
         }
     };
