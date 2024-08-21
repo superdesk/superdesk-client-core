@@ -24,7 +24,6 @@ import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 
-
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
