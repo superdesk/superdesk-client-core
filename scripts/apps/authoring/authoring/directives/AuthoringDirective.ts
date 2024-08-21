@@ -232,7 +232,7 @@ export function AuthoringDirective(
                             sdApi.navigation.isPersonalSpace(),
                         );
 
-                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
+                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
