@@ -7,7 +7,7 @@ export function getPublishDate(superdesk: ISuperdesk) {
             const {article} = this.props;
             const {DateTime} = superdesk.components;
 
-            if (article.firstpublished == null) {
+            if (article.firstpublished == null || article.pubstatus.toLowerCase() === 'canceled') {
                 return null;
             } else {
                 return (
