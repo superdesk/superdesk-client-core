@@ -1,7 +1,8 @@
 import React = require('react');
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
+import {superdesk} from './superdesk';
 
-export function getPublishDate(superdesk: ISuperdesk) {
+export function getPublishDate() {
     return class DisplayPublishedTime extends React.PureComponent<{article: IArticle}> {
         render() {
             const {article} = this.props;
