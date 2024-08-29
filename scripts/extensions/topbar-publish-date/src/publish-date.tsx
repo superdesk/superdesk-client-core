@@ -13,7 +13,7 @@ export function getPublishDate() {
             } else {
                 return (
                     <dl data-test-id="date-published">
-                        <dt>{superdesk.localization.gettext('Published')}</dt>
+                        <dt>{superdesk.localization.gettext('First Published')}</dt>
                         {' '}
                         <dd>
                             <DateTime dateTime={article.firstpublished} />
