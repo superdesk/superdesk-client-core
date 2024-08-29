@@ -11,7 +11,7 @@ export class ModifiedInfo extends React.PureComponent<IProps> {
     render() {
         const {article} = this.props;
 
-        if (article.versioncreated == null || article.pubstatus === 'CANCELED') {
+        if (article.versioncreated == null) {
             return null;
         }
 
