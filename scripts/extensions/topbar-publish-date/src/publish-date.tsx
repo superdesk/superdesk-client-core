@@ -21,4 +21,4 @@ export class DisplayPublishedTime extends React.PureComponent<{article: IArticle
             );
         }
     }
-};
+}
