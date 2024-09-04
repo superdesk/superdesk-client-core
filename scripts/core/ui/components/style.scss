@@ -32,9 +32,16 @@ time.Datetime {
 }
 
 .sd-list-item-group {
+    padding: 4px 4px 18px 4px;
     &--vertical-scroll {
         overflow-y: auto;
     }
+}
+
+.sd-list-item-group--space-between-items .sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap--small);
 }
 
 .terms-list {
