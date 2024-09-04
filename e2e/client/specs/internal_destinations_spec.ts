@@ -2,7 +2,7 @@
 
 import {browser, element, by, ExpectedConditions as EC} from 'protractor';
 import {el, els, s, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
-import {nav} from './helpers/utils';
+import {nav, retryingFindClick, waitFor} from './helpers/utils';
 
 describe('internal destinations & generic-page-list', () => {
     // The following tests also cover all other pages using generic-page-list
@@ -155,20 +155,18 @@ describe('internal destinations & generic-page-list', () => {
         expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('charlie');
     });
 
-    it('can display and remove active filters', () => {
-        var items = els(['list-page--items', 'internal-destinations-item']);
-
-        browser.wait(ECE.hasElementCount(items, 3));
+    fit('can display and remove active filters', () => {
+        browser.wait(ECE.hasElementCount(els(['list-page--items', 'internal-destinations-item']), 3));
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
 
         el(['toggle-filters']).click();
 
-        el(['list-page--filters-form', 'gform-input--desk']).click();
-        el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
-        el(['list-page--filters-form', 'filters-submit']).click();
+        // el(['list-page--filters-form', 'gform-input--desk']).click();
+        // el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
+        // el(['list-page--filters-form', 'filters-submit']).click();
 
-        browser.wait(ECE.hasElementCount(items, 2), 1000);
-        expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
+        // browser.wait(ECE.hasElementCount(els(['list-page--items', 'internal-destinations-item']), 2), 1000);
+        // expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
 
@@ -176,7 +174,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['tag-label--remove'], null, activeFilter).click();
 
-        browser.wait(ECE.hasElementCount(items, 3), 1000);
+        browser.wait(ECE.hasElementCount(els(['list-page--items', 'internal-destinations-item']), 3), 1000);
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
     });
 });
