@@ -483,6 +483,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     return (
                                         <InteractiveArticleActionsPanel
                                             items={panelState.items}
+                                            onDataChange={(item) => {
+                                                onItemChange(item);
+                                            }}
                                             tabs={panelState.tabs}
                                             activeTab={panelState.activeTab}
                                             handleUnsavedChanges={
