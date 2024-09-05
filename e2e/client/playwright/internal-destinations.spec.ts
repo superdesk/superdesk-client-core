@@ -23,4 +23,4 @@ test.describe('internal destinations', async () => {
         await page.locator(s('list-page--filters-active', 'tag-label', 'tag-label--remove')).click();
         await expect(page.locator(s('list-page--filters-active', 'tag-label'))).toHaveCount(0);
     });
-})
+});
