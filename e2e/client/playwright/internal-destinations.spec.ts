@@ -1,11 +1,11 @@
 import {test, expect} from '@playwright/test';
-import {login, s} from './utils';
+import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('internal destinations', async () => {
     test('display and removal of active filters', async ({page}) => {
-        await login(page);
-        await page.goto('/#/settings/internal-destinations');
+        await restoreDatabaseSnapshot();
 
+        await page.goto('/#/settings/internal-destinations');
         await expect(page.locator(s('list-page--filters-active', 'tag-label'))).toHaveCount(0);
 
         await page.locator(s('toggle-filters')).click();
