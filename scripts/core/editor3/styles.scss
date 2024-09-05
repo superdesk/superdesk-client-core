@@ -211,10 +211,10 @@ $editor-styleButton-size: 			3rem;
 				display: block;
 			}
 
-		img {
-			max-width: 100%;
+			img {
+				max-width: 100%;
+			}
 		}
-	}
 		.image-block__image-overlay {
 			@include image-overlay;
 		}
