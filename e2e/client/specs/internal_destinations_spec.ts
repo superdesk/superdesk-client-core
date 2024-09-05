@@ -2,7 +2,7 @@
 
 import {browser, element, by, ExpectedConditions as EC} from 'protractor';
 import {el, els, s, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
-import {nav, retryingFindClick, waitFor} from './helpers/utils';
+import {nav} from './helpers/utils';
 
 describe('internal destinations & generic-page-list', () => {
     // The following tests also cover all other pages using generic-page-list
