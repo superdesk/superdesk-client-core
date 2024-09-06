@@ -1184,6 +1184,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }
             },
+            addValidationErrors: (moreValidationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors: {
+                        ...state.validationErrors,
+                        ...moreValidationErrors,
+                    },
+                });
+            },
         };
 
         const authoringOptions: IAuthoringOptions<T> | null =
