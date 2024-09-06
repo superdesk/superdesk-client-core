@@ -342,10 +342,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             return getArticleContentProfile(item, fieldsAdapter);
         }
     },
-    closeAuthoring: (current, original, cancelAutosave, doClose) => {
-        const diff = generatePatch(original, current);
-        const hasUnsavedChanges = Object.keys(diff).length > 0;
-
+    closeAuthoring: (current, original, hasUnsavedChanges, cancelAutosave, doClose) => {
         const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',
             payload: {},
