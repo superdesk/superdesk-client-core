@@ -95,13 +95,13 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: this.props.useHeaderLayout === true ? '12px' : '32px',
+                    gap: this.props.useHeaderLayout === true ? 'var(--gap-1-5)' : 'var(--gap-4)',
                     padding: this.props.padding,
                 }}
             >
                 {
                     grouped.map((group, index) => (
-                        <div key={index} style={{display: 'flex', gap: '12px'}}>
+                        <div key={index} style={{display: 'flex', gap: 'var(--gap-1-5)'}}>
                             {
                                 group.map((field) => {
                                     const canBeToggled = toggledFields[field.id] != null;
