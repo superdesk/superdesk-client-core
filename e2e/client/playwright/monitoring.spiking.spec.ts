@@ -10,7 +10,6 @@ test('spiking and unspiking an article', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // spike article
     await monitoring.executeActionOnMonitoringItem(
         page.locator(s('article-item=story 2')),
         'Spike Item',
@@ -21,7 +20,7 @@ test('spiking and unspiking an article', async ({page}) => {
     await expect(page.locator(s('monitoring-view', 'article-item=story 2'))).not.toBeVisible();
 
     // go to spike item list and check visibility of article
-    await page.locator(s('Spiked Items')).click();
+    await page.goto('/#/workspace/spike-monitoring');
     await expect(page.locator(s('articles-list', 'article-item=story 2'))).toBeVisible();
 
     // unspike article
@@ -36,4 +35,19 @@ test('spiking and unspiking an article', async ({page}) => {
     // go to monitoring and check visibility of article
     await page.goto('/#/workspace/monitoring');
     await expect(page.locator(s('monitoring-view', 'article-item=story 2'))).toBeVisible();
+});
+
+test('spiked view respecting the selected desk', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/spike-monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
+    await expect(page.locator(s('articles-list', 'article-item=Spiked article from sport desk'))).toBeVisible();
+    await expect(page.locator(s('articles-list', 'article-item=Spiked article from education desk'))).not.toBeVisible();
+
+    await monitoring.selectDeskOrWorkspace('Education');
+    await expect(page.locator(s('articles-list', 'article-item=Spiked article from education desk'))).toBeVisible();
+    await expect(page.locator(s('articles-list', 'article-item=Spiked article from sport desk'))).not.toBeVisible();
 });

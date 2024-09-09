@@ -79,15 +79,12 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 });
             }));
         }))
-        .then(angular.bind(this, function() {
-            return this.readSettings()
-                .then(angular.bind(this, function(settings) {
-                    initGroups(settings);
-                    setupCards();
-                    this.settings = settings;
-                    getActiveProfiles();
-                }));
-        }));
+        .then(() => Promise.all([this.readSettings(), getActiveProfiles()]))
+        .then(([settings, _]) => {
+            initGroups(settings);
+            setupCards();
+            this.settings = settings;
+        });
 
     /**
      * If view showed as widget set the current widget
