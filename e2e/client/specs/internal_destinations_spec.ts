@@ -2,7 +2,7 @@
 
 import {browser, element, by, ExpectedConditions as EC} from 'protractor';
 import {el, els, s, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
-import {nav, scrollToView} from './helpers/utils';
+import {nav} from './helpers/utils';
 
 describe('internal destinations & generic-page-list', () => {
     // The following tests also cover all other pages using generic-page-list
@@ -162,8 +162,6 @@ describe('internal destinations & generic-page-list', () => {
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
 
         el(['toggle-filters']).click();
-
-        scrollToView(el(['list-page--filters-form', 'gform-input--desk']));
 
         el(['list-page--filters-form', 'gform-input--desk']).click();
         el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
