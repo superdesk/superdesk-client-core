@@ -29,7 +29,10 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
 
     let rowWidth = 0; // percent
 
-    for (const item of items) {
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+
         const itemWidth = getWidth(item);
         const fitOnThisRow = rowWidth + itemWidth <= 100;
 
@@ -48,8 +51,10 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
 
         lastGroup.push(item);
 
+        const isLastItem = i === items.length - 1;
+
         // if row is full after pushing - add a new one
-        if (rowWidth === 100) {
+        if (rowWidth === 100 && !isLastItem) {
             itemGroups.push([]);
             rowWidth = 0;
         }
@@ -90,13 +95,13 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '12px',
+                    gap: this.props.useHeaderLayout === true ? 'var(--gap-1-5)' : 'var(--gap-4)',
                     padding: this.props.padding,
                 }}
             >
                 {
                     grouped.map((group, index) => (
-                        <div key={index} style={{display: 'flex', gap: '12px'}}>
+                        <div key={index} style={{display: 'flex', gap: 'var(--gap-1-5)'}}>
                             {
                                 group.map((field) => {
                                     const canBeToggled = toggledFields[field.id] != null;

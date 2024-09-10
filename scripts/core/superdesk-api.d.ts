@@ -160,6 +160,7 @@ declare module 'superdesk-api' {
         initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
+        addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
     }
 
     export interface IAuthoringOptions<T> {

@@ -46,6 +46,7 @@ import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -435,6 +436,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 handleUnsavedChanges,
                                 sideWidget,
                                 onItemChange,
+                                addValidationErrors,
                             }, readOnly) => {
                                 if (panelState.active === true) {
                                     return (
@@ -446,6 +448,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                 () => handleUnsavedChanges().then((res) => [res])
                                             }
                                             onClose={panelActions.closePanel}
+                                            onError={(error) => {
+                                                if (error.kind === 'publishing-error') {
+                                                    addValidationErrors(error.fields);
+                                                } else {
+                                                    assertNever(error.kind);
+                                                }
+                                            }}
                                             markupV2
                                         />
                                     );
