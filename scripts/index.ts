@@ -30,6 +30,7 @@ import {store} from 'core/data';
 import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
 import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
 import {registerLegacyExtensionCompatibilityLayer} from 'register-legacy-extension-compatibility-layer';
+import {dataStore} from 'data-store';
 
 let body = angular.element('body');
 
@@ -136,6 +137,7 @@ export function startApp(
                     // preload vocabularies
                     vocabularies.getAllActiveVocabularies(),
                     preferencesService.getPrivileges(),
+                    dataStore.initialize(),
                 ]).then(() => {
                     registerExtensions(
                         extensions,

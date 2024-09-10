@@ -2,7 +2,7 @@ import {each, forEach, isNil, partition, keyBy} from 'lodash';
 import {gettext, getItemTypes} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
-import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup} from 'superdesk-api';
+import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup, IContentProfile} from 'superdesk-api';
 import {getLabelForStage} from 'apps/workspace/content/constants';
 import {getExtensionSections} from '../services/CardsService';
 
@@ -404,6 +404,27 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         updateFilterInStore();
         updateFilteringCriteria();
         $scope.$apply();
+    };
+
+    this.toggleContentProfileFilter = (profile: IContentProfile) => {
+        if (this.isContentProfileFilterActive(profile._id)) {
+            this.activeFilterTags[CONTENT_PROLFILE] =
+                this.activeFilterTags[CONTENT_PROLFILE].filter(({key}) => key !== profile._id);
+        } else {
+            this.activeFilterTags[CONTENT_PROLFILE] = (this.activeFilterTags[CONTENT_PROLFILE] ?? []).concat({
+                key: profile._id,
+                label: profile.label,
+            });
+        }
+
+        this.activeFilters.contentProfile = this.activeFilterTags[CONTENT_PROLFILE].map(({key}) => key);
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+    };
+
+    this.isContentProfileFilterActive = (id: IContentProfile['_id']): boolean => {
+        return (this.activeFilterTags[CONTENT_PROLFILE] ?? []).find(({key}) => key === id) != null;
     };
 
     this.setCustomFilter = (filter: IMonitoringFilter) => {

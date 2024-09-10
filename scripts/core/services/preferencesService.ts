@@ -23,6 +23,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 userPreferences = {
                     'feature:preview': 1,
                     'archive:view': 1,
+                    'notifications': 1,
                     'email:notification': 1,
                     'desktop:notification': 1,
                     'slack:notification': 1,
@@ -90,7 +91,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 },
                 // ask for permission and send a desktop notification
                 send: (msg) => {
-                    if (_.get(preferences, 'user_preferences.desktop:notification.enabled')) {
+                    if (preferences.user_preferences['desktop:notification'].enabled) {
                         if ('Notification' in window && Notification.permission !== 'denied') {
                             Notification.requestPermission((permission) => {
                                 if (permission === 'granted') {

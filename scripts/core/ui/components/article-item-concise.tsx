@@ -30,6 +30,7 @@ export class ArticleItemConcise extends React.PureComponent<IProps> {
                             <TypeIcon
                                 type={article.type}
                                 highlight={article.highlight}
+                                contentProfileId={article.profile}
                             />
                         </div>
                     </ListItemColumn>

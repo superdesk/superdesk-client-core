@@ -5,6 +5,7 @@ import {waitHidden, waitFor, click} from './utils';
 import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
 import {PLAIN_TEXT_TEMPLATE_NAME} from './constants';
 import {TreeSelectDriver} from './tree-select-driver';
+import {monitoring} from './monitoring';
 
 class Authoring {
     lock: any;
@@ -337,11 +338,12 @@ class Authoring {
          * @param {String} name
          */
         this.createTextItemFromTemplate = (name) => {
-            el(['content-create']).click();
-            el(['content-create-dropdown'], by.buttonText('More templates...')).click();
+            monitoring.createItem('More templates...');
+
             el(['content-create-dropdown', 'search']).sendKeys(name);
             el(['content-create-dropdown'], by.buttonText(name)).click();
-            browser.wait(ECE.presenceOf(el(['authoring'])));
+
+            browser.wait(ECE.presenceOf(el(['authoring'])), 2000);
         };
 
         this.close = function() {

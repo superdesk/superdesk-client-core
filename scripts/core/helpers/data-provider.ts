@@ -22,17 +22,17 @@ const isItemEqual = (a: IBaseRestApiResponse, b: IBaseRestApiResponse) => (
     )) || isEqual(a, b)
 );
 
-export class DataProvider<T extends IRestApiResponse<T>> implements IDataProvider {
+export class DataProvider<T extends IBaseRestApiResponse> implements IDataProvider {
     updateTimeout = 1000;
     requestFactory: IRequestFactory;
-    responseHandler: IResponseHandler;
+    responseHandler: IResponseHandler<T>;
     listenTo: IListenTo;
     listeners: Array<() => void> = [];
 
     private scheduleUpdate: () => void;
     private cache: IRestApiResponse<T>;
 
-    constructor(requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo: IListenTo) {
+    constructor(requestFactory: IRequestFactory, responseHandler: IResponseHandler<T>, listenTo: IListenTo) {
         this.requestFactory = requestFactory;
         this.responseHandler = responseHandler;
         this.listenTo = listenTo || {};

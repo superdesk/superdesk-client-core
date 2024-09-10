@@ -46,7 +46,7 @@ import {
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
-import {memoize, omit} from 'lodash';
+import {omit} from 'lodash';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
@@ -119,10 +119,7 @@ import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
-
-function getContentType(id): Promise<IContentProfile> {
-    return dataApi.findOne('content_types', id);
-}
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -152,9 +149,6 @@ export function openArticle(
 
     return Promise.resolve();
 }
-
-const getContentTypeMemoized = memoize(getContentType);
-let getContentTypeMemoizedLastCall: number = 0; // unix time
 
 export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
@@ -220,11 +214,41 @@ export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date | string) => (
-    moment(date)
-        .tz(appConfig.default_timezone)
-        .format(appConfig.view.dateformat)
-);
+export const formatDate = (
+    date: Date | string | moment.Moment,
+    options?: {timezoneId?: string; longFormat?:boolean},
+): string => {
+    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+    const dateFormat = options.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
+
+    if (options.timezoneId != null) {
+        return momentDate
+            .tz(options.timezoneId)
+            .format(dateFormat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return momentDate
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(dateFormat);
+    }
+};
+
+export const formatDateTime = (date: Date, timezoneId?: string) => {
+    if (timezoneId != null) {
+        return moment(date)
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return moment(date)
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    }
+};
 
 export function dateToServerString(date: Date) {
     return date.toISOString().slice(0, 19) + '+0000';
@@ -291,8 +315,9 @@ export function getSuperdeskApiImplementation(
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
-            superdeskToElasticQuery: toElasticQuery,
             getArticleLabel,
+            superdeskToElasticQuery: toElasticQuery,
+            prepareSuperdeskQuery: prepareSuperdeskQuery,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -323,23 +348,7 @@ export function getSuperdeskApiImplementation(
                 getDeskById: sdApi.desks.getDeskById,
             },
             contentProfile: {
-                get: (id) => {
-                    // Adding simple caching since the function will be called multiple times per second.
-
-                    // TODO: implement synchronous API(and a cache) for accessing
-                    // most user settings including content profiles.
-
-                    const timestamp = Date.now();
-
-                    // cache for 5 seconds
-                    if (timestamp - getContentTypeMemoizedLastCall > 5000) {
-                        getContentTypeMemoized.cache.clear();
-                    }
-
-                    getContentTypeMemoizedLastCall = timestamp;
-
-                    return getContentTypeMemoized(id);
-                },
+                get: (id) => sdApi.contentProfiles.get(id),
             },
             vocabulary: {
                 getAll: () => sdApi.vocabularies.getAll(),
@@ -489,20 +498,7 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date, timezoneId?: string) => {
-                if (timezoneId != null) {
-                    return moment(date)
-                        .tz(timezoneId)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                } else {
-                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
-                    const keepLocalTime = timezone === 'browser';
-
-                    return moment(date)
-                        .tz(appConfig.default_timezone, keepLocalTime)
-                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-                }
-            },
+            formatDateTime: formatDateTime,
             longFormatDateTime: (date: Date | string, timezoneId?: string) => {
                 if (timezoneId != null) {
                     return moment(date)
