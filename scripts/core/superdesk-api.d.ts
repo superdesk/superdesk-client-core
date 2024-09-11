@@ -122,6 +122,7 @@ declare module 'superdesk-api' {
         closeAuthoring(
             current: T,
             original: T,
+            hasUnsavedChanges: boolean,
             cancelAutosave: () => Promise<void>,
             doClose: () => void,
         ): Promise<void>;
