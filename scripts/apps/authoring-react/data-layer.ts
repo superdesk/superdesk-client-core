@@ -64,12 +64,20 @@ export function getArticleContentProfile<T>(
         const {editor, fields, schema} = fakeScope;
         const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
 
-        // Avoid having unnecessary adapters for fields
-        // to which we do not write data e.g. 'footer'.
-        // Authoring react doesn't support companion
-        // fields like 'footer' that don't have data on
-        // their own but simply modify the data of other fields.
-        const fieldsToOmit = ['footer'];
+        const fieldsToOmit = [
+            /**
+             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
+             * authoring-react doesn't support companion fields like 'footer' that don't have data on
+             * their own but simply modify the data of other fields.
+             */
+            'footer',
+
+            /**
+             * `media_description` isn't used anywhere. It might still be present in content profiles, so
+             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
+             */
+            'media_description',
+        ];
 
         const fieldsOrdered =
             Object.keys(editor)

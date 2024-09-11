@@ -1112,7 +1112,6 @@ declare module 'superdesk-api' {
         copyrightnotice?: string;
         sign_off: string;
         feature_media?: any;
-        media_description?: string;
         description_text?: string;
 
         associations?: {
