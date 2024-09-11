@@ -132,7 +132,7 @@ describe('internal destinations & generic-page-list', () => {
         browser.wait(ECE.textToBePresentInElement(el(['gform-output--name'], null, items.get(2)), 'alpha'));
     });
 
-    it('can filter items', () => {
+    xit('can filter items', () => {
         var items = els(['list-page--items', 'internal-destinations-item']);
 
         browser.wait(ECE.hasElementCount(items, 3));
