@@ -262,7 +262,7 @@ export function screenshot(name) {
         let file = path.join(dir, name + '.png'),
             stream = fs.createWriteStream(file);
 
-        stream.write(new Buffer(png, 'base64'));
+        stream.write(Buffer.from(png, 'base64'));
         stream.end();
     });
 }
