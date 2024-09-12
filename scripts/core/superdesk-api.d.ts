@@ -3486,6 +3486,11 @@ declare module 'superdesk-api' {
 
         userOnlineMinutes: number;
 
+        // e.g. {nl: 'leuven_dutch'}
+        spellcheckers?: {
+            [languageCode: string]: string;
+        };
+
         iMatricsFields: {
             entities: {
                 [key: string]: {
