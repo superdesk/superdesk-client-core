@@ -2,7 +2,6 @@
 /* eslint-disable no-case-declarations */
 import React from 'react';
 import {Map} from 'immutable';
-import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
     IAuthoringAction,
@@ -31,7 +30,6 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
-import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@superdesk/common';
@@ -47,6 +45,7 @@ import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
+import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 function getAuthoringActionsFromExtensions(
@@ -66,11 +65,23 @@ function getAuthoringActionsFromExtensions(
     );
 }
 
+export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
+    return Object.values(extensions)
+        .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
+        .filter((widget) => widget.isAllowed?.(article) ?? true)
+        .sort((a, b) => a.order - b.order);
+}
+
 const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
 
 interface IProps {
     itemId: IArticle['_id'];
 }
+
+export type ISideWidget = {
+    id: string;
+    pinned?: boolean;
+};
 
 const getCompareVersionsModal = (
     getLatestItem: IExposedFromAuthoring<IArticle>['getLatestItem'],
@@ -250,10 +261,7 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     sidebarMode: boolean | 'hidden';
-    sideWidget: null | {
-        id: string;
-        pinned?: boolean;
-    };
+    sideWidget: null | ISideWidget;
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -327,57 +335,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     render() {
-        function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
-            return Object.values(extensions)
-                .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-                .filter((widget) => widget.isAllowed?.(article) ?? true)
-                .sort((a, b) => a.order - b.order);
-        }
-
-        const getSidebar = (options: IExposedFromAuthoring<IArticle>) => {
-            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(options.item)
-                .map((widget) => {
-                    const tab: ISideBarTab = {
-                        icon: widget.icon,
-                        size: 'big',
-                        tooltip: widget.label,
-                        id: widget._id,
-                    };
-
-                    return tab;
-                });
-
-            const {sideWidget} = this.state;
-
-            return (
-                <Nav.SideBarTabs
-                    disabled={sideWidget?.pinned}
-                    activeTab={sideWidget?.id}
-                    onActiveTabChange={(nextWidgetId) => {
-                        if (nextWidgetId == null && closedIntentionally.value == true) {
-                            closedIntentionally.value = false;
-                        }
-
-                        const isWidgetPinned = (() => {
-                            if (sideWidget?.id != null && sideWidget.id === nextWidgetId) {
-                                return sideWidget.pinned;
-                            }
-
-                            return false;
-                        })();
-
-                        this.setState({
-                            sideWidget: nextWidgetId == null ? null : {
-                                id: nextWidgetId,
-                                pinned: isWidgetPinned,
-                            },
-                        });
-                    }}
-                    items={sidebarTabs}
-                />
-            );
-        };
-
         const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
@@ -565,7 +522,19 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     </WidgetStatePersistenceHOC>
                                 );
                             }}
-                            getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
+                            getSidebar={
+                                this.state.sidebarMode !== true
+                                    ? null
+                                    : (options) => (
+                                        <AuthoringIntegrationWrapperSidebar
+                                            options={options}
+                                            sideWidget={this.state.sideWidget}
+                                            setSideWidget={(sideWidget) => {
+                                                this.setState({sideWidget});
+                                            }}
+                                        />
+                                    )
+                            }
                             secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
                             validateBeforeSaving={false}
                             getSideWidgetIdAtIndex={(article, index) => {

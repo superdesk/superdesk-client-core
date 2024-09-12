@@ -630,9 +630,6 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<IArticle>;
     }
 
-    /**
-     * @deprecated: prefer {@link IGenericSideWidget}
-     */
     export interface IArticleSideWidget {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
@@ -640,6 +637,11 @@ declare module 'superdesk-api' {
         icon: string;
         component: React.ComponentClass<IArticleSideWidgetComponentType>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
+
+        /**
+         * Up to 2 symbols
+         */
+        getBadge?: (item: IArticle) => Promise<string | null>;
     }
 
     export type IComment = {
@@ -2835,7 +2837,7 @@ declare module 'superdesk-api' {
         };
         instance: {
             config: ISuperdeskGlobalConfig;
-            authoringReactViewEnabled: boolean;
+            authoringReactViewEnabled: boolean; // TAG: AUTHORING-ANGULAR
         };
 
         /** Retrieves configuration options passed when registering an extension. */
