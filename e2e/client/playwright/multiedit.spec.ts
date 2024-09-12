@@ -42,7 +42,7 @@ test.describe('Multiedit', async () => {
 
         await multiedit.save('story 2');
 
-        await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'exit'}).click();
+        await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'Exit'}).click();
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story 1.1')),
