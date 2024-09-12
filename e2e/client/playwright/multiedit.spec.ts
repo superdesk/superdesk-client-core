@@ -16,29 +16,23 @@ test.describe('Multiedit', async () => {
 
         await monitoring.executeBulkAction('Multi-edit', ['test sports story', 'story 2']);
 
-        await clearInput(
-            page,
-            page.locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
-                .getByRole('textbox'),
-        );
+        const item1HeadlineLocator = page.locator(
+            s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'),
+        ).getByRole('textbox');
 
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=test sports story', 'field--headline'))
-            .getByRole('textbox')
-            .fill('test sports story 1.1');
+        const item2HeadlineLocator = page.locator(
+            s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'),
+        ).getByRole('textbox');
+
+        await clearInput(item1HeadlineLocator);
+
+        await item1HeadlineLocator.fill('test sports story 1.1');
 
         await multiedit.save('test sports story');
 
-        await clearInput(
-            page,
-            page.locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
-                .getByRole('textbox'),
-        );
+        await clearInput(item2HeadlineLocator);
 
-        await page
-            .locator(s('multiedit-screen', 'multiedit-article=story 2', 'field--headline'))
-            .getByRole('textbox')
-            .fill('story 2.1');
+        await item2HeadlineLocator.fill('story 2.1');
 
         await multiedit.save('story 2');
 

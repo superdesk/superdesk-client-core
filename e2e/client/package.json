@@ -4,7 +4,7 @@
     "superdesk-core": "file:../../"
   },
   "devDependencies": {
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "^1.47.0",
     "@superdesk/build-tools": "file:../../build-tools",
     "@superdesk/end-to-end-testing-helpers": "1.0.11",
     "@types/node": "^20.8.9",
