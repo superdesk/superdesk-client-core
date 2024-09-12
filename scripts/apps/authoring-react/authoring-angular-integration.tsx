@@ -418,7 +418,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.DRAFT:
         return {
             readOnly: false,
-            actions: [toggleFullWidthButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
+            actions: [toggleFullWidthButton, closeButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
         };
 
     case ITEM_STATE.SUBMITTED:

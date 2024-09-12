@@ -124,12 +124,15 @@ export class Editor extends React.PureComponent<IProps, IState> {
         getAutocompleteSuggestions(this.props.editorId, this.props.language).then((autocompleteSuggestions) => {
             this.setState({ready: true, autocompleteSuggestions});
 
-            /**
-             * If `spellchecker__set_status` is dispatched on `componentDidMount` in AuthoringReact,
-             * the event is fired before this component mounts and starts listening to the event.
-             * Because of this, requesting status explicitly is needed.
-             */
-            dispatchEditorEvent('spellchecker__request_status', null);
+            // setting initial spellchecker status (and marking spelling issues)
+            dispatchEditorEvent('spellchecker__request_status', (status) => {
+                this.props.value.store.dispatch(
+                    setSpellcheckerStatus(
+                        status,
+                        this.unmountAbortController.signal,
+                    ),
+                );
+            });
 
             /**
              * Avoid triggering `onChange` when nothing has actually changed.

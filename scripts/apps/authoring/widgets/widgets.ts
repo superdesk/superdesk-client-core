@@ -241,7 +241,21 @@ function WidgetsManagerCtrl(
                 $scope.widgets = widgets.filter((__, i) => result[i] === true);
 
                 $scope.widgets.forEach((widget) => {
-                    if (widget.badgeAsync != null) {
+                    /**
+                     * `getBadge` is a new method meant to replace`badgeAsync` and `badge`(sync)
+                     * both will be available until TAG: AUTHORING-ANGULAR is removed
+                     * It was added to
+                     *  1. decouple the API from angular dependency injection mechanism
+                     *  2. unify `badge`(sync) and badgeAsync(async) into a single method
+                     */
+
+                    if (widget.getBadge != null) {
+                        widget.badgeAsyncValue = null;
+
+                        widget.getBadge(item).then((value) => {
+                            widget.badgeAsyncValue = value;
+                        });
+                    } else if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;
                         $injector.invoke(widget.badgeAsync, null, {item})
                             .then((value) => widget.badgeAsyncValue = value);

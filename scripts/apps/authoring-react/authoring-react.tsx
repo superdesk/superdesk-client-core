@@ -596,11 +596,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
-            if (this.state.initialized) {
-                dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
-            }
-        }));
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addEditorEventListener('spellchecker__request_status', (event) => {
+                if (this.state.initialized) {
+                    event.detail(this.state.spellcheckerEnabled);
+                }
+            }),
+        );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
@@ -1015,17 +1017,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * and unless closing is cancelled by user action in the UI this.props.onClose is called.
      */
     initiateClosing(state: IStateLoaded<T>): void {
-        if (this.hasUnsavedChanges() !== true) {
-            this.props.onClose();
-            return;
-        }
-
         const {authoringStorage} = this.props;
 
         this.setLoadingState(state, true).then(() => {
             authoringStorage.closeAuthoring(
                 this.computeLatestEntity(),
                 state.itemOriginal,
+                this.hasUnsavedChanges(),
                 () => {
                     authoringStorage.autosave.cancel();
 
@@ -1183,6 +1181,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         pinned: false,
                     });
                 }
+            },
+            addValidationErrors: (moreValidationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors: {
+                        ...state.validationErrors,
+                        ...moreValidationErrors,
+                    },
+                });
             },
         };
 

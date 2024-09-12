@@ -3,7 +3,7 @@
 ### Starting server and client
 
 * open a terminal in `./server`
-* run `docker-compose up`
+* run `docker compose up`
 * open a terminal in `./client`
 * run `npm install` if needed
 * run `npx grunt server`
