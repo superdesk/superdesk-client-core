@@ -114,6 +114,9 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     }
 }
 
+/**
+ * @deprecated will be replaced by authoring-react/multi-edit-modal.tsx
+ */
 MultieditController.$inject = ['$scope', 'multiEdit'];
 function MultieditController($scope, multiEdit) {
     $scope.$watch(() => multiEdit.items, (items) => {
@@ -127,6 +130,12 @@ function MultieditController($scope, multiEdit) {
     };
 
     $scope.closeMulti = function() {
+        /**
+         * HACK: for some reason the watcher doesn't always fire and multi edit view remains open.
+         * Since authoring-react/multi-edit-modal.tsx will replace this code - I'm not doing a proper fix.
+         */
+        $scope.boards = [];
+
         multiEdit.exit();
     };
 }
