@@ -2,6 +2,7 @@ import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
@@ -45,6 +46,7 @@ export function getSpellchecker(language: string): ISpellchecker {
     const spellcheckerName = ({
         fr: 'grammalecte',
         nl: 'leuven_dutch',
+        ...(appConfig.spellcheckers ?? {}),
     })[language];
     const ignore = spellcheck.getIgnoredWords();
 
