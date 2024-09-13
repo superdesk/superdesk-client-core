@@ -69,7 +69,7 @@ click-repl==0.3.0
     # via celery
 croniter==2.0.5
     # via superdesk-core
-cryptography==42.0.8
+cryptography==43.0.1
     # via
     #   authlib
     #   jwcrypto
@@ -158,7 +158,7 @@ markupsafe==2.0.1
     # via
     #   jinja2
     #   superdesk-core
-mongolock==1.3.4
+mongolock @ git+https://github.com/superdesk/mongolock.git@v1
     # via superdesk-core
 oauth2client==4.1.3
     # via flask-oidc-ex
