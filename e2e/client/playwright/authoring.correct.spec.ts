@@ -42,10 +42,10 @@ test('correcting with unsaved changes', async ({page}) => {
 
     await page.locator(s('authoring', 'authoring-topbar')).getByLabel('Correct').click();
 
-    clearInput(await getHeadlineField());
+    await clearInput(await getHeadlineField());
     await (await getHeadlineField()).fill('test sports story [corrected]');
 
-    clearInput(await getBodyField());
+    await clearInput(await getBodyField());
     await (await getBodyField()).fill('test sport story body [corrected]');
 
     await page.locator(s('authoring', 'authoring-topbar')).getByRole('button', {name: 'Send Correction'}).click();
