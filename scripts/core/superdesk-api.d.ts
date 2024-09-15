@@ -3361,7 +3361,7 @@ declare module 'superdesk-api' {
             useDefaultTimezone: any;
         };
         search_cvs: any;
-        view?: {
+        view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: string;
 
