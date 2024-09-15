@@ -12,16 +12,22 @@ if (appConfig.shortTimeFormat == null) {
     appConfig.shortTimeFormat = 'HH:mm'; // 24h format
 }
 
+const defaultDateFormat = 'MM/DD';
+const defaultTimeFormat = 'hh:mm';
+
 if (appConfig.view == null) {
-    appConfig.view = {};
+    appConfig.view = {
+        dateformat: defaultDateFormat,
+        timeformat: defaultTimeFormat,
+    };
 }
 
 if (appConfig.view.dateformat == null) {
-    appConfig.view.dateformat = 'MM/DD';
+    appConfig.view.dateformat = defaultDateFormat;
 }
 
 if (appConfig.view.timeformat == null) {
-    appConfig.view.timeformat = 'hh:mm';
+    appConfig.view.timeformat = defaultTimeFormat;
 }
 
 if (appConfig.longDateFormat == null) {
