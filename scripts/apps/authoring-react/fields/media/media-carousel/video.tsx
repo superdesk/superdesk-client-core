@@ -13,6 +13,7 @@ interface IProps {
     titleInput: JSX.Element;
     descriptionInput: JSX.Element;
     readOnly: boolean;
+    canRemoveItems: boolean;
 }
 
 export class MediaCarouselVideo extends React.PureComponent<IProps> {
@@ -25,6 +26,7 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
             paginationBar,
             titleInput,
             descriptionInput,
+            canRemoveItems,
         } = this.props;
 
         return (
@@ -34,7 +36,7 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                         <Spacer v gap="16" justifyContent="space-between" noWrap style={{height: '100%'}}>
                             <Spacer h gap="16" justifyContent="space-between" noWrap>
                                 {title}
-                                {removeButton}
+                                {canRemoveItems ? removeButton : null}
                             </Spacer>
 
                             <div>

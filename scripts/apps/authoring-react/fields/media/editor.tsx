@@ -217,14 +217,27 @@ export class Editor extends React.PureComponent<IProps> {
                         >
                             <MediaCarousel
                                 mediaItems={mediaItems}
-                                onChange={this.props.onChange}
+                                onChange={(val) => {
+                                    if (config.__editingOriginal) {
+                                        const item = val[0];
+
+                                        item.fields_meta = {};
+
+                                        this.props.reinitialize(item);
+                                    } else {
+                                        this.props.onChange(val);
+                                    }
+                                }}
                                 showPictureCrops={config.showPictureCrops === true}
-                                showTitleInput={config.showTitleEditingInput === true}
+                                showTitleInput={config.showTitleEditingInput ?? false}
+                                showDescriptionInput={config.showDescriptionEditingInput ?? true}
                                 readOnly={readOnly}
                                 maxItemsAllowed={config.maxItems ?? maxItemsDefault}
                                 ref={(component) => {
                                     this.mediaCarouselRef = component;
                                 }}
+                                canRemoveItems={config.canRemoveItems ?? true}
+                                computeLatestEntity={this.props.computeLatestEntity}
                             />
                         </DropZone3>
                     )

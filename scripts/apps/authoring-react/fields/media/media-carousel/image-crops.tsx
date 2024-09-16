@@ -1,28 +1,19 @@
 import React from 'react';
 import {ToggleBox} from 'superdesk-ui-framework/react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IVocabularyItem} from 'superdesk-api';
 import {Card} from 'core/ui/components/Card';
 import {SpacerBlock} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {sdApi} from 'api';
 
 interface IProps {
     renditions: IArticle['renditions'];
+    cropSizes: Array<IVocabularyItem>;
     wrapper: React.ComponentType;
 }
 
 export class ImageCrops extends React.PureComponent<IProps> {
     render() {
-        const {renditions} = this.props;
-        const cropSizes =
-            sdApi.vocabularies.getAll()
-                .get('crop_sizes')
-                .items
-                .filter((cropSize) => renditions[cropSize.name] != null);
-
-        if (cropSizes.length < 1) {
-            return null;
-        }
+        const {renditions, cropSizes} = this.props;
 
         const Wrapper = this.props.wrapper;
 

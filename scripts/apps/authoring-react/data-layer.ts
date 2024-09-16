@@ -64,6 +64,18 @@ export function getArticleContentProfile<T>(
         const {editor, fields, schema} = fakeScope;
         const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
 
+        /**
+         * Insert a field which alongside the adapter will use the media field type
+         * to enable viewing and editing of the original media item.
+         */
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            editor['_media_self'] = {
+                'order': 0,
+                'sdWidth': 'full',
+                'enabled': true,
+            };
+        }
+
         const fieldsToOmit = [
             /**
              * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.

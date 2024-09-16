@@ -18,6 +18,9 @@ interface IProps {
     readOnly: boolean;
     maxItemsAllowed: number;
     showTitleInput: boolean;
+    showDescriptionInput: boolean;
+    canRemoveItems: boolean;
+    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
 
 interface IState {
@@ -87,7 +90,15 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
     render() {
         const {currentPage} = this.state;
-        const {mediaItems, maxItemsAllowed, readOnly, showPictureCrops, showTitleInput} = this.props;
+        const {
+            mediaItems,
+            maxItemsAllowed,
+            readOnly,
+            showPictureCrops,
+            showTitleInput,
+            showDescriptionInput,
+            canRemoveItems,
+        } = this.props;
         const onChange = this.props.onChange ?? noop;
 
         const pagesTotal = mediaItems.length;
@@ -167,8 +178,8 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
             </Spacer>
         );
 
-        const titleInput = showTitleInput !== true ? null : (
-            !readOnly && (
+        const titleInput = !readOnly && showTitleInput
+            ? (
                 <Input
                     type="text"
                     label={gettext('Title')}
@@ -184,10 +195,10 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                     }}
                 />
             )
-        );
+            : null;
 
-        const descriptionInput = (
-            !readOnly && (
+        const descriptionInput = !readOnly && showDescriptionInput
+            ? (
                 <Input
                     type="text"
                     label={gettext('Description')}
@@ -203,7 +214,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                     }}
                 />
             )
-        );
+            : null;
 
         return (
             <div className="field--media">
@@ -240,6 +251,8 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     descriptionInput={descriptionInput}
                                     showCrops={showPictureCrops}
                                     readOnly={readOnly}
+                                    canRemoveItems={canRemoveItems}
+                                    computeLatestEntity={this.props.computeLatestEntity}
                                 />
                             );
                         } else if (item.type === 'video') {
@@ -253,6 +266,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     titleInput={titleInput}
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
+                                    canRemoveItems={canRemoveItems}
                                 />
                             );
                         } else if (item.type === 'audio') {
@@ -266,6 +280,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     titleInput={titleInput}
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
+                                    canRemoveItems={canRemoveItems}
                                 />
                             );
                         }

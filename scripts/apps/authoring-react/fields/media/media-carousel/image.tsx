@@ -6,6 +6,7 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {ImageCrops} from './image-crops';
 import {mediaDetailsPadding} from '../constants';
+import {sdApi} from 'api';
 
 interface IProps {
     item: IArticle;
@@ -18,6 +19,8 @@ interface IProps {
     titleInput: JSX.Element;
     showCrops?: boolean;
     readOnly: boolean;
+    canRemoveItems: boolean;
+    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
 
 export class MediaCarouselImage extends React.PureComponent<IProps> {
@@ -37,7 +40,7 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
         };
 
         ng.get('renditions')
-            .crop(this.props.item, cropOptions, {immutable: true})
+            .crop(this.props.computeLatestEntity(), cropOptions, {immutable: true})
             .then((res) => {
                 this.props.onChange(res);
             });
@@ -52,9 +55,19 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             paginationBar,
             titleInput,
             descriptionInput,
-            showCrops,
             readOnly,
+            canRemoveItems,
         } = this.props;
+
+        const renditions = item.renditions ?? {};
+
+        const cropSizes =
+            sdApi.vocabularies.getAll()
+                .get('crop_sizes')
+                .items
+                .filter((cropSize) => renditions[cropSize.name] != null);
+
+        const showCrops = this.props.showCrops === true && cropSizes.length > 0;
 
         return (
             <div>
@@ -67,7 +80,8 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                         <Spacer v gap="8" justifyContent="space-between" noWrap style={{height: '100%'}}>
                             <Spacer h gap="16" justifyContent="space-between" noWrap>
                                 {title}
-                                {removeButton}
+
+                                {canRemoveItems ? removeButton : null}
                             </Spacer>
 
                             {
@@ -135,7 +149,8 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                                 {
                                     showCrops === true && (
                                         <ImageCrops
-                                            renditions={item.renditions ?? {}}
+                                            renditions={renditions}
+                                            cropSizes={cropSizes}
                                             wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}
                                         />
                                     )

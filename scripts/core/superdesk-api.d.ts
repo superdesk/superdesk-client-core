@@ -488,12 +488,23 @@ declare module 'superdesk-api' {
         allowPicture?: boolean;
         allowVideo?: boolean;
         allowAudio?: boolean;
+        canRemoveItems?: boolean; // defaults to true
         showPictureCrops?: boolean;
         showTitleEditingInput?: boolean;
+        showDescriptionEditingInput?: boolean; // defaults to true
         allowedWorkflows?: {
             inProgress?: boolean;
             published?: boolean;
         };
+
+        /**
+         * It's not a good config option because it is meant to be applied only in one case.
+         * A cleaner solution would be to have 2 field types - media and media-original,
+         * to reuse the code between them and make it possible to pass custom `onChange` function to each.
+         * It'd take quite some time to do that and nicer interface would be the only benefit, so I'd rather
+         * delay for the future when we have more similar use-cases.
+         */
+        __editingOriginal?: boolean;
     }
 
     // AUTHORING-REACT FIELD TYPES - urls
@@ -3551,6 +3562,22 @@ declare module 'superdesk-api' {
 
         value: IValue;
         onChange: (value: IValue) => void;
+
+        /**
+         * authoring-react only.
+         * Use this method sparingly. It is performance intensive.
+         * It was added to make it possible to update data from outside authoring-react component.
+         * The reason it is needed, is that authoring-react treats `fieldsData` as a source of truth
+         * and when outside code sends updated `{item:T }` there is not other way for authoring-react
+         * to apply it to `fieldsData`, but to re-initialize.
+         */
+        reinitialize(item: any): void;
+
+        /**
+         * authoring-react only.
+         */
+        computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): any;
+
         readOnly: boolean;
         language: string;
         config: IConfig;
