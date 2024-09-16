@@ -306,6 +306,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
         this.setLoadingState = this.setLoadingState.bind(this);
+        this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
@@ -1142,6 +1143,37 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
+    /**
+     * Use this method sparingly. It is performance intensive.
+     * It was added to make it possible to update data from outside authoring-react component.
+     * The reason it is needed, is that authoring-react treats `fieldsData` as a source of truth
+     * and when outside code sends updated `{item:T }` there is not other way for authoring-react
+     * to apply it to `fieldsData`, but to re-initialize.
+     */
+    reinitialize(state: IStateLoaded<T>, itemWithUpdates: T) {
+        const item: {
+            saved: T;
+            autosaved: T;
+        } = {
+            saved: state.itemOriginal,
+            autosaved: itemWithUpdates,
+        };
+
+        this.setState(getInitialState(
+            item,
+            state.profile,
+            state.userPreferencesForFields,
+            state.spellcheckerEnabled,
+            this.props.fieldsAdapter,
+            this.props.authoringStorage,
+            this.props.storageAdapter,
+            this.props.getLanguage(item.autosaved ?? item.saved),
+            state.validationErrors,
+            state.allThemes.default,
+            state.allThemes.proofreading,
+        ));
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1476,6 +1508,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
+                                                    reinitialize={(item) => {
+                                                        this.reinitialize(state, item);
+                                                    }}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     useHeaderLayout
@@ -1486,6 +1521,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     readOnly={readOnly}
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
+                                                    computeLatestEntity={this.computeLatestEntity}
                                                 />
                                             )}
                                         >
@@ -1495,6 +1531,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}
+                                                reinitialize={(item) => {
+                                                    this.reinitialize(state, item);
+                                                }}
                                                 language={getLanguage(state.itemWithChanges)}
                                                 userPreferencesForFields={state.userPreferencesForFields}
                                                 setUserPreferencesForFields={this.setUserPreferences}
@@ -1504,6 +1543,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 readOnly={readOnly}
                                                 validationErrors={state.validationErrors}
                                                 item={state.itemWithChanges}
+                                                computeLatestEntity={this.computeLatestEntity}
                                             />
                                         </Layout.AuthoringMain>
                                     )}

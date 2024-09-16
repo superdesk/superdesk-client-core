@@ -9,6 +9,7 @@ export interface IPropsAuthoringSection<T> {
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
     onChange(fieldId: string, value: unknown): void;
+    reinitialize(item: T): void;
     readOnly: boolean;
     userPreferencesForFields: {[fieldId: string]: unknown};
     useHeaderLayout?: boolean;
@@ -20,6 +21,7 @@ export interface IPropsAuthoringSection<T> {
     padding?: string | number;
     uiTheme?: IAuthoringSectionTheme;
     item: T;
+    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
 
 function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
@@ -114,6 +116,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
                                                 onChange={this.props.onChange}
+                                                reinitialize={this.props.reinitialize}
                                                 readOnly={this.props.readOnly}
                                                 language={this.props.language}
                                                 canBeToggled={canBeToggled}
@@ -128,6 +131,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 getVocabularyItems={this.props.getVocabularyItems}
                                                 validationError={this.props.validationErrors[field.id]}
                                                 item={this.props.item}
+                                                computeLatestEntity={this.props.computeLatestEntity}
                                             />
                                         </div>
                                     );
