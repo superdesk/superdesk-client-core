@@ -51,7 +51,7 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
 
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
-            selectedDestination: getCurrentDeskDestination(),
+            selectedDestination: getCurrentDeskDestination(this.props.item.task.desk),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
                 target_subscribers: this.props.item.target_subscribers ?? [],

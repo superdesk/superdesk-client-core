@@ -4,7 +4,7 @@
     "superdesk-core": "file:../../"
   },
   "devDependencies": {
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "^1.47.0",
     "@superdesk/build-tools": "file:../../build-tools",
     "@superdesk/end-to-end-testing-helpers": "1.0.11",
     "@types/node": "^20.8.9",
@@ -20,14 +20,14 @@
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
     "server": "grunt server",
-    "start-client-server": "http-server dist -p 9000 -s &",
-    "stop-client-server": "fuser -k 9000/tcp",
     "playwright": "playwright test --workers 1",
     "playwright-interactive": "playwright test --ui",
     "protractor": "protractor protractor.conf.js",
-    "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",
-    "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w",
+    "start-client-server": "http-server dist -p 9000 -s &",
+    "stop-client-server": "fuser -k 9000/tcp",
     "start-test-server": "cd ../server && docker-compose build && docker-compose up -d",
-    "stop-test-server": "cd ../server && docker-compose stop"
+    "stop-test-server": "cd ../server && docker-compose stop",
+    "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",
+    "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w"
   }
 }

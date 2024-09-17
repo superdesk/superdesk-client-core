@@ -219,9 +219,9 @@ export const formatDate = (
     options?: {timezoneId?: string; longFormat?:boolean},
 ): string => {
     const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
-    const dateFormat = options.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
+    const dateFormat = options?.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
 
-    if (options.timezoneId != null) {
+    if (options?.timezoneId != null) {
         return momentDate
             .tz(options.timezoneId)
             .format(dateFormat);

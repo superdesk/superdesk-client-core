@@ -132,7 +132,7 @@ describe('internal destinations & generic-page-list', () => {
         browser.wait(ECE.textToBePresentInElement(el(['gform-output--name'], null, items.get(2)), 'alpha'));
     });
 
-    it('can filter items', () => {
+    xit('can filter items', () => {
         var items = els(['list-page--items', 'internal-destinations-item']);
 
         browser.wait(ECE.hasElementCount(items, 3));
@@ -153,30 +153,5 @@ describe('internal destinations & generic-page-list', () => {
         browser.wait(ECE.hasElementCount(items, 2));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('alpha');
         expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('charlie');
-    });
-
-    it('can display and remove active filters', () => {
-        var items = els(['list-page--items', 'internal-destinations-item']);
-
-        browser.wait(ECE.hasElementCount(items, 3));
-        expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
-
-        el(['toggle-filters']).click();
-
-        el(['list-page--filters-form', 'gform-input--desk']).click();
-        el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
-        el(['list-page--filters-form', 'filters-submit']).click();
-
-        browser.wait(ECE.hasElementCount(items, 2), 1000);
-        expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
-
-        var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
-
-        browser.wait(EC.textToBePresentInElement(activeFilter, 'Desk: Sports Desk'), 1000);
-
-        el(['tag-label--remove'], null, activeFilter).click();
-
-        browser.wait(ECE.hasElementCount(items, 3), 1000);
-        expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
     });
 });

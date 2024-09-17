@@ -1018,17 +1018,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * and unless closing is cancelled by user action in the UI this.props.onClose is called.
      */
     initiateClosing(state: IStateLoaded<T>): void {
-        if (this.hasUnsavedChanges() !== true) {
-            this.props.onClose();
-            return;
-        }
-
         const {authoringStorage} = this.props;
 
         this.setLoadingState(state, true).then(() => {
             authoringStorage.closeAuthoring(
                 this.computeLatestEntity(),
                 state.itemOriginal,
+                this.hasUnsavedChanges(),
                 () => {
                     authoringStorage.autosave.cancel();
 
