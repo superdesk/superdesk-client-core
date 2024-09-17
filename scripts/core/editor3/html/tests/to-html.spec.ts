@@ -11,6 +11,8 @@ import {editor3StateToHtml} from '../to-html/editor3StateToHtml';
 import {CustomEditor3Entity} from 'core/editor3/constants';
 
 describe('core.editor3.html.to-html snapshots', () => {
+    beforeEach(window.module('superdesk.apps.spellcheck'));
+
     it('converts a sentence without formatting', () => {
         const rawContentState: any = {"blocks":[{"key":"fcbn3","text":"The name of Highlaws comes from the Old English hēah-hlāw, meaning \"high mounds\".","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{"MULTIPLE_HIGHLIGHTS":{}}}],"entityMap":{}};
 
