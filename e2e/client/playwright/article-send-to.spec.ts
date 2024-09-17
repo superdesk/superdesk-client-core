@@ -23,7 +23,7 @@ test.describe('sending an article', async () => {
         await new TreeSelectDriver(
             page,
             page.locator(s('destination-select')),
-        ).setValue(['Educations']);
+        ).setValue(['Education']);
         await page
             .locator(s('interactive-actions-panel', 'stage-select'))
             .getByRole('radio', {name: 'Working Stage'})
@@ -33,9 +33,9 @@ test.describe('sending an article', async () => {
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
         ).not.toBeVisible();
-        await monitoring.selectDeskOrWorkspace('Educations');
+        await monitoring.selectDeskOrWorkspace('Education');
         await expect(
-            page.locator(s('monitoring-group=Educations / Working Stage', 'article-item=story 2')),
+            page.locator(s('monitoring-group=Education / Working Stage', 'article-item=story 2')),
         ).toBeVisible();
     });
 

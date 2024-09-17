@@ -77,6 +77,7 @@ test('default content template', async ({page}) => {
     await page.locator(s('desk-actions--options')).getByRole('button', {name: 'Edit'}).click();
     await page.locator(s('desk-config-modal', 'field--default-content-template')).selectOption({label: 'story 2'});
     await page.locator(s('desk-config-modal')).getByRole('button', {name: 'done'}).click();
+    await expect(page.locator(s('desk-config-modal'))).not.toBeVisible();
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
