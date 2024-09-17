@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
+import {clearInput} from './utils/inputs';
 
 test.setTimeout(50000);
 
@@ -41,10 +42,10 @@ test('correcting with unsaved changes', async ({page}) => {
 
     await page.locator(s('authoring', 'authoring-topbar')).getByLabel('Correct').click();
 
-    await (await getHeadlineField()).clear();
+    await clearInput(await getHeadlineField());
     await (await getHeadlineField()).fill('test sports story [corrected]');
 
-    await (await getBodyField()).clear();
+    await clearInput(await getBodyField());
     await (await getBodyField()).fill('test sport story body [corrected]');
 
     await page.locator(s('authoring', 'authoring-topbar')).getByRole('button', {name: 'Send Correction'}).click();

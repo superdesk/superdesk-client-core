@@ -86,3 +86,13 @@ await page.locator(s('authoring', 'comments-widget', 'submit')).click();
 ### Known issues
 
 * Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
+
+### Utilities
+
+#### Quickly replacing generated locators to use our `s` or `cs` helpers
+
+Find regex: `locator\('\[data-test-id="(.+)?"\]'`
+Replace regex: `locator(cs('$1')`
+
+Will replace `locator('[data-test-id="abc"]')` with `locator(cs('abc'))`
+
