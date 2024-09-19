@@ -6,6 +6,7 @@ import ng from 'core/services/ng';
 
 import {closeActionsMenu} from '../../helpers';
 import {IActivityService} from 'core/activity/activity';
+import {sdApi} from 'api';
 
 interface IProps {
     item: any;
@@ -58,12 +59,15 @@ export default class MenuItem extends React.Component<IProps, IState> {
         event.stopPropagation();
 
         this.updateActioningStatus(true);
-        this.props.scopeApply(() => {
-            this.activityService.start(this.props.activity, {data: {item: this.props.item}})
-                .finally(() => this.updateActioningStatus(false));
-        });
 
-        closeActionsMenu(this.props.item._id);
+        sdApi.article.get(this.props.item._id).then((resItem) => {
+            this.props.scopeApply(() => {
+                this.activityService.start(this.props.activity, {data: {item: resItem}})
+                    .finally(() => this.updateActioningStatus(false));
+            });
+
+            closeActionsMenu(this.props.item._id);
+        });
     }
 
     open() {
