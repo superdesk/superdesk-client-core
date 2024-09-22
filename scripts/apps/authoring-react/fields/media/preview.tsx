@@ -20,9 +20,7 @@ export class Preview extends React.PureComponent<IProps> {
                 showTitleInput={this.props.config.showTitleEditingInput}
                 showDescriptionInput={this.props.config.showDescriptionEditingInput}
                 maxItemsAllowed={this.props.config.maxItems ?? maxItemsDefault}
-                computeLatestEntity={() => {
-                    throw new Error('does not apply to preview');
-                }}
+                prepareForExternalEditing={(item) => item}
             />
         );
     }

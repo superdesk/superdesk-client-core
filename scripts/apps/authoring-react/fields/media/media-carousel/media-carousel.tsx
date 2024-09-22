@@ -20,7 +20,7 @@ interface IProps {
     showTitleInput: boolean;
     showDescriptionInput: boolean;
     canRemoveItems: boolean;
-    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
+    prepareForExternalEditing: (item: IArticle) => IArticle;
 }
 
 interface IState {
@@ -252,7 +252,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     showCrops={showPictureCrops}
                                     readOnly={readOnly}
                                     canRemoveItems={canRemoveItems}
-                                    computeLatestEntity={this.props.computeLatestEntity}
+                                    prepareForExternalEditing={this.props.prepareForExternalEditing}
                                 />
                             );
                         } else if (item.type === 'video') {

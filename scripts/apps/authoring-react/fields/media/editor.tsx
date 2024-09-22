@@ -115,7 +115,9 @@ export class Editor extends React.PureComponent<IProps> {
 
                 this.props.onChange(nextItems);
 
-                this.mediaCarouselRef.goToPage(nextItems.length - 1);
+                if (this.mediaCarouselRef != null) {
+                    this.mediaCarouselRef.goToPage(nextItems.length - 1);
+                }
             });
     }
 
@@ -192,7 +194,9 @@ export class Editor extends React.PureComponent<IProps> {
 
             this.props.onChange(nextItems);
 
-            this.mediaCarouselRef.goToPage(nextItems.length - 1);
+            if (this.mediaCarouselRef != null) {
+                this.mediaCarouselRef.goToPage(nextItems.length - 1);
+            }
         }
     }
 
@@ -237,7 +241,13 @@ export class Editor extends React.PureComponent<IProps> {
                                     this.mediaCarouselRef = component;
                                 }}
                                 canRemoveItems={config.canRemoveItems ?? true}
-                                computeLatestEntity={this.props.computeLatestEntity}
+                                prepareForExternalEditing={(item) => {
+                                    if (config.__editingOriginal) {
+                                        return this.props.computeLatestEntity();
+                                    } else {
+                                        return item;
+                                    }
+                                }}
                             />
                         </DropZone3>
                     )

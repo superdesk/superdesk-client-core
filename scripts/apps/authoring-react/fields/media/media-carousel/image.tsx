@@ -7,6 +7,7 @@ import {IArticle} from 'superdesk-api';
 import {ImageCrops} from './image-crops';
 import {mediaDetailsPadding} from '../constants';
 import {sdApi} from 'api';
+import {cloneDeep} from 'lodash';
 
 interface IProps {
     item: IArticle;
@@ -20,7 +21,7 @@ interface IProps {
     showCrops?: boolean;
     readOnly: boolean;
     canRemoveItems: boolean;
-    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
+    prepareForExternalEditing: (item: IArticle) => IArticle;
 }
 
 export class MediaCarouselImage extends React.PureComponent<IProps> {
@@ -39,10 +40,15 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             showMetadata: true,
         };
 
+
+        /**
+         * Image editing is being done using angularjs implementation that mutates data.
+         * `deepClone` is used to ensure that mutations will not affect data stored in authoring-react.
+         */
         ng.get('renditions')
-            .crop(this.props.computeLatestEntity(), cropOptions, {immutable: true})
+            .crop(this.props.prepareForExternalEditing(cloneDeep(this.props.item)), cropOptions, {immutable: true})
             .then((res) => {
-                this.props.onChange(res);
+                this.props.onChange(cloneDeep(res));
             });
     }
 
