@@ -72,6 +72,7 @@ export function getArticleContentProfile<T>(
             editor['_media_self'] = {
                 'order': 0,
                 'sdWidth': 'full',
+                'section': 'content',
                 'enabled': true,
             };
         }
