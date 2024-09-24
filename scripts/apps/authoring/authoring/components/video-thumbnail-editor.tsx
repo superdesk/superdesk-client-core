@@ -35,33 +35,50 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
             .then(
                 (response) => {
                     const {item, onChange} = this.props;
-                    const renditions: IArticle['renditions'] = Object.assign(item.renditions || {});
+                    const currentRenditions: IArticle['renditions'] = Object.assign(item.renditions ?? {});
+                    const renditionsPatch: IArticle['renditions'] = {};
 
-                    Object.keys(RENDITION_MAPPING).forEach((src) => {
-                        const rendition = response.data.renditions[src];
+                    Object.keys(RENDITION_MAPPING).forEach((renditionId) => {
+                        const rendition = response.data.renditions[renditionId];
 
                         if (rendition != null) {
-                            renditions[RENDITION_MAPPING[src]] = rendition;
+                            renditionsPatch[RENDITION_MAPPING[renditionId]] = rendition;
                         }
                     });
 
-                    item.renditions = renditions;
-                    onChange(item, 10);
+                    if (Object.keys(renditionsPatch).length > 0) {
+                        onChange({
+                            ...item,
+                            renditions: {
+                                ...currentRenditions,
+                                ...renditionsPatch,
+                            },
+                        }, 10);
+                    }
                 },
             );
     }
 
     removeThumbnail() {
         const {item, onChange} = this.props;
-        const renditions = item.renditions || {};
+        const currentRenditions: IArticle['renditions'] = item.renditions ?? {};
+        const renditionsPatch: IArticle['renditions'] = {};
 
-        Object.values(RENDITION_MAPPING).forEach((rendition) => {
-            if (renditions[rendition] != null) {
-                renditions[rendition] = null;
+        Object.values(RENDITION_MAPPING).forEach((renditionId) => {
+            if (currentRenditions[renditionId] != null) {
+                renditionsPatch[renditionId] = null;
             }
         });
 
-        onChange(item, 10);
+        if (Object.keys(renditionsPatch).length > 0) {
+            onChange({
+                ...item,
+                renditions: {
+                    ...currentRenditions,
+                    ...renditionsPatch,
+                },
+            }, 10);
+        }
     }
 
     render() {
@@ -95,7 +112,16 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
                             <i className="icon-close-small" />
                         </a>
                         <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
-                        <figcaption>{gettext('Thumbnail')}</figcaption>
+
+                        <figcaption
+                            style={{
+                                border: '1px solid rgba(150, 150, 150, 0.15)',
+                                padding: '8px',
+                                minHeight: '1.8rem',
+                            }}
+                        >
+                            {gettext('Thumbnail')}
+                        </figcaption>
                     </figure>
                 )}
                 {!showFigure && (

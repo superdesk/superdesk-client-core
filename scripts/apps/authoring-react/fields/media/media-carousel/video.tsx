@@ -3,9 +3,11 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {VideoComponent} from 'core/ui/components/video';
 import {IArticle} from 'superdesk-api';
 import {mediaDetailsPadding} from '../constants';
+import {VideoThumbnailEditor} from 'apps/authoring/authoring/components/video-thumbnail-editor';
 
 interface IProps {
     item: IArticle;
+    onChange(item: IArticle): void;
     title: JSX.Element;
     removeButton: JSX.Element;
     metadata: JSX.Element;
@@ -51,25 +53,28 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                     </div>
                 </div>
 
-                {
-                    (descriptionInput != null || titleInput != null) && (
-                        <div style={{padding: mediaDetailsPadding}}>
-                            <Spacer v gap="16" noWrap>
-                                {
-                                    titleInput != null && (
-                                        <div style={{width: '100%'}}>{titleInput}</div>
-                                    )
-                                }
+                <div style={{padding: mediaDetailsPadding}}>
+                    <Spacer v gap="16" noWrap>
+                        {
+                            titleInput != null && (
+                                <div style={{width: '100%'}}>{titleInput}</div>
+                            )
+                        }
 
-                                {
-                                    descriptionInput != null && (
-                                        <div style={{width: '100%'}}>{descriptionInput}</div>
-                                    )
-                                }
-                            </Spacer>
-                        </div>
-                    )
-                }
+                        {
+                            descriptionInput != null && (
+                                <div style={{width: '100%'}}>{descriptionInput}</div>
+                            )
+                        }
+
+                        <VideoThumbnailEditor
+                            item={item}
+                            onChange={(item) => {
+                                this.props.onChange(item);
+                            }}
+                        />
+                    </Spacer>
+                </div>
             </div>
         );
     }

@@ -259,6 +259,15 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                             return (
                                 <MediaCarouselVideo
                                     item={item}
+                                    onChange={(val) => {
+                                        onChange(
+                                            mediaItems.map(
+                                                (_item, i) => i === currentPage
+                                                    ? val
+                                                    : _item,
+                                            ),
+                                        );
+                                    }}
                                     title={title}
                                     removeButton={removeButton}
                                     metadata={metadata}
