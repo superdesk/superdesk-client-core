@@ -89,7 +89,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const {toggledFields} = this.props;
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
-        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width);
+        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width ?? 100);
 
         return (
             <div
