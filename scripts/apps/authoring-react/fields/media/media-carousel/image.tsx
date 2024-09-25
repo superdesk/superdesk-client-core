@@ -1,6 +1,5 @@
 import React from 'react';
 import {IconButton} from 'superdesk-ui-framework/react';
-import ng from 'core/services/ng';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
@@ -8,6 +7,7 @@ import {ImageCrops} from './image-crops';
 import {mediaDetailsPadding} from '../constants';
 import {sdApi} from 'api';
 import {cloneDeep} from 'lodash';
+import {editMetadata} from '../edit-metadata';
 
 interface IProps {
     item: IArticle;
@@ -32,21 +32,7 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
     }
 
     edit(mode: 'view' | 'image-edit' | 'crop') {
-        const cropOptions = {
-            isNew: false,
-            editable: true,
-            isAssociated: true,
-            defaultTab: mode,
-            showMetadata: true,
-        };
-
-
-        /**
-         * Image editing is being done using angularjs implementation that mutates data.
-         * `deepClone` is used to ensure that mutations will not affect data stored in authoring-react.
-         */
-        ng.get('renditions')
-            .crop(this.props.prepareForExternalEditing(cloneDeep(this.props.item)), cropOptions, {immutable: true})
+        editMetadata(this.props.prepareForExternalEditing(this.props.item), mode)
             .then((res) => {
                 this.props.onChange(cloneDeep(res));
             });

@@ -4,6 +4,9 @@ import {VideoComponent} from 'core/ui/components/video';
 import {IArticle} from 'superdesk-api';
 import {mediaDetailsPadding} from '../constants';
 import {VideoThumbnailEditor} from 'apps/authoring/authoring/components/video-thumbnail-editor';
+import {Button} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
+import {editMetadata} from '../edit-metadata';
 
 interface IProps {
     item: IArticle;
@@ -16,6 +19,7 @@ interface IProps {
     descriptionInput: JSX.Element;
     readOnly: boolean;
     canRemoveItems: boolean;
+    prepareForExternalEditing: (item: IArticle) => IArticle;
 }
 
 export class MediaCarouselVideo extends React.PureComponent<IProps> {
@@ -67,12 +71,26 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                             )
                         }
 
-                        <VideoThumbnailEditor
-                            item={item}
-                            onChange={(item) => {
-                                this.props.onChange(item);
-                            }}
-                        />
+                        <Spacer h gap="16" justifyContent="space-between" noWrap>
+                            <VideoThumbnailEditor
+                                item={item}
+                                onChange={(item) => {
+                                    this.props.onChange(item);
+                                }}
+                            />
+
+                            <Button
+                                text={gettext('Edit metadata')}
+                                style="hollow"
+                                size="small"
+                                onClick={() => {
+                                    editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view')
+                                        .then((item) => {
+                                            this.props.onChange(item);
+                                        });
+                                }}
+                            />
+                        </Spacer>
                     </Spacer>
                 </div>
             </div>

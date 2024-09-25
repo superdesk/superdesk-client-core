@@ -37,6 +37,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
         this.next = this.next.bind(this);
         this.prev = this.prev.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.isFirstItem = this.isFirstItem.bind(this);
         this.isLastItem = this.isLastItem.bind(this);
         this.goToPage = this.goToPage.bind(this);
@@ -61,6 +62,20 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
         }
     }
 
+    private handleChange(val: IArticle) {
+        this.props.onChange(
+            this.props.mediaItems.map(
+                (_item, i) => i === this.state.currentPage
+                    ? val
+                    : _item,
+            ),
+        );
+    }
+
+    private isFirstItem(): boolean {
+        return this.state.currentPage === 0;
+    }
+
     private isLastItem(): boolean {
         const {currentPage} = this.state;
         const pagesTotal = this.props.mediaItems.length;
@@ -68,9 +83,6 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
         return currentPage === pagesTotal - 1;
     }
 
-    private isFirstItem(): boolean {
-        return this.state.currentPage === 0;
-    }
 
     public next(): void {
         if (this.isLastItem()) {
@@ -234,15 +246,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                             return (
                                 <MediaCarouselImage
                                     item={item}
-                                    onChange={(val) => {
-                                        onChange(
-                                            mediaItems.map(
-                                                (_item, i) => i === currentPage
-                                                    ? val
-                                                    : _item,
-                                            ),
-                                        );
-                                    }}
+                                    onChange={this.handleChange}
                                     title={title}
                                     removeButton={removeButton}
                                     metadata={metadata}
@@ -259,15 +263,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                             return (
                                 <MediaCarouselVideo
                                     item={item}
-                                    onChange={(val) => {
-                                        onChange(
-                                            mediaItems.map(
-                                                (_item, i) => i === currentPage
-                                                    ? val
-                                                    : _item,
-                                            ),
-                                        );
-                                    }}
+                                    onChange={this.handleChange}
                                     title={title}
                                     removeButton={removeButton}
                                     metadata={metadata}
@@ -276,12 +272,14 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                     canRemoveItems={canRemoveItems}
+                                    prepareForExternalEditing={this.props.prepareForExternalEditing}
                                 />
                             );
                         } else if (item.type === 'audio') {
                             return (
                                 <MediaCarouselAudio
-                                    renditions={filterObject(item.renditions, (value) => value != null)}
+                                    item={item}
+                                    onChange={this.handleChange}
                                     title={title}
                                     removeButton={removeButton}
                                     metadata={metadata}
@@ -290,6 +288,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                     canRemoveItems={canRemoveItems}
+                                    prepareForExternalEditing={this.props.prepareForExternalEditing}
                                 />
                             );
                         }
