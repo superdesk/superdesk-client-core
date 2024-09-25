@@ -1,0 +1,2 @@
+
+export {escapeRegExp} from 'lodash';
