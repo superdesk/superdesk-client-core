@@ -158,6 +158,10 @@ export function startApp(
                         }
 
                         registerLegacyExtensionCompatibilityLayer();
+
+                        if (ng.get('session').sessionId != null) { // user logged in
+                            maybeDisplayInvalidInstanceConfigurationMessage();
+                        }
                     });
                 });
             },
@@ -182,12 +186,6 @@ export function startApp(
                 'superdesk.apps',
                 'superdesk.register_extensions',
             ].concat(appConfig.apps || []), {strictDi: true});
-
-            setTimeout(() => { // required to avoid protractor timing out and failing tests
-                if (ng.get('session').sessionId != null) { // user logged in
-                    maybeDisplayInvalidInstanceConfigurationMessage();
-                }
-            });
 
             window['superdeskIsReady'] = true;
 
