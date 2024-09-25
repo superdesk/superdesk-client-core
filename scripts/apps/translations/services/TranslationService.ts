@@ -79,7 +79,7 @@ export function TranslationService(
                     fn(item, _item);
                 });
             } else {
-                ng.get('authoringWorkspace').open(item);
+                ng.get('authoringWorkspace').open(_item);
                 notify.success(gettext('Item Translated'));
             }
 
