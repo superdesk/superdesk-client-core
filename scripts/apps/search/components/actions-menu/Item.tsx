@@ -60,14 +60,14 @@ export default class MenuItem extends React.Component<IProps, IState> {
 
         this.updateActioningStatus(true);
 
-        sdApi.article.get(this.props.item._id).then((resItem) => {
-            this.props.scopeApply(() => {
-                this.activityService.start(this.props.activity, {data: {item: resItem}})
-                    .finally(() => this.updateActioningStatus(false));
-            });
-
-            closeActionsMenu(this.props.item._id);
+        // sdApi.article.get(this.props.item._id).then((resItem) => {
+        this.props.scopeApply(() => {
+            this.activityService.start(this.props.activity, {data: {item: this.props.item}})
+                .finally(() => this.updateActioningStatus(false));
         });
+
+        closeActionsMenu(this.props.item._id);
+        // });
     }
 
     open() {
