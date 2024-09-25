@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {IPropsSelectUser, IUser} from 'superdesk-api';
-import {gettext, getUserSearchMongoQuery} from 'core/utils';
+import {gettext, searchUsers} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
@@ -119,21 +119,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 getItems={(searchString) => {
                     const deskMembers = sdApi.desks.getDeskMembers(this.props.deskId);
 
-                    if (searchString != null && searchString.length > 0) {
-                        const query = getUserSearchMongoQuery(searchString);
-
-                        return Promise.resolve(deskMembers.filter((user) => {
-                            return query['$or'].some((orQuery) => {
-                                return Object.keys(orQuery).every((key) => {
-                                    const regex = new RegExp(sdApi.utils.escapeRegExp(orQuery[key]), 'i');
-
-                                    return user[key] ? regex.test(user[key]) : false;
-                                });
-                            });
-                        }));
-                    }
-
-                    return Promise.resolve(deskMembers);
+                    return Promise.resolve(searchUsers(deskMembers, searchString));
                 }}
                 value={this.state.selectedUser}
                 onChange={(user) => {
