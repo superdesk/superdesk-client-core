@@ -218,6 +218,7 @@ export class Editor extends React.PureComponent<IProps> {
                             onFileSelect={this.upload}
                             multiple={canAddMultipleItems}
                             fileAccept={allowedMimeTypesForUpload}
+                            disabled={this.props.readOnly}
                         >
                             <MediaCarousel
                                 mediaItems={mediaItems}
@@ -280,6 +281,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 onFileSelect={this.upload}
                                 multiple={canAddMultipleItems}
                                 fileAccept={allowedMimeTypesForUpload}
+                                disabled={this.props.readOnly}
                             />
                         </div>
                     )

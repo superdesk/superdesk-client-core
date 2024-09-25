@@ -77,12 +77,14 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                                 onChange={(item) => {
                                     this.props.onChange(item);
                                 }}
+                                readOnly={this.props.readOnly}
                             />
 
                             <Button
                                 text={gettext('Edit metadata')}
                                 style="hollow"
                                 size="small"
+                                disabled={this.props.readOnly}
                                 onClick={() => {
                                     editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view')
                                         .then((item) => {

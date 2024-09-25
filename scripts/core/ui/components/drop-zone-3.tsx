@@ -64,6 +64,12 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
     render() {
         const {children} = this.props;
 
+        if (this.props.disabled) {
+            return (
+                <div>{children}</div>
+            );
+        }
+
         const childrenEmpty =
             typeof children === 'undefined'
             || (Array.isArray(children) ? children : [children])

@@ -8,6 +8,7 @@ import {getViewImage} from 'core/helpers/item';
 interface IProps {
     item: IArticle;
     onChange: (item: IArticle, timeout?: number) => void;
+    readOnly?: boolean;
 }
 
 const RENDITION_MAPPING = {
@@ -85,49 +86,67 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
         const {item} = this.props;
         const thumbnail = getViewImage(item);
         const showFigure = thumbnail != null && thumbnail.mimetype.startsWith('image');
+        const readOnly = this.props.readOnly ?? false;
 
-        return (
-            <DropZone
-                label=""
-                className={showFigure ? '' : 'btn btn--hollow btn--small'}
-                fileAccept="image/*"
-                onFileSelect={(files) => this.handleFiles(files)}
-                canDrop={(event) => {
-                    return event.dataTransfer.items.length > 0 && event.dataTransfer.items[0].type.startsWith('image/');
-                }}
-                onDrop={(event) => {
-                    event.preventDefault();
-                    this.handleFiles(Array.from(event.dataTransfer.files));
-                }}
-            >
-                {showFigure && (
-                    <figure className="item-association item-association--preview" style={{height: 'auto'}}>
-                        <a
-                            className="item-association__remove-item"
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                this.removeThumbnail();
-                            }}
-                        >
-                            <i className="icon-close-small" />
-                        </a>
-                        <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
+        const content = showFigure
+            ? (
+                <figure className="item-association item-association--preview" style={{height: 'auto'}}>
+                    {
+                        !readOnly && (
+                            <a
+                                className="item-association__remove-item"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.removeThumbnail();
+                                }}
+                            >
+                                <i className="icon-close-small" />
+                            </a>
+                        )
+                    }
 
-                        <figcaption
-                            style={{
-                                border: '1px solid rgba(150, 150, 150, 0.15)',
-                                padding: '8px',
-                                minHeight: '1.8rem',
-                            }}
-                        >
-                            {gettext('Thumbnail')}
-                        </figcaption>
-                    </figure>
-                )}
-                {!showFigure && (
-                    <span>{gettext('Select thumbnail')}</span>
-                )}
-            </DropZone>
-        );
+                    <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
+
+                    <figcaption
+                        style={{
+                            border: '1px solid rgba(150, 150, 150, 0.15)',
+                            padding: '8px',
+                            minHeight: '1.8rem',
+                        }}
+                    >
+                        {gettext('Thumbnail')}
+                    </figcaption>
+                </figure>
+            )
+            : (
+                <span>{gettext('Select thumbnail')}</span>
+            );
+
+        if (readOnly) {
+            return (
+                <div>
+                    {content}
+                </div>
+            );
+        } else {
+            return (
+                <DropZone
+                    label=""
+                    className={showFigure ? '' : 'btn btn--hollow btn--small'}
+                    fileAccept="image/*"
+                    onFileSelect={(files) => this.handleFiles(files)}
+                    canDrop={(event) => {
+                        return event.dataTransfer.items.length > 0
+                            && event.dataTransfer.items[0].type.startsWith('image/');
+                    }}
+                    onDrop={(event) => {
+                        event.preventDefault();
+                        this.handleFiles(Array.from(event.dataTransfer.files));
+                    }}
+                >
+                    {content}
+                </DropZone>
+            );
+        }
     }
 }

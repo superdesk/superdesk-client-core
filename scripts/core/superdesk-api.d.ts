@@ -2173,6 +2173,8 @@ declare module 'superdesk-api' {
 
         onFileSelect?: (files: Array<File>) => void;
         fileAccept?: string;
+
+        disabled?: boolean;
     }
 
     export interface IGenericListPageComponent<T> {

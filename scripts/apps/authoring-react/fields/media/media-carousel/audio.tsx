@@ -85,6 +85,7 @@ export class MediaCarouselAudio extends React.PureComponent<IProps> {
                                 text={gettext('Edit metadata')}
                                 style="hollow"
                                 size="small"
+                                disabled={this.props.readOnly}
                                 onClick={() => {
                                     editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view')
                                         .then((item) => {
