@@ -155,8 +155,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
         language: language,
         enabled:
             !spellcheckerDisabledInConfig &&
-            spellcheck &&
-            spellcheck.isAutoSpellchecker,
+            spellcheck != null,
         inProgress: false,
         warningsByBlock: {},
     };
