@@ -2886,6 +2886,7 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                get(articleId: IArticle['_id']): Promise<IArticle>;
                 isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
                 isLockedInCurrentSession(article: IArticle): boolean;
                 isLockedInOtherSession(article: IArticle): boolean;
