@@ -159,7 +159,10 @@ export function startApp(
 
                         registerLegacyExtensionCompatibilityLayer();
 
-                        if (ng.get('session').sessionId != null) { // user logged in
+                        if (
+                            ng.get('session').sessionId != null // user logged in
+                            && ng.get('session').identity.user_type === 'administrator'
+                        ) {
                             maybeDisplayInvalidInstanceConfigurationMessage();
                         }
                     });
