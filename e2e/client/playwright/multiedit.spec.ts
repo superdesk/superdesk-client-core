@@ -36,6 +36,11 @@ test.describe('Multiedit', async () => {
 
         await multiedit.save('story 2');
 
+        /**
+         * TAG: AUTHORING-ANGULAR implementation is unreliable and "Exit" button doesn't always work
+         */
+        page.waitForTimeout(1000);
+
         await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'Exit'}).click();
 
         await monitoring.executeActionOnMonitoringItem(
