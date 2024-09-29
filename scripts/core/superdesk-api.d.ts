@@ -3658,9 +3658,12 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
-         * Allows for the field to be hidden from custom field type config
+         * Field types should be made generic when possible.
+         * Making field types generic means multiple fields of the same type can be enabled in the same editing view.
+         * Generic fields will be available for adding to content profile via user interface (settings).
          */
-        private?: boolean;
+        generic: boolean;
+
         /**
          * Must return `true` if not empty.
          */

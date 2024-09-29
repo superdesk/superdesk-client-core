@@ -17,6 +17,7 @@ export function getMediaField()
 : ICustomFieldType<IMediaValueOperational, IMediaValueStorage, IMediaConfig, IMediaUserPreferences> {
     const field: ReturnType<typeof getMediaField> = {
         id: MEDIA_FIELD_ID,
+        generic: true,
         label: gettext('Media (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
