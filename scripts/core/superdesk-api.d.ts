@@ -761,6 +761,11 @@ declare module 'superdesk-api' {
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
 
             authoringSideWidgets?: Array<IArticleSideWidget>;
+
+            /**
+             * @deprecated
+             * use customFieldTypes
+             */
             authoringHeaderComponents?: Array<AuthoringHeaderItem>;
 
             getAuthoringActions?(

@@ -1,7 +1,14 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
 import {appConfig, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo, IListViewFieldWithOptions} from 'superdesk-api';
+import {
+    IVocabularyItem,
+    IArticle,
+    IBaseRestApiResponse,
+    ILockInfo,
+    IListViewFieldWithOptions,
+    IUser,
+} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
@@ -283,7 +290,15 @@ export function translateArticleType(type: IArticle['type']) {
     }
 }
 
-export function getUserSearchMongoQuery(searchString: string) {
+type IUserFieldQuery = {
+    [field in keyof IUser]?: {$regex: string, $options: string};
+};
+
+interface IMongoQuery {
+    $or: Array<IUserFieldQuery>;
+}
+
+export function getUserSearchMongoQuery(searchString: string): IMongoQuery {
     return {
         $or: [
             {username: {$regex: searchString, $options: 'i'}},
@@ -294,6 +309,26 @@ export function getUserSearchMongoQuery(searchString: string) {
             {sign_off: {$regex: searchString, $options: 'i'}},
         ],
     };
+}
+
+/**
+ * Should match the logic of `getUserSearchMongoQuery`
+ */
+export function searchUsers(users: Array<IUser>, searchString: string): Array<IUser> {
+    if (!searchString) {
+        return users;
+    }
+
+    const query = getUserSearchMongoQuery(searchString);
+    const regex = new RegExp(escapeRegExp(searchString), 'i');
+
+    return users.filter((user) => {
+        return query['$or'].some((orQuery) => {
+            return Object.keys(orQuery).every((key) => {
+                return user[key] ? regex.test(user[key]) : false;
+            });
+        });
+    });
 }
 
 export function getItemTypes() {
