@@ -17,6 +17,7 @@ export const DROPDOWN_FIELD_ID = 'dropdown';
 export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> {
     const field: ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> = {
         id: 'dropdown',
+        generic: true,
         label: gettext('Dropdown (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

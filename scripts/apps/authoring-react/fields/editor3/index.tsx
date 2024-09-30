@@ -53,6 +53,7 @@ export function getEditor3Field()
 : ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
         id: EDITOR_3_FIELD_TYPE,
+        generic: true,
         label: gettext('Editor3 (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
