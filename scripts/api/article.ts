@@ -479,7 +479,7 @@ function get(id: IArticle['_id']): Promise<IArticle> {
 function itemAction(_article: IArticle): {[key in IAuthoringActionType]: boolean} {
     const authoring = ng.get('authoring');
 
-    return authoring.itemAction(_article);
+    return authoring.itemActions(_article);
 }
 
 function isEditable(_article: IArticle): boolean {

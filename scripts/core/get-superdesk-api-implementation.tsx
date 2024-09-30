@@ -325,6 +325,7 @@ export function getSuperdeskApiImplementation(
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
+                get: sdApi.article.get,
                 isPersonal: sdApi.article.isPersonal,
                 isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
