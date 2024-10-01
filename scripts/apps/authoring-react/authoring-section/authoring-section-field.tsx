@@ -9,6 +9,7 @@ interface IProps<T> {
     field: IAuthoringFieldV2;
     fieldsData: IFieldsData;
     onChange: IPropsAuthoringSection<T>['onChange'];
+    reinitialize(item: T): void;
     readOnly: boolean;
     language: string;
     canBeToggled: boolean;
@@ -21,6 +22,7 @@ interface IProps<T> {
     validationError?: string;
     uiTheme?: IAuthoringSectionTheme;
     item: T;
+    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
 
 export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
@@ -68,6 +70,7 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
                     onChange={(val) => {
                         this.props.onChange(field.id, val);
                     }}
+                    reinitialize={this.props.reinitialize}
                     readOnly={this.props.readOnly}
                     config={field.fieldConfig}
                     fieldId={field.id}
@@ -77,6 +80,7 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
                     }}
                     getVocabularyItems={this.props.getVocabularyItems}
                     item={this.props.item}
+                    computeLatestEntity={this.props.computeLatestEntity}
                 />
             );
         }

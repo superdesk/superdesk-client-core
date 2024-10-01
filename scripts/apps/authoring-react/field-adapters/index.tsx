@@ -51,6 +51,7 @@ import {dateline} from './dateline';
 import {description_text} from './description_text';
 import {body_footer} from './body_footer';
 import {sign_off} from './sign_off';
+import {mediaSelf} from './_media_self';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -79,6 +80,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         description_text: description_text,
         body_footer: body_footer,
         sign_off: sign_off,
+        _media_self: mediaSelf,
     };
 
     return adapter;

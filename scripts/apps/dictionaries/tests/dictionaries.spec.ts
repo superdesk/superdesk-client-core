@@ -5,6 +5,7 @@ describe('dictionaries', () => {
 
     beforeEach(window.module('superdesk.apps.dictionaries'));
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));
