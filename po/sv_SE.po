@@ -34,7 +34,7 @@ msgstr "\"{{language}}\" översättning krävs"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:240
 msgid "\"{{x}}\" field is required"
-msgstr ""
+msgstr "\"{{x}}\" är obligatoriskt"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:74
 msgid ""
@@ -128,7 +128,7 @@ msgstr "(inaktiverad)"
 #: scripts/extensions/broadcasting/dist/src/rundowns/manage-rundown-items.js:97
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:176
 msgid "(empty)"
-msgstr ""
+msgstr "(tomt)"
 
 #: scripts/apps/search/MultiImageEdit.ts:290
 #: scripts/apps/search/MultiImageEdit.ts:311
@@ -535,7 +535,7 @@ msgstr ":00em"
 msgid ""
 "<button class=\"sd-alert__close\" ng-click=\"showInfoLabel = false\"></button>\n"
 "                    Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached."
-msgstr ""
+msgstr "<button class=\"sd-alert__close\" ng-click=\"showInfoLabel = false\"></button>\n                    Observera att bara en innehållsprofil per innehållstyp förutom text är tillåten. Om innehållstypen är inaktiverad är gränsen redan nådd."
 
 #: ../superdesk-analytics/client/planning_usage_report/views/planning-usage-report-parameters.html:1
 msgid ""
@@ -547,7 +547,7 @@ msgstr "<p>Skapa en rapport om användning i Planeringsverktyget.<br></p>\n    <
 msgid ""
 "<sd-spinner ng-if=\"saveTopbarLoading\" data-test-id=\"loading-indicator\" data-size=\"'mini'\"></sd-spinner>\n"
 "        <span translate>Save</span>"
-msgstr ""
+msgstr "<sd-spinner ng-if=\"saveTopbarLoading\" data-test-id=\"loading-indicator\" data-size=\"'mini'\"></sd-spinner>\n        <span translate>Spara</span>"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:216
 msgid "A content profile with this name already exists."
@@ -569,7 +569,7 @@ msgstr "En plats som motsvarar denna finns redan"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:108
 msgid "A new template will be created"
-msgstr ""
+msgstr "En ny mall kommer att skapas"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:226
 msgid "A user is required"
@@ -668,7 +668,7 @@ msgstr "Godkänd av"
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:126
 msgid "Accepted by {{user}}"
-msgstr ""
+msgstr "Godkänd av {{user}}"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:33
 msgid "Access Key ID"
@@ -731,7 +731,7 @@ msgstr "Aktiviteter"
 #: scripts/apps/authoring-react/subcomponents/authoring-actions-menu.tsx:36
 #: scripts/apps/authoring-react/subcomponents/authoring-actions-menu.tsx:65
 msgid "Actions menu"
-msgstr ""
+msgstr "Aktivitetsmeny"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:16
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:242
@@ -868,7 +868,7 @@ msgstr "Lägg till ny"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid "Add New Abbreviations Dictionary"
-msgstr ""
+msgstr "Skapa ordlista för förkortningar"
 
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:93
 msgid "Add New Agenda"
@@ -892,7 +892,7 @@ msgstr "Lägg till ny destination"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid "Add New Dictionary"
-msgstr ""
+msgstr "Skapa ordlista"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:128
 msgid "Add New Event Location"
@@ -966,7 +966,7 @@ msgstr "Lägg till ny plats"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:270
 msgid "Add article"
-msgstr ""
+msgstr "Skapa artikel"
 
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:309
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:315
@@ -1052,7 +1052,7 @@ msgstr "Lägg till ny"
 
 #: scripts/apps/workspace/content/components/new-field-select.tsx:35
 msgid "Add new field"
-msgstr ""
+msgstr "Lägg till nytt fält"
 
 #: scripts/apps/dashboard/views/workspace.html:69
 msgid "Add new widget"
@@ -1086,7 +1086,7 @@ msgstr "Lägga till evenemanget till planeringslistan?"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:251
 msgid "Add this item to all recurring events or just this one?"
-msgstr ""
+msgstr "Vill du lägga till i alla återkommande händelser eller bara detta?"
 
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
@@ -1130,7 +1130,7 @@ msgstr "Lägg till i arbetsflöde"
 
 #: scripts/apps/authoring-react/fields/urls/editor.tsx:90
 msgid "Add url"
-msgstr ""
+msgstr "Lägg till url"
 
 #: scripts/apps/dashboard/views/workspace.html:13
 #: scripts/apps/dashboard/views/workspace.html:14
@@ -1139,7 +1139,7 @@ msgstr "Lägg till widget"
 
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:25
 msgid "Added"
-msgstr ""
+msgstr "Skapad"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:80
 msgid "Added to featured stories"
@@ -1147,24 +1147,24 @@ msgstr "Tillagd i huvudartiklar"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:240
 msgid "Added to workflow"
-msgstr ""
+msgstr "Tillagd i arbetsflödet"
 
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr ""
+msgstr "Byråmaterial kan inte läggas till som relaterad artikel med nuvarande inställningar"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
 "Adding published items as related is not allowed due to configuration "
 "options"
-msgstr ""
+msgstr "Publicerade artiklar kan inte läggas till som relaterade med nuvarande inställningar"
 
 #: scripts/apps/relations/services/RelationsService.ts:36
 msgid ""
 "Adding related items that are not published is not allowed due to "
 "configuration options"
-msgstr ""
+msgstr "Opublicerade artiklar kan inte läggas till som relaterade med nuvarande inställningar"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:227
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:112
@@ -1315,17 +1315,17 @@ msgstr "Scheman"
 #: scripts/extensions/ai-widget/src/ai-assistant.tsx:66
 #: scripts/extensions/ai-widget/src/extension.ts:44
 msgid "Ai Assistant"
-msgstr ""
+msgstr "AI-assistent"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:24
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:63
 msgid "Air date"
-msgstr ""
+msgstr "Sändningsdatum"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:20
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:45
 msgid "Air time"
-msgstr ""
+msgstr "Sändningstid"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:89
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:97
@@ -1334,35 +1334,35 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:218
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:69
 msgid "Airtime"
-msgstr ""
+msgstr "Sändningstid"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:38
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:37
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:86
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:76
 msgid "Airtime date from"
-msgstr ""
+msgstr "Sändning datum från"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:46
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:42
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:104
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:91
 msgid "Airtime date to"
-msgstr ""
+msgstr "Sändning datum till"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:22
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:24
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:50
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:43
 msgid "Airtime time from"
-msgstr ""
+msgstr "Sändning tid från"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:30
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:29
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:68
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:56
 msgid "Airtime time to"
-msgstr ""
+msgstr "Sändning tid till"
 
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:18
 msgid "Alert"
@@ -1402,7 +1402,7 @@ msgstr "Alla"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:32
 msgid "All Calendars"
-msgstr ""
+msgstr "Alla kalendrar"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:254
 msgid "All Coverage has been cancelled"
@@ -1496,7 +1496,7 @@ msgstr "Alla pågående"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:282
 msgid "All planning"
-msgstr ""
+msgstr "All planering"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
@@ -1512,27 +1512,27 @@ msgstr "Tillåt radering av importerat innehåll"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:78
 msgid "Allow adding items that are in progress"
-msgstr ""
+msgstr "Tillåt att lägga till innehåll som är under arbete"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:94
 msgid "Allow adding items that are published"
-msgstr ""
+msgstr "Tillåt att lägga till innehåll som är publicerat"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:68
 msgid "Allow audio"
-msgstr ""
+msgstr "Tillåt ljud"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:301
 msgid "Allow field to be toggled"
-msgstr ""
+msgstr "Tillåt att värdet ändras"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:38
 msgid "Allow picture"
-msgstr ""
+msgstr "Tillåt bild"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:122
 msgid "Allow selecting multiple values"
-msgstr ""
+msgstr "Tillåt att flera värden väljs"
 
 #: scripts/extensions/predefinedTextField/dist/src/config.js:80
 #: scripts/extensions/predefinedTextField/src/config.tsx:152
@@ -1541,7 +1541,7 @@ msgstr "Tillåt växling till fri textinmatning"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:58
 msgid "Allow video"
-msgstr ""
+msgstr "Tillåt video"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:258
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:156
@@ -1567,7 +1567,7 @@ msgstr "Alt text:"
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:27
 msgid "Alter slugline"
-msgstr ""
+msgstr "Ändra slugline"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:21
 msgid "America/Anchorage"
@@ -1683,7 +1683,7 @@ msgstr "Fel uppstod, försök igen."
 
 #: scripts/apps/publish-preview/previewModal.tsx:66
 msgid "An error occurred while trying to preview the item."
-msgstr ""
+msgstr "Ett fel uppstod när innehållet skulle förhandsgranskas."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:229
 msgid "An update can not be created"
@@ -1779,7 +1779,7 @@ msgstr "Använd konfiguration"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:244
 msgid "Apply the changes to all recurring planning items or just this one?"
-msgstr ""
+msgstr "Vill du tillämpa ändringarna på alla återkommande utlägg eller bara detta?"
 
 #: scripts/apps/publish/views/email-config.html:38
 msgid "Apply watermark"
@@ -1856,7 +1856,7 @@ msgstr "Vill du verkligen radera filtervillkor?"
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:118
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:245
 msgid "Are you sure you want to delete it?"
-msgstr ""
+msgstr "Är du säker på att du vill radera?"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:201
 msgid "Are you sure you want to delete product?"
@@ -1944,7 +1944,7 @@ msgstr "Ska \"{{headline}}\" verkligen avpubliceras?"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:336
 msgid "Are you sure you want to unpublish item \"{{label}}\"?"
-msgstr ""
+msgstr "Är du säker på att du vill avpublicera \"{{label}}\"?"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:96
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:236
@@ -1988,11 +1988,11 @@ msgstr "Artikeltyp(er)"
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:105
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:122
 msgid "Article Type: text"
-msgstr ""
+msgstr "Artikeltyp: text"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:100
 msgid "Article Type: {{articleType}}"
-msgstr ""
+msgstr "Artikeltyp: {{articleType}}"
 
 #: ../superdesk-planning/client/utils/assignments.ts:425
 #: scripts/apps/authoring/authoring/directives/AuthoringHeaderDirective.ts:52
@@ -2013,7 +2013,7 @@ msgstr "Förvalda inställningar"
 
 #: scripts/apps/authoring-react/packages.tsx:116
 msgid "Article is not linked to any packages"
-msgstr ""
+msgstr "Artikeln är inte länkad till några paket"
 
 #: scripts/apps/search/components/fields/scheduledDateTime.tsx:28
 msgid "Article is scheduled for {{schedule}}"
@@ -2021,7 +2021,7 @@ msgstr "Artikeln är schemalagd till {{schedule}}"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:309
 msgid "Article preview"
-msgstr ""
+msgstr "Förhandsgranskning"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:260
 msgid "Article was created."
@@ -2360,7 +2360,7 @@ msgstr "Minst en av [{{list}}] måste anges."
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:94
 msgid ""
 "At least two versions are needed for comparison. This article has only one."
-msgstr ""
+msgstr "Minst två versioner krävs för att jämföra. Den här artikeln har bara en."
 
 #: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:153
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:172
@@ -2403,7 +2403,7 @@ msgstr "Bilagor"
 
 #: scripts/apps/authoring-react/fields/attachments/index.tsx:31
 msgid "Attachments (authoring-react)"
-msgstr ""
+msgstr "Bilagor (authoring-react)"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:43
 #: ../superdesk-planning/client/utils/index.ts:604
@@ -2459,7 +2459,7 @@ msgstr "Författarroller saknas i anpassade innehållsfält."
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:43
 msgid "Author:"
-msgstr ""
+msgstr "Författare:"
 
 #: scripts/apps/authoring/authoring/index.ts:196
 #: scripts/apps/authoring/compare-versions/index.ts:27
@@ -2507,7 +2507,7 @@ msgstr "Tillgänglig i användare/desk-inställningar"
 
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:109
 msgid "Available languages"
-msgstr ""
+msgstr "Tillgängliga språk"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningList.tsx:96
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:166
@@ -2570,7 +2570,7 @@ msgstr "Bli den första..."
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:181
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:361
 msgid "Before airtime"
-msgstr ""
+msgstr "Före sändning"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:7
 msgid ""
@@ -2640,7 +2640,7 @@ msgstr "Brödtextens fottext"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:34
 msgid "Body footer / Helplines / Contact Information"
-msgstr ""
+msgstr "Sidbotten / Stödlinje / Kontaktinformation"
 
 #: scripts/apps/authoring/views/theme-select.html:107
 #: scripts/apps/authoring/views/theme-select.html:56
@@ -2659,7 +2659,7 @@ msgstr "Fet (Ctrl+B)"
 #: scripts/extensions/booleanField/dist/src/extension.js:9
 #: scripts/extensions/booleanField/src/extension.tsx:16
 msgid "Boolean"
-msgstr ""
+msgstr "Boolean"
 
 #: ../superdesk-planning/client/utils/eventsplanning.ts:23
 #: ../superdesk-planning/client/utils/eventsplanning.ts:26
@@ -2684,7 +2684,7 @@ msgstr "Skapa sändning"
 #: scripts/extensions/broadcasting/dist/src/extension.js:19
 #: scripts/extensions/broadcasting/src/extension.ts:20
 msgid "Broadcasting"
-msgstr ""
+msgstr "Livesändning"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:38
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:40
@@ -2743,7 +2743,7 @@ msgstr "C & C"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:353
 msgid "CANCEL"
-msgstr ""
+msgstr "AVBRYT"
 
 #: scripts/apps/publish/views/email-config.html:20
 msgid "CID"
@@ -2791,7 +2791,7 @@ msgstr "Kalender:"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:37
 msgid "Calendar: {{activeCalendarName}}"
-msgstr ""
+msgstr "Kalender: {{activeCalendarName}}"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:143
 #: ../superdesk-planning/client/components/fields/preview/index.ts:58
@@ -2807,7 +2807,7 @@ msgstr "Kalendrar"
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:89
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:117
 msgid "Camera"
-msgstr ""
+msgstr "Kamera"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:20
 msgid "Can be associated as a take"
@@ -2819,11 +2819,11 @@ msgstr "Kan relateras som uppdatering"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:174
 msgid "Can be embedded"
-msgstr ""
+msgstr "Kan bäddas in"
 
 #: scripts/core/editor3/components/article-embed/can-add-article-embed.ts:35
 msgid "Can not embed to item which itself can be embedded."
-msgstr ""
+msgstr "Kan inte bädda in innehåll som i sin tur kan bäddas in."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:47
 msgid "Can not update a broadcast version of the story."
@@ -3082,7 +3082,7 @@ msgstr "Skiftlägeskänslig"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:96
 msgid "Case sensitive"
-msgstr ""
+msgstr "Skiftlägeskänslig"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:121
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:431
@@ -3176,8 +3176,8 @@ msgstr "Teckengränser"
 #: scripts/apps/authoring-react/fields/editor3/editor.tsx:388
 msgid "Character {{chars}} is not allowed"
 msgid_plural "The following characters are not allowed {{chars}}"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tecknet {{chars}} är inte tillåtet"
+msgstr[1] "Följande tecken är inte tillåtna {{chars}}"
 
 #: scripts/apps/authoring/authoring/ValidateCharacters.tsx:23
 msgid "Character {{chars}} not allowed in the {{field}}."
@@ -3252,7 +3252,7 @@ msgstr "Välj favoritlista"
 
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:87
 msgid "Choose the language and click the translate button at the bottom"
-msgstr ""
+msgstr "Välj språk och klicka på översätt längst ned"
 
 #: scripts/apps/contacts/constants.ts:75
 #: scripts/apps/contacts/views/search-panel.html:61
@@ -3271,7 +3271,7 @@ msgstr "Rensa inklistrad HTML"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:67
 msgid "Clean pasted HTML"
-msgstr ""
+msgstr "Rensa inklistrad HTML"
 
 #: ../superdesk-planning/client/components/Main/SearchPanel.tsx:134
 #: scripts/apps/dashboard/world-clock/configuration.html:39
@@ -3327,7 +3327,7 @@ msgstr "Rensa datum och tid"
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:78
 msgid "Clear embed"
-msgstr ""
+msgstr "Ta bort inbäddning"
 
 #: scripts/apps/contacts/views/search-panel.html:86
 #: scripts/apps/content-api/views/search-panel.html:22
@@ -3455,7 +3455,7 @@ msgstr "Stäng & fortsätt"
 #: scripts/extensions/ai-widget/dist/src/headlines/headlines-widget.js:16
 #: scripts/extensions/ai-widget/src/headlines/headlines-widget.tsx:71
 msgid "Close Headlines"
-msgstr ""
+msgstr "Stäng Rubriker"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:59
 msgid "Close Small"
@@ -3464,7 +3464,7 @@ msgstr "Stäng liten"
 #: scripts/extensions/ai-widget/dist/src/summary/summary-widget.js:16
 #: scripts/extensions/ai-widget/src/summary/summary-widget.tsx:67
 msgid "Close Summary"
-msgstr ""
+msgstr "Stäng Sammanfattning"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:60
 msgid "Close Thick"
@@ -3472,7 +3472,7 @@ msgstr "Stäng fet"
 
 #: scripts/extensions/ai-widget/src/translations/translations-widget.tsx:80
 msgid "Close Translate"
-msgstr ""
+msgstr "Stäng Översätt"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:64
 #: scripts/apps/authoring/views/authoring-topbar.html:65
@@ -3519,7 +3519,7 @@ msgstr "Förminska"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:129
 msgid "Collapse widgets"
-msgstr ""
+msgstr "Förminska widgets"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:8
 msgid "Color"
@@ -3578,7 +3578,7 @@ msgstr "Företag/Organisation"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:185
 msgid "Compare"
-msgstr ""
+msgstr "Jämför"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:2
 msgid "Compare Versions"
@@ -3586,7 +3586,7 @@ msgstr "Jämför Versioner"
 
 #: scripts/apps/authoring-react/toolbar/compare-article-versions.tsx:130
 msgid "Compare article versions"
-msgstr ""
+msgstr "Jämför artikelversioner"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:148
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:80
@@ -3596,7 +3596,7 @@ msgstr "Jämför versioner"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:125
 msgid "Comparing \"{{x}}\"(primary) to \"{{y}}\"(secondary)"
-msgstr ""
+msgstr "Jämför \"{{x}}\"(primär) med \"{{y}}\"(sekundär)"
 
 #: ../superdesk-planning/client/constants/assignments.ts:157
 msgid "Complete Assignment"
@@ -3645,7 +3645,7 @@ msgstr "Konfigurera förinställda värden"
 
 #: scripts/apps/authoring-react/authoring-react.tsx:1453
 msgid "Configure themes"
-msgstr ""
+msgstr "Anpassa teman"
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/TimeInputPopup.tsx:154
 #: scripts/apps/archive/index.tsx:472
@@ -3874,7 +3874,7 @@ msgstr "Innehållsprofil"
 
 #: scripts/apps/search/components/TypeIcon.tsx:26
 msgid "Content profile: {{name}}"
-msgstr ""
+msgstr "Innehållsprofil: {{name}}"
 
 #: scripts/apps/search/views/search-filters.html:2
 msgid "Content types"
@@ -4003,7 +4003,7 @@ msgstr "Rättad av"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:157
 msgid "Correcting multiple items from authoring pane is not supported"
-msgstr ""
+msgstr "Att rätta flera artiklar från redaktörspanelen stöds inte"
 
 #: scripts/apps/search/components/fields/state.tsx:20
 #: scripts/core/lang/missing-translations-strings.ts:16
@@ -4016,7 +4016,7 @@ msgstr "Rättelse borttagen av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:485
 msgid "Correction cancelled by {{user}}"
-msgstr ""
+msgstr "Rättelse avbruten av {{user}}"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:464
 msgid "Correction has been removed"
@@ -4191,7 +4191,7 @@ msgstr "Utlägg"
 
 #: ../superdesk-planning/client/api/planning.ts:226
 msgid "Coverages added to workflow."
-msgstr ""
+msgstr "Utlägg tillagt i arbetsflödet."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:433
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:219
@@ -4275,7 +4275,7 @@ msgstr "Skapa och öppna utlägg"
 #: scripts/extensions/ai-widget/src/summary/summary.tsx:91
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:149
 msgid "Create article"
-msgstr ""
+msgstr "Skapa artikel"
 
 #: scripts/apps/highlights/views/settings.html:11
 msgid "Create configuration"
@@ -4301,7 +4301,7 @@ msgstr "Skapa ny"
 #: scripts/extensions/broadcasting/dist/src/page.js:187
 #: scripts/extensions/broadcasting/src/page.tsx:282
 msgid "Create new Show"
-msgstr ""
+msgstr "Skapa nytt program"
 
 #: scripts/apps/desks/views/desk-config-modal.html:292
 msgid "Create new Stage"
@@ -4334,7 +4334,7 @@ msgstr "Skapa nytt utlägg"
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:18
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:45
 msgid "Create new rundown template"
-msgstr ""
+msgstr "Skapa ny mall för körschema"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:55
 msgid "Create new schedule"
@@ -4343,7 +4343,7 @@ msgstr "Skapa nytt schema"
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-modal.js:48
 #: scripts/extensions/broadcasting/src/shows/create-show-modal.tsx:86
 msgid "Create new show"
-msgstr ""
+msgstr "Skapa nytt program"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:141
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:135
@@ -4353,7 +4353,7 @@ msgstr "Skapa ny tag: \"{{ tag }}\""
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:134
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:262
 msgid "Create new template"
-msgstr ""
+msgstr "Skapa ny mall"
 
 #: scripts/apps/packaging/index.ts:50 scripts/apps/packaging/index.ts:59
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:199
@@ -4366,27 +4366,27 @@ msgstr "Skapa planering"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:259
 msgid "Create planning for all events or just this one?"
-msgstr ""
+msgstr "Skapa utlägg för alla evenemang eller bara detta?"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:57
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:103
 msgid "Create rundown"
-msgstr ""
+msgstr "Skapa körschema"
 
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:14
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:29
 msgid "Create rundown template"
-msgstr ""
+msgstr "Skapa mall för körschema"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:161
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:317
 msgid "Create rundowns automatically"
-msgstr ""
+msgstr "Skapa körscheman automatiskt"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:219
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:416
 msgid "Create template"
-msgstr ""
+msgstr "Skapa mall"
 
 #: scripts/apps/users/views/list.html:3
 msgid "Create user"
@@ -4427,12 +4427,12 @@ msgstr "Skapade nyhetskälla {{name}}"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:105
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:187
 msgid "Created at {{date}}"
-msgstr ""
+msgstr "Skapad {{date}}"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:88
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:165
 msgid "Created at {{time}} by {{user}}"
-msgstr ""
+msgstr "Skapad {{time}} av {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:96
 #: scripts/apps/authoring/versioning/history/views/history.html:6
@@ -4469,7 +4469,7 @@ msgstr "Skapad från favoritlista"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:380
 msgid "Created from highlight({{x}}) by {{user}}"
-msgstr ""
+msgstr "Skapad från favoritlista({{x}}) av {{user}}"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
@@ -4584,11 +4584,11 @@ msgstr "Anpassade innehållsfält"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:337
 msgid "Custom block"
-msgstr ""
+msgstr "Anpassat block"
 
 #: scripts/apps/vocabularies/views/settings.html:22
 msgid "Custom blocks"
-msgstr ""
+msgstr "Anpassade block"
 
 #: scripts/apps/vocabularies/views/settings.html:25
 msgid "Custom date fields"
@@ -4689,7 +4689,7 @@ msgstr "Datum"
 
 #: scripts/apps/authoring-react/fields/date/index.tsx:16
 msgid "Date (authoring-react)"
-msgstr ""
+msgstr "Datum (authoring-react)"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:177
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:91
@@ -4764,7 +4764,7 @@ msgstr "Datumrad"
 
 #: scripts/apps/authoring-react/fields/dateline/index.tsx:26
 msgid "Dateline (authoring-react)"
-msgstr ""
+msgstr "Datumrad (authoring-react)"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:203
 #: ../superdesk-planning/client/utils/contentProfiles.ts:155
@@ -4842,7 +4842,7 @@ msgstr "Standardtema"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:197
 msgid "Default Value"
-msgstr ""
+msgstr "Standardvärde"
 
 #: scripts/apps/users/views/settings-roles.html:54
 msgid "Default author roles"
@@ -4855,7 +4855,7 @@ msgstr "Förvald desk"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
-msgstr ""
+msgstr "Standardmall för desk"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:178
 msgid "Default language"
@@ -4987,7 +4987,7 @@ msgstr "Leveranstyp"
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:10
 msgid "Demo widget"
-msgstr ""
+msgstr "Demo widget"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:169
 #: ../superdesk-planning/client/components/OrderBar/OrderDirectionIcon.tsx:20
@@ -5109,7 +5109,7 @@ msgstr "Deskutlägg"
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
-msgstr ""
+msgstr "Desk e-post"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
@@ -5156,7 +5156,7 @@ msgstr "Deskbeskrivning"
 
 #: scripts/apps/desks/views/desk-config-modal.html:70
 msgid "Desk email address."
-msgstr ""
+msgstr "E-postadress till desk."
 
 #: scripts/apps/desks/services/DesksFactory.ts:425
 msgid "Desk has been modified elsewhere. Please reload the desks."
@@ -5189,7 +5189,7 @@ msgstr "Deskprenumeration"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:127
 msgid "Desk template"
-msgstr ""
+msgstr "Deskmall"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:65
 msgid "Desk with name {{name}} already exists."
@@ -5303,7 +5303,7 @@ msgstr "Ordbok med namnet {{dictionary.name}} finns redan."
 msgid ""
 "Difference view for \"{{type}}\" fields is not implemented. Latter version "
 "is being displayed."
-msgstr ""
+msgstr "Jämförelsevy för fältet \"{{type}}\" är inte implementerat. Senaste versionen visas."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:63
 msgid "Digital/Internet"
@@ -5331,7 +5331,7 @@ msgstr "Inaktivera val av en hel kategori"
 
 #: scripts/apps/authoring-react/authoring-react.tsx:1205
 msgid "Disable spellchecker"
-msgstr ""
+msgstr "Inaktivera stavningskontroll"
 
 #: scripts/apps/users/config.ts:76
 msgid "Disable user"
@@ -5361,7 +5361,7 @@ msgstr "Hindra artiklar från att skickas till den här desken"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:76
 msgid "Disallowed characters"
-msgstr ""
+msgstr "Otillåtna tecken"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:104
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:116
@@ -5370,7 +5370,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:231
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:199
 msgid "Discard unsaved changes?"
-msgstr ""
+msgstr "Kasta ej sparade ändringar?"
 
 #: scripts/core/notification/notification.ts:208
 msgid "Disconnected from Notification Server!"
@@ -5406,7 +5406,7 @@ msgstr "Vill du lägga till en bild till denna uppdatering?"
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:26
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:75
 msgid "Do you want to create a rundown template for this show right away?"
-msgstr ""
+msgstr "Vill du skapa en mall för körscheman för det här programmet nu?"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:43
 msgid "Do you want to delete \"{{ name }}\" filter?"
@@ -5584,7 +5584,7 @@ msgstr "Släpp filer här eller klicka för att välja"
 
 #: scripts/apps/authoring-react/fields/dropdown/index.ts:20
 msgid "Dropdown (authoring-react)"
-msgstr ""
+msgstr "Rullgardinsmeny (authoring-react)"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:140
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:268
@@ -5638,7 +5638,7 @@ msgstr "Klona innehållet inom en desk"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:55
 msgid "Duplicate ID: {{x}}"
-msgstr ""
+msgstr "Nytt ID: {{x}}"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:240
 msgid "Duplicate In Place"
@@ -5655,7 +5655,7 @@ msgstr "Klona en artikel"
 
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-tab.tsx:78
 msgid "Duplicate and open"
-msgstr ""
+msgstr "Klona och öppna"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:96
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:68
@@ -5673,7 +5673,7 @@ msgstr "Klona på plats"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:29
 msgid "Duplicate to"
-msgstr ""
+msgstr "Klona till"
 
 #: scripts/apps/archive/index.tsx:196
 msgid "Duplicate to personal"
@@ -5707,21 +5707,21 @@ msgstr "Gäller till"
 
 #: scripts/apps/authoring-react/fields/duration/index.tsx:19
 msgid "Duration (authoring-react)"
-msgstr ""
+msgstr "Tidslängd (authoring-react)"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:54
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:50
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:122
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:111
 msgid "Duration from"
-msgstr ""
+msgstr "Tidslängd från"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:62
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:55
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:140
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:124
 msgid "Duration to"
-msgstr ""
+msgstr "Tidslängd till"
 
 #: ../superdesk-planning/client/validators/events.ts:79
 msgid "END DATE cannot be in the past"
@@ -5820,19 +5820,19 @@ msgstr "Redigera \"' + schedule.name + '\" schema"
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 msgid "Edit \"{{name}}\" Desk"
-msgstr ""
+msgstr "Redigera desken \"{{name}}\""
 
 #: scripts/apps/products/views/products-config-modal.html:4
 msgid "Edit \"{{name}}\" Product"
-msgstr ""
+msgstr "Redigera produkten \"{{name}}\""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{name}}\" highlight"
-msgstr ""
+msgstr "Redigera favoritlistan \"{{name}}\""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:7
 msgid "Edit Abbreviations Dictionary"
-msgstr ""
+msgstr "Redigera förkortningslexikon"
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:9
 #: ../superdesk-planning/client/constants/tooltips.ts:23
@@ -5864,7 +5864,7 @@ msgstr "Redigera beskärning"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:8
 msgid "Edit Dictionary"
-msgstr ""
+msgstr "Redigera ordbok"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:57
 #: ../superdesk-planning/client/constants/tooltips.ts:35
@@ -5915,7 +5915,7 @@ msgstr "Redigera regeluppsättning"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:262
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:404
 msgid "Edit Rundown"
-msgstr ""
+msgstr "Redigera körschema"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:67
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:160
@@ -6003,7 +6003,7 @@ msgstr "Redigera i nytt fönster"
 #: scripts/apps/authoring-react/fields/linked-items/editor.tsx:54
 #: scripts/apps/authoring-react/fields/package-items/editor.tsx:51
 msgid "Edit in new window"
-msgstr ""
+msgstr "Redigera i nytt fönster"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:424
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:426
@@ -6016,7 +6016,7 @@ msgstr "Redigera i popup"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:374
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:649
 msgid "Edit item"
-msgstr ""
+msgstr "Redigera innehåll"
 
 #: scripts/core/editor3/highlightsConfig.ts:136
 msgid "Edit link"
@@ -6101,7 +6101,7 @@ msgstr "Editor 3"
 
 #: scripts/apps/authoring-react/fields/editor3/index.tsx:56
 msgid "Editor3 (authoring-react)"
-msgstr ""
+msgstr "Editor3 (authoring-react)"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:185
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:147
@@ -6110,7 +6110,7 @@ msgstr "Redaktörsnotering"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:368
 msgid "Editorial note"
-msgstr ""
+msgstr "Redaktörsnotering"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:245
 msgid "Ednote"
@@ -6152,11 +6152,11 @@ msgstr "Embargo: {{text}}"
 
 #: scripts/apps/authoring-react/fields/embed/index.tsx:17
 msgid "Embed (authoring-react)"
-msgstr ""
+msgstr "Bädda in (authoring-react)"
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:106
 msgid "Embed code"
-msgstr ""
+msgstr "Inbäddningskod"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:475
 msgid "Embedded Fields"
@@ -6164,15 +6164,15 @@ msgstr "Inbäddade fält"
 
 #: scripts/core/editor3/components/BaseUnstyledComponent.tsx:103
 msgid "Embedding articles is not configured for this content profile field"
-msgstr ""
+msgstr "Inbäddning av artiklar är inte konfigurerat för det här fältet"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:24
 msgid "Embedding from:"
-msgstr ""
+msgstr "Inbäddning från:"
 
 #: scripts/core/editor3/actions/editor3.tsx:75
 msgid "Embedding is not allowed for this editor"
-msgstr ""
+msgstr "Inbäddning är inte tillåtet i den här editorn"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Enable Feature Preview"
@@ -6184,7 +6184,7 @@ msgstr "Aktivera om konfig inte kan testas på REST server."
 
 #: scripts/apps/authoring-react/authoring-react.tsx:1239
 msgid "Enable spellchecker"
-msgstr ""
+msgstr "Aktivera stavningskontroll"
 
 #: scripts/apps/users/config.ts:108
 msgid "Enable user"
@@ -6290,7 +6290,7 @@ msgstr "Gick inte att skicka som "
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:83
 msgid "Error sending as {{name}} to {{destination}} at {{date}}"
-msgstr ""
+msgstr "Error skickad som {{name}} till {{destination}} den {{date}}"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:28
 msgid "Error. Dictionary not saved."
@@ -6470,7 +6470,7 @@ msgstr "Fel: Unikt namn är inte unikt."
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:111
 msgid "Error: {{ message }}"
-msgstr ""
+msgstr "Error: {{ message }}"
 
 #: scripts/apps/users/directives/UserEditDirective.ts:192
 msgid "Error: {{error}}"
@@ -6945,7 +6945,7 @@ msgstr "Kunde inte lägga till utlägg till arbetsflödet"
 
 #: ../superdesk-planning/client/api/planning.ts:233
 msgid "Failed to add coverages to workflow"
-msgstr ""
+msgstr "Kunde inte lägga till utlägg till arbetsflödet"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:326
 #: ../superdesk-planning/client/actions/planning/ui.ts:320
@@ -7121,7 +7121,7 @@ msgstr "Gick inte att ladda in alla lagringsplatser"
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:208
 msgid "Failed to load content profile."
-msgstr ""
+msgstr "Gick inte att hämta innehållsprofilen."
 
 #: ../superdesk-planning/client/actions/events/ui.ts:352
 msgid "Failed to load duplicated Event."
@@ -7371,7 +7371,7 @@ msgstr "Förhandsvisning"
 
 #: scripts/apps/authoring-react/field-adapters/feature_media.ts:21
 msgid "Feature media"
-msgstr ""
+msgstr "Dragarbild"
 
 #: scripts/apps/users/views/user-preferences.html:13
 #: scripts/apps/users/views/user-preferences.html:27
@@ -7465,7 +7465,7 @@ msgstr "Hämta"
 
 #: scripts/core/interactive-article-actions-panel/actions/fetch-to-tab.tsx:95
 msgid "Fetch and open"
-msgstr ""
+msgstr "Hämta och öppna"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:48
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:78
@@ -7475,7 +7475,7 @@ msgstr "Hämta till"
 
 #: scripts/api/article-fetch.tsx:104
 msgid "Fetch valid({{count}})"
-msgstr ""
+msgstr "Hämtning giltig({{count}})"
 
 #: scripts/apps/search/components/fields/state.tsx:13
 msgid "Fetched"
@@ -7499,7 +7499,7 @@ msgstr "Fält\n                                    typ"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:88
 msgid "Field ID to prefill from"
-msgstr ""
+msgstr "Fält ID att hämta från"
 
 #: scripts/apps/authoring-react/authoring-react.tsx:944
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:151
@@ -7615,7 +7615,7 @@ msgstr "Filtrera testresultat"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:92
 msgid "Filter by day:"
-msgstr ""
+msgstr "Filtrera på dag:"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:99
 msgid "Filter condition saved."
@@ -7877,7 +7877,7 @@ msgstr "Hela namnet"
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Full width mode"
-msgstr ""
+msgstr "Full bredd"
 
 #: scripts/extensions/sams/dist/src/utils/assets.js:69
 #: scripts/extensions/sams/src/utils/assets.ts:81
@@ -7953,7 +7953,7 @@ msgstr "Skapar rapport som visar användaraktivitet."
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:40
 msgid "Generate from URL"
-msgstr ""
+msgstr "Skapa från URL"
 
 #: scripts/apps/publish/views/subscribers.html:282
 msgid "Generate token"
@@ -7962,7 +7962,7 @@ msgstr "Skapa token"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:191
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:399
 msgid "Generated name for created rundowns"
-msgstr ""
+msgstr "Namn för skapade körscheman"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:534
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:127
@@ -8093,7 +8093,7 @@ msgstr "Grupphantering"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:422
 msgid "Guid"
-msgstr ""
+msgstr "Guid"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:20
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:70
@@ -8196,7 +8196,7 @@ msgstr "Rubrik:"
 #: scripts/extensions/ai-widget/src/headlines/headlines-widget.tsx:74
 #: scripts/extensions/ai-widget/src/main-panel.tsx:25
 msgid "Headlines"
-msgstr ""
+msgstr "Rubriker"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:105
 msgid "Heart"
@@ -8248,7 +8248,7 @@ msgstr "Dölj media"
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:55
 msgid "Hide preview"
-msgstr ""
+msgstr "Dölj förhandsvisning"
 
 #: scripts/apps/search/components/fields/nested-link.tsx:27
 msgid "Hide previous items"
@@ -8397,14 +8397,14 @@ msgstr "Identifierar media inom email-html.mallen"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:53
 msgid "Identifiers have to be specified for all items."
-msgstr ""
+msgstr "ID:n måste anges för alla objekt."
 
 #: scripts/apps/workspace/content/views/profile-settings.html:175
 msgid ""
 "If enabled, it will be possible to embed articles using this content profile"
 " into other articles that accept embeds (configurable in content profile "
 "field settings)"
-msgstr ""
+msgstr "Om aktiverad kommer artiklar med denna innehållsprofil kunna bäddas in i andra artiklar som tillåter inbäddningar (konfigurerbart i innehållsprofilens inställningar)"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:138
 #: scripts/core/ui/views/sd-timezone.html:17
@@ -8476,7 +8476,7 @@ msgstr "Bildstorlek"
 
 #: scripts/api/article-fetch.tsx:111
 msgid "Image size validation failed"
-msgstr ""
+msgstr "Validering av bildens storlek misslyckades"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/ImageTaggingComponent/ImageTaggingComponent.js:199
 #: scripts/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.tsx:298
@@ -8694,7 +8694,7 @@ msgstr "Nyhetsbyrå sekvens"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:274
 msgid "Ingest sequence"
-msgstr ""
+msgstr "Nyhetsbyrå sekvens"
 
 #: ../superdesk-planning/client/components/AuditInformation/index.tsx:49
 msgid "Ingest: {{ name }}"
@@ -8727,7 +8727,7 @@ msgstr "Inmatningstyp"
 
 #: scripts/apps/authoring-react/fields/tag-input/editor.tsx:23
 msgid "Input tags here"
-msgstr ""
+msgstr "Skriv etiketter här"
 
 #: scripts/core/editor3/components/links/LinkInput.tsx:220
 #: scripts/core/editor3/components/links/LinkInput.tsx:252
@@ -8892,13 +8892,13 @@ msgstr "Redan låst."
 
 #: scripts/core/editor3/components/article-embed/can-add-article-embed.ts:30
 msgid "Item content profile is not configured to allow embedding."
-msgstr ""
+msgstr "Innehållsprofilen är inte inställd för att tillåta inbäddningar."
 
 #: scripts/api/article-duplicate.tsx:37
 msgid "Item duplicated"
 msgid_plural "Items duplicated"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Innehållet klonat"
+msgstr[1] "Innehållet klonat"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:47
 msgid "Item has been killed."
@@ -8918,7 +8918,7 @@ msgstr "Har ändrats. Stäng och öppna igen för att fortsätta. Ändringarna g
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:69
 msgid "Item has not been transmitted to any subscriber"
-msgstr ""
+msgstr "Innehållet har inte skickats till någon prenumerant"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/index.tsx:41
 #: scripts/apps/authoring/versioning/views/versioning.html:6
@@ -8947,7 +8947,7 @@ msgstr "Låst"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:132
 msgid "Item not added. Maximum limit of {{n}} items exceeded."
-msgstr ""
+msgstr "Ej tillagt. Det maximala antalet {{n}} har överskridits."
 
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:65
 msgid "Item not found!"
@@ -9045,7 +9045,7 @@ msgstr "Flyttat till arbetsfas av användaren"
 
 #: scripts/api/article-fetch.tsx:131
 msgid "Items that can not be fetched"
-msgstr ""
+msgstr "Innehåll som inte kan hämtas"
 
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:101
@@ -9171,7 +9171,7 @@ msgstr "Språk"
 
 #: scripts/extensions/ai-widget/src/translations/translations-footer.tsx:50
 msgid "Languages are not available."
-msgstr ""
+msgstr "Språk finns inte tillgängligt."
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:76
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:11
@@ -9292,7 +9292,7 @@ msgstr "Lär mer om Superdesk på <a href=\"https://www.superdesk.org/\" title=\
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Leave full width mode"
-msgstr ""
+msgstr "Lämna full bredd"
 
 #: scripts/apps/archive/views/item-preview.html:10
 #: scripts/apps/archive/views/metadata-view.html:193
@@ -9357,7 +9357,7 @@ msgstr "Länk"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:266
 msgid "Link (Ctrl+K)"
-msgstr ""
+msgstr "Länk (Ctrl+K)"
 
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:51
 msgid "Link controls:"
@@ -9377,11 +9377,11 @@ msgstr "Länkad av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:398
 msgid "Linked by {{user}}"
-msgstr ""
+msgstr "Länkad av {{user}}"
 
 #: scripts/apps/authoring-react/fields/linked-items/index.tsx:27
 msgid "Linked items (authoring-react)"
-msgstr ""
+msgstr "Länkat innehåll (authoring-react)"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:119
 msgid "LinkedIn"
@@ -9593,7 +9593,7 @@ msgstr "Macron"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:37
 msgid "Macros widget"
-msgstr ""
+msgstr "Macron widget"
 
 #: scripts/core/menu/views/menu.html:85
 msgid "Main menu"
@@ -9654,7 +9654,7 @@ msgstr "Hantera planeringsprofil"
 #: scripts/extensions/broadcasting/dist/src/page.js:148
 #: scripts/extensions/broadcasting/src/page.tsx:215
 msgid "Manage Rundown Templates"
-msgstr ""
+msgstr "Hantera mallar för körscheman"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:243
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:349
@@ -9677,7 +9677,7 @@ msgstr "Hantera samlingar"
 #: scripts/extensions/broadcasting/src/page.tsx:229
 #: scripts/extensions/broadcasting/src/page.tsx:234
 msgid "Manage Shows"
-msgstr ""
+msgstr "Hantera program"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.tsx:19
 msgid "Manage agendas"
@@ -9702,7 +9702,7 @@ msgstr "Profil"
 #: scripts/extensions/broadcasting/dist/src/page.js:150
 #: scripts/extensions/broadcasting/src/page.tsx:220
 msgid "Manage rundown templates"
-msgstr ""
+msgstr "Hantera mallar för körscheman"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:5
 #: scripts/apps/search/views/saved-searches.html:27
@@ -9724,7 +9724,7 @@ msgstr "Hantera:"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:86
 msgid "Manual entry"
-msgstr ""
+msgstr "Manuellt inlägg"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:126
 msgid "Map Marker"
@@ -9754,7 +9754,7 @@ msgstr "Markera som färdig"
 
 #: scripts/extensions/markForUser/src/extension.tsx:51
 msgid "Mark for User"
-msgstr ""
+msgstr "Markera för användare"
 
 #: scripts/apps/desks/index.ts:60 scripts/apps/monitoring/index.ts:108
 msgid "Mark for desk"
@@ -9810,11 +9810,11 @@ msgstr "Markerad av "
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:451
 #: scripts/apps/authoring-react/toolbar/highlights-management.tsx:74
 msgid "Marked for"
-msgstr ""
+msgstr "Markerad för"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:319
 msgid "Marked for desk {{x}} by {{user}}"
-msgstr ""
+msgstr "Markerad för desk {{x}} av {{user}}"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:204
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:38
@@ -9824,7 +9824,7 @@ msgstr "Markerad för deskar"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:285
 msgid "Marked for highlight {{x}} by {{user}}"
-msgstr ""
+msgstr "Markerad för favoritlista {{x}} av {{user}}"
 
 #: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
 #: scripts/extensions/markForUser/dist/src/extension.js:19
@@ -9885,12 +9885,12 @@ msgstr "Maximal filstorlek"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:25
 msgid "Maximum items allowed"
-msgstr ""
+msgstr "Max antal tillåtna"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:44
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:174
 msgid "Maximum length"
-msgstr ""
+msgstr "Maxlängd"
 
 #: scripts/apps/publish/views/subscribers.html:111
 #: scripts/apps/workspace/content/constants.ts:35
@@ -9900,7 +9900,7 @@ msgstr "Media"
 
 #: scripts/apps/authoring-react/fields/media/index.tsx:20
 msgid "Media (authoring-react)"
-msgstr ""
+msgstr "Media (authoring-react)"
 
 #: scripts/apps/contacts/index.ts:22
 msgid "Media Contacts"
@@ -9997,7 +9997,7 @@ msgstr "Minimum höjd och bredd måste vara större än eller minst 200"
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:32
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:164
 msgid "Minimum length"
-msgstr ""
+msgstr "Minimumlängd"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:127
 msgid "Minus Sign"
@@ -10014,7 +10014,7 @@ msgstr "Minuter"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:71
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Diverse"
 
 #: scripts/apps/authoring/views/authoring-header.html:61
 msgid "Missing Link"
@@ -10037,7 +10037,7 @@ msgstr "Ändrad"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:96
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:182
 msgid "Modified at {{time}} by {{user}}"
-msgstr ""
+msgstr "Ändrad {{time}} av {{user}}"
 
 #: scripts/apps/search/directives/DateFilters.ts:85
 msgid "Modified from"
@@ -10111,7 +10111,7 @@ msgstr "Fler åtgärder"
 
 #: scripts/core/ui/components/content-create-dropdown/more-templates.tsx:49
 msgid "More templates"
-msgstr ""
+msgstr "Fler mallar"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:82
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:181
@@ -10137,7 +10137,7 @@ msgstr "Flytta till"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:209
 msgid "Move down"
-msgstr ""
+msgstr "Flytta ned"
 
 #: scripts/apps/monitoring/index.ts:91
 msgid "Move focus to next stage or group"
@@ -10149,7 +10149,7 @@ msgstr "Flytta fokus till föregående fas eller grupp"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:197
 msgid "Move up"
-msgstr ""
+msgstr "Flytta upp"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:253
 #: scripts/apps/authoring/versioning/history/views/history.html:75
@@ -10189,7 +10189,7 @@ msgstr "Multival"
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:124
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:157
 msgid "Multi-edit"
-msgstr ""
+msgstr "Multi-redigera"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:299
 msgid "Multi-line quote"
@@ -10421,7 +10421,7 @@ msgstr "Ny prenumeration"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:133
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:257
 msgid "New template"
-msgstr ""
+msgstr "Ny mall"
 
 #: scripts/apps/authoring-react/fields/media/media-carousel/media-carousel.tsx:162
 #: scripts/apps/monitoring/views/aggregate-settings.html:157
@@ -10444,7 +10444,7 @@ msgstr "Nästa vecka"
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:115
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:114
 msgid "Next match"
-msgstr ""
+msgstr "Nästa träff"
 
 #: scripts/apps/users/config.ts:158
 msgid "Next user"
@@ -10525,7 +10525,7 @@ msgstr "Inga mallar tillgängliga"
 
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:84
 msgid "No Translations yet"
-msgstr ""
+msgstr "Inga översättningar än"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:51
 msgid "No agendas assigned."
@@ -10570,7 +10570,7 @@ msgstr "Inga tillgängliga översättningar"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/TemplatesListView.tsx:37
 msgid "No calendar"
-msgstr ""
+msgstr "Ingen kalender"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:82
 msgid "No calendars assigned"
@@ -10609,7 +10609,7 @@ msgstr "Ingen desk vald"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-to-tab.tsx:114
 msgid "No destinations are available."
-msgstr ""
+msgstr "Inga destinationer finns tillgängliga."
 
 #: scripts/core/spellcheck/spellcheck.ts:510
 msgid "No dictionary available for spell checking."
@@ -10642,7 +10642,7 @@ msgstr "Inga formateringar hittade för {{formats}} då det publicerade har unik
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:154
 msgid "No highlights have been created yet."
-msgstr ""
+msgstr "Inga favoritlistor har skapats än."
 
 #: scripts/apps/users/views/change-avatar.html:15
 msgid "No image"
@@ -10662,7 +10662,7 @@ msgstr "Inga hittade"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:176
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:342
 msgid "No items found matching search criteria"
-msgstr ""
+msgstr "Kunde inte hitta något innehåll som matchar sökningen"
 
 #: scripts/core/ui/components/select2.tsx:193
 msgid "No items found."
@@ -10685,7 +10685,7 @@ msgstr "Inga med denna status"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:146
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:295
 msgid "No items yet"
-msgstr ""
+msgstr "Inget innehåll ännu"
 
 #: scripts/apps/archive/views/package_item_labels_dropdown_directive.html:4
 msgid "No label"
@@ -10711,7 +10711,7 @@ msgstr "Inga alternativ tillgängliga för detta fält"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-tab.tsx:50
 msgid "No options available."
-msgstr ""
+msgstr "Inga alternativ tillgängliga."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:436
 msgid ""
@@ -10725,11 +10725,11 @@ msgstr "Inga relaterade utlägg än"
 
 #: ../superdesk-planning/client/components/fields/preview/RelatedArticles.tsx:27
 msgid "No related articles"
-msgstr ""
+msgstr "Inga relaterade artiklar"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EditorFieldEventRelatedItems.tsx:85
 msgid "No related articles yet"
-msgstr ""
+msgstr "Inga artiklar relaterad än"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:149
 msgid "No related planning items."
@@ -10783,12 +10783,12 @@ msgstr "Servern svarar inte.<br>Gör nytt försök."
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:123
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:240
 msgid "No show selected"
-msgstr ""
+msgstr "Inget program valt"
 
 #: scripts/extensions/broadcasting/dist/src/authoring-fields/subitems/subitems-view-edit.js:58
 #: scripts/extensions/broadcasting/src/authoring-fields/subitems/subitems-view-edit.tsx:142
 msgid "No subitems"
-msgstr ""
+msgstr "Inga undergrupper"
 
 #: scripts/apps/authoring/track-changes/views/suggestions-widget.html:46
 msgid "No suggestions have been resolved"
@@ -10802,15 +10802,15 @@ msgstr "Inga taggar än"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:149
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:317
 msgid "No template selected"
-msgstr ""
+msgstr "Ingen mall vald"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/TemplatesListView.tsx:72
 msgid "No templates available in this calendar group."
-msgstr ""
+msgstr "Inga mallar tillgängliga i den här kalendergruppen."
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/TemplatesListView.tsx:82
 msgid "No templates found."
-msgstr ""
+msgstr "Hittade inga mallar."
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:251
 #: scripts/extensions/videoEditor/src/VideoEditorThumbnail.tsx:371
@@ -11012,7 +11012,7 @@ msgstr "Antal uppdrag:"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:69
 msgid "Number of assignments in TO DO"
-msgstr ""
+msgstr "Antal utlägg i ATT GÖRA"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:71
 #: scripts/apps/users/activity-widget/configuration.html:7
@@ -11026,7 +11026,7 @@ msgstr "OEM"
 #: scripts/apps/desks/views/desk-config-modal.html:312
 #: scripts/apps/desks/views/desk-config-modal.html:317
 msgid "OFF"
-msgstr ""
+msgstr "AV"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.tsx:72
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.tsx:107
@@ -11042,7 +11042,7 @@ msgstr "OK"
 #: scripts/apps/desks/views/desk-config-modal.html:311
 #: scripts/apps/desks/views/desk-config-modal.html:316
 msgid "ON"
-msgstr ""
+msgstr "PÅ"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:25
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:35
@@ -11143,7 +11143,7 @@ msgstr "Endast följande innehållstyper tillåts:"
 
 #: scripts/apps/archive/controllers/UploadController.ts:350
 msgid "Only the following files are allowed: {{fileTypes}}"
-msgstr ""
+msgstr "Endast följande filer tillåts: {{fileTypes}}"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:89
 msgid "Only the following media item types are allowed:"
@@ -11151,7 +11151,7 @@ msgstr "Endast följande mediatyper tillåts: "
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:157
 msgid "Only the following media types are allowed: {{types}}"
-msgstr ""
+msgstr "Endast följande mediatyper tillåts: {{types}}"
 
 #: scripts/core/auth/secure-login.html:28
 msgid "Oops! Authentication has been denied."
@@ -11199,7 +11199,7 @@ msgstr "Öppna i  nytt fönster"
 #: scripts/extensions/broadcasting/src/notifications.ts:22
 #: scripts/extensions/broadcasting/src/notifications.ts:26
 msgid "Open item"
-msgstr ""
+msgstr "Öppna"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:215
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:218
@@ -11216,11 +11216,11 @@ msgstr "Öppna bevakning"
 
 #: scripts/apps/authoring-react/toolbar/multi-edit-toolbar-action.tsx:57
 msgid "Open multi edit"
-msgstr ""
+msgstr "Multi-redigera"
 
 #: scripts/apps/authoring-react/packages.tsx:106
 msgid "Open package"
-msgstr ""
+msgstr "Öppna paket"
 
 #: scripts/apps/workspace/index.ts:37
 msgid "Open personal"
@@ -11270,7 +11270,7 @@ msgstr "Operatör"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:105
 msgid "Options:"
-msgstr ""
+msgstr "Alternativ:"
 
 #: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:199
 #: scripts/extensions/sams/dist/src/apps/samsAttachmentsWidget.js:209
@@ -11353,7 +11353,7 @@ msgstr "Original ID"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:406
 msgid "Original Id"
-msgstr ""
+msgstr "Original ID"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:19
 msgid "Original Image"
@@ -11479,7 +11479,7 @@ msgstr "PROFIL"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:714
 msgid "PUBLISH"
-msgstr ""
+msgstr "PUBLICERA"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
 msgid "Pacific/Auckland"
@@ -11516,11 +11516,11 @@ msgstr "Paketera enskilda artiklar "
 #: scripts/apps/authoring-react/data-layer.ts:191
 #: scripts/apps/authoring-react/field-adapters/package_items.ts:9
 msgid "Package items"
-msgstr ""
+msgstr "Paketinnehåll"
 
 #: scripts/apps/authoring-react/fields/package-items/index.tsx:25
 msgid "Package items (authoring-react)"
-msgstr ""
+msgstr "Paketinnehåll (authoring-react)"
 
 #: scripts/apps/archive/views/item-preview.html:5
 msgid "Package preview"
@@ -11537,7 +11537,7 @@ msgstr "Paket"
 
 #: scripts/apps/authoring-react/data-layer.ts:202
 msgid "Packages profile"
-msgstr ""
+msgstr "Profil"
 
 #: scripts/core/list/views/sdPaginationAlt.html:2
 msgid "Page"
@@ -11578,7 +11578,7 @@ msgstr "Parametrar"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:597
 msgid "Parent coverage not linked to a news item yet."
-msgstr "Överordnad rapportering är inte kopplad till någon artikel ännu."
+msgstr "Nyhetsbevakningen är inte kopplad till någon artikel ännu."
 
 #: scripts/apps/publish/views/ftp-config.html:15
 msgid "Passive mode"
@@ -11747,7 +11747,7 @@ msgstr "Nåla fast"
 
 #: scripts/apps/authoring/widgets/WidgetHeaderComponent.tsx:36
 msgid "Pin/Unpin"
-msgstr ""
+msgstr "Fäst/Lossa"
 
 #: ../superdesk-planning/client/components/fields/editor/Place.tsx:25
 #: ../superdesk-planning/client/utils/contentProfiles.ts:169
@@ -11774,7 +11774,7 @@ msgstr "Platser:"
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/rundown-items.js:40
 #: scripts/extensions/broadcasting/src/rundowns/components/rundown-items.tsx:128
 msgid "Planned"
-msgstr ""
+msgstr "Planerad"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:103
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:16
@@ -11787,7 +11787,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/shows/create-show.tsx:119
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:46
 msgid "Planned duration"
-msgstr ""
+msgstr "Planerad längd"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:76
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.tsx:218
@@ -11900,7 +11900,7 @@ msgstr "Endast utlägg"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:66
 msgid "Planning templates"
-msgstr ""
+msgstr "Planeringsmallar"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AssociatedPlanningsBookmark.tsx:58
 msgid "Planning: {{ name }}"
@@ -12173,7 +12173,7 @@ msgstr "Senaste "
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:107
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:122
 msgid "Previous match"
-msgstr ""
+msgstr "Föregående träff"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:614
 msgid "Previous scheduled update is not linked to a news item yet."
@@ -12192,7 +12192,7 @@ msgstr "Skriv ut"
 
 #: scripts/apps/authoring-react/authoring-react.tsx:1333
 msgid "Print preview"
-msgstr ""
+msgstr "Förhandsgranska utskrift"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:112
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:129
@@ -12219,7 +12219,7 @@ msgstr "Prioritet ändrad till "
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:280
 msgid "Priority:"
-msgstr ""
+msgstr "Prioritet:"
 
 #: ../superdesk-planning/client/components/PriorityLabel/index.tsx:50
 msgid "Priority: {{ name }}"
@@ -12344,7 +12344,7 @@ msgstr "Korrläsnings-tema"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:105
 msgid "Proofreading Theme"
-msgstr ""
+msgstr "Korrläsnings-tema"
 
 #: scripts/core/auth/reset-password.html:11
 msgid ""
@@ -12458,11 +12458,11 @@ msgstr "Publicera och fortsätt"
 
 #: scripts/core/interactive-article-actions-panel/actions/publish-tab.tsx:281
 msgid "Publish from"
-msgstr ""
+msgstr "Publicera från"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:106
 msgid "Publish schedule"
-msgstr ""
+msgstr "Publiceringsschema"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:26
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:81
@@ -12547,7 +12547,7 @@ msgstr "Publiceringsåtgärder"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:124
 msgid "Publishing multiple items from authoring pane is not supported"
-msgstr ""
+msgstr "Att publicera flera artiklar från redaktörspanelen stöds inte"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:182
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:56
@@ -12601,7 +12601,7 @@ msgstr "Köad"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:57
 msgid "Quick List"
-msgstr ""
+msgstr "Snabblista"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:157
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:28
@@ -12825,7 +12825,7 @@ msgstr "Uppdaterar..."
 #: scripts/extensions/ai-widget/src/summary/summary.tsx:42
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:67
 msgid "Regenerate"
-msgstr ""
+msgstr "Återskapa"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:18
 msgid "Region"
@@ -12852,7 +12852,7 @@ msgstr "Avvisad av "
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:127
 msgid "Rejected by {{user}}"
-msgstr ""
+msgstr "Avvisad av {{user}}"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:114
 msgid "Relate an item"
@@ -12877,7 +12877,7 @@ msgstr "Relaterade utlägg"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:220
 msgid "Related Planning(s)"
-msgstr ""
+msgstr "Relaterade utlägg"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AssociatedPlanningsBookmark.tsx:99
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/index.tsx:55
@@ -13027,7 +13027,7 @@ msgstr "Ta bort all formatering"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:102
 msgid "Remove article"
-msgstr ""
+msgstr "Ta bort artikel"
 
 #: scripts/apps/highlights/views/settings.html:20
 msgid "Remove configuration"
@@ -13122,7 +13122,7 @@ msgstr "Ta bort innehållsfält"
 
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:35
 msgid "Removed"
-msgstr ""
+msgstr "Borttagen"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:545
 msgid "Removed assignment from coverage."
@@ -13155,7 +13155,7 @@ msgstr "Återöppnad av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:443
 msgid "Reopened by {{user}}"
-msgstr ""
+msgstr "Öppnad igen av {{user}}"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:104
 msgid "Reorder Sections"
@@ -13205,7 +13205,7 @@ msgstr "Ersätt alla"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:141
 msgid "Replace all"
-msgstr ""
+msgstr "Ersätt alla"
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:106
 msgid "Replace link"
@@ -13218,7 +13218,7 @@ msgstr "Ersätt med "
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:87
 msgid "Replace {{x}} with {{y}}"
-msgstr ""
+msgstr "Ersätt {{x}} med {{y}}"
 
 #: scripts/apps/authoring/track-changes/views/suggestions-widget.html:25
 msgid "Replace:"
@@ -13360,7 +13360,7 @@ msgstr "Klarmarkerad av"
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:18
 msgid "Resolved suggestions"
-msgstr ""
+msgstr "Åtgärdade ändringsförslag"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:580
 msgid "Resolving comments"
@@ -13428,7 +13428,7 @@ msgstr "Omskriven av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:504
 msgid "Rewritten by {{user}}"
-msgstr ""
+msgstr "Omskriven av {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:469
 #: scripts/apps/authoring/versioning/history/views/history.html:157
@@ -13480,7 +13480,7 @@ msgstr "Rotera höger"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:253
 msgid "Round corners for dropdown items"
-msgstr ""
+msgstr "Rundade hörn för rullgardiner"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:22
 msgid "Route incoming content to"
@@ -13553,17 +13553,17 @@ msgstr "Kör automatiskt"
 #: scripts/extensions/broadcasting/dist/src/page.js:174
 #: scripts/extensions/broadcasting/src/page.tsx:263
 msgid "Rundown"
-msgstr ""
+msgstr "Körschema"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:53
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:89
 msgid "Rundown created"
-msgstr ""
+msgstr "Körschema skapat"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:86
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:175
 msgid "Rundown name"
-msgstr ""
+msgstr "Namn"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:115
 msgid "SA"
@@ -13625,7 +13625,7 @@ msgstr "Lör"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:188
 msgid "Sample content"
-msgstr ""
+msgstr "Exempelinnehåll"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:113
 msgid "Sat"
@@ -13769,7 +13769,7 @@ msgstr "Spara rapport"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:276
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:426
 msgid "Save Rundown"
-msgstr ""
+msgstr "Spara körschema"
 
 #: scripts/apps/search/views/save-search.html:10
 msgid "Save Search"
@@ -13876,7 +13876,7 @@ msgstr "Spara evenemang som mall"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:364
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:630
 msgid "Save item"
-msgstr ""
+msgstr "Spara"
 
 #: scripts/apps/users/views/edit-form.html:403
 msgid "Save password"
@@ -14171,7 +14171,7 @@ msgstr "Sökbyråer"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:121
 msgid "Search Related Articles"
-msgstr ""
+msgstr "Sök relaterade artiklar"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:456
 msgid "Search Source"
@@ -14242,7 +14242,7 @@ msgstr "Sökgenväg"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:81
 msgid "Search templates"
-msgstr ""
+msgstr "Sök mallar"
 
 #: scripts/apps/search/directives/SaveSearch.ts:72
 msgid "Search was saved successfully"
@@ -14347,12 +14347,12 @@ msgstr "Välj en desk först"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:123
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:241
 msgid "Select a show from the dropdown above."
-msgstr ""
+msgstr "Välj ett program från rullistan ovan."
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:149
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:318
 msgid "Select a template from the sidebar."
-msgstr ""
+msgstr "Välj en mall från sidopanelen."
 
 #: scripts/core/ui/components/SelectUser.tsx:117
 #: scripts/core/ui/components/SelectUser.tsx:21
@@ -14362,11 +14362,11 @@ msgstr "Välj en användare"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-vocabulary/config.tsx:27
 msgid "Select a vocabulary"
-msgstr ""
+msgstr "Välj ett innehållsfält"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:110
 msgid "Select a vocabulary for predefined snippets"
-msgstr ""
+msgstr "Välj ett innehållsfält för fördefinierade stycken"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:257
 msgid "Select all"
@@ -14386,7 +14386,7 @@ msgstr "Välj ett befintligt utlägg eller skapa ett nytt"
 
 #: scripts/apps/authoring-react/toolbar/multi-edit-toolbar-action.tsx:36
 msgid "Select articles"
-msgstr ""
+msgstr "Välj artiklar"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:70
 msgid "Select at most 1 file to upload."
@@ -14463,7 +14463,7 @@ msgstr "Välj sparade sökningar för vy"
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/select-show.js:21
 #: scripts/extensions/broadcasting/src/rundowns/components/select-show.tsx:53
 msgid "Select show"
-msgstr ""
+msgstr "Välj program"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:7
 msgid "Select source"
@@ -14494,7 +14494,7 @@ msgstr "Välj typ"
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:29
 msgid "Select version"
-msgstr ""
+msgstr "Välj version"
 
 #: scripts/core/views/sdSearchList.html:21
 msgid "Selected item"
@@ -14541,7 +14541,7 @@ msgstr "Skicka stoppsignal"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-to-tab.tsx:160
 msgid "Send and open"
-msgstr ""
+msgstr "Skicka och öppna"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-tab.tsx:56
 msgid "Send correction"
@@ -14549,7 +14549,7 @@ msgstr "Skicka rättelse"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:387
 msgid "Send kill"
-msgstr ""
+msgstr "Skicka återkallelse"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Send notifications via email"
@@ -14562,8 +14562,8 @@ msgstr "Skicka bara efter schemalagd publicering"
 #: scripts/core/interactive-article-actions-panel/actions/send-to-tab.tsx:186
 msgid "Send package and items"
 msgid_plural "Send packages and items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Skicka paket och artiklar"
+msgstr[1] "Skicka paket och artiklar"
 
 #: scripts/apps/packaging/index.ts:110
 msgid "Send package to"
@@ -14587,7 +14587,7 @@ msgstr "Skicka till Mitt skrivbord"
 
 #: scripts/apps/users/components/EmailNotificationPreferences.tsx:24
 msgid "Send {{name}} notifications"
-msgstr ""
+msgstr "Skicka {{name}} notiser"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Sending"
@@ -14611,7 +14611,7 @@ msgstr "Skickad till "
 
 #: scripts/api/article-send.tsx:257
 msgid "Sent successfully"
-msgstr ""
+msgstr "Skickades framgångsrikt"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
@@ -14619,7 +14619,7 @@ msgstr "Skickad/Köad som"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:98
 msgid "Sent/Queued as {{name}} to {{destination}} at {{date}}"
-msgstr ""
+msgstr "Skickat/köat som {{name}} till {{destination}} den {{date}}"
 
 #: scripts/apps/publish/views/publish-queue.html:104
 msgid "Sequence No"
@@ -14666,7 +14666,7 @@ msgstr "Samling inaktiverad"
 #: scripts/apps/publish/views/ftp-config.html:12
 #: scripts/apps/publish/views/http-push-config.html:14
 msgid "Set and hidden thereafter"
-msgstr ""
+msgstr "Inskrivet och därefter dolt"
 
 #: scripts/apps/users/views/settings-roles.html:50
 msgid "Set as default"
@@ -14794,11 +14794,11 @@ msgstr "Visa alla meddelanden"
 #: scripts/extensions/broadcasting/dist/src/shows/manage-shows.js:19
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:31
 msgid "Show code"
-msgstr ""
+msgstr "Visa kod"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:48
 msgid "Show crops for pictures"
-msgstr ""
+msgstr "Visa beskärningar för bilder"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:101
 msgid "Show error messages"
@@ -14815,7 +14815,7 @@ msgstr "Visa i förhandsvisning"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:110
 msgid "Show input for editing title"
-msgstr ""
+msgstr "Visa fält för att redigera titel"
 
 #: ../superdesk-planning/client/components/UI/Preview/ExpandableText.tsx:46
 msgid "Show less"
@@ -14826,7 +14826,7 @@ msgstr "Visa mindre"
 #: scripts/extensions/broadcasting/src/shows/create-show.tsx:95
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:25
 msgid "Show name"
-msgstr ""
+msgstr "Visa namn"
 
 #: ../superdesk-planning/client/components/Location/index.tsx:54
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:93
@@ -15031,7 +15031,7 @@ msgstr "Vissa utlägg tilldelade"
 
 #: scripts/apps/authoring/multiedit/multiedit.ts:70
 msgid "Some articles failed to unlock"
-msgstr ""
+msgstr "Vissa artiklar kunde inte låsas upp"
 
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/extension.js:31
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:42
@@ -15041,11 +15041,11 @@ msgstr "Några artiklar är kopplade till pågående utlägg."
 #: scripts/api/article-send.tsx:135
 msgid ""
 "Some packages contain the following published items that can not be sent:"
-msgstr ""
+msgstr "Vissa paket innehåller publicerade artiklar som inte kan skickas:"
 
 #: ../superdesk-planning/client/actions/main.ts:480
 msgid "Some related planning item post validation failed"
-msgstr ""
+msgstr "Validering av relaterade utlägg misslyckades"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:456
 msgid ""
@@ -15533,14 +15533,14 @@ msgstr "Undergrupp av:"
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:112
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:144
 msgid "Subitem attachments"
-msgstr ""
+msgstr "Bilagor i undergrupp"
 
 #: scripts/extensions/broadcasting/dist/src/authoring-fields/subitems/index.js:13
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:130
 #: scripts/extensions/broadcasting/src/authoring-fields/subitems/index.tsx:30
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:165
 msgid "Subitems"
-msgstr ""
+msgstr "Undergrupper"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:547
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:117
@@ -15668,7 +15668,7 @@ msgstr "Summa"
 #: scripts/extensions/ai-widget/src/main-panel.tsx:35
 #: scripts/extensions/ai-widget/src/summary/summary-widget.tsx:70
 msgid "Summary"
-msgstr ""
+msgstr "Sammanfattning"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:106
 msgid "Sun"
@@ -15705,19 +15705,19 @@ msgstr "Swimlane-vy"
 
 #: ../superdesk-planning/client/components/fields/editor/Language.tsx:111
 msgid "Switch Metadata Language"
-msgstr ""
+msgstr "Byt språk för metadata"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:86
 msgid "Switch article"
-msgstr ""
+msgstr "Växla artikel"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:16
 msgid "Switch authoring"
-msgstr ""
+msgstr "Växla textproduktion"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:18
 msgid "Switch authoring?"
-msgstr ""
+msgstr "Växla textproduktion?"
 
 #: scripts/apps/monitoring/index.ts:89
 msgid "Switch between grouped/single desk view"
@@ -15817,7 +15817,7 @@ msgstr "Tabellrubrik lista"
 
 #: scripts/apps/authoring-react/fields/tag-input/index.tsx:25
 msgid "Tag-input (authoring-react)"
-msgstr ""
+msgstr "Etikett-fält (authoring-react)"
 
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:83
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:40
@@ -15847,7 +15847,7 @@ msgstr "Provtext skapad av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:418
 msgid "Take created by {{user}}"
-msgstr ""
+msgstr "Version skapad av {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:304
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:120
@@ -15882,7 +15882,7 @@ msgstr "Stoppad"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:427
 msgid "Taken as a rewrite of"
-msgstr ""
+msgstr "Gjord som rewrite av"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:31
 msgid "Takes"
@@ -15929,15 +15929,15 @@ msgstr "Kanaler"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:131
 msgid "Target regions"
-msgstr ""
+msgstr "Målgrupper"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:106
 msgid "Target subscribers"
-msgstr ""
+msgstr "Mottagare"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:149
 msgid "Target types"
-msgstr ""
+msgstr "Kanaler"
 
 #: scripts/apps/publish/views/subscribers.html:127
 msgid "Targetable by users"
@@ -15956,12 +15956,12 @@ msgstr "Utläggshantering"
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:58
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:74
 msgid "Tech. title"
-msgstr ""
+msgstr "Tech. titel"
 
 #: scripts/extensions/broadcasting/dist/src/authoring-fields/subitems/subitems-view-edit.js:46
 #: scripts/extensions/broadcasting/src/authoring-fields/subitems/subitems-view-edit.tsx:101
 msgid "Technical information"
-msgstr ""
+msgstr "Teknisk information"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:19
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:72
@@ -15982,7 +15982,7 @@ msgstr "Mall finns redan. Ska den ersättas?"
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:93
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:207
 msgid "Template based settings"
-msgstr ""
+msgstr "Mallbaserade inställningar"
 
 #: ../superdesk-planning/client/actions/events/api.ts:666
 #: ../superdesk-planning/client/components/Events/ManageEventTemplatesModal.tsx:62
@@ -16003,7 +16003,7 @@ msgstr "Malltyp"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:118
 msgid "Template will be updated"
-msgstr ""
+msgstr "Mallen kommer att uppdateras"
 
 #: scripts/apps/templates/index.ts:46
 #: scripts/apps/templates/views/templates.html:3
@@ -16012,7 +16012,7 @@ msgstr "Mallar"
 
 #: scripts/apps/authoring-react/field-adapters/usageterms.ts:18
 msgid "Terms of use"
-msgstr ""
+msgstr "Användarvillkor"
 
 #: scripts/apps/content-filters/views/manage-filters.html:138
 msgid "Test"
@@ -16262,11 +16262,11 @@ msgstr "Namnet på en Slack-kanal ansluten med denna desk, tecknet # behöver in
 msgid ""
 "The package \"{{name}}\" contains the following published items that can not"
 " be sent:"
-msgstr ""
+msgstr "Paketet \"{{name}}\" innehåller dessa publicerade artiklar som inte kan skickas:"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:19
 msgid "The page needs to be reloaded in order to do that."
-msgstr ""
+msgstr "Sidan måste laddas om för att göra det."
 
 #: scripts/apps/users/directives/ChangePasswordDirective.ts:21
 #: scripts/core/auth/login-modal-directive.ts:73
@@ -16288,7 +16288,7 @@ msgstr "Svaret raderas. Är du säker?"
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:23
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:65
 msgid "The show {{name}} has been successfully created"
-msgstr ""
+msgstr "Programmet {{name}} skapades framgångsrikt"
 
 #: scripts/apps/archive/controllers/file-upload-error-modal.tsx:62
 msgid "The size of {{filename}} is {{width}}x{{height}}"
@@ -16364,7 +16364,7 @@ msgstr "Det finns inga utlägg att göra"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:29
 msgid "There are no changes"
-msgstr ""
+msgstr "Det finns inga ändringar"
 
 #: ../superdesk-planning/client/constants/assignments.ts:174
 msgid "There are no current assignments"
@@ -16384,7 +16384,7 @@ msgstr "Ingenting matchar denna sökning."
 
 #: scripts/core/ui/components/virtual-lists/virtual-list.tsx:206
 msgid "There are no items yet"
-msgstr ""
+msgstr "Det finns inget innehåll än"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:566
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:432
@@ -16403,12 +16403,12 @@ msgstr "Det finns inga publika filtillägg än. Ladda upp några genom att förs
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:208
 msgid "There are no resolved suggestions"
-msgstr ""
+msgstr "Det finns inga åtgärdade ändringsförslag"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:173
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:336
 msgid "There are no rundowns yet"
-msgstr ""
+msgstr "Det finns inga körscheman än"
 
 #: scripts/apps/master-desk/components/UsersComponent.tsx:150
 msgid "There are no users assigned to this desk"
@@ -16441,7 +16441,7 @@ msgstr "Innehåller ej sparade ändringar, gå till artikel för att spara?"
 
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:34
 msgid "There are some unsaved changes, save it now?"
-msgstr ""
+msgstr "Det finns osparade ändringar, vill du spara nu?"
 
 #: scripts/core/auth/auth.ts:240
 msgid "There are some unsaved changes. Please save them before signing out."
@@ -16485,7 +16485,7 @@ msgstr "Något gick fel. Gick inte att ansluta uppdatering."
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:90
 #: scripts/extensions/broadcasting/src/utils/handle-unsaved-rundown-changes.ts:23
 msgid "There is an item open in editing mode. Discard changes?"
-msgstr ""
+msgstr "Det finns en artikel öppen i redigeringsläge. Vill du kasta ändringarna?"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:275
 msgid "There is an update assignment for this story due at ''."
@@ -16560,16 +16560,16 @@ msgstr "Felmeddelande. Användarkontot sparades inte."
 #: scripts/extensions/ai-widget/dist/src/summary/summary.js:22
 #: scripts/extensions/ai-widget/src/summary/summary.tsx:45
 msgid "There was an error when trying to generate a summary."
-msgstr ""
+msgstr "Ett fel uppstod när sammanfattningen skulle genereras."
 
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:70
 msgid "There was an error when trying to generate a translation."
-msgstr ""
+msgstr "Ett fel uppstod när översättningen skulle genereras."
 
 #: scripts/extensions/ai-widget/dist/src/headlines/headlines.js:22
 #: scripts/extensions/ai-widget/src/headlines/headlines.tsx:49
 msgid "There was an error when trying to generate headlines."
-msgstr ""
+msgstr "Ett fel uppstod när rubriken skulle genereras."
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:218
 msgid "There was an error, could not delete Events and Planning view filter."
@@ -16650,7 +16650,7 @@ msgstr "Denna och alla framtida evenemang"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:276
 msgid "This and all future planning"
-msgstr ""
+msgstr "Denna och all framtida planering"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:575
 msgid ""
@@ -16711,7 +16711,7 @@ msgid ""
 "This field will initialize with the value of specified field when toggled "
 "from \"off\" to \"on\". Only plain-text gets copied. Formatting options or "
 "links are not preserved."
-msgstr ""
+msgstr "Det här fältet kommer att initieras med angivet värde om knappen ändras från \"av\" till \"på\". Bara ren text kommer att kopieras. Formatering eller länkar bevaras inte."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:358
 msgid "This is a default template of the following desk(s): {{deskNames}}."
@@ -16719,7 +16719,7 @@ msgstr "Detta är en standardmall från följande desk(s): {{deskNames}}."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:351
 msgid "This is a recurring event."
-msgstr ""
+msgstr "Det här är ett återkommande evenemang."
 
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89
@@ -16728,7 +16728,7 @@ msgstr "Detta är rubriken"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:173
 msgid "This item is already added"
-msgstr ""
+msgstr "Det här innehållet har redan lagts till"
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:154
 msgid "This item is already added as related."
@@ -16753,7 +16753,7 @@ msgstr "Detta låstes upp av {{username}}."
 
 #: scripts/core/editor3/components/BaseUnstyledComponent.tsx:130
 msgid "This link is not embeddable."
-msgstr ""
+msgstr "Den här länken kan inte bäddas in."
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModalSubnav.tsx:66
 msgid "This list contains unposted changes!"
@@ -16761,7 +16761,7 @@ msgstr "Listan innehåller avpublicerade ändringar!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:270
 msgid "This planning only"
-msgstr ""
+msgstr "Endast det här utlägget"
 
 #: scripts/apps/archive/views/preview.html:100
 msgid "This story has been rewritten by:"
@@ -16857,7 +16857,7 @@ msgstr "Tid"
 
 #: scripts/apps/authoring-react/fields/time/index.tsx:19
 msgid "Time (authoring-react)"
-msgstr ""
+msgstr "Tid (authoring-react)"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:15
 msgid "Time Restricted"
@@ -16905,7 +16905,7 @@ msgstr "Tidsåtgång för innehållsproduktion"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:124
 msgid "Time zone"
-msgstr ""
+msgstr "Tidszon"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:559
 msgid "Timeline"
@@ -16994,7 +16994,7 @@ msgstr "För att få en inbäddad kod, klistra in en URL."
 #: scripts/apps/authoring-react/fields/media/difference.tsx:72
 msgid ""
 "To see detailed differences, compare primary and secondary items visually"
-msgstr ""
+msgstr "För att se detaljerad skillnad, jämför primärt och sekundärt innehåll visuellt"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:18
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:129
@@ -17004,7 +17004,7 @@ msgstr "Till:"
 
 #: scripts/extensions/ai-widget/src/translations/translations-footer.tsx:65
 msgid "To: {{ language }}"
-msgstr ""
+msgstr "Till: {{ language }}"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:18
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:9
@@ -17057,7 +17057,7 @@ msgstr "Växla fetstil"
 
 #: scripts/apps/authoring-react/authoring-section/get-field-container.tsx:19
 msgid "Toggle field"
-msgstr ""
+msgstr "Toggle"
 
 #: scripts/apps/search/views/search.html:3
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:249
@@ -17301,7 +17301,7 @@ msgstr "U"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:643
 msgid "UNSPIKE"
-msgstr ""
+msgstr "ÅTERSTÄLL"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:135
 msgid "UP"
@@ -17423,7 +17423,7 @@ msgstr "Okänt fel. Försök publicera från artikelns redigeringsvy."
 
 #: scripts/api/article-send.tsx:248
 msgid "Unknown error occurred"
-msgstr ""
+msgstr "Ett okänt fel uppstod"
 
 #: ../superdesk-analytics/client/utils.js:161
 msgid "Unlink"
@@ -17443,7 +17443,7 @@ msgstr "Avlänkad av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:456
 msgid "Unlinked by {{user}}"
-msgstr ""
+msgstr "Avlänkad av {{user}}"
 
 #: ../superdesk-analytics/client/utils.js:171
 #: ../superdesk-planning/client/components/LockContainer/LockContainerPopup.tsx:42
@@ -17488,11 +17488,11 @@ msgstr "Avmarkerad av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:336
 msgid "Unmarked from desk({{x}}) by {{user}}"
-msgstr ""
+msgstr "Avmarkerad från desk({{x}}) av {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:302
 msgid "Unmarked from highlight({{x}}) by {{user}}"
-msgstr ""
+msgstr "Avmarkerad från favoritlista({{x}}) av {{user}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:201
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:27
@@ -17672,7 +17672,7 @@ msgstr "Uppdatera alla återkommande evenemang eller bara detta?"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:258
 msgid "Update all recurring planning or just this one?"
-msgstr ""
+msgstr "Uppdatera all återkommande utlägg eller bara detta?"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Update every"
@@ -17732,7 +17732,7 @@ msgstr "Uppdaterad den"
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:104
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:178
 msgid "Updated at {{date}}"
-msgstr ""
+msgstr "Uppdaterad {{date}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:129
 #: scripts/apps/authoring/versioning/history/views/history.html:18
@@ -17742,7 +17742,7 @@ msgstr "Uppdaterad av"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:119
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:135
 msgid "Updated fields:"
-msgstr ""
+msgstr "Uppdaterade fält:"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetListItem.js:113
 #: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:98
@@ -17868,7 +17868,7 @@ msgstr "Statistik för tyngd"
 
 #: scripts/apps/authoring-react/fields/urls/index.tsx:19
 msgid "Urls (authoring-react)"
-msgstr ""
+msgstr "Url:er (authoring-react)"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:76
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:72
@@ -18059,7 +18059,7 @@ msgstr "Värdet måste vara unikt"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:79
 msgid "Value type"
-msgstr ""
+msgstr "Typ av värde"
 
 #: scripts/apps/content-filters/views/filter-search.html:26
 #: scripts/apps/content-filters/views/filter-search.html:30
@@ -18083,7 +18083,7 @@ msgstr "Versionskapare"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:76
 msgid "Version: {{n}}"
-msgstr ""
+msgstr "Version: {{n}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/index.tsx:40
 #: scripts/apps/authoring/versioning/versioning.ts:8
@@ -18093,7 +18093,7 @@ msgstr "Versioner"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/index.tsx:15
 msgid "Versions and item history"
-msgstr ""
+msgstr "Versioner och historik"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:205
 #: ../superdesk-planning/client/utils/index.ts:598
@@ -18169,11 +18169,11 @@ msgstr "Visa full profil"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:516
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:115
 msgid "View item"
-msgstr ""
+msgstr "Visa innehåll"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:403
 msgid "View linked item"
-msgstr ""
+msgstr "Visa länkat innehåll"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:13
 msgid "View name"
@@ -18214,7 +18214,7 @@ msgstr "Visa scheman"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:180
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:205
 msgid "View source item"
-msgstr ""
+msgstr "Vissa ursprungligt innehåll"
 
 #: scripts/apps/contacts/index.ts:23
 msgid "View/Manage media contacts"
@@ -18233,7 +18233,7 @@ msgstr "Hantera innehållsfält"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:82
 msgid "Vocabulary"
-msgstr ""
+msgstr "Innehållsfält"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:101
 msgid "Vocabulary saved successfully"
@@ -18484,7 +18484,7 @@ msgstr "Ja"
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:16
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:39
 msgid "Yes, create a template"
-msgstr ""
+msgstr "Ja, skapa en mall"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:17
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:8
@@ -18499,7 +18499,7 @@ msgstr "Du ändrar dina personliga preferenser. Om du vill ändra standard-ordni
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
-msgstr ""
+msgstr "Du skapar ett nytt utlägg."
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:73
 msgid "You are currently managing featured story in another session"
@@ -18532,7 +18532,7 @@ msgstr "Du kan antingen hindra fortsatt skrift när teckengränsen är nådd ell
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:154
 msgid "You can't multi-edit, because these articles can't be edited"
-msgstr ""
+msgstr "Du kan inte multi-redigera eftersom dessa artiklar inte kan ändras."
 
 #: scripts/core/menu/notifications/views/notifications.html:13
 msgid "You don't have any notifications"
@@ -18557,7 +18557,7 @@ msgstr "Du har ej sparade ändringar. Ska de sparas nu?"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:242
 msgid ""
 "You made changes to this planning item that is part of a recurring event."
-msgstr ""
+msgstr "Du har gjort ändringar i det här utlägget som är del av ett återkommande evenemang."
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
@@ -18767,7 +18767,7 @@ msgstr "av"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:208
 msgid "by {{user}}"
-msgstr ""
+msgstr "av {{user}}"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:223
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:284
@@ -18804,7 +18804,7 @@ msgstr "stad"
 
 #: scripts/core/ui/components/virtual-lists/select.tsx:178
 msgid "clear"
-msgstr ""
+msgstr "rensa"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:48
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:116
@@ -18817,11 +18817,11 @@ msgstr "inaktiv"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:112
 msgid "color"
-msgstr ""
+msgstr "färg"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:102
 msgid "column"
-msgstr ""
+msgstr "kolumn"
 
 #: scripts/core/menu/notifications/views/notifications.html:31
 msgid "commented on"
@@ -18903,7 +18903,7 @@ msgstr "nuvarande"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:55
 msgid "custom blocks"
-msgstr ""
+msgstr "anpassade block"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:17
 msgid "custom vocabulary"
@@ -19030,7 +19030,7 @@ msgstr "lagra"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:63
 msgid "embed articles"
-msgstr ""
+msgstr "bädda in artiklar"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:139
 msgid "ends"
@@ -19095,11 +19095,11 @@ msgstr "hämtad i"
 #: scripts/extensions/broadcasting/src/form-validation.ts:18
 #: scripts/extensions/broadcasting/src/form-validation.ts:22
 msgid "field can not be empty"
-msgstr ""
+msgstr "fältet kan inte vara tomt"
 
 #: scripts/api/article-fetch.tsx:135
 msgid "file name"
-msgstr ""
+msgstr "filnamn"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:230
 msgid "first"
@@ -19124,7 +19124,7 @@ msgstr "för \"{{currentDesk.name}}\" Desk"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "for \"{{name}}\" Desk"
-msgstr ""
+msgstr "för desken \"{{name}}\""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:42
 msgid "for '{{ desk }}'"
@@ -19166,7 +19166,7 @@ msgstr "från favoritlista"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:361
 msgid "from highlight: {{x}}"
-msgstr ""
+msgstr "från favoritlista: {{x}}"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:237
 msgid "from {{from}} to {{to}}"
@@ -19177,7 +19177,7 @@ msgstr "från {{from}} till {{to}}"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:260
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:276
 msgid "from:"
-msgstr ""
+msgstr "från:"
 
 #: scripts/apps/users/views/edit-form.html:70
 msgid "full name"
@@ -19189,7 +19189,7 @@ msgstr "genre:"
 
 #: scripts/core/ui/components/UserPopup/UserPopup.tsx:27
 msgid "go to profile"
-msgstr ""
+msgstr "gå till profil"
 
 #: scripts/core/utils.tsx:272 scripts/core/utils.tsx:304
 msgid "graphic"
@@ -19221,7 +19221,7 @@ msgstr "h6"
 
 #: scripts/api/article-fetch.tsx:137
 msgid "height"
-msgstr ""
+msgstr "höjd"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
@@ -19352,7 +19352,7 @@ msgstr "kursiv"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:429
 msgid "item"
-msgstr ""
+msgstr "innehåll"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:166
 msgid "item metadata associated."
@@ -19372,7 +19372,7 @@ msgstr "återkallad"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:111
 msgid "label"
-msgstr "etikett"
+msgstr "namn"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:24
 msgid "label: <b>{{label.name}}</b>"
@@ -19518,7 +19518,7 @@ msgstr "nytt"
 
 #: scripts/core/ui/components/content-create-dropdown/content-create-dropdown.tsx:17
 msgid "new item"
-msgstr ""
+msgstr "nytt innehåll"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:8
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:439
@@ -19541,7 +19541,7 @@ msgstr "ingen"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/controlled-vocabulary-select.tsx:97
 msgid "not"
-msgstr ""
+msgstr "inte"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:651
 msgid "notes"
@@ -19585,12 +19585,12 @@ msgstr "på vardagar"
 #: scripts/apps/authoring/authoring/components/text-statistics.tsx:22
 msgid "one word"
 msgid_plural "{{x}} words"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ett ord"
+msgstr[1] "{{x}} ord"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:32
 msgid "open in a new window"
-msgstr ""
+msgstr "öppna i ett nytt fönster"
 
 #: scripts/extensions/markForUser/dist/src/extension.js:48
 #: scripts/extensions/markForUser/dist/src/extension.js:59
@@ -19786,7 +19786,7 @@ msgstr "ersatt {{type}} om {{subject}}"
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:181
 #: scripts/core/editor3/directive.tsx:435
 msgid "required"
-msgstr ""
+msgstr "obligatorisk"
 
 #: scripts/apps/users/views/edit-form.html:208
 msgid "reset password"
@@ -19818,7 +19818,7 @@ msgstr "överfört"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:90
 msgid "row"
-msgstr ""
+msgstr "rad"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "scheduled"
@@ -19992,15 +19992,15 @@ msgstr "till uppdrag av"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:151
 msgid "toggle difference"
-msgstr ""
+msgstr "växla jämförelse"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:135
 msgid "toggle primary"
-msgstr ""
+msgstr "växla primär"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:143
 msgid "toggle secondary"
-msgstr ""
+msgstr "växla sekundär"
 
 #: scripts/apps/authoring/views/authoring-header.html:85
 msgid "translations"
@@ -20105,7 +20105,7 @@ msgstr "användare"
 #: scripts/extensions/broadcasting/dist/src/form-validation.js:27
 #: scripts/extensions/broadcasting/src/form-validation.ts:26
 msgid "value must be greater than zero"
-msgstr ""
+msgstr "värdet måste vara större än noll"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:241
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:304
@@ -20138,13 +20138,13 @@ msgstr "version"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:121
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:258
 msgid "version {{n}}"
-msgstr ""
+msgstr "version {{n}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:161
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:176
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:236
 msgid "version: {{n}}"
-msgstr ""
+msgstr "version: {{n}}"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:402
 #: scripts/apps/archive/controllers/UploadController.ts:343
@@ -20177,7 +20177,7 @@ msgstr "veckor"
 
 #: scripts/api/article-fetch.tsx:136
 msgid "width"
-msgstr ""
+msgstr "bredd"
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:110
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:95
@@ -20344,7 +20344,7 @@ msgstr "{{field.label | translate}}"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:112
 msgid "{{field}} (optional)"
-msgstr ""
+msgstr "{{field}} (frivilligt)"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:368
 msgid "{{field}} cannot be earlier than now!"
@@ -20401,28 +20401,28 @@ msgstr "{{numWords}} ord"
 #: scripts/api/article-fetch.tsx:117
 msgid "{{n}} images can not be fetched because they are too small."
 msgid_plural "One image can not be fetched because it is too small."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{{n}} bilder kan inte hämtas eftersom de är för små."
+msgstr[1] "En bild kan inte hämtas eftersom den är för liten."
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:41
 msgid "{{n}} items added"
-msgstr ""
+msgstr "{{n}} objekt tillagda"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:54
 msgid "{{n}} items modified"
-msgstr ""
+msgstr "{{n}} objekt ändrade"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:62
 msgid "{{n}} items re-ordered"
-msgstr ""
+msgstr "{{n}} objekt omorganiserade"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:47
 msgid "{{n}} items removed"
-msgstr ""
+msgstr "{{n}} objekt borttagna"
 
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:105
 msgid "{{n}} of {{total}} matches"
-msgstr ""
+msgstr "{{n}} av {{total}} träffar"
 
 #: scripts/apps/users/views/edit-form.html:62
 msgid "{{roles[user.role].name}}"
@@ -20462,8 +20462,8 @@ msgstr "{{width}} * {{height}}"
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:55
 msgid "{{wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{{wordsCount}} ord"
+msgstr[1] "{{ $count}} ord"
 
 #: scripts/extensions/datetimeField/dist/src/editor.js:77
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:75
