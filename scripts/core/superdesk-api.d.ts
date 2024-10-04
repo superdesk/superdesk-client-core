@@ -2553,7 +2553,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IDataApi {
-        findOne<T>(endpoint: string, id: string): Promise<T>;
+        findOne<T>(endpoint: string, id: string, cache?: boolean): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
