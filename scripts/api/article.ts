@@ -259,7 +259,7 @@ function translate(item: IArticle, language: string): Promise<IArticle> {
         }
 
         return _item;
-    })
+    });
 }
 
 
