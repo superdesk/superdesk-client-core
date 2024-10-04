@@ -7,6 +7,7 @@ interface IHttpRequestOptions {
     payload?: {};
     headers?: {[key: string]: any};
     urlParams?: {[key: string]: any};
+    cache?: 'default' | 'no-store' | 'reload' | 'no-cache' | 'force-cache' | 'only-if-cached';
 
     abortSignal?: AbortSignal;
 }
