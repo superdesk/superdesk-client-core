@@ -124,26 +124,10 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                     {this.props.mode === 'current' && (
                         <Button
                             onClick={() => {
-                                const currentDeskId = superdesk.entities.desk.getActiveDeskId();
-                                const taskData = (() => {
-                                    if (currentDeskId != null) {
-                                        const currentDesk = superdesk.entities.desk.getDeskById(currentDeskId);
-
-                                        return {
-                                            user: article.task.user,
-                                            desk: currentDesk._id,
-                                            stage: currentDesk.working_stage,
-                                        };
-                                    }
-
-                                    return {user: article.task.user};
-                                })();
-
-                                superdesk.entities.article.createNewWithData({
-                                    body_html: translation,
-                                    task: taskData,
-                                    language: this.props.activeLanguageId,
-                                }, article.profile);
+                                superdesk.entities.article.translate(article, this.props.activeLanguageId)
+                                    .then((item) => {
+                                        superdesk.entities.article.patch(item, {body_html: translation});
+                                    });
                             }}
                             size="small"
                             text={gettext('Create article')}
