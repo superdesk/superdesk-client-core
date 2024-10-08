@@ -58,7 +58,10 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
             setTabState,
             fieldsData,
             onFieldsDataChange,
+            getLatestArticle,
         } = this.props;
+
+        const latestArticle = getLatestArticle != null ? getLatestArticle() : article;
 
         return children({
             header: (
@@ -89,9 +92,10 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
             ),
             body: (
                 <TranslationsBody
+                    key={latestArticle.body_html}
                     mode={mode}
                     activeLanguageId={activeLanguageId}
-                    article={article}
+                    article={latestArticle}
                     error={error}
                     generateTranslation={() => {
                         setTabState({

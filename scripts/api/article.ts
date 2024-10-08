@@ -242,21 +242,18 @@ function translate(item: IArticle, language: string): Promise<IArticle> {
             desk: sdApi.desks.getCurrentDeskId(),
         },
     }).then((_item) => {
-        const onTranslateAfterMiddlewares
-                : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
-            = flatMap(
-                Object.values(extensions).map(({activationResult}) => activationResult),
-                (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
-            );
+        // const onTranslateAfterMiddlewares
+        //         : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+        //     = flatMap(
+        //         Object.values(extensions).map(({activationResult}) => activationResult),
+        //         (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+        //     );
 
-        if (onTranslateAfterMiddlewares.length > 0) {
-            onTranslateAfterMiddlewares.forEach((fn) => {
-                fn(item, _item);
-            });
-        } else {
-            openArticle(_item._id, 'edit');
-            notify.success(gettext('Item Translated'));
-        }
+        // if (onTranslateAfterMiddlewares.length > 0) {
+        //     onTranslateAfterMiddlewares.forEach((fn) => {
+        //         fn(item, _item);
+        //     });
+        // } else {
 
         return _item;
     });

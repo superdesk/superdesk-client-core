@@ -147,6 +147,7 @@ export function openArticle(
         authoringWorkspace.edit({_id: id}, mode);
     }
 
+    console.log('opened')
     return Promise.resolve();
 }
 

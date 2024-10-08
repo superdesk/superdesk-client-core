@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
+import {IArticle, IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import DefaultAiAssistantPanel from './main-panel';
@@ -17,6 +17,7 @@ export type ITranslationLanguage = ITranslation['_id'];
 
 export interface ICommonProps<T> extends IArticleSideWidgetComponentType {
     state: T;
+    getLatestArticle: () => IArticle;
     setSection: (section: IAiAssistantSection) => void;
     setTabState: (state: IStateAiWidget['currentTab'], callbackFn?: () => void) => void;
     children: (components: {header?: JSX.Element, body: JSX.Element, footer?: JSX.Element}) => JSX.Element;
