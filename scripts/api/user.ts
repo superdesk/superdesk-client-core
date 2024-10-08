@@ -1,4 +1,5 @@
 import ng from 'core/services/ng';
+import {IUser} from 'superdesk-api';
 
 function hasPrivilege(privilege: string): boolean {
     const privileges = ng.get('privileges');
@@ -18,8 +19,13 @@ function isLoggedIn() {
     return session?.identity?._id != null;
 }
 
+function getAll(): Array<IUser> {
+    return ng.get('desks').users._items;
+}
+
 export const user = {
     hasPrivilege,
     isLoggedIn,
     getCurrentUserId,
+    getAll,
 };

@@ -117,9 +117,11 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 inlineLabel={true}
                 labelHidden={true}
                 getItems={(searchString) => {
-                    const deskMembers = sdApi.desks.getDeskMembers(this.props.deskId);
+                    const users = this.props.deskId
+                        ? sdApi.desks.getDeskMembers(this.props.deskId)
+                        : sdApi.user.getAll();
 
-                    return Promise.resolve(searchUsers(deskMembers, searchString));
+                    return Promise.resolve(searchUsers(users, searchString));
                 }}
                 value={this.state.selectedUser}
                 onChange={(user) => {
