@@ -145,12 +145,12 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                         'body_html',
                                         superdesk.helpers.editor3ToOperationalFormat(
                                             {rawContentState: rawState},
-                                            this.props.activeLanguageId,
+                                            article.language,
                                         ),
                                     ));
                             } else {
                                 superdesk.ui.article.applyFieldChangesToEditor(
-                                    this.props.article._id,
+                                    article._id,
                                     {key: 'body_html', value: translation},
                                 );
                             }
