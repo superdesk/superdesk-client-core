@@ -119,7 +119,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 getItems={(searchString) => {
                     const users = this.props.deskId
                         ? sdApi.desks.getDeskMembers(this.props.deskId)
-                        : sdApi.user.getAll();
+                        : sdApi.user.getAll().toArray();
 
                     return Promise.resolve(searchUsers(users, searchString));
                 }}

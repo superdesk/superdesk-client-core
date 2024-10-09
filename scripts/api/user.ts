@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {IUser} from 'superdesk-api';
+import {OrderedMap} from 'immutable';
 
 function hasPrivilege(privilege: string): boolean {
     const privileges = ng.get('privileges');
@@ -19,8 +20,8 @@ function isLoggedIn() {
     return session?.identity?._id != null;
 }
 
-function getAll(): Array<IUser> {
-    return ng.get('desks').users._items;
+function getAll(): OrderedMap<IUser['_id'], IUser> {
+    return OrderedMap(ng.get('desks').users._items.map((user) => [user._id, user]));
 }
 
 export const user = {
