@@ -14,6 +14,12 @@ interface IState {
     actions: Array<IAuthoringAction> | null;
 }
 
+/**
+ * Menu component requires providing actions up-front
+ * while here we don't want to compute them unless user initiates opening of the menu.
+ * To work around this, we render a button, when it is clicked we fetch the items
+ * and replace the button with an actual Menu component.
+ */
 export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -61,17 +67,26 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 <div>
                     <Menu items={menuItems}>
                         {(toggle) => (
-                            <MoreActionsButton
-                                aria-label={gettext('Actions menu')}
+                            <div
                                 ref={(el) => {
+                                    // open immediately on mount
+
                                     if (el != null) {
-                                        setTimeout(() => {
-                                            el.click();
-                                        });
+                                        const button = el.querySelector('button');
+
+                                        if (button != null) {
+                                            setTimeout(() => {
+                                                button.click();
+                                            });
+                                        }
                                     }
                                 }}
-                                onClick={toggle}
-                            />
+                            >
+                                <MoreActionsButton
+                                    aria-label={gettext('Actions menu')}
+                                    onClick={toggle}
+                                />
+                            </div>
                         )}
                     </Menu>
                 </div>

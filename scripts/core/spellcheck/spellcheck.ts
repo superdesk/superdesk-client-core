@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
 import {getStores, unsetStore} from '../editor3/store';
 import {setAbbreviations} from 'core/editor3/actions';
-import {getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 
 /**
  * Spellcheck module
@@ -544,7 +544,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
      * check if tansa is activated
      */
     function useTansaProofing() {
-        return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
+        return appConfig.features?.useTansaProofing === true;
     }
 
     function dispatchAbbreviation(abbreviation) {

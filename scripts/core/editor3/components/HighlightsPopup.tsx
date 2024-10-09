@@ -1,7 +1,6 @@
 import React from 'react';
 import {EditorState} from 'draft-js';
 import {render, unmountComponentAtNode} from 'react-dom';
-import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 import {List} from 'immutable';
 
@@ -12,6 +11,13 @@ import {getSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 import {ReactContextForEditor3} from '../directive';
 
+interface IProps {
+    editorState: EditorState;
+    onChange(editorState: EditorState): void;
+    editorNode: React.RefObject<HTMLDivElement>;
+    highlightsManager: any;
+}
+
 /**
  * @ngdoc react
  * @name HighlightsPopup
@@ -21,7 +27,7 @@ import {ReactContextForEditor3} from '../directive';
  * also handles positioning the popup relative to the editor's position and hiding
  * it when a user clicks outside the editor/popup context.
  */
-export class HighlightsPopup extends React.Component<any, any> {
+export class HighlightsPopup extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
     static contextType = ReactContextForEditor3;
@@ -251,10 +257,3 @@ export class HighlightsPopup extends React.Component<any, any> {
         return null;
     }
 }
-
-HighlightsPopup.propTypes = {
-    editorState: PropTypes.instanceOf(EditorState),
-    editorNode: PropTypes.object,
-    highlightsManager: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-};

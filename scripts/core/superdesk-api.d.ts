@@ -2240,7 +2240,6 @@ declare module 'superdesk-api' {
 
     export interface IPropsActionButton {
         'aria-label': string;
-        ref?(event): void;
         onClick(event: React.MouseEvent): void;
     }
 
