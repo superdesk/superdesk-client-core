@@ -32,32 +32,6 @@ interface IState {
     translatedFromLanguage: string | null;
 }
 
-function applyTranslationToBody(
-    onFieldsDataChange: IProps['onFieldsDataChange'],
-    fieldsData: IProps['fieldsData'],
-    translation: string,
-    article: IArticle,
-) {
-    if (superdesk.instance.authoringReactViewEnabled) {
-        const rawState = convertToRaw(ContentState.createFromText(translation));
-
-        console.log(translation, 'apply to body');
-        onFieldsDataChange?.(
-            fieldsData?.set(
-                'body_html',
-                superdesk.helpers.editor3ToOperationalFormat(
-                    {rawContentState: rawState},
-                    article.language,
-                ),
-            ));
-    } else {
-        superdesk.ui.article.applyFieldChangesToEditor(
-            article._id,
-            {key: 'body_html', value: translation},
-        );
-    }
-}
-
 export default class TranslationsBody extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -84,7 +58,6 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
         const {error, loading, translation, article, generateTranslation} = this.props;
         const {gettext} = superdesk.localization;
 
-        console.log('render', this.props.article.body_html)
         if (error) {
             return (
                 <Spacer v alignItems="center" gap="8" justifyContent="center" noWrap>
@@ -151,27 +124,11 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                     {this.props.mode === 'current' && (
                         <Button
                             onClick={() => {
-                                superdesk.entities.article.translate(article, this.props.activeLanguageId)
-                                    .then((translatedArticle) => {
-
-                                        // return superdesk.entities.article.get(this.props.article._id).then((x) => {
-                                        //     debugger
-                                        //     return superdesk.entities.article.patch(
-                                        //         x,
-                                        //         {body_html: translation},
-                                        //         {patchDirectlyAndOverwriteAuthoringValues: true}
-                                        //     ).then((x) => {
-                                        //         superdesk.ui.article.edit(this.props.article._id);
-                                        //     })
-                                        // })
-
-                                        return applyTranslationToBody(
-                                            this.props.onFieldsDataChange,
-                                            this.props.fieldsData,
-                                            translation,
-                                            translatedArticle,
-                                        );
-                                    });
+                                superdesk.entities.article.translateAndPatch(
+                                    article,
+                                    this.props.activeLanguageId,
+                                    translation,
+                                );
                             }}
                             size="small"
                             text={gettext('Create article')}
@@ -180,12 +137,23 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                     )}
                     <Button
                         onClick={() => {
-                            applyTranslationToBody(
-                                this.props.onFieldsDataChange,
-                                this.props.fieldsData,
-                                translation,
-                                article,
-                            );
+                            if (superdesk.instance.authoringReactViewEnabled) {
+                                const rawState = convertToRaw(ContentState.createFromText(translation));
+
+                                this.props.onFieldsDataChange?.(
+                                    this.props.fieldsData?.set(
+                                        'body_html',
+                                        superdesk.helpers.editor3ToOperationalFormat(
+                                            {rawContentState: rawState},
+                                            this.props.activeLanguageId,
+                                        ),
+                                    ));
+                            } else {
+                                superdesk.ui.article.applyFieldChangesToEditor(
+                                    this.props.article._id,
+                                    {key: 'body_html', value: translation},
+                                );
+                            }
                         }}
                         size="small"
                         text={gettext('Apply')}

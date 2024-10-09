@@ -147,7 +147,6 @@ export function openArticle(
         authoringWorkspace.edit({_id: id}, mode);
     }
 
-    console.log('opened')
     return Promise.resolve();
 }
 
@@ -326,7 +325,8 @@ export function getSuperdeskApiImplementation(
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
-                translate: sdApi.article.translate,
+                createTranslation: sdApi.article.createTranslation,
+                translateAndPatch: sdApi.article.translateAndPatch,
                 get: sdApi.article.get,
                 isPersonal: sdApi.article.isPersonal,
                 isLocked: sdApi.article.isLocked,

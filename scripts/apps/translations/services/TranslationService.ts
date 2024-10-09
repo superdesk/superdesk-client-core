@@ -20,13 +20,10 @@ import {ILanguage} from 'superdesk-interfaces/Language';
  * @description Provides set of methods to translate items to different languages
  */
 
-TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
+TranslationService.$inject = ['api', '$rootScope', 'search'];
 export function TranslationService(
     api,
     $rootScope,
-    notify,
-    authoringWorkspace: AuthoringWorkspaceService,
-    desks,
     search,
 ) {
     var service: any = {};
@@ -62,7 +59,7 @@ export function TranslationService(
      * @param {Object} language translate language
      */
     service.set = function(item: IArticle, language: ILanguage) {
-        sdApi.article.translate(item, language.language).then(() => {
+        sdApi.article.createTranslation(item, language.language).then(() => {
             $rootScope.$broadcast('item:translate');
         });
     };
