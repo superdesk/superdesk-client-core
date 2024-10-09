@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticle, IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
+import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from './superdesk';
 import DefaultAiAssistantPanel from './main-panel';
