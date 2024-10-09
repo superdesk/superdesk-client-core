@@ -232,7 +232,7 @@ function createNewWithData(data: Partial<IArticle>, contentProfileId: string): v
         });
 }
 
-function createTranslation(
+function translate(
     item: IArticle,
     language: string,
 ): Promise<IArticle> {
@@ -244,48 +244,8 @@ function createTranslation(
             language: language,
             desk: sdApi.desks.getCurrentDeskId(),
         },
-    }).then((_item) => {
-        const onTranslateAfterMiddlewares
-                : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
-            = flatMap(
-                Object.values(extensions).map(({activationResult}) => activationResult),
-                (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
-            );
-
-        if (onTranslateAfterMiddlewares.length > 0) {
-            onTranslateAfterMiddlewares.forEach((fn) => {
-                fn(item, _item);
-            });
-        } else {
-            return openArticle(_item._id, 'edit').then(() => _item);
-        }
     });
 }
-
-function translateAndPatch(
-    item: IArticle,
-    language: string,
-    contentPatch: string,
-): Promise<IArticle> {
-    return httpRequestJsonLocal<IArticle>({
-        method: 'POST',
-        path: '/archive/translate',
-        payload: {
-            guid: item.guid,
-            language: language,
-            desk: sdApi.desks.getCurrentDeskId(),
-        },
-    }).then((translatedItem) => get(translatedItem._id).then((fullTranslatedItem) =>
-        patchArticle(
-            fullTranslatedItem,
-            {body_html: contentPatch, fields_meta: {}},
-            {patchDirectlyAndOverwriteAuthoringValues: true},
-        ).then(() =>
-            openArticle(fullTranslatedItem._id, 'edit').then(() => fullTranslatedItem),
-        ),
-    ));
-}
-
 
 /**
  * Checks if associations is with rewrite_of item then open then modal to add associations.
@@ -570,8 +530,7 @@ function rewrite(item: IArticle): void {
 }
 
 interface IArticleApi {
-    translateAndPatch(item: IArticle, language: string, contentPatch: string): Promise<IArticle>;
-    createTranslation(item: IArticle, language: string): Promise<IArticle>;
+    translate(item: IArticle, language: string): Promise<IArticle>;
     get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
     isEditable(article: IArticle): boolean;
@@ -666,8 +625,7 @@ interface IArticleApi {
 }
 
 export const article: IArticleApi = {
-    translateAndPatch,
-    createTranslation,
+    translate,
     rewrite,
     isLocked,
     isEditable,

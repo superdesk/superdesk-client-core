@@ -1,11 +1,9 @@
 import _, {flatMap} from 'lodash';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {gettext} from 'core/utils';
 import {extensions} from 'appConfig';
 import {IArticle, IExtensionActivationResult} from 'superdesk-api';
-import ng from 'core/services/ng';
 import {sdApi} from 'api';
 import {ILanguage} from 'superdesk-interfaces/Language';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 
 /**
  * @ngdoc service
@@ -59,7 +57,22 @@ export function TranslationService(
      * @param {Object} language translate language
      */
     service.set = function(item: IArticle, language: ILanguage) {
-        sdApi.article.createTranslation(item, language.language).then(() => {
+        sdApi.article.translate(item, language.language).then((_item) => {
+            const onTranslateAfterMiddlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+                = flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+                );
+
+            if (onTranslateAfterMiddlewares.length > 0) {
+                onTranslateAfterMiddlewares.forEach((fn) => {
+                    fn(item, _item);
+                });
+            } else {
+                return openArticle(_item._id, 'edit');
+            }
+
             $rootScope.$broadcast('item:translate');
         });
     };
