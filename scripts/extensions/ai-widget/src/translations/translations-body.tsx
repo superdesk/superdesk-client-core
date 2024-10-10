@@ -124,14 +124,14 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                     {this.props.mode === 'current' && (
                         <Button
                             onClick={() => {
-                                const {translate, get, patch} = superdesk.entities.article;
+                                const {article: articleApi} = superdesk.entities;
 
-                                translate(
+                                articleApi.translate(
                                     article,
                                     this.props.activeLanguageId,
                                 ).then((translatedItem) =>
-                                    get(translatedItem._id).then((fullTranslatedItem) => {
-                                        return patch(
+                                    articleApi.get(translatedItem._id).then((fullTranslatedItem) => {
+                                        return articleApi.patch(
                                             fullTranslatedItem,
                                             {body_html: translation, fields_meta: {}},
                                         ).then(() => {
