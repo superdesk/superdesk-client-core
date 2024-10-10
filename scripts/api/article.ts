@@ -21,6 +21,7 @@ import {
     IAuthoringActionType,
     IDangerousArticlePatchingOptions,
     IDesk,
+    IExtensionActivationResult,
     IStage,
     onPublishMiddlewareResult,
 } from 'superdesk-api';
@@ -229,6 +230,21 @@ function createNewWithData(data: Partial<IArticle>, contentProfileId: string): v
         .then((item) => {
             openArticle(item._id, 'edit');
         });
+}
+
+function translate(
+    item: IArticle,
+    language: string,
+): Promise<IArticle> {
+    return httpRequestJsonLocal<IArticle>({
+        method: 'POST',
+        path: '/archive/translate',
+        payload: {
+            guid: item.guid,
+            language: language,
+            desk: sdApi.desks.getCurrentDeskId(),
+        },
+    });
 }
 
 /**
@@ -514,6 +530,7 @@ function rewrite(item: IArticle): void {
 }
 
 interface IArticleApi {
+    translate(item: IArticle, language: string): Promise<IArticle>;
     get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
     isEditable(article: IArticle): boolean;
@@ -608,6 +625,7 @@ interface IArticleApi {
 }
 
 export const article: IArticleApi = {
+    translate,
     rewrite,
     isLocked,
     isEditable,
