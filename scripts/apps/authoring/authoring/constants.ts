@@ -14,5 +14,6 @@ export function getAuthoringMenuGroups(): Array<IGroup> {
         {_id: 'packaging', icon: 'package-create'},
         {_id: 'highlights', icon: 'star'},
         {_id: 'corrections', label: gettext('Publishing actions'), concate: true},
+        {_id: 'planning-actions', label: gettext('Planning'), icon: 'calendar-list'}
     ];
 }

@@ -1,7 +1,7 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {IAuthoringAction} from 'superdesk-api';
-import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -9,6 +9,7 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 import {sdApi} from 'api';
 import {closedIntentionally} from 'apps/authoring/widgets/widgets';
+import {partition} from 'lodash';
 
 /**
  * @ngdoc directive
@@ -31,7 +32,10 @@ export function AuthoringTopbarDirective(
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             function setActionsFromExtensions() {
-                scope.articleActionsFromExtensions = getArticleActionsFromExtensions(scope.item);
+                scope.articleActionsFromExtensions = partition(
+                    getAuthoringActionsFromExtensions(scope.item),
+                    (action) => action.groupId !== 'planning-actions',
+                );
             }
 
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
@@ -134,7 +138,7 @@ export function AuthoringTopbarDirective(
             };
 
             scope.itemActionsHighlightsSectionDisplayed = () =>
-                scope.articleActionsFromExtensions.some(({groupId}) => groupId === 'highlights')
+                scope.articleActionsFromExtensions[0].some(({groupId}) => groupId === 'highlights')
                 || (
                     scope.item.task.desk
                     && (scope.itemActions.mark_item_for_desks || scope.itemActions.mark_item_for_highlight)

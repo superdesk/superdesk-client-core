@@ -287,9 +287,17 @@
                   </li>
                 </ul>
 
-                <ul ng-if="articleActionsFromExtensions">
-                    <li ng-repeat="action in articleActionsFromExtensions" ng-if="action.groupId !== 'highlights'">
+                <ul ng-if="articleActionsFromExtensions[1]">
+                    <li class="dropdown__menu-divider"></li>
+                    <li><span class="dropdown__menu-label" translate>Planning</span></li>
+                    <li ng-repeat="action in articleActionsFromExtensions[1]" ng-if="action.groupId !== 'highlights'">
                         <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
+                    </li>
+                </ul>
+
+                <ul ng-if="articleActionsFromExtensions[0]">
+                    <li ng-repeat="action in articleActionsFromExtensions[0]" ng-if="action.groupId !== 'highlights'">
+                        <button ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
 
@@ -307,7 +315,7 @@
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
                     </div>
                   </li>
-                  <li ng-repeat="action in articleActionsFromExtensions">
+                  <li ng-repeat="action in articleActionsFromExtensions[0]">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>

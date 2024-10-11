@@ -20,7 +20,7 @@ import {AuthoringReact} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {extensions} from 'appConfig';
-import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getArticleActionsFromExtensions, getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {flatMap} from 'lodash';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
@@ -47,23 +47,6 @@ import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
-
-function getAuthoringActionsFromExtensions(
-    item: IArticle,
-    contentProfile: IContentProfileV2,
-    fieldsData: Map<string, unknown>,
-): Array<IAuthoringAction> {
-    const actionGetters
-        : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
-    = flatMap(
-        Object.values(extensions),
-        (extension) => extension.activationResult.contributions?.getAuthoringActions ?? [],
-    );
-
-    return flatMap(
-        actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)),
-    );
-}
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -394,7 +377,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     contentProfile,
                                     fieldsData,
                                 );
-                                const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
+                                // const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
 
                                 return [
                                     getSaveAsTemplate(getLatestItem),
@@ -410,7 +393,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                     getTranslateModal(getLatestItem),
                                     ...authoringActionsFromExtensions,
-                                    ...articleActionsFromExtensions,
+                                    // ...articleActionsFromExtensions,
                                 ];
                             }}
                             getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
