@@ -136,7 +136,6 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
-    .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
     .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
     .component('sdLineCount',
