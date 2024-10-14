@@ -377,7 +377,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     contentProfile,
                                     fieldsData,
                                 );
-                                // const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
 
                                 return [
                                     getSaveAsTemplate(getLatestItem),
@@ -393,7 +392,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
                                     getTranslateModal(getLatestItem),
                                     ...authoringActionsFromExtensions,
-                                    // ...articleActionsFromExtensions,
                                 ];
                             }}
                             getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
