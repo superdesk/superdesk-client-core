@@ -1,13 +1,10 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable no-case-declarations */
 import React from 'react';
-import {Map} from 'immutable';
 import {
     IArticle,
     IAuthoringAction,
     IArticleSideWidget,
-    IContentProfileV2,
-    IExtensionActivationResult,
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringStorage,
@@ -20,8 +17,7 @@ import {AuthoringReact} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {extensions} from 'appConfig';
-import {getArticleActionsFromExtensions, getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {flatMap} from 'lodash';
+import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {
