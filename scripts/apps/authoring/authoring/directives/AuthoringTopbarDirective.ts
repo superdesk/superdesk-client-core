@@ -32,11 +32,12 @@ export function AuthoringTopbarDirective(
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
             function setActionsFromExtensions() {
-                const [allOtherActions, planningActions] = partition(
+                const [nonPlanningActions, planningActions] = partition(
                     getAuthoringActionsFromExtensions(scope.item),
                     (action) => action.groupId !== 'planning-actions',
                 );
-                scope.allOtherActions = allOtherActions;
+
+                scope.nonPlanningActions = nonPlanningActions;
                 scope.planningActions = planningActions;
             }
 
@@ -140,7 +141,7 @@ export function AuthoringTopbarDirective(
             };
 
             scope.itemActionsHighlightsSectionDisplayed = () =>
-                scope.allOtherActions.some(({groupId}) => groupId === 'highlights')
+                scope.nonPlanningActions.some(({groupId}) => groupId === 'highlights')
                 || (
                     scope.item.task.desk
                     && (scope.itemActions.mark_item_for_desks || scope.itemActions.mark_item_for_highlight)

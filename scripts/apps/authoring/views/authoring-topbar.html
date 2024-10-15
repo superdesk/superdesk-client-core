@@ -295,8 +295,8 @@
                     </li>
                 </ul>
 
-                <ul ng-if="allOtherActions">
-                    <li ng-repeat="action in allOtherActions" ng-if="action.groupId !== 'highlights'">
+                <ul ng-if="nonPlanningActions">
+                    <li ng-repeat="action in nonPlanningActions" ng-if="action.groupId !== 'highlights'">
                         <button ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
@@ -315,7 +315,7 @@
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
                     </div>
                   </li>
-                  <li ng-repeat="action in allOtherActions">
+                  <li ng-repeat="action in nonPlanningActions">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>
