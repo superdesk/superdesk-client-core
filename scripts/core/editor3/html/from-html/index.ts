@@ -66,11 +66,11 @@ class HTMLParser {
 
     manageEmbeds(__html: string): string {
         let html = __html;
-        const embedCount = html.match(/<!-- EMBED START.*-->/g)?.length ?? 0;
+        const embedCount = html.match(/<!-- EMBED START.*?-->/g)?.length ?? 0;
 
         for (let i = 0; i < embedCount; i++) {
-            const startTag = html.match(/<!-- EMBED START.*-->/);
-            const endTag = html.match(/<!-- EMBED END.*-->/);
+            const startTag = html.match(/<!-- EMBED START.*?-->/);
+            const endTag = html.match(/<!-- EMBED END.*?-->/);
 
             if (startTag == null || endTag == null) {
                 continue;
