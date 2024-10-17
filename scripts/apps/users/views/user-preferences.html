@@ -19,6 +19,7 @@
                 <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('planning-prefs')}" ng-click="goTo('planning-prefs')" ng-if="showPlanning()" translate>Planning</button>
                 <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('vocabulary-values')}" ng-click="goTo('vocabulary-values')" ng-if="profileConfig.desks !== false" translate>Vocabulary values</button>
                 <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('appearance')}" ng-click="goTo('appearance')" translate>Appearance</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('macros-config')}" ng-click="goTo('macros-config')" ng-show = "preferences['macro_config']" translate>{{preferences['macro_config'].label}}</button>
             </nav>
         </div>
         <div class="preferences__content">
@@ -419,6 +420,17 @@
                             </div>
                         </div>
         
+                    </div>
+                </li>
+
+                <li ng-show = "preferences['macro_config']" class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+                    <h3 id="macros-config" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>{{preferences['macro_config'].label}}</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div sd-info-item>
+                            <div ng-repeat="(key, field) in preferences.macro_config.fields">
+                            <label class="form-label" translate>{{ key }}</label>
+                            <input type="text" ng-model="preferences['macro_config'].fields[key]" />
+                        </div>
                     </div>
                 </li>
 
