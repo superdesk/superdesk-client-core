@@ -3,8 +3,8 @@ import {each} from 'lodash';
 
 var ENTER = 13;
 
-CommentsService.$inject = ['api'];
-function CommentsService(api) {
+CommentsService.$inject = ['api', 'notify'];
+function CommentsService(api, notify) {
     this.comments = null;
 
     this.fetch = function(item) {
@@ -22,7 +22,11 @@ function CommentsService(api) {
     };
 
     this.save = function(comment) {
-        return api.item_comments.save(comment);
+        return api.item_comments.save(comment).catch((error) => {
+            if (error.data._issues?.text != null) {
+                notify.error(error.data._issues.text)
+            }
+        });
     };
 }
 

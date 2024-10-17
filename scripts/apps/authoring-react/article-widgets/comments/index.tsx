@@ -4,6 +4,7 @@ import {IArticleSideWidget, IArticleSideWidgetComponentType, IComment, IRestApiR
 import {gettext} from 'core/utils';
 import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {notify} from 'core/notify/notify';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
 
@@ -49,6 +50,12 @@ class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
                             item: this.props.article._id,
                             text: text,
                         },
+                    })
+                    .then((res: void) => res)
+                    .catch((error) => {
+                        if (error.data._issues?.text != null) {
+                            notify.error(error.data._issues.text)
+                        }
                     });
                 }}
             />
