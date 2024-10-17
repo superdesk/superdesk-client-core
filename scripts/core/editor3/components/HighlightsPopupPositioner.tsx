@@ -27,7 +27,8 @@ function getNextPosition(originalElement, editorNode) {
     element.style.bottom = '';
     mainFlexElement.style['max-height'] = '';
 
-    element.style.left = (editorNode.getBoundingClientRect().left - 360) + 'px';
+    // Math.abs is needed, so that the popover is never positioned outside of the viewport
+    element.style.left = `${Math.abs(editorNode.getBoundingClientRect().left - 360)}px`
 
     const paddingBlockStart = 4;
     const paddingBlockEnd = 4;
