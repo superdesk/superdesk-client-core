@@ -420,7 +420,7 @@ export function UserPreferencesDirective(
                         });
                     }
 
-                    p[key] = _.extend(val, scope.preferences[key]);
+                    p[key] = _.merge(val, scope.preferences[key]);
                 });
                 return p;
             }
