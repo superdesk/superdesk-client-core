@@ -24,7 +24,7 @@ function CommentsService(api, notify) {
     this.save = function(comment) {
         return api.item_comments.save(comment).catch((error) => {
             if (error.data._issues?.text != null) {
-                notify.error(error.data._issues.text)
+                notify.error(error.data._issues.text);
             }
         });
     };

@@ -51,12 +51,12 @@ class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
                             text: text,
                         },
                     })
-                    .then((res: void) => res)
-                    .catch((error) => {
-                        if (error.data._issues?.text != null) {
-                            notify.error(error.data._issues.text)
-                        }
-                    });
+                        .then((res: void) => res)
+                        .catch((error) => {
+                            if (error.data._issues?.text != null) {
+                                notify.error(error.data._issues.text);
+                            }
+                        });
                 }}
             />
         );
