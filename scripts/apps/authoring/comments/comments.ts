@@ -1,10 +1,11 @@
+import {notify} from 'core/notify/notify';
 import {gettext} from 'core/utils';
 import {each} from 'lodash';
 
 var ENTER = 13;
 
-CommentsService.$inject = ['api', 'notify'];
-function CommentsService(api, notify) {
+CommentsService.$inject = ['api'];
+function CommentsService(api) {
     this.comments = null;
 
     this.fetch = function(item) {
