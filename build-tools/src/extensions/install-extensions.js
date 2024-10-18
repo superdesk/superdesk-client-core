@@ -86,7 +86,7 @@ module.exports = function installExtensions(clientDir) {
             correctApiDefinitionsPath(extensionRootPath, clientDir);
 
             execSync(
-                `cd ${extensionRootPath} && npm install --no-audit && npm run compile --if-present`,
+                `cd ${extensionRootPath} && npm ci --no-audit && npm run compile --if-present`,
                 {stdio: 'inherit'}
             );
 
