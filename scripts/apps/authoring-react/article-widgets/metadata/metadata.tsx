@@ -47,7 +47,6 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
     render() {
         const {article} = this.props;
-
         const {
             flags,
             usageterms,
@@ -87,9 +86,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
             versioncreator,
             rewritten_by,
         } = article;
-
         const {onItemChange} = this.props;
-
         const allVocabularies = sdApi.vocabularies.getAll();
 
         return (
@@ -268,19 +265,17 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             />
                         )}
 
-                        {
-                            (ingest_provider_sequence?.length ?? 0) > 0 && (
-                                <MetadataItem
-                                    label={gettext('Ingest sequence')}
-                                    value={ingest_provider_sequence}
-                                />
-                            )
-                        }
+                        {(ingest_provider_sequence?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Ingest sequence')}
+                                value={ingest_provider_sequence}
+                            />
+                        )}
 
                         {expiry && (
                             <MetadataItem
                                 label={gettext('Expiry')}
-                                value={<Datetime datetime={expiry} />}
+                                value={<DateTime dateTime={expiry} />}
                             />
                         )}
 
@@ -303,66 +298,56 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
                         <MetadataItem label={gettext('Take key')} value={anpa_take_key} />
 
-                        {
-                            signal && (
+                        {signal && (
+                            <MetadataItem
+                                label={gettext('Signal')}
+                                value={(
+                                    <div>
+                                        {(signal.map(({name, qcode}) => (
+                                            <Fragment key={name}>{name ?? qcode}</Fragment>
+                                        )))}
+                                    </div>
+                                )}
+                            />
+                        )}
+
+                        {anpa_category?.name != null && (
+                            <MetadataItem
+                                label={gettext('Category')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(anpa_category, 'name')}
+                            />
+                        )}
+
+                        {allVocabularies.filter((cv) => article[cv.schema_field] != null).toArray()
+                            .map((vocabulary) => (
                                 <MetadataItem
-                                    label={gettext('Signal')}
-                                    value={(
-                                        <div>
-                                            {(signal.map(({name, qcode}) => (
-                                                <Fragment key={name}>{name ?? qcode}</Fragment>
-                                            )))}
-                                        </div>
+                                    key={vocabulary._id}
+                                    label={vocabulary.display_name}
+                                    value={vocabularies.getVocabularyItemLabel(
+                                        article[vocabulary.schema_field],
+                                        article,
                                     )}
                                 />
-                            )
+                            ))
                         }
 
-                        {
-                            anpa_category?.name != null && (
+                        {(genre?.length ?? 0) > 0
+                            && allVocabularies.map((v) => v.schema_field).includes('genre') === false
+                            && (
                                 <MetadataItem
-                                    label={gettext('Category')}
-                                    value={sdApi.vocabularies.vocabularyItemsToString(anpa_category, 'name')}
+                                    label={gettext('Genre')}
+                                    value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
                                 />
                             )
                         }
 
-                        {
-                            allVocabularies
-                                .filter((cv) => article[cv.schema_field] != null)
-                                .toArray()
-                                .map((vocabulary) => (
-                                    <MetadataItem
-                                        key={vocabulary._id}
-                                        label={vocabulary.display_name}
-                                        value={vocabularies.getVocabularyItemLabel(
-                                            article[vocabulary.schema_field],
-                                            article,
-                                        )}
-                                    />
-                                ))
-                        }
-
-                        {
-                            (genre.length ?? 0) > 0
-                                && allVocabularies.map((v) => v.schema_field).includes('genre') === false
-                                && (
-                                    <MetadataItem
-                                        label={gettext('Genre')}
-                                        value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
-                                    />
-                                )
-                        }
-
-                        {
-                            (place.length ?? 0) > 0
-                                && allVocabularies.map((v) => v.schema_field).includes('place') === false
-                                && (
-                                    <MetadataItem
-                                        label={gettext('Place')}
-                                        value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
-                                    />
-                                )
+                        {(place?.length ?? 0) > 0
+                            && allVocabularies.map((v) => v.schema_field).includes('place') === false && (
+                                <MetadataItem
+                                    label={gettext('Place')}
+                                    value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
+                                />
+                            )
                         }
 
                         {(ednote?.length ?? 0) > 0 && <MetadataItem label={gettext('Editorial note')} value={ednote} />}
@@ -438,22 +423,16 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
                         <MetadataItem label={gettext('Type')} value={type} />
 
-                        {
-                            renditions?.original != null && (
-                                <MetadataItem
-                                    label={gettext('Type')}
-                                    value={`${renditions.original.width} x ${renditions.original.height}`}
-                                />
-                            )
-                        }
+                        {renditions?.original != null && (
+                            <MetadataItem
+                                label={gettext('Type')}
+                                value={`${renditions.original.width} x ${renditions.original.height}`}
+                            />
+                        )}
 
-                        {
-                            article.type === 'picture'
-                                && article.archive_description !== article.description_text
-                                && (
-                                    <AnnotationsPreview article={article} />
-                                )
-                        }
+                        {article.type === 'picture' && article.archive_description !== article.description_text && (
+                            <AnnotationsPreview article={article} />
+                        )}
                     </Spacer>
                 )}
             />
