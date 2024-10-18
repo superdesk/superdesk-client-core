@@ -121,6 +121,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             const clipboardItem = new ClipboardItem({
                                 'text/html': new Blob([translation], { type: 'text/html' }),
                             });
+
                             navigator.clipboard.write([clipboardItem]);
                         }}
                     />
