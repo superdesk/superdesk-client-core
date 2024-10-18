@@ -118,9 +118,9 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                         ariaValue={gettext('Copy')}
                         icon="copy"
                         onClick={() => {
-                            const clipboardItem = new ClipboardItem({
-                                'text/html': new Blob([translation], { type: 'text/html' }),
-                            });
+                            const clipboardItem = new ClipboardItem(
+                                {'text/html': new Blob([translation], { type: 'text/html' })},
+                            );
 
                             navigator.clipboard.write([clipboardItem]);
                         }}
