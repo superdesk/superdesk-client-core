@@ -145,7 +145,11 @@ function getInlineToolbarActions(
         priority: 0.1,
         component: () => (
             <ToggleFullWidth
-                setFullWidth={() => setFullWidth()}
+                setFullWidth={() => {
+                    options.authoringStorage.autosave.flush().then(() => {
+                        setFullWidth();
+                    });
+                }}
                 fullWidth={fullWidth}
             />
         ),
