@@ -129,7 +129,7 @@
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
     "webpack": "3.11.0",
-    "webpack-dev-server": "2.11.1"
+    "webpack-dev-server": "5.1.0"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
