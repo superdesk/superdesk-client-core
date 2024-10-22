@@ -843,7 +843,7 @@ export function AuthoringDirective(
                     }
                 });
 
-                $scope.autosave(item);
+                $scope.autosave(item, 0);
             };
 
             $scope.firstLineConfig = appConfig?.ui?.authoring?.firstLine ?? {};
@@ -858,6 +858,7 @@ export function AuthoringDirective(
                     $scope.item,
                     $scope.origItem,
                     timeout,
+                    $scope.$applyAsync,
                 ).then(
                     () => {
                         $scope.$applyAsync(() => {
