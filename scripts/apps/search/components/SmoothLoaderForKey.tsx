@@ -49,14 +49,14 @@ export class SmoothLoaderForKey extends React.PureComponent<IProps, IState> {
         const {children} = this.props;
         const style: CSSProperties = loading
             ? {position: 'absolute', insetInlineStart: -9999, insetBlockStart: -9999, visibility: 'hidden'}
-            : {height: '100%'};
+            : {height: '100%', display: 'contents'};
 
         return (
             <div
                 ref={(ref) => {
                     this.wrapper = ref;
                 }}
-                style={{height: '100%'}}
+                style={{height: '100%', display: 'contents'}}
             >
                 {(() => {
                     if (loading) {

@@ -11,7 +11,7 @@ import {fetchChangedResources} from './helpers/CrudManager';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
-import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
+import {SmoothLoaderForKey} from '../apps/search/components/SmoothLoaderForKey';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 interface IState {
@@ -237,7 +237,6 @@ export class WithLiveResources
         const key = JSON.stringify(omit(this.props, 'children'));
 
         return (
-            <div>
                 <SmoothLoaderForKey
                     key_={key}
                     ref={(ref) => {
@@ -249,7 +248,6 @@ export class WithLiveResources
                         onInitialized={this.setLoaded}
                     />
                 </SmoothLoaderForKey>
-            </div>
         );
     }
 }
