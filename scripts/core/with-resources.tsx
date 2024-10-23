@@ -237,17 +237,17 @@ export class WithLiveResources
         const key = JSON.stringify(omit(this.props, 'children'));
 
         return (
-                <SmoothLoaderForKey
-                    key_={key}
-                    ref={(ref) => {
-                        this.smoothLoaderRef = ref;
-                    }}
-                >
-                    <WithLiveResourcesComponent
-                        {...this.props}
-                        onInitialized={this.setLoaded}
-                    />
-                </SmoothLoaderForKey>
+            <SmoothLoaderForKey
+                key_={key}
+                ref={(ref) => {
+                    this.smoothLoaderRef = ref;
+                }}
+            >
+                <WithLiveResourcesComponent
+                    {...this.props}
+                    onInitialized={this.setLoaded}
+                />
+            </SmoothLoaderForKey>
         );
     }
 }
