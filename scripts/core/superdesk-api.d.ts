@@ -210,7 +210,10 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
+        secondaryToolbarWidgets: Array<React.ComponentType<{
+            item: T;
+            onChange(itemWithChanges: T): void;
+        }>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 
@@ -769,7 +772,10 @@ declare module 'superdesk-api' {
             /**
              * Display custom components in the second toolbar in authoring panel
              */
-            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{
+                article: IArticle;
+                onChange: (itemWithChanges: IArticle) => void;
+            }>>;
 
             authoringSideWidgets?: Array<IArticleSideWidget>;
 

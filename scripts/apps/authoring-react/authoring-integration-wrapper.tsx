@@ -43,6 +43,7 @@ import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -51,7 +52,13 @@ export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideW
         .sort((a, b) => a.order - b.order);
 }
 
-const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
+const defaultToolbarItems: Array<React.ComponentType<{
+    article: IArticle;
+    onChange: (itemWithChanges: IArticle) => void;
+}>> = [
+    ContentProfileDropdown,
+    CreatedModifiedInfo,
+];
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -317,10 +324,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
-        const secondaryToolbarWidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
-            defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions).map(
-                (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
-            );
+        const secondaryToolbarWidgetsReady = defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions)
+            .map((Component) => (props) => <Component onChange={props.onChange} article={props.item} />);
 
         return (
             <WithInteractiveArticleActionsPanel location="authoring">

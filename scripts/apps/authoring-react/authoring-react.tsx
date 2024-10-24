@@ -1146,7 +1146,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * and when outside code sends updated `{item:T }` there is not other way for authoring-react
      * to apply it to `fieldsData`, but to re-initialize.
      */
-    reinitialize(state: IStateLoaded<T>, itemWithUpdates: T) {
+    reinitialize(
+        state: IStateLoaded<T>,
+        itemWithUpdates: T,
+        newProfile?: IContentProfileV2,
+    ) {
         const item: {
             saved: T;
             autosaved: T;
@@ -1157,7 +1161,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         this.setState(getInitialState(
             item,
-            state.profile,
+            newProfile ?? state.profile,
             state.userPreferencesForFields,
             state.spellcheckerEnabled,
             this.props.fieldsAdapter,
@@ -1411,6 +1415,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         };
 
+        const onChangeSideWidget = (item: T) => {
+            authoringStorage.getContentProfile(item, this.props.fieldsAdapter)
+                .then((res) => {
+                    this.reinitialize(state, item, res);
+                });
+        };
+
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
                 {
@@ -1421,110 +1432,84 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
-                        {(panelState, panelActions) => {
-                            return (
-                                <Layout.AuthoringFrame
-                                    header={
-                                        primaryToolbarWidgets.length < 1
+                        {(panelState, panelActions) => (
+                            <Layout.AuthoringFrame
+                                header={
+                                    primaryToolbarWidgets.length < 1
                                         && this.props.getAuthoringPrimaryToolbarWidgets == null
-                                            ? undefined
-                                            : (
-                                                <SubNav>
-                                                    <AuthoringToolbar
-                                                        entity={state.itemWithChanges}
-                                                        coreWidgets={primaryToolbarWidgets}
-                                                        extraWidgets={
-                                                            this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                                        }
-                                                        backgroundColor={authoringOptions?.toolbarBgColor}
-                                                    />
-                                                </SubNav>
-                                            )
-                                    }
-                                    main={(
-                                        <Layout.AuthoringMain
-                                            noPaddingForContent
-                                            headerCollapsed={this.props.headerCollapsed}
-                                            toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                                <React.Fragment>
-                                                    <div
-                                                        style={{
-                                                            paddingInlineEnd: 16,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 8,
-                                                        }}
-                                                    >
-                                                        {
-                                                            this.props.secondaryToolbarWidgets
-                                                                .map((Component, i) => {
-                                                                    return (
-                                                                        <Component
-                                                                            key={i}
-                                                                            item={state.itemWithChanges}
-                                                                        />
-                                                                    );
-                                                                })
-                                                        }
-                                                    </div>
-
-                                                    <ButtonGroup align="end">
-
-                                                        {printPreviewAction.jsxButton()}
-
-                                                        {this.props.themingEnabled === true && (
-                                                            <>
-                                                                <IconButton
-                                                                    icon="adjust"
-                                                                    ariaValue={gettext('Toggle theme')}
-                                                                    onClick={() => {
-                                                                        this.setState({
-                                                                            ...state,
-                                                                            proofreadingEnabled:
-                                                                                !state.proofreadingEnabled,
-                                                                        });
-                                                                    }}
-                                                                />
-                                                                <IconButton
-                                                                    icon="switches"
-                                                                    ariaValue={gettext('Configure themes')}
-                                                                    onClick={() => {
-                                                                        this.showThemeConfigModal(state);
-                                                                    }}
-                                                                />
-                                                            </>
-                                                        )}
-
-                                                    </ButtonGroup>
-
-                                                </React.Fragment>
-                                            )}
-                                            authoringHeader={(
-                                                <AuthoringSection
-                                                    fields={state.profile.header}
-                                                    fieldsData={state.fieldsDataWithChanges}
-                                                    onChange={this.handleFieldChange}
-                                                    reinitialize={(item) => {
-                                                        this.reinitialize(state, item);
-                                                    }}
-                                                    language={getLanguage(state.itemWithChanges)}
-                                                    userPreferencesForFields={state.userPreferencesForFields}
-                                                    useHeaderLayout
-                                                    setUserPreferencesForFields={this.setUserPreferences}
-                                                    getVocabularyItems={this.getVocabularyItems}
-                                                    toggledFields={state.toggledFields}
-                                                    toggleField={this.toggleField}
-                                                    readOnly={readOnly}
-                                                    validationErrors={state.validationErrors}
-                                                    item={state.itemWithChanges}
-                                                    computeLatestEntity={this.computeLatestEntity}
+                                        ? undefined
+                                        : (
+                                            <SubNav>
+                                                <AuthoringToolbar
+                                                    entity={state.itemWithChanges}
+                                                    coreWidgets={primaryToolbarWidgets}
+                                                    extraWidgets={
+                                                        this.props.getAuthoringPrimaryToolbarWidgets(exposed)
+                                                    }
+                                                    backgroundColor={authoringOptions?.toolbarBgColor}
                                                 />
-                                            )}
-                                        >
+                                            </SubNav>
+                                        )
+                                }
+                                main={(
+                                    <Layout.AuthoringMain
+                                        noPaddingForContent
+                                        headerCollapsed={this.props.headerCollapsed}
+                                        toolBar={this.props.hideSecondaryToolbar ? undefined : (
+                                            <React.Fragment>
+                                                <div
+                                                    style={{
+                                                        paddingInlineEnd: 16,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: 8,
+                                                    }}
+                                                >
+                                                    {this.props.secondaryToolbarWidgets.map((Component, i) => (
+                                                        <Component
+                                                            key={i}
+                                                            onChange={(item) => {
+                                                                onChangeSideWidget(item);
+                                                            }}
+                                                            item={state.itemWithChanges}
+                                                        />
+                                                    ))}
+                                                </div>
+
+                                                <ButtonGroup align="end">
+
+                                                    {printPreviewAction.jsxButton()}
+
+                                                    {this.props.themingEnabled === true && (
+                                                        <>
+                                                            <IconButton
+                                                                icon="adjust"
+                                                                ariaValue={gettext('Toggle theme')}
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        ...state,
+                                                                        proofreadingEnabled:
+                                                                            !state.proofreadingEnabled,
+                                                                    });
+                                                                }}
+                                                            />
+                                                            <IconButton
+                                                                icon="switches"
+                                                                ariaValue={gettext('Configure themes')}
+                                                                onClick={() => {
+                                                                    this.showThemeConfigModal(state);
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
+
+                                                </ButtonGroup>
+
+                                            </React.Fragment>
+                                        )}
+                                        authoringHeader={(
                                             <AuthoringSection
-                                                uiTheme={uiTheme}
-                                                padding="3.2rem 4rem 5.2rem 4rem"
-                                                fields={state.profile.content}
+                                                fields={state.profile.header}
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}
                                                 reinitialize={(item) => {
@@ -1532,6 +1517,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 }}
                                                 language={getLanguage(state.itemWithChanges)}
                                                 userPreferencesForFields={state.userPreferencesForFields}
+                                                useHeaderLayout
                                                 setUserPreferencesForFields={this.setUserPreferences}
                                                 getVocabularyItems={this.getVocabularyItems}
                                                 toggledFields={state.toggledFields}
@@ -1541,16 +1527,37 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 item={state.itemWithChanges}
                                                 computeLatestEntity={this.computeLatestEntity}
                                             />
-                                        </Layout.AuthoringMain>
-                                    )}
-                                    sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                    sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                    sideBar={this.props.getSidebar?.(exposed)}
-                                />
-                            );
-                        }}
+                                        )}
+                                    >
+                                        <AuthoringSection
+                                            uiTheme={uiTheme}
+                                            padding="3.2rem 4rem 5.2rem 4rem"
+                                            fields={state.profile.content}
+                                            fieldsData={state.fieldsDataWithChanges}
+                                            onChange={this.handleFieldChange}
+                                            reinitialize={(item) => {
+                                                this.reinitialize(state, item);
+                                            }}
+                                            language={getLanguage(state.itemWithChanges)}
+                                            userPreferencesForFields={state.userPreferencesForFields}
+                                            setUserPreferencesForFields={this.setUserPreferences}
+                                            getVocabularyItems={this.getVocabularyItems}
+                                            toggledFields={state.toggledFields}
+                                            toggleField={this.toggleField}
+                                            readOnly={readOnly}
+                                            validationErrors={state.validationErrors}
+                                            item={state.itemWithChanges}
+                                            computeLatestEntity={this.computeLatestEntity}
+                                        />
+                                    </Layout.AuthoringMain>
+                                )}
+                                sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                                sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sidePanelOpen={pinned && OpenWidgetComponent != null}
+                                sideBar={this.props.getSidebar?.(exposed)}
+                            />
+                        )}
                     </WithInteractiveArticleActionsPanel>
                 </WithKeyBindings>
             </div>
