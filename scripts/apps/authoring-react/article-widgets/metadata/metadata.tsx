@@ -88,6 +88,8 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
         } = article;
         const {onItemChange} = this.props;
         const allVocabularies = sdApi.vocabularies.getAll();
+        const hasGenre = allVocabularies.map((v) => v.schema_field).includes('genre') === false;
+        const hasPlace = allVocabularies.map((v) => v.schema_field).includes('place') === false;
 
         return (
             <AuthoringWidgetLayout
@@ -209,54 +211,52 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             />
                         )}
 
-                        {
-                            <>
-                                <Spacer h gap="64" justifyContent="space-between" noWrap>
-                                    <Heading type="h6">
-                                        {gettext('State').toUpperCase()}
-                                    </Heading>
-                                    <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
-                                        <StateComponent item={article} />
-                                        {article.embargo && (
-                                            <Label
-                                                style="hollow"
-                                                type="alert"
-                                                text={gettext('embargo')}
-                                            />
-                                        )}
-                                        {flags.marked_for_not_publication && (
-                                            <Label
-                                                text={gettext('Not For Publication')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {flags.marked_for_legal && (
-                                            <Label
-                                                text={gettext('Legal')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {flags.marked_for_sms && (
-                                            <Label
-                                                text={gettext('Sms')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {(rewritten_by?.length ?? 0) > 0 && (
-                                            <Label
-                                                text={gettext('Updated')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                    </Spacer>
+                        {<>
+                            <Spacer h gap="64" justifyContent="space-between" noWrap>
+                                <Heading type="h6">
+                                    {gettext('State').toUpperCase()}
+                                </Heading>
+                                <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
+                                    <StateComponent item={article} />
+                                    {article.embargo && (
+                                        <Label
+                                            style="hollow"
+                                            type="alert"
+                                            text={gettext('embargo')}
+                                        />
+                                    )}
+                                    {flags.marked_for_not_publication && (
+                                        <Label
+                                            text={gettext('Not For Publication')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_legal && (
+                                        <Label
+                                            text={gettext('Legal')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_sms && (
+                                        <Label
+                                            text={gettext('Sms')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {(rewritten_by?.length ?? 0) > 0 && (
+                                        <Label
+                                            text={gettext('Updated')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
                                 </Spacer>
-                                <ContentDivider border type="dotted" margin="x-small" />
-                            </>
-                        }
+                            </Spacer>
+                            <ContentDivider border type="dotted" margin="x-small" />
+                        </>}
 
                         {ingest_provider != null && (
                             <MetadataItem
@@ -331,24 +331,19 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             ))
                         }
 
-                        {(genre?.length ?? 0) > 0
-                            && allVocabularies.map((v) => v.schema_field).includes('genre') === false
-                            && (
-                                <MetadataItem
-                                    label={gettext('Genre')}
-                                    value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
-                                />
-                            )
-                        }
+                        {(genre?.length ?? 0) > 0 && hasGenre && (
+                            <MetadataItem
+                                label={gettext('Genre')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
+                            />
+                        )}
 
-                        {(place?.length ?? 0) > 0
-                            && allVocabularies.map((v) => v.schema_field).includes('place') === false && (
-                                <MetadataItem
-                                    label={gettext('Place')}
-                                    value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
-                                />
-                            )
-                        }
+                        {(place?.length ?? 0) > 0 && hasPlace && (
+                            <MetadataItem
+                                label={gettext('Place')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
+                            />
+                        )}
 
                         {(ednote?.length ?? 0) > 0 && <MetadataItem label={gettext('Editorial note')} value={ednote} />}
 
