@@ -5,6 +5,7 @@ import {ModifiedInfo} from 'apps/authoring/authoring/modified-info';
 
 interface IProps {
     article: IArticle;
+    onChange: () => void;
 }
 
 export class CreatedModifiedInfo extends React.PureComponent<IProps> {
