@@ -26,7 +26,6 @@ export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownVa
         getEmptyValue: (config) => config.multiple ? [] : null,
         differenceComponent: Difference,
         configComponent: Config,
-        toOperationalFormat: (valueStorage) => valueStorage,
     };
 
     return field;
