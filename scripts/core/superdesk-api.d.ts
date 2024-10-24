@@ -2291,7 +2291,7 @@ declare module 'superdesk-api' {
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
         resource: string;
         query: ISuperdeskQuery;
-        children: (result: IRestApiResponse<T>) => JSX.Element;
+        children: (result: IRestApiResponse<T>) => React.ReactNode;
     }
 
     export interface ILiveResourcesProps {
