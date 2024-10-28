@@ -333,21 +333,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
-            const shouldWidgetGetPinned = !(this.props.sideWidget?.pinned ?? false);
+            const widgetPinned = !(this.props.sideWidget?.pinned ?? false);
             const update = {
                 type: 'string',
-                _id: shouldWidgetGetPinned ? this.props.sideWidget.id : null,
+                _id: widgetPinned ? this.props.sideWidget.id : null,
             };
-
-            dispatchEvent(new CustomEvent('resize-monitoring', {
-                detail: {value: shouldWidgetGetPinned ? -330 : 330},
-            }));
 
             closedIntentionally.value = true;
             sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
             this.props.onSideWidgetChange({
                 ...this.props.sideWidget,
-                pinned: shouldWidgetGetPinned,
+                pinned: widgetPinned,
             });
         };
 
@@ -1472,7 +1468,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                         <Component
                                                             key={i}
-                                                            reinitialize={(item) => {
+                                                            onChange={(item) => {
                                                                 onChangeSideWidget(item);
                                                             }}
                                                             item={state.itemWithChanges}

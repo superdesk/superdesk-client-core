@@ -62,6 +62,7 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
 
         return (
             <Nav.SideBarTabs
+                disabled={sideWidget?.pinned}
                 activeTab={sideWidget?.id}
                 onActiveTabChange={(nextWidgetId) => {
                     if (nextWidgetId == null && closedIntentionally.value == true) {

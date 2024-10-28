@@ -212,7 +212,7 @@ declare module 'superdesk-api' {
 
         secondaryToolbarWidgets: Array<React.ComponentType<{
             item: T;
-            reinitialize(itemWithChanges: T): void;
+            onChange(itemWithChanges: T): void;
         }>>;
 
         disableWidgetPinning?: boolean; // defaults to false
