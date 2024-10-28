@@ -6,7 +6,7 @@ import {sdApi} from 'api';
 
 interface IProps {
     article: IArticle;
-    onChange: (itemWithChanges: IArticle) => void;
+    reinitialize: (itemWithChanges: IArticle) => void;
 }
 
 interface IState {
@@ -37,7 +37,7 @@ export class ContentProfileDropdown extends React.PureComponent<IProps, IState> 
                         this.setState({
                             selectedProfileId: profileId,
                         }, () => {
-                            this.props.onChange({
+                            this.props.reinitialize({
                                 ...this.props.article,
                                 profile: profileId,
                             });

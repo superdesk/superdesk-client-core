@@ -1468,7 +1468,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                         <Component
                                                             key={i}
-                                                            onChange={(item) => {
+                                                            reinitialize={(item) => {
                                                                 onChangeSideWidget(item);
                                                             }}
                                                             item={state.itemWithChanges}

@@ -54,7 +54,7 @@ export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideW
 
 const defaultToolbarItems: Array<React.ComponentType<{
     article: IArticle;
-    onChange: (itemWithChanges: IArticle) => void;
+    reinitialize: (itemWithChanges: IArticle) => void;
 }>> = [
     ContentProfileDropdown,
     CreatedModifiedInfo,
@@ -325,7 +325,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
         const secondaryToolbarWidgetsReady = defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions)
-            .map((Component) => (props) => <Component onChange={props.onChange} article={props.item} />);
+            .map((Component) => (props) => <Component reinitialize={props.onChange} article={props.item} />);
 
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
