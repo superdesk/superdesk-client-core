@@ -1456,25 +1456,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         noPaddingForContent
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                            <React.Fragment>
-                                                <div
-                                                    style={{
-                                                        paddingInlineEnd: 16,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 8,
-                                                    }}
-                                                >
-                                                    {this.props.secondaryToolbarWidgets.map((Component, i) => (
-                                                        <Component
-                                                            key={i}
-                                                            reinitialize={(item) => {
-                                                                onChangeSideWidget(item);
-                                                            }}
-                                                            item={state.itemWithChanges}
-                                                        />
-                                                    ))}
-                                                </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
+                                                    alignItems: 'center',
+                                                    gap: 8,
+                                                    maxWidth: '100%',
+                                                }}
+                                            >
+                                                {this.props.secondaryToolbarWidgets.map((Component, i) => (
+                                                    <Component
+                                                        key={i}
+                                                        reinitialize={(item) => {
+                                                            onChangeSideWidget(item);
+                                                        }}
+                                                        item={state.itemWithChanges}
+                                                    />
+                                                ))}
 
                                                 <ButtonGroup align="end">
 
@@ -1504,8 +1503,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     )}
 
                                                 </ButtonGroup>
-
-                                            </React.Fragment>
+                                            </div>
                                         )}
                                         authoringHeader={(
                                             <AuthoringSection
