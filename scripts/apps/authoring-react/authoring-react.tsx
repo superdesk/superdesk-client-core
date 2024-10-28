@@ -1432,32 +1432,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
-                        {(panelState, panelActions) => (
+                        {() => (
                             <Layout.AuthoringFrame
-                                header={
-                                    primaryToolbarWidgets.length < 1
-                                        && this.props.getAuthoringPrimaryToolbarWidgets == null
-                                        ? undefined
-                                        : (
-                                            <SubNav>
-                                                <AuthoringToolbar
-                                                    entity={state.itemWithChanges}
-                                                    coreWidgets={primaryToolbarWidgets}
-                                                    extraWidgets={
-                                                        this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                                    }
-                                                    backgroundColor={authoringOptions?.toolbarBgColor}
-                                                />
-                                            </SubNav>
-                                        )
-                                }
+                                header={primaryToolbarWidgets.length < 1 &&
+                                    this.props.getAuthoringPrimaryToolbarWidgets == null && (
+                                    <SubNav>
+                                        <AuthoringToolbar
+                                            entity={state.itemWithChanges}
+                                            coreWidgets={primaryToolbarWidgets}
+                                            extraWidgets={
+                                                this.props.getAuthoringPrimaryToolbarWidgets(exposed)
+                                            }
+                                            backgroundColor={authoringOptions?.toolbarBgColor}
+                                        />
+                                    </SubNav>
+                                )}
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                            <div className='flex flex-row flex-wrap align-center px-2 gap-1 py-1'>
+                                        toolBar={this.props.hideSecondaryToolbar && (
+                                            <div className="flex flex-row flex-wrap align-center px-2 gap-1 py-1">
                                                 {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                     <Component
                                                         key={i}
@@ -1467,11 +1463,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         item={state.itemWithChanges}
                                                     />
                                                 ))}
-
                                                 <ButtonGroup align="end">
-
                                                     {printPreviewAction.jsxButton()}
-
                                                     {this.props.themingEnabled === true && (
                                                         <>
                                                             <IconButton
