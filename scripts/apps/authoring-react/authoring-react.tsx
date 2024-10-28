@@ -1455,16 +1455,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     <Layout.AuthoringMain
                                         noPaddingForContent
                                         headerCollapsed={this.props.headerCollapsed}
+                                        toolbarCustom
                                         toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    gap: 8,
-                                                    maxWidth: '100%',
-                                                }}
-                                            >
+                                            <div className='flex flex-row flex-wrap align-center px-2 gap-1 py-1'>
                                                 {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                     <Component
                                                         key={i}
