@@ -424,24 +424,22 @@
                 </li>
 
                 <li ng-show = "preferences['macro_config']" class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
-                    <h3 id="macros-config" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>{{preferences['macro_config'].label}}</h3>
-                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
-                        <div sd-info-item>
-                            <div ng-repeat="(key, field) in preferences.macro_config.fields">
-                            <label class="form-label" translate>{{ key }}</label>
-                            <input type="text" ng-model="preferences['macro_config'].fields[key]" />
+                <h3 id="macros-config" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>{{preferences['macro_config'].label}}</h3>
+                <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                    <div sd-info-item class="sd-display--contents">
+                        <div class="form__group">
+                            <div class="form__item">
+                                <div class="sd-input" ng-repeat="(key, field) in preferences.macro_config.fields">
+                                    <label class="sd-input__label" for="id169" id="id169label" tabindex="-1">{{ key }}</label>
+                                    <div class="sd-input__input-container">
+                                        <input class="sd-input__input" type="text" id="id169" aria-describedby="id169label" tabindex="0" ng-model="preferences['macro_config'].fields[key]">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
                 </li>
-
-                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
-
-                </li>
-
-                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
-
-                </li>
-
             </ul>
         </div>
     </div>
