@@ -1437,17 +1437,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             <Layout.AuthoringFrame
                                 header={primaryToolbarWidgets.length < 1 &&
                                     this.props.getAuthoringPrimaryToolbarWidgets == null ? null : (
-                                    <SubNav>
-                                        <AuthoringToolbar
-                                            entity={state.itemWithChanges}
-                                            coreWidgets={primaryToolbarWidgets}
-                                            extraWidgets={
-                                                this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                            }
-                                            backgroundColor={authoringOptions?.toolbarBgColor}
-                                        />
-                                    </SubNav>
-                                )}
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                coreWidgets={primaryToolbarWidgets}
+                                                extraWidgets={
+                                                    this.props.getAuthoringPrimaryToolbarWidgets(exposed)
+                                                }
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )
+                                }
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
@@ -1455,10 +1456,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         toolbarCustom
                                         toolBar={this.props.hideSecondaryToolbar ? null : (
                                             <div
-                                                className='authoring-sticky'
-                                                style={{
-                                                    width: '100%'
-                                                }}
+                                                className="authoring-sticky"
+                                                style={{width: '100%'}}
                                             >
                                                 {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                     <Component
@@ -1467,7 +1466,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                             if (this.hasUnsavedChanges()) {
                                                                 exposed.handleUnsavedChanges().then(() => {
                                                                     onChangeSideWidget(item);
-                                                                })
+                                                                });
                                                             } else {
                                                                 onChangeSideWidget(item);
                                                             }
@@ -1503,17 +1502,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 </ButtonGroup>
                                             </div>
                                         )}
-                                        headerStyles='authoring-header--padding-medium pt-1'
+                                        headerStyles="authoring-header--padding-medium pt-1"
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>
-                                                <div className='authoring-header__general-info'>
+                                                <div className="authoring-header__general-info">
                                                     <ContentProfileDropdown
                                                         article={state.itemWithChanges}
                                                         reinitialize={(item) => {
                                                             if (this.hasUnsavedChanges()) {
                                                                 exposed.handleUnsavedChanges().then(() => {
                                                                     onChangeSideWidget(item);
-                                                                })
+                                                                });
                                                             } else {
                                                                 onChangeSideWidget(item);
                                                             }

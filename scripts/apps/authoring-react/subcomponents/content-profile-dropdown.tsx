@@ -28,13 +28,11 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
 
     render() {
         return (
-            <Spacer gap='4' h noGrow noWrap>
-                <span className='authoring-header__label'>{gettext('PROFILE')}</span>
-                <div className='authoring-header__value'>
+            <Spacer gap="4" h noGrow noWrap>
+                <span className="authoring-header__label">{gettext('PROFILE')}</span>
+                <div className="authoring-header__value">
                     <select
-                        style={{
-                            height: 16
-                        }}
+                        style={{height: 16}}
                         value={this.state.selectedProfileId}
                         onChange={(e) => {
                             e.preventDefault();
