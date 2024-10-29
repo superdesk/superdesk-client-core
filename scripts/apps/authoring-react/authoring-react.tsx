@@ -1434,8 +1434,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={!(primaryToolbarWidgets.length < 1) &&
-                                    this.props.getAuthoringPrimaryToolbarWidgets != null && (
+                                header={primaryToolbarWidgets.length < 1 &&
+                                    this.props.getAuthoringPrimaryToolbarWidgets == null ? null : (
                                     <SubNav>
                                         <AuthoringToolbar
                                             entity={state.itemWithChanges}
@@ -1452,7 +1452,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         noPaddingForContent
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={!this.props.hideSecondaryToolbar && (
+                                        toolBar={this.props.hideSecondaryToolbar ? null : (
                                             <div className="flex flex-row flex-wrap align-center px-2 gap-1 py-1">
                                                 {this.props.secondaryToolbarWidgets.map((Component, i) => (
                                                     <Component
