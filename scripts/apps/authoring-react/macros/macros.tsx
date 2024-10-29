@@ -316,7 +316,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
                     body={(
                         <Label text={gettext('No macros configured.')} />
                     )}
-            />
+                />
             );
         }
 
