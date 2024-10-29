@@ -480,7 +480,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
-                                headerPadding="medium"
+                                headerStyles='authoring-header--padding-medium'
                                 authoringHeader={(
                                     <AiringInfoBlock
                                         value={rundown}

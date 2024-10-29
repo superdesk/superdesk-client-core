@@ -1,12 +1,12 @@
 import React from 'react';
 import {IArticle, IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {Select, Option, Text} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework/react';
 import {sdApi} from 'api';
 
-interface IProps {
-    article: IArticle;
-    reinitialize: (itemWithChanges: IArticle) => void;
+interface IProps<T> {
+    article: T;
+    reinitialize: (itemWithChanges: T) => void;
 }
 
 interface IState {
@@ -14,47 +14,51 @@ interface IState {
     selectedProfileId: string;
 }
 
-export class ContentProfileDropdown extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IState> {
+    constructor(props: IProps<T>) {
         super(props);
 
         const allProfiles = sdApi.contentProfiles.getAll().filter((x) => x.enabled === true && x.type === 'text');
 
         this.state = {
             profilesList: allProfiles,
-            selectedProfileId: allProfiles.find((x) => x._id === this.props.article.profile)._id ?? '',
+            selectedProfileId: allProfiles.find((x) => x._id === (this.props.article as IArticle)?.profile)._id ?? '',
         };
     }
 
     render() {
         return (
-            <div className="flex flex-row items-center gap-2">
-                <Text className="m-0" size="x-small" weight="medium">{gettext('Profile')}</Text>
-                <Select
-                    fullWidth
-                    value={this.state.selectedProfileId}
-                    onChange={(profileId) => {
-                        this.setState({
-                            selectedProfileId: profileId,
-                        }, () => {
-                            this.props.reinitialize({
-                                ...this.props.article,
-                                profile: profileId,
+            <Spacer gap='4' h noGrow noWrap>
+                <span className='authoring-header__label'>{gettext('PROFILE')}</span>
+                <div className='authoring-header__value'>
+                    <select
+                        style={{
+                            height: 16
+                        }}
+                        value={this.state.selectedProfileId}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            const profileId = e.target.value;
+
+                            this.setState({
+                                selectedProfileId: profileId,
+                            }, () => {
+                                this.props.reinitialize({
+                                    ...this.props.article,
+                                    profile: profileId,
+                                });
                             });
-                        });
-                    }}
-                    label="Profile"
-                    inlineLabel
-                    labelHidden
-                >
-                    <Option value="" />
-                    {this.state.profilesList.map((profile) => (
-                        <Option key={profile._id} value={profile._id}>
-                            {profile.label}
-                        </Option>
-                    ))}
-                </Select>
-            </div>
+                        }}
+                    >
+                        <option value="" />
+                        {this.state.profilesList.map((profile) => (
+                            <option key={profile._id} value={profile._id}>
+                                {profile.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </Spacer>
         );
     }
 }
