@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {appConfig} from '../../appConfig';
+import {notify} from 'core/notify/notify';
 
 interface IHttpRequestOptions {
     method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -171,5 +172,32 @@ export function uploadFileWithProgress<T>(
 
                 request.send(data);
             });
+        });
+}
+
+export function trackArticleActionProgress<T>(
+    p: () => Promise<T>,
+    itemId: string,
+    successMessage: string,
+    errorMessage: string,
+): Promise<T> {
+    dispatchEvent(new CustomEvent('action-loading', {
+        detail: {loading: true, itemId},
+    }));
+
+    return p()
+        .then((res) => {
+            notify.success(successMessage);
+
+            return res;
+        }).catch((error) => {
+            notify.error(errorMessage);
+
+            return error;
+        })
+        .finally(() => {
+            dispatchEvent(new CustomEvent('action-loading', {
+                detail: {loading: true, itemId},
+            }));
         });
 }

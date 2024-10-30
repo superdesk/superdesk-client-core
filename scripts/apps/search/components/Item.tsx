@@ -111,7 +111,7 @@ export class Item extends React.Component<IProps, IState> {
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
         this.toggleNested = this.toggleNested.bind(this);
-        this.handleHighlightsLoading = this.handleHighlightsLoading.bind(this);
+        this.handleActionLoading = this.handleActionLoading.bind(this);
     }
 
     componentWillMount() {
@@ -120,21 +120,21 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
-    handleHighlightsLoading(e: CustomEvent) {
+    handleActionLoading(e: CustomEvent) {
         if (e.detail.itemId === this.props.item._id) {
             this.setState({loading: e.detail.loading});
         }
     }
 
     componentDidMount() {
-        addEventListener('highlights-loading', this.handleHighlightsLoading);
+        addEventListener('action-loading', this.handleActionLoading);
         this._mounted = true;
     }
 
     componentWillUnmount() {
         this._mounted = false;
         closeActionsMenu(this.props.item._id);
-        removeEventListener('highlights-loading', this.handleHighlightsLoading);
+        removeEventListener('action-loading', this.handleActionLoading);
     }
 
     componentWillReceiveProps(nextProps) {

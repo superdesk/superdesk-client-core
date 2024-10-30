@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {IPackagesService} from 'types/Services/Packages';
 import {IBaseRestApiResponse} from 'superdesk-api';
 import {notify} from 'core/notify/notify';
+import {trackArticleActionProgress} from 'core/helpers/network';
 
 export interface IHighlight extends IBaseRestApiResponse {
     name: string;
@@ -114,26 +115,16 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * Mark an item for a highlight
      */
     service.markItem = function(highlight, markedItem) {
-        dispatchEvent(new CustomEvent('highlights-loading', {
-            detail: {loading: true, itemId: markedItem._id},
-        }));
-
-        return api.save(
-            'marked_for_highlights',
-            {highlights: [highlight], marked_item: markedItem._id},
-        )
-            .then(() => {
-                notify.success(gettext('Item was successfully marked'));
-            })
-            .catch(() => {
-                notify.error(gettext('Couldn\'t mark item'));
-            })
-            .finally(() => {
-                dispatchEvent(new CustomEvent('highlights-loading', {
-                    detail: {loading: false, itemId: markedItem._id},
-                }));
-            });
-    };
+        return trackArticleActionProgress(
+            () => api.save(
+                'marked_for_highlights',
+                {highlights: [highlight], marked_item: markedItem._id},
+            ),
+            markedItem._id,
+            gettext('Item marked'),
+            gettext('Couldn\'t mark item'),
+        );
+    }
 
     /**
      * Create empty highlight package
