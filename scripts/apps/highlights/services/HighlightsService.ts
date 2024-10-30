@@ -124,7 +124,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
             gettext('Item marked'),
             gettext('Couldn\'t mark item'),
         );
-    }
+    };
 
     /**
      * Create empty highlight package
