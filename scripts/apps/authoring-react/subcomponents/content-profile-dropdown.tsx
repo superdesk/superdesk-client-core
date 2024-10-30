@@ -42,7 +42,7 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
                                 selectedProfileId: profileId,
                             }, () => {
                                 this.props.reinitialize({
-                                    ...this.props.article,
+                                    ...this.props.item,
                                     profile: profileId,
                                 });
                             });
