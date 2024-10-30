@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IPackagesService} from 'types/Services/Packages';
 import {IBaseRestApiResponse} from 'superdesk-api';
+import {notify} from 'core/notify/notify';
 
 export interface IHighlight extends IBaseRestApiResponse {
     name: string;
@@ -27,6 +28,10 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     var promise = {};
     var cache = $cacheFactory('highlightList');
 
+    /**
+     * Allows for state control when a request is made.
+     */
+    service.requestLoading = false;
     /**
      * Get cached value for given key
      *
@@ -111,7 +116,21 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * Mark an item for a highlight
      */
     service.markItem = function(highlight, markedItem) {
-        return api.save('marked_for_highlights', {highlights: [highlight], marked_item: markedItem._id});
+        service.requestLoading = true;
+
+        return api.save(
+            'marked_for_highlights',
+            {highlights: [highlight], marked_item: markedItem._id},
+        )
+            .then(() => {
+                notify.success(gettext("Item was successfully marked"));
+            })
+            .catch(() => {
+                notify.error(gettext("Couldn't mark item"));
+            })
+            .finally(() => {
+                service.requestLoading = false;
+            });
     };
 
     /**
