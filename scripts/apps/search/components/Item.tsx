@@ -127,14 +127,14 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        addEventListener('action-loading', this.handleActionLoading);
+        addEventListener('article-action-loading', this.handleActionLoading);
         this._mounted = true;
     }
 
     componentWillUnmount() {
         this._mounted = false;
         closeActionsMenu(this.props.item._id);
-        removeEventListener('action-loading', this.handleActionLoading);
+        removeEventListener('article-action-loading', this.handleActionLoading);
     }
 
     componentWillReceiveProps(nextProps) {

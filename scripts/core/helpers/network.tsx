@@ -176,16 +176,16 @@ export function uploadFileWithProgress<T>(
 }
 
 export function trackArticleActionProgress<T>(
-    p: () => Promise<T>,
+    getPromise: () => Promise<T>,
     itemId: string,
     successMessage: string,
     errorMessage: string,
 ): Promise<T> {
-    dispatchEvent(new CustomEvent('action-loading', {
+    dispatchEvent(new CustomEvent('article-action-loading', {
         detail: {loading: true, itemId},
     }));
 
-    return p()
+    return getPromise()
         .then((res) => {
             notify.success(successMessage);
 
@@ -196,7 +196,7 @@ export function trackArticleActionProgress<T>(
             return error;
         })
         .finally(() => {
-            dispatchEvent(new CustomEvent('action-loading', {
+            dispatchEvent(new CustomEvent('article-action-loading', {
                 detail: {loading: true, itemId},
             }));
         });
