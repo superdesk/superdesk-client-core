@@ -5,12 +5,12 @@ import {Spacer} from 'superdesk-ui-framework/react';
 import {sdApi} from 'api';
 
 interface IProps<T> {
-    article: T;
+    item: T;
     reinitialize: (itemWithChanges: T) => void;
 }
 
 interface IState {
-    profilesList: Array<IContentProfile>;
+    profiles: Array<IContentProfile>;
     selectedProfileId: string;
 }
 
@@ -21,8 +21,8 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
         const allProfiles = sdApi.contentProfiles.getAll().filter((x) => x.enabled === true && x.type === 'text');
 
         this.state = {
-            profilesList: allProfiles,
-            selectedProfileId: allProfiles.find((x) => x._id === (this.props.article as IArticle)?.profile)._id ?? '',
+            profiles: allProfiles,
+            selectedProfileId: allProfiles.find((x) => x._id === (this.props.item as IArticle)?.profile)._id ?? '',
         };
     }
 
@@ -49,7 +49,7 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
                         }}
                     >
                         <option value="" />
-                        {this.state.profilesList.map((profile) => (
+                        {this.state.profiles.map((profile) => (
                             <option key={profile._id} value={profile._id}>
                                 {profile.label}
                             </option>

@@ -1507,7 +1507,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             <div style={{width: '100%'}}>
                                                 <div className="authoring-header__general-info">
                                                     <ContentProfileDropdown
-                                                        article={state.itemWithChanges}
+                                                        item={state.itemWithChanges}
                                                         reinitialize={(item) => {
                                                             if (this.hasUnsavedChanges()) {
                                                                 exposed.handleUnsavedChanges().then(() => {
