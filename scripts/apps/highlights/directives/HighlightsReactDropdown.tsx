@@ -34,12 +34,6 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
      */
     return (
         <ul className={className}>
-            {highlights.requestLoading && (
-                <div style={{zIndex: 17000}}>
-                    <Spinner size='large'/>
-                    <Loader overlay />
-                </div>
-            )}
             {highlights._items.length ? highlights._items.map((h) => (
                 <li key={`highlight-${h._id}`}>
                     <HighlightBtn

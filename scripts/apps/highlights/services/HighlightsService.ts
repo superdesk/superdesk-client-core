@@ -29,10 +29,6 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     var cache = $cacheFactory('highlightList');
 
     /**
-     * Allows for state control when a request is made.
-     */
-    service.requestLoading = false;
-    /**
      * Get cached value for given key
      *
      * @param {string} key
@@ -59,11 +55,13 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
         var criteria = {};
 
         if (desk) {
-            criteria = {where: {$or: [
-                {desks: desk},
-                {desks: {$size: 0}},
-            ],
-            },
+            criteria = {
+                where: {
+                    $or: [
+                        {desks: desk},
+                        {desks: {$size: 0}},
+                    ],
+                },
             };
         }
 
@@ -116,20 +114,24 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * Mark an item for a highlight
      */
     service.markItem = function(highlight, markedItem) {
-        service.requestLoading = true;
+        dispatchEvent(new CustomEvent('highlights-loading', {
+            detail: {loading: true, itemId: markedItem._id},
+        }));
 
         return api.save(
             'marked_for_highlights',
             {highlights: [highlight], marked_item: markedItem._id},
         )
             .then(() => {
-                notify.success(gettext("Item was successfully marked"));
+                notify.success(gettext('Item was successfully marked'));
             })
             .catch(() => {
-                notify.error(gettext("Couldn't mark item"));
+                notify.error(gettext('Couldn\'t mark item'));
             })
             .finally(() => {
-                service.requestLoading = false;
+                dispatchEvent(new CustomEvent('highlights-loading', {
+                    detail: {loading: false, itemId: markedItem._id},
+                }));
             });
     };
 

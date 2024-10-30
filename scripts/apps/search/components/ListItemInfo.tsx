@@ -6,6 +6,7 @@ import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {IRelatedEntities} from 'core/getRelatedEntities';
+import {Loader} from 'superdesk-ui-framework/react';
 
 export interface IPropsItemListInfo {
     item: IArticle;
@@ -14,6 +15,7 @@ export interface IPropsItemListInfo {
     ingestProvider: any;
     profilesById: any;
     highlightsById: any;
+    loading?: boolean;
     markedDesksById: any;
     openAuthoringView: (rewrittenBy?: string) => void;
     narrow: any;
@@ -69,6 +71,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 className={className}
                 style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
             >
+                {this.props.loading && <Loader overlay />}
                 {listItems}
                 {
                     articleDisplayWidgets.length < 1 ? null : (
