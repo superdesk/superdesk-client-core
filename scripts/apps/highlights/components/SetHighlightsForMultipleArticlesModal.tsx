@@ -47,7 +47,7 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
                         promises.then(() => this.props.highlightsService.markItem(highlightId, article));
                     } else {
                         notify.error(gettext(
-                            "Article {{ slug }} is already marked for this highlight",
+                            "Article {{slug}} is already marked for this highlight",
                             {slug: getArticleLabel(article)},
                         ));
                     }

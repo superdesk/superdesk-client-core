@@ -122,8 +122,8 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
                 {highlights: [highlight], marked_item: markedItem._id},
             ),
             markedItem._id,
-            gettext(addToHighlight ? 'Item marked' : 'Item unmarked'),
-            gettext(addToHighlight ? 'Couldn\'t mark item' : 'Couldn\'t unmark item'),
+            addToHighlight ? gettext('Item marked') : gettext('Item unmarked'),
+            addToHighlight ? gettext('Couldn\'t mark item') : gettext('Couldn\'t unmark item'),
         );
     };
 
