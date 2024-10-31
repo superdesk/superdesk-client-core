@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IPackagesService} from 'types/Services/Packages';
-import {IBaseRestApiResponse} from 'superdesk-api';
-import {notify} from 'core/notify/notify';
+import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
 import {trackArticleActionProgress} from 'core/helpers/network';
 
 export interface IHighlight extends IBaseRestApiResponse {
@@ -112,17 +111,19 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     };
 
     /**
-     * Mark an item for a highlight
+     * Mark/Unmark an item for a highlight
      */
-    service.markItem = function(highlight, markedItem) {
+    service.markItem = function(highlight: string, markedItem: IArticle) {
+        const addToHighlight = markedItem.highlights.includes(highlight) === false;
+
         return trackArticleActionProgress(
             () => api.save(
                 'marked_for_highlights',
                 {highlights: [highlight], marked_item: markedItem._id},
             ),
             markedItem._id,
-            gettext('Item marked'),
-            gettext('Couldn\'t mark item'),
+            gettext(addToHighlight ? 'Item marked' : 'Item unmarked'),
+            gettext(addToHighlight ? 'Couldn\'t mark item' : 'Couldn\'t unmark item'),
         );
     };
 
