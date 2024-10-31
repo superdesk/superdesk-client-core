@@ -114,7 +114,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * Mark/Unmark an item for a highlight
      */
     service.markItem = function(highlight: string, markedItem: IArticle) {
-        const addToHighlight = markedItem.highlights.includes(highlight) === false;
+        const addToHighlight = (markedItem.highlights ?? []).includes(highlight) === false;
 
         return trackArticleActionProgress(
             () => api.save(
