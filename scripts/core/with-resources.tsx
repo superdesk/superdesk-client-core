@@ -18,9 +18,6 @@ interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
-/**
- * Doesn't work with elastic search endpoints, only with mongo ones.
- */
 class WithLiveResourcesComponent
     extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
@@ -98,7 +95,7 @@ class WithLiveResourcesComponent
         }
 
         return Promise.all(
-            resources.map(({resource, ids}) => {
+            resources.filter(({ids}) => ids.length > 0).map(({resource, ids}) => {
                 const query: ISuperdeskQuery = {
                     filter: {
                         $and: [

@@ -2295,7 +2295,7 @@ declare module 'superdesk-api' {
     }
 
     export interface ILiveResourcesProps {
-        resources: Array<{resource: string, ids?: Array<string>}>;
+        resources: Array<{resource: string, ids: Array<string>}>;
         children: (result: Array<IRestApiResponse<any>>) => JSX.Element;
     }
 
