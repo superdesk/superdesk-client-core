@@ -197,7 +197,7 @@ export function trackArticleActionProgress<T>(
         })
         .finally(() => {
             dispatchEvent(new CustomEvent('article-action-loading', {
-                detail: {loading: true, itemId},
+                detail: {loading: false, itemId},
             }));
         });
 }
