@@ -300,7 +300,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
-                                headerStyles="authoring-header--padding-medium"
+                                headerPadding={{top: 8}}
                                 toolBar={this.props.toolbar}
                                 authoringHeader={(
                                     <React.Fragment>

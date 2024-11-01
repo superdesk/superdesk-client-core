@@ -1502,7 +1502,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 </ButtonGroup>
                                             </div>
                                         )}
-                                        headerStyles="authoring-header--padding-medium pt-1"
+                                        headerPadding={{top: 8}}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>
                                                 <div className="authoring-header__general-info">
