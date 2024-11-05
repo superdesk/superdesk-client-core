@@ -210,7 +210,10 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
+        secondaryToolbarWidgets: Array<React.ComponentType<{
+            item: T;
+            reinitialize(itemWithChanges: T): void;
+        }>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 
@@ -489,12 +492,23 @@ declare module 'superdesk-api' {
         allowPicture?: boolean;
         allowVideo?: boolean;
         allowAudio?: boolean;
+        canRemoveItems?: boolean; // defaults to true
         showPictureCrops?: boolean;
         showTitleEditingInput?: boolean;
+        showDescriptionEditingInput?: boolean; // defaults to true
         allowedWorkflows?: {
             inProgress?: boolean;
             published?: boolean;
         };
+
+        /**
+         * It's not a good config option because it is meant to be applied only in one case.
+         * A cleaner solution would be to have 2 field types - media and media-original,
+         * to reuse the code between them and make it possible to pass custom `onChange` function to each.
+         * It'd take quite some time to do that and nicer interface would be the only benefit, so I'd rather
+         * delay for the future when we have more similar use-cases.
+         */
+        __editingOriginal?: boolean;
     }
 
     // AUTHORING-REACT FIELD TYPES - urls
@@ -758,7 +772,10 @@ declare module 'superdesk-api' {
             /**
              * Display custom components in the second toolbar in authoring panel
              */
-            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{
+                article: IArticle;
+                reinitialize: (itemWithChanges: IArticle) => void;
+            }>>;
 
             authoringSideWidgets?: Array<IArticleSideWidget>;
 
@@ -2167,6 +2184,8 @@ declare module 'superdesk-api' {
 
         onFileSelect?: (files: Array<File>) => void;
         fileAccept?: string;
+
+        disabled?: boolean;
     }
 
     export interface IGenericListPageComponent<T> {
@@ -2277,7 +2296,7 @@ declare module 'superdesk-api' {
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
         resource: string;
         query: ISuperdeskQuery;
-        children: (result: IRestApiResponse<T>) => JSX.Element;
+        children: (result: IRestApiResponse<T>) => React.ReactNode;
     }
 
     export interface ILiveResourcesProps {
@@ -2539,7 +2558,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IDataApi {
-        findOne<T>(endpoint: string, id: string): Promise<T>;
+        findOne<T>(endpoint: string, id: string, cache?: boolean): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
@@ -2890,6 +2909,8 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                translate(article: IArticle, language: string): Promise<IArticle>;
+                get(articleId: IArticle['_id']): Promise<IArticle>;
                 isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
                 isLockedInCurrentSession(article: IArticle): boolean;
                 isLockedInOtherSession(article: IArticle): boolean;
@@ -3563,6 +3584,22 @@ declare module 'superdesk-api' {
 
         value: IValue;
         onChange: (value: IValue) => void;
+
+        /**
+         * authoring-react only.
+         * Use this method sparingly. It is performance intensive.
+         * It was added to make it possible to update data from outside authoring-react component.
+         * The reason it is needed, is that authoring-react treats `fieldsData` as a source of truth
+         * and when outside code sends updated `{item:T }` there is not other way for authoring-react
+         * to apply it to `fieldsData`, but to re-initialize.
+         */
+        reinitialize(item: any): void;
+
+        /**
+         * authoring-react only.
+         */
+        computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): any;
+
         readOnly: boolean;
         language: string;
         config: IConfig;

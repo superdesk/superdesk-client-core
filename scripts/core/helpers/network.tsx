@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {appConfig} from '../../appConfig';
+import {notify} from 'core/notify/notify';
 
 interface IHttpRequestOptions {
     method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -7,6 +8,7 @@ interface IHttpRequestOptions {
     payload?: {};
     headers?: {[key: string]: any};
     urlParams?: {[key: string]: any};
+    cache?: 'default' | 'no-store' | 'reload' | 'no-cache' | 'force-cache' | 'only-if-cached';
 
     abortSignal?: AbortSignal;
 }
@@ -170,5 +172,32 @@ export function uploadFileWithProgress<T>(
 
                 request.send(data);
             });
+        });
+}
+
+export function trackArticleActionProgress<T>(
+    getPromise: () => Promise<T>,
+    itemId: string,
+    successMessage: string,
+    errorMessage: string,
+): Promise<T> {
+    dispatchEvent(new CustomEvent('article-action-loading', {
+        detail: {loading: true, itemId},
+    }));
+
+    return getPromise()
+        .then((res) => {
+            notify.success(successMessage);
+
+            return res;
+        }).catch((error) => {
+            notify.error(errorMessage);
+
+            return error;
+        })
+        .finally(() => {
+            dispatchEvent(new CustomEvent('article-action-loading', {
+                detail: {loading: false, itemId},
+            }));
         });
 }

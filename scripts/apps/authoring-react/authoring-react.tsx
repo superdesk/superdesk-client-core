@@ -58,6 +58,7 @@ import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofre
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
+import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
 
 export function getFieldsData<T>(
     item: T,
@@ -306,6 +307,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
         this.setLoadingState = this.setLoadingState.bind(this);
+        this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
@@ -1138,6 +1140,41 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
+    /**
+     * Use this method sparingly. It is performance intensive.
+     * It was added to make it possible to update data from outside authoring-react component.
+     * The reason it is needed, is that authoring-react treats `fieldsData` as a source of truth
+     * and when outside code sends updated `{item:T }` there is not other way for authoring-react
+     * to apply it to `fieldsData`, but to re-initialize.
+     */
+    reinitialize(
+        state: IStateLoaded<T>,
+        itemWithUpdates: T,
+        newProfile?: IContentProfileV2,
+    ) {
+        const item: {
+            saved: T;
+            autosaved: T;
+        } = {
+            saved: state.itemOriginal,
+            autosaved: itemWithUpdates,
+        };
+
+        this.setState(getInitialState(
+            item,
+            newProfile ?? state.profile,
+            state.userPreferencesForFields,
+            state.spellcheckerEnabled,
+            this.props.fieldsAdapter,
+            this.props.authoringStorage,
+            this.props.storageAdapter,
+            this.props.getLanguage(item.autosaved ?? item.saved),
+            state.validationErrors,
+            state.allThemes.default,
+            state.allThemes.proofreading,
+        ));
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1379,6 +1416,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         };
 
+        const onChangeSideWidget = (item: T) => {
+            authoringStorage.getContentProfile(item, this.props.fieldsAdapter)
+                .then((res) => {
+                    this.reinitialize(state, item, res);
+                });
+        };
+
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
                 {
@@ -1389,89 +1433,99 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
-                        {(panelState, panelActions) => {
-                            return (
-                                <Layout.AuthoringFrame
-                                    header={
-                                        primaryToolbarWidgets.length < 1
-                                        && this.props.getAuthoringPrimaryToolbarWidgets == null
-                                            ? undefined
-                                            : (
-                                                <SubNav>
-                                                    <AuthoringToolbar
-                                                        entity={state.itemWithChanges}
-                                                        coreWidgets={primaryToolbarWidgets}
-                                                        extraWidgets={
-                                                            this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                                        }
-                                                        backgroundColor={authoringOptions?.toolbarBgColor}
-                                                    />
-                                                </SubNav>
-                                            )
-                                    }
-                                    main={(
-                                        <Layout.AuthoringMain
-                                            noPaddingForContent
-                                            headerCollapsed={this.props.headerCollapsed}
-                                            toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                                <React.Fragment>
-                                                    <div
-                                                        style={{
-                                                            paddingInlineEnd: 16,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 8,
+                        {() => (
+                            <Layout.AuthoringFrame
+                                header={primaryToolbarWidgets.length < 1 &&
+                                    this.props.getAuthoringPrimaryToolbarWidgets == null ? null : (
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                coreWidgets={primaryToolbarWidgets}
+                                                extraWidgets={
+                                                    this.props.getAuthoringPrimaryToolbarWidgets(exposed)
+                                                }
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )
+                                }
+                                main={(
+                                    <Layout.AuthoringMain
+                                        noPaddingForContent
+                                        headerCollapsed={this.props.headerCollapsed}
+                                        toolbarCustom
+                                        toolBar={this.props.hideSecondaryToolbar ? null : (
+                                            <div
+                                                className="authoring-sticky"
+                                                style={{width: '100%'}}
+                                            >
+                                                {this.props.secondaryToolbarWidgets.map((Component, i) => (
+                                                    <Component
+                                                        key={i}
+                                                        reinitialize={(item) => {
+                                                            if (this.hasUnsavedChanges()) {
+                                                                exposed.handleUnsavedChanges().then(() => {
+                                                                    onChangeSideWidget(item);
+                                                                });
+                                                            } else {
+                                                                onChangeSideWidget(item);
+                                                            }
                                                         }}
-                                                    >
-                                                        {
-                                                            this.props.secondaryToolbarWidgets
-                                                                .map((Component, i) => {
-                                                                    return (
-                                                                        <Component
-                                                                            key={i}
-                                                                            item={state.itemWithChanges}
-                                                                        />
-                                                                    );
-                                                                })
-                                                        }
-                                                    </div>
+                                                        item={state.itemWithChanges}
+                                                    />
+                                                ))}
+                                                <ButtonGroup align="end">
+                                                    {printPreviewAction.jsxButton()}
+                                                    {this.props.themingEnabled === true && (
+                                                        <>
+                                                            <IconButton
+                                                                icon="adjust"
+                                                                ariaValue={gettext('Toggle theme')}
+                                                                onClick={() => {
+                                                                    this.setState({
+                                                                        ...state,
+                                                                        proofreadingEnabled:
+                                                                            !state.proofreadingEnabled,
+                                                                    });
+                                                                }}
+                                                            />
+                                                            <IconButton
+                                                                icon="switches"
+                                                                ariaValue={gettext('Configure themes')}
+                                                                onClick={() => {
+                                                                    this.showThemeConfigModal(state);
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
 
-                                                    <ButtonGroup align="end">
-
-                                                        {printPreviewAction.jsxButton()}
-
-                                                        {this.props.themingEnabled === true && (
-                                                            <>
-                                                                <IconButton
-                                                                    icon="adjust"
-                                                                    ariaValue={gettext('Toggle theme')}
-                                                                    onClick={() => {
-                                                                        this.setState({
-                                                                            ...state,
-                                                                            proofreadingEnabled:
-                                                                                !state.proofreadingEnabled,
-                                                                        });
-                                                                    }}
-                                                                />
-                                                                <IconButton
-                                                                    icon="switches"
-                                                                    ariaValue={gettext('Configure themes')}
-                                                                    onClick={() => {
-                                                                        this.showThemeConfigModal(state);
-                                                                    }}
-                                                                />
-                                                            </>
-                                                        )}
-
-                                                    </ButtonGroup>
-
-                                                </React.Fragment>
-                                            )}
-                                            authoringHeader={(
+                                                </ButtonGroup>
+                                            </div>
+                                        )}
+                                        headerPadding={{top: 8}}
+                                        authoringHeader={(
+                                            <div style={{width: '100%'}}>
+                                                <div className="authoring-header__general-info">
+                                                    <ContentProfileDropdown
+                                                        item={state.itemWithChanges}
+                                                        reinitialize={(item) => {
+                                                            if (this.hasUnsavedChanges()) {
+                                                                exposed.handleUnsavedChanges().then(() => {
+                                                                    onChangeSideWidget(item);
+                                                                });
+                                                            } else {
+                                                                onChangeSideWidget(item);
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
+                                                    reinitialize={(item) => {
+                                                        this.reinitialize(state, item);
+                                                    }}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     useHeaderLayout
@@ -1482,35 +1536,40 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     readOnly={readOnly}
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
+                                                    computeLatestEntity={this.computeLatestEntity}
                                                 />
-                                            )}
-                                        >
-                                            <AuthoringSection
-                                                uiTheme={uiTheme}
-                                                padding="3.2rem 4rem 5.2rem 4rem"
-                                                fields={state.profile.content}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
-                                                language={getLanguage(state.itemWithChanges)}
-                                                userPreferencesForFields={state.userPreferencesForFields}
-                                                setUserPreferencesForFields={this.setUserPreferences}
-                                                getVocabularyItems={this.getVocabularyItems}
-                                                toggledFields={state.toggledFields}
-                                                toggleField={this.toggleField}
-                                                readOnly={readOnly}
-                                                validationErrors={state.validationErrors}
-                                                item={state.itemWithChanges}
-                                            />
-                                        </Layout.AuthoringMain>
-                                    )}
-                                    sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                    sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                    sideBar={this.props.getSidebar?.(exposed)}
-                                />
-                            );
-                        }}
+                                            </div>
+                                        )}
+                                    >
+                                        <AuthoringSection
+                                            uiTheme={uiTheme}
+                                            padding="3.2rem 4rem 5.2rem 4rem"
+                                            fields={state.profile.content}
+                                            fieldsData={state.fieldsDataWithChanges}
+                                            onChange={this.handleFieldChange}
+                                            reinitialize={(item) => {
+                                                this.reinitialize(state, item);
+                                            }}
+                                            language={getLanguage(state.itemWithChanges)}
+                                            userPreferencesForFields={state.userPreferencesForFields}
+                                            setUserPreferencesForFields={this.setUserPreferences}
+                                            getVocabularyItems={this.getVocabularyItems}
+                                            toggledFields={state.toggledFields}
+                                            toggleField={this.toggleField}
+                                            readOnly={readOnly}
+                                            validationErrors={state.validationErrors}
+                                            item={state.itemWithChanges}
+                                            computeLatestEntity={this.computeLatestEntity}
+                                        />
+                                    </Layout.AuthoringMain>
+                                )}
+                                sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                                sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sidePanelOpen={pinned && OpenWidgetComponent != null}
+                                sideBar={this.props.getSidebar?.(exposed)}
+                            />
+                        )}
                     </WithInteractiveArticleActionsPanel>
                 </WithKeyBindings>
             </div>

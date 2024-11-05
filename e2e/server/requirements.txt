@@ -116,7 +116,7 @@ hachoir==3.3.0
     # via superdesk-core
 hermescache==0.10.0
     # via superdesk-core
-honcho==1.1.0
+honcho==2.0.0
     # via -r requirements.in
 httplib2==0.22.0
     # via oauth2client

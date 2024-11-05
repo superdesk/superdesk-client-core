@@ -111,6 +111,7 @@ export class Item extends React.Component<IProps, IState> {
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
         this.toggleNested = this.toggleNested.bind(this);
+        this.handleActionLoading = this.handleActionLoading.bind(this);
     }
 
     componentWillMount() {
@@ -119,13 +120,21 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
+    handleActionLoading(e: CustomEvent) {
+        if (e.detail.itemId === this.props.item._id) {
+            this.setState({loading: e.detail.loading});
+        }
+    }
+
     componentDidMount() {
+        addEventListener('article-action-loading', this.handleActionLoading);
         this._mounted = true;
     }
 
     componentWillUnmount() {
         this._mounted = false;
         closeActionsMenu(this.props.item._id);
+        removeEventListener('article-action-loading', this.handleActionLoading);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -358,6 +367,7 @@ export class Item extends React.Component<IProps, IState> {
             default:
                 return (
                     <ListItemTemplate
+                        loading={this.state.loading}
                         item={item}
                         relatedEntities={this.props.relatedEntities}
                         itemSelected={itemSelected}
