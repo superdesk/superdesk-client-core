@@ -10,6 +10,7 @@ const {gettext} = superdesk.localization;
 const predefinedField: ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> = {
     id: 'predefined-text',
     label: gettext('Predefined text field'),
+    generic: true,
     editorComponent: Editor,
     previewComponent: Preview,
     configComponent: Config,
