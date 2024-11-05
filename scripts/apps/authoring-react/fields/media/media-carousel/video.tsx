@@ -3,9 +3,14 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {VideoComponent} from 'core/ui/components/video';
 import {IArticle} from 'superdesk-api';
 import {mediaDetailsPadding} from '../constants';
+import {VideoThumbnailEditor} from 'apps/authoring/authoring/components/video-thumbnail-editor';
+import {Button} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
+import {editMetadata} from '../edit-metadata';
 
 interface IProps {
     item: IArticle;
+    onChange(item: IArticle): void;
     title: JSX.Element;
     removeButton: JSX.Element;
     metadata: JSX.Element;
@@ -13,6 +18,8 @@ interface IProps {
     titleInput: JSX.Element;
     descriptionInput: JSX.Element;
     readOnly: boolean;
+    canRemoveItems: boolean;
+    prepareForExternalEditing: (item: IArticle) => IArticle;
 }
 
 export class MediaCarouselVideo extends React.PureComponent<IProps> {
@@ -25,6 +32,7 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
             paginationBar,
             titleInput,
             descriptionInput,
+            canRemoveItems,
         } = this.props;
 
         return (
@@ -34,7 +42,7 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                         <Spacer v gap="16" justifyContent="space-between" noWrap style={{height: '100%'}}>
                             <Spacer h gap="16" justifyContent="space-between" noWrap>
                                 {title}
-                                {removeButton}
+                                {canRemoveItems ? removeButton : null}
                             </Spacer>
 
                             <div>
@@ -49,25 +57,44 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                     </div>
                 </div>
 
-                {
-                    (descriptionInput != null || titleInput != null) && (
-                        <div style={{padding: mediaDetailsPadding}}>
-                            <Spacer v gap="16" noWrap>
-                                {
-                                    titleInput != null && (
-                                        <div style={{width: '100%'}}>{titleInput}</div>
-                                    )
-                                }
+                <div style={{padding: mediaDetailsPadding}}>
+                    <Spacer v gap="16" noWrap>
+                        {
+                            titleInput != null && (
+                                <div style={{width: '100%'}}>{titleInput}</div>
+                            )
+                        }
 
-                                {
-                                    descriptionInput != null && (
-                                        <div style={{width: '100%'}}>{descriptionInput}</div>
-                                    )
-                                }
-                            </Spacer>
-                        </div>
-                    )
-                }
+                        {
+                            descriptionInput != null && (
+                                <div style={{width: '100%'}}>{descriptionInput}</div>
+                            )
+                        }
+
+                        <Spacer h gap="16" justifyContent="space-between" noWrap>
+                            <VideoThumbnailEditor
+                                item={item}
+                                onChange={(item) => {
+                                    this.props.onChange(item);
+                                }}
+                                readOnly={this.props.readOnly}
+                            />
+
+                            <Button
+                                text={gettext('Edit metadata')}
+                                style="hollow"
+                                size="small"
+                                disabled={this.props.readOnly}
+                                onClick={() => {
+                                    editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view')
+                                        .then((item) => {
+                                            this.props.onChange(item);
+                                        });
+                                }}
+                            />
+                        </Spacer>
+                    </Spacer>
+                </div>
             </div>
         );
     }

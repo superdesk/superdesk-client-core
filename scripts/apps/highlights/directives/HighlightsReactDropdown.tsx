@@ -1,5 +1,6 @@
 import React from 'react';
 import HighlightBtn from '../components/HighlightBtn';
+import {Loader, Spinner} from 'superdesk-ui-framework/react';
 
 /**
  * @ngdoc directive

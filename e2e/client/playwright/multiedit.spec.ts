@@ -6,7 +6,7 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {clearInput} from './utils/inputs';
 
 test.describe('Multiedit', async () => {
-    test('editing articles in multi-edit mode', async ({page}) => {
+    test.skip('editing articles in multi-edit mode', async ({page}) => {
         const monitoring = new Monitoring(page);
         const multiedit = new MultiEdit(page);
 

@@ -1,9 +1,9 @@
 import _, {flatMap} from 'lodash';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {gettext} from 'core/utils';
 import {extensions} from 'appConfig';
-import {IExtensionActivationResult} from 'superdesk-api';
-import ng from 'core/services/ng';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {sdApi} from 'api';
+import {ILanguage} from 'superdesk-interfaces/Language';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 
 /**
  * @ngdoc service
@@ -18,13 +18,10 @@ import ng from 'core/services/ng';
  * @description Provides set of methods to translate items to different languages
  */
 
-TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
+TranslationService.$inject = ['api', '$rootScope', 'search'];
 export function TranslationService(
     api,
     $rootScope,
-    notify,
-    authoringWorkspace: AuthoringWorkspaceService,
-    desks,
     search,
 ) {
     var service: any = {};
@@ -59,14 +56,8 @@ export function TranslationService(
      * @param {Object} item item to be translated
      * @param {Object} language translate language
      */
-    service.set = function(item, language) {
-        var params = {
-            guid: item.guid,
-            language: language.language,
-            desk: desks.getCurrentDeskId(),
-        };
-
-        api.save('translate', params).then((_item) => {
+    service.set = function(item: IArticle, language: ILanguage) {
+        sdApi.article.translate(item, language.language).then((_item) => {
             const onTranslateAfterMiddlewares
                     : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
                 = flatMap(
@@ -79,8 +70,7 @@ export function TranslationService(
                     fn(item, _item);
                 });
             } else {
-                ng.get('authoringWorkspace').open(_item);
-                notify.success(gettext('Item Translated'));
+                return openArticle(_item._id, 'edit');
             }
 
             $rootScope.$broadcast('item:translate');
