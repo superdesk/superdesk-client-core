@@ -1185,7 +1185,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     this.reinitialize(state, item, res);
                 });
         }
-    };
+    }
 
     render() {
         const state = this.state;

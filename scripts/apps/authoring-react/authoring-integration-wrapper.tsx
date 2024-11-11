@@ -56,8 +56,8 @@ const defaultToolbarItems: Array<React.ComponentType<{
     article: IArticle;
     reinitialize: (itemWithChanges: IArticle) => void;
 }>> = [
-        CreatedModifiedInfo,
-    ];
+    CreatedModifiedInfo,
+];
 
 interface IProps {
     itemId: IArticle['_id'];
