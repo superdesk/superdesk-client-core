@@ -134,8 +134,8 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     : {
                         ...rundownItemActionNext,
                         sideWidget: {
-                            id: sidePanel,
-                            pinned: false,
+                            activeId: sidePanel,
+                            pinnedId: undefined,
                         },
                     };
 

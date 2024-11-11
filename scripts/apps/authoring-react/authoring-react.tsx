@@ -364,7 +364,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         widgetReactIntegration.closeActiveWidget = () => {
             closedIntentionally.value = false;
-            this.props.onSideWidgetChange(null);
+            this.props.onSideWidgetChange({
+                activeId: this.props.sideWidget?.pinnedId,
+                pinnedId: this.props.sideWidget?.pinnedId,
+            });
         };
 
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
