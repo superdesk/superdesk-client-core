@@ -350,7 +350,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             // from this function
             this.props.onSideWidgetChange({
                 activeId: this.props.sideWidget.activeId,
-                pinnedId: nextPinnedWidget
+                pinnedId: nextPinnedWidget,
             });
         };
 
@@ -1212,7 +1212,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             toggleSideWidget: (id) => {
                 const activeWidgetId = this.props.sideWidget?.activeId;
 
-                debugger
                 this.props.onSideWidgetChange({
                     activeId: id,
                     pinnedId: id === activeWidgetId ? activeWidgetId : this.props.sideWidget?.pinnedId,
