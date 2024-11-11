@@ -161,6 +161,7 @@ declare module 'superdesk-api' {
         initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
+        onChangeToolbarWidget(item: T): void;
         addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
     }
 
@@ -214,6 +215,8 @@ declare module 'superdesk-api' {
             item: T;
             reinitialize(itemWithChanges: T): void;
         }>>;
+
+        customHeader?: (options: IExposedFromAuthoring<T>) => JSX.Element;
 
         disableWidgetPinning?: boolean; // defaults to false
 

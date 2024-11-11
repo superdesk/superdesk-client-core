@@ -56,8 +56,8 @@ const defaultToolbarItems: Array<React.ComponentType<{
     article: IArticle;
     reinitialize: (itemWithChanges: IArticle) => void;
 }>> = [
-    CreatedModifiedInfo,
-];
+        CreatedModifiedInfo,
+    ];
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -361,6 +361,22 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             onEditingEnd={(article) => {
                                 dispatchCustomEvent('articleEditEnd', article);
                             }}
+                            customHeader={((options) => (
+                                <div className="authoring-header__general-info">
+                                    <ContentProfileDropdown
+                                        item={options.item}
+                                        reinitialize={(item) => {
+                                            if (options.hasUnsavedChanges()) {
+                                                options.handleUnsavedChanges().then(() => {
+                                                    options.onChangeToolbarWidget(item);
+                                                });
+                                            } else {
+                                                options.onChangeToolbarWidget(item);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            ))}
                             getActions={({
                                 item,
                                 contentProfile,

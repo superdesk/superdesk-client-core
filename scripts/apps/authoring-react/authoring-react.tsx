@@ -58,7 +58,6 @@ import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofre
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
-import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
 
 export function getFieldsData<T>(
     item: T,
@@ -309,6 +308,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.setLoadingState = this.setLoadingState.bind(this);
         this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
+        this.onChangeToolbarWidget = this.onChangeToolbarWidget.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -1175,6 +1175,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
+
+    onChangeToolbarWidget(item: T) {
+        const state = this.state;
+
+        if (state.initialized === true) {
+            this.props.authoringStorage.getContentProfile(item, this.props.fieldsAdapter)
+                .then((res) => {
+                    this.reinitialize(state, item, res);
+                });
+        }
+    };
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1219,6 +1231,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }
             },
+            onChangeToolbarWidget: this.onChangeToolbarWidget,
             addValidationErrors: (moreValidationErrors) => {
                 this.setState({
                     ...state,
@@ -1416,13 +1429,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         };
 
-        const onChangeSideWidget = (item: T) => {
-            authoringStorage.getContentProfile(item, this.props.fieldsAdapter)
-                .then((res) => {
-                    this.reinitialize(state, item, res);
-                });
-        };
-
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
                 {
@@ -1465,10 +1471,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         reinitialize={(item) => {
                                                             if (this.hasUnsavedChanges()) {
                                                                 exposed.handleUnsavedChanges().then(() => {
-                                                                    onChangeSideWidget(item);
+                                                                    this.onChangeToolbarWidget(item);
                                                                 });
                                                             } else {
-                                                                onChangeSideWidget(item);
+                                                                this.onChangeToolbarWidget(item);
                                                             }
                                                         }}
                                                         item={state.itemWithChanges}
@@ -1505,20 +1511,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         headerPadding={{top: 8}}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>
-                                                <div className="authoring-header__general-info">
-                                                    <ContentProfileDropdown
-                                                        item={state.itemWithChanges}
-                                                        reinitialize={(item) => {
-                                                            if (this.hasUnsavedChanges()) {
-                                                                exposed.handleUnsavedChanges().then(() => {
-                                                                    onChangeSideWidget(item);
-                                                                });
-                                                            } else {
-                                                                onChangeSideWidget(item);
-                                                            }
-                                                        }}
-                                                    />
-                                                </div>
+                                                {this.props.customHeader(exposed)}
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
