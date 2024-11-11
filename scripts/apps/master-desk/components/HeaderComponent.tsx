@@ -5,13 +5,11 @@ import {
     CheckButtonGroup,
     RadioButtonGroup,
     Switch,
-    Dropdown,
-    NavButton,
     ButtonGroup,
     Button,
 } from 'superdesk-ui-framework/react';
 import {IMenuItem} from 'superdesk-ui-framework/app-typescript/components/Dropdown';
-import {IMasterDeskTab, IMasterDeskViews, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
+import {IMasterDeskTab, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
 import {gettext} from 'core/utils';
 
 interface IProps {

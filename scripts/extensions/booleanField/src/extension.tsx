@@ -13,6 +13,7 @@ const {gettext} = superdesk.localization;
 
 const booleanField: ICustomFieldType<IValueOperational, IValueStorage, ICommonFieldConfig, IUserPreferences> = {
     id: 'boolean',
+    generic: true,
     label: gettext('Boolean'),
     editorComponent: Editor,
     previewComponent: Preview,

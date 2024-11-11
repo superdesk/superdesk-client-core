@@ -210,7 +210,10 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        secondaryToolbarWidgets: Array<React.ComponentType<{item: T}>>;
+        secondaryToolbarWidgets: Array<React.ComponentType<{
+            item: T;
+            reinitialize(itemWithChanges: T): void;
+        }>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 
@@ -769,7 +772,10 @@ declare module 'superdesk-api' {
             /**
              * Display custom components in the second toolbar in authoring panel
              */
-            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{
+                article: IArticle;
+                reinitialize: (itemWithChanges: IArticle) => void;
+            }>>;
 
             authoringSideWidgets?: Array<IArticleSideWidget>;
 
@@ -3694,9 +3700,12 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
-         * Allows for the field to be hidden from custom field type config
+         * Field types should be made generic when possible.
+         * Making field types generic means multiple fields of the same type can be enabled in the same editing view.
+         * Generic fields will be available for adding to content profile via user interface (settings).
          */
-        private?: boolean;
+        generic: boolean;
+
         /**
          * Must return `true` if not empty.
          */

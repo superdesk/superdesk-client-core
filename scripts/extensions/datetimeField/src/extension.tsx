@@ -25,6 +25,7 @@ function onTemplateCreate(_value: string, config: IConfig) {
 const datetimeField: ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> = {
     id: 'datetime',
     label: gettext('Datetime'),
+    generic: true,
     editorComponent: Editor,
     previewComponent: Preview,
     configComponent: Config,
