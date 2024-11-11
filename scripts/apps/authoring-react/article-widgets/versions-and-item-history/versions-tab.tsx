@@ -183,7 +183,9 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Button
                             text={gettext('Compare')}
-                            disabled={selectedForComparison.from === selectedForComparison.to}
+                            disabled={selectedForComparison?.from != null
+                                && (selectedForComparison.from === selectedForComparison.to)
+                            }
                             onClick={() => {
                                 this.compareVersions();
                             }}

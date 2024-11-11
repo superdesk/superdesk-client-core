@@ -223,8 +223,8 @@ declare module 'superdesk-api' {
         getSidebarWidgetsCount(options: IExposedFromAuthoring<T>): number;
 
         sideWidget: null | {
-            id: string;
-            pinned?: boolean;
+            pinnedId?: string;
+            activeId?: string;
         };
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
