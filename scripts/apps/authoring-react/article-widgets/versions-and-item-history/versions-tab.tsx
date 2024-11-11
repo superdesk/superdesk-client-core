@@ -114,11 +114,11 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
 
         compareAuthoringEntities({
             item1: {
-                label: gettext('version {{n}}', {n: from._current_version}),
+                label: gettext('version {{n}}', {n: from?._current_version}),
                 entity: from,
             },
             item2: {
-                label: gettext('version {{n}}', {n: to._current_version}),
+                label: gettext('version {{n}}', {n: to?._current_version}),
                 entity: to,
             },
             getLanguage: () => '',
@@ -158,7 +158,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                                     },
                                 });
                             }}
-                            getLabel={(item) => gettext('version: {{n}}', {n: item._current_version})}
+                            getLabel={(item) => gettext('version: {{n}}', {n: item?._current_version})}
                             required
                         />
 
@@ -173,7 +173,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                                     },
                                 });
                             }}
-                            getLabel={(item) => gettext('version: {{n}}', {n: item._current_version})}
+                            getLabel={(item) => gettext('version: {{n}}', {n: item?._current_version})}
                             required
                         />
                     </Spacer>
@@ -233,7 +233,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
 
                                 <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
                                     <div>
-                                        {gettext('version: {{n}}', {n: item._current_version})}
+                                        {gettext('version: {{n}}', {n: item?._current_version})}
                                     </div>
 
                                     <div style={{display: 'flex'}}>
@@ -255,7 +255,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                                                         item,
                                                         contentProfile,
                                                         fieldsData,
-                                                        gettext('version {{n}}', {n: item._current_version}),
+                                                        gettext('version {{n}}', {n: item?._current_version}),
                                                     );
                                                 }}
                                                 style="hollow"

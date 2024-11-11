@@ -56,10 +56,9 @@ const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [Cr
 interface IProps {
     itemId: IArticle['_id'];
 }
-
 export type ISideWidget = {
-    id: string;
-    pinned?: boolean;
+    activeId?: string;
+    pinnedId?: string;
 };
 
 const getCompareVersionsModal = (
@@ -240,8 +239,7 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     sidebarMode: boolean | 'hidden';
-    sideWidget: null | ISideWidget;
-    sideWidgetSecondary: null | ISideWidget;
+    sideWidget: ISideWidget;
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -251,11 +249,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         super(props);
 
         const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+        const widgetId = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
 
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
-            sideWidget: localStorageWidget != null ? JSON.parse(localStorageWidget) : null,
-            sideWidgetSecondary: null,
+            sideWidget: {
+                pinnedId: widgetId,
+                activeId: widgetId,
+            },
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -269,7 +270,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     componentDidUpdate(_prevProps: IPropsWrapper, prevState: IState): void {
-        if (this.state.sideWidget?.id != null && this.state.sideWidget?.id != prevState.sideWidget?.id) {
+        if (
+            this.state.sideWidget?.pinnedId != null
+            && this.state.sideWidget?.pinnedId != prevState.sideWidget?.pinnedId
+        ) {
             this.loadWidgetFromPreferences();
         }
     }
@@ -280,8 +284,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         if (pinnedWidgetPreference?._id != null) {
             this.setState({
                 sideWidget: {
-                    id: pinnedWidgetPreference._id,
-                    pinned: true,
+                    pinnedId: pinnedWidgetPreference._id,
+                    activeId: pinnedWidgetPreference._id,
                 },
             });
         }
@@ -392,18 +396,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             ];
                         }}
                         getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
-                        sideWidget={this.state.sideWidgetSecondary ?? this.state.sideWidget}
+                        sideWidget={this.state.sideWidget}
                         onSideWidgetChange={(sideWidget) => {
-                            if (this.state.sideWidgetSecondary != null) {
-                                this.setState({
-                                    sideWidgetSecondary: sideWidget,
-                                    sideWidget: sideWidget.pinned ? null : this.state.sideWidget,
-                                });
-
-                                closedIntentionally.value = false;
-                            } else {
-                                this.setState({sideWidget});
-                            }
+                            this.setState({sideWidget});
+                            closedIntentionally.value = false;
                         }}
                         getInlineToolbarActions={this.props.getInlineToolbarActions}
                         getAuthoringPrimaryToolbarWidgets={
@@ -486,9 +482,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                 if (
                                                     localStorageWidgetState == null
                                                     && closedIntentionally.value === true
-                                                    && widgetState[this.state.sideWidget.id] != null
+                                                    && widgetState[this.state.sideWidget?.activeId] != null
                                                 ) {
-                                                    return widgetState[this.state.sideWidget.id];
+                                                    return widgetState[this.state.sideWidget?.activeId];
                                                 }
 
                                                 return undefined;
@@ -512,17 +508,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         getSidebar={this.state.sidebarMode !== true ? null : (options) => (
                             <AuthoringIntegrationWrapperSidebar
                                 options={options}
-                                sideWidget={this.state.sideWidgetSecondary ?? this.state.sideWidget}
+                                sideWidget={this.state.sideWidget}
                                 setSideWidget={(sideWidget) => {
-                                    if (this.state.sideWidget?.id === sideWidget?.id && sideWidget?.id != null) {
-                                        this.setState({sideWidgetSecondary: null});
-                                        closedIntentionally.value = true;
-                                    } else if (this.state.sideWidget?.pinned === true) {
-                                        this.setState({sideWidgetSecondary: sideWidget});
-                                        closedIntentionally.value = true;
-                                    } else {
-                                        this.setState({sideWidget});
-                                    }
+                                    this.setState({sideWidget});
+                                    closedIntentionally.value = false;
                                 }}
                             />
                         )}

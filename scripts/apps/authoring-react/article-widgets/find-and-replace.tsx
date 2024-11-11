@@ -134,7 +134,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
                                             this.highlightMatches();
                                         });
                                     }}
-                                    disabled={this.state.replaceValue?.trim().length < 1}
+                                    disabled={(this.state.replaceValue ?? '').trim().length < 1}
                                 />
 
                                 <Button
