@@ -56,8 +56,8 @@ const defaultToolbarItems: Array<React.ComponentType<{
     article: IArticle;
     reinitialize: (itemWithChanges: IArticle) => void;
 }>> = [
-        CreatedModifiedInfo,
-    ];
+    CreatedModifiedInfo,
+];
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -378,7 +378,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             ),
                             availableOffline: false,
                             group: 'start',
-                            priority: 1
+                            priority: 1,
                         }])}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
