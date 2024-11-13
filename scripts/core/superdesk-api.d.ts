@@ -216,7 +216,7 @@ declare module 'superdesk-api' {
             reinitialize(itemWithChanges: T): void;
         }>>;
 
-        customHeader?: (options: IExposedFromAuthoring<T>) => JSX.Element;
+        customHeader?: (options: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 

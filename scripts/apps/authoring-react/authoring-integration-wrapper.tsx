@@ -56,8 +56,8 @@ const defaultToolbarItems: Array<React.ComponentType<{
     article: IArticle;
     reinitialize: (itemWithChanges: IArticle) => void;
 }>> = [
-    CreatedModifiedInfo,
-];
+        CreatedModifiedInfo,
+    ];
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -359,22 +359,27 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             },
                             retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                         }}
-                        customHeader={((options) => (
-                            <div className="authoring-header__general-info">
-                                <ContentProfileDropdown
-                                    item={options.item}
-                                    reinitialize={(item) => {
-                                        if (options.hasUnsavedChanges()) {
-                                            options.handleUnsavedChanges().then(() => {
-                                                options.onChangeToolbarWidget(item);
-                                            });
-                                        } else {
-                                            options.onChangeToolbarWidget(item);
-                                        }
-                                    }}
-                                />
-                            </div>
-                        ))}
+                        customHeader={((exposed) => [{
+                            component: ({entity}) => (
+                                <div className="authoring-header__general-info">
+                                    <ContentProfileDropdown
+                                        item={entity}
+                                        reinitialize={(item) => {
+                                            if (exposed.hasUnsavedChanges()) {
+                                                exposed.handleUnsavedChanges().then(() => {
+                                                    exposed.onChangeToolbarWidget(item);
+                                                });
+                                            } else {
+                                                exposed.onChangeToolbarWidget(item);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            ),
+                            availableOffline: false,
+                            group: 'start',
+                            priority: 1
+                        }])}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
                             dispatchCustomEvent('articleEditStart', article);

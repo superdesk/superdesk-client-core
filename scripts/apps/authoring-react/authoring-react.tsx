@@ -1512,7 +1512,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         headerPadding={{top: 8}}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>
-                                                {this.props.customHeader(exposed)}
+                                                <AuthoringToolbar
+                                                    entity={state.itemWithChanges}
+                                                    coreWidgets={this.props.customHeader(exposed)}
+                                                    backgroundColor={authoringOptions?.toolbarBgColor}
+                                                />
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
