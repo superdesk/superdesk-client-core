@@ -388,7 +388,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 availableOffline: false,
                                 group: 'start',
                                 priority: 1,
-                            }]
+                            }];
                         })}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
