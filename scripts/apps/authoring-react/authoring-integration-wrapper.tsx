@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable no-case-declarations */
+/* eslint-disable react/display-name */
 import React from 'react';
 import {
     IArticle,
@@ -70,11 +71,9 @@ const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): 
     ),
     group: 'end',
     priority: 1,
-    keyBindings: {
-        'ctrl+shift+i': () => {
-            exposed.printPreview();
-        }
-    },
+    keyBindings: {'ctrl+shift+i': () => {
+        exposed.printPreview();
+    }},
 },
 {
     availableOffline: true,
@@ -89,11 +88,9 @@ const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): 
     ),
     group: 'end',
     priority: 2,
-    keyBindings: {
-        'ctrl+shift+t': () => {
-            exposed.toggleTheme();
-        }
-    }
+    keyBindings: {'ctrl+shift+t': () => {
+        exposed.toggleTheme();
+    }},
 },
 {
     availableOffline: true,
@@ -108,11 +105,9 @@ const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): 
     ),
     group: 'end',
     priority: 3,
-    keyBindings: {
-        'ctrl+shift+c': () => {
-            exposed.configureTheme();
-        }
-    },
+    keyBindings: {'ctrl+shift+c': () => {
+        exposed.configureTheme();
+    }},
 }];
 
 export type ISideWidget = {
@@ -433,7 +428,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 availableOffline: false,
                                 group: 'start',
                                 priority: 1,
-                            }]
+                            }];
                         })}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {

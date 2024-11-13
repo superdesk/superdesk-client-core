@@ -1222,7 +1222,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     state.profile,
                     state.profile,
                     state.fieldsDataWithChanges,
-                )
+                );
             },
             configureTheme: () => {
                 this.showThemeConfigModal(state);
@@ -1373,9 +1373,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }
 
         const extraPrimaryToolbarWidgets = this.props.getAuthoringPrimaryToolbarWidgets?.(exposed) ?? [];
-        const secondaryToolbarWidgets = this.props.getSecondaryToolbarWidgets(exposed);
+        const secondaryToolbarWidgets = this.props.getSecondaryToolbarWidgets?.(exposed) ?? [];
 
         const allKeyBindings: IKeyBindings = {
+            ...getKeyBindingsFromActions(secondaryToolbarWidgets),
             ...getKeyBindingsFromActions(authoringOptions?.actions ?? []),
             ...keyBindingsFromAuthoringActions,
             ...widgetKeybindings,
@@ -1417,22 +1418,23 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             <Layout.AuthoringFrame
                                 header={primaryToolbarWidgets.length < 1
                                     && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                    <SubNav>
-                                        <AuthoringToolbar
-                                            entity={state.itemWithChanges}
-                                            coreWidgets={primaryToolbarWidgets}
-                                            extraWidgets={extraPrimaryToolbarWidgets}
-                                            backgroundColor={authoringOptions?.toolbarBgColor}
-                                        />
-                                    </SubNav>
-                                )}
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                coreWidgets={primaryToolbarWidgets}
+                                                extraWidgets={extraPrimaryToolbarWidgets}
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )
+                                }
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
                                         toolBar={secondaryToolbarWidgets == null ? null : (
-                                            <SubNav className='px-2'>
+                                            <SubNav className="px-2">
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
                                                     coreWidgets={secondaryToolbarWidgets}

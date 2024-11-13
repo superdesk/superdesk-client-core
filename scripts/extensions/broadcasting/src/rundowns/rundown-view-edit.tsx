@@ -665,7 +665,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     };
                                                 }}
                                                 getAuthoringPrimaryToolbarWidgets={() => []}
-                                                secondaryToolbarWidgets={[]}
                                                 getSidebarWidgetsCount={({item}) => {
                                                     return getAvailableSideWidgets(item).length;
                                                 }}

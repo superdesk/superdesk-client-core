@@ -200,7 +200,7 @@ declare module 'superdesk-api' {
         getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
 
         getAuthoringPrimaryToolbarWidgets?(options: IExposedFromAuthoring<T>): Array<ITopBarWidget<T>>;
-        getSecondaryToolbarWidgets: (exposed: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
+        getSecondaryToolbarWidgets?: (exposed: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
 
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
