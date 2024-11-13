@@ -1434,7 +1434,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         hideCollapseButton={state.profile.header.count() < 1}
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={null == null ? null : (
+                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
                                             <SubNav className="px-2">
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
