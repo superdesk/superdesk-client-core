@@ -4,14 +4,14 @@ import {gettext} from 'core/utils';
 import {TimeElem} from 'apps/search/components/TimeElem';
 
 interface IProps {
-    article: IArticle;
+    entity: IArticle;
 }
 
 export class ModifiedInfo extends React.PureComponent<IProps> {
     render() {
-        const {article} = this.props;
+        const {entity} = this.props;
 
-        if (article.versioncreated == null) {
+        if (entity.versioncreated == null) {
             return null;
         }
 
@@ -19,7 +19,7 @@ export class ModifiedInfo extends React.PureComponent<IProps> {
             <dl>
                 <dt>{gettext('Modified')}</dt>
                 {' '}
-                <dd><TimeElem date={article.versioncreated} /></dd>
+                <dd><TimeElem date={entity.versioncreated} /></dd>
             </dl>
         );
     }

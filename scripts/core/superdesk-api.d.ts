@@ -147,6 +147,9 @@ declare module 'superdesk-api' {
          * we are passing a function instead.
          */
         getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
+        toggleTheme: () => void;
+        printPreview: () => void;
+        configureTheme: () => void;
         toggleSideWidget(id: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -161,7 +164,7 @@ declare module 'superdesk-api' {
         initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
-        onChangeToolbarWidget(item: T): void;
+        reinitialize(item: T, profile?: IContentProfileV2): void;
         addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
     }
 
@@ -188,8 +191,6 @@ declare module 'superdesk-api' {
          */
         resourceNames: Array<string>;
 
-        // Hides the toolbar which includes the "Print Preview" button.
-        hideSecondaryToolbar?: boolean;
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
@@ -197,9 +198,10 @@ declare module 'superdesk-api' {
         fieldsAdapter: IFieldsAdapter<T>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
-        getAuthoringPrimaryToolbarWidgets?(
-            options: IExposedFromAuthoring<T>,
-        ): Array<ITopBarWidget<T>>;
+
+        getAuthoringPrimaryToolbarWidgets?(options: IExposedFromAuthoring<T>): Array<ITopBarWidget<T>>;
+        getSecondaryToolbarWidgets: (exposed: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
+
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
 
@@ -211,12 +213,8 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
-        secondaryToolbarWidgets: Array<React.ComponentType<{
-            item: T;
-            reinitialize(itemWithChanges: T): void;
-        }>>;
 
-        customHeader?: (options: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
+        headerToolbar?: (options: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
 
         disableWidgetPinning?: boolean; // defaults to false
 
@@ -238,11 +236,7 @@ declare module 'superdesk-api' {
         ): IFieldsData;
 
         validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
-
         headerCollapsed?: boolean; // initial value
-
-        themingEnabled?: boolean; // only works with article; default false
-
         autoFocus?: boolean; // defaults to true; will focus first input
     }
 
@@ -763,22 +757,14 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
 
             /**
-             * Display custom components at the top of authoring panel
+             * First toolbar of authoring panel
              */
-            authoringTopbarWidgets?: Array<{
-                component: React.ComponentType<{article: IArticle}>;
-                availableOffline: boolean;
-                priority: IDisplayPriority;
-                group: 'start' | 'middle' | 'end';
-            }>;
+            authoringTopbarWidgets?: Array<ITopBarWidget<IArticle>>;
 
             /**
-             * Display custom components in the second toolbar in authoring panel
+             * Second toolbar of authoring panel
              */
-            authoringTopbar2Widgets?: Array<React.ComponentType<{
-                article: IArticle;
-                reinitialize: (itemWithChanges: IArticle) => void;
-            }>>;
+            authoringTopbar2Widgets?: Array<ITopBarWidget<IArticle>>;
 
             authoringSideWidgets?: Array<IArticleSideWidget>;
 

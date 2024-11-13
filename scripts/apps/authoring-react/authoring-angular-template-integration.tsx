@@ -16,7 +16,6 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
                 <AuthoringIntegrationWrapper
                     itemId={null} // Id doesn't apply when editing embedded JSON.
                     sidebarMode="hidden"
-                    hideSecondaryToolbar={true}
                     authoringStorage={getTemplateEditViewAuthoringStorage(this.props.template.data as IArticle)}
                     onFieldChange={(_fieldId, fieldsData, computeLatestEntity) => {
                         this.props.template.data = computeLatestEntity();
