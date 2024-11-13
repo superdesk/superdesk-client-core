@@ -308,7 +308,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.setLoadingState = this.setLoadingState.bind(this);
         this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
-        this.onChangeToolbarWidget = this.onChangeToolbarWidget.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -1178,18 +1177,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-
-    onChangeToolbarWidget(item: T) {
-        const state = this.state;
-
-        if (state.initialized === true) {
-            this.props.authoringStorage.getContentProfile(item, this.props.fieldsAdapter)
-                .then((res) => {
-                    this.reinitialize(state, item, res);
-                });
-        }
-    }
-
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1232,7 +1219,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     pinnedId: id === activeWidgetId ? activeWidgetId : this.props.sideWidget?.pinnedId,
                 });
             },
-            onChangeToolbarWidget: this.onChangeToolbarWidget,
+            reinitialize: (item, profile) => this.reinitialize(state, item, profile),
             addValidationErrors: (moreValidationErrors) => {
                 this.setState({
                     ...state,
@@ -1472,10 +1459,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         reinitialize={(item) => {
                                                             if (this.hasUnsavedChanges()) {
                                                                 exposed.handleUnsavedChanges().then(() => {
-                                                                    this.onChangeToolbarWidget(item);
+                                                                    this.reinitialize(state, item);
                                                                 });
                                                             } else {
-                                                                this.onChangeToolbarWidget(item);
+                                                                this.reinitialize(state, item);
                                                             }
                                                         }}
                                                         item={state.itemWithChanges}
