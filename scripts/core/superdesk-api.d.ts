@@ -753,8 +753,8 @@ declare module 'superdesk-api' {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
-            articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
-            articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            articleListItemWidgets?: Array<ITopBarWidget<IArticle>['component']>;
+            articleGridItemWidgets?: Array<ITopBarWidget<IArticle>['component']>;
 
             /**
              * First toolbar of authoring panel
