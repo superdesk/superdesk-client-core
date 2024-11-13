@@ -1431,9 +1431,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
+                                        hideCollapseButton={state.profile.header.count() < 1}
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={secondaryToolbarWidgets == null ? null : (
+                                        toolBar={null == null ? null : (
                                             <SubNav className="px-2">
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
@@ -1442,14 +1443,19 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 />
                                             </SubNav>
                                         )}
-                                        headerPadding={{top: 8}}
+                                        headerPadding={{
+                                            top: 8,
+                                            bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                        }}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>
-                                                <AuthoringToolbar
-                                                    entity={state.itemWithChanges}
-                                                    coreWidgets={this.props.headerToolbar(exposed)}
-                                                    backgroundColor={authoringOptions?.toolbarBgColor}
-                                                />
+                                                {this.props.headerToolbar != null && (
+                                                    <AuthoringToolbar
+                                                        entity={state.itemWithChanges}
+                                                        coreWidgets={this.props.headerToolbar(exposed)}
+                                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                                    />
+                                                )}
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
