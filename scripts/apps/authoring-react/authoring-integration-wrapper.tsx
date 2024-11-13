@@ -359,7 +359,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             },
                             retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                         }}
-                        customHeader={((exposed) => {
+                        headerToolbar={((exposed) => {
                             const getProfileAndReinitialize = (item: IArticle) =>
                                 this.props.authoringStorage.getContentProfile(
                                     item,
@@ -374,13 +374,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         <ContentProfileDropdown
                                             item={entity}
                                             reinitialize={(item) => {
-                                                if (exposed.hasUnsavedChanges()) {
-                                                    exposed.handleUnsavedChanges().then(() => {
-                                                        getProfileAndReinitialize(item);
-                                                    });
-                                                } else {
+                                                const handledChanges = exposed.hasUnsavedChanges()
+                                                    ? exposed.handleUnsavedChanges()
+                                                    : Promise.resolve();
+
+                                                handledChanges.then(() => {
                                                     getProfileAndReinitialize(item);
-                                                }
+                                                });
                                             }}
                                         />
                                     </div>

@@ -1501,7 +1501,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             <div style={{width: '100%'}}>
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
-                                                    coreWidgets={this.props.customHeader(exposed)}
+                                                    coreWidgets={this.props.headerToolbar(exposed)}
                                                     backgroundColor={authoringOptions?.toolbarBgColor}
                                                 />
                                                 <AuthoringSection
