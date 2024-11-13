@@ -18,7 +18,6 @@ export function getPublishWarningConfirmModal(
                 return (
                     <Modal
                         visible
-                        zIndex={1050}
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}

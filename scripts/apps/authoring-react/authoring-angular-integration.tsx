@@ -313,7 +313,6 @@ function getInlineToolbarActions(
                             size="small"
                             position="center"
                             onHide={closeModal}
-                            zIndex={2001}
                             headerTemplate={gettext('Confirm Unpublishing')}
                             footerTemplate={(
                                 <Spacer h gap="4" justifyContent="end" noGrow>
@@ -450,7 +449,6 @@ function getInlineToolbarActions(
             component: () => (
                 <>
                     <Popover
-                        zIndex={1050}
                         triggerSelector="#marked-for-desks"
                         title={gettext('Marked for')}
                         placement="bottom-end"

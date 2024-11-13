@@ -116,7 +116,6 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="x-large"
                 position="center"
                 maximized

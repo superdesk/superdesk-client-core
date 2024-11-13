@@ -119,7 +119,6 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="medium"
                 position="top"
                 headerTemplate={gettext('Character limit settings')}

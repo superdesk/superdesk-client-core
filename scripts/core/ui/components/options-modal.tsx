@@ -33,7 +33,6 @@ export function showOptionsModal(title: string, message: string, options: Array<
             return (
                 <Modal
                     visible
-                    zIndex={1050}
                     size="small"
                     position="top"
                     data-test-id={dataTestId}

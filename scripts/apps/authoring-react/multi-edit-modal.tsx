@@ -68,7 +68,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             priority: 0.1,
             component: () => (
                 <Menu
-                    zIndex={1050}
                     items={
                         availableArticles.map((article) => {
                             const leaf: IMenuItem = {
@@ -205,7 +204,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         return (
             <Modal
                 contentPadding="none"
-                zIndex={1050}
                 maximized
                 onHide={this.props.onClose}
                 visible
@@ -252,7 +250,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                     {availableArticles.length > 0 && (
                         <div className="multi-edit-add-button">
                             <Menu
-                                zIndex={1050}
                                 items={availableArticles.map((a) => {
                                     const leaf: IMenuItem = {
                                         onClick: () => this.add(a._id),

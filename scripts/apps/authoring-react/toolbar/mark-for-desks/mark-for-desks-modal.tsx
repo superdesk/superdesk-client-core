@@ -32,7 +32,6 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 onHide={this.props.closeModal}
                 size="medium"
                 headerTemplate={gettext('Marked for desks')}

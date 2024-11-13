@@ -35,7 +35,6 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
                 getId={getLabel}
                 required={required}
                 disabled={disabled}
-                zIndex={zIndex}
                 data-test-id={this.props['data-test-id']}
                 inputWidth="100%"
             />

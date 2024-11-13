@@ -107,7 +107,6 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
                 <div style={{paddingBlockStart: 5}}>
                     <TreeSelect
-                        zIndex={2000}
                         label=""
                         inlineLabel
                         labelHidden
