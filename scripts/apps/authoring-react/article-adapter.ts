@@ -25,7 +25,7 @@ interface IAuthoringReactArticleAdapter {
  *  to prevent duplicate IDs, thus prefixing was never necessary. Adapter removes the prefixes.
  */
 export function getArticleAdapter(): IAuthoringReactArticleAdapter {
-    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
+    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies?.() ?? [];
 
     const oldFormatCustomFieldIds: Set<IOldCustomFieldId> = new Set(
         customFieldVocabularies
