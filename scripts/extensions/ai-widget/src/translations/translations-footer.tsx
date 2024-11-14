@@ -64,7 +64,6 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
                         getId={({_id}) => _id}
                         valueTemplate={({label}) => <span>{gettext('To: {{ language }}', {language: label})}</span>}
                         getLabel={({label}) => label}
-                        zIndex={1050}
                         getOptions={() => availableLanguages.map((language) => ({value: language}))}
                         kind="synchronous"
                         onChange={(value) => {
