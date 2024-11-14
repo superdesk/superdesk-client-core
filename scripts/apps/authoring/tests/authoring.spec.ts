@@ -1857,8 +1857,9 @@ describe('authoring container directive', () => {
     }));
 
     describe('authoring embed directive', () => {
-        beforeEach(inject(($templateCache) => {
+        beforeEach(inject(($templateCache, preferencesService) => {
             $templateCache.put('scripts/apps/authoring/views/authoring.html', '<div></div>');
+            spyOn(preferencesService, 'getSync').and.returnValue(null);
         }));
 
         it('applies kill template',

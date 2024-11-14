@@ -36,6 +36,7 @@ describe('field adapters', () => {
 
                 return testVocabularies;
             },
+            getCustomFieldVocabularies: () => [],
             getVocabularyItemLabel: (term) => term.name,
         };
 
