@@ -187,7 +187,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                             <React.Fragment>
                                 <Layout.LayoutContainer>
                                     <Layout.HeaderPanel>
-                                        <SubNav zIndex={2}>
+                                        <SubNav>
                                             <SearchBar
                                                 placeholder={gettext('Search')}
                                                 value={this.state.searchString}
@@ -238,7 +238,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                                                 onHide={() => {
                                                                                     closeModal();
                                                                                 }}
-                                                                                zIndex={1050}
                                                                             >
                                                                                 <ManageShows />
                                                                             </Modal>
@@ -296,7 +295,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                 </Dropdown>
                                             </ButtonGroup>
                                         </SubNav>
-                                        <SubNav zIndex={1}>
+                                        <SubNav>
                                             <ButtonGroup align="start">
                                                 <NavButton
                                                     icon="filter-large"
