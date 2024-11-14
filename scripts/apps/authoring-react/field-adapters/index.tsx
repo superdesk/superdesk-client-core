@@ -182,7 +182,7 @@ export function storeEditor3ValueBase(
  * to {@link IAuthoringFieldV2}
  */
 export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>): IFieldsAdapter<IArticle> {
-    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
+    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies?.() ?? [];
     const adapter: IFieldsAdapter<IArticle> = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {
