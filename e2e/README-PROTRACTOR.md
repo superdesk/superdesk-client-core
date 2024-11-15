@@ -10,3 +10,4 @@ To use newer chrome versions, set `CHROME_BIN` and `CHROMEWEBDRIVER`(should poin
 Example setup with chrome test browser executable path:
 
 export CHROME_BIN="/Downloads/chrome-mac-arm64/Google_Chrome_for_Testing.app/Contents/MacOS/Google_Chrome_for_Testing"
+asdasd
