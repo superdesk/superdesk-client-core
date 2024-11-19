@@ -42,19 +42,20 @@ describe('ingest_provider', () => {
     it('Change settings for Ingest Provider', () => {
         addProvider();
         expect(ingestDashboard.getDashboardList().count()).toEqual(1);
-        var dashboard = ingestDashboard.getDashboard(0);
-        var settings = ingestDashboard.getDashboardSettings(dashboard);
 
-        settings.click();
+        const dashboard = ingestDashboard.getDashboard(0);
+        const mainSettingsButton = ingestDashboard.getDashboardSettingsButton(dashboard);
+
+        mainSettingsButton.click();
 
         // status
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(true);
-        ingestDashboard.getDashboardSettingsStatusButton(settings).click();
+        ingestDashboard.getDashboardSettingsStatusButton(mainSettingsButton).click();
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(false);
 
         // ingest count
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(true);
-        ingestDashboard.getDashboardSettingsIngestCountButton(settings).click();
+        ingestDashboard.getDashboardSettingsIngestCountButton(mainSettingsButton).click();
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(false);
     });
 
@@ -70,10 +71,10 @@ describe('ingest_provider', () => {
     it('Go to Ingest Providers and open dialog', () => {
         addProvider();
         var dashboard = ingestDashboard.getDashboard(0);
-        var settings = ingestDashboard.getDashboardSettings(dashboard);
+        var settings = ingestDashboard.getDashboardSettingsButton(dashboard);
 
         settings.click();
-        settings.element(by.css('.icon-pencil')).click();
+        settings.element(by.className('icon-pencil')).click();
 
         browser.wait(() => element(by.id('ingest-settings')).isDisplayed(), 1000).then(() => {
             expect(element(by.id('ingest-settings')).isDisplayed()).toBe(true);
@@ -86,7 +87,7 @@ describe('ingest_provider', () => {
         var ingestProvider = element.all(by.repeater('provider in providers._items')).first();
 
         browser.actions().mouseMove(ingestProvider).perform();
-        ingestProvider.all(by.css('.icon-pencil')).first().click();
-        expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
+        ingestProvider.all(by.className('icon-pencil')).first().click();
+        expect(element(by.className('modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
     });
 });
