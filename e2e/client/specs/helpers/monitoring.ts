@@ -471,14 +471,11 @@ class Monitoring {
          * @param {number} item
          */
         this.actionOnItemSubmenu = function(action, submenu, group, item) {
-            console.log(action, submenu)
             const menu: ElementFinder = this.openItemMenu(group, item);
             const header = menu.element(by.buttonText(action));
             const btn = menu.element(by.partialButtonText(submenu));
 
             browser.actions().mouseMove(header, {x: -50, y: -50}).mouseMove(header).perform();
-
-            // debugger
 
             waitFor(btn, 1000);
             btn.click();

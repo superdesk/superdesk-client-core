@@ -252,7 +252,7 @@ class IngestSettings {
 
             timezoneLabel: element(by.id('timezone')),
             timezoneDeleteBtn: element(by.css('[ng-click="clearSelectedTimeZone()"]')),
-            timezoneInput: element(by.model("term")),
+            timezoneInput: element(by.model('term')),
             timezoneList: $('.item-list').all(by.tagName('li')),
         };
     }
