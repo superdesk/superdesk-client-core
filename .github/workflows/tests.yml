@@ -73,6 +73,7 @@ jobs:
 
     - name: Pin chrome version
       run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=127.0.6533.99
+      working-directory: e2e/client
 
     - name: Run Protractor
       run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }} --webdriver-update false
