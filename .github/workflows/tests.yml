@@ -71,14 +71,12 @@ jobs:
 
     # protractor start
 
-    - name: Setup Chrome
+    - name: Run Protractor
       uses: browser-actions/setup-chrome@v1
       with:
         chrome-version: 127.0.6533.99
         install-dependencies: true
         install-chromedriver: true
-
-    - name: Run Protractor
       run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
