@@ -53,7 +53,7 @@ var config = {
 
     directConnect: true,
 
-    chromeDriver: process.env.CHROMEWEBDRIVER ? proecss.env. process.env.CHROMEWEBDRIVER : null,
+    chromeDriver: process.env.CHROMEWEBDRIVER ? process.env.CHROMEWEBDRIVER : null,
 
     onPrepare: function() {
         execSync(
