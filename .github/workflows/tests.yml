@@ -71,13 +71,11 @@ jobs:
 
     # protractor start
 
+    - name: Pin chrome version
+      run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=127.0.6533.99
+
     - name: Run Protractor
-      uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: 127.0.6533.99
-        install-dependencies: true
-        install-chromedriver: true
-      run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
+      run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }} --webdriver-update false
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
