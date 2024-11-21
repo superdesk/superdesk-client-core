@@ -57,7 +57,6 @@ jobs:
         chrome-version: 127.0.6533.99
         install-dependencies: true
         install-chromedriver: true
-      working-directory: e2e/client
 
     - name: Run Protractor
       run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
