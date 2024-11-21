@@ -2,19 +2,19 @@ name: "CI"
 on:
   [push, pull_request]
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - uses: actions/setup-node@v4
-  #     with:
-  #       node-version: '14.x'
-  #   # avoid file watch limit error
-  #   - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-  #   - run: npm ci
-  #   - run: npm run test || npm run test || npm run test
-  #     env:
-  #       TZ: "Europe/Prague"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '14.x'
+    # avoid file watch limit error
+    - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+    - run: npm ci
+    - run: npm run test || npm run test || npm run test
+      env:
+        TZ: "Europe/Prague"
   e2e:
     runs-on: ubuntu-latest
     strategy:
@@ -35,19 +35,19 @@ jobs:
     - name: Build client
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
-    # # playwright start
-    # - name: Install Playwright Browsers
-    #   run: npx playwright install --with-deps
-    #   working-directory: e2e/client
-    # - name: Run Playwright tests
-    #   run: npx playwright test
-    #   working-directory: e2e/client
-    # - uses: actions/upload-artifact@v4
-    #   if: ${{ failure() }}
-    #   with:
-    #     name: playwright-report-${{ matrix.suite }}
-    #     path: e2e/client/test-results
-    # # playwright end
+    # playwright start
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: e2e/client
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: e2e/client
+    - uses: actions/upload-artifact@v4
+      if: ${{ failure() }}
+      with:
+        name: playwright-report-${{ matrix.suite }}
+        path: e2e/client/test-results
+    # playwright end
 
     # protractor start
 
