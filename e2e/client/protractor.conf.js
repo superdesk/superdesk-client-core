@@ -53,7 +53,7 @@ var config = {
 
     directConnect: true,
 
-    chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER.replace('/superdesk-client-core', '') + '/x64/chromedriver') : null,
+    chromeDriver: process.env.CHROMEWEBDRIVER ? process.env.CHROMEWEBDRIVER + '/chromedriver' : null,
 
     onPrepare: function() {
         execSync(
