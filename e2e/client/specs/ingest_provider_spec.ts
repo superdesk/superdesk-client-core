@@ -74,7 +74,7 @@ describe('ingest_provider', () => {
         var settings = ingestDashboard.getDashboardSettingsButton(dashboard);
 
         settings.click();
-        settings.element(by.className('icon-pencil')).click();
+        settings.element(by.css('.icon-pencil')).click();
 
         browser.wait(() => element(by.id('ingest-settings')).isDisplayed(), 1000).then(() => {
             expect(element(by.id('ingest-settings')).isDisplayed()).toBe(true);
@@ -87,7 +87,7 @@ describe('ingest_provider', () => {
         var ingestProvider = element.all(by.repeater('provider in providers._items')).first();
 
         browser.actions().mouseMove(ingestProvider).perform();
-        ingestProvider.all(by.className('icon-pencil')).first().click();
-        expect(element(by.className('modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
+        ingestProvider.all(by.css('.icon-pencil')).first().click();
+        expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
     });
 });

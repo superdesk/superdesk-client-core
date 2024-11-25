@@ -119,7 +119,7 @@ class IngestDashboard {
         var self = this;
 
         this.dropDown = element(by.id('ingest-dashboard-dropdown'));
-        this.ingestDashboard = element(by.className('ingest-dashboard-list'));
+        this.ingestDashboard = element(by.css('.ingest-dashboard-list'));
 
         this.openDropDown = function() {
             return self.dropDown.click();
@@ -148,7 +148,7 @@ class IngestDashboard {
         };
 
         this.getDashboardSettingsButton = function(dashboard) {
-            return dashboard.element(by.className('dropdown'));
+            return dashboard.element(by.css('.dropdown'));
         };
 
         this.getDashboardSettingsStatusButton = function(settings) {
@@ -252,7 +252,7 @@ class IngestSettings {
 
             timezoneLabel: element(by.id('timezone')),
             timezoneDeleteBtn: element(by.css('[ng-click="clearSelectedTimeZone()"]')),
-            timezoneInput: element(by.model('term')),
+            timezoneInput: $('[term="tzSearchTerm"]').element(by.model('term')),
             timezoneList: $('.item-list').all(by.tagName('li')),
         };
     }

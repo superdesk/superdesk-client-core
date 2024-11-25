@@ -152,7 +152,7 @@ class Workspace {
                 .mouseMove(menu)
                 .perform();
 
-            return menu.element(by.buttonText(name));
+            return menu.element(by.partialButtonText(name));
         };
 
         /**
