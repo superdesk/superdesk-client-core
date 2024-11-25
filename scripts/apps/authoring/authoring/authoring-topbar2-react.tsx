@@ -90,7 +90,7 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         return (
             <AuthoringToolbar
                 entity={articleUpdatedReference}
-                coreWidgets={articleDisplayWidgets}
+                widgets={articleDisplayWidgets}
             />
         );
     }

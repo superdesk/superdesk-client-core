@@ -1421,8 +1421,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         <SubNav>
                                             <AuthoringToolbar
                                                 entity={state.itemWithChanges}
-                                                coreWidgets={primaryToolbarWidgets}
-                                                extraWidgets={extraPrimaryToolbarWidgets}
+                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
                                                 backgroundColor={authoringOptions?.toolbarBgColor}
                                             />
                                         </SubNav>
@@ -1438,7 +1437,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             <SubNav className="px-2">
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
-                                                    coreWidgets={secondaryToolbarWidgets}
+                                                    widgets={secondaryToolbarWidgets}
                                                     backgroundColor={authoringOptions?.toolbarBgColor}
                                                 />
                                             </SubNav>
@@ -1452,7 +1451,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 {this.props.headerToolbar != null && (
                                                     <AuthoringToolbar
                                                         entity={state.itemWithChanges}
-                                                        coreWidgets={this.props.headerToolbar(exposed)}
+                                                        widgets={this.props.headerToolbar(exposed)}
                                                         backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 )}
