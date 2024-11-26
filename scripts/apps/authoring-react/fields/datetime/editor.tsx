@@ -1,14 +1,15 @@
 import React from 'react';
 import {DateTimePicker} from 'superdesk-ui-framework/react';
 import {
-    ITimeValueOperational,
-    ITimeFieldConfig,
-    ITimeUserPreferences,
     IEditorComponentProps,
+    IDateTimeFieldConfig,
+    IDateTimeValueOperational,
+    IDateTimeUserPreferences,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-type IProps = IEditorComponentProps<ITimeValueOperational, ITimeFieldConfig, ITimeUserPreferences>;
+type IProps = IEditorComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig, IDateTimeUserPreferences>;
 
 export class Editor extends React.PureComponent<IProps> {
     render() {
@@ -17,7 +18,7 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DateTimePicker
-                    dateFormat='MM/DD/YYYY'
+                    dateFormat={appConfig.shortDateFormat}
                     label={gettext("Date time (AUTHORING-REACT)")}
                     onChange={(value) => {
                         this.props.onChange(value);

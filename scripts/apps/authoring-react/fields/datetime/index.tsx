@@ -1,9 +1,9 @@
 import {
     ICustomFieldType,
-    ITimeValueOperational,
-    ITimeValueStorage,
-    ITimeFieldConfig,
-    ITimeUserPreferences,
+    IDateTimeValueOperational,
+    IDateTimeValueStorage,
+    IDateTimeFieldConfig,
+    IDateTimeUserPreferences,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
@@ -13,8 +13,13 @@ import {Difference} from './difference';
 export const DATETIME_FIELD_ID = 'datetime';
 
 export function getDatetimeField()
-: ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> {
-    const field: ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> = {
+: ICustomFieldType<IDateTimeValueOperational, IDateTimeValueStorage, IDateTimeFieldConfig, IDateTimeUserPreferences> {
+    const field: ICustomFieldType<
+        IDateTimeValueOperational,
+        IDateTimeValueStorage,
+        IDateTimeFieldConfig,
+        IDateTimeUserPreferences
+    > = {
         id: DATETIME_FIELD_ID,
         label: gettext('Datetime (authoring-react)'),
         editorComponent: Editor,

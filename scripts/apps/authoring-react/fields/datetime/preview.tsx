@@ -1,10 +1,10 @@
 import {gettext} from 'core/utils';
 import {noop} from 'lodash';
 import React from 'react';
-import {IPreviewComponentProps, ITimeFieldConfig, ITimeValueOperational} from 'superdesk-api';
+import {IDateTimeFieldConfig, IDateTimeValueOperational, IPreviewComponentProps} from 'superdesk-api';
 import {DateTimePicker} from 'superdesk-ui-framework/react';
 
-type IProps = IPreviewComponentProps<ITimeValueOperational, ITimeFieldConfig>;
+type IProps = IPreviewComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {

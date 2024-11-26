@@ -1,8 +1,8 @@
 import React from 'react';
-import {IDifferenceComponentProps, ITimeFieldConfig, ITimeValueOperational} from 'superdesk-api';
+import {IDateTimeFieldConfig, IDateTimeValueOperational, IDifferenceComponentProps} from 'superdesk-api';
 import {DifferenceGeneric} from '../difference-generic';
 
-type IProps = IDifferenceComponentProps<ITimeValueOperational, ITimeFieldConfig>;
+type IProps = IDifferenceComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig>;
 
 export class Difference extends React.PureComponent<IProps> {
     render() {
