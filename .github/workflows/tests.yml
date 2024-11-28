@@ -9,6 +9,7 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
+        cache: 'npm'
     # avoid file watch limit error
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     - run: npm ci
@@ -26,6 +27,7 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: '14.x'
+        cache: 'npm'
     - name: Start e2e server
       run: |
         docker compose pull
@@ -80,3 +82,15 @@ jobs:
       if: ${{ failure() }}
       run: docker compose logs server
       working-directory: e2e/server
+
+  extensions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '14.x'
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build-extensions
+  
