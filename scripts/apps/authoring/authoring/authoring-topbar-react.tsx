@@ -84,7 +84,7 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
                         return (
                             <span key={i} style={{marginInlineEnd: 10}}>
                                 <Component
-                                    article={
+                                    entity={
                                         this.props.action === 'view'
                                             ? this.state.articleOriginal
                                             : articleUpdatedReference

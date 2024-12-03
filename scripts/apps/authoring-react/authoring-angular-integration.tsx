@@ -815,7 +815,7 @@ export function getAuthoringPrimaryToolbarWidgets(
             return {
                 ...item,
                 component: (props: {entity: IArticle}) => (
-                    <Component article={props.entity} />
+                    <Component entity={props.entity} />
                 ),
             };
         })

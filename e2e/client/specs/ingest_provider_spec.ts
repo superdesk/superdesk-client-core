@@ -42,19 +42,20 @@ describe('ingest_provider', () => {
     it('Change settings for Ingest Provider', () => {
         addProvider();
         expect(ingestDashboard.getDashboardList().count()).toEqual(1);
-        var dashboard = ingestDashboard.getDashboard(0);
-        var settings = ingestDashboard.getDashboardSettings(dashboard);
 
-        settings.click();
+        const dashboard = ingestDashboard.getDashboard(0);
+        const mainSettingsButton = ingestDashboard.getDashboardSettingsButton(dashboard);
+
+        mainSettingsButton.click();
 
         // status
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(true);
-        ingestDashboard.getDashboardSettingsStatusButton(settings).click();
+        ingestDashboard.getDashboardSettingsStatusButton(mainSettingsButton).click();
         expect(ingestDashboard.getDashboardStatus(dashboard).isDisplayed()).toBe(false);
 
         // ingest count
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(true);
-        ingestDashboard.getDashboardSettingsIngestCountButton(settings).click();
+        ingestDashboard.getDashboardSettingsIngestCountButton(mainSettingsButton).click();
         expect(ingestDashboard.getDashboardIngestCount(dashboard).isDisplayed()).toBe(false);
     });
 
@@ -70,7 +71,7 @@ describe('ingest_provider', () => {
     it('Go to Ingest Providers and open dialog', () => {
         addProvider();
         var dashboard = ingestDashboard.getDashboard(0);
-        var settings = ingestDashboard.getDashboardSettings(dashboard);
+        var settings = ingestDashboard.getDashboardSettingsButton(dashboard);
 
         settings.click();
         settings.element(by.css('.icon-pencil')).click();

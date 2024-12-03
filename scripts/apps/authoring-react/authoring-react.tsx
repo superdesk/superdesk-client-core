@@ -1211,6 +1211,22 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
             sideWidget: this.props.sideWidget?.activeId,
+            toggleTheme: () => {
+                this.setState({
+                    ...state,
+                    proofreadingEnabled: !state.proofreadingEnabled,
+                });
+            },
+            printPreview: () => {
+                previewAuthoringEntity(
+                    state.profile,
+                    state.profile,
+                    state.fieldsDataWithChanges,
+                );
+            },
+            configureTheme: () => {
+                this.showThemeConfigModal(state);
+            },
             toggleSideWidget: (id) => {
                 const activeWidgetId = this.props.sideWidget?.activeId;
 
@@ -1343,53 +1359,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             };
         }
 
-        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions?.actions != null ? [
-            ...authoringOptions.actions,
-            {
+        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions.actions ?? [];
+
+        if (authoringActions.length > 0) {
+            primaryToolbarWidgets.push({
                 group: 'end',
                 priority: 0.4,
-                component: () => {
-                    return (
-                        <AuthoringActionsMenu getActions={() => authoringActions} />
-                    );
-                },
+                component: () => (
+                    <AuthoringActionsMenu getActions={() => authoringActions} />
+                ),
                 availableOffline: true,
-            },
-        ] : [];
+            });
+        }
 
-        const printPreviewAction = (() => {
-            const execute = () => {
-                previewAuthoringEntity(
-                    state.itemWithChanges,
-                    state.profile,
-                    state.fieldsDataWithChanges,
-                );
-            };
-
-            const preview = {
-                jsxButton: () => {
-                    return (
-                        <IconButton
-                            icon="preview-mode"
-                            ariaValue={gettext('Print preview')}
-                            onClick={() => {
-                                execute();
-                            }}
-                        />
-                    );
-                },
-                keybindings: {
-                    'ctrl+shift+i': () => {
-                        execute();
-                    },
-                },
-            };
-
-            return preview;
-        })();
+        const extraPrimaryToolbarWidgets = this.props.getAuthoringPrimaryToolbarWidgets?.(exposed) ?? [];
+        const secondaryToolbarWidgets = this.props.getSecondaryToolbarWidgets?.(exposed) ?? [];
 
         const allKeyBindings: IKeyBindings = {
-            ...printPreviewAction.keybindings,
+            ...getKeyBindingsFromActions(secondaryToolbarWidgets),
             ...getKeyBindingsFromActions(authoringOptions?.actions ?? []),
             ...keyBindingsFromAuthoringActions,
             ...widgetKeybindings,
@@ -1429,15 +1416,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={primaryToolbarWidgets.length < 1 &&
-                                    this.props.getAuthoringPrimaryToolbarWidgets == null ? null : (
+                                header={primaryToolbarWidgets.length < 1
+                                    && extraPrimaryToolbarWidgets?.length < 1 ? null : (
                                         <SubNav>
                                             <AuthoringToolbar
                                                 entity={state.itemWithChanges}
-                                                coreWidgets={primaryToolbarWidgets}
-                                                extraWidgets={
-                                                    this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                                }
+                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
                                                 backgroundColor={authoringOptions?.toolbarBgColor}
                                             />
                                         </SubNav>
@@ -1446,64 +1430,31 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
+                                        hideCollapseButton={state.profile.header.count() < 1}
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={this.props.hideSecondaryToolbar ? null : (
-                                            <div
-                                                className="authoring-sticky"
-                                                style={{width: '100%'}}
-                                            >
-                                                {this.props.secondaryToolbarWidgets.map((Component, i) => (
-                                                    <Component
-                                                        key={i}
-                                                        reinitialize={(item) => {
-                                                            if (this.hasUnsavedChanges()) {
-                                                                exposed.handleUnsavedChanges().then(() => {
-                                                                    this.reinitialize(state, item);
-                                                                });
-                                                            } else {
-                                                                this.reinitialize(state, item);
-                                                            }
-                                                        }}
-                                                        item={state.itemWithChanges}
-                                                    />
-                                                ))}
-                                                <ButtonGroup align="end">
-                                                    {printPreviewAction.jsxButton()}
-                                                    {this.props.themingEnabled === true && (
-                                                        <>
-                                                            <IconButton
-                                                                icon="adjust"
-                                                                ariaValue={gettext('Toggle theme')}
-                                                                onClick={() => {
-                                                                    this.setState({
-                                                                        ...state,
-                                                                        proofreadingEnabled:
-                                                                            !state.proofreadingEnabled,
-                                                                    });
-                                                                }}
-                                                            />
-                                                            <IconButton
-                                                                icon="switches"
-                                                                ariaValue={gettext('Configure themes')}
-                                                                onClick={() => {
-                                                                    this.showThemeConfigModal(state);
-                                                                }}
-                                                            />
-                                                        </>
-                                                    )}
-
-                                                </ButtonGroup>
-                                            </div>
-                                        )}
-                                        headerPadding={{top: 8}}
-                                        authoringHeader={(
-                                            <div style={{width: '100%'}}>
+                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
+                                            <SubNav className="px-2">
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
-                                                    coreWidgets={this.props.headerToolbar(exposed)}
+                                                    widgets={secondaryToolbarWidgets}
                                                     backgroundColor={authoringOptions?.toolbarBgColor}
                                                 />
+                                            </SubNav>
+                                        )}
+                                        headerPadding={{
+                                            top: 8,
+                                            bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                        }}
+                                        authoringHeader={(
+                                            <div style={{width: '100%'}}>
+                                                {this.props.headerToolbar != null && (
+                                                    <AuthoringToolbar
+                                                        entity={state.itemWithChanges}
+                                                        widgets={this.props.headerToolbar(exposed)}
+                                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                                    />
+                                                )}
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}

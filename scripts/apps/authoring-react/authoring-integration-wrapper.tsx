@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable no-case-declarations */
+/* eslint-disable react/display-name */
 import React from 'react';
 import {
     IArticle,
@@ -44,6 +45,7 @@ import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
+import {IconButton} from 'superdesk-ui-framework';
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -52,16 +54,62 @@ export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideW
         .sort((a, b) => a.order - b.order);
 }
 
-const defaultToolbarItems: Array<React.ComponentType<{
-    article: IArticle;
-    reinitialize: (itemWithChanges: IArticle) => void;
-}>> = [
-    CreatedModifiedInfo,
-];
-
 interface IProps {
     itemId: IArticle['_id'];
 }
+
+const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> => [{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="preview-mode"
+            ariaValue={gettext('Print preview')}
+            onClick={() => {
+                exposed.printPreview();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 1,
+    keyBindings: {'ctrl+shift+i': () => {
+        exposed.printPreview();
+    }},
+},
+{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="adjust"
+            ariaValue={gettext('Toggle theme')}
+            onClick={() => {
+                exposed.toggleTheme();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 2,
+    keyBindings: {'ctrl+shift+t': () => {
+        exposed.toggleTheme();
+    }},
+},
+{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="switches"
+            ariaValue={gettext('Configure themes')}
+            onClick={() => {
+                exposed.configureTheme();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 3,
+    keyBindings: {'ctrl+shift+c': () => {
+        exposed.configureTheme();
+    }},
+}];
+
 export type ISideWidget = {
     activeId?: string;
     pinnedId?: string;
@@ -221,9 +269,6 @@ interface IPropsWrapper extends IProps {
         actions: Array<ITopBarWidget<IArticle>>;
     };
 
-    // Hides the toolbar which includes the "Print Preview" button.
-    hideSecondaryToolbar?: boolean;
-
     // If it's not passed then the sidebar is shown expanded and can't be collapsed.
     // If hidden is passed then it can't be expanded.
     // If it's set to true or false then it can be collapsed/expanded back.
@@ -329,16 +374,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
-        const secondaryToolbarWidgetsReady = defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions)
-            .map((Component) => (props) => <Component reinitialize={props.reinitialize} article={props.item} />);
-
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => (
                     <AuthoringReact
-                        themingEnabled
                         onFieldChange={this.props.onFieldChange}
-                        hideSecondaryToolbar={this.props.hideSecondaryToolbar}
                         ref={(component) => {
                             this.authoringReactRef = component;
                         }}
@@ -550,7 +590,18 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 }}
                             />
                         )}
-                        secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
+                        getSecondaryToolbarWidgets={(exposed) => [
+                            {
+                                availableOffline: true,
+                                component: () => (
+                                    <CreatedModifiedInfo article={exposed.item} />
+                                ),
+                                group: 'start',
+                                priority: 1,
+                            },
+                            ...secondaryToolbarWidgetsFromExtensions,
+                            ...getAuthoringCosmeticActions(exposed),
+                        ]}
                         validateBeforeSaving={false}
                         getSideWidgetIdAtIndex={(article, index) => {
                             return getWidgetsFromExtensions(article)[index]._id;

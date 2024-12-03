@@ -434,8 +434,8 @@ class Monitoring {
          * @param {boolean} useFullButtonText
          * @param {boolean} confirm Accept confirmation dialog.
          */
-        this.actionOnItem = function(action, group, item, useFullButtonText, confirm) {
-            var menu = this.openItemMenu(group, item);
+        this.actionOnItem = function(action, group, item, useFullButtonText = true, confirm) {
+            const menu: ElementFinder = this.openItemMenu(group, item);
 
             browser.wait(() => menu.isPresent(), 3000);
 
@@ -471,14 +471,12 @@ class Monitoring {
          * @param {number} item
          */
         this.actionOnItemSubmenu = function(action, submenu, group, item) {
-            var menu = this.openItemMenu(group, item);
-            var header = menu.element(by.partialButtonText(action));
-            var btn = menu.all(by.partialButtonText(submenu)).first();
+            const menu: ElementFinder = this.openItemMenu(group, item);
+            const header = menu.element(by.buttonText(action));
+            const btn = menu.element(by.partialButtonText(submenu));
 
-            browser.actions()
-                .mouseMove(header, {x: -50, y: -50})
-                .mouseMove(header)
-                .perform();
+            browser.actions().mouseMove(header, {x: -50, y: -50}).mouseMove(header).perform();
+
             waitFor(btn, 1000);
             btn.click();
         };

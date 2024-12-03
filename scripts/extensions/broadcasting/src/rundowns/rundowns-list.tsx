@@ -306,9 +306,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                     };
 
                                                     return (
-                                                        <Dropdown
-                                                            items={[preview, edit]}
-                                                        >
+                                                        <Dropdown items={[preview, edit]}>
                                                             <IconButton
                                                                 ariaValue={gettext('Actions')}
                                                                 icon="dots-vertical"
