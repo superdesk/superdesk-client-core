@@ -11,7 +11,6 @@ interface IValue {
 }
 
 interface IProps {
-    zIndex?: number;
     required?: boolean;
     vocabularies: Array<{qcode: string; name: string}>;
     value: Array<IValue>;
@@ -54,7 +53,6 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         type={this.state.allow ? 'default' : 'primary'}
                     />
                     <SelectFilterable
-                        zIndex={this.props.zIndex}
                         items={itemsExcludingSelected}
                         value={this.state.vocabulary}
                         getLabel={(vocabulary) => vocabulary?.name ?? ''}
