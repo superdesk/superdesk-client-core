@@ -325,7 +325,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         return (
                             <div style={{display: 'inline-flex'}}>
                                 <TreeMenu
-                                    zIndex={1051}
                                     getOptions={() => options}
                                     getLabel={(item) => item}
                                     getId={(item) => item}

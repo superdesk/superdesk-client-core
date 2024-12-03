@@ -117,7 +117,6 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="x-large"
                 position="center"
                 onHide={this.state.saving ? noop : this.props.closeModal}

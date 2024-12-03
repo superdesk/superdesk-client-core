@@ -30,7 +30,6 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
         return (
             <Modal
                 contentPadding="none"
-                zIndex={1050}
                 onHide={this.props.onClose}
                 visible
                 headerTemplate={gettext('Select articles')}
@@ -41,7 +40,6 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                         label=""
                         inlineLabel
                         labelHidden
-                        zIndex={1050}
                         optionLabel={(article) => getArticleLabel(article)}
                         value={this.state.selectedArticles}
                         onChange={(values) => {

@@ -3,7 +3,17 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, Label, Modal, NavButton, Popover, Spacer} from 'superdesk-ui-framework/react';
+import {
+    Button,
+    ButtonGroup,
+    IconButton,
+    Label,
+    Modal,
+    NavButton,
+    Popover,
+    Spacer,
+    WithPopover,
+} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -19,7 +29,6 @@ import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
-import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 import {
     authoringStorageIArticle,
@@ -168,7 +177,6 @@ function getInlineToolbarActions(
                     />
                 )}
                 placement="right-end"
-                zIndex={1050}
             >
                 {
                     (togglePopup) => (
@@ -313,7 +321,6 @@ function getInlineToolbarActions(
                             size="small"
                             position="center"
                             onHide={closeModal}
-                            zIndex={2001}
                             headerTemplate={gettext('Confirm Unpublishing')}
                             footerTemplate={(
                                 <Spacer h gap="4" justifyContent="end" noGrow>
@@ -450,7 +457,6 @@ function getInlineToolbarActions(
             component: () => (
                 <>
                     <Popover
-                        zIndex={1050}
                         triggerSelector="#marked-for-desks"
                         title={gettext('Marked for')}
                         placement="bottom-end"

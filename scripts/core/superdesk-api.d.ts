@@ -3093,7 +3093,6 @@ declare module 'superdesk-api' {
                 referenceElement: HTMLElement,
                 placement: import('@popperjs/core').Placement,
                 Component: React.ComponentType<{closePopup(): void}>,
-                zIndex?: number,
                 closeOnHoverEnd?: boolean,
                 onClose?: () => void,
             ): {close: () => void};

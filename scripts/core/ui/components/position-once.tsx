@@ -1,9 +1,13 @@
+import {Placement} from '@popperjs/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {IPropsPositioner, PopupPositioner} from './popupNew';
+import {PopupPositioner} from 'superdesk-ui-framework/react';
 
-interface IProps extends Omit<IPropsPositioner, 'referenceElement'> {
+interface IProps {
     delayed?: boolean;
+    placement: Placement;
+    onClose(): void;
+    closeOnHoverEnd?: boolean;
 }
 
 interface IState {
@@ -41,7 +45,6 @@ export class PositionInline extends React.PureComponent<IProps, IState> {
                         <PopupPositioner
                             referenceElement={this.referenceEl}
                             placement={this.props.placement}
-                            zIndex={this.props.zIndex}
                             onClose={this.props.onClose}
                         >
                             {this.props.children}

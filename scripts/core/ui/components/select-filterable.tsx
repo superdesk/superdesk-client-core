@@ -11,14 +11,13 @@ interface IProps<T> {
 
     required?: boolean;
     disabled?: boolean;
-    zIndex?: number;
 
     'data-test-id'?: string;
 }
 
 export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
     render() {
-        const {items, value, getLabel, onChange, required, zIndex, disabled} = this.props;
+        const {items, value, getLabel, onChange, required, disabled} = this.props;
 
         return (
             <TreeSelect
@@ -35,7 +34,6 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
                 getId={getLabel}
                 required={required}
                 disabled={disabled}
-                zIndex={zIndex}
                 data-test-id={this.props['data-test-id']}
                 inputWidth="100%"
             />

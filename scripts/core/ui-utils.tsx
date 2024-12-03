@@ -12,7 +12,6 @@ export const ui = {
                     position="top"
                     visible
                     onHide={closeModal}
-                    zIndex={1050}
                 >
                     {message}
                 </Modal>

@@ -135,7 +135,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         }
 
                         return (
-                            <Dropdown items={actions} append>
+                            <Dropdown items={actions}>
                                 <IconButton
                                     ariaValue={gettext('Actions')}
                                     icon="dots-vertical"

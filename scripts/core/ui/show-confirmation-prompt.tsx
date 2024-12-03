@@ -14,7 +14,6 @@ export function showConfirmationPrompt({title, message}: {title: string; message
                     closeModal();
                     resolve(false);
                 }}
-                zIndex={2001}
                 headerTemplate={title}
                 footerTemplate={(
                     <Spacer h gap="4" justifyContent="end" noGrow>

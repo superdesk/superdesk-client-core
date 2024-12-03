@@ -103,7 +103,6 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
     showModal(({closeModal}) => (
         <Modal
             visible
-            zIndex={1050}
             size="small"
             position="top"
             onHide={closeModal}
