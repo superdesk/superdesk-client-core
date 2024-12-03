@@ -19,7 +19,7 @@ export class Editor extends React.PureComponent<IProps> {
             <Container>
                 <DateTimePicker
                     dateFormat={appConfig.view.dateformat}
-                    label={gettext("Date time (AUTHORING-REACT)")}
+                    label={gettext('Date time (AUTHORING-REACT)')}
                     onChange={(value) => {
                         this.props.onChange(value);
                     }}
