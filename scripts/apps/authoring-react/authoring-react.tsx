@@ -1451,7 +1451,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 {this.props.headerToolbar != null && (
                                                     <AuthoringToolbar
                                                         entity={state.itemWithChanges}
-                                                        widgets={this.props.headerToolbar(exposed)}
+                                                        widgets={this.props.headerToolbar?.(exposed) ?? []}
                                                         backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 )}
@@ -1477,26 +1477,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             </div>
                                         )}
                                     >
-                                        <AuthoringSection
-                                            uiTheme={uiTheme}
-                                            padding="3.2rem 4rem 5.2rem 4rem"
-                                            fields={state.profile.content}
-                                            fieldsData={state.fieldsDataWithChanges}
-                                            onChange={this.handleFieldChange}
-                                            reinitialize={(item) => {
-                                                this.reinitialize(state, item);
-                                            }}
-                                            language={getLanguage(state.itemWithChanges)}
-                                            userPreferencesForFields={state.userPreferencesForFields}
-                                            setUserPreferencesForFields={this.setUserPreferences}
-                                            getVocabularyItems={this.getVocabularyItems}
-                                            toggledFields={state.toggledFields}
-                                            toggleField={this.toggleField}
-                                            readOnly={readOnly}
-                                            validationErrors={state.validationErrors}
-                                            item={state.itemWithChanges}
-                                            computeLatestEntity={this.computeLatestEntity}
-                                        />
+                                        {state.profile.content.count() < 1 ? null : (
+                                            <AuthoringSection
+                                                uiTheme={uiTheme}
+                                                padding="3.2rem 4rem 5.2rem 4rem"
+                                                fields={state.profile.content}
+                                                fieldsData={state.fieldsDataWithChanges}
+                                                onChange={this.handleFieldChange}
+                                                reinitialize={(item) => {
+                                                    this.reinitialize(state, item);
+                                                }}
+                                                language={getLanguage(state.itemWithChanges)}
+                                                userPreferencesForFields={state.userPreferencesForFields}
+                                                setUserPreferencesForFields={this.setUserPreferences}
+                                                getVocabularyItems={this.getVocabularyItems}
+                                                toggledFields={state.toggledFields}
+                                                toggleField={this.toggleField}
+                                                readOnly={readOnly}
+                                                validationErrors={state.validationErrors}
+                                                item={state.itemWithChanges}
+                                                computeLatestEntity={this.computeLatestEntity}
+                                            />
+                                        )}
                                     </Layout.AuthoringMain>
                                 )}
                                 sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
