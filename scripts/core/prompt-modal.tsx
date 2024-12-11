@@ -28,7 +28,6 @@ export class PromptModal extends React.Component<IProps, IState> {
                 position="top"
                 visible
                 onHide={this.props.closeModal}
-                headerTemplate=""
                 footerTemplate={
                     (
                         <Spacer h gap="4" justifyContent="end" noWrap>
