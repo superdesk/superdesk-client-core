@@ -25,13 +25,16 @@ export const ui = {
             showModal(({closeModal}) => {
                 return (
                     <PromptModal
-                        closeModal={closeModal}
+                        closeModal={({value}) => {
+                            closeModal();
+
+                            if (value != null) {
+                                resolve(value);
+                            }
+                        }}
                         label={options.inputLabel}
                         okButtonText={options.okButtonText}
                         cancelButtonText={options.cancelButtonText}
-                        onDone={(value) => {
-                            resolve(value);
-                        }}
                     />
                 );
             });

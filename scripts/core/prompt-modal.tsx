@@ -4,8 +4,7 @@ import {gettext} from './utils';
 
 interface IProps {
     label: string;
-    closeModal(): void;
-    onDone(value: string): void;
+    closeModal(result: {value: string | null}): void;
     okButtonText?: string;
     cancelButtonText?: string;
 }
@@ -27,21 +26,20 @@ export class PromptModal extends React.Component<IProps, IState> {
             <Modal
                 position="top"
                 visible
-                onHide={this.props.closeModal}
+                onHide={() => this.props.closeModal({value: null})}
                 footerTemplate={
                     (
                         <Spacer h gap="4" justifyContent="end" noWrap>
                             <Button
                                 type="default"
                                 text={this.props.cancelButtonText ?? gettext('Cancel')}
-                                onClick={this.props.closeModal}
+                                onClick={() => this.props.closeModal({value: null})}
                             />
                             <Button
                                 type="primary"
                                 text={this.props.okButtonText ?? gettext('Ok')}
                                 onClick={() => {
-                                    this.props.onDone(this.state.value);
-                                    this.props.closeModal();
+                                    this.props.closeModal({value: this.state.value});
                                 }}
                             />
                         </Spacer>
