@@ -48,7 +48,6 @@ export class PromptModal extends React.Component<IProps, IState> {
                         </Spacer>
                     )
                 }
-                zIndex={1051}
             >
                 <Input
                     label={this.props.label}
