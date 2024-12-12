@@ -16,6 +16,7 @@ import {
     IAuthoringOptions,
     IStoreValueIncomplete,
     IAuthoringSectionTheme,
+    IAuthoringValidationErrors,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -253,7 +254,6 @@ export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
  * `true` means field is available - `false` - hidden.
  */
 export type IToggledFields = {[fieldId: string]: boolean};
-export type IAuthoringValidationErrors = {[fieldId: string]: string};
 
 interface IStateLoaded<T> {
     initialized: true;

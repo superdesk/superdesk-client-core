@@ -133,6 +133,8 @@ declare module 'superdesk-api' {
 
     export type IFieldsData = import('immutable').Map<string, unknown>;
 
+    export type IAuthoringValidationErrors = {[fieldId: string]: string};
+
     /**
      * Check authoring-react.tsx for comments on individual methods.
      */
