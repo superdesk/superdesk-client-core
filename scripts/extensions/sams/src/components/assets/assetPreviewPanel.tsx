@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
+import {getHumanReadableFileSize} from '@sourcefabric/common';
 
 // Types
 import {ASSET_ACTIONS, IAssetCallback, IAssetItem, LIST_ACTION} from '../../interfaces';
@@ -33,7 +34,6 @@ import {getPreviewComponent} from './preview';
 import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
 // Utils
-import {getHumanReadableFileSize} from '../../utils/ui';
 import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
