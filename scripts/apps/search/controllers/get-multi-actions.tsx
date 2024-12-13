@@ -163,7 +163,7 @@ export function getMultiActions(
             });
         };
 
-        if ($location.path() === '/workspace/personal') {
+        if (sdApi.navigation.isPersonalSpace()) {
             modal.confirm(gettext('Do you want to delete the items permanently?')).then(spikeMultiple);
             return;
         }

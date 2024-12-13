@@ -23,6 +23,7 @@ export function getDatelineField()
 : DatelineFieldType {
     const field: DatelineFieldType = {
         id: DATELINE_FIELD_ID,
+        generic: true,
         label: gettext('Dateline (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

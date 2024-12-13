@@ -1,6 +1,11 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IArticle, IArticleSideWidget, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+    IRestApiResponse,
+} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -14,10 +19,6 @@ interface IState {
     packages: Array<IArticle> | null |'no-packages';
 }
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 const getLabel = () => gettext('Packages');
 
 function openPackage(packageItem: IArticle): void {
@@ -28,7 +29,9 @@ function openPackage(packageItem: IArticle): void {
     }
 }
 
-class PackagesWidget extends React.Component<IProps, IState> {
+const PACKAGES_WIDGET_ID = 'packages-widget';
+
+class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
     constructor(props) {
         super(props);
 
@@ -79,6 +82,7 @@ class PackagesWidget extends React.Component<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={PACKAGES_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -118,7 +122,7 @@ class PackagesWidget extends React.Component<IProps, IState> {
 
 export function getPackagesWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'packages-widget',
+        _id: PACKAGES_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'package',

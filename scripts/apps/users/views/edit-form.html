@@ -369,9 +369,9 @@
 </div>
 
 <div sd-modal data-model="features.reset_user_password && show.change_password && user._id" class="modal--tabs">
-    <div class="modal__header">
-        <button class="modal__close pull-right" ng-click="show.change_password = false"><i class="icon-close-small"></i></button>
+    <div class="modal__header modal__header--flex">
         <h3 class="modal__heading">Change password</h3>
+        <button class="icn-btn" ng-click="show.change_password = false"><i class="icon-close-small"></i></button>
     </div>
     <div class="modal__body" sd-change-password>
         <div class="modal__body-content">
@@ -397,14 +397,14 @@
                 </div>
             </form>
         </div>
-        <div class="modal__body-footer">
-            <button class="btn" ng-click="show.change_password = false" translate>Cancel</button>
-            <button class="btn btn--primary"
-                    ng-click="changePasswordForm.$valid && changePassword(oldPwd, newPwd)"
-                    ng-disabled="changePasswordForm.$invalid"
-                    translate>
-                Save password
-            </button>
-        </div>
+    </div>
+    <div class="modal__footer">
+        <button class="btn" ng-click="show.change_password = false" translate>Cancel</button>
+        <button class="btn btn--primary"
+                ng-click="changePasswordForm.$valid && changePassword(oldPwd, newPwd)"
+                ng-disabled="changePasswordForm.$invalid"
+                translate>
+            Save password
+        </button>
     </div>
 </div>

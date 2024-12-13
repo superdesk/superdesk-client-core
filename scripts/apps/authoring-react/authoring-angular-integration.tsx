@@ -3,7 +3,17 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {Button, ButtonGroup, IconButton, Label, Modal, NavButton, Popover, Spacer} from 'superdesk-ui-framework/react';
+import {
+    Button,
+    ButtonGroup,
+    IconButton,
+    Label,
+    Modal,
+    NavButton,
+    Popover,
+    Spacer,
+    WithPopover,
+} from 'superdesk-ui-framework/react';
 import {
     IArticle,
     ITopBarWidget,
@@ -19,7 +29,6 @@ import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
-import {WithPopover} from 'core/helpers/with-popover';
 import {HighlightsCardContent} from './toolbar/highlights-management';
 import {
     authoringStorageIArticle,
@@ -34,6 +43,7 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@superdesk/common';
+import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -43,6 +53,8 @@ function onClose() {
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
     action?: IAuthoringActionType,
+    setFullWidth?: () => void,
+    fullWidth?: boolean,
 ): IAuthoringOptions<IArticle> {
     const {
         item,
@@ -137,6 +149,22 @@ function getInlineToolbarActions(
         availableOffline: true,
     };
 
+    const toggleFullWidthButton: ITopBarWidget<IArticle> = {
+        group: 'start',
+        priority: 0.1,
+        component: () => (
+            <ToggleFullWidth
+                setFullWidth={() => {
+                    options.authoringStorage.autosave.flush().then(() => {
+                        setFullWidth();
+                    });
+                }}
+                fullWidth={fullWidth}
+            />
+        ),
+        availableOffline: true,
+    };
+
     const getManageHighlights = (): ITopBarWidget<IArticle> => ({
         group: 'start',
         priority: 0.3,
@@ -149,7 +177,6 @@ function getInlineToolbarActions(
                     />
                 )}
                 placement="right-end"
-                zIndex={1050}
             >
                 {
                     (togglePopup) => (
@@ -294,7 +321,6 @@ function getInlineToolbarActions(
                             size="small"
                             position="center"
                             onHide={closeModal}
-                            zIndex={2001}
                             headerTemplate={gettext('Confirm Unpublishing')}
                             footerTemplate={(
                                 <Spacer h gap="4" justifyContent="end" noGrow>
@@ -388,14 +414,14 @@ function getInlineToolbarActions(
     if (action === 'kill') {
         return {
             readOnly: false,
-            actions: [sendKillAction, closeIconButton, minimizeButton],
+            actions: [toggleFullWidthButton, sendKillAction, closeIconButton, minimizeButton],
         };
     }
 
     if (action === 'correct') {
         return {
             readOnly: false,
-            actions: [sendCorrectionAction, cancelAuthoringAction, minimizeButton],
+            actions: [toggleFullWidthButton, sendCorrectionAction, cancelAuthoringAction, minimizeButton],
         };
     }
 
@@ -403,7 +429,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.DRAFT:
         return {
             readOnly: false,
-            actions: [saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
+            actions: [toggleFullWidthButton, closeButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom()],
         };
 
     case ITEM_STATE.SUBMITTED:
@@ -413,6 +439,7 @@ function getInlineToolbarActions(
     case ITEM_STATE.UNPUBLISHED:
         // eslint-disable-next-line no-case-declarations
         const actions: Array<ITopBarWidget<IArticle>> = [
+            toggleFullWidthButton,
             minimizeButton,
             closeButton,
             ...getReadOnlyAndArchivedFrom(),
@@ -430,7 +457,6 @@ function getInlineToolbarActions(
             component: () => (
                 <>
                     <Popover
-                        zIndex={1050}
                         triggerSelector="#marked-for-desks"
                         title={gettext('Marked for')}
                         placement="bottom-end"
@@ -634,6 +660,7 @@ function getInlineToolbarActions(
                     ),
                     availableOffline: false,
                 },
+                toggleFullWidthButton,
                 closeIconButton,
             ],
         };
@@ -657,6 +684,7 @@ function getInlineToolbarActions(
                     ),
                     availableOffline: false,
                 },
+                toggleFullWidthButton,
                 closeIconButton,
             ],
         };
@@ -666,6 +694,7 @@ function getInlineToolbarActions(
         return {
             readOnly: true,
             actions: [
+                toggleFullWidthButton,
                 updateAction,
                 correctAction,
                 takedownAction,
@@ -678,13 +707,14 @@ function getInlineToolbarActions(
     case ITEM_STATE.BEING_CORRECTED:
         return {
             readOnly: false,
-            actions: [closeIconButton, saveButton],
+            actions: [toggleFullWidthButton, closeIconButton, saveButton],
         };
 
     case ITEM_STATE.CORRECTION:
         return {
             readOnly: false,
             actions: [
+                toggleFullWidthButton,
                 saveButton,
                 {
                     group: 'end',
@@ -710,13 +740,13 @@ function getInlineToolbarActions(
     case ITEM_STATE.KILLED:
         return {
             readOnly: true,
-            actions: [closeIconButton],
+            actions: [toggleFullWidthButton, closeIconButton],
         };
 
     case ITEM_STATE.RECALLED:
         return {
             readOnly: true,
-            actions: [closeIconButton],
+            actions: [toggleFullWidthButton, closeIconButton],
         };
     default:
         assertNever(itemState);
@@ -785,7 +815,7 @@ export function getAuthoringPrimaryToolbarWidgets(
             return {
                 ...item,
                 component: (props: {entity: IArticle}) => (
-                    <Component article={props.entity} />
+                    <Component entity={props.entity} />
                 ),
             };
         })
@@ -795,6 +825,8 @@ export function getAuthoringPrimaryToolbarWidgets(
 export interface IProps {
     action?: IAuthoringActionType;
     itemId: IArticle['_id'];
+    setFullWidth: () => void;
+    fullWidth: boolean;
 }
 
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
@@ -806,7 +838,12 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
                     itemId={this.props.itemId}
                     onClose={onClose}
-                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(exposed, this.props.action)}
+                    getInlineToolbarActions={(exposed) => getInlineToolbarActions(
+                        exposed,
+                        this.props.action,
+                        this.props.setFullWidth,
+                        this.props.fullWidth,
+                    )}
                     authoringStorage={(() => {
                         if (this.props.action === 'kill' || this.props.action === 'takedown') {
                             return getAuthoringStorageIArticleKillOrTakedown(this.props.action);

@@ -61,6 +61,7 @@ export class MultiSelect extends React.Component<IProps> {
                                     <TypeIcon
                                         type={item.type}
                                         highlight={item.highlight}
+                                        contentProfileId={item.profile}
                                     />
                                 </div>
                                 {checkbox}

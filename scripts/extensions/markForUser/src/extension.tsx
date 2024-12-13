@@ -2,7 +2,6 @@ import {
     ISuperdesk,
     IExtension,
     IExtensionActivationResult,
-    IArticle,
     IMonitoringFilter,
     IPersonalSpaceSection,
 } from 'superdesk-api';
@@ -11,11 +10,6 @@ import {getActionsInitialize} from './get-article-actions';
 import {getActionsBulkInitialize} from './get-article-actions-bulk';
 import {getMarkedForMeComponent} from './get-marked-for-me-component';
 import {getQueryMarkedForUser, getQueryNotMarkedForAnyoneOrMarkedForMe} from './get-article-queries';
-
-interface IMarkForUserNotification {
-    message: string;
-    item: IArticle['_id'];
-}
 
 const extension: IExtension = {
     exposes: {
@@ -53,27 +47,15 @@ const extension: IExtension = {
                         getSections: () => personalSpaceSections,
                     },
                     notifications: {
-                        'item:marked': (notification: IMarkForUserNotification) => {
-                            return {
+                        'item:marked': {
+                            name: gettext('Mark for User'),
+                            handler: (notification: any) => ({
                                 body: notification.message,
-                                actions: [
-                                    {
-                                        label: gettext('open item'),
-                                        onClick: () => superdesk.ui.article.view(notification.item),
-                                    },
-                                ],
-                            };
-                        },
-                        'item:unmarked': (notification: IMarkForUserNotification) => {
-                            return {
-                                body: notification.message,
-                                actions: [
-                                    {
-                                        label: gettext('open item'),
-                                        onClick: () => superdesk.ui.article.view(notification.item),
-                                    },
-                                ],
-                            };
+                                actions: [{
+                                    label: gettext('open item'),
+                                    onClick: () => superdesk.ui.article.view(notification.item),
+                                }],
+                            }),
                         },
                     },
                     entities: {

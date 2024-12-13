@@ -1,44 +1,11 @@
-<div class="pinned-tab__wrapper">
-    <section class="tabcontent">
-        <!--
-            react based widgets use WidgetHeading component
-            that has pinning button already inside
-
-            this was done to prevent absolutely positioned pinning button
-            from covering other components
-        -->
-        <div
-            ng-if="pinnedWidget.component == null"
-            class="tabcontent-actions"
-        >
-            <button class="icn-btn active" ng-click="pinWidget(widget)">
-                <i class="icon-pin"></i>
-            </button>
-        </div>
-
-        <div
-            ng-if="pinnedWidget.component == null"
-            sd-widget
-            data-widget="pinnedWidget"
-            data-configurable="pinnedWidget.configurable"
-            data-save="pinnedWidget.save()"
-        >
-            <div ng-include="pinnedWidget.template" class="sd-wrap-helper"></div>
-        </div>
-
-        <sd-widget-react
-            ng-if="pinnedWidget.component != null"
-            widget="pinnedWidget"
-            article="item"
-            class="sd-widget"
-        ></sd-widget-react>
-    </section>
-</div>
-
-<div class="widget-wrapper"
+<div
+    class="widget-wrapper"
     ng-class="{
         'active-right': active,
-        'right-extended': active.extended}">
+        'right-extended': active.extended
+    }"
+>
+    <!-- AVAILABLE WIDGETS LIST START -->
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs" data-test-id="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
@@ -64,31 +31,32 @@
             </li>
         </ul>
     </div>
-
-    <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
-        ng-if="active && !isWidgetLocked(active) && !active.pinned"
+    <!-- AVAILABLE WIDGETS LIST END -->
+    <div
+        ng-if="active || pinnedWidget"
+        ng-class="{
+            'pinned-tab__wrapper': active._id == pinnedWidget._id,
+            'tabpane open-tabpane right-tabpane': active._id != null && (active._id != pinnedWidget._id),
+        }"
+        class="widget-{{active._id}}"
         data-test-id="authoring-widget-panel"
         data-test-value="{{active.label}}"
     >
         <section class="tabcontent" ng-init="widget=active">
-            <!--
-                react based widgets use WidgetHeading component
-                that has pinning button already inside
-
-                this was done to prevent absolutely positioned pinning button
-                from covering other components
-            -->
             <div
-                ng-if="active.component == null"
+                ng-if="active.template != null"
                 class="tabcontent-actions"
             >
-                <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': widget.pinned}">
+                <button
+                    class="icn-btn"
+                    ng-click="pinWidget(active)"
+                    ng-class="{'active': active.pinned}"
+                >
                     <i class="icon-pin"></i>
                 </button>
             </div>
-
             <div
-                ng-if="active.component == null"
+                ng-if="active.template != null"
                 sd-widget
                 data-widget="active"
                 data-configurable="active.configurable"
@@ -98,8 +66,8 @@
             </div>
 
             <sd-widget-react
-                ng-if="active.component != null"
-                widget="active"
+                ng-if="active.component != null || pinnedWidget.component != null"
+                widget="{active, pinnedWidget}"
                 article="item"
                 class="sd-widget"
             ></sd-widget-react>

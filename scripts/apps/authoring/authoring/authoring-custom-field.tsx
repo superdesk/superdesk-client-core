@@ -1,6 +1,6 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {get, throttle, Cancelable} from 'lodash';
+import {get, throttle, Cancelable, noop} from 'lodash';
 
 import {getField} from 'apps/fields';
 import {IArticle, IVocabulary, ITemplate, IFieldsData} from 'superdesk-api';
@@ -104,6 +104,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             value={this.state.value}
                             fieldsData={getFieldsData(this.props)}
                             onChange={(value) => this.setValue(value)}
+                            reinitialize={noop}
                             readOnly={!editable}
                             config={field.custom_field_config}
                             fieldId={field._id}
@@ -126,6 +127,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             getVocabularyItems={() => []} // only used in authoring-react
                             container={({children}) => (<div>{children}</div>)}
                             item={item}
+                            computeLatestEntity={() => item}
                         />
                     )
                 }

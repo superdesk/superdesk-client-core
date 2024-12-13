@@ -1,7 +1,7 @@
 import React from 'react';
-import {IAuthoringSectionTheme, IAuthoringSectionClassNames, IFieldsV2, IVocabularyItem} from 'superdesk-api';
+import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem, IAuthoringValidationErrors} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
+import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
 export interface IPropsAuthoringSection<T> {
@@ -9,6 +9,7 @@ export interface IPropsAuthoringSection<T> {
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
     onChange(fieldId: string, value: unknown): void;
+    reinitialize(item: T): void;
     readOnly: boolean;
     userPreferencesForFields: {[fieldId: string]: unknown};
     useHeaderLayout?: boolean;
@@ -20,6 +21,7 @@ export interface IPropsAuthoringSection<T> {
     padding?: string | number;
     uiTheme?: IAuthoringSectionTheme;
     item: T;
+    computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
 
 function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
@@ -29,7 +31,10 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
 
     let rowWidth = 0; // percent
 
-    for (const item of items) {
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+
         const itemWidth = getWidth(item);
         const fitOnThisRow = rowWidth + itemWidth <= 100;
 
@@ -48,8 +53,10 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
 
         lastGroup.push(item);
 
+        const isLastItem = i === items.length - 1;
+
         // if row is full after pushing - add a new one
-        if (rowWidth === 100) {
+        if (rowWidth === 100 && !isLastItem) {
             itemGroups.push([]);
             rowWidth = 0;
         }
@@ -82,7 +89,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const {toggledFields} = this.props;
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
-        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width);
+        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width ?? 100);
 
         return (
             <div
@@ -90,13 +97,13 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '12px',
+                    gap: this.props.useHeaderLayout === true ? 'var(--gap-1-5)' : 'var(--gap-4)',
                     padding: this.props.padding,
                 }}
             >
                 {
                     grouped.map((group, index) => (
-                        <div key={index} style={{display: 'flex', gap: '12px'}}>
+                        <div key={index} style={{display: 'flex', gap: 'var(--gap-1-5)'}}>
                             {
                                 group.map((field) => {
                                     const canBeToggled = toggledFields[field.id] != null;
@@ -109,6 +116,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
                                                 onChange={this.props.onChange}
+                                                reinitialize={this.props.reinitialize}
                                                 readOnly={this.props.readOnly}
                                                 language={this.props.language}
                                                 canBeToggled={canBeToggled}
@@ -123,6 +131,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 getVocabularyItems={this.props.getVocabularyItems}
                                                 validationError={this.props.validationErrors[field.id]}
                                                 item={this.props.item}
+                                                computeLatestEntity={this.props.computeLatestEntity}
                                             />
                                         </div>
                                     );

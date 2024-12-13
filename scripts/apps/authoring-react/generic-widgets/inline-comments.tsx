@@ -40,6 +40,8 @@ interface IInlineComment {
     };
 }
 
+const COMMENTS_WIDGET_ID = 'inline-comments-widget-generic';
+
 class Comment extends React.PureComponent<{comment: IInlineComment}> {
     render() {
         const {comment} = this.props;
@@ -220,6 +222,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={COMMENTS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -233,7 +236,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
 
 export function getInlineCommentsWidgetGeneric<T>() {
     const metadataWidget: IGenericSideWidget<T> = {
-        _id: 'inline-comments-widget-generic',
+        _id: COMMENTS_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'comments',

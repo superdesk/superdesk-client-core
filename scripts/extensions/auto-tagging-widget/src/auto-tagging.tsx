@@ -17,6 +17,7 @@ import {getExistingTags, createTagsPatch} from './data-transformations';
 import {noop} from 'lodash';
 
 import {ImageTagging} from './ImageTaggingComponent/ImageTaggingComponent';
+import {AUTO_TAGGING_WIDGET_ID} from './extension';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -102,7 +103,6 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
     showModal(({closeModal}) => (
         <Modal
             visible
-            zIndex={1050}
             size="small"
             position="top"
             onHide={closeModal}
@@ -397,6 +397,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 <AuthoringWidgetLayout
                     header={(
                         <AuthoringWidgetHeading
+                            widgetId={AUTO_TAGGING_WIDGET_ID}
                             widgetName={label}
                             editMode={dirty}
                         >

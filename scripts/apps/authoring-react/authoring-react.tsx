@@ -16,6 +16,7 @@ import {
     IAuthoringOptions,
     IStoreValueIncomplete,
     IAuthoringSectionTheme,
+    IAuthoringValidationErrors,
 } from 'superdesk-api';
 import {
     ButtonGroup,
@@ -28,7 +29,11 @@ import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
-import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {
+    PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+    closedIntentionally,
+    widgetReactIntegration,
+} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
@@ -249,7 +254,6 @@ export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
  * `true` means field is available - `false` - hidden.
  */
 export type IToggledFields = {[fieldId: string]: boolean};
-export type IAuthoringValidationErrors = {[fieldId: string]: string};
 
 interface IStateLoaded<T> {
     initialized: true;
@@ -302,6 +306,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.showThemeConfigModal = this.showThemeConfigModal.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
         this.setLoadingState = this.setLoadingState.bind(this);
+        this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
@@ -328,28 +333,40 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         widgetReactIntegration.pinWidget = () => {
+            const nextPinnedWidget = this.props.sideWidget.pinnedId != null ? null : this.props.sideWidget.activeId;
+            const update = {
+                type: 'string',
+                _id: nextPinnedWidget,
+            };
+
+            dispatchEvent(new CustomEvent('resize-monitoring', {
+                detail: {value: nextPinnedWidget ? -330 : 330},
+            }));
+
+            sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
+
+            // Pinned state can change, but the active widget shouldn't change
+            // from this function
             this.props.onSideWidgetChange({
-                ...this.props.sideWidget,
-                pinned: !(this.props.sideWidget?.pinned ?? false),
+                activeId: this.props.sideWidget.activeId,
+                pinnedId: nextPinnedWidget,
             });
         };
 
         widgetReactIntegration.getActiveWidget = () => {
-            return this.props.sideWidget?.id ?? null;
+            return this.props.sideWidget?.activeId;
         };
 
         widgetReactIntegration.getPinnedWidget = () => {
-            const pinned = this.props.sideWidget?.pinned === true;
-
-            if (pinned) {
-                return this.props.sideWidget.id;
-            } else {
-                return null;
-            }
+            return this.props.sideWidget?.pinnedId;
         };
 
         widgetReactIntegration.closeActiveWidget = () => {
-            this.props.onSideWidgetChange(null);
+            closedIntentionally.value = false;
+            this.props.onSideWidgetChange({
+                activeId: this.props.sideWidget?.pinnedId,
+                pinnedId: this.props.sideWidget?.pinnedId,
+            });
         };
 
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
@@ -564,7 +581,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
             this.setState(initialState);
 
-            if (this.componentRef != null) {
+            if (this.componentRef != null && this.props.autoFocus !== false) {
                 this.cleanupFunctionsToRunBeforeUnmounting.push(focusFirstChildInput(this.componentRef).cancel);
             }
         });
@@ -583,11 +600,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             }
         });
 
-        this.cleanupFunctionsToRunBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
-            if (this.state.initialized) {
-                dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
-            }
-        }));
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addEditorEventListener('spellchecker__request_status', (event) => {
+                if (this.state.initialized) {
+                    event.detail(this.state.spellcheckerEnabled);
+                }
+            }),
+        );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalEventListener(
@@ -607,8 +626,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
                 (event) => {
-                    if (event.detail._id === this.props.itemId) {
-                        const patch = event.detail;
+                    if (event.detail.item._id === this.props.itemId) {
+                        const patch = event.detail.item;
 
                         const {state} = this;
 
@@ -707,6 +726,53 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     }
                 }
             }),
+        );
+
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalEventListener(
+                'dangerouslyOverwriteAuthoringField',
+                (event) => {
+                    if (event.detail.itemId === this.props.itemId) {
+                        const patch = {[event.detail.field.key]: event.detail.field.value};
+
+                        const {state} = this;
+
+                        if (state.initialized) {
+                            if (state.itemOriginal === state.itemWithChanges) {
+                                /**
+                                 * if object references are the same before patching
+                                 * they should be the same after patching too
+                                 * in order for checking for changes to work correctly
+                                 * (reference equality is used for change detection)
+                                 */
+
+                                const patched = {
+                                    ...state.itemOriginal,
+                                    ...patch,
+                                };
+
+                                this.setState({
+                                    ...state,
+                                    itemOriginal: patched,
+                                    itemWithChanges: patched,
+                                });
+                            } else {
+                                this.setState({
+                                    ...state,
+                                    itemWithChanges: {
+                                        ...state.itemWithChanges,
+                                        ...patch,
+                                    },
+                                    itemOriginal: {
+                                        ...state.itemOriginal,
+                                        ...patch,
+                                    },
+                                });
+                            }
+                        }
+                    }
+                },
+            ),
         );
 
         /**
@@ -955,17 +1021,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * and unless closing is cancelled by user action in the UI this.props.onClose is called.
      */
     initiateClosing(state: IStateLoaded<T>): void {
-        if (this.hasUnsavedChanges() !== true) {
-            this.props.onClose();
-            return;
-        }
-
         const {authoringStorage} = this.props;
 
         this.setLoadingState(state, true).then(() => {
             authoringStorage.closeAuthoring(
                 this.computeLatestEntity(),
                 state.itemOriginal,
+                this.hasUnsavedChanges(),
                 () => {
                     authoringStorage.autosave.cancel();
 
@@ -1080,6 +1142,41 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
+    /**
+     * Use this method sparingly. It is performance intensive.
+     * It was added to make it possible to update data from outside authoring-react component.
+     * The reason it is needed, is that authoring-react treats `fieldsData` as a source of truth
+     * and when outside code sends updated `{item:T }` there is not other way for authoring-react
+     * to apply it to `fieldsData`, but to re-initialize.
+     */
+    reinitialize(
+        state: IStateLoaded<T>,
+        itemWithUpdates: T,
+        newProfile?: IContentProfileV2,
+    ) {
+        const item: {
+            saved: T;
+            autosaved: T;
+        } = {
+            saved: state.itemOriginal,
+            autosaved: itemWithUpdates,
+        };
+
+        this.setState(getInitialState(
+            item,
+            newProfile ?? state.profile,
+            state.userPreferencesForFields,
+            state.spellcheckerEnabled,
+            this.props.fieldsAdapter,
+            this.props.authoringStorage,
+            this.props.storageAdapter,
+            this.props.getLanguage(item.autosaved ?? item.saved),
+            state.validationErrors,
+            state.allThemes.default,
+            state.allThemes.proofreading,
+        ));
+    }
+
     render() {
         const state = this.state;
         const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
@@ -1113,16 +1210,40 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.id ?? null,
+            sideWidget: this.props.sideWidget?.activeId,
+            toggleTheme: () => {
+                this.setState({
+                    ...state,
+                    proofreadingEnabled: !state.proofreadingEnabled,
+                });
+            },
+            printPreview: () => {
+                previewAuthoringEntity(
+                    state.profile,
+                    state.profile,
+                    state.fieldsDataWithChanges,
+                );
+            },
+            configureTheme: () => {
+                this.showThemeConfigModal(state);
+            },
             toggleSideWidget: (id) => {
-                if (id == null || this.props.sideWidget?.id === id) {
-                    this.props.onSideWidgetChange(null);
-                } else {
-                    this.props.onSideWidgetChange({
-                        id: id,
-                        pinned: false,
-                    });
-                }
+                const activeWidgetId = this.props.sideWidget?.activeId;
+
+                this.props.onSideWidgetChange({
+                    activeId: id,
+                    pinnedId: id === activeWidgetId ? activeWidgetId : this.props.sideWidget?.pinnedId,
+                });
+            },
+            reinitialize: (item, profile) => this.reinitialize(state, item, profile),
+            addValidationErrors: (moreValidationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors: {
+                        ...state.validationErrors,
+                        ...moreValidationErrors,
+                    },
+                });
             },
         };
 
@@ -1229,64 +1350,33 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         for (let i = 0; i < widgetsCount; i++) {
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
-                const nextWidgetName: string = this.props.getSideWidgetIdAtIndex(exposed.item, i);
+                const nextWidgetId: string = this.props.getSideWidgetIdAtIndex(exposed.item, i);
 
                 this.props.onSideWidgetChange({
-                    id: nextWidgetName,
-                    pinned: this.props.sideWidget?.pinned ?? false,
+                    activeId: nextWidgetId,
+                    pinnedId: this.props.sideWidget?.pinnedId,
                 });
             };
         }
 
-        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions?.actions != null ? [
-            ...authoringOptions.actions,
-            {
+        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions.actions ?? [];
+
+        if (authoringActions.length > 0) {
+            primaryToolbarWidgets.push({
                 group: 'end',
                 priority: 0.4,
-                component: () => {
-                    return (
-                        <AuthoringActionsMenu getActions={() => authoringActions} />
-                    );
-                },
+                component: () => (
+                    <AuthoringActionsMenu getActions={() => authoringActions} />
+                ),
                 availableOffline: true,
-            },
-        ] : [];
+            });
+        }
 
-        const pinned = this.props.sideWidget?.pinned === true;
-
-        const printPreviewAction = (() => {
-            const execute = () => {
-                previewAuthoringEntity(
-                    state.itemWithChanges,
-                    state.profile,
-                    state.fieldsDataWithChanges,
-                );
-            };
-
-            const preview = {
-                jsxButton: () => {
-                    return (
-                        <IconButton
-                            icon="preview-mode"
-                            ariaValue={gettext('Print preview')}
-                            onClick={() => {
-                                execute();
-                            }}
-                        />
-                    );
-                },
-                keybindings: {
-                    'ctrl+shift+i': () => {
-                        execute();
-                    },
-                },
-            };
-
-            return preview;
-        })();
+        const extraPrimaryToolbarWidgets = this.props.getAuthoringPrimaryToolbarWidgets?.(exposed) ?? [];
+        const secondaryToolbarWidgets = this.props.getSecondaryToolbarWidgets?.(exposed) ?? [];
 
         const allKeyBindings: IKeyBindings = {
-            ...printPreviewAction.keybindings,
+            ...getKeyBindingsFromActions(secondaryToolbarWidgets),
             ...getKeyBindingsFromActions(authoringOptions?.actions ?? []),
             ...keyBindingsFromAuthoringActions,
             ...widgetKeybindings,
@@ -1312,6 +1402,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
         };
 
+        const isPinned = this.props.sideWidget?.pinnedId != null;
+
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
                 {
@@ -1322,89 +1414,54 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
-                        {(panelState, panelActions) => {
-                            return (
-                                <Layout.AuthoringFrame
-                                    header={
-                                        primaryToolbarWidgets.length < 1
-                                        && this.props.getAuthoringPrimaryToolbarWidgets == null
-                                            ? undefined
-                                            : (
-                                                <SubNav>
+                        {() => (
+                            <Layout.AuthoringFrame
+                                header={primaryToolbarWidgets.length < 1
+                                    && extraPrimaryToolbarWidgets?.length < 1 ? null : (
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )
+                                }
+                                main={(
+                                    <Layout.AuthoringMain
+                                        noPaddingForContent
+                                        hideCollapseButton={state.profile.header.count() < 1}
+                                        headerCollapsed={this.props.headerCollapsed}
+                                        toolbarCustom
+                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
+                                            <SubNav className="px-2">
+                                                <AuthoringToolbar
+                                                    entity={state.itemWithChanges}
+                                                    widgets={secondaryToolbarWidgets}
+                                                    backgroundColor={authoringOptions?.toolbarBgColor}
+                                                />
+                                            </SubNav>
+                                        )}
+                                        headerPadding={{
+                                            top: 8,
+                                            bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                        }}
+                                        authoringHeader={(
+                                            <div style={{width: '100%'}}>
+                                                {this.props.headerToolbar != null && (
                                                     <AuthoringToolbar
                                                         entity={state.itemWithChanges}
-                                                        coreWidgets={primaryToolbarWidgets}
-                                                        extraWidgets={
-                                                            this.props.getAuthoringPrimaryToolbarWidgets(exposed)
-                                                        }
+                                                        widgets={this.props.headerToolbar(exposed)}
                                                         backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
-                                                </SubNav>
-                                            )
-                                    }
-                                    main={(
-                                        <Layout.AuthoringMain
-                                            noPaddingForContent
-                                            headerCollapsed={this.props.headerCollapsed}
-                                            toolBar={this.props.hideSecondaryToolbar ? undefined : (
-                                                <React.Fragment>
-                                                    <div
-                                                        style={{
-                                                            paddingInlineEnd: 16,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 8,
-                                                        }}
-                                                    >
-                                                        {
-                                                            this.props.secondaryToolbarWidgets
-                                                                .map((Component, i) => {
-                                                                    return (
-                                                                        <Component
-                                                                            key={i}
-                                                                            item={state.itemWithChanges}
-                                                                        />
-                                                                    );
-                                                                })
-                                                        }
-                                                    </div>
-
-                                                    <ButtonGroup align="end">
-
-                                                        {printPreviewAction.jsxButton()}
-
-                                                        {this.props.themingEnabled === true && (
-                                                            <>
-                                                                <IconButton
-                                                                    icon="adjust"
-                                                                    ariaValue={gettext('Toggle theme')}
-                                                                    onClick={() => {
-                                                                        this.setState({
-                                                                            ...state,
-                                                                            proofreadingEnabled:
-                                                                                !state.proofreadingEnabled,
-                                                                        });
-                                                                    }}
-                                                                />
-                                                                <IconButton
-                                                                    icon="switches"
-                                                                    ariaValue={gettext('Configure themes')}
-                                                                    onClick={() => {
-                                                                        this.showThemeConfigModal(state);
-                                                                    }}
-                                                                />
-                                                            </>
-                                                        )}
-
-                                                    </ButtonGroup>
-
-                                                </React.Fragment>
-                                            )}
-                                            authoringHeader={(
+                                                )}
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
+                                                    reinitialize={(item) => {
+                                                        this.reinitialize(state, item);
+                                                    }}
                                                     language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     useHeaderLayout
@@ -1415,35 +1472,40 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     readOnly={readOnly}
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
+                                                    computeLatestEntity={this.computeLatestEntity}
                                                 />
-                                            )}
-                                        >
-                                            <AuthoringSection
-                                                uiTheme={uiTheme}
-                                                padding="3.2rem 4rem 5.2rem 4rem"
-                                                fields={state.profile.content}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
-                                                language={getLanguage(state.itemWithChanges)}
-                                                userPreferencesForFields={state.userPreferencesForFields}
-                                                setUserPreferencesForFields={this.setUserPreferences}
-                                                getVocabularyItems={this.getVocabularyItems}
-                                                toggledFields={state.toggledFields}
-                                                toggleField={this.toggleField}
-                                                readOnly={readOnly}
-                                                validationErrors={state.validationErrors}
-                                                item={state.itemWithChanges}
-                                            />
-                                        </Layout.AuthoringMain>
-                                    )}
-                                    sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                    sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                    sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                    sideBar={this.props.getSidebar?.(exposed)}
-                                />
-                            );
-                        }}
+                                            </div>
+                                        )}
+                                    >
+                                        <AuthoringSection
+                                            uiTheme={uiTheme}
+                                            padding="3.2rem 4rem 5.2rem 4rem"
+                                            fields={state.profile.content}
+                                            fieldsData={state.fieldsDataWithChanges}
+                                            onChange={this.handleFieldChange}
+                                            reinitialize={(item) => {
+                                                this.reinitialize(state, item);
+                                            }}
+                                            language={getLanguage(state.itemWithChanges)}
+                                            userPreferencesForFields={state.userPreferencesForFields}
+                                            setUserPreferencesForFields={this.setUserPreferences}
+                                            getVocabularyItems={this.getVocabularyItems}
+                                            toggledFields={state.toggledFields}
+                                            toggleField={this.toggleField}
+                                            readOnly={readOnly}
+                                            validationErrors={state.validationErrors}
+                                            item={state.itemWithChanges}
+                                            computeLatestEntity={this.computeLatestEntity}
+                                        />
+                                    </Layout.AuthoringMain>
+                                )}
+                                sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
+                                sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sidePanelOpen={isPinned && OpenWidgetComponent != null}
+                                sideBar={this.props.getSidebar?.(exposed)}
+                            />
+                        )}
                     </WithInteractiveArticleActionsPanel>
                 </WithKeyBindings>
             </div>

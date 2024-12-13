@@ -13,6 +13,7 @@ import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {sdApi} from 'api';
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -377,7 +378,7 @@ export function AuthoringService(
     ) {
         let extDiff = helpers.extendItem({}, diff);
 
-        if (extDiff['task'] && $location.path() !== '/workspace/personal') {
+        if (extDiff['task'] && !sdApi.navigation.isPersonalSpace()) {
             delete extDiff['task'];
         }
 
@@ -546,12 +547,15 @@ export function AuthoringService(
      */
     this.save = function saveAuthoring(
         origItem: IArticle,
-        _item: IArticle,
+        __item: IArticle,
         requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
+        cloneAfterGeneratingHtml?: boolean,
     ) {
         for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
             fn();
         }
+
+        const _item = cloneAfterGeneratingHtml === true ? cloneDeep(__item) : __item;
 
         return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
             angular.extend(_item, item);
@@ -603,6 +607,7 @@ export function AuthoringService(
                     const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
                     authoringWorkspace.update(origItem);
+
                     return origItem;
                 });
             }
@@ -811,7 +816,7 @@ export function AuthoringService(
     this._updateGeneralActions = function(currentItem, action) {
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
-        let isPersonalSpace = $location.path() === '/workspace/personal';
+        const isPersonalSpace = sdApi.navigation.isPersonalSpace();
 
         action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem)
             && !isCorrection(currentItem);

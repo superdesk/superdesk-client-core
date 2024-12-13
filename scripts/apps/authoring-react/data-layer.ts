@@ -25,7 +25,7 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
-import moment from 'moment';
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -64,12 +64,33 @@ export function getArticleContentProfile<T>(
         const {editor, fields, schema} = fakeScope;
         const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
 
-        // Avoid having unnecessary adapters for fields
-        // to which we do not write data e.g. 'footer'.
-        // Authoring react doesn't support companion
-        // fields like 'footer' that don't have data on
-        // their own but simply modify the data of other fields.
-        const fieldsToOmit = ['footer'];
+        /**
+         * Insert a field which alongside the adapter will use the media field type
+         * to enable viewing and editing of the original media item.
+         */
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            editor['_media_self'] = {
+                'order': 0,
+                'sdWidth': 'full',
+                'section': 'content',
+                'enabled': true,
+            };
+        }
+
+        const fieldsToOmit = [
+            /**
+             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
+             * authoring-react doesn't support companion fields like 'footer' that don't have data on
+             * their own but simply modify the data of other fields.
+             */
+            'footer',
+
+            /**
+             * `media_description` isn't used anywhere. It might still be present in content profiles, so
+             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
+             */
+            'media_description',
+        ];
 
         const fieldsOrdered =
             Object.keys(editor)
@@ -342,10 +363,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             return getArticleContentProfile(item, fieldsAdapter);
         }
     },
-    closeAuthoring: (current, original, cancelAutosave, doClose) => {
-        const diff = generatePatch(original, current);
-        const hasUnsavedChanges = Object.keys(diff).length > 0;
-
+    closeAuthoring: (current, original, hasUnsavedChanges, cancelAutosave, doClose) => {
         const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',
             payload: {},
@@ -421,8 +439,8 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
             newItem.sms_message = '';
 
             const {override_ednote_for_corrections, override_ednote_template} = appConfig;
-            const date = moment(newItem.versioncreated)
-                .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+
+            const date = formatDateTime(newItem.versioncreated);
 
             if (override_ednote_for_corrections && override_ednote_template == null) {
                 const lineBreak = '\r\n\r\n';

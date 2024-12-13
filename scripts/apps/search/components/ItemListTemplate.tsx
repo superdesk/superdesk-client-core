@@ -9,6 +9,7 @@ interface IPropsItemsListTemplate extends IPropsItemListInfo {
     selectingDisabled: boolean;
     getActionsMenu: () => any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
+    loading?: boolean;
 }
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
@@ -29,6 +30,7 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                         : null
                 }
                 <ListItemInfo
+                    loading={this.props.loading}
                     item={item}
                     relatedEntities={this.props.relatedEntities}
                     openAuthoringView={this.props.openAuthoringView}

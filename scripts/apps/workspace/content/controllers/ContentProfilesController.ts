@@ -252,6 +252,12 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
             .then(this.toggleEdit);
     };
 
+    this.onIconChange = (val) => {
+        $scope.editing.form.icon = val;
+        $scope.ngForm.$dirty = true;
+        $scope.$apply();
+    };
+
     /**
      * @description Commits the changes made in the editing form for a profile
      * to the server.

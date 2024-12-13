@@ -9,6 +9,7 @@ import {
     IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
+    IOpenSideWidget,
 } from 'superdesk-api';
 import {
     gettext,
@@ -45,7 +46,7 @@ import {
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
-import {memoize, omit} from 'lodash';
+import {omit} from 'lodash';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
@@ -108,24 +109,29 @@ import {
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
-import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
-import {getCustomFieldVocabularies, getLanguageVocabulary} from './helpers/business-logic';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
+import {showPopup} from 'superdesk-ui-framework/react';
+import {ui} from './ui-utils';
 
-function getContentType(id): Promise<IContentProfile> {
-    return dataApi.findOne('content_types', id);
-}
-
-export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit' | 'edit-new-window'): Promise<void> {
+export function openArticle(
+    id: IArticle['_id'],
+    mode: 'view' | 'edit' | 'edit-new-window',
+    openSideWidget?: IOpenSideWidget,
+): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
+
+    if (openSideWidget?.id != null) {
+        localStorage.setItem('SIDE_WIDGET', JSON.stringify(openSideWidget));
+    }
 
     if (mode === 'edit-new-window') {
         authoringWorkspace.popupFromId(id, 'view');
@@ -144,9 +150,6 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit' | 'edit-n
 
     return Promise.resolve();
 }
-
-const getContentTypeMemoized = memoize(getContentType);
-let getContentTypeMemoizedLastCall: number = 0; // unix time
 
 export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
@@ -212,11 +215,41 @@ export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date | string) => (
-    moment(date)
-        .tz(appConfig.default_timezone)
-        .format(appConfig.view.dateformat)
-);
+export const formatDate = (
+    date: Date | string | moment.Moment,
+    options?: {timezoneId?: string; longFormat?:boolean},
+): string => {
+    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+    const dateFormat = options?.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
+
+    if (options?.timezoneId != null) {
+        return momentDate
+            .tz(options.timezoneId)
+            .format(dateFormat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return momentDate
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(dateFormat);
+    }
+};
+
+export const formatDateTime = (date: Date, timezoneId?: string) => {
+    if (timezoneId != null) {
+        return moment(date)
+            .tz(timezoneId)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    } else {
+        const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+        const keepLocalTime = timezone === 'browser';
+
+        return moment(date)
+            .tz(appConfig.default_timezone, keepLocalTime)
+            .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+    }
+};
 
 export function dateToServerString(date: Date) {
     return date.toISOString().slice(0, 19) + '+0000';
@@ -283,8 +316,9 @@ export function getSuperdeskApiImplementation(
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
-            superdeskToElasticQuery: toElasticQuery,
             getArticleLabel,
+            superdeskToElasticQuery: toElasticQuery,
+            prepareSuperdeskQuery: prepareSuperdeskQuery,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -292,6 +326,8 @@ export function getSuperdeskApiImplementation(
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
+                translate: sdApi.article.translate,
+                get: sdApi.article.get,
                 isPersonal: sdApi.article.isPersonal,
                 isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
@@ -315,29 +351,15 @@ export function getSuperdeskApiImplementation(
                 getDeskById: sdApi.desks.getDeskById,
             },
             contentProfile: {
-                get: (id) => {
-                    // Adding simple caching since the function will be called multiple times per second.
-
-                    // TODO: implement synchronous API(and a cache) for accessing
-                    // most user settings including content profiles.
-
-                    const timestamp = Date.now();
-
-                    // cache for 5 seconds
-                    if (timestamp - getContentTypeMemoizedLastCall > 5000) {
-                        getContentTypeMemoized.cache.clear();
-                    }
-
-                    getContentTypeMemoizedLastCall = timestamp;
-
-                    return getContentTypeMemoized(id);
-                },
+                get: (id) => sdApi.contentProfiles.get(id),
             },
             vocabulary: {
+                getAll: () => sdApi.vocabularies.getAll(),
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
-                getCustomFieldVocabularies: getCustomFieldVocabularies,
-                getLanguageVocabulary: getLanguageVocabulary,
+                getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
+                getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
+                isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
             },
             attachment: attachmentsApi,
             users: {
@@ -366,8 +388,23 @@ export function getSuperdeskApiImplementation(
                 view: (id: IArticle['_id']) => {
                     openArticle(id, 'view');
                 },
+                edit: (
+                    id: IArticle['_id'],
+                    openSideWidget?: IOpenSideWidget,
+                ) => {
+                    openArticle(id, 'edit', openSideWidget);
+                },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
+                },
+                applyFieldChangesToEditor: (
+                    itemId: IArticle['_id'],
+                    field: {key: string, value: valueof<IArticle>},
+                ) => {
+                    dispatchInternalEvent('dangerouslyOverwriteAuthoringField', {
+                        field,
+                        itemId,
+                    });
                 },
                 save: () => {
                     dispatchInternalEvent('saveArticleInEditMode', null);
@@ -382,6 +419,7 @@ export function getSuperdeskApiImplementation(
                 title: title ?? gettext('Confirm'),
                 message,
             }),
+            prompt: ui.prompt,
             showIgnoreCancelSaveDialog,
             notify: notify,
             framework: {
@@ -464,15 +502,20 @@ export function getSuperdeskApiImplementation(
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
             formatDate: formatDate,
-            formatDateTime: (date: Date) => {
-                return moment(date)
-                    .tz(appConfig.default_timezone)
-                    .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
-            },
-            longFormatDateTime: (date: Date | string) => {
-                return moment(date)
-                    .tz(appConfig.default_timezone)
-                    .format(appConfig.longDateFormat || 'LLL');
+            formatDateTime: formatDateTime,
+            longFormatDateTime: (date: Date | string, timezoneId?: string) => {
+                if (timezoneId != null) {
+                    return moment(date)
+                        .tz(timezoneId)
+                        .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+                } else {
+                    const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
+                    const keepLocalTime = timezone === 'browser';
+
+                    return moment(date)
+                        .tz(appConfig.default_timezone, keepLocalTime)
+                        .format(appConfig.longDateFormat || 'LLL');
+                }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },

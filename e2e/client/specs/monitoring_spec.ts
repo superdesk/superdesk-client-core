@@ -473,8 +473,7 @@ describe('monitoring', () => {
     it('can start content upload', () => {
         monitoring.openMonitoring();
 
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'upload-media']).click();
+        monitoring.createItem('Upload media');
 
         expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();
     });
@@ -1089,8 +1088,11 @@ xdescribe('marked for me filter in monitoring', () => {
 
         nav('/settings/templates');
 
-        el(['content-template--testing', 'template-actions']).click();
-        el(['content-template--testing', 'template-actions--options'], by.buttonText('Edit')).click();
+        element(
+            by.css('[data-test-id="content-template"][data-test-value="testing"] [data-test-id="template-actions"]'),
+        ).click();
+        // eslint-disable-next-line
+        element(by.css('[data-test-id="content-template"][data-test-value="testing"] [data-test-id="template-actions--options"]')).element(by.buttonText('Edit')).click();
         browser.sleep(1000);
 
         el(['template-edit-view', 'desks', 'desk--Multiple sources']).click();

@@ -3,6 +3,8 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
+import {getHumanReadableFileSize} from '@sourcefabric/common';
+
 // Types
 import {IAttachment} from 'superdesk-api';
 import {superdeskApi} from '../../apis';
@@ -23,7 +25,7 @@ import {
 } from '../../ui/list';
 
 // Utils
-import {getIconTypeFromMimetype, getHumanReadableFileSize} from '../../utils/ui';
+import {getIconTypeFromMimetype} from '../../utils/ui';
 
 interface IProps {
     files: Array<IAttachment>;

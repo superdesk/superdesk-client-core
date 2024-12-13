@@ -59,6 +59,7 @@ export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown>
 
                 <Form.FormItem>
                     <DatePickerISO
+                        required
                         label={gettext('Air date')}
                         dateFormat={superdesk.instance.config.view.dateformat}
                         value={fields.airtime_date ?? ''}

@@ -538,7 +538,7 @@ export class HistoryTab extends React.PureComponent<IProps, IState> {
                                         {getOperationLabel(item.operation, item.update.state)} {item.displayName}
                                     </strong>
 
-                                    <ToggleBox title={gettext('Details')}>
+                                    <ToggleBox variant="simple" title={gettext('Details')}>
                                         <TransmissionDetails article={this.props.article} historyItem={item} key={i} />
                                     </ToggleBox>
                                 </BaseHistoryItem>

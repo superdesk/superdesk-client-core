@@ -85,12 +85,10 @@ export function getInitialDestination(
     return destination;
 }
 
-export function getCurrentDeskDestination(): ISendToDestination {
-    let destinationDesk: string = sdApi.desks.getCurrentDeskId();
-
+export function getCurrentDeskDestination(id?: string): ISendToDestination {
     return {
         type: 'desk',
-        desk: destinationDesk,
+        desk: id ?? sdApi.desks.getCurrentDeskId(),
         stage: null,
     };
 }

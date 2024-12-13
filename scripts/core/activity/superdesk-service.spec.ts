@@ -53,55 +53,47 @@ describe('Superdesk service', () => {
         expect(superdesk.activities.testActivity.label).toBe(testActivity.label);
     }));
 
-    it('can run activities', inject(($rootScope, superdesk, activityService) => {
-        var result = null;
-
+    it('can run activities', (done) => inject(($rootScope, superdesk, activityService) => {
         activityService.start(superdesk.activities.testActivity)
-            .then((res) => {
-                result = res;
+            .then((result) => {
+                expect(result).toBe('test');
+
+                done();
             });
 
         $rootScope.$digest();
-
-        expect(result).toBe('test');
     }));
 
-    it('can run activities by intent', inject(($rootScope, superdesk) => {
-        var successResult = null;
-        var failureResult = null;
-
+    it('can run activities by intent', (done) => inject(($rootScope, superdesk) => {
         superdesk.intent('testAction', 'testType', 'testData')
-            .then((result) => {
-                successResult = result;
-            });
-        superdesk.intent('testAction2', 'testType2', 'testData2')
-            .then(null, (result) => {
-                failureResult = result;
+            .then((successResult) => {
+                expect(successResult).toBe('test');
+
+                superdesk.intent('testAction2', 'testType2', 'testData2')
+                    .then(null, (failureResult) => {
+                        expect(failureResult).toBe(undefined);
+
+                        done();
+                    });
             });
 
         $rootScope.$digest();
-
-        expect(successResult).toBe('test');
-        expect(failureResult).toBe(undefined);
     }));
 
-    it('can run activities by intent provided with an id', inject(($rootScope, superdesk) => {
-        var successResult = null;
-        var failureResult = null;
-
+    it('can run activities by intent provided with an id', (done) => inject(($rootScope, superdesk) => {
         superdesk.intent('testAction', 'testType', 'testData', 'testId')
-            .then((result) => {
-                successResult = result;
-            });
-        superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2')
-            .then(null, (result) => {
-                failureResult = result;
+            .then((successResult) => {
+                expect(successResult).toBe('test');
+
+                superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2')
+                    .then(null, (failureResult) => {
+                        expect(failureResult).toBe(undefined);
+
+                        done();
+                    });
             });
 
         $rootScope.$digest();
-
-        expect(successResult).toBe('test');
-        expect(failureResult).toBe(undefined);
     }));
 
     it('can find activities', inject((superdesk) => {

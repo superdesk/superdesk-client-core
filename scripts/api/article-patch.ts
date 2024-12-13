@@ -34,7 +34,7 @@ export const patchArticle = (
             if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
                 dispatchInternalEvent(
                     'dangerouslyOverwriteAuthoringData',
-                    {...patch, _etag: res._etag, _id: res._id},
+                    {item: {...patch, _etag: res._etag, _id: res._id}},
                 );
             }
         });

@@ -1,18 +1,14 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {IArticleSideWidget, IExtensionActivationResult, IArticle, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {InlineCommentsWidget} from '../generic-widgets/inline-comments';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Inline comments');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
-class InlineCommentsWidgetWrapper extends React.PureComponent<IProps> {
+class InlineCommentsWidgetWrapper extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <InlineCommentsWidget<IArticle>

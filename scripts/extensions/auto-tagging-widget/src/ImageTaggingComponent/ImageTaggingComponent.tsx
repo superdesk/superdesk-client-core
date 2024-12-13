@@ -271,6 +271,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
 
         return (
             <ToggleBox
+                variant="simple"
                 className="toggle-box--circle"
                 title={
                     isLoading
@@ -292,7 +293,6 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                     title={gettext('Information')}
                     placement="bottom-end"
                     triggerSelector="#image-suggestions-info-btn"
-                    zIndex={999}
                 >
                     {gettext(
                         'Image suggestions are based on generated tags'

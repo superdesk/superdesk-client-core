@@ -26,7 +26,6 @@ import {urgency} from './urgency';
 import {priority} from './priority';
 import {getSubjectAdapter} from './subject';
 import {anpa_category} from './anpa_category';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {sdApi} from 'api';
 import {headline} from './headline';
 import {abstract} from './abstract';
@@ -52,6 +51,7 @@ import {dateline} from './dateline';
 import {description_text} from './description_text';
 import {body_footer} from './body_footer';
 import {sign_off} from './sign_off';
+import {mediaSelf} from './_media_self';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -80,6 +80,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         description_text: description_text,
         body_footer: body_footer,
         sign_off: sign_off,
+        _media_self: mediaSelf,
     };
 
     return adapter;
@@ -181,7 +182,7 @@ export function storeEditor3ValueBase(
  * to {@link IAuthoringFieldV2}
  */
 export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>): IFieldsAdapter<IArticle> {
-    const customFieldVocabularies = getCustomFieldVocabularies();
+    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
     const adapter: IFieldsAdapter<IArticle> = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {

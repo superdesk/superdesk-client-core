@@ -2,6 +2,8 @@ import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'supe
 import {getAutoTaggingComponent} from './auto-tagging';
 import {getHeaderAutoTaggingComponent} from './header-auto-tagging';
 
+export const AUTO_TAGGING_WIDGET_ID = 'imatrics-auto-tagging-widget';
+
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
@@ -12,7 +14,7 @@ const extension: IExtension = {
             contributions: {
                 authoringSideWidgets: [
                     {
-                        _id: 'imatrics-auto-tagging-widget',
+                        _id: AUTO_TAGGING_WIDGET_ID,
                         label: label,
                         icon: 'tag',
                         order: 1,

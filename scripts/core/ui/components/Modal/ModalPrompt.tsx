@@ -39,7 +39,6 @@ export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="medium"
                 position="top"
                 headerTemplate={this.props.title}

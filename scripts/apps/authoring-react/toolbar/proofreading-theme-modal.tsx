@@ -84,7 +84,6 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
         return (
             <Modal
                 size="x-large"
-                zIndex={1050}
                 visible
                 onHide={this.props.onHide}
                 headerTemplate={gettext('Configure Editor themes')}

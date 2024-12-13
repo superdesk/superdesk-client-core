@@ -20,7 +20,7 @@ interface IProps {
     article: IArticle;
     error: boolean;
     loading: boolean;
-    headlines: Array<string>;
+    headlines: Array<string> | null;
     generateHeadlines: () => void;
     fieldsData?: OrderedMap<string, unknown>;
     onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
@@ -28,7 +28,7 @@ interface IProps {
 
 export default class HeadlinesBody extends React.Component<IProps> {
     componentDidMount(): void {
-        if (this.props.headlines.length < 1) {
+        if ((this.props.headlines?.length ?? 0) < 1) {
             this.props.generateHeadlines();
         }
     }
@@ -58,7 +58,7 @@ export default class HeadlinesBody extends React.Component<IProps> {
 
         return (
             <Spacer v gap="0" noWrap noGrow>
-                {headlines.map((headline, i) => (
+                {(headlines ?? []).map((headline, i) => (
                     <React.Fragment key={i}>
                         <Container gap="small" direction="column">
                             <Text size="small" weight="medium">
@@ -77,14 +77,13 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                     'headline',
                                                     superdesk.helpers.editor3ToOperationalFormat(
                                                         {rawContentState: rawState},
-                                                        'en',
+                                                        article.language,
                                                     ),
                                                 ));
                                         } else {
-                                            superdesk.entities.article.patch(
-                                                article,
-                                                {headline},
-                                                {patchDirectlyAndOverwriteAuthoringValues: true},
+                                            superdesk.ui.article.applyFieldChangesToEditor(
+                                                article._id,
+                                                {key: 'headline', value: headline},
                                             );
                                         }
                                     }}

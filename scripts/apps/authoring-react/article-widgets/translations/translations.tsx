@@ -1,7 +1,7 @@
 import React from 'react';
 import {RelativeDate} from 'core/datetime/relativeDate';
 import {state as State} from 'apps/search/components/fields/state';
-import {IArticle, IArticleSideWidget, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -12,23 +12,22 @@ import {Label} from 'superdesk-ui-framework';
 import {TranslationsBody} from './TranslationsBody';
 
 const getLabel = () => gettext('Translations');
+const TRANSLATIONS_WIDGET_ID = 'translation-widget';
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
-class Translations extends React.Component<IProps> {
+class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={TRANSLATIONS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
                 )}
                 body={(
                     <TranslationsBody
+                        initialState={this.props.initialState}
                         item={this.props.article}
                         wrapperTemplate={
                             ({children}) =>
@@ -90,7 +89,7 @@ class Translations extends React.Component<IProps> {
 
 export function getTranslationsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'translation-widget',
+        _id: TRANSLATIONS_WIDGET_ID,
         label: getLabel(),
         order: 2,
         icon: 'web',

@@ -1,4 +1,5 @@
 import {defineConfig, devices} from '@playwright/test';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -12,7 +13,7 @@ import {defineConfig, devices} from '@playwright/test';
 export default defineConfig({
     testDir: './playwright',
     /* Run tests in files in parallel */
-    fullyParallel: true,
+    fullyParallel: false,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
@@ -29,7 +30,7 @@ export default defineConfig({
         viewport: {width: 1280, height: 800},
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',
 
         screenshot: 'only-on-failure',
     },
@@ -40,7 +41,7 @@ export default defineConfig({
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: 'playwright/.auth/user.json',
+                storageState: path.join(__dirname, './playwright/.auth/user.json'),
             },
         },
 

@@ -33,21 +33,19 @@ describe('session service', () => {
         expect($rootScope.$broadcast).toHaveBeenCalledWith('logout');
     }));
 
-    it('can resolve identity on start', inject((session, $rootScope) => {
-        var identity;
+    it('can resolve identity on start', (done) => inject((session, $rootScope) => {
+        session.getIdentity().then((identity) => {
+            session.getIdentity().then((i2) => {
+                expect(identity.name).toBe('foo');
+                expect(identity).toBe(i2);
 
-        session.getIdentity().then((_identity) => {
-            identity = _identity;
-        });
-
-        session.getIdentity().then((i2) => {
-            expect(identity).toBe(i2);
+                done();
+            });
         });
 
         session.start(SESSION, {name: 'foo'});
 
         $rootScope.$apply();
-        expect(identity.name).toBe('foo');
     }));
 
     it('can store state for future requests', inject((session, $rootScope) => {
@@ -111,19 +109,18 @@ describe('session service', () => {
         expect(nextSession.identity.name).toBe('baz');
     }));
 
-    it('can return identity after session start', inject((session, $rootScope) => {
+    it('can return identity after session start', (done) => inject((session, $rootScope) => {
         session.start(SESSION, {name: 'bar'});
         $rootScope.$digest();
 
-        var success = jasmine.createSpy('success');
-
-        session.getIdentity().then(success);
+        session.getIdentity().then(() => {
+            done();
+        });
 
         $rootScope.$digest();
-        expect(success).toHaveBeenCalled();
     }));
 
-    it('should not resolve identity after expiry', inject((session, $rootScope) => {
+    it('should not resolve identity after expiry', (done) => inject((session, $rootScope) => {
         session.start(SESSION, {name: 'bar'});
         $rootScope.$digest();
 
@@ -134,7 +131,12 @@ describe('session service', () => {
 
         session.getIdentity().then(success);
 
+        setTimeout(() => {
+            expect(success).not.toHaveBeenCalled();
+
+            done();
+        }, 2000);
+
         $rootScope.$digest();
-        expect(success).not.toHaveBeenCalled();
     }));
 });

@@ -1,10 +1,9 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
-import {longFormat} from 'core/datetime/datetime';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/search/interfaces';
-import {openArticle} from 'core/get-superdesk-api-implementation';
+import {formatDate, openArticle} from 'core/get-superdesk-api-implementation';
 
 export function getStateLabel(itemState: ITEM_STATE) {
     switch (itemState) {
@@ -43,7 +42,7 @@ export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'it
                 const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
 
                 if (scheduled != null) {
-                    title = gettext('Scheduled for {{date}}', {date: longFormat(scheduled)});
+                    title = gettext('Scheduled for {{date}}', {date: formatDate(scheduled, {longFormat: true})});
                 }
             }
 

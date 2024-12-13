@@ -1,4 +1,3 @@
-import {isEqual} from 'lodash';
 import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
@@ -56,9 +55,9 @@ function getRundownItemTemplateAuthoringStorage(
         getContentProfile: () => {
             return Promise.resolve(rundownItemContentProfile);
         },
-        closeAuthoring: (current, original, _cancelAutosave, doClose) => {
+        closeAuthoring: (_current, original, hasUnsavedChanges, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
-            const warnAboutLosingChanges = isCreationMode || !isEqual(current.data, original.data);
+            const warnAboutLosingChanges = isCreationMode || hasUnsavedChanges;
 
             if (warnAboutLosingChanges) {
                 return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {

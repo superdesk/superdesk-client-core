@@ -226,8 +226,13 @@ export function getContentProfileFormConfig(
 
     const characterValidationEnabled = appConfig?.disallowed_characters != null;
 
+    /**
+     * validate_characters switch doesn't make sense in authoring-react
+     * because there is a dedicated config per field which chars are disallowed.
+     */
     if (
-        field?.id != null
+        authoringReactViewEnabled
+        && field?.id != null
         && characterValidationEnabled
         && (
             schema[field.id]?.type === 'string'

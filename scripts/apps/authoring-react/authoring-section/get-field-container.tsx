@@ -6,6 +6,26 @@ import {Switch} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 
+export const RequiredIndicatorForHeader = () => (
+    <span
+        className="sd-font-size--x-small"
+        style={{color: 'var(--sd-colour-alert)'}}
+    >
+        *
+    </span>
+);
+
+export const RequiredIndicatorForContent = () => (
+    <span
+        style={{
+            fontSize: 'var(--text-size--base)',
+            fontStyle: 'italic',
+        }}
+    >
+        {gettext('Required')}
+    </span>
+);
+
 export function getFieldContainer(
     useHeaderLayout: boolean,
     canBeToggled: boolean,
@@ -38,15 +58,12 @@ export function getFieldContainer(
                             )}
                         >
                             <Spacer h gap="8" noGrow noWrap>
-                                <span style={{textAlign: 'end'}}>
-                                    {field.fieldConfig.required && (
-                                        <span
-                                            className="sd-font-size--x-small"
-                                            style={{color: 'var(--sd-colour-alert)'}}
-                                        >* </span>
-                                    )}
+                                <Spacer h gap="4" noGrow noWrap>
                                     {field.name}
-                                </span>
+                                    {field.fieldConfig.required && (
+                                        <RequiredIndicatorForHeader />
+                                    )}
+                                </Spacer>
                                 <span>{toggle}</span>
                             </Spacer>
                         </span>
@@ -54,20 +71,19 @@ export function getFieldContainer(
                         <div style={{flexGrow: 1}}>
                             {this.props.children}
 
-                            {
-                                miniToolbar != null && (
-                                    <div>{miniToolbar}</div>
-                                )
-                            }
-
-                            {
-                                validationError != null && (
-                                    <div>
-                                        <SpacerBlock v gap="4" />
+                            <Spacer h gap="8" justifyContent="end" noGrow noWrap>
+                                {
+                                    validationError != null && (
                                         <div className="input-field-error">{validationError}</div>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
+
+                                {
+                                    miniToolbar != null && (
+                                        <div>{miniToolbar}</div>
+                                    )
+                                }
+                            </Spacer>
                         </div>
                     </Spacer>
                 </div>
@@ -89,14 +105,20 @@ export function getFieldContainer(
                         }}
                     >
                         <Spacer h gap="8" noGrow>
-                            <span
-                                className={classNames(
-                                    'field-label--base',
-                                    {'field-label--base--invalid': validationError != null},
+                            <Spacer h gap="8" noGrow noWrap>
+                                <span
+                                    className={classNames(
+                                        'field-label--base',
+                                        {'field-label--base--invalid': validationError != null},
+                                    )}
+                                >
+                                    {field.name}
+                                </span>
+
+                                {field.fieldConfig.required && (
+                                    <RequiredIndicatorForContent />
                                 )}
-                            >
-                                {field.name}
-                            </span>
+                            </Spacer>
 
                             <span>{toggle}</span>
                         </Spacer>
@@ -108,7 +130,7 @@ export function getFieldContainer(
                         }
                     </div>
 
-                    <SpacerBlock v gap="8" />
+                    <SpacerBlock v gap="4" />
 
                     {
                         validationError != null && (

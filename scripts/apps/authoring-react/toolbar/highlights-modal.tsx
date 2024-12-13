@@ -69,7 +69,6 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
         return (
             <Modal
                 onHide={this.props.closeModal}
-                zIndex={1050}
                 size="small"
                 visible
                 headerTemplate={gettext('Highlights')}

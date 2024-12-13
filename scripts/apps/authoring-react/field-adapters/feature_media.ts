@@ -33,16 +33,12 @@ export const feature_media: IFieldAdapter<IArticle> = {
         }
     },
     storeValue: (value: IMediaValueOperational, article) => {
-        if (value.length < 1) {
-            return article;
-        } else {
-            return {
-                ...article,
-                associations: {
-                    ...(article.associations ?? {}),
-                    featuremedia: value[0],
-                },
-            };
-        }
+        return {
+            ...article,
+            associations: {
+                ...(article.associations ?? {}),
+                featuremedia: value[0] ?? null,
+            },
+        };
     },
 };

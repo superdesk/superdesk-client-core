@@ -27,3 +27,21 @@ CONTENTAPI_ELASTICSEARCH_INDEX = CONTENTAPI_MONGO_DBNAME
 LEGAL_ARCHIVE = True
 
 DEFAULT_TIMEZONE = "Europe/London"
+
+VALIDATOR_MEDIA_METADATA = {
+    "slugline": {
+        "required": False,
+    },
+    "headline": {
+        "required": False,
+    },
+    "description_text": {
+        "required": True,
+    },
+    "byline": {
+        "required": False,
+    },
+    "copyrightnotice": {
+        "required": False,
+    },
+}

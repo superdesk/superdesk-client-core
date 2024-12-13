@@ -19,6 +19,7 @@ export class DropdownOption extends React.PureComponent<IProps> {
                 className="content-create-dropdown--option"
                 onClick={onClick}
                 data-test-id={this.props['data-test-id']}
+                aria-label={label}
             >
                 {
                     icon != null && (

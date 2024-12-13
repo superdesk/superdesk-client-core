@@ -6,6 +6,7 @@ interface IProps {
     item: IArticle;
     wrapperTemplate: React.ComponentType<{children: Array<JSX.Element>}>;
     translationTemplate: React.ComponentType<{translation: IArticle, getTranslatedFromLanguage: () => string}>;
+    initialState?: IState;
 }
 
 interface IState {
@@ -14,7 +15,20 @@ interface IState {
 }
 
 export class TranslationsBody extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = this.props.initialState ?? {
+            translations: null,
+            translationsLookup: {},
+        };
+    }
+
     componentDidMount() {
+        if (this.props.initialState != null) {
+            return;
+        }
+
         const {item} = this.props;
 
         ng.get('TranslationService').getTranslations(item)

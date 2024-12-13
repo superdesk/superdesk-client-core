@@ -21,6 +21,7 @@ import {
     IAuthoringActionType,
     IDangerousArticlePatchingOptions,
     IDesk,
+    IExtensionActivationResult,
     IStage,
     onPublishMiddlewareResult,
 } from 'superdesk-api';
@@ -74,9 +75,7 @@ function canPublish(item: IArticle): boolean {
         return false;
     }
 
-    const $location = ng.get('$location');
-
-    if ($location.path() === '/workspace/personal' && appConfig?.features?.publishFromPersonal !== true) {
+    if (sdApi.navigation.isPersonalSpace() && appConfig?.features?.publishFromPersonal !== true) {
         return false;
     } else {
         const deskId = item?.task?.desk;
@@ -233,6 +232,21 @@ function createNewWithData(data: Partial<IArticle>, contentProfileId: string): v
         });
 }
 
+function translate(
+    item: IArticle,
+    language: string,
+): Promise<IArticle> {
+    return httpRequestJsonLocal<IArticle>({
+        method: 'POST',
+        path: '/archive/translate',
+        payload: {
+            guid: item.guid,
+            language: language,
+            desk: sdApi.desks.getCurrentDeskId(),
+        },
+    });
+}
+
 /**
  * Checks if associations is with rewrite_of item then open then modal to add associations.
  * The user has options to add associated media to the current item and review the media change
@@ -311,9 +325,9 @@ function canPublishOnDesk(deskType: string): boolean {
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
     return appConfig.features?.customAuthoringTopbar?.publishAndContinue
-        && sdApi.navigation.isPersonalSpace()
+        && !sdApi.navigation.isPersonalSpace()
         && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
-        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty, sdApi.navigation.isPersonalSpace());
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
 }
 
 function showCloseAndContinue(item: IArticle, dirty: boolean): boolean {
@@ -481,7 +495,7 @@ function get(id: IArticle['_id']): Promise<IArticle> {
 function itemAction(_article: IArticle): {[key in IAuthoringActionType]: boolean} {
     const authoring = ng.get('authoring');
 
-    return authoring.itemAction(_article);
+    return authoring.itemActions(_article);
 }
 
 function isEditable(_article: IArticle): boolean {
@@ -516,6 +530,7 @@ function rewrite(item: IArticle): void {
 }
 
 interface IArticleApi {
+    translate(item: IArticle, language: string): Promise<IArticle>;
     get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
     isEditable(article: IArticle): boolean;
@@ -610,6 +625,7 @@ interface IArticleApi {
 }
 
 export const article: IArticleApi = {
+    translate,
     rewrite,
     isLocked,
     isEditable,

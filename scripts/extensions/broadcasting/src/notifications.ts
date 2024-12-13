@@ -18,10 +18,11 @@ interface IRundownItemCommentNotification {
 type IExtensionNotifications = Required<Required<IExtensionActivationResult>['contributions']>['notifications'];
 
 export const notifications: IExtensionNotifications = {
-    'rundown-item-comment': (notification: IRundownItemCommentNotification) => ({
-        body: notification.message,
-        actions: [
-            {
+    'rundown-item-comment': {
+        name: gettext('Open item'),
+        handler: (notification: IRundownItemCommentNotification) => ({
+            body: notification.message,
+            actions: [{
                 label: gettext('Open item'),
                 onClick: () => {
                     const {rundownId, rundownItemId} = notification.data;
@@ -42,7 +43,7 @@ export const notifications: IExtensionNotifications = {
                         superdesk.browser.location.setPage(BROADCASTING_MODULE_PATH);
                     }
                 },
-            },
-        ],
-    }),
+            }],
+        }),
+    },
 };

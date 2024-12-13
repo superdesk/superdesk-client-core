@@ -1,20 +1,18 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IArticleSideWidget, IComment, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType, IComment, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {notify} from 'core/notify/notify';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
-class Component extends React.PureComponent<IProps> {
+class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <CommentsWidget
+                initialState={this.props.initialState}
                 entityId={this.props.article._id}
                 readOnly={this.props.readOnly}
                 contentProfile={this.props.contentProfile}
@@ -52,7 +50,13 @@ class Component extends React.PureComponent<IProps> {
                             item: this.props.article._id,
                             text: text,
                         },
-                    });
+                    })
+                        .then((res: void) => res)
+                        .catch((error) => {
+                            if (error.data._issues?.text != null) {
+                                notify.error(error.data._issues.text);
+                            }
+                        });
                 }}
             />
         );

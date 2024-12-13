@@ -82,7 +82,6 @@ export class PreviewModal extends React.Component<IProps> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="small"
                 position="top"
                 headerTemplate={gettext('Select preview target')}

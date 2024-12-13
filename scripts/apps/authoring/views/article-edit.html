@@ -279,18 +279,20 @@
      sd-validation-error="error.media"
      data-required="schema.media.required"
      tabindex="{{editor.media.order}}"
-     sd-width="{{editor.media.sdWidth|| 'full'}}">
-
+     sd-width="{{editor.media.sdWidth|| 'full'}}"
+     data-test-id="authoring-field"
+     data-test-value="media"
+>
     <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
         <div class="media-item__item">
             <div class="item-association item-association--preview">
                 <div class="item-association__image-container" sd-item-rendition data-item="item" data-rendition="baseImage"></div>
 
-                <div class="item-association__image-overlay" ng-if="_editable">
-                    <div class="item-association__icons-block">
-                        <a class="item-association__image-action" sd-tooltip="{{'Edit metadata' | translate}}" ng-click="editMedia('view')" aria-label="{{ 'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="{{'Edit image' | translate}}" ng-click="editMedia('image-edit')" aria-label="{{ 'Edit image' | translate}}"><i class="icon-switches"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="{{'Edit crops' | translate}}" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes" aria-label="{{ 'Edit crops' | translate}}"><i class="icon-crop"></i></a>
+                <div class="item-association__image-overlay" ng-if="_editable" data-test-id="image-overlay">
+                    <div class="item-association__icons-block" data-test-id="image-overlay-actions">
+                        <a class="item-association__image-action" data-test-id="edit-metadata" sd-tooltip="{{'Edit metadata' | translate}}" ng-click="editMedia('view')" aria-label="{{ 'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
+                        <a class="item-association__image-action" data-test-id="edit-image" sd-tooltip="{{'Edit image' | translate}}" ng-click="editMedia('image-edit')" aria-label="{{ 'Edit image' | translate}}"><i class="icon-switches"></i></a>
+                        <a class="item-association__image-action" data-test-id="crop" sd-tooltip="{{'Edit crops' | translate}}" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes" aria-label="{{ 'Edit crops' | translate}}"><i class="icon-crop"></i></a>
                     </div>
                 </div>
             </div>
@@ -371,6 +373,7 @@
          data-required="schema.description_text.required"
          data-validation-error="error.description_text"
          data-validate-characters="schema.description_text.validate_characters"
+         data-test-id="field--description_text"
     ></div>
 </div>
 
@@ -515,6 +518,8 @@
         data-required="schema[field._id].required"
         data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
         data-validate-characters="schema[field._id].validate_characters"
+        data-test-id="authoring-field"
+        data-test-value="{{ field.display_name }}"
     ></div>
 </div>
 
@@ -525,7 +530,10 @@
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    sd-validation-error="error[field._id] || error.extra[field._id]">
+    sd-validation-error="error[field._id] || error.extra[field._id]"
+    data-test-id="authoring-field"
+    data-test-value="{{ field.display_name }}"
+>
 
     <label class="field__label">{{field.display_name}}</label>
     <div
@@ -547,7 +555,10 @@
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field_id]"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-required="schema[field._id].required">
+    data-required="schema[field._id].required"
+    data-test-id="authoring-field"
+    data-test-value="{{ field.display_name }}"
+>
     <label class="field__label" translate>{{field.display_name}}</label>
     <span>
     <button ng-disabled="!_editable || schema[field._id].readonly === true" id="clear-embed-btn" type="button" class="btn btn--small pull-right" ng-click="clearEmbed(field._id)"
@@ -597,7 +608,8 @@
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-test-id="{{'authoring-field--' + field._id}}"
+    data-test-id="authoring-field"
+    data-test-value="{{ field.display_name }}"
 >
     <label class="field__label" translate>{{field.display_name}}</label>
 
@@ -659,7 +671,10 @@
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
     order="{{editor[field._id].order}}"
     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
-    data-required="schema[field._id].required">
+    data-required="schema[field._id].required"
+    data-test-id="authoring-field"
+    data-test-value="{{ field.display_name }}"
+>
     <sd-article-url-fields
         editable="_editable && schema[field._id].readonly !== true"
         label="field.display_name"

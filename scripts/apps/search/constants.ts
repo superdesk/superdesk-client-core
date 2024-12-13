@@ -184,6 +184,8 @@ export const CORE_PROJECTED_FIELDS = {
         'translated_from',
         'translations',
         'schedule_settings',
+
+        'profile',
     ],
 };
 

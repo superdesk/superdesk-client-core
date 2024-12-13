@@ -3,6 +3,8 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
+import {getHumanReadableFileSize} from '@sourcefabric/common';
+
 // Types
 import {IDesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
@@ -26,7 +28,6 @@ import {
     Text,
 } from '../../ui';
 import {IPanelTools} from '../../ui/PanelTools';
-import {getHumanReadableFileSize} from '../../utils/ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 interface IProps {

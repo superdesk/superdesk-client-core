@@ -112,6 +112,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         return (
             <SelectWithTemplate
+                key={this.props.deskId}
                 label={gettext('Select a user')}
                 inlineLabel={true}
                 labelHidden={true}
@@ -119,11 +120,17 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                     this.abortController?.abort();
                     this.abortController = new AbortController();
 
-                    const query = JSON.stringify(
-                        searchString != null && searchString.length > 0
-                            ? getUserSearchMongoQuery(searchString)
-                            : {},
-                    );
+                    let url = '/users';
+
+                    if (this.props.deskId != null && this.props.deskId != '') {
+                        url = `/desks/${this.props.deskId}/users`;
+                    }
+
+                    const urlParams = {max_results: 50};
+
+                    if (searchString != null && searchString.length > 0) {
+                        urlParams['where'] = getUserSearchMongoQuery(searchString);
+                    }
 
                     // Wrapping into additional promise in order to avoid having to handle rejected promise
                     // in `SelectWithTemplate` component. The component takes a generic promise
@@ -132,11 +139,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                     return new Promise((resolve) => {
                         httpRequestJsonLocal<IRestApiResponse<IUser>>({
                             method: 'GET',
-                            path: '/users',
-                            urlParams: {
-                                where: query,
-                                max_results: 50,
-                            },
+                            path: url,
+                            urlParams,
                             abortSignal: this.abortController.signal,
                         }).then((res) => {
                             resolve(res._items);

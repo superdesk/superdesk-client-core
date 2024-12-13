@@ -62,7 +62,6 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                 visible
                 onHide={() => this.props.closeModal()}
                 size="medium"
-                zIndex={1050}
                 headerTemplate={gettext('Save as template')}
             >
                 <Spacer v gap="16">

@@ -5,6 +5,7 @@ import {element, browser, protractor, by} from 'protractor';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
+import {monitoring} from './helpers/monitoring';
 import {multiAction} from './helpers/actions';
 import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 import {TreeSelectDriver} from './helpers/tree-select-driver';
@@ -164,8 +165,7 @@ describe('content', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'create-package']).click();
+        monitoring.createItem('Create package');
 
         element.all(by.model('item.headline')).first().sendKeys('Empty Package');
         authoring.save();

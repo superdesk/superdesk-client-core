@@ -2,7 +2,11 @@ import {IBaseRestApiResponse, ISortOption, IRestApiResponse} from 'superdesk-api
 import ng from 'core/services/ng';
 import {appConfig} from 'appConfig';
 
-function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string, authenticationToken: string) {
+function fetchPage<T extends IBaseRestApiResponse>(
+    items: Array<T>,
+    url: string,
+    authenticationToken: string,
+): Promise<Array<T>> {
     return fetch(appConfig.server.url + '/' + url, {
         method: 'GET',
         headers: {
@@ -23,7 +27,7 @@ function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string,
         });
 }
 
-export function fetchAll<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption) {
+export function fetchAll<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption): Promise<Array<T>> {
     const sortOption = (sort.direction === 'descending' ? '-' : '') + sort.field;
 
     return ng.getService('session')

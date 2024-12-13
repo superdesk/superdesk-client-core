@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IVocabularyItem} from 'superdesk-api';
+import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -17,17 +17,14 @@ import {AnnotationsPreview} from './AnnotationsPreview';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
-
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+const METADATA_WIDGET_ID = 'metadata-widget';
 
 interface IState {
     languages: Array<ILanguage>;
 }
 
-class MetadataWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = {
@@ -50,7 +47,6 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
     render() {
         const {article} = this.props;
-
         const {
             flags,
             usageterms,
@@ -90,15 +86,16 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
             versioncreator,
             rewritten_by,
         } = article;
-
         const {onItemChange} = this.props;
-
         const allVocabularies = sdApi.vocabularies.getAll();
+        const hasGenre = allVocabularies.map((v) => v.schema_field).includes('genre') === false;
+        const hasPlace = allVocabularies.map((v) => v.schema_field).includes('place') === false;
 
         return (
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={METADATA_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
@@ -148,7 +145,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             label={gettext('Usage terms').toUpperCase()}
                             inlineLabel
                             type="text"
-                            value={usageterms}
+                            value={usageterms ?? ''}
                             onChange={(value) => {
                                 onItemChange({
                                     ...article,
@@ -214,54 +211,52 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             />
                         )}
 
-                        {
-                            <>
-                                <Spacer h gap="64" justifyContent="space-between" noWrap>
-                                    <Heading type="h6">
-                                        {gettext('State').toUpperCase()}
-                                    </Heading>
-                                    <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
-                                        <StateComponent item={article} />
-                                        {article.embargo && (
-                                            <Label
-                                                style="hollow"
-                                                type="alert"
-                                                text={gettext('embargo')}
-                                            />
-                                        )}
-                                        {flags.marked_for_not_publication && (
-                                            <Label
-                                                text={gettext('Not For Publication')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {flags.marked_for_legal && (
-                                            <Label
-                                                text={gettext('Legal')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {flags.marked_for_sms && (
-                                            <Label
-                                                text={gettext('Sms')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                        {(rewritten_by?.length ?? 0) > 0 && (
-                                            <Label
-                                                text={gettext('Updated')}
-                                                style="hollow"
-                                                type="alert"
-                                            />
-                                        )}
-                                    </Spacer>
+                        {<>
+                            <Spacer h gap="64" justifyContent="space-between" noWrap>
+                                <Heading type="h6">
+                                    {gettext('State').toUpperCase()}
+                                </Heading>
+                                <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
+                                    <StateComponent item={article} />
+                                    {article.embargo && (
+                                        <Label
+                                            style="hollow"
+                                            type="alert"
+                                            text={gettext('embargo')}
+                                        />
+                                    )}
+                                    {flags.marked_for_not_publication && (
+                                        <Label
+                                            text={gettext('Not For Publication')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_legal && (
+                                        <Label
+                                            text={gettext('Legal')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_sms && (
+                                        <Label
+                                            text={gettext('Sms')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {(rewritten_by?.length ?? 0) > 0 && (
+                                        <Label
+                                            text={gettext('Updated')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
                                 </Spacer>
-                                <ContentDivider border type="dotted" margin="x-small" />
-                            </>
-                        }
+                            </Spacer>
+                            <ContentDivider border type="dotted" margin="x-small" />
+                        </>}
 
                         {ingest_provider != null && (
                             <MetadataItem
@@ -270,19 +265,17 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
                             />
                         )}
 
-                        {
-                            (ingest_provider_sequence?.length ?? 0) > 0 && (
-                                <MetadataItem
-                                    label={gettext('Ingest sequence')}
-                                    value={ingest_provider_sequence}
-                                />
-                            )
-                        }
+                        {(ingest_provider_sequence?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Ingest sequence')}
+                                value={ingest_provider_sequence}
+                            />
+                        )}
 
                         {expiry && (
                             <MetadataItem
                                 label={gettext('Expiry')}
-                                value={<Datetime datetime={expiry} />}
+                                value={<DateTime dateTime={expiry} />}
                             />
                         )}
 
@@ -305,67 +298,52 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         <MetadataItem label={gettext('Take key')} value={anpa_take_key} />
 
-                        {
-                            signal && (
+                        {signal && (
+                            <MetadataItem
+                                label={gettext('Signal')}
+                                value={(
+                                    <div>
+                                        {(signal.map(({name, qcode}) => (
+                                            <Fragment key={name}>{name ?? qcode}</Fragment>
+                                        )))}
+                                    </div>
+                                )}
+                            />
+                        )}
+
+                        {anpa_category?.name != null && (
+                            <MetadataItem
+                                label={gettext('Category')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(anpa_category, 'name')}
+                            />
+                        )}
+
+                        {allVocabularies.filter((cv) => article[cv.schema_field] != null).toArray()
+                            .map((vocabulary) => (
                                 <MetadataItem
-                                    label={gettext('Signal')}
-                                    value={(
-                                        <div>
-                                            {(signal.map(({name, qcode}) => (
-                                                <Fragment key={name}>{name ?? qcode}</Fragment>
-                                            )))}
-                                        </div>
+                                    key={vocabulary._id}
+                                    label={vocabulary.display_name}
+                                    value={vocabularies.getVocabularyItemLabel(
+                                        article[vocabulary.schema_field],
+                                        article,
                                     )}
                                 />
-                            )
+                            ))
                         }
 
-                        {
-                            anpa_category?.name != null && (
-                                <MetadataItem
-                                    label={gettext('Category')}
-                                    value={sdApi.vocabularies.vocabularyItemsToString(anpa_category, 'name')}
-                                />
-                            )
-                        }
+                        {(genre?.length ?? 0) > 0 && hasGenre && (
+                            <MetadataItem
+                                label={gettext('Genre')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
+                            />
+                        )}
 
-                        {
-                            allVocabularies
-                                .filter((cv) => article[cv.schema_field] != null)
-                                .toArray()
-                                .map((vocabulary) => (
-                                    <MetadataItem
-                                        key={vocabulary._id}
-                                        label={vocabulary.display_name}
-                                        value={vocabularies.getVocabularyItemLabel(
-                                            article[vocabulary.schema_field],
-                                            article,
-                                        )}
-                                    />
-                                ))
-                        }
-
-                        {
-                            (genre.length ?? 0) > 0
-                                && allVocabularies.map((v) => v.schema_field).includes('genre') === false
-                                && (
-                                    <MetadataItem
-                                        label={gettext('Genre')}
-                                        value={sdApi.vocabularies.vocabularyItemsToString(genre, 'name')}
-                                    />
-                                )
-                        }
-
-                        {
-                            (place.length ?? 0) > 0
-                                && allVocabularies.map((v) => v.schema_field).includes('place') === false
-                                && (
-                                    <MetadataItem
-                                        label={gettext('Place')}
-                                        value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
-                                    />
-                                )
-                        }
+                        {(place?.length ?? 0) > 0 && hasPlace && (
+                            <MetadataItem
+                                label={gettext('Place')}
+                                value={sdApi.vocabularies.vocabularyItemsToString(place, 'name')}
+                            />
+                        )}
 
                         {(ednote?.length ?? 0) > 0 && <MetadataItem label={gettext('Editorial note')} value={ednote} />}
 
@@ -440,22 +418,16 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
                         <MetadataItem label={gettext('Type')} value={type} />
 
-                        {
-                            renditions?.original != null && (
-                                <MetadataItem
-                                    label={gettext('Type')}
-                                    value={`${renditions.original.width} x ${renditions.original.height}`}
-                                />
-                            )
-                        }
+                        {renditions?.original != null && (
+                            <MetadataItem
+                                label={gettext('Type')}
+                                value={`${renditions.original.width} x ${renditions.original.height}`}
+                            />
+                        )}
 
-                        {
-                            article.type === 'picture'
-                                && article.archive_description !== article.description_text
-                                && (
-                                    <AnnotationsPreview article={article} />
-                                )
-                        }
+                        {article.type === 'picture' && article.archive_description !== article.description_text && (
+                            <AnnotationsPreview article={article} />
+                        )}
                     </Spacer>
                 )}
             />
@@ -465,7 +437,7 @@ class MetadataWidget extends React.PureComponent<IProps, IState> {
 
 export function getMetadataWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'metadata-widget',
+        _id: METADATA_WIDGET_ID,
         label: getLabel(),
         order: 1,
         icon: 'info',

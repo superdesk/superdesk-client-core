@@ -51,7 +51,7 @@ describe('Preferences Service', () => {
         },
     };
 
-    beforeEach(inject((api, $q) => {
+    beforeEach(inject(($injector, $q, session, api) => {
         spyOn(api, 'find').and.callFake((resource, id, params, cache) => {
             if (cache) {
                 return $q.when(testPreferences);
@@ -60,57 +60,52 @@ describe('Preferences Service', () => {
             return $q.when(testUncachedPreferences);
         });
         spyOn(api, 'save').and.returnValue($q.when({user_preferences: update}));
-    }));
 
-    beforeEach(inject(($injector, $q, session) => {
         preferencesService = $injector.get('preferencesService');
         spyOn(session, 'getIdentity').and.returnValue($q.when({sessionId: 1}));
         session.sessionId = 1;
     }));
 
-    it('can get user preferences', inject((api, $rootScope) => {
+    it('can get user preferences', (done) => inject((api, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
-        var preferences;
+        preferencesService.get().then((preferences) => {
+            expect(preferences).not.toBe(null);
+            expect(preferences['archive:view'].view).toBe('mgrid');
+            expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
 
-        preferencesService.get().then((_preferences) => {
-            preferences = _preferences;
+            done();
         });
 
         $rootScope.$digest();
-
-        expect(preferences).not.toBe(null);
-        expect(preferences['archive:view'].view).toBe('mgrid');
-        expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
     }));
 
-    it('can get user preferences by key', inject((api, $rootScope) => {
+    it('can get user preferences by key', (done) => inject(($rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
-        var preferences;
 
-        preferencesService.get('archive:view').then((_preferences) => {
-            preferences = _preferences;
+        preferencesService.get('archive:view').then((preferences) => {
+            expect(preferences.view).toBe('mgrid');
+
+            done();
         });
 
         $rootScope.$digest();
-        expect(preferences.view).toBe('mgrid');
     }));
 
-    it('can get user preferences by key bypass the cache', inject((api, $rootScope) => {
-        var preferences;
+    it('can get user preferences by key bypass the cache', (done) => inject(($rootScope) => {
+        preferencesService.get('feature:preview', true).then((preferences) => {
+            expect(preferences.enabled).toBe(false);
 
-        preferencesService.get('feature:preview', true).then((_preferences) => {
-            preferences = _preferences;
+            done();
         });
 
         $rootScope.$digest();
-        expect(preferences.enabled).toBe(false);
     }));
 
-    it('update user preferences by key', inject((api, $q, $rootScope) => {
+    it('update user preferences by key', (done) => inject((api, $rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
@@ -119,28 +114,26 @@ describe('Preferences Service', () => {
         $rootScope.$digest();
         expect(api.save.calls.count()).toBe(1);
 
-        var preferences;
+        preferencesService.get('feature:preview').then((preferences) => {
+            expect(preferences.enabled).toBe(false);
 
-        preferencesService.get('feature:preview').then((_preferences) => {
-            preferences = _preferences;
+            done();
         });
 
         $rootScope.$digest();
-        expect(preferences.enabled).toBe(false);
     }));
 
-    it('can get all active privileges', inject((api, $rootScope) => {
+    it('can get all active privileges', (done) => inject(($rootScope) => {
         preferencesService.get();
         $rootScope.$digest();
 
-        var privileges;
+        preferencesService.getPrivileges().then((privileges) => {
+            expect(privileges.privilege1).toBe(1);
 
-        preferencesService.getPrivileges().then((_privileges) => {
-            privileges = _privileges;
+            done();
         });
 
         $rootScope.$digest();
-        expect(privileges.privilege1).toBe(1);
     }));
 });
 
@@ -156,15 +149,16 @@ describe('preferences error handling', () => {
         $httpBackend.expectGET('/preferences/sess2').respond({});
     }));
 
-    it('can reload on session expiry', inject((preferencesService, session, $rootScope, $httpBackend) => {
-        var success = jasmine.createSpy('success');
+    it('can reload on session expiry', (done) => inject((preferencesService, session, $rootScope, $httpBackend) => {
         var error = jasmine.createSpy('error');
 
-        preferencesService.get().then(success, error);
+        preferencesService.get().then(() => {
+            expect(error).not.toHaveBeenCalled();
+
+            done();
+        }, error);
         $rootScope.$digest();
         session.sessionId = 'sess2';
         $httpBackend.flush();
-        expect(success).toHaveBeenCalled();
-        expect(error).not.toHaveBeenCalled();
     }));
 });

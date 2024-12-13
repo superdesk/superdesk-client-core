@@ -1,4 +1,4 @@
-import {IDesk, IStage} from 'superdesk-api';
+import {IDesk, IStage, IUser} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {OrderedMap} from 'immutable';
 
@@ -49,6 +49,10 @@ function getDeskById(id: IDesk['_id']): IDesk {
     return getAllDesks().get(id);
 }
 
+function getDeskMembers(deskId: IDesk['_id']): Array<IUser> {
+    return ng.get('desks').deskMembers[deskId] ?? [];
+}
+
 interface IDesksApi {
     /** Desk is considered active if it is being viewed in monitoring at the moment */
     getActiveDeskId(): IDesk['_id'] | null;
@@ -58,6 +62,7 @@ interface IDesksApi {
     getDeskById(id: IDesk['_id']): IDesk ;
     getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
     getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
+    getDeskMembers(deskId: IDesk['_id']): Array<IUser>; // members of the desk
 }
 
 export const desks: IDesksApi = {
@@ -68,4 +73,5 @@ export const desks: IDesksApi = {
     getDeskById,
     getDeskStages,
     getCurrentUserDesks,
+    getDeskMembers,
 };

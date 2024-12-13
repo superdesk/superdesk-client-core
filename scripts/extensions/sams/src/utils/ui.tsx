@@ -33,16 +33,6 @@ export function showModalConnectedToStore<T = any>(
     );
 }
 
-export function getHumanReadableFileSize(fileSize: number): string {
-    if (fileSize < 1024) {
-        return fileSize + 'bytes';
-    } else if (fileSize < 1048576) {
-        return (fileSize / 1024).toFixed(1) + 'KB';
-    } else {
-        return (fileSize / 1048576).toFixed(1) + 'MB';
-    }
-}
-
 export function getIconTypeFromMimetype(mimetype: string) {
     if (mimetype.startsWith('image/')) {
         return 'photo';

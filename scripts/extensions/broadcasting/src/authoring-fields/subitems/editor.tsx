@@ -73,7 +73,6 @@ export class Editor extends React.PureComponent<IProps> {
                                 }
                             </Card>
                         ),
-                        1051,
                     );
                 }}
                 disabled={this.props.readOnly}

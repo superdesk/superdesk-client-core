@@ -1,3 +1,4 @@
+import {merge} from 'lodash';
 import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
 
 /* globals __SUPERDESK_CONFIG__: true */
@@ -9,6 +10,28 @@ if (appConfig.startingDay == null) {
 
 if (appConfig.shortTimeFormat == null) {
     appConfig.shortTimeFormat = 'HH:mm'; // 24h format
+}
+
+const defaultDateFormat = 'MM/DD';
+const defaultTimeFormat = 'hh:mm';
+
+if (appConfig.view == null) {
+    appConfig.view = {
+        dateformat: defaultDateFormat,
+        timeformat: defaultTimeFormat,
+    };
+}
+
+if (appConfig.view.dateformat == null) {
+    appConfig.view.dateformat = defaultDateFormat;
+}
+
+if (appConfig.view.timeformat == null) {
+    appConfig.view.timeformat = defaultTimeFormat;
+}
+
+if (appConfig.longDateFormat == null) {
+    appConfig.longDateFormat = 'LLL';
 }
 
 if (appConfig.ui == null) {
@@ -26,6 +49,9 @@ if (appConfig.features == null) {
 if (appConfig.features.autorefreshContent == null) {
     appConfig.features.autorefreshContent = true; // default to true
 }
+
+// allow e2e tests to overwrite appConfig via local storage
+Object.assign(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';

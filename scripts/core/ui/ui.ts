@@ -1,18 +1,19 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {difference, filter, mapValues, sortBy, union, without} from 'lodash';
+import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {Spinner} from 'superdesk-ui-framework/react';
+import {Spinner, IconPicker} from 'superdesk-ui-framework/react';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 import {FormattingOptionsTreeSelect} from 'apps/workspace/content/views/FormattingOptionsMultiSelect';
+import {IS_WIDGET_PINNED, SIDE_WIDGET_WIDTH} from 'apps/authoring/widgets/widgets';
 
 /**
  * Gives top shadow for scroll elements
@@ -925,23 +926,36 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 }, 0, false);
             }
 
-            /*
-             * Resize on request
-             */
-            $rootScope.$on('resize:monitoring', (e, value) => {
-                if ((workspace.outerWidth() + value) < MONITORING_MIN_WIDTH) {
+            const resizeOnDemandHandler = (resizeWith: number) => {
+                if ((workspace.outerWidth() + resizeWith) < MONITORING_MIN_WIDTH) {
                     return;
                 }
 
-                workspace.width(workspace.outerWidth() + value);
+                workspace.width(workspace.outerWidth() + resizeWith);
 
                 resize();
 
                 $timeout(() => {
                     afterResize();
                 }, 500, false);
+            };
+
+            addEventListener('resize-monitoring', (e: CustomEvent) => {
+                resizeOnDemandHandler(e.detail.value);
             });
 
+            /*
+             * Resize on request
+             */
+            $rootScope.$on('resize:monitoring', (e, value) => {
+                resizeOnDemandHandler(value);
+            });
+
+            $rootScope.$on('$destroy', () => {
+                removeEventListener('resize-monitoring', (e: CustomEvent) => {
+                    resizeOnDemandHandler(e.detail.value);
+                });
+            });
             /*
              * If authoring is not initialized,
              * wait, and initialize it again
@@ -959,7 +973,12 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 handles: 'e',
                 minWidth: MONITORING_MIN_WIDTH,
                 start: function(e, ui) {
-                    workspace.resizable({maxWidth: container.width() - AUTHORING_MIN_WIDTH});
+                    const WIDGET_SIDEBAR_MENU_WIDTH = 48;
+                    const totalSize = IS_WIDGET_PINNED
+                        ? (AUTHORING_MIN_WIDTH + SIDE_WIDGET_WIDTH + WIDGET_SIDEBAR_MENU_WIDTH)
+                        : AUTHORING_MIN_WIDTH;
+
+                    workspace.resizable({maxWidth: container.width() - totalSize});
                 },
                 resize: resize,
                 stop: afterResize,
@@ -1301,6 +1320,13 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             Spinner,
             ['size'],
+        ),
+    )
+
+    .component('sdIconPicker',
+        reactToAngular1(
+            IconPicker,
+            ['value', 'onChange'],
         ),
     )
 

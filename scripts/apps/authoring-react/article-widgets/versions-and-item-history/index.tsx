@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     IArticleSideWidget,
-    IExtensionActivationResult,
+    IArticleSideWidgetComponentType,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -14,21 +14,16 @@ import {VersionsTab} from './versions-tab';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Versions and item history');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 interface IState {
     selectedTab: 'versions' | 'history';
 }
+const VERSIONS_AND_HISTORY_WIDGET_ID = 'versions-and-item-history';
 
-class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
-        this.state = {
-            selectedTab: 'versions',
-        };
+        this.state = this.props.initialState ?? {selectedTab: 'versions'};
     }
 
     render() {
@@ -36,6 +31,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
+                        widgetId={VERSIONS_AND_HISTORY_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                         customContent={(
@@ -73,7 +69,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
 
 export function getVersionsAndItemHistoryWidget() {
     const widget: IArticleSideWidget = {
-        _id: 'versions-and-item-history',
+        _id: VERSIONS_AND_HISTORY_WIDGET_ID,
         label: getLabel(),
         order: 4,
         icon: 'history',

@@ -21,6 +21,7 @@ export class Editor extends React.PureComponent<IProps> {
                     label=""
                     inlineLabel
                     labelHidden
+                    required
                     value={this.props.value}
                     onChange={(dateString) => {
                         if (dateString === '') {

@@ -63,13 +63,6 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                         {(toggle) => (
                             <MoreActionsButton
                                 aria-label={gettext('Actions menu')}
-                                ref={(el) => {
-                                    if (el != null) {
-                                        setTimeout(() => {
-                                            el.click();
-                                        });
-                                    }
-                                }}
                                 onClick={toggle}
                             />
                         )}

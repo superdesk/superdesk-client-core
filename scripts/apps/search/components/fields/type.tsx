@@ -4,17 +4,15 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 
 class TypeComponent extends React.Component<IPropsItemListInfo> {
     render() {
-        const props = this.props;
+        const item = this.props.item;
 
-        if (props.item.type == null) {
+        if (item.type == null) {
             return null;
         }
 
-        const {_type, highlight} = props.item;
-
         return (
             <span>
-                <TypeIcon type={_type} highlight={highlight} />
+                <TypeIcon type={item._type} highlight={item.highlight} contentProfileId={item.profile} />
             </span>
         );
     }

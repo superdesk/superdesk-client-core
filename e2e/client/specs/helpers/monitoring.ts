@@ -25,6 +25,7 @@ class Monitoring {
     showSpiked: () => void;
     showPersonal: () => void;
     showSearch: () => void;
+    createItem: (template: string) => void;
     createFromDeskTemplate: () => any;
     getGroup: (group: number) => any;
     getGroups: () => any;
@@ -171,8 +172,14 @@ class Monitoring {
          * Create new item using desk template
          */
         this.createFromDeskTemplate = () => {
-            el(['content-create']).click();
-            el(['content-create-dropdown', 'default-desk-template']).click();
+            const createButton = el(['content-create']);
+            const templateButton = el(['content-create-dropdown', 'default-desk-template']);
+
+            browser.wait(ECE.elementToBeClickable(createButton), 1000);
+            createButton.click();
+
+            browser.wait(ECE.elementToBeClickable(templateButton), 1000);
+            templateButton.click();
         };
 
         this.getGroup = function(group: number) {
@@ -427,8 +434,8 @@ class Monitoring {
          * @param {boolean} useFullButtonText
          * @param {boolean} confirm Accept confirmation dialog.
          */
-        this.actionOnItem = function(action, group, item, useFullButtonText, confirm) {
-            var menu = this.openItemMenu(group, item);
+        this.actionOnItem = function(action, group, item, useFullButtonText = true, confirm) {
+            const menu: ElementFinder = this.openItemMenu(group, item);
 
             browser.wait(() => menu.isPresent(), 3000);
 
@@ -464,14 +471,12 @@ class Monitoring {
          * @param {number} item
          */
         this.actionOnItemSubmenu = function(action, submenu, group, item) {
-            var menu = this.openItemMenu(group, item);
-            var header = menu.element(by.partialButtonText(action));
-            var btn = menu.all(by.partialButtonText(submenu)).first();
+            const menu: ElementFinder = this.openItemMenu(group, item);
+            const header = menu.element(by.buttonText(action));
+            const btn = menu.element(by.partialButtonText(submenu));
 
-            browser.actions()
-                .mouseMove(header, {x: -50, y: -50})
-                .mouseMove(header)
-                .perform();
+            browser.actions().mouseMove(header, {x: -50, y: -50}).mouseMove(header).perform();
+
             waitFor(btn, 1000);
             btn.click();
         };
@@ -991,6 +996,17 @@ class Monitoring {
 
         this.getPackageItemLabel = function(index) {
             return element.all(by.id('package-item-label')).get(index);
+        };
+
+        this.createItem = (buttonText: string) => {
+            const plusButton = el(['content-create']);
+            const itemButton = el(['content-create-dropdown']).element(by.buttonText(buttonText));
+
+            browser.wait(ECE.elementToBeClickable(plusButton), 2000);
+            plusButton.click();
+
+            browser.wait(ECE.elementToBeClickable(itemButton), 2000, `Button '${buttonText}' is not clickable`);
+            itemButton.click();
         };
     }
 }

@@ -35,7 +35,7 @@ describe('templates', () => {
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('New Template');
         templates.toggleMetadata();
-        expect(templates.getLegalSwitch().getAttribute('checked')).toEqual('true');
+        expect(templates.legalSwitch.getAttribute('checked')).toEqual('true');
         expect(authoring.getHeadlineText()).toEqual('New Item');
         expect(authoring.getBodyText()).toEqual('This is body from the template');
         expect(authoring.getSignoffText()).toBe('ABC');

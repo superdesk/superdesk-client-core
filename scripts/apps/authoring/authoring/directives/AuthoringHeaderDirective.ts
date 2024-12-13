@@ -23,6 +23,7 @@ AuthoringHeaderDirective.$inject = [
     'features',
     'TranslationService',
     'authoringWorkspace',
+    '$location',
 ];
 export function AuthoringHeaderDirective(
     api,
@@ -36,6 +37,7 @@ export function AuthoringHeaderDirective(
     features,
     TranslationService,
     authoringWorkspace: AuthoringWorkspaceService,
+    $location,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
@@ -307,52 +309,57 @@ export function AuthoringHeaderDirective(
             const loadingStartTimestamp = Date.now();
             let lastElementCount = null;
 
-            /**
-             * Use interval to approximately determine when fields have loaded.
-             */
-            const interval = setInterval(() => {
-                if (Date.now() - loadingStartTimestamp > 5000) {
-                    // stop trying after 5s
-                    // there might not be inputs in authoring header configured
-                    clearInterval(interval);
-                } else {
-                    const elements = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')];
+            // authoring-angular specific workaround
+            const autofocus = $location.url() !== '/settings/templates' && $location.url() !== '/multiedit';
 
-                    if (elements.length < 1) {
-                        return;
-                    } else if (lastElementCount == null) {
-                        lastElementCount = elements.length;
-
-                        return;
-                    } else if (lastElementCount !== elements.length) {
-                        lastElementCount = elements.length;
-
-                        return;
-                    } else {
+            if (autofocus) {
+                /**
+                 * Use interval to approximately determine when fields have loaded.
+                 */
+                const interval = setInterval(() => {
+                    if (Date.now() - loadingStartTimestamp > 5000) {
+                        // stop trying after 5s
+                        // there might not be inputs in authoring header configured
                         clearInterval(interval);
-                    }
-
-                    if (scope.action === 'correct') {
-                        elem.find('#ednote').focus();
                     } else {
-                        const sorted = elements
-                            .map((el) => {
-                                const orderEl = el.closest('[order]');
+                        const elements = [...elem[0].querySelectorAll('input, textarea, [contenteditable]')];
 
-                                return {
-                                    input: el,
-                                    order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
-                                };
-                            })
-                            .filter(({order}) => order != null)
-                            .sort((a, b) => a.order - b.order);
+                        if (elements.length < 1) {
+                            return;
+                        } else if (lastElementCount == null) {
+                            lastElementCount = elements.length;
 
-                        if (sorted.length > 0) {
-                            sorted[0].input.focus();
+                            return;
+                        } else if (lastElementCount !== elements.length) {
+                            lastElementCount = elements.length;
+
+                            return;
+                        } else {
+                            clearInterval(interval);
+                        }
+
+                        if (scope.action === 'correct') {
+                            elem.find('#ednote').focus();
+                        } else {
+                            const sorted = elements
+                                .map((el) => {
+                                    const orderEl = el.closest('[order]');
+
+                                    return {
+                                        input: el,
+                                        order: orderEl == null ? null : parseInt(orderEl.getAttribute('order'), 10),
+                                    };
+                                })
+                                .filter(({order}) => order != null)
+                                .sort((a, b) => a.order - b.order);
+
+                            if (sorted.length > 0) {
+                                sorted[0].input.focus();
+                            }
                         }
                     }
-                }
-            }, 100);
+                }, 100);
+            }
         },
     };
 }

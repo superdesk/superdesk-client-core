@@ -15,4 +15,3 @@ export {ItemAssociationDirective} from './ItemAssociationDirective';
 export {ItemCarouselDirective} from './ItemCarouselDirective';
 export {RemoveTagsDirective} from './RemoveTagsDirective';
 export {TansaScopeSyncDirective} from './TansaScopeSyncDirective';
-export {ItemActionsByIntentDirective} from './ItemActionsByIntentDirective';

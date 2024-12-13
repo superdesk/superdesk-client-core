@@ -1127,8 +1127,8 @@ function MetaLocatorsDirective(places) {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'vocabularies', '$rootScope', 'session', '$filter'];
-export function MetadataService(api, subscribersService, vocabularies, $rootScope, session, $filter) {
+MetadataService.$inject = ['api', 'subscribersService', 'vocabularies', '$rootScope', 'session', '$filter', 'features'];
+export function MetadataService(api, subscribersService, vocabularies, $rootScope, session, $filter, features) {
     var service = {
         values: {},
         helper_text: {},
@@ -1272,7 +1272,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         fetchAgendas: function() {
             var self = this;
 
-            if ($rootScope.features.agenda) {
+            if (features.agenda) {
                 return api.get('/agenda').then((result) => {
                     var agendas = [];
 
@@ -1288,7 +1288,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         fetchEventsPlanningFilters: function() {
             var self = this;
 
-            if ($rootScope.features.events_planning_filters) {
+            if (features.events_planning_filters) {
                 return api.get('/events_planning_filters').then((result) => {
                     self.values.eventsPlanningFilters = _.get(result, '_items', [])
                         .map((item) => ({name: item.name, qcode: item._id}));
@@ -1351,7 +1351,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         },
         initialize: function() {
             if (!this.loaded) {
-                this.loaded = this.fetchMetadataValues()
+                this.loaded = features._loaded
+                    .then(angular.bind(this, this.fetchMetadataValues))
                     .then(angular.bind(this, this.fetchSubjectcodes))
                     .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))

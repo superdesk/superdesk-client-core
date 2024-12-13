@@ -24,7 +24,7 @@ interface IProps {
 
 export default class SummaryBody extends React.Component<IProps> {
     componentDidMount(): void {
-        if (this.props.summary === '') {
+        if (this.props.summary == null || this.props.summary == '') {
             this.props.generateSummary();
         }
     }
@@ -68,24 +68,24 @@ export default class SummaryBody extends React.Component<IProps> {
                     <Button
                         onClick={() => {
                             const currentDeskId = superdesk.entities.desk.getActiveDeskId();
+                            const taskData: IArticle['task'] = (() => {
+                                if (currentDeskId != null) {
+                                    const currentDesk = superdesk.entities.desk.getDeskById(currentDeskId);
 
-                            if (currentDeskId != null) {
-                                const currentDesk = superdesk.entities.desk.getDeskById(currentDeskId);
+                                    return {
+                                        user: article.task.user,
+                                        desk: currentDesk._id,
+                                        stage: currentDesk.working_stage,
+                                    };
+                                }
 
-                                superdesk.entities.article.createNewWithData({
-                                    body_html: summary,
-                                    task: {
-                                        user: this.props.article.task.user,
-                                        desk: currentDesk?._id,
-                                        stage: currentDesk?.working_stage,
-                                    },
-                                }, article.profile);
-                            } else {
-                                superdesk.entities.article.createNewWithData({
-                                    body_html: summary,
-                                    task: {user: this.props.article.task.user},
-                                }, article.profile);
-                            }
+                                return {user: article.task.user};
+                            })();
+
+                            superdesk.entities.article.createNewWithData({
+                                body_html: summary,
+                                task: taskData,
+                            }, article.profile);
                         }}
                         size="small"
                         text={gettext('Create article')}

@@ -1,6 +1,9 @@
-import _ from 'lodash';
-import {gettext} from 'core/utils';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import _, {flatMap} from 'lodash';
+import {extensions} from 'appConfig';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {sdApi} from 'api';
+import {ILanguage} from 'superdesk-interfaces/Language';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 
 /**
  * @ngdoc service
@@ -15,13 +18,10 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
  * @description Provides set of methods to translate items to different languages
  */
 
-TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
+TranslationService.$inject = ['api', '$rootScope', 'search'];
 export function TranslationService(
     api,
     $rootScope,
-    notify,
-    authoringWorkspace: AuthoringWorkspaceService,
-    desks,
     search,
 ) {
     var service: any = {};
@@ -56,17 +56,24 @@ export function TranslationService(
      * @param {Object} item item to be translated
      * @param {Object} language translate language
      */
-    service.set = function(item, language) {
-        var params = {
-            guid: item.guid,
-            language: language.language,
-            desk: desks.getCurrentDeskId(),
-        };
+    service.set = function(item: IArticle, language: ILanguage) {
+        sdApi.article.translate(item, language.language).then((_item) => {
+            const onTranslateAfterMiddlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+                = flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+                );
 
-        api.save('translate', params).then((_item) => {
-            authoringWorkspace.open(_item);
+            if (onTranslateAfterMiddlewares.length > 0) {
+                onTranslateAfterMiddlewares.forEach((fn) => {
+                    fn(item, _item);
+                });
+            } else {
+                return openArticle(_item._id, 'edit');
+            }
+
             $rootScope.$broadcast('item:translate');
-            notify.success(gettext('Item Translated'));
         });
     };
 

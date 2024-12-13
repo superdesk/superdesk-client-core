@@ -24,6 +24,7 @@ export const LINKED_ITEMS_FIELD_TYPE = 'linked-items';
 export function getLinkedItemsField(): ILinkedItemsField {
     const field: ILinkedItemsField = {
         id: LINKED_ITEMS_FIELD_TYPE,
+        generic: true,
         label: gettext('Linked items (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

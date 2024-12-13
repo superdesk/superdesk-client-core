@@ -9,9 +9,12 @@ import {appConfig, extensions} from 'appConfig';
 import {WidgetHeaderComponent} from './WidgetHeaderComponent';
 import {WidgetLayoutComponent} from './WidgetLayoutComponent';
 
-const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
+export const PINNED_WIDGET_USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
 let PINNED_WIDGET_RESIZED = false;
+
+export let IS_WIDGET_PINNED = false;
+export const SIDE_WIDGET_WIDTH = 330;
 
 interface IWidget {
     label?: string;
@@ -98,9 +101,9 @@ function AuthoringWidgetsProvider() {
 export interface IWidgetIntegrationComponentProps {
     widgetName: string;
     pinned: boolean;
-    widget: any;
+    widget: string;
     editMode: boolean;
-    pinWidget(widget: any): void;
+    pinWidget(sideWidget?: IWidget): void;
     closeWidget(): void;
 
     /**
@@ -118,7 +121,7 @@ export interface IWidgetIntegrationComponentProps {
  * and styles in the angular based authoring.
  */
 interface IWidgetIntegration {
-    pinWidget(widget: any): void;
+    pinWidget(sideWidget?: IWidget): void;
     getActiveWidget(): any;
     closeActiveWidget(): any;
     getPinnedWidget(): any;
@@ -136,6 +139,12 @@ export const widgetReactIntegration: IWidgetIntegration = {
     WidgetLayoutComponent: () => null,
     disableWidgetPinning: false,
 };
+
+/**
+ * Used for controlling when a widget is closed intentionally by a user action.
+ * When switching to full view mode authoring re-renders causing the widget to close unintentionally.
+ */
+export let closedIntentionally = {value: false};
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
@@ -157,9 +166,15 @@ function WidgetsManagerCtrl(
     preferencesService,
     $rootScope,
 ) {
-    $scope.active = null;
+    const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+    const localStorageWidgetState = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
+    const widgetValue = localStorageWidget == null
+        ? null
+        : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
 
-    preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
+    $scope.active = widgetValue;
+
+    preferencesService.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS).then((preferences) =>
         this.widgetFromPreferences = preferences,
     );
 
@@ -226,7 +241,21 @@ function WidgetsManagerCtrl(
                 $scope.widgets = widgets.filter((__, i) => result[i] === true);
 
                 $scope.widgets.forEach((widget) => {
-                    if (widget.badgeAsync != null) {
+                    /**
+                     * `getBadge` is a new method meant to replace`badgeAsync` and `badge`(sync)
+                     * both will be available until TAG: AUTHORING-ANGULAR is removed
+                     * It was added to
+                     *  1. decouple the API from angular dependency injection mechanism
+                     *  2. unify `badge`(sync) and badgeAsync(async) into a single method
+                     */
+
+                    if (widget.getBadge != null) {
+                        widget.badgeAsyncValue = null;
+
+                        widget.getBadge(item).then((value) => {
+                            widget.badgeAsyncValue = value;
+                        });
+                    } else if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;
                         $injector.invoke(widget.badgeAsync, null, {item})
                             .then((value) => widget.badgeAsyncValue = value);
@@ -234,7 +263,7 @@ function WidgetsManagerCtrl(
                 });
 
                 if (this.widgetFromPreferences) {
-                    let widgetFromPreferences = $scope.widgets.find((widget) =>
+                    let widgetFromPreferences = $scope.widgets?.find((widget) =>
                         widget._id === this.widgetFromPreferences._id);
 
                     if (widgetFromPreferences) {
@@ -306,13 +335,13 @@ function WidgetsManagerCtrl(
         }
 
         if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
-            $rootScope.$broadcast('resize:monitoring', -330);
+            $rootScope.$broadcast('resize:monitoring', -SIDE_WIDGET_WIDTH);
 
             PINNED_WIDGET_RESIZED = true;
         }
 
         if (!widget || $scope.pinnedWidget === widget) {
-            $rootScope.$broadcast('resize:monitoring', 330);
+            $rootScope.$broadcast('resize:monitoring', SIDE_WIDGET_WIDTH);
 
             angular.element('body').removeClass('main-section--pinned-tabs');
 
@@ -329,16 +358,19 @@ function WidgetsManagerCtrl(
         } else {
             angular.element('body').addClass('main-section--pinned-tabs');
             $scope.pinnedWidget = widget;
+            $scope.active = widget;
             widget.pinned = true;
 
             this.updateUserPreferences(widget);
         }
+
+        IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
-        () => $scope.widgets.find(({pinned}) => pinned === true)?.name ?? null;
+        () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
 
     widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
     widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
@@ -346,7 +378,7 @@ function WidgetsManagerCtrl(
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];
 
-        update[USER_PREFERENCE_SETTINGS] = {
+        update[PINNED_WIDGET_USER_PREFERENCE_SETTINGS] = {
             type: 'string',
             _id: widget ? widget._id : null,
         };
@@ -362,11 +394,17 @@ function WidgetsManagerCtrl(
     };
 
     $scope.closeWidget = function() {
+        closedIntentionally.value = false;
+
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
             $scope.active.afterClose($scope);
         }
 
-        $scope.active = null;
+        if ($scope.pinnedWidget != null) {
+            $scope.active = $scope.pinnedWidget;
+        } else {
+            $scope.active = null;
+        }
     };
 
     // activate widget based on query string
@@ -391,6 +429,10 @@ function WidgetsManagerCtrl(
             $scope.autosave();
         });
     };
+
+    if (widgetValue?.component != null && localStorageWidgetState?.pinned === true) {
+        $scope.pinWidget(widgetValue);
+    }
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();

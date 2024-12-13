@@ -52,7 +52,7 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
-                    <ToggleBox title={gettext('Destination')} initiallyOpen>
+                    <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
                             value={this.state.selectedDestination}
                             onChange={(value) => {

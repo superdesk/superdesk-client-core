@@ -99,8 +99,8 @@ type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
     sideWidget: null | {
-        id: string;
-        pinned: boolean;
+        activeId?: string;
+        pinnedId?: string;
     };
 }
 
@@ -300,7 +300,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
-                                headerPadding="medium"
+                                headerPadding={{top: 8}}
                                 toolBar={this.props.toolbar}
                                 authoringHeader={(
                                     <React.Fragment>
@@ -600,7 +600,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 }}
                                                 getSideWidgetIdAtIndex={() => ''}
                                                 getAuthoringPrimaryToolbarWidgets={() => []}
-                                                secondaryToolbarWidgets={[]}
                                                 disableWidgetPinning
                                             />
                                         )

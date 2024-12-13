@@ -1,12 +1,11 @@
 import React from 'react';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
-import {showPopup} from '../popupNew';
 import {IBaseRestApiResponse, IPropsSelectFromRemote, ISuperdeskQuery} from 'superdesk-api';
 import {VirtualListFromQuery} from './virtual-list-from-query';
 import {gettext} from 'core/utils';
 import {InputLabel} from '../input-label';
 import {SpacerBlock} from '../Spacer';
-import {IconButton} from 'superdesk-ui-framework';
+import {IconButton, showPopup} from 'superdesk-ui-framework/react';
 
 interface IState<T> {
     selected: 'loading' | T | null;
@@ -154,7 +153,6 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                                     />
                                 </div>
                             ),
-                            3000,
                             undefined,
                             () => {
                                 this.lastPopup = null;

@@ -159,7 +159,6 @@ export function getBulkActions(
                 onTrigger: () => {
                     showModal(({closeModal}) => (
                         <Modal
-                            zIndex={1050}
                             size="medium"
                             visible
                             onHide={closeModal}

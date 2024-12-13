@@ -1,6 +1,6 @@
 import {IArticle} from 'superdesk-api';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {IOldCustomFieldId} from './interfaces';
+import {sdApi} from 'api';
 
 interface IAuthoringReactArticleAdapter {
     /**
@@ -25,7 +25,7 @@ interface IAuthoringReactArticleAdapter {
  *  to prevent duplicate IDs, thus prefixing was never necessary. Adapter removes the prefixes.
  */
 export function getArticleAdapter(): IAuthoringReactArticleAdapter {
-    const customFieldVocabularies = getCustomFieldVocabularies();
+    const customFieldVocabularies = sdApi.vocabularies.getCustomFieldVocabularies();
 
     const oldFormatCustomFieldIds: Set<IOldCustomFieldId> = new Set(
         customFieldVocabularies

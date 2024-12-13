@@ -34,29 +34,28 @@ describe('externalSourceController', () => {
         spyOn(notify, 'error').and.returnValue(null);
     }));
 
-    it('can export to active desk', inject((api, data, desks, notify, $rootScope, $q) => {
-        let result = null;
-
+    it('can export to active desk', (done) => inject((api, data, desks, notify, $rootScope, $q) => {
         desks.activeDeskId = userDesks[2]._id;
         spyOn(api, 'save').and.returnValue($q.when({}));
 
         ExternalSourceController(api, data, desks, notify)
-            .then((_result) => {
-                result = _result;
+            .then((result) => {
+                expect(result).toEqual({actioning: {externalsource: false}});
+                expect(api.save).toHaveBeenCalledWith(
+                    externalSourceData.item.fetch_endpoint,
+                    {
+                        guid: externalSourceData.item.guid,
+                        desk: userDesks[2]._id,
+                    },
+                    null, null, {repo: externalSourceData.item.ingest_provider},
+                );
+
+                expect(notify.success.calls.count()).toEqual(1);
+
+                done();
             });
 
         $rootScope.$digest();
-        expect(result).toEqual({actioning: {externalsource: false}});
-        expect(api.save).toHaveBeenCalledWith(
-            externalSourceData.item.fetch_endpoint,
-            {
-                guid: externalSourceData.item.guid,
-                desk: userDesks[2]._id,
-            },
-            null, null, {repo: externalSourceData.item.ingest_provider},
-        );
-
-        expect(notify.success.calls.count()).toEqual(1);
     }));
 
     it('can export to default desk', inject((api, data, desks, notify, session, $rootScope, $q) => {

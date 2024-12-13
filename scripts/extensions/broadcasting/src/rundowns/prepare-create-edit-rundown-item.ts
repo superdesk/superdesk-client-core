@@ -1,4 +1,3 @@
-import {isEqual} from 'lodash';
 import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
@@ -16,8 +15,8 @@ const {httpRequestJsonLocal} = superdesk;
 
 interface IRundownItemActionBase extends IWithAuthoringReactKey {
     sideWidget: null | {
-        id: string;
-        pinned: boolean;
+        activeId?: string;
+        pinnedId?: string;
     };
 }
 
@@ -108,10 +107,8 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
         getContentProfile: () => {
             return Promise.resolve(rundownItemContentProfile);
         },
-        closeAuthoring: (current, original, _cancelAutosave, doClose) => {
-            const warnAboutLosingChanges = !isEqual(current, original);
-
-            if (warnAboutLosingChanges) {
+        closeAuthoring: (_current, _original, hasUnsavedChanges, _cancelAutosave, doClose) => {
+            if (hasUnsavedChanges) {
                 return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
                     if (confirmed) {
                         doClose();
@@ -197,7 +194,7 @@ function getRundownItemCreationAuthoringStorage(
         getContentProfile: () => {
             return Promise.resolve(contentProfile);
         },
-        closeAuthoring: (_current, _original, _cancelAutosave, doClose) => {
+        closeAuthoring: (_current, _original, _hasUnsavedChanges, _cancelAutosave, doClose) => {
             return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
                 if (confirmed) {
                     doClose();

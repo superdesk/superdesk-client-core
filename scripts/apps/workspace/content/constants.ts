@@ -33,7 +33,6 @@ export const GET_LABEL_MAP = () => ({
     keywords: gettext('Keywords'),
     language: gettext('Language'),
     media: gettext('Media'),
-    media_description: gettext('Media Description'),
     place: gettext('Place'),
     priority: gettext('Priority'),
     publish_schedule: gettext('Scheduled Time'),
@@ -95,12 +94,10 @@ export function getLabelForStage(stage: IStage | ICard): string {
 
 export const EXTRA_SCHEMA_FIELDS = Object.freeze({
     feature_media: {},
-    media_description: {},
 });
 
 export const EXTRA_EDITOR_FIELDS = Object.freeze({
     feature_media: {enabled: true},
-    media_description: {enabled: true},
 });
 
 

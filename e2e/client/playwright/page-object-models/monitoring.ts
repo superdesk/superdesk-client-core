@@ -38,10 +38,22 @@ export class Monitoring {
             .click();
     }
 
+    async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
+        for (const selectedArticle of articleNames) {
+            await this.page.locator(s(`article-item=${selectedArticle}`, 'item-type-and-multi-select')).hover();
+            await this.page.locator(s(`article-item=${selectedArticle}`, 'multi-select-checkbox')).check();
+        }
+
+        await this.page.locator(s('multi-action-bar', 'multi-actions-inline', action)).click();
+    }
+
     async createArticleFromTemplate(template: string, options?: {slugline?:string, body_html?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
-        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: template}).click();
+        await this.page
+            .locator(s('content-create-dropdown'))
+            .getByRole('button', {name: template, exact: true})
+            .click();
 
         if (options != null) {
             let keys = Object.keys(options);
@@ -56,5 +68,14 @@ export class Monitoring {
                 }
             }
         }
+    }
+
+    async openMediaUploadView(): Promise<void> {
+        await this.page.locator(s('content-create')).click();
+        await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'Upload media'}).click();
+    }
+
+    getArticleLocator(headline: string): Locator {
+        return this.page.locator(s('article-item=' + headline));
     }
 }

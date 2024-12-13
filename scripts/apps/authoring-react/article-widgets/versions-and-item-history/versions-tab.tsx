@@ -6,6 +6,7 @@ import {
     IRestApiResponse,
     IDesk,
     IStage,
+    IArticleSideWidgetComponentType,
 } from 'superdesk-api';
 import {gettext, getArticleLabel} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -32,10 +33,6 @@ const loadingState: IState = {
     selectedForComparison: {from: null, to: null},
 };
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
-
 interface IState {
     versions: Array<IArticle> | 'loading';
     desks: Map<string, IDesk>;
@@ -43,8 +40,8 @@ interface IState {
     selectedForComparison?: {from: IArticle; to: IArticle};
 }
 
-export class VersionsTab extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
+    constructor(props: IArticleSideWidgetComponentType) {
         super(props);
 
         this.state = loadingState;
@@ -148,7 +145,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
 
         return (
             <Spacer v gap="8" noWrap alignItems="stretch">
-                <ToggleBox title={gettext('Compare versions')} initiallyOpen margin="none">
+                <ToggleBox variant="simple" title={gettext('Compare versions')} initiallyOpen margin="none">
                     <Spacer h gap="16">
                         <SelectFilterable
                             items={versions}
@@ -186,7 +183,9 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Button
                             text={gettext('Compare')}
-                            disabled={selectedForComparison.from === selectedForComparison.to}
+                            disabled={selectedForComparison?.from != null
+                                && (selectedForComparison.from === selectedForComparison.to)
+                            }
                             onClick={() => {
                                 this.compareVersions();
                             }}

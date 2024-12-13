@@ -147,6 +147,8 @@ class GlobalSearch {
         this.itemClick = function(index) {
             var itemElem = this.getItem(index);
 
+            browser.wait(ECE.elementToBeClickable(itemElem), 1000);
+
             itemElem.click();
 
             browser.wait(ECE.attributeContains(itemElem, 'class', 'active'), 2000);
