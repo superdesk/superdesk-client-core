@@ -1,10 +1,15 @@
 import {mapValues, memoize} from 'lodash';
-import {IArticle, IAuthoringFieldV2, IFieldAdapter, IDropdownTreeConfig, ITreeWithLookup} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    IDropdownTreeConfig,
+    ITreeWithLookup,
+    ISubjectCode,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {arrayToTree, sortTree} from 'core/helpers/tree';
 import {store} from 'core/data';
-
-type ISubjectCode = {qcode: string; name: string; parent?: string};
 
 export function getSubjectAdapter(): IFieldAdapter<IArticle> {
     const getItems: () => ITreeWithLookup<ISubjectCode> = memoize(() => {
@@ -30,7 +35,7 @@ export function getSubjectAdapter(): IFieldAdapter<IArticle> {
                 getItems,
                 getLabel: (item: ISubjectCode) => item.name,
                 getId: (item: ISubjectCode) => item.qcode,
-                canSelectBranchWithChildren: () => true,
+                canSelectBranchWithChildren: true,
                 multiple: true,
             };
 

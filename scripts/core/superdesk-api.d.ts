@@ -355,6 +355,7 @@ declare module 'superdesk-api' {
         vocabularyId: IVocabulary['_id'];
         multiple: boolean;
         filter?(vocabulary: IVocabularyItem): boolean;
+        canSelectBranchWithChildren?: boolean;
     }
 
     export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
@@ -366,18 +367,21 @@ declare module 'superdesk-api' {
         ): void;
         getLabel(item: unknown): string;
         getId(item: unknown): string;
-        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        canSelectBranchWithChildren?: boolean;
         optionTemplate?: React.ComponentType<{item: unknown}>;
         valueTemplate?: React.ComponentType<{item: unknown}>;
         multiple: boolean;
     }
 
+    /**
+     * @deprecated Use IDropdownConfigManualSource/IDropdownConfigVocabulary/IDropdownConfigRemoteSource
+     */
     export interface IDropdownTreeConfig extends ICommonFieldConfig {
         source: 'dropdown-tree';
         getItems(): ITreeWithLookup<unknown>;
         getLabel(item: unknown): string;
         getId(item: unknown): string;
-        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        canSelectBranchWithChildren?: boolean;
         optionTemplate?: React.ComponentType<{item: unknown}>;
         valueTemplate?: React.ComponentType<{item: unknown}>;
         multiple: boolean;
@@ -389,6 +393,7 @@ declare module 'superdesk-api' {
         options: Array<IDropdownOption>;
         roundCorners: boolean;
         multiple: boolean;
+        canSelectBranchWithChildren?: boolean;
     }
 
     export type IDropdownConfig =

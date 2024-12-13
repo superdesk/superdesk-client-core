@@ -80,6 +80,7 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                     kind="synchronous"
                     getOptions={() => options}
                     values={selected}
+                    canSelectBranchWithChildren={config.canSelectBranchWithChildren}
                     onChange={(_values) => {
                         const ids = _values.map((val) => val.id);
 
