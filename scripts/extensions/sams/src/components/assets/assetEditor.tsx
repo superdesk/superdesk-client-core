@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {noop, cloneDeep} from 'lodash';
+import {getHumanReadableFileSize} from '@sourcefabric/common';
 
 // Types
 import {ASSET_STATE, IAssetItem, ISetItem, IAssetTag, IAutoTaggingSearchResult} from '../../interfaces';
@@ -16,7 +17,6 @@ import {FormLabel, Input, Option, Select, Autocomplete, Tag, Label} from 'superd
 import {FormGroup, FormRow} from '../../ui';
 
 // Utils
-import {getHumanReadableFileSize} from '../../utils/ui';
 import {convertTagSearchResultToAssetTags} from '../../utils/assets';
 
 interface IProps {
