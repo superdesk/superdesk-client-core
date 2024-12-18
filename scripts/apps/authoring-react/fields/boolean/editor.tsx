@@ -1,9 +1,8 @@
-import {ICommonFieldConfig, IEditorComponentProps} from 'superdesk-api';
+import {IBooleanFieldValueOperational, ICommonFieldConfig, IEditorComponentProps} from 'superdesk-api';
 import * as React from 'react';
 import {Switch} from 'superdesk-ui-framework/react';
-import {IValueOperational} from './interfaces';
 
-type IProps = IEditorComponentProps<IValueOperational, ICommonFieldConfig, never>;
+type IProps = IEditorComponentProps<IBooleanFieldValueOperational, ICommonFieldConfig, never>;
 
 export class Editor extends React.PureComponent<IProps> {
     render() {

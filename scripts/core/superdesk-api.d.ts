@@ -249,6 +249,11 @@ declare module 'superdesk-api' {
     export type IAttachmentsUserPreferences = never;
     export type IAttachmentsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - boolean
+    export type IBooleanFieldValueOperational = boolean | null;
+    export type IBooleanFieldValueStorage = IValueOperational;
+    export type IBooleanFieldUserPreferences = never;
+
     // AUTHORING-REACT FIELD TYPES - date
 
     export type IDateValueOperational = string;
