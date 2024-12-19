@@ -14,11 +14,6 @@ def get_command(branch=None):
 
 rules_to_check = [
     {
-        'name': 'Do not use `translate` filter anymore. Translation strings can\'t be extracted when the filter is used.',
-        'perl_regex': '\|\s*?translate',
-        'tolerance': True
-    },
-    {
         'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
 
         # must match:
