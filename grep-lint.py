@@ -9,6 +9,7 @@ def get_command(branch=None):
 
     arguments_list.append("--")
     arguments_list.append("scripts")
+    arguments_list.append("./package.json")
 
     return arguments_list
 
@@ -42,6 +43,13 @@ rules_to_check = [
         # template: 'a', b: '<'
         'perl_regex': 'template\s*?:\s*[\'|"|`][^\'|"|`]*<[^\'|"|`]*[\'|"|`]',
         'tolerance': True
+    },
+    {
+        'name': 'force exact ui-framework version',
+
+        # errors if finds a caret or a tilde next to ui-framework version
+        'perl_regex': '"superdesk-ui-framework": "(\^|~)',
+        'tolerance': False
     },
 ]
 
