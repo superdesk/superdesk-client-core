@@ -55,6 +55,10 @@ rules_to_check = [
 
 any_rule_violated = False
 
+
+print('git branch output:')
+print(subprocess.check_output(["git", "branch"], stderr=subprocess.STDOUT).decode('utf-8'))
+
 for rule in rules_to_check:
     rule_regex = rule['perl_regex']
     rule_name = rule['name']
