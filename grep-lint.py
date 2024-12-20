@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import re
 
 def get_command(branch=None):
     arguments_list = ["git", "grep", "-P", rule_regex]
@@ -12,6 +13,14 @@ def get_command(branch=None):
     arguments_list.append("./package.json")
 
     return arguments_list
+
+## fetch upstream to be able to compare current commit to it
+subprocess.call(["git", "remote", "add", "temp-remote", "https://github.com/superdesk/superdesk-client-core.git"], stderr=subprocess.STDOUT)
+subprocess.call(["git", "fetch", "temp-remote", "--quiet"], stderr=subprocess.STDOUT)
+develop_commit_with_ref = subprocess.check_output(["git", "ls-remote", "--heads", "temp-remote", "develop"]).decode('utf-8')
+develop_commit = re.split('\t', develop_commit_with_ref)[0]
+subprocess.call(["git", "remote", "remove", "temp-remote"], stderr=subprocess.STDOUT)
+##
 
 rules_to_check = [
     {
@@ -55,11 +64,6 @@ rules_to_check = [
 
 any_rule_violated = False
 
-
-print('git branch output:')
-print(subprocess.check_output(["git", "fetch", "origin"], stderr=subprocess.STDOUT).decode('utf-8'))
-print(subprocess.check_output(["git", "branch"], stderr=subprocess.STDOUT).decode('utf-8'))
-
 for rule in rules_to_check:
     rule_regex = rule['perl_regex']
     rule_name = rule['name']
@@ -69,7 +73,7 @@ for rule in rules_to_check:
 
     try:
         violations_count_develop = len(
-            subprocess.check_output(get_command("origin/develop")).decode('utf-8').splitlines()
+            subprocess.check_output(get_command(develop_commit)).decode('utf-8').splitlines()
         )
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
