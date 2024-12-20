@@ -69,7 +69,7 @@ for rule in rules_to_check:
 
     try:
         violations_count_develop = len(
-            subprocess.check_output(get_command("develop")).decode('utf-8').splitlines()
+            subprocess.check_output(get_command("origin/develop")).decode('utf-8').splitlines()
         )
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
@@ -97,6 +97,6 @@ for rule in rules_to_check:
         print("Rule regex: `" + rule_regex + "`")
 
         if rule_tolerance is True:
-            print('Tolerance is enabled, but ' + str(violations_count) + ' violations were found in the working while there only are ' + str(violations_count_develop) + ' violations on develop. See grep-lint.py for details.')
+            print('Tolerance is enabled, but ' + str(violations_count) + ' violations were found on this commit while there only are ' + str(violations_count_develop) + ' violations on develop. See grep-lint.py for details.')
 
 sys.exit(1 if any_rule_violated else 0)
