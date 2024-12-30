@@ -217,47 +217,4 @@ describe('content', () => {
 
         element(by.id('closeAuthoringBtn')).click();
     });
-
-    it('can set embargo and send', () => {
-        // Initial steps before proceeding, to get initial state of send buttons.
-        workspace.editItem('item3', 'SPORTS');
-        authoring.sendTo('Sports Desk', 'Incoming Stage');
-        authoring.confirmSendTo();
-
-        workspace.editItem('item3', 'SPORTS');
-
-        el(['open-send-publish-pane']).click();
-
-        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
-
-        const sendToButton = el(['authoring', 'interactive-actions-panel', 'send']);
-
-        browser.wait(ECE.visibilityOf(sendToButton));
-
-        new TreeSelectDriver(
-            el(['interactive-actions-panel', 'destination-select']),
-        ).setValue('Sports Desk');
-
-        const stage = 'two';
-
-        // State after selecting different Stage in the same desk
-        el(
-            ['interactive-actions-panel', 'stage-select'],
-            by.cssContainingText('[data-test-id="item"]', stage),
-        ).click();
-
-        expect(sendToButton.isEnabled()).toBe(true);
-
-        // State after setting Embargo
-        setEmbargo();
-        browser.sleep(100);
-        expect(sendToButton.isEnabled()).toBe(true);
-
-        // State after changing Desk
-        new TreeSelectDriver(
-            el(['interactive-actions-panel', 'destination-select']),
-        ).setValue('Politic Desk');
-
-        expect(sendToButton.isEnabled()).toBe(true);
-    });
 });

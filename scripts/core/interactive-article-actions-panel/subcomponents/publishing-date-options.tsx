@@ -60,6 +60,7 @@ interface IProps {
     value: IPublishingDateOptions;
     onChange(value: IPublishingDateOptions): void;
     allowSettingEmbargo: boolean;
+    allowSettingPublishSchedule?: boolean;
 }
 
 export class PublishingDateOptions extends React.PureComponent<IProps> {
@@ -76,7 +77,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             && this.props.allowSettingEmbargo
             && sdApi.user.hasPrivilege('embargo');
 
-        const canSetPublishSchedule = embargo == null;
+        const canSetPublishSchedule = embargo == null && this.props.allowSettingPublishSchedule;
 
         return (
             <div>

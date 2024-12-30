@@ -249,6 +249,11 @@ declare module 'superdesk-api' {
     export type IAttachmentsUserPreferences = never;
     export type IAttachmentsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - boolean
+    export type IBooleanFieldValueOperational = boolean | null;
+    export type IBooleanFieldValueStorage = IValueOperational;
+    export type IBooleanFieldUserPreferences = never;
+
     // AUTHORING-REACT FIELD TYPES - date
 
     export type IDateValueOperational = string;
@@ -3412,6 +3417,16 @@ declare module 'superdesk-api' {
             preview?: {
                 hideContentLabels: boolean;
             };
+
+            panels?: {
+                publish?: {
+                    publishSchedule?: boolean
+                    publishingTarget?: boolean;
+                }
+                sendTo?: {
+                    publishSchedule?: boolean;
+                }
+            }
         };
         ui: {
             /**
@@ -3429,7 +3444,7 @@ declare module 'superdesk-api' {
             sendPublishSchedule?: boolean;
 
             /**
-             * Can set embargo in "send to" pane. Defaults to true;
+             * Can set embargo in "send to" pane. Defaults to false;
              */
             sendEmbargo?: boolean;
 
