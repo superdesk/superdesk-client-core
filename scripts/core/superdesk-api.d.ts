@@ -374,7 +374,8 @@ declare module 'superdesk-api' {
     }
 
     /**
-     * @deprecated Use IDropdownConfigManualSource/IDropdownConfigVocabulary/IDropdownConfigRemoteSource
+     * Prioritize using IDropdownConfigManualSource/IDropdownConfigVocabulary/IDropdownConfigRemoteSource
+     * if any of those can satisfy your use-case
      */
     export interface IDropdownTreeConfig extends ICommonFieldConfig {
         source: 'dropdown-tree';
