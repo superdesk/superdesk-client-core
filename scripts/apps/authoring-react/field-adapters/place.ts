@@ -22,7 +22,7 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
 
     if (useGeoNamesApi) {
         return {
-            getFieldV2: (fieldEditor, fieldSchema) => {
+            getFieldV2: () => {
                 const fieldConfig: IDropdownConfigRemoteSource = {
                     source: 'remote-source',
                     searchOptions: (searchTerm, language, callback) => {
@@ -68,7 +68,7 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
         };
     } else { // use "locators" vocabulary
         return {
-            getFieldV2: (fieldEditor, fieldSchema) => {
+            getFieldV2: () => {
                 const multiple = isMultiple('locators');
 
                 const fieldConfig: IDropdownConfigVocabulary = {

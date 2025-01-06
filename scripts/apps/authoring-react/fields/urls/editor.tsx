@@ -34,68 +34,62 @@ export class Editor extends React.PureComponent<IProps> {
 
         return (
             <Container>
-                {
-                    urls.map((urlObj, i) => (
-                        <Spacer h gap="16" justifyContent="space-between" noWrap key={i}>
-                            <div style={{flexGrow: 1}}>
-                                <Input
-                                    inlineLabel
-                                    labelHidden
-                                    type="text"
-                                    label=""
-                                    value={urlObj.url}
-                                    onChange={(val) => {
-                                        this.handleUrlUpdate(i, {...urlObj, url: val});
+                {urls.map((urlObj, i) => (
+                    <Spacer h gap="16" justifyContent="space-between" noWrap key={i}>
+                        <div style={{flexGrow: 1}}>
+                            <Input
+                                inlineLabel
+                                labelHidden
+                                type="text"
+                                label=""
+                                value={urlObj.url}
+                                onChange={(val) => {
+                                    this.handleUrlUpdate(i, {...urlObj, url: val});
+                                }}
+                                disabled={readOnly}
+                            />
+                            {this.props.config.hideDescription !== true && (
+                                <>
+                                    <SpacerBlock v gap="8" />
+                                    <textarea
+                                        value={urlObj.description}
+                                        onChange={(event) => {
+                                            this.handleUrlUpdate(i, {...urlObj, description: event.target.value});
+                                        }}
+                                        placeholder={gettext('Description')}
+                                        readOnly={readOnly}
+                                        style={{resize: 'vertical'}}
+                                    />
+                                </>
+                            )}
+                        </div>
+                        {!readOnly && (
+                            <div>
+                                <IconButton
+                                    icon="remove-sign"
+                                    ariaValue={gettext('Remove')}
+                                    onClick={() => {
+                                        this.props.onChange(urls.filter((_, j) => j !== i));
                                     }}
                                     disabled={readOnly}
                                 />
-
-                                <SpacerBlock v gap="8" />
-
-                                <textarea
-                                    value={urlObj.description}
-                                    onChange={(event) => {
-                                        this.handleUrlUpdate(i, {...urlObj, description: event.target.value});
-                                    }}
-                                    placeholder={gettext('Description')}
-                                    readOnly={readOnly}
-                                    style={{resize: 'vertical'}}
-                                />
                             </div>
+                        )}
+                    </Spacer>
+                ))}
+                {!readOnly && (
+                    <div>
+                        <SpacerBlock v gap="16" />
 
-                            {
-                                !readOnly && (
-                                    <div>
-                                        <IconButton
-                                            icon="remove-sign"
-                                            ariaValue={gettext('Remove')}
-                                            onClick={() => {
-                                                this.props.onChange(urls.filter((_, j) => j !== i));
-                                            }}
-                                            disabled={readOnly}
-                                        />
-                                    </div>
-                                )
-                            }
-                        </Spacer>
-                    ))
-                }
-
-                {
-                    !readOnly && (
-                        <div>
-                            <SpacerBlock v gap="16" />
-
-                            <Button
-                                text={gettext('Add url')}
-                                onClick={() => {
-                                    this.props.onChange(urls.concat({url: 'https://', description: ''}));
-                                }}
-                                type="primary"
-                            />
-                        </div>
-                    )
-                }
+                        <Button
+                            text={gettext('Add url')}
+                            onClick={() => {
+                                this.props.onChange(urls.concat({url: 'https://', description: ''}));
+                            }}
+                            type="primary"
+                        />
+                    </div>
+                )}
             </Container>
         );
     }

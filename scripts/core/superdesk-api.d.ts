@@ -528,13 +528,15 @@ declare module 'superdesk-api' {
 
     export interface IUrlObject {
         url: string;
-        description: string;
+        description?: string;
     }
 
     export type IUrlsFieldValueOperational = Array<IUrlObject>;
     export type IUrlsFieldValueStorage = IUrlsFieldValueOperational;
     export type IUrlsFieldUserPreferences = never;
-    export type IUrlsFieldConfig = ICommonFieldConfig;
+    export interface IUrlsFieldConfig extends ICommonFieldConfig {
+        hideDescription?: boolean;
+    }
 
     // EDITOR3
 
