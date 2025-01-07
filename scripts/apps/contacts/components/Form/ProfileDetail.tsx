@@ -9,8 +9,8 @@ import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {validateMinRequiredField, getContactTypeObject,
     getMinRequiredFieldLabels, getMinRequiredFieldLabel} from '../../../contacts/helpers';
-import {IContact, IContactsService, IContactType} from '../../Contacts';
-
+import {IContactsService} from '../../Contacts';
+import {IContactType, IContact} from 'superdesk-api';
 import {
     Row,
     RowItem,

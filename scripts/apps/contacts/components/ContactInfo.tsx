@@ -1,14 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ItemContainer} from 'apps/contacts/components';
 import {ContactName, Notes, JobTitle} from 'apps/contacts/components/fields';
 import {isEmpty, findKey} from 'lodash';
 import {gettext} from 'core/utils';
+import {IContact} from 'superdesk-api';
+
+interface IProps {
+    item: IContact;
+    labelInactive?: string;
+}
 
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}) => {
+export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactive}) => {
     const meta = [];
     const info = [];
 
@@ -100,9 +105,4 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}
     return (
         <div className="sd-grid-item__content" x-ms-format-detection="none">{info}</div>
     );
-};
-
-ContactInfo.propTypes = {
-    item: PropTypes.object,
-    labelInactive: PropTypes.bool,
 };
