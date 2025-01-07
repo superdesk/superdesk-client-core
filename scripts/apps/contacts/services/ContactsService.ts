@@ -4,7 +4,8 @@ import {FILTER_FIELDS, getUrlParameters} from '../constants';
 import {gettext} from 'core/utils';
 
 import {replaceUrls} from '../helpers';
-import {IContact, IContactsService} from '../Contacts';
+import {IContactsService} from '../Contacts';
+import {IContact} from 'superdesk-api';
 
 const DEFAULT_PAGE_SIZE = 50;
 

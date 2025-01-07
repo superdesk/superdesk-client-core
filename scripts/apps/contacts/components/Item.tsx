@@ -67,7 +67,7 @@ export class Item extends React.Component<any, any> {
 
         if (view === 'photogrid') {
             contents.push(
-                <ContactHeader item={item} svc={svc} />,
+                <ContactHeader item={item} />,
                 <ContactInfo item={item} />,
                 <ContactFooter item={item} svc={svc} />,
             );

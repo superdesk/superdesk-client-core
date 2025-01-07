@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import {DEFAULT_LIST_CONFIG, FB_URL, IG_URL, getLookupFields} from './constants';
 import * as fields from './components/fields';
-import {IContact, IContactType} from './Contacts';
+import {IContact, IContactType} from 'superdesk-api';
 
 export const onEventCapture = (event?) => {
     if (event) {

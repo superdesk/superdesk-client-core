@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from 'apps/contacts/components';
 import {gettext} from 'core/utils';
-
-import {IContact} from '../Contacts';
+import {IContact} from 'superdesk-api';
 
 interface IProps {
     svc: {
