@@ -1,9 +1,9 @@
 import React from 'react';
-import {Row, LineInput, SelectInput, Input, Toggle} from './';
+import {LineInput} from './';
 import {KEYCODES} from '../../../contacts/constants';
 import {set, get, isEmpty} from 'lodash';
 import {gettext} from 'core/utils';
-import {Label} from 'superdesk-ui-framework/react';
+import {IconButton, Input, Option, Select, Spacer, Switch} from 'superdesk-ui-framework/react';
 
 interface IProps {
     remove: () => void,
@@ -62,65 +62,53 @@ export class ContactNumberInput extends React.Component<IProps, IState> {
         const {value, field, remove, onChange, readOnly, usages} = this.props;
 
         return (
-            <Row flex={true}>
-                <LineInput
-                    readOnly={readOnly}
-                    invalid={this.isFieldInvalid(`${field}.number`, value.number)}
-                    message={
+            <Spacer h gap="4" justifyContent="space-between" alignItems="start">
+                <Input
+                    label={gettext('Number')}
+                    value={value.number ?? ''}
+                    readonly={readOnly}
+                    error={
                         this.isFieldInvalid(`${field}.number`, value.number)
                             ? gettext('This field is required.')
-                            : ''
+                            : undefined
                     }
+                    onChange={(val) => {
+                        onChange(`${field}.number`, val);
+                    }}
+                    type="text"
+                    disabled={readOnly}
+                />
+                <Select
+                    onChange={(val) => {
+                        this.onChange(`${field}.usage`, val);
+                    }}
+                    label={gettext('Usage')}
+                    value={value.usage ?? ''}
                 >
-                    <Label text={gettext('Number')} />
-                    <Input
-                        value={get(value, 'number', '')}
-                        onChange={onChange}
-                        type="text"
-                        disabled={readOnly}
+                    <Option value="" />
+                    {usages.map((x) => (
+                        <Option key={x.qcode}>{x.qcode}</Option>
+                    ))}
+                </Select>
+                <Switch
+                    label={{
+                        content: gettext('Public'),
+                        side: 'left',
+                    }}
+                    onChange={(val) => {
+                        onChange(`${field}.public`, val);
+                    }}
+                    value={value.public ?? true}
+                    disabled={readOnly || this.state.preventSwitch}
+                />
+                {!readOnly && (
+                    <IconButton
+                        ariaValue={gettext('Remove')}
+                        icon="trash"
+                        onClick={remove}
                     />
-                </LineInput>
-                <LineInput readOnly={readOnly} className="sd-line-input__usage">
-                    <Label text={gettext('usage')} />
-                    <SelectInput
-                        noMargin={true}
-                        field={`${field}.usage`}
-                        value={get(value, 'usage', '')}
-                        onChange={this.onChange}
-                        options={usages}
-                        labelField="qcode"
-                        keyField="qcode"
-                        clearable={true}
-                    />
-
-                </LineInput>
-                <LineInput readOnly={readOnly} className="sd-line-input__usage-flag">
-                    <Label text={gettext('public')} />
-                    <Toggle
-                        value={get(value, 'public', true)}
-                        onChange={(e) => onChange(`${field}.public`, e.target.value)}
-                        readOnly={readOnly || this.state.preventSwitch}
-                    />
-                </LineInput>
-                <LineInput readOnly={readOnly}>
-                    {!readOnly && (
-                        <a
-                            tabIndex={0}
-                            className="icn-btn sd-line-input__icon"
-                            onClick={remove}
-                            onKeyDown={(event) => {
-                                if (event && event.keyCode === KEYCODES.ENTER) {
-                                    event.preventDefault();
-                                    remove();
-                                }
-                            }}
-                        >
-                            <i className="icon-trash" />
-                        </a>
-                    )}
-                </LineInput>
-
-            </Row>
+                )}
+            </Spacer>
         );
     }
 }
