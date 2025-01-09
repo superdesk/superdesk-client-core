@@ -85,9 +85,9 @@ export class Item extends React.Component<IProps, IState> {
                     )}
                 >
                     {view === 'photogrid' ? (
-                        <Spacer gap="4" v justifyContent="start" alignItems="center">
+                        <Spacer gap="0" v justifyContent="start" alignItems="center">
                             <ContactInfo item={item} />
-                            <ContactFooter item={item} svc={svc} />
+                            <ContactFooter item={item} />
                         </Spacer>
                     ) : (
                         <Spacer gap="4" v justifyContent="start" alignItems="center">

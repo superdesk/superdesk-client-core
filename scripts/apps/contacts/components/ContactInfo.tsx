@@ -4,7 +4,7 @@ import {ContactName, Notes, JobTitle} from 'apps/contacts/components/fields';
 import {isEmpty, findKey} from 'lodash';
 import {gettext} from 'core/utils';
 import {IContact} from 'superdesk-api';
-import {ContentDivider, Divider, Icon, Spacer} from 'superdesk-ui-framework/react';
+import {ContentDivider, Icon, Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
     item: IContact;
@@ -23,20 +23,19 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
         <span>{item.organisation}</span> : null;
 
     info.push(
-        <Spacer style={{margin: 4}} h gap="8" justifyContent="start" alignItems="center" noWrap>
+        <Spacer style={{margin: '8px 0'}} h gap="8" justifyContent="start" alignItems="center" noWrap>
             <div
                 style={{
                     backgroundColor: '#67afa1',
                     borderRadius: '50%',
-                    padding: 4,
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
             >
-                <i style={{color: 'white'}} className={`${item.first_name ? 'icon-user' : 'icon-business'}`} />
+                <Icon size="small" color="white" name={`${item.first_name ? 'user' : 'business'}`} />
             </div>
             <h3 key="contact-name">
                 <ContactName item={item} />
@@ -58,6 +57,7 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
 
     meta.push(
         <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
             <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
                 <Icon name="envelope" size="small" />
                 {!isEmpty(item.contact_email) && (<ItemContainer item={item} field="contact_email" />)}
@@ -113,12 +113,9 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
     info.push(
         <Spacer v gap="4" justifyContent="space-between" alignItems="center">
             {meta}
-            <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
-                <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
-                    <Icon name="info-sign" size="small" />
-                    {item.notes && (<Notes item={item} />)}
-                </Spacer>
-                <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="info-sign" size="small" />
+                {item.notes && (<Notes item={item} />)}
             </Spacer>
         </Spacer>,
     );

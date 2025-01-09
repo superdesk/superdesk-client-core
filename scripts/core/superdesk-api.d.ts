@@ -626,6 +626,7 @@ declare module 'superdesk-api' {
         };
         notes?: string;
         contact_type?: string;
+        _updated?: string;
     }
 
     export interface IArticleActionBulk {
