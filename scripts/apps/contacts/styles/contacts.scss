@@ -9,16 +9,6 @@
     contacts detail pane
 ====================================================
 */
-.contact-icon-background {
-    background-color: $iconBackground;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .contact-details-pane {
     position: relative;
     width: 100%;
@@ -191,7 +181,7 @@
     position: absolute !important;
     inset-block-start: 1.6rem;
     inset-inline-start: 1.2rem;
-    background: #67afa1;
+    background: var(--sd-colour-success);
     height: 3.4rem;
     width: 3.4rem;
     border-radius: 50%;
