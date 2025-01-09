@@ -13,7 +13,7 @@ interface IProps {
  */
 export const ContactFooter: React.FunctionComponent<IProps> = ({item}) => {
     return (
-        <Spacer style={{padding: 8}} h gap="4" justifyContent="start" alignItems="center">
+        <Spacer style={{padding: 8}} h gap="4" justifyContent="start" alignItems="center" noGrow>
             <Spacer h gap="4" justifyContent="start" alignItems="center" noWrap>
                 <span className="sd-grid-item__text-label">{gettext('Updated:')}</span>
                 <DateTime dateTime={item._updated} />
