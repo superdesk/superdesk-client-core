@@ -9,6 +9,15 @@
     contacts detail pane
 ====================================================
 */
+.contact-icon-background {
+    background-color: $iconBackground;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .contact-details-pane {
     position: relative;

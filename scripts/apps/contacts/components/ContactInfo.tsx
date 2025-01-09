@@ -24,17 +24,7 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
 
     info.push(
         <Spacer style={{margin: '8px 0'}} h gap="8" justifyContent="start" alignItems="center" noWrap>
-            <div
-                style={{
-                    backgroundColor: '#67afa1',
-                    borderRadius: '50%',
-                    width: 36,
-                    height: 36,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
+            <div className="contact-icon-background">
                 <Icon size="small" color="white" name={`${item.first_name ? 'user' : 'business'}`} />
             </div>
             <h3 key="contact-name">
