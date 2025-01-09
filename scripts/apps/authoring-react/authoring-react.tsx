@@ -1430,7 +1430,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 main={(
                                     <Layout.AuthoringMain
                                         noPaddingForContent
-                                        hideCollapseButton={state.profile.header.count() < 1}
+                                        hideCollapseButton={state.profile.content.count() < 1}
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
                                         toolBar={secondaryToolbarWidgets.length === 0 ? null : (

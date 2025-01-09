@@ -67,7 +67,6 @@ export const authors: IFieldAdapter<IArticle> = {
                     lookup: {},
                 });
             },
-            canSelectBranchWithChildren: () => false,
             getLabel: (item: IUserOption | IAuthorRole) => item.name,
             valueTemplate: valueTemplate,
             optionTemplate: optionTemplate,

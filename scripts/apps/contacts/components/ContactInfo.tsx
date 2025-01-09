@@ -1,14 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ItemContainer} from 'apps/contacts/components';
 import {ContactName, Notes, JobTitle} from 'apps/contacts/components/fields';
 import {isEmpty, findKey} from 'lodash';
 import {gettext} from 'core/utils';
+import {IContact} from 'superdesk-api';
+import {ContentDivider, Icon, Spacer} from 'superdesk-ui-framework/react';
+
+interface IProps {
+    item: IContact;
+    labelInactive?: string;
+}
 
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}) => {
+export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactive}) => {
     const meta = [];
     const info = [];
 
@@ -17,7 +23,10 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}
         <span>{item.organisation}</span> : null;
 
     info.push(
-        <div className="contact-header__container" key="contact-container">
+        <Spacer style={{margin: '8px 0'}} h gap="8" justifyContent="start" alignItems="center" noWrap>
+            <div className="contact-icon-background">
+                <Icon size="small" color="white" name={`${item.first_name ? 'user' : 'business'}`} />
+            </div>
             <h3 key="contact-name">
                 <ContactName item={item} />
                 {contactJobTitle && <span title={item.job_title}>{contactJobTitle}</span>}
@@ -33,76 +42,75 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}
                     </span>
                 )}
             </div>
-        </div>,
+        </Spacer>,
     );
 
     meta.push(
-        <li className="simple-list__item simple-list__item--with-icon" key="l-1">
-            <span key="2"><i key="2.1" className="icon-envelope" /></span>
-            <span key="3">
+        <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="envelope" size="small" />
                 {!isEmpty(item.contact_email) && (<ItemContainer item={item} field="contact_email" />)}
-            </span>
-        </li>,
+            </Spacer>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+        </Spacer>,
     );
 
     meta.push(
-        <li className="simple-list__item simple-list__item--with-icon" key="l-2">
-            <span key="10"><i key="10.1" className="icon-globe" /></span>
-            <span key="11">
-                {item.website && (<ItemContainer item={item} field="website" />)}
-            </span>
-        </li>,
-    );
-
-    meta.push(
-        <li className="simple-list__item simple-list__item--with-icon" key="l-3">
-            <span key="4"><i key="4.1" className="icon-phone" /></span>
-            <span key="5" className="dark">
+        <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="globe" size="small" />
                 {!isEmpty(item.contact_phone) && findKey(item.contact_phone, 'number') &&
                     (<ItemContainer item={item} field="contact_phone" />)
                 }
-            </span>
-        </li>,
+            </Spacer>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+        </Spacer>,
     );
 
     meta.push(
-        <li className="simple-list__item simple-list__item--with-icon" key="l-4">
-            <span key="mobile-dt"><i key="mobile-icon" className="icon-mobile" /></span>
-            <span key="mobile-dd" className="dark">
+        <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="phone" size="small" />
+                {item.website && (<ItemContainer item={item} field="website" />)}
+            </Spacer>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+        </Spacer>,
+    );
+
+    meta.push(
+        <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="mobile" size="small" />
                 {!isEmpty(item.mobile) && findKey(item.mobile, 'number') &&
                     (<ItemContainer item={item} field="mobile" />)
                 }
-            </span>
-        </li>,
+            </Spacer>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+        </Spacer>,
     );
 
     meta.push(
-        <li className="simple-list__item simple-list__item--with-icon" key="l-5">
-            <span key="address-dt"><i key="address-link" className="icon-map-marker" /></span>
-            <span key="address-dd">
+        <Spacer v gap="4" justifyContent="center" alignItems="center" noWrap>
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="map-marker" size="small" />
                 {item && (<ItemContainer item={item} field="location" />)}
-            </span>
-        </li>,
+            </Spacer>
+            <ContentDivider margin="x-small" orientation="horizontal" type="dotted" />
+        </Spacer>,
     );
 
     info.push(
-        <ul className="simple-list simple-list--dotted simple-list--no-border-b simple-list--no-padding-b" key="dl">
+        <Spacer v gap="4" justifyContent="space-between" alignItems="center">
             {meta}
-            <li className="simple-list__item simple-list__item--with-icon" key="l-6">
-                <i key="12.1" className="icon-info-sign" />
-                <span key="12.2">
-                    {item.notes && (<Notes item={item} />)}
-                </span>
-            </li>
-        </ul>,
+            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                <Icon name="info-sign" size="small" />
+                {item.notes && (<Notes item={item} />)}
+            </Spacer>
+        </Spacer>,
     );
 
     return (
         <div className="sd-grid-item__content" x-ms-format-detection="none">{info}</div>
     );
-};
-
-ContactInfo.propTypes = {
-    item: PropTypes.object,
-    labelInactive: PropTypes.bool,
 };

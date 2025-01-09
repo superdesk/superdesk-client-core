@@ -10,7 +10,7 @@ interface IPropsBase<T> {
     valueTemplate?: React.ComponentType<{item: T}>;
     getId(item: T): string;
     getLabel(item: T): string;
-    canSelectBranchWithChildren?(branch: ITreeNode<T>): boolean;
+    canSelectBranchWithChildren?: boolean;
     allowMultiple?: boolean;
     readOnly?: boolean;
 }
@@ -58,7 +58,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     }}
                     getLabel={getLabel}
                     getId={getId}
-                    selectBranchWithChildren={false}
+                    selectBranchWithChildren={props.canSelectBranchWithChildren ?? false}
                     optionTemplate={(item) => <OptionTemplate item={item} />}
                     valueTemplate={(item, Wrapper) => <Wrapper><ValueTemplate item={item} /></Wrapper>}
                     allowMultiple={this.props.allowMultiple}
@@ -84,7 +84,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     }}
                     getLabel={getLabel}
                     getId={getId}
-                    selectBranchWithChildren={false}
+                    selectBranchWithChildren={props.canSelectBranchWithChildren ?? false}
                     optionTemplate={(item) => <OptionTemplate item={item} />}
                     valueTemplate={(item) => <ValueTemplate item={item} />}
                     allowMultiple={this.props.allowMultiple}

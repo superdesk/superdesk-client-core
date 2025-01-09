@@ -362,6 +362,7 @@ declare module 'superdesk-api' {
         vocabularyId: IVocabulary['_id'];
         multiple: boolean;
         filter?(vocabulary: IVocabularyItem): boolean;
+        canSelectBranchWithChildren?: boolean;
     }
 
     export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
@@ -373,18 +374,22 @@ declare module 'superdesk-api' {
         ): void;
         getLabel(item: unknown): string;
         getId(item: unknown): string;
-        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        canSelectBranchWithChildren?: boolean;
         optionTemplate?: React.ComponentType<{item: unknown}>;
         valueTemplate?: React.ComponentType<{item: unknown}>;
         multiple: boolean;
     }
 
+    /**
+     * Prioritize using IDropdownConfigManualSource/IDropdownConfigVocabulary/IDropdownConfigRemoteSource
+     * if any of those can satisfy your use-case
+     */
     export interface IDropdownTreeConfig extends ICommonFieldConfig {
         source: 'dropdown-tree';
         getItems(): ITreeWithLookup<unknown>;
         getLabel(item: unknown): string;
         getId(item: unknown): string;
-        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        canSelectBranchWithChildren?: boolean;
         optionTemplate?: React.ComponentType<{item: unknown}>;
         valueTemplate?: React.ComponentType<{item: unknown}>;
         multiple: boolean;
@@ -396,6 +401,7 @@ declare module 'superdesk-api' {
         options: Array<IDropdownOption>;
         roundCorners: boolean;
         multiple: boolean;
+        canSelectBranchWithChildren?: boolean;
     }
 
     export type IDropdownConfig =
@@ -528,13 +534,15 @@ declare module 'superdesk-api' {
 
     export interface IUrlObject {
         url: string;
-        description: string;
+        description?: string;
     }
 
     export type IUrlsFieldValueOperational = Array<IUrlObject>;
     export type IUrlsFieldValueStorage = IUrlsFieldValueOperational;
     export type IUrlsFieldUserPreferences = never;
-    export type IUrlsFieldConfig = ICommonFieldConfig;
+    export interface IUrlsFieldConfig extends ICommonFieldConfig {
+        hideDescription?: boolean;
+    }
 
     // EDITOR3
 
@@ -573,6 +581,52 @@ declare module 'superdesk-api' {
         label: string;
         onTrigger(): void;
         keyBindings?: IKeyBindings;
+    }
+
+    export interface IContactPhoneNumber {
+        number?: string;
+        usage?: string;
+        public?: boolean;
+    }
+
+    export interface IContactType {
+        qcode?: string;
+        name?: string;
+        assignable?: boolean;
+    }
+
+    export interface IContact {
+        _id: string;
+        is_active?: boolean;
+        public?: boolean;
+        organisation?: string;
+        first_name?: string;
+        last_name?: string;
+        honorific?: string;
+        job_title?: string;
+        mobile?: Array<IContactPhoneNumber>;
+        contact_phone?: Array<IContactPhoneNumber>;
+        fax?: Array<string>;
+        contact_email?: Array<string>;
+        twitter?: string;
+        facebook?: string;
+        instagram?: string;
+        website?: string;
+        contact_address?: Array<string>;
+        locality?: string;
+        city?: string;
+        contact_state?: {
+            name?: string,
+            qcode?: string,
+        };
+        postcode?: string;
+        country?: {
+            name?: string,
+            qcode?: string,
+        };
+        notes?: string;
+        contact_type?: string;
+        _updated?: string;
     }
 
     export interface IArticleActionBulk {
