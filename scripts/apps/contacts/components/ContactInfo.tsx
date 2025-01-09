@@ -8,14 +8,18 @@ import {ContentDivider, Icon, Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
     item: IContact;
-    labelInactive?: string;
-    isActive?: boolean;
+    showIfContactIsInactive?: string;
+    hideHeader?: boolean;
 }
 
 /**
  * Media Contact Info - renders contact's information
  */
-export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactive, isActive}) => {
+export const ContactInfo: React.FunctionComponent<IProps> = ({
+    item,
+    showIfContactIsInactive,
+    hideHeader,
+}) => {
     const meta = [];
     const info = [];
 
@@ -23,7 +27,7 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
     const contactOrg = item.first_name && item.organisation ?
         <span>{item.organisation}</span> : null;
 
-    if (isActive != true) {
+    if (hideHeader != true) {
         info.push(
             <Spacer style={{margin: '8px 0'}} h gap="8" justifyContent="start" alignItems="center" noWrap>
                 <div
@@ -45,7 +49,7 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({item, labelInactiv
                 </h3>
                 <div key="contact-org">
                     <span className="item-info">{contactOrg}</span>
-                    {!item.is_active && labelInactive && (
+                    {!item.is_active && showIfContactIsInactive && (
                         <span
                             title="inactive"
                             className="label label--draft label--hollow pull-right"
