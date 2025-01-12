@@ -308,6 +308,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.setLoadingState = this.setLoadingState.bind(this);
         this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
+        this.getItemAndAutosave = this.getItemAndAutosave.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -535,6 +536,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }
     }
 
+    private getItemAndAutosave(): Promise<{autosaved: T; saved: T}> {
+        const {authoringStorage, itemId} = this.props;
+
+        return Promise.all([
+            authoringStorage.autosave.get(itemId).catch(() => null),
+            authoringStorage.getEntity(itemId),
+        ]).then(([autosaved, saved]) => ({autosaved, saved}));
+    }
+
     componentDidMount() {
         const authThemes = ng.get('authThemes');
 
@@ -544,7 +554,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         Promise.all(
             [
-                authoringStorage.getEntity(this.props.itemId).then((item) => {
+                this.getItemAndAutosave().then((item) => {
                     const itemCurrent = item.autosaved ?? item.saved;
 
                     return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
@@ -803,7 +813,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     return;
                 }
 
-                authoringStorage.getEntity(state.itemOriginal._id).then((item) => {
+                this.getItemAndAutosave().then((item) => {
                     this.setState(getInitialState(
                         item,
                         state.profile,
@@ -829,7 +839,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     return;
                 }
 
-                authoringStorage.getEntity(state.itemOriginal._id).then((item) => {
+                this.getItemAndAutosave().then((item) => {
                     this.setState(getInitialState(
                         item,
                         state.profile,

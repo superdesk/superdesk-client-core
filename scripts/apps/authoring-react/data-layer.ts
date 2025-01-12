@@ -271,27 +271,9 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
     getEntity: (id) => {
         // TODO: take published items into account
 
-        return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
-            const adapter = getArticleAdapter();
+        const adapter = getArticleAdapter();
 
-            const saved = adapter.toAuthoringReact(_saved);
-
-            if (sdApi.article.isLockedInOtherSession(saved)) {
-                return {saved, autosaved: null};
-            } else if (sdApi.article.isLockedInCurrentSession(saved)) {
-                return new Promise<IArticle>((resolve) => {
-                    authoringStorageIArticle.autosave.get(id)
-                        .then((_autosaved) => {
-                            resolve(adapter.toAuthoringReact(_autosaved));
-                        })
-                        .catch(() => {
-                            resolve(null);
-                        });
-                }).then((autosaved) => ({saved, autosaved}));
-            } else {
-                return {saved, autosaved: null};
-            }
-        });
+        return dataApi.findOne<IArticle>('archive', id).then((saved) => adapter.toAuthoringReact(saved));
     },
     isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
     forceLock(entity) {
@@ -413,14 +395,11 @@ export const getAuthoringStorageIArticleKillOrTakedown = (
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {
-        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
-            return sdApi.article.getItemPatchWithKillOrTakedownTemplate(saved, action).then((updated) => {
+        return authoringStorageIArticle.getEntity(id).then((saved) => {
+            return sdApi.article.getItemPatchWithKillOrTakedownTemplate(saved, action).then((patch) => {
                 return {
-                    saved: {
-                        ...updated,
-                        ...saved, // updated is missing original_creator property so we get it from the saved article
-                    },
-                    autosaved: autosaved,
+                    ...saved,
+                    ...patch,
                 };
             });
         });
@@ -432,7 +411,7 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {
-        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
+        return authoringStorageIArticle.getEntity(id).then((saved) => {
             const newItem = {...saved};
 
             newItem.flags.marked_for_sms = false;
@@ -458,10 +437,7 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
 
             delete newItem.fields_meta['ednote'];
 
-            return {
-                saved: newItem,
-                autosaved: newItem,
-            };
+            return saved;
         });
     },
     saveEntity: () => new Promise(noop),

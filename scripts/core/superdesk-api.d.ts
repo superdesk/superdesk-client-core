@@ -90,8 +90,13 @@ declare module 'superdesk-api' {
     }
 
     export interface IAuthoringAutoSave<T> {
+        /**
+         * Must reject or resolve with null if autosave doesn't have data on item
+         */
         get(id: string): Promise<T>;
+
         delete(id: string, etag: string): Promise<void>;
+
         cancel(): void;
 
         /**
@@ -117,7 +122,7 @@ declare module 'superdesk-api' {
     export interface IAuthoringStorage<T> {
         forceLock(entity: T): Promise<T>;
         isLockedInCurrentSession(item: T): boolean;
-        getEntity(id: string): Promise<{saved: T | null, autosaved: T | null}>;
+        getEntity(id: string): Promise<T>;
         saveEntity(current: T, original: T): Promise<T>;
         closeAuthoring(
             current: T,
