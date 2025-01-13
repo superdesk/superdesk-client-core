@@ -193,7 +193,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
         loading: false,
         itemOriginal: itemOriginal,
         itemWithChanges: itemWithChanges,
-        autosaveEtag: item.autosaved?._etag ?? null,
+        itemAutosaved: item.autosaved ?? null,
         fieldsDataOriginal: fieldsOriginal,
         fieldsDataWithChanges: fieldsDataWithChanges,
         profile: profile,
@@ -259,7 +259,14 @@ interface IStateLoaded<T> {
     initialized: true;
     itemOriginal: T;
     itemWithChanges: T;
-    autosaveEtag: string | null;
+
+    /**
+     * is needed for etag
+     * and for passing it to schedule function
+     * which needs it passed to retrieve extra autosave-specific values like lock_user
+     */
+    itemAutosaved: T | null;
+
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
@@ -418,8 +425,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         authoringStorage.autosave.cancel();
 
-        if (this.state.initialized && this.state.autosaveEtag != null) {
-            return authoringStorage.autosave.delete(this.state.itemOriginal['_id'], this.state.autosaveEtag);
+        if (this.state.initialized && this.state.itemAutosaved != null) {
+            return authoringStorage.autosave.delete(this.state.itemOriginal['_id'], this.state.itemAutosaved._etag);
         } else {
             return Promise.resolve();
         }
@@ -895,9 +902,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         (autosaved) => {
                             this.setState({
                                 ...state,
-                                autosaveEtag: autosaved._etag,
+                                itemAutosaved: autosaved,
                             });
                         },
+                        state.itemAutosaved,
                     );
                 }
             }
@@ -1041,7 +1049,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 () => {
                     authoringStorage.autosave.cancel();
 
-                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
                 },
                 () => this.props.onClose(),
             ).then(() => {

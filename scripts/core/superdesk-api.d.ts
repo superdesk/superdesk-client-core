@@ -104,7 +104,7 @@ declare module 'superdesk-api' {
          * In order to get the latest article, data has to be serialized. Using a function
          * allows to only do it once after timeout passes, instead of on every character change.
          */
-        schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+        schedule(getItem: () => T, callback: (autosaved: T) => void, currentAutosavedItem: T): void;
 
         /**
         * Immediately autosaves without a delay if there is anything to autosave.
