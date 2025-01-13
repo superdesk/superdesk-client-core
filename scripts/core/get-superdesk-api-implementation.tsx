@@ -462,7 +462,6 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             IconBig,
-            // eslint-disable-next-line react/display-name
             getAuthoringComponent: () => AuthoringReact,
             getLockInfoHttpComponent: () => LockInfoHttp,
             getLockInfoComponent: () => LockInfo,
