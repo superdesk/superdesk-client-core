@@ -18,12 +18,7 @@ import {
     IAuthoringSectionTheme,
     IAuthoringValidationErrors,
 } from 'superdesk-api';
-import {
-    ButtonGroup,
-    Loader,
-    SubNav,
-    IconButton,
-} from 'superdesk-ui-framework/react';
+import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
@@ -1187,12 +1182,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-    getExposed(
-        state: IStateLoaded<T>,
-        authoringStorage: IAuthoringStorage<T>,
-        storageAdapter: IStorageAdapter<T>,
-        fieldsAdapter: IFieldsAdapter<T>,
-    ): IExposedFromAuthoring<T> {
+    getExposed(): IExposedFromAuthoring<T> | null {
+        const {state} = this;
+
+        if (state.initialized === false) {
+            return null;
+        }
+
+        const {onClose, authoringStorage, fieldsAdapter, storageAdapter, sideWidget} = this.props;
+
         return {
             item: state.itemWithChanges,
             contentProfile: state.profile,
@@ -1203,13 +1201,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
-            keepChangesAndClose: () => this.props.onClose(),
+            keepChangesAndClose: () => onClose(),
             onItemChange: (item: T) => this.onItemChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.activeId,
+            sideWidget: sideWidget?.activeId,
             toggleTheme: () => {
                 this.setState({
                     ...state,
@@ -1249,7 +1247,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
     render() {
         const state = this.state;
-        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
+        const {getLanguage, getSidePanel} = this.props;
 
         if (state.initialized !== true) {
             return null;
@@ -1264,7 +1262,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             );
         }
 
-        const exposed = this.getExposed(state, authoringStorage, storageAdapter, fieldsAdapter);
+        const exposed = this.getExposed();
         const authoringOptions: IAuthoringOptions<T> | null =
             this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;

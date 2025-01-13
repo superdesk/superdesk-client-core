@@ -463,12 +463,7 @@ export function getSuperdeskApiImplementation(
             Icon,
             IconBig,
             // eslint-disable-next-line react/display-name
-            getAuthoringComponent: () => forwardRef((props, ref) => (
-                <AuthoringReact
-                    {...props}
-                    ref={ref}
-                />
-            )),
+            getAuthoringComponent: () => AuthoringReact,
             getLockInfoHttpComponent: () => LockInfoHttp,
             getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
