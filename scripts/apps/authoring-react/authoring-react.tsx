@@ -1182,11 +1182,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-    getExposed(): IExposedFromAuthoring<T> | null {
+    public getExposed(): IExposedFromAuthoring<T> {
         const {state} = this;
 
         if (state.initialized === false) {
-            return null;
+            throw new Error('Can\'t get exposed if state isn\'t loaded');
         }
 
         const {onClose, authoringStorage, fieldsAdapter, storageAdapter, sideWidget} = this.props;
