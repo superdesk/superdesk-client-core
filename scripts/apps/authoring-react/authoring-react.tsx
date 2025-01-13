@@ -1187,24 +1187,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-    render() {
-        const state = this.state;
-        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
-
-        if (state.initialized !== true) {
-            return null;
-        }
-
-        // TODO: remove test code
-        if (uiFrameworkAuthoringPanelTest) {
-            return (
-                <div>
-                    <EditorTest />
-                </div>
-            );
-        }
-
-        const exposed: IExposedFromAuthoring<T> = {
+    getExposed(
+        state: IStateLoaded<T>,
+        authoringStorage: IAuthoringStorage<T>,
+        storageAdapter: IStorageAdapter<T>,
+        fieldsAdapter: IFieldsAdapter<T>,
+    ): IExposedFromAuthoring<T> {
+        return {
             item: state.itemWithChanges,
             contentProfile: state.profile,
             getLatestItem: this.computeLatestEntity,
@@ -1256,7 +1245,26 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
         };
+    }
 
+    render() {
+        const state = this.state;
+        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
+
+        if (state.initialized !== true) {
+            return null;
+        }
+
+        // TODO: remove test code
+        if (uiFrameworkAuthoringPanelTest) {
+            return (
+                <div>
+                    <EditorTest />
+                </div>
+            );
+        }
+
+        const exposed = this.getExposed(state, authoringStorage, storageAdapter, fieldsAdapter);
         const authoringOptions: IAuthoringOptions<T> | null =
             this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;

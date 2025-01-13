@@ -121,6 +121,8 @@ import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
+import {forwardRef, RefObject} from 'react';
+import React from 'react';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -460,7 +462,13 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             IconBig,
-            getAuthoringComponent: () => AuthoringReact,
+            // eslint-disable-next-line react/display-name
+            getAuthoringComponent: () => forwardRef((props, ref) => (
+                <AuthoringReact
+                    {...props}
+                    ref={ref}
+                />
+            )),
             getLockInfoHttpComponent: () => LockInfoHttp,
             getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
