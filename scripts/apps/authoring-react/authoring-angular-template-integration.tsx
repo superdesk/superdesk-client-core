@@ -58,7 +58,7 @@ function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStora
 
     const authoringStorageTemplateEditView: IAuthoringStorage<IArticle> = {
         autosave: new AutoSaveTemplate(),
-        getEntity: () => Promise.resolve({saved: article, autosaved: null}),
+        getEntity: () => Promise.resolve(article),
         isLockedInCurrentSession: () => true,
         forceLock: (entity) => Promise.resolve(entity),
         saveEntity: (current) => Promise.resolve(current),

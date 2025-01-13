@@ -39,7 +39,7 @@ function getRundownItemTemplateAuthoringStorage(
     const authoringStorageRundownItem: IAuthoringStorage<IRundownItemTemplateInitial> = {
         autosave: new AutoSaveRundownItem(),
         getEntity: () => {
-            return Promise.resolve({saved: item, autosaved: null});
+            return Promise.resolve(item);
         },
         isLockedInCurrentSession: () => false,
 
