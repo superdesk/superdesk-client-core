@@ -1,4 +1,3 @@
-export {TimeElem} from './TimeElem';
 export {ItemContainer} from './ItemContainer';
 export {ListItemInfo} from './ListItemInfo';
 export {Item} from './Item';
