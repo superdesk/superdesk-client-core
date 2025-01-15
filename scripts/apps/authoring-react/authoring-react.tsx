@@ -27,8 +27,7 @@ import {
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
-import {EditorTest} from './ui-framework-authoring-test';
-import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
     closedIntentionally,
@@ -938,6 +937,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         if (this.state.initialized) {
                             resolve(this.state.itemOriginal);
                         }
+                    }).catch((e) => {
+                        // Since we don't give modal control to the developer using authoring react
+                        // we close the prompt and return an error
+                        closePromptFn();
+                        reject(e);
                     });
                 } else {
                     assertNever(action);
@@ -1263,6 +1267,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     },
                 });
             },
+            getValidationErrors: () => {
+                return state.validationErrors;
+            },
         };
 
         const authoringOptions: IAuthoringOptions<T> | null =
@@ -1436,14 +1443,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             <Layout.AuthoringFrame
                                 header={primaryToolbarWidgets.length < 1
                                     && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                        <SubNav>
-                                            <AuthoringToolbar
-                                                entity={state.itemWithChanges}
-                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
-                                                backgroundColor={authoringOptions?.toolbarBgColor}
-                                            />
-                                        </SubNav>
-                                    )
+                                    <SubNav>
+                                        <AuthoringToolbar
+                                            entity={state.itemWithChanges}
+                                            widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
+                                            backgroundColor={authoringOptions?.toolbarBgColor}
+                                        />
+                                    </SubNav>
+                                )
                                 }
                                 main={(
                                     <Layout.AuthoringMain
