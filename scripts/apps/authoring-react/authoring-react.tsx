@@ -18,12 +18,7 @@ import {
     IAuthoringSectionTheme,
     IAuthoringValidationErrors,
 } from 'superdesk-api';
-import {
-    ButtonGroup,
-    Loader,
-    SubNav,
-    IconButton,
-} from 'superdesk-ui-framework/react';
+import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
@@ -1199,24 +1194,16 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-    render() {
-        const state = this.state;
-        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
+    public getExposed(): IExposedFromAuthoring<T> {
+        const {state} = this;
 
-        if (state.initialized !== true) {
-            return null;
+        if (state.initialized === false) {
+            throw new Error('Can\'t get exposed if state isn\'t loaded');
         }
 
-        // TODO: remove test code
-        if (uiFrameworkAuthoringPanelTest) {
-            return (
-                <div>
-                    <EditorTest />
-                </div>
-            );
-        }
+        const {onClose, authoringStorage, fieldsAdapter, storageAdapter, sideWidget} = this.props;
 
-        const exposed: IExposedFromAuthoring<T> = {
+        return {
             item: state.itemWithChanges,
             contentProfile: state.profile,
             getLatestItem: this.computeLatestEntity,
@@ -1226,13 +1213,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
-            keepChangesAndClose: () => this.props.onClose(),
+            keepChangesAndClose: () => onClose(),
             onItemChange: (item: T) => this.onItemChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.activeId,
+            sideWidget: sideWidget?.activeId,
             toggleTheme: () => {
                 this.setState({
                     ...state,
@@ -1271,9 +1258,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 return state.validationErrors;
             },
         };
+    }
 
-        const authoringOptions: IAuthoringOptions<T> | null =
-            this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
+    render() {
+        const state = this.state;
+        const {getLanguage, getSidePanel} = this.props;
+
+        if (state.initialized !== true) {
+            return null;
+        }
+
+        const exposed = this.getExposed();
+        const authoringOptions: IAuthoringOptions<T> | null = this.props.getInlineToolbarActions != null
+            ? this.props.getInlineToolbarActions(exposed)
+            : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
