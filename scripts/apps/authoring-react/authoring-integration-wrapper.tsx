@@ -513,6 +513,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                 assertNever(error.kind);
                                             }
                                         }}
+                                        onDataChange={(item) => {
+                                            onItemChange(item);
+                                        }}
                                         markupV2
                                     />
                                 );
