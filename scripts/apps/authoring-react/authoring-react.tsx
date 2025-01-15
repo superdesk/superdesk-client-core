@@ -1441,14 +1441,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             <Layout.AuthoringFrame
                                 header={primaryToolbarWidgets.length < 1
                                     && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                    <SubNav>
-                                        <AuthoringToolbar
-                                            entity={state.itemWithChanges}
-                                            widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
-                                            backgroundColor={authoringOptions?.toolbarBgColor}
-                                        />
-                                    </SubNav>
-                                )
+                                        <SubNav>
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        </SubNav>
+                                    )
                                 }
                                 main={(
                                     <Layout.AuthoringMain
