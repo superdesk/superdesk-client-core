@@ -1253,18 +1253,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             return null;
         }
 
-        // TODO: remove test code
-        if (uiFrameworkAuthoringPanelTest) {
-            return (
-                <div>
-                    <EditorTest />
-                </div>
-            );
-        }
-
         const exposed = this.getExposed();
-        const authoringOptions: IAuthoringOptions<T> | null =
-            this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
+        const authoringOptions: IAuthoringOptions<T> | null = this.props.getInlineToolbarActions != null
+            ? this.props.getInlineToolbarActions(exposed)
+            : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
