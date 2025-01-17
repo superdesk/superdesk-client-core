@@ -107,7 +107,10 @@ module.exports = function makeConfig(grunt) {
                  * with a superdesk app open and superdesk-core not installed.
                  * running `npm link superdesk-core` inside of a superdesk app fixes this.
                  */
-                'superdesk-core': getModuleDir('superdesk-core'),
+                'superdesk-core':
+                    process.cwd() === __dirname
+                        ? __dirname // when running unit tests from this project
+                        : getModuleDir('superdesk-core'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
