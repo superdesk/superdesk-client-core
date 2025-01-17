@@ -31,6 +31,7 @@
   "dependencies": {
     "@metadata/exif": "github:superdesk/exif#431066d",
     "@popperjs/core": "2.10.2",
+    "@sourcefabric/common": "0.0.43",
     "@superdesk/common": "0.0.17",
     "@types/angular": "1.6.50",
     "@types/draft-js": "0.11.5",
