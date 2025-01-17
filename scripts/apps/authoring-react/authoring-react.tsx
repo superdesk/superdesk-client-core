@@ -936,7 +936,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         // Since we don't give modal control to the developer using authoring react
                         // we close the prompt and return an error
                         closePromptFn();
-                        reject(e);
+                        reject();
                     });
                 } else {
                     assertNever(action);
