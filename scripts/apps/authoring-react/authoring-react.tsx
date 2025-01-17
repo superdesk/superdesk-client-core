@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef, RefObject} from 'react';
 import {
     IArticle,
     IAuthoringFieldV2,
@@ -283,6 +283,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
+    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -311,6 +312,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.setRef = this.setRef.bind(this);
         this.getItemAndAutosave = this.getItemAndAutosave.bind(this);
 
+        this.fieldRefs = {};
         const setStateOriginal = this.setState.bind(this);
 
         this.setState = (...args) => {
@@ -573,6 +575,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 userPreferences[SPELLCHECKER_PREFERENCE].enabled
                 ?? userPreferences[SPELLCHECKER_PREFERENCE].default
                 ?? true;
+
+            profile.header.merge(profile.content).forEach(({id}) => {
+                this.fieldRefs[id] = createRef();
+            });
 
             const initialState = getInitialState(
                 item,
@@ -1179,6 +1185,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             autosaved: itemWithUpdates,
         };
 
+        newProfile.header.merge(newProfile.header).forEach((x) => {
+            this.fieldRefs[x.id] = createRef();
+        });
+
         this.setState(getInitialState(
             item,
             newProfile ?? state.profile,
@@ -1211,6 +1221,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             handleFieldsDataChange: this.handleFieldsDataChange,
             hasUnsavedChanges: () => this.hasUnsavedChanges(),
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
+            discardUnsavedChanges: () => this.discardUnsavedChanges(state),
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => onClose(),
@@ -1479,6 +1490,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     />
                                                 )}
                                                 <AuthoringSection
+                                                    fieldRefs={this.fieldRefs}
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
@@ -1502,6 +1514,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                     >
                                         {state.profile.content.count() < 1 ? null : (
                                             <AuthoringSection
+                                                fieldRefs={this.fieldRefs}
                                                 uiTheme={uiTheme}
                                                 padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}

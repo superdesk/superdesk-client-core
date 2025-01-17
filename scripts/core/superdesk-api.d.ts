@@ -165,6 +165,7 @@ declare module 'superdesk-api' {
         fieldsAdapter: IFieldsAdapter<T>;
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
+        discardUnsavedChanges(): Promise<void>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         onItemChange(item: T): void;
         save(): Promise<T>;

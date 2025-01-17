@@ -1,5 +1,5 @@
-import React from 'react';
-import {IAuthoringFieldV2, IAuthoringSectionTheme, IAuthoringSectionClassNames, IFieldsData} from 'superdesk-api';
+import React, {RefObject} from 'react';
+import {IAuthoringFieldV2, IAuthoringSectionTheme, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
 import {IPropsAuthoringSection} from './authoring-section';
@@ -21,6 +21,7 @@ interface IProps<T> {
     getVocabularyItems: IPropsAuthoringSection<T>['getVocabularyItems'];
     validationError?: string;
     uiTheme?: IAuthoringSectionTheme;
+    fieldRef: RefObject<HTMLDivElement>;
     item: T;
     computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
 }
@@ -47,42 +48,42 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
             this.props.validationError,
         );
 
-        if (canBeToggled && toggledOn === false) {
-            return (
-                <Container key={field.id} />
-            );
-        } else {
-            return (
-                <FieldEditorConfig.editorComponent
-                    uiTheme={this.props.uiTheme == null ? undefined : {
-                        backgroundColor: this.props.uiTheme.backgroundColor,
-                        backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
-                        textColor: this.props.uiTheme.textColor,
-                        fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
-                        fontFamily: this.props.uiTheme.fontFamily,
-                    }}
-                    key={field.id}
-                    editorId={field.id}
-                    container={Container}
-                    language={this.props.language}
-                    value={fieldsData.get(field.id)}
-                    fieldsData={fieldsData}
-                    onChange={(val) => {
-                        this.props.onChange(field.id, val);
-                    }}
-                    reinitialize={this.props.reinitialize}
-                    readOnly={this.props.readOnly}
-                    config={field.fieldConfig}
-                    fieldId={field.id}
-                    editorPreferences={this.props.editorPreferences}
-                    onEditorPreferencesChange={(fieldPreferences) => {
-                        this.props.onEditorPreferencesChange(field.id, fieldPreferences);
-                    }}
-                    getVocabularyItems={this.props.getVocabularyItems}
-                    item={this.props.item}
-                    computeLatestEntity={this.props.computeLatestEntity}
-                />
-            );
-        }
+        return (
+            <div ref={this.props.fieldRef}>
+                {canBeToggled && toggledOn === false ? (
+                    <Container key={field.id} />
+                ) : (
+                    <FieldEditorConfig.editorComponent
+                        uiTheme={this.props.uiTheme == null ? undefined : {
+                            backgroundColor: this.props.uiTheme.backgroundColor,
+                            backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
+                            textColor: this.props.uiTheme.textColor,
+                            fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
+                            fontFamily: this.props.uiTheme.fontFamily,
+                        }}
+                        key={field.id}
+                        editorId={field.id}
+                        container={Container}
+                        language={this.props.language}
+                        value={fieldsData.get(field.id)}
+                        fieldsData={fieldsData}
+                        onChange={(val) => {
+                            this.props.onChange(field.id, val);
+                        }}
+                        reinitialize={this.props.reinitialize}
+                        readOnly={this.props.readOnly}
+                        config={field.fieldConfig}
+                        fieldId={field.id}
+                        editorPreferences={this.props.editorPreferences}
+                        onEditorPreferencesChange={(fieldPreferences) => {
+                            this.props.onEditorPreferencesChange(field.id, fieldPreferences);
+                        }}
+                        getVocabularyItems={this.props.getVocabularyItems}
+                        item={this.props.item}
+                        computeLatestEntity={this.props.computeLatestEntity}
+                    />
+                )}
+            </div>
+        );
     }
 }

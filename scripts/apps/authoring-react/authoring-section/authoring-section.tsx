@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {RefObject} from 'react';
 import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem, IAuthoringValidationErrors} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
 export interface IPropsAuthoringSection<T> {
+    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement>};
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
@@ -112,6 +113,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     return (
                                         <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
                                             <AuthoringSectionField
+                                                fieldRef={this.props.fieldRefs[field.id]}
                                                 uiTheme={themeApplies ? this.props.uiTheme : undefined}
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
