@@ -137,32 +137,36 @@ export function scheduledFormat(__item: IArticle): {short: string, long: string}
     };
 }
 
+/**
+ * Get short representation of given datetime
+ *
+ * It returns time for current day, day + time for current week, date otherwise.
+ *
+ * @param {String} d iso format datetime
+ * @return {String}
+ */
+export function shortFormat(d) {
+    var m = moment(d);
+    var now = moment();
+
+    if (isSameDay(m, now)) {
+        return m.format(TIME_FORMAT);
+    } else if (isSameWeek(m, now)) {
+        return m.format(WEEK_FORMAT);
+    } else if (isArchiveYear(m, now)) {
+        return m.format(ARCHIVE_FORMAT);
+    }
+
+    return m.format(DATE_FORMAT);
+}
+
+export const longFormat = (date) => formatDate(date, {longFormat: true});
+
 DateTimeService.$inject = [];
 function DateTimeService() {
-    /**
-     * Get short representation of given datetime
-     *
-     * It returns time for current day, day + time for current week, date otherwise.
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.shortFormat = function(d) {
-        var m = moment(d);
-        var now = moment();
+    this.shortFormat = shortFormat;
 
-        if (isSameDay(m, now)) {
-            return m.format(TIME_FORMAT);
-        } else if (isSameWeek(m, now)) {
-            return m.format(WEEK_FORMAT);
-        } else if (isArchiveYear(m, now)) {
-            return m.format(ARCHIVE_FORMAT);
-        }
-
-        return m.format(DATE_FORMAT);
-    };
-
-    this.longFormat = (date) => formatDate(date, {longFormat: true});
+    this.longFormat = longFormat;
 }
 
 DateTimeHelperService.$inject = [];
