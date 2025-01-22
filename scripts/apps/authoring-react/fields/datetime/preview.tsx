@@ -14,12 +14,7 @@ export class Preview extends React.PureComponent<IProps> {
                 label={gettext('Date time (AUTHORING-REACT)')}
                 onChange={noop}
                 preview={true}
-                value={(() => {
-                    const {value} = this.props;
-                    const parsedVal = value != null && (value.length > 0) ? new Date(value) : null;
-
-                    return parsedVal;
-                })()}
+                value={this.props.value}
                 disabled={this.props.config.readOnly}
                 width={this.props.config.width}
             />
