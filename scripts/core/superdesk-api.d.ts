@@ -325,7 +325,7 @@ declare module 'superdesk-api' {
 
     // AUTHORING-REACT FIELD TYPES - datetime
 
-    export type IDateTimeValueOperational = string; // ISO 8601, 13:59:01.123
+    export type IDateTimeValueOperational = Date | null; // ISO 8601, 13:59:01.123
     export type IDateTimeValueStorage = IDateTimeValueOperational;
     export interface IDateTimeFieldConfig extends ICommonFieldConfig {
         allowSeconds?: boolean;

@@ -23,15 +23,8 @@ export class Editor extends React.PureComponent<IProps> {
                         text: gettext('Date time'),
                         hidden: true,
                     }}
-                    onChange={(value) => {
-                        this.props.onChange(value);
-                    }}
-                    value={(() => {
-                        const {value} = this.props;
-                        const parsedVal = value != null && (value.length > 0) ? new Date(value) : null;
-
-                        return parsedVal;
-                    })()}
+                    onChange={this.props.onChange}
+                    value={this.props.value}
                     disabled={this.props.config.readOnly}
                     width={this.props.config.width}
                 />
