@@ -8,7 +8,6 @@ import {
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {cloneDeep} from 'lodash';
 
 type IProps = IEditorComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig, IDateTimeUserPreferences>;
 
@@ -24,10 +23,7 @@ export class Editor extends React.PureComponent<IProps> {
                         text: gettext('Date time'),
                         hidden: true,
                     }}
-                    onChange={(val) => {
-                        // if value passed to onChange has the same reference, storageAdapter won't be triggered
-                        this.props.onChange(cloneDeep(val));
-                    }}
+                    onChange={this.props.onChange}
                     value={this.props.value}
                     disabled={this.props.config.readOnly}
                     width={this.props.config.width}
