@@ -95,7 +95,7 @@ module.exports = function makeConfig(grunt) {
                  * which is likely due to multiple instances of the library being loaded.
                  * The error is only thrown in certain execution branches.
                  */
-                'draft-js': getModuleDir('draft-js'),
+                'draft-js': getModuleDir('@sourcefabric/draft-js'),
 
                 /**
                  * Required for development mode only.
