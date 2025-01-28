@@ -38,7 +38,7 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="8">
                     <TreeSelect
-                        kind='synchronous'
+                        kind="synchronous"
                         allowMultiple
                         label={gettext('Select desks')}
                         value={selectedDesks}

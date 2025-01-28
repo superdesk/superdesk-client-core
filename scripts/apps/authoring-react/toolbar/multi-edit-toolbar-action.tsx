@@ -27,10 +27,6 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
     }
 
     render(): ReactNode {
-        const options = sdApi.article.getWorkQueueItems().filter((article) =>
-            this.state.selectedArticles.map(({_id}) => _id).includes(article._id) === false,
-        );
-
         return (
             <Modal
                 contentPadding="none"
@@ -41,7 +37,7 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <TreeSelect
-                        kind='synchronous'
+                        kind="synchronous"
                         allowMultiple
                         inlineLabel
                         labelHidden
@@ -51,7 +47,11 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                         }}
                         getId={(item) => getArticleLabel(item)}
                         getLabel={(item) => getArticleLabel(item)}
-                        getOptions={() => options.map((item) => ({value: item}))}
+                        getOptions={() => sdApi.article.getWorkQueueItems().filter((article) =>
+                                this.state.selectedArticles.map(({_id}) => _id)
+                                .includes(article._id) === false,
+                            ).map((item) => ({value: item})
+                        )}
                     />
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button

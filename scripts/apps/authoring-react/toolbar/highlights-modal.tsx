@@ -75,7 +75,7 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer v gap="16">
                     <TreeSelect
-                        kind='synchronous'
+                        kind="synchronous"
                         allowMultiple
                         inlineLabel
                         labelHidden
