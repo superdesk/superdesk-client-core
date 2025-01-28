@@ -1508,6 +1508,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
                                                     computeLatestEntity={this.computeLatestEntity}
+                                                    fieldTemplate={this.props.fieldTemplate}
                                                 />
                                             </div>
                                         )}
@@ -1533,6 +1534,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 validationErrors={state.validationErrors}
                                                 item={state.itemWithChanges}
                                                 computeLatestEntity={this.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
                                             />
                                         )}
                                     </Layout.AuthoringMain>

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import classNames from 'classnames';
-import {IAuthoringFieldV2, IEditorComponentContainerProps} from 'superdesk-api';
+import {IAuthoringFieldV2, IEditorComponentContainerProps, IPropsAuthoringFieldTemplate} from 'superdesk-api';
 import {Switch} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
@@ -26,14 +26,45 @@ export const RequiredIndicatorForContent = () => (
     </span>
 );
 
-export function getFieldContainer(
+export interface IGetFieldContainerOptions {
     useHeaderLayout: boolean,
     canBeToggled: boolean,
     field: IAuthoringFieldV2,
     toggledOn: boolean,
     toggleField: (fieldId: string) => void,
     validationError?: string,
-) {
+    fieldTemplate: React.ComponentType<IPropsAuthoringFieldTemplate> | null;
+}
+
+export function getFieldContainer(options: IGetFieldContainerOptions) {
+    const {
+        useHeaderLayout,
+        canBeToggled,
+        field,
+        toggledOn,
+        toggleField,
+        validationError,
+    } = options;
+
+    const FieldTemplate = options.fieldTemplate;
+
+    if (FieldTemplate != null) {
+        class Component extends React.PureComponent<IEditorComponentContainerProps> {
+            render() {
+                return (
+                    <FieldTemplate
+                        field={field}
+                        input={this.props.children}
+                        validationError={validationError}
+                        miniToolbar={this.props.miniToolbar}
+                    />
+                );
+            }
+        }
+
+        return Component;
+    }
+
     const toggle = canBeToggled && (
         <Switch
             label={{content: gettext('Toggle field')}}
@@ -43,6 +74,7 @@ export function getFieldContainer(
             }}
         />
     );
+
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {

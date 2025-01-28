@@ -3,6 +3,7 @@ import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem, IAuthoringValidation
 import {Map} from 'immutable';
 import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
+import {IGetFieldContainerOptions} from './get-field-container';
 
 export interface IPropsAuthoringSection<T> {
     fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement>};
@@ -23,6 +24,7 @@ export interface IPropsAuthoringSection<T> {
     uiTheme?: IAuthoringSectionTheme;
     item: T;
     computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
+    fieldTemplate: IGetFieldContainerOptions['fieldTemplate'];
 }
 
 function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
@@ -134,6 +136,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 validationError={this.props.validationErrors[field.id]}
                                                 item={this.props.item}
                                                 computeLatestEntity={this.props.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
                                             />
                                         </div>
                                     );

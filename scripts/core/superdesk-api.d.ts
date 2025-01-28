@@ -191,6 +191,13 @@ declare module 'superdesk-api' {
         keyBindings?: IKeyBindings;
     }
 
+    interface IPropsAuthoringFieldTemplate {
+        field: IAuthoringFieldV2;
+        input: React.ReactNode;
+        validationError?: string;
+        miniToolbar?: React.ReactNode;
+    }
+
     interface IPropsAuthoring<T> {
         itemId: string;
 
@@ -233,6 +240,8 @@ declare module 'superdesk-api' {
             pinnedId?: string;
             activeId?: string;
         };
+
+        fieldTemplate?: React.ComponentType<IPropsAuthoringFieldTemplate>;
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
