@@ -24,7 +24,7 @@ export class Editor extends React.PureComponent<IProps> {
                         hidden: true,
                     }}
                     onChange={this.props.onChange}
-                    value={this.props.value}
+                    value={this.props.value ?? null}
                     disabled={this.props.config.readOnly}
                     width={this.props.config.width}
                 />

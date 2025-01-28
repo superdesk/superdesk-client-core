@@ -49,7 +49,7 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
         );
 
         return (
-            <div ref={this.props.fieldRef}>
+            <div ref={this.props.fieldRef} data-test-id="authoring-field" data-test-value={field.id}>
                 {canBeToggled && toggledOn === false ? (
                     <Container key={field.id} />
                 ) : (
