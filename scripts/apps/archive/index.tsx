@@ -348,6 +348,7 @@ angular.module('superdesk.apps.archive', [
                         return lockCond && authoring.itemActions(item).export;
                     }],
                 modal: true,
+                zIndex: '1050',
                 cssClass: 'modal-responsive',
                 controller: ['$scope', function($scope) {
                     $scope.export = true;
