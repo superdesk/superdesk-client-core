@@ -1,21 +1,29 @@
 name: "CI"
+
 on:
   [push, pull_request]
+
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: ['14', '18', '20', 'lts/*']
+
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: '14.x'
+        node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    # avoid file watch limit error
-    - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
     - run: npm ci
-    - run: npm run test || npm run test || npm run test
+
+    - run: npm run test
       env:
         TZ: "Europe/Prague"
+
   e2e:
     runs-on: ubuntu-22.04
     strategy:
