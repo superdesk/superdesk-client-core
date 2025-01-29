@@ -78,57 +78,55 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar, sectionClassNames} = this.props;
+            const {miniToolbar} = this.props;
 
             return (
-                <div className={sectionClassNames?.header}>
-                    <Spacer v gap="0">
-                        <span
-                            className={classNames(
-                                'form-label',
-                                {'form-label--invalid': validationError != null},
-                            )}
-                        >
-                            <Spacer h gap="8" noGrow noWrap>
-                                <Spacer h gap="4" noGrow noWrap>
-                                    {field.name}
-                                    {field.fieldConfig.required && (
-                                        <RequiredIndicatorForHeader />
-                                    )}
-                                </Spacer>
-                                <span>{toggle}</span>
+                <Spacer v gap="0">
+                    <span
+                        className={classNames(
+                            'form-label',
+                            {'form-label--invalid': validationError != null},
+                        )}
+                    >
+                        <Spacer h gap="8" noGrow noWrap>
+                            <Spacer h gap="4" noGrow noWrap>
+                                {field.name}
+                                {field.fieldConfig.required && (
+                                    <RequiredIndicatorForHeader />
+                                )}
                             </Spacer>
-                        </span>
+                            <span>{toggle}</span>
+                        </Spacer>
+                    </span>
 
-                        <div style={{flexGrow: 1}}>
-                            {this.props.children}
+                    <div style={{flexGrow: 1}}>
+                        {this.props.children}
 
-                            <Spacer h gap="8" justifyContent="end" noGrow noWrap>
-                                {
-                                    validationError != null && (
-                                        <div className="input-field-error">{validationError}</div>
-                                    )
-                                }
+                        <Spacer h gap="8" justifyContent="end" noGrow noWrap>
+                            {
+                                validationError != null && (
+                                    <div className="input-field-error">{validationError}</div>
+                                )
+                            }
 
-                                {
-                                    miniToolbar != null && (
-                                        <div>{miniToolbar}</div>
-                                    )
-                                }
-                            </Spacer>
-                        </div>
-                    </Spacer>
-                </div>
+                            {
+                                miniToolbar != null && (
+                                    <div>{miniToolbar}</div>
+                                )
+                            }
+                        </Spacer>
+                    </div>
+                </Spacer>
             );
         }
     }
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar, sectionClassNames} = this.props;
+            const {miniToolbar} = this.props;
 
             return (
-                <div className={sectionClassNames?.content}>
+                <div>
                     <div
                         style={{
                             display: 'flex',

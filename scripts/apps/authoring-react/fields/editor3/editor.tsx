@@ -6,7 +6,6 @@ import {
 } from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
 import {
-    initializeSpellchecker,
     getInitialSpellcheckerData,
 } from 'core/editor3/store';
 import ng from 'core/services/ng';
@@ -412,8 +411,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
                  * to allow consumers apply conditional logic based on presence of mini toolbar
                  */
                 miniToolbar={isSpacerTreeEmpty(miniToolbar) ? undefined : miniToolbar}
-
-                sectionClassNames={{header: 'sd-input-style'}}
             >
                 {
                     HelperComponent != null && (
@@ -426,6 +423,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         />
                     )
                 }
+
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         {
@@ -457,14 +455,17 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                 </>
                             )
                         }
-                        <Editor3
-                            uiTheme={this.props.uiTheme}
-                            scrollContainer=".sd-editor-content__main-container"
-                            singleLine={config.singleLine ?? false}
-                            cleanPastedHtml={config.cleanPastedHtml ?? false}
-                            autocompleteSuggestions={this.state.autocompleteSuggestions}
-                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
-                        />
+
+                        <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
+                            <Editor3
+                                uiTheme={this.props.uiTheme}
+                                scrollContainer=".sd-editor-content__main-container"
+                                singleLine={config.singleLine ?? false}
+                                cleanPastedHtml={config.cleanPastedHtml ?? false}
+                                autocompleteSuggestions={this.state.autocompleteSuggestions}
+                                canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
+                            />
+                        </div>
                     </ReactContextForEditor3.Provider>
                 </Provider>
             </Container>

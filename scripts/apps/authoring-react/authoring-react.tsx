@@ -17,6 +17,8 @@ import {
     IStoreValueIncomplete,
     IAuthoringSectionTheme,
     IAuthoringValidationErrors,
+    IFieldsV2,
+    IEditor3Config,
 } from 'superdesk-api';
 import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -53,6 +55,7 @@ import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofre
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
+import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
 
 export function getFieldsData<T>(
     item: T,
@@ -239,6 +242,29 @@ export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
         assertNever(value);
     }
 };
+
+function setCompactMode(fields: IFieldsV2): IFieldsV2 {
+    let result = fields;
+
+    fields.forEach((field, key) => {
+        if (field.fieldType === EDITOR_3_FIELD_TYPE) {
+            const currentConfig = field.fieldConfig as IEditor3Config;
+            const nextConfig: IEditor3Config = currentConfig.compact != null
+                ? currentConfig
+                : {
+                    ...currentConfig,
+                    compact: true,
+                };
+
+            result = result.set(key, {
+                ...field,
+                fieldConfig: nextConfig,
+            });
+        }
+    });
+
+    return result;
+}
 
 /**
  * Toggling a field "off" hides it and removes its values.
@@ -1491,7 +1517,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 )}
                                                 <AuthoringSection
                                                     fieldRefs={this.fieldRefs}
-                                                    fields={state.profile.header}
+                                                    fields={setCompactMode(state.profile.header)}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     reinitialize={(item) => {
