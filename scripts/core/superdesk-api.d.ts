@@ -3266,7 +3266,6 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
-            memoize<T extends ICallable>(func: T, maxCacheEntryCount?: number): T; // maxCacheEntryCount = 1
             generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IPatchingOptions): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
