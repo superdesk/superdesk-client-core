@@ -56,6 +56,7 @@ import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
+import memoizeOne from 'memoize-one';
 
 export function getFieldsData<T>(
     item: T,
@@ -243,6 +244,9 @@ export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
     }
 };
 
+/**
+ * Default compact mode to true for editor3 fields in header.
+ */
 function setCompactMode(fields: IFieldsV2): IFieldsV2 {
     let result = fields;
 
@@ -310,6 +314,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
     fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+    private prepareHeaderFields: typeof setCompactMode;
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -337,6 +342,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
         this.getItemAndAutosave = this.getItemAndAutosave.bind(this);
+        this.prepareHeaderFields = memoizeOne(setCompactMode);
 
         this.fieldRefs = {};
         const setStateOriginal = this.setState.bind(this);
@@ -1517,7 +1523,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 )}
                                                 <AuthoringSection
                                                     fieldRefs={this.fieldRefs}
-                                                    fields={setCompactMode(state.profile.header)}
+                                                    fields={this.prepareHeaderFields(state.profile.header)}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     reinitialize={(item) => {

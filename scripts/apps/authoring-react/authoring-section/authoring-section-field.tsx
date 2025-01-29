@@ -3,7 +3,8 @@ import {IAuthoringFieldV2, IAuthoringSectionTheme, IFieldsData} from 'superdesk-
 import {getField} from 'apps/fields';
 import {getFieldContainer, IGetFieldContainerOptions} from './get-field-container';
 import {IPropsAuthoringSection} from './authoring-section';
-import {memoize} from 'core/memoize';
+import memoizeOne from 'memoize-one';
+import {shallowEqualObjects} from 'shallow-equal';
 
 interface IProps<T> {
     field: IAuthoringFieldV2;
@@ -33,7 +34,7 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
     constructor(props: IProps<T>) {
         super(props);
 
-        this.getFieldContainer = memoize(getFieldContainer, 1);
+        this.getFieldContainer = memoizeOne(getFieldContainer, ([a], [b]) => shallowEqualObjects(a, b));
     }
 
     render() {
