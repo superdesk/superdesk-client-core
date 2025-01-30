@@ -18,7 +18,6 @@ import {noop} from 'lodash';
 
 import {ImageTagging} from './ImageTaggingComponent/ImageTaggingComponent';
 import {AUTO_TAGGING_WIDGET_ID} from './extension';
-import memoizeOne from 'memoize-one';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -160,7 +159,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
     const {httpRequestJsonLocal} = superdesk;
     const {gettext, gettextPlural} = superdesk.localization;
-    const {generatePatch, arrayToTree} = superdesk.utilities;
+    const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
     const {AuthoringWidgetLayout, AuthoringWidgetHeading, Alert} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
@@ -191,7 +190,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.insertTagFromSearch = this.insertTagFromSearch.bind(this);
             this.reload = this.reload.bind(this);
             this.save = this.save.bind(this);
-            this.isDirty = memoizeOne((a, b) => Object.keys(generatePatch(a, b)).length > 0);
+            this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
             const dataBeforeLoading = this.state.data;
