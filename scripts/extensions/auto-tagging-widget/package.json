@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@superdesk/common": "^0.0.8",
+    "memoize-one": "^6.0.0",
     "react-bootstrap": "1.6.0"
   }
 }
