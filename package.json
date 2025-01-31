@@ -161,7 +161,7 @@
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
     "postinstall": "node tasks/generate-placeholder-file-for-extension-styles.js",
-    "test": "npm run unit && npm run unit && node tasks/verify-client-api-changes.js",
+    "test": "npm run lint && npm run unit && npm run verify-client-api-changes",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
     "unit": "karma start --single-run",
     "lint": "python3 ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
