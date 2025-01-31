@@ -10,6 +10,7 @@ module.exports = function(config) {
     // in karma, entry is read from files prop
     webpackConfig.entry = null;
     webpackConfig.devtool = 'eval';
+    webpackConfig.mode = 'development';
 
     config.set({
         frameworks: [
@@ -56,7 +57,7 @@ module.exports = function(config) {
 
         // test results reporter to use
         // options: 'progress', 'dots', 'spec'(via "karma-spec-reporter" package)
-        reporters: ['spec'],
+        //reporters: ['dots'],
 
         // web server port
         port: 8080,

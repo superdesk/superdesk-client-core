@@ -14,13 +14,14 @@ export default angular.module('superdesk.core.services.asset', [])
         this.templateUrl = function(path) {
             var ret = path;
 
-            if (/^(apps|core)/.test(path)) {
+            if (/^(core|apps)/.test(path)) {
                 return 'scripts/' + path;
             }
 
             if (!/^(https?:\/\/|\/\/|\/|.\/|..\/)/.test(path)) {
                 ret = 'scripts/' + ret;
             }
+
             if (!/^(https?:\/\/|\/\/)/.test(path) && appConfig.paths != null && appConfig.paths.superdesk) {
                 ret = appConfig.paths.superdesk + ret;
             }
