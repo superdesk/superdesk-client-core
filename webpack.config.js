@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 function getModuleDir(moduleName) {
     return path.join(
@@ -62,8 +62,9 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
-            new ExtractTextPlugin({
+            new MiniCssExtractPlugin({
                 filename: '[name].bundle.css',
+                chunkFilename: '[id].bundle.css',
             }),
         ],
 
@@ -153,28 +154,11 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.(css|scss)$/i,
-                    use: ExtractTextPlugin.extract({
-                        fallback: [{
-                            loader: 'style-loader',
-                            options: {
-                                sourceMap: true,
-                            },
-                        }],
-                        use: [
-                            {
-                                loader: 'css-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                        ],
-                    }),
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {loader: 'css-loader'},
+                        {loader: 'sass-loader'},
+                    ],
                 },
                 {
                     test: /\.json$/,
