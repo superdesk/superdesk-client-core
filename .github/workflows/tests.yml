@@ -44,17 +44,20 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm install
+    - run: npm run build
+    - run: npm run specs--compile
+    - run: npm run start-client-server
+
     - name: Start e2e server
       run: |
         docker compose pull
         docker compose build
         docker compose up -d
       working-directory: e2e/server
-    - run: npm install
-    - run: npm run build
-    - run: npm run specs--compile
-    - run: npm run start-client-server
+
     # playwright start
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
