@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "compile": "tsc",
-    "prepublish": "rm -rf dist && npm run compile"
+    "prepublish": "rm -rf dist && npm run compile",
+    "postinstall": "rm -rf dist && npm run compile"
   },
   "devDependencies": {
     "protractor": "^7.0.0",
