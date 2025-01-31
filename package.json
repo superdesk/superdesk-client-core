@@ -160,7 +160,7 @@
   },
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
-    "postinstall": "node ./tasks/patch-package.js && node tasks/generate-placeholder-file-for-extension-styles.js",
+    "postinstall": "node tasks/generate-placeholder-file-for-extension-styles.js",
     "test": "npm run unit && npm run unit && node tasks/verify-client-api-changes.js",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
     "unit": "karma start --single-run",
