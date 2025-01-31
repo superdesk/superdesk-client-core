@@ -44,6 +44,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - run: npm install
+      working-directory: ./
+
+    - run: npm install
+      working-directory: ./build-tools
+
+    - run: npm install
+      working-directory: ./end-to-end-testing-helpers
+
     - run: npm install
     - run: npm run build
     - run: npm run specs--compile
