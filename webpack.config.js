@@ -166,6 +166,14 @@ module.exports = function makeConfig(grunt) {
                 },
             ],
         },
+        devServer: {
+            port: 9000,
+            host: '0.0.0.0',
+            static: [
+                {directory: path.join(process.cwd(), 'dist')},
+                {directory: __dirname},
+            ],
+        }
     };
 };
 
