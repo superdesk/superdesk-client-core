@@ -35,6 +35,9 @@ jobs:
       matrix:
         node-version: ['14', '18', '20', 'lts/*']
         suite: [a, b]
+    defaults:
+      run:
+        working-directory: e2e/client
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -47,16 +50,15 @@ jobs:
         docker compose build
         docker compose up -d
       working-directory: e2e/server
-    - name: Build client
-      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
-      working-directory: e2e/client
+    - run: npm install
+    - run: npm run build
+    - run: npm run specs--compile
+    - run: npm run start-client-server
     # playwright start
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-      working-directory: e2e/client
     - name: Run Playwright tests
       run: npx playwright test
-      working-directory: e2e/client
     - uses: actions/upload-artifact@v4
       if: ${{ failure() }}
       with:
@@ -80,7 +82,6 @@ jobs:
         CHROMEWEBDRIVER: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
-      working-directory: e2e/client
 
     - name: Upload screenshots
       if: ${{ failure() }}
