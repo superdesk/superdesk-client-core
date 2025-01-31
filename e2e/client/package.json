@@ -1,7 +1,9 @@
 {
   "private": true,
   "dependencies": {
-    "superdesk-core": "file:../../"
+    "superdesk-core": "file:../../",
+    "@superdesk/build-tools": "file:../../build-tools",
+    "@superdesk/end-to-end-testing-helpers": "file:../../end-to-end-testing-helpers"
   },
   "devDependencies": {
     "@playwright/test": "~1.47.0",
