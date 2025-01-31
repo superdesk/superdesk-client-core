@@ -21,7 +21,10 @@ jobs:
 
     - run: npm install # needed while we support v14
 
-    - run: npm run test
+    - run: npm run lint
+    - run: npm run unit
+    - run: npm run verify-client-api-changes
+
       env:
         TZ: "Europe/Prague"
 
