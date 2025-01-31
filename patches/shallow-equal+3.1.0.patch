@@ -1,0 +1,59 @@
+diff --git a/node_modules/shallow-equal/dist/index.modern.mjs b/node_modules/shallow-equal/dist/index.modern.mjs
+index 0a12c69..3a07362 100644
+--- a/node_modules/shallow-equal/dist/index.modern.mjs
++++ b/node_modules/shallow-equal/dist/index.modern.mjs
+@@ -5,11 +5,11 @@ function shallowEqualArrays(arrA, arrB) {
+   if (!arrA || !arrB) {
+     return false;
+   }
+-  const len = arrA.length;
++  var len = arrA.length;
+   if (arrB.length !== len) {
+     return false;
+   }
+-  for (let i = 0; i < len; i++) {
++  for (var i = 0; i < len; i++) {
+     if (arrA[i] !== arrB[i]) {
+       return false;
+     }
+@@ -24,14 +24,14 @@ function shallowEqualObjects(objA, objB) {
+   if (!objA || !objB) {
+     return false;
+   }
+-  const aKeys = Object.keys(objA);
+-  const bKeys = Object.keys(objB);
+-  const len = aKeys.length;
++  var aKeys = Object.keys(objA);
++  var bKeys = Object.keys(objB);
++  var len = aKeys.length;
+   if (bKeys.length !== len) {
+     return false;
+   }
+-  for (let i = 0; i < len; i++) {
+-    const key = aKeys[i];
++  for (var i = 0; i < len; i++) {
++    var key = aKeys[i];
+     if (objA[key] !== objB[key] || !Object.prototype.hasOwnProperty.call(objB, key)) {
+       return false;
+     }
+@@ -40,8 +40,8 @@ function shallowEqualObjects(objA, objB) {
+ }
+ 
+ function shallowEqual(a, b) {
+-  const aIsArr = Array.isArray(a);
+-  const bIsArr = Array.isArray(b);
++  var aIsArr = Array.isArray(a);
++  var bIsArr = Array.isArray(b);
+   if (aIsArr !== bIsArr) {
+     return false;
+   }
+@@ -51,5 +51,7 @@ function shallowEqual(a, b) {
+   return shallowEqualObjects(a, b);
+ }
+ 
+-export { shallowEqual, shallowEqualArrays, shallowEqualObjects };
+-//# sourceMappingURL=index.modern.mjs.map
++exports.shallowEqual = shallowEqual;
++exports.shallowEqualArrays = shallowEqualArrays;
++exports.shallowEqualObjects = shallowEqualObjects;
++//# sourceMappingURL=index.js.map
