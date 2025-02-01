@@ -60,7 +60,7 @@ if (language === 'en') {
             return Promise.reject("Failed to load translations");
         }
     })
-    .then((translations) => translations[language])
+    .then((translations) => Object.assign({'': {language}}, translations[language]))
     .then(applyTranslations)
     .catch((reason) => console.error("There was error when loading translations", reason));
 }
