@@ -89,6 +89,7 @@ module.exports = function(grunt) {
         }
 
         grunt.task.run([
+            'nggettext_compile',
             'webpack:build',
             'filerev',
             'usemin',

@@ -9,6 +9,7 @@ beforeEach(window.module(($provide) => {
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
+beforeEach(window.module('superdesk.apps.spellcheck'));
 
 // required for react authoring fields
 beforeEach(window.module('superdesk.core.preferences'));
