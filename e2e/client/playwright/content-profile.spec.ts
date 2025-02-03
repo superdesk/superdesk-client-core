@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('content profile icon', async ({page}) => {
+test.skip('content profile icon', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

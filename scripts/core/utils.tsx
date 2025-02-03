@@ -57,12 +57,12 @@ if (language === 'en') {
         if (response.ok) {
             return response.json();
         } else {
-            return Promise.reject("Failed to load translations");
+            return Promise.reject('Failed to load translations');
         }
     })
-    .then((translations) => Object.assign({'': {language}}, translations[language]))
-    .then(applyTranslations)
-    .catch((reason) => console.error("There was error when loading translations", reason));
+        .then((translations) => Object.assign({'': {language}}, translations[language]))
+        .then(applyTranslations)
+        .catch((reason) => console.error('There was error when loading translations', reason));
 }
 
 export const i18n = gettextjs();
