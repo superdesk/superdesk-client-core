@@ -1277,7 +1277,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             if (features.agenda) {
                 return api.get('/agenda').then((result) => {
                     self.values.agendas = [
-                        { name: '', qcode: '' },
+                        {name: '', qcode: ''},
                         ..._.get(result, '_items', [])
                             .filter((item) => item.is_enabled)
                             .map((item) => ({
