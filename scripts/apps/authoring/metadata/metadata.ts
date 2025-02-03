@@ -1165,7 +1165,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                         self.single_value[vocabulary._id] = vocabulary.selection_type === getSingleSelection();
                     }
                     // add empty value for each vocabulary
-                    self.values[vocabulary._id] = [{name: "", qcode: ""}, ...vocabulary.items];
+                    self.values[vocabulary._id] = [{name: '', qcode: ''}, ...vocabulary.items];
                 });
                 self.cvs = result;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
@@ -1277,11 +1277,13 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             if (features.agenda) {
                 return api.get('/agenda').then((result) => {
                     self.values.agendas = [
-                        {name: '', qcode: ''},
-                        ..._.get(result, '_items', []).filter(item => item.is_enabled).map((item) => ({
-                            name: item.name,
-                            qcode: item._id
-                        }))
+                        { name: '', qcode: '' },
+                        ..._.get(result, '_items', [])
+                            .filter((item) => item.is_enabled)
+                            .map((item) => ({
+                                name: item.name,
+                                qcode: item._id,
+                            })),
                     ];
                 });
             }
@@ -1295,8 +1297,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                         {name: '', qcode: ''},
                         ..._.get(result, '_items', []).map((item) => ({
                             name: item.name,
-                            qcode: item._id
-                        }))
+                            qcode: item._id,
+                        })),
                     ];
                 });
             }

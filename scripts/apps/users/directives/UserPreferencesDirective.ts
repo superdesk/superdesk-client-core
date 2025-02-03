@@ -456,7 +456,6 @@ export function UserPreferencesDirective(
                 Object.entries(orig).forEach(([key, val]) => {
                     if (key === 'dateline:located') {
                         var $input = element.find('.input-term > input');
-
                         scope.changeDatelinePreview(scope.preferences[key], $input[0].value);
                     }
 
@@ -475,7 +474,6 @@ export function UserPreferencesDirective(
                     }
 
                     patchObject[key] = _.merge(val, scope.preferences[key]);
-
                 });
 
                 if (orig['editor:theme'] != null) {
