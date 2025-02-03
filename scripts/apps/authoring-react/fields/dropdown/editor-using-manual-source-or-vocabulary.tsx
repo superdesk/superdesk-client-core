@@ -70,10 +70,6 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
 
         const noPadding = selected.every(({color}) => color == null);
 
-        if (selected.length < 1 && options.nodes.length < 1) {
-            return null; // hide field
-        }
-
         return (
             <Container>
                 <MultiSelectTreeWithTemplate
