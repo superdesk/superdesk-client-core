@@ -1,12 +1,12 @@
+import _ from 'lodash';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
-export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
+export default angular.module('superdesk.core.preferences', ['superdesk.core.api', 'superdesk.core.auth.session'])
     /**
      * @ngdoc service
      * @module superdesk.core.services
      * @name preferencesService
      *
-     * @requires https://docs.angularjs.org/api/ng/service/$injector $injector
      * @requires https://docs.angularjs.org/api/ng/service/$rootScope $rootScope
      * @requires https://docs.angularjs.org/api/ng/service/$q $q
      * @requires session
@@ -14,8 +14,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
      *
      * @description Preferences Service (TODO)
      */
-    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'lodash',
-        function PreferencesService($injector, $rootScope, $q, session, notify, _) {
+    .service('preferencesService', ['$rootScope', '$q', 'session', 'api',
+        function PreferencesService($rootScope, $q, session, api) {
             var USER_PREFERENCES = 'user_preferences',
                 SESSION_PREFERENCES = 'session_preferences',
                 ACTIVE_PRIVILEGES = 'active_privileges',
@@ -43,7 +43,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'editor:pinned_widget': 1,
                     [AUTHORING_FIELD_PREFERENCES]: 1,
                 },
-                preferences,
+                preferences: {[key: string]: any} = {},
                 preferencesPromise;
 
             $rootScope.$watch(() => session.token, resetPreferences);
@@ -115,9 +115,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * On next call it will remove local copy and fetch again.
              */
             function getPreferences(cached) {
-                var api = $injector.get('api');
-
-                preferences = null;
+                preferences = {};
                 preferencesPromise = session.getIdentity()
                     .then(fetchPreferences)
                     .then(null, (response) => {
@@ -191,6 +189,10 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 }
             };
 
+            this.reset = () => {
+                preferencesPromise = null;
+            };
+
             this.getSync = getValue;
 
             this.registerUserPreference = function(key) {
@@ -253,8 +255,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * Commit updates.
              */
             function commitUpdates() {
-                var api = $injector.get('api'),
-                    serverUpdates = updates;
+                const serverUpdates = updates;
 
                 updates = null;
                 return api.save('preferences', preferences, serverUpdates)

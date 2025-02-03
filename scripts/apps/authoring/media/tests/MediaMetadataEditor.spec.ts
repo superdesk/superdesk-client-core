@@ -3,16 +3,6 @@ import {appConfig} from 'appConfig';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('media metadata editor', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {
-                url: '',
-                ws: undefined,
-            },
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
     beforeEach(window.module(($provide) => {
         $provide.service('metadata', ($q) => ({
             initialize: () => $q.when({}),

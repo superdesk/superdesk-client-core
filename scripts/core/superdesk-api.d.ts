@@ -3330,6 +3330,8 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        testing?: boolean;
+
         // FROM SERVER
         default_language: string;
         disallowed_characters: Array<string>; // applies to slugline

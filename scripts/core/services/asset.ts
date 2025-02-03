@@ -14,6 +14,10 @@ export default angular.module('superdesk.core.services.asset', [])
         this.templateUrl = function(path) {
             var ret = path;
 
+            if (/^(apps|core)/.test(path)) {
+                return 'scripts/' + path;
+            }
+
             if (!/^(https?:\/\/|\/\/|\/|.\/|..\/)/.test(path)) {
                 ret = 'scripts/' + ret;
             }

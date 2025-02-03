@@ -1,5 +1,3 @@
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
 import _ from 'lodash';
 
 describe('MetadataWidgetCtrl controller', () => {
@@ -15,23 +13,6 @@ describe('MetadataWidgetCtrl controller', () => {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
-
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            default_timezone: 'Europe/London',
-            server: {url: undefined, ws: undefined},
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
 
     beforeEach(inject((
         $rootScope, $controller, $q, _metadata_, preferencesService,

@@ -2,11 +2,17 @@ import ng from 'core/services/ng';
 
 beforeEach(window.module(($provide) => {
     $provide.constant('lodash', window._);
+
+    localStorage.clear();
 }));
 
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
+
+// required for react authoring fields
+beforeEach(window.module('superdesk.core.preferences'));
+beforeEach(window.module('superdesk.apps.spellcheck'));
 
 /**
  * Mock services that call server on init and thus would require mocking all the time
@@ -14,12 +20,28 @@ beforeEach(window.module('superdesk.core.services.storage'));
 angular.module('superdesk.mocks', [])
     .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
     .run(['$httpBackend', ($httpBackend) => {
-        // mock call to /api which is used in a few service factories
-        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+        // mock call to api home which is used in a few service factories
+        $httpBackend.whenGET('http://localhost:5000').respond({_links: {child: [
+            {title: 'auth_db', href: 'auth_db'},
+            {title: 'users', href: 'users'},
+            {title: 'preferences', href: 'preferences'},
+            {title: 'workspace', href: '/users/<regex():user_id>/workspace'},
+        ]}});
+
+        // editor3 is fetching those
+        $httpBackend.whenGET('http://localhost:5000/languages').respond({_items: [
+            {_id: 'en', label: 'English', language: 'en'},
+        ]});
+
+        $httpBackend.whenGET('http://localhost:5000/content_types').respond({_items: []});
+
+        $httpBackend.whenGET('http://localhost:5000/ingest_rule_handlers').respond({_items: []});
+
+        $httpBackend.whenGET('http://localhost:5000/preferences/sess').respond({});
     }])
     .run(['$injector', ng.register])
     .constant('config', {
-        server: {url: ''},
+        server: {url: 'http://localhost:5000'},
         editor: {},
         model: {
             dateformat: 'DD/MM/YYYY',

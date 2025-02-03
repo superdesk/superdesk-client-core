@@ -45,7 +45,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.state = {
             value: getValue(props),
-            preferences: ng.get('preferencesService').getSync(),
+            preferences: ng.get('preferencesService').getSync() || {},
         };
 
         this.lastPropsValue = this.state.value;

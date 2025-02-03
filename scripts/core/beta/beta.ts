@@ -1,39 +1,18 @@
 import _ from 'lodash';
 
-angular.module('superdesk.core.services.beta', ['superdesk.core.preferences'])
+angular.module('superdesk.core.services.beta', [])
 
 /**
  * Superdesk service for enabling/disabling beta preview in app
+ * @deprecated
  */
-    .service('betaService', ['$window', '$rootScope', '$q', 'preferencesService',
-        function($window, $rootScope, $q, preferencesService) {
+    .service('betaService', ['$window', '$rootScope', '$q',
+        function($window, $rootScope, $q) {
             $rootScope.beta = null;
 
-            this.toggleBeta = function() {
-                var update = {
-                    'feature:preview': {
-                        default: false,
-                        enabled: !$rootScope.beta,
-                        label: 'Enable Feature Preview',
-                        type: 'bool',
-                        category: 'feature',
-                    },
-                };
-
-                preferencesService.update(update, 'feature:preview').then(() => {
-                    $rootScope.beta = !$rootScope.beta;
-                    $window.location.reload();
-                });
-            };
+            this.toggleBeta = angular.noop();
 
             this.isBeta = function() {
-                if (_.isNil($rootScope.beta)) {
-                    return preferencesService.get('feature:preview').then((result) => {
-                        $rootScope.beta = result && result.enabled;
-                        return $rootScope.beta;
-                    }, () => $q.when(false));
-                }
-
                 return $q.resolve($rootScope.beta);
             };
         }])
