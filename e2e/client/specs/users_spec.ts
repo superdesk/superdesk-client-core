@@ -209,9 +209,9 @@ describe('users', () => {
 
             var catListItems = authoring.getCategoryListItems;
 
-            expect(catListItems.count()).toBe(3);
-            expect(catListItems.get(1).getText()).toEqual('Entertainment');
-            expect(catListItems.get(2).getText()).toEqual('Finance');
+            expect(catListItems.count()).toBe(2);
+            expect(catListItems.get(0).getText()).toEqual('Entertainment');
+            expect(catListItems.get(1).getText()).toEqual('Finance');
         },
         );
 
@@ -238,9 +238,9 @@ describe('users', () => {
 
             var catListItems = authoring.getCategoryListItems;
 
-            expect(catListItems.count()).toBe(3);
-            expect(catListItems.get(1).getText()).toEqual('Entertainment');
-            expect(catListItems.get(2).getText()).toEqual('Finance');
+            expect(catListItems.count()).toBe(2);
+            expect(catListItems.get(0).getText()).toEqual('Entertainment');
+            expect(catListItems.get(1).getText()).toEqual('Finance');
 
             // now type some search term and check if down arrow navigates to filtered list
             browser.actions().sendKeys('fin').perform();
