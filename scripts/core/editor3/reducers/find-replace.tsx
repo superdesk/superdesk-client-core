@@ -10,24 +10,24 @@ interface IDiff { [s: string]: string; }
 
 const findReplace = (state = {}, action) => {
     switch (action.type) {
-    case 'HIGHLIGHTS_FIND_NEXT':
-        return findNext(state);
-    case 'HIGHLIGHTS_FIND_PREV':
-        return findPrev(state);
-    case 'HIGHLIGHTS_REPLACE':
-        return replaceHighlight(state, action.payload);
-    case 'HIGHLIGHTS_REPLACE_MULTIPLE':
-        return replaceMultipleHighlights(state, action.payload);
-    case 'HIGHLIGHTS_REPLACE_ALL':
-        return replaceHighlight(state, action.payload, true);
-    case 'PATCH_HTML_ON_EDITOR_STATE':
-        return patchHtmloNEditorState(state, action.payload);
-    case 'HIGHLIGHTS_RENDER':
-        return render(state);
-    case 'HIGHLIGHTS_CRITERIA':
-        return setCriteria(state, action.payload);
-    default:
-        return state;
+        case 'HIGHLIGHTS_FIND_NEXT':
+            return findNext(state);
+        case 'HIGHLIGHTS_FIND_PREV':
+            return findPrev(state);
+        case 'HIGHLIGHTS_REPLACE':
+            return replaceHighlight(state, action.payload);
+        case 'HIGHLIGHTS_REPLACE_MULTIPLE':
+            return replaceMultipleHighlights(state, action.payload);
+        case 'HIGHLIGHTS_REPLACE_ALL':
+            return replaceHighlight(state, action.payload, true);
+        case 'PATCH_HTML_ON_EDITOR_STATE':
+            return patchHtmloNEditorState(state, action.payload);
+        case 'HIGHLIGHTS_RENDER':
+            return render(state);
+        case 'HIGHLIGHTS_CRITERIA':
+            return setCriteria(state, action.payload);
+        default:
+            return state;
     }
 };
 

@@ -14,40 +14,40 @@ export class Preview extends React.PureComponent<IProps> {
         const {source} = config;
 
         switch (source) {
-        case 'manual-entry':
-            return (
-                <PreviewManualEntry
-                    item={this.props.item}
-                    value={value}
-                    config={config}
-                />
-            );
-        case 'vocabulary':
-            return (
-                <PreviewVocabulary
-                    item={this.props.item}
-                    value={value}
-                    config={config}
-                />
-            );
-        case 'remote-source':
-            return (
-                <PreviewRemoteSource
-                    item={this.props.item}
-                    value={value}
-                    config={config}
-                />
-            );
-        case 'dropdown-tree':
-            return (
-                <PreviewDropdownTree
-                    item={this.props.item}
-                    value={value}
-                    config={config}
-                />
-            );
-        default:
-            assertNever(source);
+            case 'manual-entry':
+                return (
+                    <PreviewManualEntry
+                        item={this.props.item}
+                        value={value}
+                        config={config}
+                    />
+                );
+            case 'vocabulary':
+                return (
+                    <PreviewVocabulary
+                        item={this.props.item}
+                        value={value}
+                        config={config}
+                    />
+                );
+            case 'remote-source':
+                return (
+                    <PreviewRemoteSource
+                        item={this.props.item}
+                        value={value}
+                        config={config}
+                    />
+                );
+            case 'dropdown-tree':
+                return (
+                    <PreviewDropdownTree
+                        item={this.props.item}
+                        value={value}
+                        config={config}
+                    />
+                );
+            default:
+                assertNever(source);
         }
     }
 }

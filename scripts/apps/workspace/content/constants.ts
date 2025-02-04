@@ -51,25 +51,25 @@ export const GET_LABEL_MAP = () => ({
 
 function getLabelForStageName(stageName: IStage['name']): string | null {
     switch (stageName.toLowerCase()) {
-    case 'working stage':
-        return gettext('Working Stage');
-    case 'incoming stage':
-        return gettext('Incoming Stage');
-    default:
-        return null;
+        case 'working stage':
+            return gettext('Working Stage');
+        case 'incoming stage':
+            return gettext('Incoming Stage');
+        default:
+            return null;
     }
 }
 
 function getLabelForStageType(stageType: ICard['type']): string | null {
     switch (stageType) {
-    case 'deskOutput':
-        return gettext('Desk Output');
-    case 'sentDeskOutput':
-        return gettext('Sent Desk Output');
-    case 'scheduledDeskOutput':
-        return gettext('Scheduled Desk Output');
-    default:
-        return null;
+        case 'deskOutput':
+            return gettext('Desk Output');
+        case 'sentDeskOutput':
+            return gettext('Sent Desk Output');
+        case 'scheduledDeskOutput':
+            return gettext('Scheduled Desk Output');
+        default:
+            return null;
     }
 }
 

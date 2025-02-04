@@ -197,18 +197,18 @@ export function MonitoringView(
 
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
-                    case 'list':
-                        scope.switchView('compact');
-                        break;
-                    case 'swimlane':
-                        scope.switchView('compact', true);
-                        break;
-                    case 'photogrid':
-                        scope.switchView('photogrid');
-                        break;
-                    default:
-                        scope.switchView('compact'); // list by default
-                        break;
+                        case 'list':
+                            scope.switchView('compact');
+                            break;
+                        case 'swimlane':
+                            scope.switchView('compact', true);
+                            break;
+                        case 'photogrid':
+                            scope.switchView('photogrid');
+                            break;
+                        default:
+                            scope.switchView('compact'); // list by default
+                            break;
                     }
                 }
             });
