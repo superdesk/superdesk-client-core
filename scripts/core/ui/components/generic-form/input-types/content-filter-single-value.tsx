@@ -8,18 +8,20 @@ export const ContentFilterSingleValue = getSelectSingleValueAutoComplete({
             'content_filters',
             1,
             {field: 'name', direction: 'ascending'},
-            searchString.length > 0
-                ? {
-                      $and: [
-                          {
-                              name: {
-                                  $regex: searchString,
-                                  $options: 'i',
-                              },
-                          },
-                      ],
-                  }
-                : {},
+            (
+                searchString.length > 0
+                    ? {
+                        $and: [
+                            {
+                                name: {
+                                    $regex: searchString,
+                                    $options: 'i',
+                                },
+                            },
+                        ],
+                    }
+                    : {}
+            ),
             200,
         );
     },

@@ -18,7 +18,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
          * @param {string} item
          * @param {string} action
          */
-        this.edit = function (item, action) {
+        this.edit = function(item, action) {
             self.item = item;
             self.action = action;
             self.state.opened = !!item;
@@ -31,7 +31,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
         templateUrl: 'scripts/apps/authoring/views/authoring-container.html',
         scope: {},
         require: 'sdAuthoringContainer',
-        link: function (scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ctrl) {
             scope.$watch(authoringWorkspace.getState, (state) => {
                 if (state) {
                     if (itemInEditMode != null) {

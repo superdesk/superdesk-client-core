@@ -1,6 +1,11 @@
 import React from 'react';
 import {TimePicker} from 'superdesk-ui-framework/react';
-import {ITimeValueOperational, ITimeFieldConfig, ITimeUserPreferences, IEditorComponentProps} from 'superdesk-api';
+import {
+    ITimeValueOperational,
+    ITimeFieldConfig,
+    ITimeUserPreferences,
+    IEditorComponentProps,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<ITimeValueOperational, ITimeFieldConfig, ITimeUserPreferences>;

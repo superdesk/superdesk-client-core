@@ -4,9 +4,11 @@ import {IVersionInformation} from '../interfaces';
 export function fixItemResponseVersionDates<T extends IVersionInformation>(
     response: IRestApiResponse<T>,
 ): IRestApiResponse<T> {
-    (response._items ?? []).forEach((item: T) => {
-        fixItemVersionDates(item);
-    });
+    (response._items ?? []).forEach(
+        (item: T) => {
+            fixItemVersionDates(item);
+        },
+    );
 
     return response;
 }

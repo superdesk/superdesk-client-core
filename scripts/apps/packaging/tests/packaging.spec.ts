@@ -15,10 +15,7 @@ describe('packaging', () => {
             var scope = $rootScope.$new();
 
             scope.autosave = jasmine.createSpy('autosave');
-            scope.groups = [
-                {id: 'root', refs: [{idRef: 'main'}]},
-                {id: 'main', refs: [], items: []},
-            ];
+            scope.groups = [{id: 'root', refs: [{idRef: 'main'}]}, {id: 'main', refs: [], items: []}];
             $compile('<div sd-package-items-edit ng-model="groups"></div>')(scope);
             scope.$digest();
 

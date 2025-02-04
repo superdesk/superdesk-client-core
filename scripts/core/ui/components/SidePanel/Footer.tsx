@@ -8,7 +8,14 @@ import classNames from 'classnames';
  * @description Footer Component of a side panel
  */
 export const Footer: React.StatelessComponent<any> = ({children, className}) => (
-    <div className={classNames('side-panel__footer', className)}>{children}</div>
+    <div
+        className={classNames(
+            'side-panel__footer',
+            className,
+        )}
+    >
+        {children}
+    </div>
 );
 
 Footer.propTypes = {

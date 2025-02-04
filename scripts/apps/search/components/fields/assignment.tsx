@@ -11,7 +11,11 @@ class AssignmentComponent extends React.Component<IPropsItemListInfo> {
         }
 
         return (
-            <span key="assignment" className="assignment-icon" title={gettext('Coverage')}>
+            <span
+                key="assignment"
+                className="assignment-icon"
+                title={gettext('Coverage')}
+            >
                 <i className="icon-calendar" />
             </span>
         );

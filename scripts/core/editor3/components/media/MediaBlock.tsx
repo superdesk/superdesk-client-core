@@ -35,7 +35,7 @@ interface IReduxStateProps {
 }
 
 interface IDispatchProps {
-    cropImage(entityKey: string, entityData: any, options: {isNew: any; showMetadata: any; defaultTab: any}): void;
+    cropImage(entityKey: string, entityData: any, options: {isNew: any; showMetadata: any; defaultTab: any;}): void;
     removeBlock(blockKey: string): void;
     changeCaption(entityKey: string, newCaption: string, field: ICaptionField): void;
     setLocked(): void;
@@ -133,12 +133,15 @@ export class MediaBlockComponent extends React.Component<IProps> {
         const editable = !readOnly && (data._type !== 'externalsource' || isMediaEditable(data));
 
         return (
+
             <div className="image-block" onClick={(e) => e.stopPropagation()}>
-                {readOnly ? null : (
-                    <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
-                        <i className="icon-close-small" />
-                    </a>
-                )}
+                {
+                    readOnly ? null : (
+                        <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
+                            <i className="icon-close-small" />
+                        </a>
+                    )
+                }
                 <div className="image-block__wrapper">
                     {showTitle ? (
                         <Textarea
@@ -150,105 +153,116 @@ export class MediaBlockComponent extends React.Component<IProps> {
                             onChange={({target}) => this.onChange(target.value, 'headline')}
                             disabled={readOnly}
                         />
-                    ) : null}
+                    ) : null }
 
                     {mediaType === 'picture' && (
                         <div className="image-block__image">
                             <div className="image-block__image-overlay">
                                 <div className="image-block__metadata image-block__metadata--top-overlay">
                                     <span>
-                                        <em>{gettext('Title:')} </em>
+                                        <em>{gettext('Title:')}{' '}</em>
                                         {data.headline || gettext('[No Value]')}
                                     </span>
                                 </div>
-                                {editable && (
-                                    <div className="image-block__icons-block">
-                                        <a
-                                            className="image-block__image-action"
-                                            data-sd-tooltip={gettext('Edit metadata')}
-                                            onClick={() => {
-                                                this.onClick('view');
-                                            }}
-                                        >
-                                            <i className="icon-pencil" />
-                                        </a>
+                                {
+                                    editable && (
+                                        <div className="image-block__icons-block">
+                                            <a
+                                                className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit metadata')}
+                                                onClick={() => {
+                                                    this.onClick('view');
+                                                }}
+                                            >
+                                                <i className="icon-pencil" />
+                                            </a>
 
-                                        <a
-                                            className="image-block__image-action"
-                                            data-sd-tooltip={gettext('Edit image')}
-                                            onClick={() => {
-                                                this.onClick('image-edit');
-                                            }}
-                                        >
-                                            <i className="icon-switches" />
-                                        </a>
+                                            <a
+                                                className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit image')}
+                                                onClick={() => {
+                                                    this.onClick('image-edit');
+                                                }}
+                                            >
+                                                <i className="icon-switches" />
+                                            </a>
 
-                                        <a
-                                            className="image-block__image-action"
-                                            data-sd-tooltip={gettext('Edit crops')}
-                                            onClick={() => {
-                                                this.onClick('crop');
-                                            }}
-                                        >
-                                            <i className="icon-crop" />
-                                        </a>
-                                    </div>
-                                )}
+                                            <a
+                                                className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit crops')}
+                                                onClick={() => {
+                                                    this.onClick('crop');
+                                                }}
+                                            >
+                                                <i className="icon-crop" />
+                                            </a>
+                                        </div>
+                                    )
+                                }
                                 <div className="image-block__metadata image-block__metadata--bottom-overlay">
                                     <span>
-                                        <em>{gettext('Alt text:')} </em>
+                                        <em>{gettext('Alt text:')}{' '}</em>
                                         {data.alt_text || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettext('Credit:')} </em>
+                                        <em>{gettext('Credit:')}{' '}</em>
                                         {data.byline || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettext('Copyright holder:')} </em>
+                                        <em>{gettext('Copyright holder:')}{' '}</em>
                                         {data.copyrightholder || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettext('Assign rights:')} </em>
-                                        {getTranslationForAssignRights(data.usageterms) || gettext('[No Value]')}
+                                        <em>{gettext('Assign rights:')}{' '}</em>
+                                        {
+                                            getTranslationForAssignRights(data.usageterms)
+                                            || gettext('[No Value]')
+                                        }
                                     </span>
                                     <span>
-                                        <em>{gettext('Copyright notice:')} </em>
+                                        <em>{gettext('Copyright notice:')}{' '}</em>
                                         {data.copyrightnotice || gettext('[No Value]')}
                                     </span>
                                 </div>
+
                             </div>
                             <img src={rendition.href} alt={alt} />
                         </div>
                     )}
                     {mediaType === 'video' && (
                         <div>
-                            {showTitle === true ? null : (
-                                <Textarea
-                                    placeholder={gettext('Title')}
-                                    onFocus={setLocked}
-                                    onClick={setLocked}
-                                    className="image-block__title"
-                                    value={data.headline}
-                                    onChange={({target}) => this.onChange(target.value, 'headline')}
-                                    disabled={readOnly}
-                                />
-                            )}
+                            {
+                                showTitle === true ? null : (
+                                    <Textarea
+                                        placeholder={gettext('Title')}
+                                        onFocus={setLocked}
+                                        onClick={setLocked}
+                                        className="image-block__title"
+                                        value={data.headline}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
+                                        disabled={readOnly}
+                                    />
+                                )
+                            }
                             <VideoComponent item={data} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
-                                    <em>{gettext('Credit:')} </em>
+                                    <em>{gettext('Credit:')}{' '}</em>
                                     {data.byline || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettext('Copyright holder:')} </em>
+                                    <em>{gettext('Copyright holder:')}{' '}</em>
                                     {data.copyrightholder || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettext('Assign rights:')} </em>
-                                    {getTranslationForAssignRights(data.usageterms) || gettext('[No Value]')}
+                                    <em>{gettext('Assign rights:')}{' '}</em>
+                                    {
+                                        getTranslationForAssignRights(data.usageterms)
+                                        || gettext('[No Value]')
+                                    }
                                 </span>
                                 <span>
-                                    <em>{gettext('Copyright notice:')} </em>
+                                    <em>{gettext('Copyright notice:')}{' '}</em>
                                     {data.copyrightnotice || gettext('[No Value]')}
                                 </span>
                             </div>
@@ -256,37 +270,43 @@ export class MediaBlockComponent extends React.Component<IProps> {
                     )}
                     {mediaType === 'audio' && (
                         <div>
-                            {showTitle === true ? null : (
-                                <Textarea
-                                    placeholder={gettext('Title')}
-                                    onFocus={setLocked}
-                                    onClick={setLocked}
-                                    className="image-block__title"
-                                    value={data.headline}
-                                    onChange={({target}) => this.onChange(target.value, 'headline')}
-                                    disabled={readOnly}
-                                />
-                            )}
+                            {
+                                showTitle === true ? null : (
+                                    <Textarea
+                                        placeholder={gettext('Title')}
+                                        onFocus={setLocked}
+                                        onClick={setLocked}
+                                        className="image-block__title"
+                                        value={data.headline}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
+                                        disabled={readOnly}
+                                    />
+                                )
+                            }
 
                             <audio controls src={rendition.href} style={{width: '100%'}} />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
-                                    <em>{gettext('Credit:')} </em>
+                                    <em>{gettext('Credit:')}{' '}</em>
                                     {data.byline || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettext('Copyright holder:')} </em>
+                                    <em>{gettext('Copyright holder:')}{' '}</em>
                                     {data.copyrightholder || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettext('Assign rights:')} </em>
-                                    {getTranslationForAssignRights(data.usageterms) || gettext('[No Value]')}
+                                    <em>{gettext('Assign rights:')}{' '}</em>
+                                    {
+                                        getTranslationForAssignRights(data.usageterms)
+                                            || gettext('[No Value]')
+                                    }
                                 </span>
                                 <span>
-                                    <em>{gettext('Copyright notice:')} </em>
+                                    <em>{gettext('Copyright notice:')}{' '}</em>
                                     {data.copyrightnotice || gettext('[No Value]')}
                                 </span>
                             </div>
+
                         </div>
                     )}
 

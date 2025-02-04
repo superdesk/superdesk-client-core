@@ -50,24 +50,24 @@ export class AtomicBlockParser {
         const entityType: CustomEditor3Entity = entity.getType();
 
         switch (entityType) {
-            case CustomEditor3Entity.MEDIA:
-                return this.parseMedia(data, rawKey).trim();
-            case CustomEditor3Entity.EMBED:
-                return this.parseEmbed(data).trim();
-            case CustomEditor3Entity.TABLE:
-                return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
-            case CustomEditor3Entity.MULTI_LINE_QUOTE:
-                return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
-            case CustomEditor3Entity.CUSTOM_BLOCK:
-                return this.parseCustomBlock(getData(this.contentState, contentBlock.getKey())).trim();
-            case CustomEditor3Entity.ARTICLE_EMBED:
-                // eslint-disable-next-line no-case-declarations
-                const item = (data as IEditorDragDropArticleEmbed['data']).item;
+        case CustomEditor3Entity.MEDIA:
+            return this.parseMedia(data, rawKey).trim();
+        case CustomEditor3Entity.EMBED:
+            return this.parseEmbed(data).trim();
+        case CustomEditor3Entity.TABLE:
+            return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
+        case CustomEditor3Entity.MULTI_LINE_QUOTE:
+            return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
+        case CustomEditor3Entity.CUSTOM_BLOCK:
+            return this.parseCustomBlock(getData(this.contentState, contentBlock.getKey())).trim();
+        case CustomEditor3Entity.ARTICLE_EMBED:
+            // eslint-disable-next-line no-case-declarations
+            const item = (data as IEditorDragDropArticleEmbed['data']).item;
 
-                return `<div data-association-key="${item._id}">${item.body_html}</div>`;
-            default:
-                logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
-                assertNever(entityType);
+            return `<div data-association-key="${item._id}">${item.body_html}</div>`;
+        default:
+            logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
+            assertNever(entityType);
         }
     }
 
@@ -91,10 +91,9 @@ export class AtomicBlockParser {
      */
     parseEmbed({data, description}) {
         let {html} = data;
-        const descriptionHtml =
-            typeof description === 'string' && description.length > 0
-                ? `<p class="embed-block__description">${description}</p>`
-                : '';
+        const descriptionHtml = typeof description === 'string' && description.length > 0
+            ? `<p class="embed-block__description">${description}</p>`
+            : '';
         const finalHtml = isQumuWidget(html) ? postProccessQumuEmbed(html) : data.html;
 
         return `<div class="embed-block">${finalHtml}${descriptionHtml}</div>`;
@@ -116,22 +115,20 @@ export class AtomicBlockParser {
         const alt = media.alt_text || '';
         const mediaType = media.type;
 
-        let type,
-            content,
-            desc = media.description_text;
+        let type, content, desc = media.description_text;
 
         switch (mediaType) {
-            case 'video':
-                type = 'Video';
-                content = `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
-                break;
-            case 'audio':
-                type = 'Audio';
-                content = `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
-                break;
-            default:
-                type = 'Image';
-                content = `<img src="${href}" alt="${alt}" />`;
+        case 'video':
+            type = 'Video';
+            content = `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            break;
+        case 'audio':
+            type = 'Audio';
+            content = `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            break;
+        default:
+            type = 'Image';
+            content = `<img src="${href}" alt="${alt}" />`;
         }
 
         return this.formatEmbed(type, rawKey, content, desc);
@@ -169,8 +166,9 @@ export class AtomicBlockParser {
 
         const {numRows, numCols, cells, withHeader} = data;
         const getCell = (i, j) => {
-            const cellContentState =
-                cells[i] && cells[i][j] ? convertFromRaw(cells[i][j]) : ContentState.createFromText('');
+            const cellContentState = cells[i] && cells[i][j]
+                ? convertFromRaw(cells[i][j])
+                : ContentState.createFromText('');
 
             return editor3StateToHtml(cellContentState, ['table']);
         };
@@ -189,7 +187,7 @@ export class AtomicBlockParser {
             startRow = 1;
         }
 
-        if (!withHeader || (withHeader && numRows > 1)) {
+        if (!withHeader || withHeader && numRows > 1) {
             html += '<tbody>';
 
             for (let i = startRow; i < numRows; i++) {
@@ -219,7 +217,9 @@ export class AtomicBlockParser {
 
         const {cells} = data;
         let html = `<div class="${MULTI_LINE_QUOTE_CLASS}">`;
-        const cellContentState = cells[0]?.[0] != null ? convertFromRaw(cells[0][0]) : ContentState.createFromText('');
+        const cellContentState = cells[0]?.[0] != null
+            ? convertFromRaw(cells[0][0])
+            : ContentState.createFromText('');
 
         html += editor3StateToHtml(cellContentState);
         html += '</div>';
@@ -240,10 +240,12 @@ export class AtomicBlockParser {
 
         const attributes: Array<{name: string; value: string}> = [
             {name: 'data-custom-block-type', value: blockId},
-            ...(configurableAlgorithms.editor3?.customBlocks?.getAdditionalWrapperAttributes(
-                vocabulary,
-                tableCellContentHtml,
-            ) ?? []),
+            ...(
+                configurableAlgorithms.editor3?.customBlocks?.getAdditionalWrapperAttributes(
+                    vocabulary,
+                    tableCellContentHtml,
+                ) ?? []
+            ),
         ];
 
         const attributesString = attributes.map(({name, value}) => `${name}="${value}"`).join(' ');

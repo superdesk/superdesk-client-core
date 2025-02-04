@@ -26,15 +26,12 @@ class LinkFunction {
         this.scope.refreshList = this.refreshList.bind(this);
 
         // set the watch
-        this.scope.$watch(
-            () => _.omit(this.$location.search(), ['_id', 'item']),
+        this.scope.$watch(() => _.omit(this.$location.search(), ['_id', 'item']),
             (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     this.scope.refreshList();
                 }
-            },
-            true,
-        );
+            }, true);
 
         this.scope.$on('refresh:list', (event, group) => {
             this.scope.refreshList();
@@ -72,18 +69,13 @@ class LinkFunction {
         this.criteria = this.contentApiSearch.getCriteria();
         this._getAggregations();
 
-        return this.contentApiSearch
-            .query(this.criteria)
-            .then(
-                (items) => {
-                    this.scope.$applyAsync(() => {
-                        this.render(items, null, data && data.force);
-                    });
-                },
-                (error) => {
-                    this.notify.error(gettext('Failed to run the query!'));
-                },
-            )
+        return this.contentApiSearch.query(this.criteria).then((items) => {
+            this.scope.$applyAsync(() => {
+                this.render(items, null, data && data.force);
+            });
+        }, (error) => {
+            this.notify.error(gettext('Failed to run the query!'));
+        })
             .finally(() => {
                 this.scope.loading = false;
 
@@ -130,8 +122,7 @@ class LinkFunction {
             this.criteria.page = (this.criteria.page || 0) + 1;
             this._getAggregations();
 
-            this.contentApiSearch
-                .query(this.criteria)
+            this.contentApiSearch.query(this.criteria)
                 .then(setScopeItems)
                 .finally(() => {
                     this.scope.loading = false;

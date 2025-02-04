@@ -7,6 +7,13 @@ export class Preview extends React.PureComponent<
     IPreviewComponentProps<IBooleanFieldValueOperational, ICommonFieldConfig>
 > {
     render() {
-        return <Switch label={{content: ''}} onChange={noop} value={this.props.value as boolean} disabled={true} />;
+        return (
+            <Switch
+                label={{content: ''}}
+                onChange={noop}
+                value={this.props.value as boolean}
+                disabled={true}
+            />
+        );
     }
 }

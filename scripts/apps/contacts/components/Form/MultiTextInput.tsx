@@ -30,10 +30,8 @@ export class MultiTextInput extends React.Component<any, any> {
     }
 
     isFieldInvalid(field, value, errors) {
-        this.errorMessage =
-            get(this.state.touched, field, false) && isEmpty(value)
-                ? gettext('This field is required.')
-                : errors[field] || '';
+        this.errorMessage = get(this.state.touched, field, false) &&
+            isEmpty(value) ? gettext('This field is required.') : errors[field] || '';
 
         return !isEmpty(this.errorMessage);
     }
@@ -59,23 +57,25 @@ export class MultiTextInput extends React.Component<any, any> {
                         readOnly={readOnly}
                     />
 
-                    {!readOnly && (
-                        <div>
-                            <a
-                                tabIndex={0}
-                                className="icn-btn sd-line-input__icon-right"
-                                onClick={remove}
-                                onKeyDown={(event) => {
-                                    if (event && event.keyCode === KEYCODES.ENTER) {
-                                        event.preventDefault();
-                                        remove();
-                                    }
-                                }}
-                            >
-                                <i className="icon-trash" />
-                            </a>
-                        </div>
-                    )}
+                    {!readOnly &&
+                            (
+                                <div>
+                                    <a
+                                        tabIndex={0}
+                                        className="icn-btn sd-line-input__icon-right"
+                                        onClick={remove}
+                                        onKeyDown={(event) => {
+                                            if (event && event.keyCode === KEYCODES.ENTER) {
+                                                event.preventDefault();
+                                                remove();
+                                            }
+                                        }}
+                                    >
+                                        <i className="icon-trash" />
+                                    </a>
+                                </div>
+                            )
+                    }
                 </LineInput>
             </Row>
         );

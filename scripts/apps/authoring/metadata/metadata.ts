@@ -12,16 +12,8 @@ import {sdApi} from 'api';
 import {PublishingTargetSelect} from 'core/interactive-article-actions-panel/subcomponents/publishing-target-select';
 
 MetadataCtrl.$inject = [
-    '$scope',
-    'desks',
-    'metadata',
-    'privileges',
-    'datetimeHelper',
-    'userList',
-    'preferencesService',
-    'archiveService',
-    'moment',
-    'content',
+    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
+    'preferencesService', 'archiveService', 'moment', 'content',
 ];
 
 function getSingleSelection() {
@@ -31,59 +23,43 @@ function getSingleSelection() {
 const DISABLE_CHILDREN_SEARCH_FIELDS = ['authors'];
 
 function MetadataCtrl(
-    $scope,
-    desks,
-    metadata,
-    privileges,
-    datetimeHelper,
-    userList,
-    preferencesService,
-    archiveService,
-    moment,
-    content,
-) {
+    $scope, desks, metadata, privileges, datetimeHelper, userList,
+    preferencesService, archiveService, moment, content) {
     desks.initialize();
 
-    $scope.change_profile =
-        appConfig.item_profile != null &&
-        appConfig.item_profile.change_profile === 1 &&
-        _.get($scope, 'origItem.type') === 'text';
+    $scope.change_profile = appConfig.item_profile != null && appConfig.item_profile.change_profile === 1 &&
+                            _.get($scope, 'origItem.type') === 'text';
 
-    metadata
-        .initialize()
-        .then(() => {
-            $scope.metadata = metadata.values;
-            return preferencesService.get();
-        })
+    metadata.initialize().then(() => {
+        $scope.metadata = metadata.values;
+        return preferencesService.get();
+    })
         .then(setAvailableCategories)
         .then(setAvailableCompanyCodes);
 
-    $scope.$watch(
-        () => desks.active.desk,
-        (activeDeskId) => {
-            content
-                .getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
-                .then((profiles) => {
-                    $scope.desk_content_types = profiles;
-                });
-        },
-    );
+    $scope.$watch(() => desks.active.desk, (activeDeskId) => {
+        content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
+            .then((profiles) => {
+                $scope.desk_content_types = profiles;
+            });
+    });
 
-    $scope.processGenre = function () {
+    $scope.processGenre = function() {
         $scope.item.genre = _.map($scope.item.genre, (g) => _.pick(g, 'name'));
     };
 
     /**
-     * Builds a list of categories available for selection in scope. Used by
-     * the "category" menu in the Authoring metadata section.
-     *
-     * @function setAvailableCategories
-     * @param {Object} prefs - user preferences setting, including the
-     *   preferred categories settings, among other things
-     */
+    * Builds a list of categories available for selection in scope. Used by
+    * the "category" menu in the Authoring metadata section.
+    *
+    * @function setAvailableCategories
+    * @param {Object} prefs - user preferences setting, including the
+    *   preferred categories settings, among other things
+    */
     function setAvailableCategories(prefs) {
         var all, // all available categories
             filtered,
+
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
             userPrefs;
@@ -95,11 +71,11 @@ function MetadataCtrl(
     }
 
     /**
-     * Builds a list of company_codes available for selection in scope. Used by
-     * the "company_codes" menu in the Authoring metadata section.
-     *
-     * @function setAvailableCompanyCodes
-     */
+    * Builds a list of company_codes available for selection in scope. Used by
+    * the "company_codes" menu in the Authoring metadata section.
+    *
+    * @function setAvailableCompanyCodes
+    */
     function setAvailableCompanyCodes() {
         var all, // all available company codes
             assigned = {}, // company codes already assigned to the article
@@ -173,7 +149,8 @@ function MetadataCtrl(
     $scope.$watch('item.embargo_date', (newValue, oldValue) => {
         // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
-            $scope.item.embargo_time = moment('00:01', 'HH:mm').format(appConfig.model.timeformat);
+            $scope.item.embargo_time = moment('00:01', 'HH:mm')
+                .format(appConfig.model.timeformat);
         }
 
         setEmbargoTS(newValue, oldValue);
@@ -252,14 +229,16 @@ function MetadataCtrl(
 
     if (!archiveService.isLegal($scope.item)) {
         if ($scope.item.original_creator) {
-            userList.getUser($scope.item.original_creator).then((user) => {
-                $scope.originalCreator = user.display_name;
-            });
+            userList.getUser($scope.item.original_creator)
+                .then((user) => {
+                    $scope.originalCreator = user.display_name;
+                });
         }
         if ($scope.item.version_creator) {
-            userList.getUser($scope.item.version_creator).then((user) => {
-                $scope.versionCreator = user.display_name;
-            });
+            userList.getUser($scope.item.version_creator)
+                .then((user) => {
+                    $scope.versionCreator = user.display_name;
+                });
         }
     }
 }
@@ -274,24 +253,21 @@ function MetaTargetedPublishingDirective() {
             autosave: '&',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-target-publishing.html',
-        link: function (scope, elem) {
-            scope.removeTarget = function (target) {
+        link: function(scope, elem) {
+            scope.removeTarget = function(target) {
                 scope.targets = _.without(scope.targets, target);
                 scope.autosave();
             };
 
-            scope.addTarget = function (target) {
+            scope.addTarget = function(target) {
                 if (angular.isUndefined(scope.targets)) {
                     scope.targets = [];
                 }
 
                 let parsedTarget = JSON.parse(target);
 
-                var existing = _.find(scope.targets, {
-                    qcode: parsedTarget.qcode,
-                    name: parsedTarget.name,
-                    allow: !scope.deny,
-                });
+                var existing = _.find(scope.targets,
+                    {qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
 
                 if (!existing) {
                     scope.targets.push({qcode: parsedTarget.qcode, name: parsedTarget.name, allow: !scope.deny});
@@ -306,7 +282,7 @@ function MetaTargetedPublishingDirective() {
                 scope.deny = false;
             }
 
-            scope.canAddTarget = function () {
+            scope.canAddTarget = function() {
                 return scope.disabled || !scope.target || scope.target === '';
             };
         },
@@ -317,7 +293,7 @@ MetadropdownFocusDirective.$inject = ['keyboardManager'];
 function MetadropdownFocusDirective(keyboardManager) {
     return {
         require: 'dropdown',
-        link: function (scope, elem, attrs, dropdown) {
+        link: function(scope, elem, attrs, dropdown) {
             scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
                     _.defer(() => {
@@ -329,37 +305,29 @@ function MetadropdownFocusDirective(keyboardManager) {
                             buttonList[0].focus();
                         }
 
-                        keyboardManager.push(
-                            'up',
-                            () => {
-                                if (buttonList.length > 0) {
-                                    var focusedElem = elem.find('button:focus')[0];
-                                    var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select previous item on key UP
+                        keyboardManager.push('up', () => {
+                            if (buttonList.length > 0) {
+                                var focusedElem = elem.find('button:focus')[0];
+                                var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
+                                // select previous item on key UP
 
-                                    if (indexValue > 0 && indexValue < buttonList.length) {
-                                        buttonList[indexValue - 1].focus();
-                                    }
+                                if (indexValue > 0 && indexValue < buttonList.length) {
+                                    buttonList[indexValue - 1].focus();
                                 }
-                            },
-                            keyboardOptions,
-                        );
+                            }
+                        }, keyboardOptions);
 
-                        keyboardManager.push(
-                            'down',
-                            () => {
-                                if (buttonList.length > 0) {
-                                    var focusedElem = elem.find('button:focus')[0];
-                                    var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
-                                    // select next item on key DOWN
+                        keyboardManager.push('down', () => {
+                            if (buttonList.length > 0) {
+                                var focusedElem = elem.find('button:focus')[0];
+                                var indexValue = _.findIndex(buttonList, (chr) => chr === focusedElem);
+                                // select next item on key DOWN
 
-                                    if (indexValue < buttonList.length - 1) {
-                                        buttonList[indexValue + 1].focus();
-                                    }
+                                if (indexValue < buttonList.length - 1) {
+                                    buttonList[indexValue + 1].focus();
                                 }
-                            },
-                            keyboardOptions,
-                        );
+                            }
+                        }, keyboardOptions);
                     });
                 } else if (isOpen === false) {
                     keyboardManager.pop('down');
@@ -387,11 +355,11 @@ function MetaDropdownDirective($filter, metadata) {
             containingDirective: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             scope.multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
             scope.getLocaleName = metadata.getLocaleName;
 
-            scope.select = function (item) {
+            scope.select = function(item) {
                 var fieldObject: {[fieldId: string]: any} = {};
                 const isMultiInputField = scope.multiInputFields.includes(scope.field);
 
@@ -399,15 +367,14 @@ function MetaDropdownDirective($filter, metadata) {
                     if (!isMultiInputField) {
                         // single input field
                         // we use 'name' attribute for string fields and the whole object for other fields
-                        fieldObject[scope.field] = scope.key ? item[scope.key] : item.name || item;
+                        fieldObject[scope.field] = scope.key ? item[scope.key] : (item.name || item);
                     } else if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
                         // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
                         item.scheme = scope.cv._id;
-                        fieldObject[scope.field] = (scope.item[scope.field] || []).filter(
-                            (v) => v.scheme !== scope.cv._id,
-                        );
+                        fieldObject[scope.field] = (scope.item[scope.field] || []).filter((v) =>
+                            v.scheme !== scope.cv._id);
                         fieldObject[scope.field].push(item);
                     } else {
                         fieldObject[scope.field] = scope.key ? item[scope.key] : [item];
@@ -480,7 +447,7 @@ function MetaTagsDirective(api, $timeout) {
             disabled: '=',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-tags.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
             var inputElem = element.find('input')[0];
 
             scope.adding = false;
@@ -490,31 +457,27 @@ function MetaTagsDirective(api, $timeout) {
             scope.extractedTags = null;
             scope.item[scope.field] = scope.item[scope.field] || [];
 
-            var add = function (tag) {
+            var add = function(tag) {
                 scope.tags.push(tag);
                 scope.tags = _.uniq(scope.tags);
                 scope.toggle(tag);
                 cancel();
             };
 
-            var cancel = function () {
+            var cancel = function() {
                 scope.newTag = null;
                 scope.adding = false;
             };
 
             scope.$watch('adding', () => {
                 if (scope.adding) {
-                    $timeout(
-                        () => {
-                            inputElem.focus();
-                        },
-                        0,
-                        false,
-                    );
+                    $timeout(() => {
+                        inputElem.focus();
+                    }, 0, false);
                 }
             });
 
-            scope.key = function ($event) {
+            scope.key = function($event) {
                 if ($event.keyCode === ENTER && !$event.shiftKey) {
                     add(scope.newTag);
                 } else if ($event.keyCode === ESC && !$event.shiftKey) {
@@ -522,11 +485,11 @@ function MetaTagsDirective(api, $timeout) {
                 }
             };
 
-            scope.isSelected = function (tag) {
+            scope.isSelected = function(tag) {
                 return scope.item[scope.field].indexOf(tag) !== -1;
             };
 
-            scope.toggle = function (tag) {
+            scope.toggle = function(tag) {
                 if (!scope.disabled) {
                     if (scope.isSelected(tag)) {
                         _.pull(scope.item[scope.field], tag);
@@ -537,7 +500,7 @@ function MetaTagsDirective(api, $timeout) {
                 }
             };
 
-            scope.refresh = function () {
+            scope.refresh = function() {
                 scope.refreshing = true;
                 var body = (scope.item[scope.sourceField] || '')
                     .replace(/<br[^>]*>/gi, '&nbsp;')
@@ -547,11 +510,12 @@ function MetaTagsDirective(api, $timeout) {
                     .replace(/&nbsp;/g, ' ');
 
                 if (body) {
-                    api.save('keywords', {text: body}).then((result) => {
-                        scope.extractedTags = _.map(result.keywords, 'text');
-                        scope.tags = _.uniq(scope.extractedTags.concat(scope.item[scope.field]));
-                        scope.refreshing = false;
-                    });
+                    api.save('keywords', {text: body})
+                        .then((result) => {
+                            scope.extractedTags = _.map(result.keywords, 'text');
+                            scope.tags = _.uniq(scope.extractedTags.concat(scope.item[scope.field]));
+                            scope.refreshing = false;
+                        });
                 } else {
                     scope.refreshing = false;
                 }
@@ -575,7 +539,7 @@ function MetaWordsListDirective() {
             style: '@',
         },
         template: require('./views/metadata-words-list.html'),
-        link: function (scope, element) {
+        link: function(scope, element) {
             scope.words = [];
             scope.selectedTerm = '';
 
@@ -593,14 +557,12 @@ function MetaWordsListDirective() {
              *
              * @return {Array} list of word(s)
              */
-            scope.search = function (wordToFind) {
+            scope.search = function(wordToFind) {
                 if (!wordToFind) {
                     scope.words = scope.list;
                 } else {
-                    scope.words = _.filter(
-                        scope.list,
-                        (t) => t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1,
-                    );
+                    scope.words = _.filter(scope.list,
+                        (t) => t.name.toLowerCase().indexOf(wordToFind.toLowerCase()) !== -1);
                 }
 
                 scope.selectedTerm = wordToFind;
@@ -613,7 +575,7 @@ function MetaWordsListDirective() {
              *
              * @param {Object} item selected word object
              */
-            scope.select = function (item) {
+            scope.select = function(item) {
                 var keyword: any = item ? item.qcode : scope.selectedTerm;
                 var t: any = _.clone(scope.item[scope.field]) || [];
                 var index = _.findIndex(t, (word: any) => word.toLowerCase() === keyword.toLowerCase());
@@ -634,7 +596,7 @@ function MetaWordsListDirective() {
             /**
              * Removes the term from the user selected terms
              */
-            scope.removeTerm = function (term) {
+            scope.removeTerm = function(term) {
                 var temp = scope.item[scope.field].filter((item) => !_.isEqual(item, term));
 
                 // build object
@@ -723,8 +685,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     return;
                 }
 
-                var tree: any = {},
-                    updates = {};
+                var tree: any = {}, updates = {};
 
                 if (scope.cv && scope.cv.dependent) {
                     updates[scope.field] = [];
@@ -762,38 +723,33 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 setPreferredItems();
             });
 
-            scope.$watch(
-                'item[field]',
-                (selected) => {
-                    if (!selected) {
-                        scope.selectedItems = [];
-                        return;
-                    }
+            scope.$watch('item[field]', (selected) => {
+                if (!selected) {
+                    scope.selectedItems = [];
+                    return;
+                }
 
-                    scope.terms = filterSelected(scope.list);
-                    if (_.get(scope, 'cv._id')) {
-                        // filter out items from current cv
-                        scope.selectedItems = selected.filter((term) => term.scheme === (scope.cv._id || scope.cv.id));
-                    } else {
-                        scope.selectedItems = selected.filter(
-                            (term) => ignoreScheme === true || !term.scheme || term.scheme === scope.field,
-                        );
-                    }
-                },
-                true,
-            );
+                scope.terms = filterSelected(scope.list);
+                if (_.get(scope, 'cv._id')) { // filter out items from current cv
+                    scope.selectedItems = selected.filter((term) => term.scheme === (scope.cv._id || scope.cv.id));
+                } else {
+                    scope.selectedItems = selected.filter(
+                        (term) => ignoreScheme === true || !term.scheme || term.scheme === scope.field,
+                    );
+                }
+            }, true);
 
             scope.$on('$destroy', () => {
                 metadata.subjectScope = null;
             });
 
-            scope.openParent = function (term, $event) {
+            scope.openParent = function(term, $event) {
                 var parent = _.find(scope.list, {[scope.uniqueField]: term.parent});
 
                 scope.openTree(parent, $event);
             };
 
-            scope.openTree = function (term, $event) {
+            scope.openTree = function(term, $event) {
                 if ($event.altKey) {
                     let activeTree = scope.tree[term ? term[scope.uniqueField] : null];
 
@@ -810,10 +766,10 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     const el = elem.find('button:not([disabled]):not(.dropdown__toggle)');
 
                     if (
-                        typeof el === 'object' &&
-                        el != null &&
-                        typeof el[0] === 'object' &&
-                        typeof el[0].focus === 'function'
+                        typeof el === 'object'
+                        && el != null
+                        && typeof el[0] === 'object'
+                        && typeof el[0].focus === 'function'
                     ) {
                         el[0].focus();
                     }
@@ -828,7 +784,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             scope.activeList = false;
             scope.selectedTerm = '';
 
-            scope.searchTerms = function (term) {
+            scope.searchTerms = function(term) {
                 if (!term) {
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
@@ -843,46 +799,35 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         searchList = scope.combinedList;
                     }
 
-                    scope.terms = $filter('sortByName')(
-                        _.filter(filterSelected(searchList), (t) => {
-                            var searchObj = {};
-                            const termLower = term.toLowerCase();
-                            // if there are translations available search term from the translations
-                            const searchFromTranslations =
-                                t.translations != null &&
-                                t.translations.name != null &&
-                                t.translations.name[scope.item.language] != null;
+                    scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
+                        var searchObj = {};
+                        const termLower = term.toLowerCase();
+                        // if there are translations available search term from the translations
+                        const searchFromTranslations = t.translations != null && t.translations.name != null
+                            && t.translations.name[scope.item.language] != null;
 
-                            searchObj[scope.uniqueField] = t[scope.uniqueField];
+                        searchObj[scope.uniqueField] = t[scope.uniqueField];
 
-                            if (searchFromTranslations) {
-                                return (
-                                    t.translations.name[scope.item.language].toLowerCase().includes(termLower) &&
-                                    !_.find(scope.item[scope.field], searchObj)
-                                );
-                            }
+                        if (searchFromTranslations) {
+                            return t.translations.name[scope.item.language].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
+                        }
 
-                            if (searchUnique) {
-                                // In case we want to search by some unique field like qcode as well as name
-                                // see SD-4829
-                                return (
-                                    t.name.toLowerCase().includes(termLower) ||
-                                    (t[scope.uniqueField].toLowerCase().includes(termLower) &&
-                                        !_.find(scope.item[scope.field], searchObj))
-                                );
-                            }
+                        if (searchUnique) {
+                            // In case we want to search by some unique field like qcode as well as name
+                            // see SD-4829
+                            return t.name.toLowerCase().includes(termLower)
+                                || t[scope.uniqueField].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
+                        }
 
-                            return (
-                                t.name.toLowerCase().includes(termLower) ||
-                                (t.user != null &&
-                                    t.user.username.toLowerCase().includes(termLower) &&
-                                    // make sure to skip the terms which are already added for ex:
-                                    // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
-                                    // and if user search for "Arbeidsliv" again he shouln't get any search results
-                                    !_.find(scope.item[scope.field], searchObj))
-                            );
-                        }),
-                    );
+                        return t.name.toLowerCase().includes(termLower)
+                            || (t.user != null && t.user.username.toLowerCase().includes(termLower))
+                            // make sure to skip the terms which are already added for ex:
+                            // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
+                            // and if user search for "Arbeidsliv" again he shouln't get any search results
+                            && !_.find(scope.item[scope.field], searchObj);
+                    }));
                     scope.activeList = true;
                 }
                 return scope.terms;
@@ -930,11 +875,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         o.language = term.language;
                     }
 
-                    t.push(
-                        angular.extend({}, term, {
-                            scheme: scope.cv ? scope.cv._id : null,
-                        }),
-                    );
+                    t.push(angular.extend({}, term, {
+                        scheme: scope.cv ? scope.cv._id : null,
+                    }));
 
                     o[scope.field] = t;
 
@@ -942,7 +885,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 }
             }
 
-            scope.selectTerm = function (term, $event) {
+            scope.selectTerm = function(term, $event) {
                 // while searching, allow to search for categories but don't select them
                 if (scope.tree?.[term?.[scope.uniqueField]] && !scope.allowEntireCat) {
                     scope.openTree(term, $event);
@@ -956,16 +899,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     }
 
                     // make sure we run scope.change even if popup stays opened
-                    $timeout(
-                        () => {
-                            scope.$applyAsync(() => {
-                                scope.postprocessing();
-                                scope.change({item: scope.item, field: scope.field});
-                            });
-                        },
-                        50,
-                        false,
-                    );
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
+                            scope.postprocessing();
+                            scope.change({item: scope.item, field: scope.field});
+                        });
+                    }, 50, false);
 
                     if ($event && ($event.ctrlKey || $event.metaKey || appConfig.features.keepMetaTermsOpenedOnClick)) {
                         $event.stopPropagation();
@@ -1000,7 +939,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 }
             };
 
-            scope.removeTerm = function (term) {
+            scope.removeTerm = function(term) {
                 var tempItem = {},
                     subjectCodesArray = scope.item[scope.field],
                     filteredArray = subjectCodesArray.filter((item) => !_.isEqual(item, term));
@@ -1058,8 +997,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                 return preferredItems
                     .map((preferedItem) =>
-                        scope.list.find((item) => item[scope.uniqueField] === preferedItem[scope.uniqueField]),
-                    )
+                        scope.list.find((item) => item[scope.uniqueField] === preferedItem[scope.uniqueField]))
                     .filter((item) => item != null); // filter out items missing in cv
             }
 
@@ -1087,22 +1025,19 @@ function MetaLocatorsDirective(places) {
             keepinput: '=',
         },
 
-        controller: function () {
+        controller: function() {
             this.selectedTerm = '';
         },
         controllerAs: '$ctrl',
 
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-locators.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
             scope.locators = [];
 
             scope.$applyAsync(() => {
                 if (scope.item) {
-                    if (
-                        scope.fieldprefix &&
-                        scope.item[scope.fieldprefix] &&
-                        scope.item[scope.fieldprefix][scope.field]
-                    ) {
+                    if (scope.fieldprefix && scope.item[scope.fieldprefix] &&
+                        scope.item[scope.fieldprefix][scope.field]) {
                         scope.$ctrl.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
                     } else if (scope.item[scope.field]) {
                         scope.$ctrl.selectedTerm = scope.item[scope.field].city;
@@ -1134,8 +1069,7 @@ function MetaLocatorsDirective(places) {
             scope.searchLocator = (locatorToFind) => {
                 scope.$ctrl.selectedTerm = locatorToFind;
                 scope.loading = true;
-                return places
-                    .searchDateline(locatorToFind, scope.item.language)
+                return places.searchDateline(locatorToFind, scope.item.language)
                     .then(setLocators)
                     .finally(() => {
                         scope.$applyAsync(() => {
@@ -1150,29 +1084,20 @@ function MetaLocatorsDirective(places) {
              *
              * @param {Object} locator user selected located object
              */
-            scope.selectLocator = function (locator) {
+            scope.selectLocator = function(locator) {
                 var updates = {};
                 let loc = locator;
 
                 if (!loc && scope.$ctrl.selectedTerm) {
-                    var previousLocator =
-                        scope.fieldprefix && scope.item[scope.fieldprefix] != null
-                            ? scope.item[scope.fieldprefix][scope.field]
-                            : scope.item[scope.field];
+                    var previousLocator = scope.fieldprefix && scope.item[scope.fieldprefix] != null
+                        ? scope.item[scope.fieldprefix][scope.field]
+                        : scope.item[scope.field];
 
                     if (previousLocator && scope.$ctrl.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
                     } else {
-                        loc = {
-                            city: scope.$ctrl.selectedTerm,
-                            city_code: scope.$ctrl.selectedTerm,
-                            tz: 'UTC',
-                            dateline: 'city',
-                            country: '',
-                            country_code: '',
-                            state_code: '',
-                            state: '',
-                        };
+                        loc = {city: scope.$ctrl.selectedTerm, city_code: scope.$ctrl.selectedTerm, tz: 'UTC',
+                            dateline: 'city', country: '', country_code: '', state_code: '', state: ''};
                     }
                 }
 
@@ -1215,27 +1140,16 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
         search_config: appConfig.search || {
-            slugline: 1,
-            headline: 1,
-            unique_name: 1,
-            story_text: 1,
-            byline: 1,
-            keywords: 1,
-            creator: 1,
-            from_desk: 1,
-            to_desk: 1,
-            spike: 1,
-            scheduled: 1,
-            company_codes: 1,
-            ingest_provider: 1,
-            marked_desks: 1,
+            slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
+            keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
+            scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,
             featuremedia: 1,
         },
         subjectScope: null,
         loaded: null,
         _urgencyByValue: {},
         _priorityByValue: {},
-        fetchMetadataValues: function () {
+        fetchMetadataValues: function() {
             var self = this;
 
             return vocabularies.getAllActiveVocabularies().then((result) => {
@@ -1252,11 +1166,11 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                     }
                 });
                 self.cvs = result;
-                self.values.regions = _.sortBy(self.values.geographical_restrictions, (target) =>
-                    target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
+                self.values.regions = _.sortBy(self.values.geographical_restrictions,
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
                 );
-                self.values.subscriberTypes = _.sortBy(self.values.subscriber_types, (target) =>
-                    target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
+                self.values.subscriberTypes = _.sortBy(self.values.subscriber_types,
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
                 );
 
                 if (self.values.urgency) {
@@ -1268,7 +1182,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 }
             });
         },
-        fetchSubscribers: function () {
+        fetchSubscribers: function() {
             var self = this;
 
             self.values.customSubscribers = [];
@@ -1278,14 +1192,14 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 });
             });
         },
-        fetchSubjectcodes: function (code) {
+        fetchSubjectcodes: function(code) {
             var self = this;
 
             return api.get('/subjectcodes').then((result) => {
                 self.values.subjectcodes = result._items;
             });
         },
-        fetchAuthors: function (code) {
+        fetchAuthors: function(code) {
             var self = this;
 
             self.values.authors = [];
@@ -1309,8 +1223,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                             name: role.name,
                             parent: user._id,
                             sub_label: user.display_name,
-                            private: user.private,
-                        });
+                            private: user.private});
                     });
                 });
                 self.values.authors = $filter('sortByName')(self.values.authors);
@@ -1319,7 +1232,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 }
             });
         },
-        removeSubjectTerm: function (term) {
+        removeSubjectTerm: function(term) {
             if (!this.subjectScope) {
                 return;
             }
@@ -1328,8 +1241,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 tempItem = {};
 
             angular.forEach(this.search_cvs || [], (cv) => {
-                if (_.isNil(term)) {
-                    // clear subject scope
+                if (_.isNil(term)) { // clear subject scope
                     self.subjectScope.item[cv.id].length = 0;
                 } else {
                     var subjectCodesArray = self.subjectScope.item[cv.id],
@@ -1345,7 +1257,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             _.extend(self.subjectScope.item, tempItem);
             self.subjectScope.change({item: self.subjectScope.item});
         },
-        fetchCities: function () {
+        fetchCities: function() {
             var self = this;
 
             if (!self.citiesPromise) {
@@ -1357,7 +1269,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
 
             return self.citiesPromise;
         },
-        fetchAgendas: function () {
+        fetchAgendas: function() {
             var self = this;
 
             if (features.agenda) {
@@ -1373,38 +1285,34 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 });
             }
         },
-        fetchEventsPlanningFilters: function () {
+        fetchEventsPlanningFilters: function() {
             var self = this;
 
             if (features.events_planning_filters) {
                 return api.get('/events_planning_filters').then((result) => {
-                    self.values.eventsPlanningFilters = _.get(result, '_items', []).map((item) => ({
-                        name: item.name,
-                        qcode: item._id,
-                    }));
+                    self.values.eventsPlanningFilters = _.get(result, '_items', [])
+                        .map((item) => ({name: item.name, qcode: item._id}));
                 });
             }
         },
-        getFilteredCustomVocabularies: function (qcodes) {
-            return this.fetchMetadataValues().then(() =>
-                this.cvs.filter((cv) => {
-                    var cvService = cv.service || {};
+        getFilteredCustomVocabularies: function(qcodes) {
+            return this.fetchMetadataValues().then(() => this.cvs.filter((cv) => {
+                var cvService = cv.service || {};
 
-                    if (cvService.all) {
-                        cv.terms = (cv.items || []).filter((item) => {
-                            if (item.service) {
-                                return qcodes.some((qcode) => !!item.service[qcode]);
-                            } else {
-                                return true;
-                            }
-                        });
-                        return true;
-                    } else {
-                        cv.terms = cv.items;
-                        return qcodes.some((qcode) => !!cvService[qcode]);
-                    }
-                }),
-            );
+                if (cvService.all) {
+                    cv.terms = (cv.items || []).filter((item) => {
+                        if (item.service) {
+                            return qcodes.some((qcode) => !!item.service[qcode]);
+                        } else {
+                            return true;
+                        }
+                    });
+                    return true;
+                } else {
+                    cv.terms = cv.items;
+                    return qcodes.some((qcode) => !!cvService[qcode]);
+                }
+            }));
         },
         /**
          * Get custom vocabularies for selected services, used in authoring
@@ -1414,10 +1322,12 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
          * @param {Object} schema
          * @return {Array}
          */
-        getCustomVocabulariesForArticleHeader: function (qcodes, editor, schema) {
-            return this.getFilteredCustomVocabularies(qcodes).then((cvs) =>
-                cvs.filter((cv) => (cv.terms.length || cv.read_only) && (editor[cv._id] || schema[cv._id])),
-            );
+        getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
+            return this.getFilteredCustomVocabularies(qcodes)
+                .then(
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
+                );
         },
         /**
          * Get all available custom vocabularies, used in content profile editor
@@ -1426,7 +1336,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
          * @param {Object} schema
          * @return {Array}
          */
-        getAllCustomVocabulariesForArticleHeader: function (editor, schema) {
+        getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
             return this.fetchMetadataValues().then(() => {
                 const customVocabulariesForArticleHeader = this.cvs.filter(
                     (cv) => cv.field_type == null && cv.service && (editor[cv._id] || schema[cv._id]),
@@ -1439,7 +1349,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                 return {customVocabulariesForArticleHeader, customTextAndDateVocabularies};
             });
         },
-        initialize: function () {
+        initialize: function() {
             if (!this.loaded) {
                 this.loaded = features._loaded
                     .then(angular.bind(this, this.fetchMetadataValues))
@@ -1453,10 +1363,10 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
 
             return this.loaded;
         },
-        urgencyByValue: function (value) {
+        urgencyByValue: function(value) {
             return this._urgencyByValue[value] || null;
         },
-        priorityByValue: function (value) {
+        priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
         getLocaleName: (term: IVocabularyItem, item: IArticle) => sdApi.vocabularies.getVocabularyItemLabel(term, item),
@@ -1475,7 +1385,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
     // update cv on change
     $rootScope.$on('vocabularies:updated', (event, data) => {
         api.find('vocabularies', data.vocabulary_id).then((cv) => {
-            service.cvs = service.cvs.map((_cv) => (_cv._id === cv._id ? cv : _cv));
+            service.cvs = service.cvs.map((_cv) => _cv._id === cv._id ? cv : _cv);
         });
     });
 
@@ -1493,17 +1403,15 @@ function MetadataListItem() {
     };
 }
 
-angular
-    .module('superdesk.apps.authoring.metadata', [
-        'superdesk.apps.authoring.widgets',
-        'superdesk.apps.publish',
-        'superdesk.apps.vocabularies',
-        'vs-repeat',
-    ])
-    .config([
-        'authoringWidgetsProvider',
-        function (authoringWidgetsProvider) {
-            authoringWidgetsProvider.widget('metadata', {
+angular.module('superdesk.apps.authoring.metadata', [
+    'superdesk.apps.authoring.widgets',
+    'superdesk.apps.publish',
+    'superdesk.apps.vocabularies',
+    'vs-repeat',
+])
+    .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
+        authoringWidgetsProvider
+            .widget('metadata', {
                 icon: 'info',
                 label: gettext('Info'),
                 removeHeader: true,
@@ -1520,8 +1428,7 @@ angular
                     personal: true,
                 },
             });
-        },
-    ])
+    }])
 
     .controller('MetadataWidgetCtrl', MetadataCtrl)
     .service('metadata', MetadataService)
@@ -1531,20 +1438,33 @@ angular
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
-    .component('sdTargetSubscribers', reactToAngular1(PublishingTargetSelect, ['value', 'onChange']))
+    .component(
+        'sdTargetSubscribers',
+        reactToAngular1(
+            PublishingTargetSelect,
+            [
+                'value',
+                'onChange',
+            ],
+        ),
+    )
     .component(
         'sdMetaDataDropdownSingleSelectReact',
-        reactToAngular1(MetaDataDropdownSingleSelectReact, [
-            'selectedItemLabel',
-            'options',
-            'onChange',
-            'tabIndex',
-            'disabled',
-            'language',
-        ]),
+        reactToAngular1(
+            MetaDataDropdownSingleSelectReact,
+            [
+                'selectedItemLabel',
+                'options',
+                'onChange',
+                'tabIndex',
+                'disabled',
+                'language',
+            ],
+        ),
     )
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective)
     .directive('sdPreferedCvItemsConfig', PreferedCvItemsConfigDirective)
-    .directive('sdMetaPlace', MetaPlaceDirective);
+    .directive('sdMetaPlace', MetaPlaceDirective)
+;

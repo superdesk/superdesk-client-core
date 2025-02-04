@@ -65,37 +65,49 @@ export class DifferenceGeneric<T> extends React.PureComponent<IProps<T>> {
 
         return (
             <SpacerInlineFlex h gap="8" gapSecondary="8">
-                {removed.length > 0 && (
-                    <React.Fragment>
-                        {removed.map((change, i) => (
-                            <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid red'}}>
-                                <span style={{opacity: 0.3, textDecoration: 'line-through'}}>
-                                    <Template item={change.item} />
-                                </span>
-                            </span>
-                        ))}
-                    </React.Fragment>
-                )}
+                {
+                    removed.length > 0 && (
+                        <React.Fragment>
+                            {
+                                removed.map((change, i) => (
+                                    <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid red'}}>
+                                        <span style={{opacity: 0.3, textDecoration: 'line-through'}}>
+                                            <Template item={change.item} />
+                                        </span>
+                                    </span>
+                                ))
+                            }
+                        </React.Fragment>
+                    )
+                }
 
-                {unChangedItems.length > 0 && (
-                    <React.Fragment>
-                        {unChangedItems.map((item, i) => (
-                            <span key={i}>
-                                <Template item={item} />
-                            </span>
-                        ))}
-                    </React.Fragment>
-                )}
+                {
+                    unChangedItems.length > 0 && (
+                        <React.Fragment>
+                            {
+                                unChangedItems.map((item, i) => (
+                                    <span key={i}>
+                                        <Template item={item} />
+                                    </span>
+                                ))
+                            }
+                        </React.Fragment>
+                    )
+                }
 
-                {added.length > 0 && (
-                    <React.Fragment>
-                        {added.map((change, i) => (
-                            <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid green'}}>
-                                <Template item={change.item} />
-                            </span>
-                        ))}
-                    </React.Fragment>
-                )}
+                {
+                    added.length > 0 && (
+                        <React.Fragment>
+                            {
+                                added.map((change, i) => (
+                                    <span key={i} style={{paddingBlockEnd: 4, borderBlockEnd: '2px solid green'}}>
+                                        <Template item={change.item} />
+                                    </span>
+                                ))
+                            }
+                        </React.Fragment>
+                    )
+                }
             </SpacerInlineFlex>
         );
     }

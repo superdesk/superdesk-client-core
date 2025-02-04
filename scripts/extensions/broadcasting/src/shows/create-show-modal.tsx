@@ -62,7 +62,12 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
             this.setState({inProgress: false}, () => {
                 this.props.closeModal();
 
-                showModal(({closeModal}) => <CreateShowAfterModal closeModal={closeModal} show={show} />);
+                showModal(({closeModal}) => (
+                    <CreateShowAfterModal
+                        closeModal={closeModal}
+                        show={show}
+                    />
+                ));
             });
         });
     }
@@ -76,23 +81,31 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}
-                        headerTemplate={gettext('Create new show')}
+                        headerTemplate={
+                            gettext('Create new show')
+                        }
                         footerTemplate={
-                            <Spacer h gap="32" justifyContent="space-between" noWrap>
-                                <div>{this.state.inProgress && <Spinner />}</div>
+                            (
+                                <Spacer h gap="32" justifyContent="space-between" noWrap>
+                                    <div>
+                                        {
+                                            this.state.inProgress && (
+                                                <Spinner />
+                                            )
+                                        }
+                                    </div>
 
-                                <div>
-                                    <Spacer h gap="8" noWrap>
-                                        <Button
-                                            text={gettext('Cancel')}
-                                            onClick={this.cancel}
-                                            disabled={this.state.inProgress}
-                                        />
-                                        <Button
-                                            text={gettext('Save')}
-                                            onClick={() => {
-                                                save()
-                                                    .then((savedShow) => {
+                                    <div>
+                                        <Spacer h gap="8" noWrap>
+                                            <Button
+                                                text={gettext('Cancel')}
+                                                onClick={this.cancel}
+                                                disabled={this.state.inProgress}
+                                            />
+                                            <Button
+                                                text={gettext('Save')}
+                                                onClick={() => {
+                                                    save().then((savedShow) => {
                                                         this.props.closeModal();
 
                                                         showModal(({closeModal}) => (
@@ -101,17 +114,17 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                                                                 show={savedShow}
                                                             />
                                                         ));
-                                                    })
-                                                    .catch(() => {
+                                                    }).catch(() => {
                                                         // noop, validation failed
                                                     });
-                                            }}
-                                            type="primary"
-                                            disabled={this.state.inProgress}
-                                        />
-                                    </Spacer>
-                                </div>
-                            </Spacer>
+                                                }}
+                                                type="primary"
+                                                disabled={this.state.inProgress}
+                                            />
+                                        </Spacer>
+                                    </div>
+                                </Spacer>
+                            )
                         }
                     >
                         {form}

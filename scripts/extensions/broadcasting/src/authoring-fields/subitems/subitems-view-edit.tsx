@@ -54,81 +54,95 @@ export class SubitemsViewEdit extends React.PureComponent<IProps> {
 
         return (
             <>
-                {subitems.length > 0 ? (
-                    <Spacer v gap="32">
-                        {subitems.map((subitem) => (
-                            <div key={subitem.qcode}>
-                                <Spacer h gap="4" justifyContent="space-between" noGrow>
-                                    <div>
-                                        <SubitemLabel
-                                            subitem={subitemTypes.find((item) => item?.qcode === subitem.qcode)}
-                                        />
-                                    </div>
-
-                                    {!this.props.readOnly &&
-                                        (() => {
-                                            const {onChange} = this.props;
-
-                                            return (
-                                                <span className="text-red--600">
-                                                    <IconButton
-                                                        icon="remove-sign"
-                                                        ariaValue={gettext('Remove')}
-                                                        onClick={() => {
-                                                            onChange(
-                                                                subitems.filter(({qcode}) => qcode !== subitem.qcode),
-                                                            );
-                                                        }}
+                {
+                    subitems.length > 0
+                        ? (
+                            <Spacer v gap="32">
+                                {
+                                    subitems.map((subitem) => (
+                                        <div key={subitem.qcode}>
+                                            <Spacer h gap="4" justifyContent="space-between" noGrow>
+                                                <div>
+                                                    <SubitemLabel
+                                                        subitem={subitemTypes.find(
+                                                            (item) => item?.qcode === subitem.qcode,
+                                                        )}
                                                     />
-                                                </span>
-                                            );
-                                        })()}
-                                </Spacer>
+                                                </div>
 
-                                <SpacerBlock v gap="16" />
+                                                {
+                                                    !this.props.readOnly && (() => {
+                                                        const {onChange} = this.props;
 
-                                <Spacer v gap="16" style={{paddingInlineStart: 20}} noWrap>
-                                    <div style={{width: '100%'}}>
-                                        <Input
-                                            label={gettext('Technical information')}
-                                            type="text"
-                                            value={subitem.technical_info}
-                                            onChange={(val) => {
-                                                if (!this.props.readOnly) {
-                                                    this.props.onChange(
-                                                        this.patchSubitem(subitem.qcode, {technical_info: val}),
-                                                    );
+                                                        return (
+                                                            <span className="text-red--600">
+                                                                <IconButton
+                                                                    icon="remove-sign"
+                                                                    ariaValue={gettext('Remove')}
+                                                                    onClick={() => {
+                                                                        onChange(
+                                                                            subitems.filter(
+                                                                                ({qcode}) => qcode !== subitem.qcode,
+                                                                            ),
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </span>
+                                                        );
+                                                    })()
                                                 }
-                                            }}
-                                            disabled={this.props.readOnly}
-                                        />
-                                    </div>
+                                            </Spacer>
 
-                                    <div style={{width: '100%'}}>
-                                        <FormLabel text={gettext('Content')} />
+                                            <SpacerBlock v gap="16" />
 
-                                        <Editor3Html
-                                            value={subitem.content}
-                                            onChange={(val) => {
-                                                if (!this.props.readOnly) {
-                                                    this.props.onChange(
-                                                        this.patchSubitem(subitem.qcode, {content: val}),
-                                                    );
-                                                }
-                                            }}
-                                            readOnly={this.props.readOnly}
-                                            editorFormat={[]}
-                                        />
-                                    </div>
-                                </Spacer>
-                            </div>
-                        ))}
-                    </Spacer>
-                ) : (
-                    <Alert size="small" margin="none">
-                        {gettext('No subitems')}
-                    </Alert>
-                )}
+                                            <Spacer v gap="16" style={{paddingInlineStart: 20}} noWrap>
+                                                <div style={{width: '100%'}}>
+                                                    <Input
+                                                        label={gettext('Technical information')}
+                                                        type="text"
+                                                        value={subitem.technical_info}
+                                                        onChange={(val) => {
+                                                            if (!this.props.readOnly) {
+                                                                this.props.onChange(
+                                                                    this.patchSubitem(
+                                                                        subitem.qcode,
+                                                                        {technical_info: val},
+                                                                    ),
+                                                                );
+                                                            }
+                                                        }}
+                                                        disabled={this.props.readOnly}
+                                                    />
+                                                </div>
+
+                                                <div style={{width: '100%'}}>
+                                                    <FormLabel text={gettext('Content')} />
+
+                                                    <Editor3Html
+                                                        value={subitem.content}
+                                                        onChange={(val) => {
+                                                            if (!this.props.readOnly) {
+                                                                this.props.onChange(
+                                                                    this.patchSubitem(subitem.qcode, {content: val}),
+                                                                );
+                                                            }
+                                                        }}
+                                                        readOnly={this.props.readOnly}
+                                                        editorFormat={[]}
+                                                    />
+                                                </div>
+                                            </Spacer>
+                                        </div>
+                                    ))
+                                }
+                            </Spacer>
+                        )
+                        : (
+                            <Alert size="small" margin="none">
+                                {gettext('No subitems')}
+                            </Alert>
+                        )
+                }
             </>
         );
     }

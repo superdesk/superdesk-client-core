@@ -11,7 +11,7 @@
     }
 
     &:focus {
-        @include box-shadow(0, 0, 5px, 0, rgba(0, 0, 0, 0.45));
+        @include box-shadow(0, 0, 5px, 0, rgba(0,0,0,0.45));
         @include border-radius(3px);
         @include border-box();
     }

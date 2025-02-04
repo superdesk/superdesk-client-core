@@ -15,7 +15,9 @@ export interface IGroup {
     id: string;
     label: string;
     precondition?: () => boolean;
-    dataSource: {repo: string; query: object} | ((f: FetchFunction) => Promise<any>);
+    dataSource:
+        {repo: string, query: object}
+        | ((f: FetchFunction) => Promise<any>);
     collapsed?: boolean;
 }
 
@@ -108,69 +110,77 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'created',
             label: gettext('Created by this user'),
             dataSource(fetchFn) {
-                const markedQuery =
-                    extensions['markForUser']?.extension.exposes.getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
+                const markedQuery = extensions['markForUser']
+                    ?.extension
+                    .exposes
+                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
 
-                const mustQuery = [{...getQueryCreatedByUser(userId)}, {...getQueryNotLockedByMe(userId)}];
+                const mustQuery = [
+                    {...getQueryCreatedByUser(userId)},
+                    {...getQueryNotLockedByMe(userId)},
+                ];
 
                 if (markedQuery != null) {
                     mustQuery.push({...markedQuery});
                 }
 
-                return ng
-                    .get('desks')
-                    .fetchStages()
-                    .then((stages) => {
-                        const incomingStages = stages._items
-                            .filter(({default_incoming}) => default_incoming === true)
-                            .map(({_id}) => _id);
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const incomingStages = stages._items
+                        .filter(({default_incoming}) => default_incoming === true)
+                        .map(({_id}) => _id);
 
-                        const isNotOnIncomingStage: any = {
-                            bool: {
-                                must_not: {
-                                    terms: {
-                                        'task.stage': incomingStages,
-                                    },
+                    const isNotOnIncomingStage: any = {
+                        bool: {
+                            must_not: {
+                                terms: {
+                                    'task.stage': incomingStages,
                                 },
                             },
-                        };
+                        },
+                    };
 
-                        mustQuery.push({...isNotOnIncomingStage});
+                    mustQuery.push({...isNotOnIncomingStage});
 
-                        return fetchFn('archive', {
-                            bool: {
-                                must: mustQuery,
-                            },
-                        });
+                    return fetchFn('archive', {
+                        bool: {
+                            must: mustQuery,
+                        },
                     });
+                });
             },
         },
         {
             id: 'moved',
             label: gettext('Moved to a working stage by this user'),
             dataSource(fetchFn) {
-                return ng
-                    .get('desks')
-                    .fetchStages()
-                    .then((stages) => {
-                        const workingStages = stages._items
-                            .filter(({working_stage}) => working_stage === true)
-                            .map(({_id}) => _id);
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const workingStages = stages._items
+                        .filter(({working_stage}) => working_stage === true)
+                        .map(({_id}) => _id);
 
-                        const inOnWorkingStage: any = {
-                            terms: {
-                                'task.stage': workingStages,
-                            },
-                        };
+                    const inOnWorkingStage: any = {
+                        terms: {
+                            'task.stage': workingStages,
+                        },
+                    };
 
-                        const movedByUser = [{match: {'task.user': userId}}, {term: {operation: 'move'}}];
+                    const movedByUser = [
+                        {match: {'task.user': userId}},
+                        {term: {operation: 'move'}},
+                    ];
 
-                        return fetchFn('archive_history', {
+                    return fetchFn(
+                        'archive_history',
+                        {
                             bool: {
-                                must: [...movedByUser, inOnWorkingStage],
+                                must: [
+                                    ...movedByUser,
+                                    inOnWorkingStage,
+                                ],
                             },
-                        });
-                    });
+                        },
+                    );
+                });
             },
         },
     ];
@@ -191,7 +201,9 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
             $timeout: ng.get('$timeout'),
             activityService: ng.get('activityService'),
             api: ng.get('api'),
-            authoringWorkspace: ng.get('authoringWorkspace') as AuthoringWorkspaceService,
+            authoringWorkspace: ng.get(
+                'authoringWorkspace',
+            ) as AuthoringWorkspaceService,
             cards: ng.get('cards'),
             datetime: ng.get('datetime'),
             desks: ng.get('desks'),
@@ -251,7 +263,9 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
             'item:move',
             'item:publish',
             'item:update',
-        ].map((event) => this.services.$rootScope.$on(event, this.refreshItems));
+        ].map((event) =>
+            this.services.$rootScope.$on(event, this.refreshItems),
+        );
     }
 
     refreshItems() {
@@ -262,10 +276,9 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
 
     fetchItems(group: IGroup): Promise<IGroupData> {
         const {api, search} = this.services;
-        const promise =
-            typeof group.dataSource === 'function'
-                ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
-                : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
+        const promise = typeof group.dataSource === 'function'
+            ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
+            : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
         return promise.then((res) => {
             const itemIds = [];
@@ -307,9 +320,12 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
     }
 
     updateGroupDataOnUserChange(user: IUser) {
-        this.setState({groups: GET_GROUPS(user._id, this.services), loading: true}, () => {
-            this.fetchGroupsData();
-        });
+        this.setState(
+            {groups: GET_GROUPS(user._id, this.services), loading: true},
+            () => {
+                this.fetchGroupsData();
+            },
+        );
     }
 
     render() {
@@ -320,10 +336,14 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                 <div className="main-list" style={{insetBlockStart: 0}}>
                     {this.props.header ? (
                         <div className="widget-header">
-                            <h3 className="widget-title">{gettext('User Activity')}</h3>
+                            <h3 className="widget-title">
+                                {gettext('User Activity')}
+                            </h3>
                         </div>
                     ) : null}
-                    <div className="search-box search-box--no-shadow search-box--fluid-height">
+                    <div
+                        className="search-box search-box--no-shadow search-box--fluid-height"
+                    >
                         <form className="search-box__content">
                             <SelectUser
                                 selectedUserId={this.props.user?._id ?? null}
@@ -336,39 +356,39 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                             />
                         </form>
                     </div>
-                    {loading ? (
-                        <Loader />
-                    ) : (
-                        this.state.groupsData && (
-                            <div className="content-list-holder">
-                                <div className="shadow-list-holder">
-                                    <div className="content-list">
-                                        {this.state.groups.map((group) => {
-                                            const {groupsData} = this.state;
-                                            const data = groupsData.find((g) => g.id === group.id);
+                    {
+                        loading ? <Loader /> :
+                            this.state.groupsData && (
+                                <div className="content-list-holder">
+                                    <div className="shadow-list-holder">
+                                        <div className="content-list">
+                                            {
+                                                this.state.groups.map((group) => {
+                                                    const {groupsData} = this.state;
+                                                    const data = groupsData.find((g) => g.id === group.id);
 
-                                            if (!data) {
-                                                logger.warn(
-                                                    `Tried to render group '${group.id}' but no data was found`,
-                                                );
-                                                return null;
+                                                    if (!data) {
+                                                        logger.warn(
+                                                            `Tried to render group '${group.id}' but no data was found`,
+                                                        );
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div key={`user-activity-${group.id}`}>
+                                                            <GroupComponent
+                                                                group={group}
+                                                                data={data}
+                                                                toggleCollapseExpand={this.toggleCollapseExpand}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })
                                             }
-
-                                            return (
-                                                <div key={`user-activity-${group.id}`}>
-                                                    <GroupComponent
-                                                        group={group}
-                                                        data={data}
-                                                        toggleCollapseExpand={this.toggleCollapseExpand}
-                                                    />
-                                                </div>
-                                            );
-                                        })}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    )}
+                            )}
                 </div>
             </div>
         );

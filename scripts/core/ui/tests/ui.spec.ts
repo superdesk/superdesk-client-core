@@ -56,30 +56,32 @@ describe('superdesk ui', () => {
     });
 
     describe('sdTimezone directive', () => {
-        var fakeTzData, getTzDataDeferred, isoScope; // the directive's isolate scope
+        var fakeTzData,
+            getTzDataDeferred,
+            isoScope; // the directive's isolate scope
 
         beforeEach(window.module('superdesk.apps.ingest'));
-        beforeEach(
-            window.module(($provide) => {
-                var childDirectives = ['sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead'];
+        beforeEach(window.module(($provide) => {
+            var childDirectives = [
+                'sdWeekdayPicker', 'sdTimepickerAlt', 'sdTypeahead',
+            ];
 
-                fakeTzData = {
-                    $promise: null,
-                    zones: {},
-                    links: {},
-                };
-                $provide.constant('tzdata', fakeTzData);
+            fakeTzData = {
+                $promise: null,
+                zones: {},
+                links: {},
+            };
+            $provide.constant('tzdata', fakeTzData);
 
-                // Mock child directives to test the directive under test in
-                // isolation, avoiding the need to create more complex fixtures
-                // that satisfy any special child directives' requirements.
-                childDirectives.forEach((directiveName) => {
-                    // Internally, Angular appends the "Directive" suffix to
-                    // directive name, thus we need to do the same for mocking.
-                    $provide.factory(directiveName + 'Directive', () => ({}));
-                });
-            }),
-        );
+            // Mock child directives to test the directive under test in
+            // isolation, avoiding the need to create more complex fixtures
+            // that satisfy any special child directives' requirements.
+            childDirectives.forEach((directiveName) => {
+                // Internally, Angular appends the "Directive" suffix to
+                // directive name, thus we need to do the same for mocking.
+                $provide.factory(directiveName + 'Directive', () => ({}));
+            });
+        }));
 
         beforeEach(inject(($compile, $rootScope, $q, tzdata) => {
             var element,
@@ -102,9 +104,11 @@ describe('superdesk ui', () => {
             expect(isoScope.tzSearchTerm).toEqual('');
         });
 
-        it('initializes the list of matching time zones to an empty list', () => {
-            expect(isoScope.matchingTimeZones).toEqual([]);
-        });
+        it('initializes the list of matching time zones to an empty list',
+            () => {
+                expect(isoScope.matchingTimeZones).toEqual([]);
+            },
+        );
 
         it('initializes the list of all available time zones', () => {
             var serverTzData = {
@@ -119,7 +123,7 @@ describe('superdesk ui', () => {
 
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
-            fakeTzData.getTzNames = function () {
+            fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
             };
 
@@ -128,7 +132,9 @@ describe('superdesk ui', () => {
             getTzDataDeferred.resolve(serverTzData);
             isoScope.$digest();
 
-            expect(isoScope.timeZones).toEqual(['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']);
+            expect(isoScope.timeZones).toEqual(
+                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'],
+            );
         });
 
         it('applies the default timezone', () => {
@@ -144,7 +150,7 @@ describe('superdesk ui', () => {
 
             fakeTzData.zones = serverTzData.zones;
             fakeTzData.links = serverTzData.links;
-            fakeTzData.getTzNames = function () {
+            fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
             };
 
@@ -155,39 +161,55 @@ describe('superdesk ui', () => {
             getTzDataDeferred.resolve(serverTzData);
             isoScope.$digest();
 
-            expect(isoScope.timeZones).toEqual(['Australia/Sydney', 'Europe/Rome', 'Foo/Bar']);
+            expect(isoScope.timeZones).toEqual(
+                ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'],
+            );
 
             isoScope.$digest();
 
             expect(isoScope.timezone).toEqual('Europe/Rome');
         });
 
-        describe("scope's searchTimeZones() method", () => {
-            it('sets the time zone search term to the given term ', () => {
-                isoScope.tzSearchTerm = 'foo';
-                isoScope.searchTimeZones('bar');
-                expect(isoScope.tzSearchTerm).toEqual('bar');
-            });
+        describe('scope\'s searchTimeZones() method', () => {
+            it('sets the time zone search term to the given term ',
+                () => {
+                    isoScope.tzSearchTerm = 'foo';
+                    isoScope.searchTimeZones('bar');
+                    expect(isoScope.tzSearchTerm).toEqual('bar');
+                },
+            );
 
-            it('sets the matching time zones to an empty list if given ' + 'an empty search term', () => {
+            it('sets the matching time zones to an empty list if given ' +
+                'an empty search term',
+            () => {
                 isoScope.matchingTimeZones = ['foo', 'bar'];
                 isoScope.searchTimeZones('');
                 expect(isoScope.matchingTimeZones).toEqual([]);
-            });
+            },
+            );
 
-            it('sets the matching time zones to those matching the given ' + 'search term', () => {
-                isoScope.timeZones = ['Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz'];
+            it('sets the matching time zones to those matching the given ' +
+                'search term',
+            () => {
+                isoScope.timeZones = [
+                    'Foo/City', 'Asia/FooBar', 'EU_f/oo', 'bar_fOo', 'xyz',
+                ];
                 isoScope.searchTimeZones('fOO');
-                expect(isoScope.matchingTimeZones).toEqual(['Foo/City', 'Asia/FooBar', 'bar_fOo']);
-            });
+                expect(isoScope.matchingTimeZones).toEqual([
+                    'Foo/City', 'Asia/FooBar', 'bar_fOo',
+                ]);
+            },
+            );
         });
 
-        describe("scope's selectTimeZone() method", () => {
-            it("sets the routing rule's time zone to the one given", () => {
-                isoScope.timezone = null;
-                isoScope.selectTimeZone('foo');
-                expect(isoScope.timezone).toEqual('foo');
-            });
+        describe('scope\'s selectTimeZone() method', () => {
+            it('sets the routing rule\'s time zone to the one given',
+                () => {
+                    isoScope.timezone = null;
+                    isoScope.selectTimeZone('foo');
+                    expect(isoScope.timezone).toEqual('foo');
+                },
+            );
 
             it('clears the time zone search term', () => {
                 isoScope.tzSearchTerm = 'Europe';
@@ -196,7 +218,7 @@ describe('superdesk ui', () => {
             });
         });
 
-        describe("scope's clearSelectedTimeZone() method", () => {
+        describe('scope\'s clearSelectedTimeZone() method', () => {
             it('clears the time zone', () => {
                 isoScope.timezone = 'foo';
                 isoScope.clearSelectedTimeZone();
@@ -215,10 +237,9 @@ describe('superdesk ui', () => {
     describe('multiple emails', () => {
         var scope, form, html;
 
-        html =
-            '<form name="form">' +
-            '<input type="text" name="email" ng-model="model.email" required sd-multiple-emails> ' +
-            '</form>';
+        html = '<form name="form">' +
+                    '<input type="text" name="email" ng-model="model.email" required sd-multiple-emails> ' +
+               '</form>';
         beforeEach(inject(($compile, $rootScope) => {
             scope = $rootScope.$new();
             scope.model = {email: null};

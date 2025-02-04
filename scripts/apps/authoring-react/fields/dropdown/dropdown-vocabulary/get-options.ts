@@ -15,27 +15,28 @@ export function getOptions(
 ): ITreeWithLookup<IDropdownOption> {
     const vocabularyItems: Array<IVocabularyItem> = getVocabularyOptions(config.vocabularyId);
 
-    const vocabularyItemsFiltered =
-        config.filter == null
-            ? vocabularyItems
-            : vocabularyItems.filter((vocabularyItem: IVocabularyItem) => config.filter(vocabularyItem));
+    const vocabularyItemsFiltered = config.filter == null
+        ? vocabularyItems
+        : vocabularyItems.filter((vocabularyItem: IVocabularyItem) => config.filter(vocabularyItem));
 
-    const dropdownOptions: Array<IDropdownOption> = vocabularyItemsFiltered.map((item) => {
-        const v: IDropdownOption = {
-            id: item.qcode,
-            label: getVocabularyItemNameTranslated(item),
-        };
+    const dropdownOptions: Array<IDropdownOption> = vocabularyItemsFiltered.map(
+        (item) => {
+            const v: IDropdownOption = {
+                id: item.qcode,
+                label: getVocabularyItemNameTranslated(item),
+            };
 
-        if (item.color != null) {
-            v.color = item.color;
-        }
+            if (item.color != null) {
+                v.color = item.color;
+            }
 
-        if (item.parent != null) {
-            v.parent = item.parent;
-        }
+            if (item.parent != null) {
+                v.parent = item.parent;
+            }
 
-        return v;
-    });
+            return v;
+        },
+    );
 
     const tree: ITreeWithLookup<IDropdownOption> = {
         nodes: arrayToTree(
@@ -43,10 +44,7 @@ export function getOptions(
             ({id}) => id.toString(),
             ({parent}) => parent?.toString(),
         ).result,
-        lookup: keyBy(
-            dropdownOptions.map((opt) => ({value: opt})),
-            (opt) => opt.value.id.toString(),
-        ),
+        lookup: keyBy(dropdownOptions.map((opt) => ({value: opt})), (opt) => opt.value.id.toString()),
     };
 
     return tree;

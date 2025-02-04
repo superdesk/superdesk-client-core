@@ -49,7 +49,7 @@ module.exports = Object.assign({}, sharedConfigs, {
     }),
     plugins: [...(sharedConfigs.plugins ?? []), '@typescript-eslint'],
 
-    extends: [...(sharedConfigs.extends ?? []), 'plugin:prettier', 'plugin:@typescript-eslint/recommended'],
+    extends: [...(sharedConfigs.extends ?? []), 'plugin:@typescript-eslint/recommended'],
 
     parser: '@typescript-eslint/parser',
 
@@ -75,7 +75,11 @@ module.exports = Object.assign({}, sharedConfigs, {
                     "functions": "always-multiline"
                 }],
 
-                "space-before-function-paren": ["error", {"anonymous": "never", "named": "never"}],
+                "space-before-function-paren": ["error", {
+                    "anonymous": "never",
+                    "named": "never",
+                    "asyncArrow": "always"
+                }],
 
 
                 // allow calling hasOwnProperty

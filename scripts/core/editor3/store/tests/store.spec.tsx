@@ -17,9 +17,7 @@ describe('editor3.store', () => {
                 editorFormat: ['h1'],
                 readOnly: false,
                 trim: true,
-                onChange: () => {
-                    /* no-op */
-                },
+                onChange: () => { /* no-op */ },
                 value: 'abc',
                 item: {},
                 limitBehavior: 'highlight',

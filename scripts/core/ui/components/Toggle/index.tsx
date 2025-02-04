@@ -37,7 +37,7 @@ const Toggle: React.StatelessComponent<any> = ({value, onChange, readOnly, onFoc
             className={classes}
             onClick={!readOnly && onChange ? onClick : null}
             onFocus={onFocus}
-            onKeyDown={!readOnly ? handleKeyDown : null}
+            onKeyDown= {!readOnly ? handleKeyDown : null}
         >
             <span className="inner" />
         </button>

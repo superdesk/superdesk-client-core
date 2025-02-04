@@ -1,30 +1,17 @@
 <div class="widget-container" ng-controller="AggregateCtrl as agg" ng-init="agg.setWidget(widget)">
     <div class="widget-header" ng-init="!searchOpen">
-        <button
-            class="widget-header__search-button"
-            ng-click="searchOpen = !searchOpen; agg.search(); query = ''"
-            ng-class="{'widget-header__search-button--active': searchOpen}"
-        >
-            <i class="icon-search"></i>
-        </button>
+        <button class="widget-header__search-button" ng-click="searchOpen = !searchOpen; agg.search(); query = ''" ng-class="{'widget-header__search-button--active': searchOpen}"><i class="icon-search"></i></button>
         <h3 class="widget-title" translate>{{ widget.configuration.label || widget.label }}</h3>
     </div>
-    <div
-        class="main-list"
-        ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}"
-    >
+    <div class="main-list"
+        ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
         <div class="search-box" ng-class="{'search-box--hidden': !searchOpen}">
             <form class="search-box__content">
-                <button type="reset" class="search-cancel" ng-click="agg.search()" ng-if="query">
-                    <i class="icon-remove-sign"></i>
-                </button>
-                <input
-                    type="text"
-                    placeholder="{{ :: 'Search' | translate }}"
+                <button type="reset" class="search-cancel" ng-click="agg.search()" ng-if="query"><i class="icon-remove-sign"></i></button>
+                <input type="text" placeholder="{{ :: 'Search' | translate }}"
                     ng-model="query"
                     ng-model-options="{debounce: 500}"
-                    ng-change="agg.search(query)"
-                />
+                    ng-change="agg.search(query)">
             </form>
         </div>
 
@@ -34,20 +21,18 @@
                     <div class="desk" ng-repeat="group in agg.cards track by group._id">
                         <div class="stage" ng-show="total">
                             <div sd-stage-header></div>
-                            <div
-                                class="stage-content"
-                                ng-style="agg.getMaxHeightStyle(group.max_items)"
-                                ng-show="agg.getExpandedState(group._id) || agg.state.solo"
-                                sd-widget-group
-                                data-stage="group"
-                                data-total="total"
-                                data-can-edit="true"
-                                data-show-empty="false"
-                                data-max-items="group.max_items"
-                                data-action="agg.preview(item)"
-                                data-selected="agg.selected"
-                                data-filter="group.query"
-                            ></div>
+                            <div class="stage-content" ng-style="agg.getMaxHeightStyle(group.max_items)"
+                                 ng-show="agg.getExpandedState(group._id) || agg.state.solo"
+                                 sd-widget-group
+                                 data-stage="group"
+                                 data-total="total"
+                                 data-can-edit="true"
+                                 data-show-empty="false"
+                                 data-max-items="group.max_items"
+                                 data-action="agg.preview(item)"
+                                 data-selected="agg.selected"
+                                 data-filter="group.query">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -56,40 +41,28 @@
                     <div class="desk" ng-init="group = agg.state.solo">
                         <div class="stage" ng-show="total">
                             <div sd-stage-header></div>
-                            <div
-                                class="stage-content"
-                                ng-show="agg.getExpandedState(group._id) || agg.state.solo"
-                                sd-widget-group
-                                data-stage="group"
-                                data-total="total"
-                                data-can-edit="true"
-                                data-show-empty="false"
-                                data-max-items="100"
-                                data-action="agg.preview(item)"
-                                data-selected="agg.selected"
-                                data-filter="group.query"
-                            ></div>
+                            <div class="stage-content" ng-show="agg.getExpandedState(group._id) || agg.state.solo"
+                                 sd-widget-group
+                                 data-stage="group"
+                                 data-total="total"
+                                 data-can-edit="true"
+                                 data-show-empty="false"
+                                 data-max-items="100"
+                                 data-action="agg.preview(item)"
+                                 data-selected="agg.selected"
+                                 data-filter="group.query">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div
-        class="preview preview-widget"
-        ng-init="contenttab = true"
+    <div class="preview preview-widget" ng-init="contenttab = true"
         ng-if="agg.selected"
-        ng-class="{wrap: !agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}"
-    >
+        ng-class="{wrap: !agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
         <div class="nav">
-            <button
-                class="backlink"
-                href=""
-                ng-if="!$root.config.features.customMonitoringWidget"
-                ng-click="agg.preview()"
-            >
-                <span class="ng-scope" translate>Back</span>
-            </button>
+            <button class="backlink" href="" ng-if="!$root.config.features.customMonitoringWidget" ng-click="agg.preview()"><span class="ng-scope" translate>Back</span></button>
         </div>
         <ul class="nav nav-tabs">
             <li ng-class="{active: contenttab}">
@@ -100,8 +73,10 @@
             </li>
         </ul>
         <div class="content-item-preview" ng-if="agg.selected">
-            <div class="content" ng-if="contenttab" sd-media-preview-widget data-item="agg.selected"></div>
-            <div ng-if="!contenttab" sd-media-metadata data-item="agg.selected"></div>
+            <div class="content" ng-if="contenttab"
+                 sd-media-preview-widget data-item="agg.selected"></div>
+            <div ng-if="!contenttab"
+                 sd-media-metadata data-item="agg.selected"></div>
         </div>
     </div>
 </div>

@@ -28,27 +28,31 @@ export class Difference extends React.PureComponent<IProps> {
 
                     return (
                         <div>
-                            {stats.removed.map((id, i) => (
-                                <ArticleItemConcise
-                                    key={i}
-                                    article={keyed[id]}
-                                    backgroundColor="var(--diff-color-removal)"
-                                />
-                            ))}
+                            {
+                                stats.removed.map((id, i) => (
+                                    <ArticleItemConcise
+                                        key={i}
+                                        article={keyed[id]}
+                                        backgroundColor="var(--diff-color-removal)"
+                                    />
+                                ))
+                            }
 
-                            {value2Ids.map((id, i) => (
-                                <ArticleItemConcise
-                                    key={i}
-                                    article={keyed[id]}
-                                    backgroundColor={(() => {
-                                        if (stats.added.find((_id) => _id === id) != null) {
-                                            return 'var(--diff-color-addition)';
-                                        } else {
-                                            return undefined;
-                                        }
-                                    })()}
-                                />
-                            ))}
+                            {
+                                value2Ids.map((id, i) => (
+                                    <ArticleItemConcise
+                                        key={i}
+                                        article={keyed[id]}
+                                        backgroundColor={(() => {
+                                            if (stats.added.find((_id) => _id === id) != null) {
+                                                return 'var(--diff-color-addition)';
+                                            } else {
+                                                return undefined;
+                                            }
+                                        })()}
+                                    />
+                                ))
+                            }
                         </div>
                     );
                 }}

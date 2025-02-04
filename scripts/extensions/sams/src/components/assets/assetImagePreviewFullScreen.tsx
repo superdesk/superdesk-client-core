@@ -15,7 +15,15 @@ import {getSets} from '../../store/sets/selectors';
 
 // UI
 import {Icon, Label, FormLabel} from 'superdesk-ui-framework/react';
-import {FormRow, Modal, PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, Text} from '../../ui';
+import {
+    FormRow,
+    Modal,
+    PanelContent,
+    PanelContentBlock,
+    PanelContentBlockInner,
+    PanelHeader,
+    Text,
+} from '../../ui';
 import {AssetImageRendition} from './AssetImageRendition';
 import {getPreviewComponent} from './preview';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
@@ -49,7 +57,9 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
     render() {
         const {gettext} = superdeskApi.localization;
         const ContentPreview = getPreviewComponent(this.props.asset!);
-        const typeIcon = getIconTypeFromMimetype(this.props.asset?.mimetype ?? 'text');
+        const typeIcon = getIconTypeFromMimetype(
+            this.props.asset?.mimetype ?? 'text',
+        );
         const setName = this.props.sets!.find((set) => set._id === this.props.asset!.set_id)?.name!;
 
         return (
@@ -67,43 +77,36 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
                             display: 'flex',
                         },
                     }}
-                    main={
-                        !ContentPreview ? null : (
-                            <AssetImageRendition
-                                asset={this.props.asset!}
-                                rendition={
-                                    this.props.asset?.renditions.find((r) => r?.name === RENDITION.ORIGINAL)?.params!
-                                }
-                                style={{
-                                    maxWidth: '100%',
-                                    maxHeight: '100%',
-                                    height: 'auto',
-                                    margin: 'auto',
-                                    pointerEvents: 'none',
-                                    transition: 'filter ease-in-out 0.3s',
-                                }}
-                                container={(loading, children) => (
-                                    <div
-                                        className="asset-preview__image"
-                                        style={
-                                            !loading
-                                                ? undefined
-                                                : {
-                                                      width: '100%',
-                                                      height: '250px',
-                                                      position: 'relative',
-                                                      backgroundColor: '#2c2c2c',
-                                                  }
-                                        }
-                                    >
-                                        {children}
-                                    </div>
-                                )}
-                            />
-                        )
-                    }
+                    main={!ContentPreview ? null : (
+                        <AssetImageRendition
+                            asset={this.props.asset!}
+                            rendition={this.props.asset?.renditions.find((r) =>
+                                r?.name === RENDITION.ORIGINAL)?.params!}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                height: 'auto',
+                                margin: 'auto',
+                                pointerEvents: 'none',
+                                transition: 'filter ease-in-out 0.3s',
+                            }}
+                            container={(loading, children) => (
+                                <div
+                                    className="asset-preview__image"
+                                    style={!loading ? undefined : {
+                                        width: '100%',
+                                        height: '250px',
+                                        position: 'relative',
+                                        backgroundColor: '#2c2c2c',
+                                    }}
+                                >
+                                    {children}
+                                </div>
+                            )}
+                        />
+                    )}
                     rightPanelOpen={true}
-                    rightPanel={
+                    rightPanel={(
                         <React.Fragment>
                             <PanelHeader
                                 onClose={this.props.closeModal}
@@ -142,8 +145,8 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
                                             <FormRow>
                                                 <FormLabel text={gettext('Type')} style="light" />
                                                 <Text>
-                                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}(
-                                                    {this.props.asset?.mimetype})
+                                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}
+                                                    ({this.props.asset?.mimetype})
                                                 </Text>
                                             </FormRow>
 
@@ -175,16 +178,19 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
                                                     />
                                                 ))}
                                             </FormRow>
+
                                         </ToggleBoxNext>
                                     </PanelContentBlockInner>
                                 </PanelContentBlock>
                             </PanelContent>
                         </React.Fragment>
-                    }
+                    )}
                 />
             </Modal>
         );
     }
 }
 
-export const AssetImagePreviewFullScreen = connect(mapStateToProps)(AssetImagePreviewFullScreenComponent);
+export const AssetImagePreviewFullScreen = connect(
+    mapStateToProps,
+)(AssetImagePreviewFullScreenComponent);

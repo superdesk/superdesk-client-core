@@ -17,14 +17,12 @@ import {gettext} from 'core/utils';
  * @packageName superdesk.apps
  * @description Enhances the application with profiling support for the workspace.
  */
-export default angular
-    .module('superdesk.apps.profiling', [])
+export default angular.module('superdesk.apps.profiling', [])
     .controller('profilingCtrl', ProfilingController)
 
-    .config([
-        'superdeskProvider',
-        function (superdesk) {
-            superdesk.activity('/profiling', {
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('/profiling', {
                 label: gettext('Profiling Data'),
                 templateUrl: 'scripts/apps/profiling/views/profiling.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
@@ -33,12 +31,8 @@ export default angular
                 adminTools: false,
                 privileges: {profiling: 1},
             });
-        },
-    ])
+    }])
 
-    .config([
-        'apiProvider',
-        function (apiProvider) {
-            apiProvider.api('profiling', {type: 'http', backend: {rel: 'profiling'}});
-        },
-    ]);
+    .config(['apiProvider', function(apiProvider) {
+        apiProvider.api('profiling', {type: 'http', backend: {rel: 'profiling'}});
+    }]);

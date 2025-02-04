@@ -6,7 +6,11 @@ import {Map} from 'immutable';
 import {PlannedDurationLabel} from './planned-duration-label';
 import {superdesk} from '../../superdesk';
 import {IVocabularyItem} from 'superdesk-api';
-import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, RUNDOWN_SUBITEM_TYPES, STATUS_VOCABULARY_ID} from '../../constants';
+import {
+    RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
+    RUNDOWN_SUBITEM_TYPES,
+    STATUS_VOCABULARY_ID,
+} from '../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {customizations} from '../../customization';
 const {vocabulary} = superdesk.entities;
@@ -69,27 +73,46 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
         );
 
         const array: React.ComponentProps<typeof TableList>['array'] = this.props.items.map((item) => {
-            const statusColor = item.status == null ? undefined : (statuses.get(item.status)?.color ?? undefined);
+            const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
-            const subitemVocabularies =
-                item.subitems == null
-                    ? null
-                    : item.subitems.map(({qcode}) => subitemTypes.get(qcode)).filter((x) => x != null);
+            const subitemVocabularies = item.subitems == null
+                ? null
+                : item.subitems
+                    .map(({qcode}) => subitemTypes.get(qcode))
+                    .filter((x) => x != null);
 
-            return {
+            return ({
                 locked: isRundownItem(item) ? item._lock : false,
                 hexColor: statusColor,
                 start: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
-                        {itemType != null && <Label text={itemType.name} hexColor={itemType.color} size="normal" />}
+                        {
+                            itemType != null && (
+                                <Label
+                                    text={itemType.name}
+                                    hexColor={itemType.color}
+                                    size="normal"
+                                />
+                            )
+                        }
 
-                        {subitemVocabularies != null && (
-                            <Spacer h gap="4" justifyContent="start" noGrow style={{flexWrap: 'wrap'}}>
-                                {subitemVocabularies.map(({name, color}, i) => (
-                                    <Label key={i} text={name} hexColor={color} style="translucent" size="normal" />
-                                ))}
-                            </Spacer>
-                        )}
+                        {
+                            subitemVocabularies != null && (
+                                <Spacer h gap="4" justifyContent="start" noGrow style={{flexWrap: 'wrap'}}>
+                                    {
+                                        subitemVocabularies.map(({name, color}, i) => (
+                                            <Label
+                                                key={i}
+                                                text={name}
+                                                hexColor={color}
+                                                style="translucent"
+                                                size="normal"
+                                            />
+                                        ))
+                                    }
+                                </Spacer>
+                            )
+                        }
                     </Spacer>
                 ),
                 center: (
@@ -99,20 +122,24 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 ),
                 end: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
-                        {item.planned_duration != null && item.planned_duration > 0 && (
-                            <PlannedDurationLabel
-                                label={gettext('Planned')}
-                                planned_duration={item.planned_duration}
-                                size="default"
-                            />
-                        )}
-                        {item.duration != null && item.duration > 0 && (
-                            <DurationLabel
-                                duration={item.duration}
-                                planned_duration={item.planned_duration}
-                                size="default"
-                            />
-                        )}
+                        {
+                            item.planned_duration != null && item.planned_duration > 0 && (
+                                <PlannedDurationLabel
+                                    label={gettext('Planned')}
+                                    planned_duration={item.planned_duration}
+                                    size="default"
+                                />
+                            )
+                        }
+                        {
+                            item.duration != null && item.duration > 0 && (
+                                <DurationLabel
+                                    duration={item.duration}
+                                    planned_duration={item.planned_duration}
+                                    size="default"
+                                />
+                            )
+                        }
                     </Spacer>
                 ),
                 action: this.props.getActions(item),
@@ -123,11 +150,15 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 onDoubleClick: () => {
                     this.props.edit(item);
                 },
-            };
+            });
         });
 
         if (this.props.rundownReadOnly) {
-            return <TableList array={array} />;
+            return (
+                <TableList
+                    array={array}
+                />
+            );
         } else {
             return (
                 <TableList

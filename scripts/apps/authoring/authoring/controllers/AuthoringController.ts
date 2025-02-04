@@ -3,7 +3,7 @@ export function AuthoringController($scope, item, action, superdesk) {
     $scope.origItem = item;
     $scope.action = action || 'edit';
 
-    $scope.lock = function () {
+    $scope.lock = function() {
         superdesk.intent('author', 'article', item);
     };
 }

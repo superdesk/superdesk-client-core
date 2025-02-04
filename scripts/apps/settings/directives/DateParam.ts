@@ -3,7 +3,7 @@ DateParam.$inject = ['$location'];
 export function DateParam($location) {
     return {
         scope: true,
-        link: function (scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
             var search = $location.search();
 
             if (search[attrs.location]) {

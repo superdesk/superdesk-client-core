@@ -11,11 +11,9 @@ describe('authoring ChangeImageController', () => {
     beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.mocks'));
 
-    beforeEach(
-        window.module(($provide) => {
-            $provide.constant('lodash', _);
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        $provide.constant('lodash', _);
+    }));
 
     beforeEach(inject((notify) => {
         spyOn(notify, 'success').and.returnValue(null);
@@ -195,30 +193,26 @@ describe('authoring ChangeImageController', () => {
             expect(scope.data.metadata.poi).toEqual({x: 0.5, y: 0.5});
         }));
 
-        it("sets default poi if non defined, but don't save when crop validation is on", inject((
-            api,
-            $rootScope,
-            $q,
-            notify,
-            content,
-        ) => {
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    validatePointOfInterestForImages: true,
-                },
-            };
+        it('sets default poi if non defined, but don\'t save when crop validation is on',
+            inject((api, $rootScope, $q, notify, content) => {
+                const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                    features: {
+                        ...appConfig.features,
+                        validatePointOfInterestForImages: true,
+                    },
+                };
 
-            Object.assign(appConfig, testConfig);
+                Object.assign(appConfig, testConfig);
 
-            let scope = angular.copy(scopeData);
+                let scope = angular.copy(scopeData);
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, content);
-            $rootScope.$digest();
+                ChangeImageController(scope, notify, _, api, $rootScope, $q, content);
+                $rootScope.$digest();
 
-            expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
-            expect(scope.data.metadata.poi).toBeFalsy();
-        }));
+                expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
+                expect(scope.data.metadata.poi).toBeFalsy();
+            }),
+        );
 
         it('No error thrown if poi is specified', inject((api, $rootScope, $q, notify, content) => {
             let scope = angular.copy(scopeData);

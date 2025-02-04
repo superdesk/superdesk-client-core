@@ -19,8 +19,16 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
         return (
             <div>
                 <span className="state-border" />
-                <MultiSelectCheckbox item={item} itemSelected={itemSelected} multiSelect={multiSelect} />
-                {item.priority || item.urgency ? <ListPriority item={item} singleLine={this.props.singleLine} /> : null}
+                <MultiSelectCheckbox
+                    item={item}
+                    itemSelected={itemSelected}
+                    multiSelect={multiSelect}
+                />
+                {
+                    item.priority || item.urgency
+                        ? <ListPriority item={item} singleLine={this.props.singleLine} />
+                        : null
+                }
                 <ListItemInfo
                     loading={this.props.loading}
                     item={item}

@@ -3,7 +3,7 @@
     <span ng-show="total" class="label-total">{{total}}</span>
     <div class="dropdown dropdown--align-right" dropdown>
         <button id="order_button" class="dropdown__toggle" dropdown__toggle>
-            <span class="sd-opacity--75">{{'Sort by' | translate }}:</span>
+            <span class="sd-opacity--75">{{'Sort by' | translate }}:</span> 
             <span class="sd-text__strong-s">{{ active.label | translate }}</span>
             <span class="dropdown__caret"></span>
         </button>
@@ -16,12 +16,7 @@
             </li>
         </ul>
     </div>
-    <button
-        ng-click="toggleDir()"
-        class="icn-btn direction"
-        title="{{active.dir}}"
-        aria-label="{{ 'Sort order' | translate }}"
-    >
+    <button ng-click="toggleDir()" class="icn-btn direction" title="{{active.dir}}" aria-label="{{ 'Sort order' | translate }}">
         <i class="icon-ascending" ng-if="active.dir === 'asc'" aria-label="{{ 'Ascending' | translate }}"></i>
         <i class="icon-descending" ng-if="active.dir === 'desc'" aria-label="{{ 'Descending' | translate }}"></i>
     </button>

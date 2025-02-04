@@ -38,7 +38,13 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
     }
 
     getInlineToolbarActions(
-        {item, hasUnsavedChanges, save, initiateClosing, stealLock},
+        {
+            item,
+            hasUnsavedChanges,
+            save,
+            initiateClosing,
+            stealLock,
+        },
         availableArticles: Array<IArticle>,
     ): IAuthoringOptions<IArticle> {
         const saveButton: ITopBarWidget<IArticle> = {
@@ -62,14 +68,15 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             priority: 0.1,
             component: () => (
                 <Menu
-                    items={availableArticles.map((article) => {
-                        const leaf: IMenuItem = {
-                            onClick: () => this.switchTo(item._id, article._id),
-                            label: getArticleLabel(article),
-                        };
+                    items={
+                        availableArticles.map((article) => {
+                            const leaf: IMenuItem = {
+                                onClick: () => this.switchTo(item._id, article._id),
+                                label: getArticleLabel(article),
+                            };
 
-                        return leaf;
-                    })}
+                            return leaf;
+                        })}
                 >
                     {(toggle) => (
                         <Button
@@ -112,10 +119,14 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                 } else {
                     return (
                         <NavButton
-                            icon={this.componentRefs[item._id]?.isSidebarCollapsed() ? 'chevron-left' : 'chevron-right'}
+                            icon={
+                                (this.componentRefs[item._id])?.isSidebarCollapsed()
+                                    ? 'chevron-left'
+                                    : 'chevron-right'
+                            }
                             iconSize="big"
                             text={gettext('Collapse widgets')}
-                            onClick={() => this.componentRefs[item._id]?.toggleSidebar()}
+                            onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
                         />
                     );
                 }
@@ -160,10 +171,10 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
     }
 
     switchTo(currentId: string, nextId: string) {
-        this.componentRefs[currentId]?.prepareForUnmounting().then(() => {
+        (this.componentRefs[currentId])?.prepareForUnmounting().then(() => {
             this.setState({
                 // setting nextId in place of currentId
-                articleIds: this.state.articleIds.map((id) => (id === currentId ? nextId : id)),
+                articleIds: this.state.articleIds.map((id) => id === currentId ? nextId : id),
             });
         });
     }
@@ -183,8 +194,9 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
          */
         const availableArticles = [
             ...this.state.workQueueItems.filter(
-                (item) =>
-                    this.props.initiallySelectedArticles.map((article) => article._id).includes(item._id) !== true,
+                (item) => this.props.initiallySelectedArticles
+                    .map((article) => article._id)
+                    .includes(item._id) !== true,
             ),
             ...this.props.initiallySelectedArticles,
         ].filter((article) => !this.state.articleIds.includes(article._id));
@@ -199,33 +211,41 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             >
                 <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
                     <Spacer h gap="0" noWrap style={{height: '100%'}}>
-                        {this.state.articleIds.map((_id, i) => {
-                            return (
-                                <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
-                                    {i !== 0 && <div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />}
-                                    <div style={{width: '100%'}}>
-                                        <AuthoringIntegrationWrapper
-                                            getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
-                                            authoringStorage={authoringStorageIArticle}
-                                            sidebarMode={true}
-                                            ref={(component) => {
-                                                this.componentRefs[_id] = component;
-                                            }}
-                                            onClose={() => {
-                                                this.setState({
-                                                    articleIds: this.state.articleIds.filter((id) => id !== _id),
-                                                });
-                                            }}
-                                            itemId={_id}
-                                            getInlineToolbarActions={(options) =>
-                                                this.getInlineToolbarActions(options, availableArticles)
-                                            }
-                                            autoFocus={false}
-                                        />
-                                    </div>
-                                </Spacer>
-                            );
-                        })}
+                        {
+                            this.state.articleIds.map((_id, i) => {
+                                return (
+                                    <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
+                                        {
+                                            i !== 0 && (
+                                                <div
+                                                    style={{width: 4, background: 'var(--sd-colour-bg--10)'}}
+                                                />
+                                            )
+                                        }
+                                        <div style={{width: '100%'}}>
+                                            <AuthoringIntegrationWrapper
+                                                getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
+                                                authoringStorage={authoringStorageIArticle}
+                                                sidebarMode={true}
+                                                ref={(component) => {
+                                                    this.componentRefs[_id] = component;
+                                                }}
+                                                onClose={() => {
+                                                    this.setState({
+                                                        articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                                    });
+                                                }}
+                                                itemId={_id}
+                                                getInlineToolbarActions={(options) =>
+                                                    this.getInlineToolbarActions(options, availableArticles)
+                                                }
+                                                autoFocus={false}
+                                            />
+                                        </div>
+                                    </Spacer>
+                                );
+                            })
+                        }
                     </Spacer>
                     {availableArticles.length > 0 && (
                         <div className="multi-edit-add-button">

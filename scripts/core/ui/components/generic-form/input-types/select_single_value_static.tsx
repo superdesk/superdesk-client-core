@@ -15,16 +15,21 @@ export class SelectSingleValue extends React.Component<IProps> {
 
             const itemWithLabel = items.find((item) => item.id === this.props.value);
 
-            return <span>{itemWithLabel?.label ?? this.props.value}</span>;
+            return (
+                <span>{itemWithLabel?.label ?? this.props.value}</span>
+            );
         }
 
         return (
             <div
-                className={classNames('sd-line-input', {
-                    'sd-line-input--invalid': this.props.issues.length > 0,
-                    'sd-line-input--required': this.props.formField.required === true,
-                    'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
-                })}
+                className={classNames(
+                    'sd-line-input',
+                    {
+                        'sd-line-input--invalid': this.props.issues.length > 0,
+                        'sd-line-input--required': this.props.formField.required === true,
+                        'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                    },
+                )}
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <select
@@ -37,19 +42,19 @@ export class SelectSingleValue extends React.Component<IProps> {
                     data-test-id={`gform-input--${this.props.formField.field}`}
                 >
                     <option value="" />
-                    {items == null
-                        ? null
-                        : items.map(({id, label}) => (
-                              <option key={id} value={id}>
-                                  {label}
-                              </option>
-                          ))}
+                    {
+                        items == null
+                            ? null
+                            : items.map(({id, label}) => (
+                                <option key={id} value={id}>{label}</option>
+                            ))
+                    }
                 </select>
-                {this.props.issues.map((str, i) => (
-                    <div key={i} className="sd-line-input__message">
-                        {str}
-                    </div>
-                ))}
+                {
+                    this.props.issues.map((str, i) => (
+                        <div key={i} className="sd-line-input__message">{str}</div>
+                    ))
+                }
             </div>
         );
     }

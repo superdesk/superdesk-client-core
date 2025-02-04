@@ -37,27 +37,29 @@ export class FrequencySimple extends React.PureComponent<IProps> {
 
         return (
             <CheckButtonGroup>
-                {getWeekdayNames('short', this.props.firstDayOfWeek).map(({label, index}) => (
-                    <CheckboxButton
-                        key={index}
-                        checked={daysObj[index] === true}
-                        label={{text: label}}
-                        onChange={(val) => {
-                            if (val === true) {
-                                this.props.onChange({
-                                    ...rrule,
-                                    by_day: (rrule.by_day ?? []).concat(index).sort((a, b) => a - b),
-                                });
-                            } else {
-                                this.props.onChange({
-                                    ...rrule,
-                                    by_day: (rrule.by_day ?? []).filter((_val) => _val !== index),
-                                });
-                            }
-                        }}
-                        disabled={this.props.readOnly}
-                    />
-                ))}
+                {
+                    getWeekdayNames('short', this.props.firstDayOfWeek).map(({label, index}) => (
+                        <CheckboxButton
+                            key={index}
+                            checked={daysObj[index] === true}
+                            label={{text: label}}
+                            onChange={(val) => {
+                                if (val === true) {
+                                    this.props.onChange({
+                                        ...rrule,
+                                        by_day: (rrule.by_day ?? []).concat(index).sort((a, b) => a - b),
+                                    });
+                                } else {
+                                    this.props.onChange({
+                                        ...rrule,
+                                        by_day: (rrule.by_day ?? []).filter((_val) => _val !== index),
+                                    });
+                                }
+                            }}
+                            disabled={this.props.readOnly}
+                        />
+                    ))
+                }
             </CheckButtonGroup>
         );
     }

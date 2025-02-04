@@ -1,4 +1,8 @@
-import {IExtension, IExtensionActivationResult, ICustomFieldType} from 'superdesk-api';
+import {
+    IExtension,
+    IExtensionActivationResult,
+    ICustomFieldType,
+} from 'superdesk-api';
 import {Editor} from './editor';
 import {Config} from './config';
 import {TemplateEditor} from './template-editor';
@@ -35,7 +39,9 @@ const extension: IExtension = {
     activate: () => {
         const result: IExtensionActivationResult = {
             contributions: {
-                customFieldTypes: [datetimeField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>],
+                customFieldTypes: [
+                    datetimeField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
+                ],
             },
         };
 

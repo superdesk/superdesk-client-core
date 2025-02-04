@@ -18,10 +18,15 @@ export const Group: React.StatelessComponent<any> = ({
     shadow,
 }) => (
     <div
-        className={classNames(className, 'sd-list-item-group', shadow ? `sd-shadow--z${shadow}` : null, {
-            'sd-list-item-group--space-between-items': spaceBetween,
-            'sd-list-item-group--vertical-scroll': verticalScroll,
-        })}
+        className={classNames(
+            className,
+            'sd-list-item-group',
+            shadow ? `sd-shadow--z${shadow}` : null,
+            {
+                'sd-list-item-group--space-between-items': spaceBetween,
+                'sd-list-item-group--vertical-scroll': verticalScroll,
+            },
+        )}
         style={style}
         onScroll={onScroll}
         ref={refNode}

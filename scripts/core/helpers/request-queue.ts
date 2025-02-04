@@ -112,19 +112,16 @@ class RequestQueue {
             urlParams: req.params.params,
             abortSignal: req.params.abortSignal,
         })
-            .then(
-                (res) => {
-                    this.logTime(req, 'done');
-                    req.status = RequestStatus.DONE;
-                    req.resolve(res);
-                },
-                (reason) => {
-                    this.logTime(req, 'fail');
-                    console.error('error', reason, req);
-                    req.status = RequestStatus.FAILED;
-                    req.reject(reason);
-                },
-            )
+            .then((res) => {
+                this.logTime(req, 'done');
+                req.status = RequestStatus.DONE;
+                req.resolve(res);
+            }, (reason) => {
+                this.logTime(req, 'fail');
+                console.error('error', reason, req);
+                req.status = RequestStatus.FAILED;
+                req.reject(reason);
+            })
             .finally(() => {
                 // finished request, we can start next one
                 this.remove(req);
@@ -197,7 +194,11 @@ class Request {
     }
 
     isEqual(req: Request): boolean {
-        return req.id === this.id && req.provider === this.provider && req.priority === this.priority;
+        return (
+            req.id === this.id &&
+            req.provider === this.provider &&
+            req.priority === this.priority
+        );
     }
 }
 

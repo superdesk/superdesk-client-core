@@ -1,4 +1,5 @@
-angular.module('superdesk.core.api.allowed', []).service('allowed', AllowedService);
+angular.module('superdesk.core.api.allowed', [])
+    .service('allowed', AllowedService);
 
 AllowedService.$inject = ['lodash', 'api', '$q'];
 function AllowedService(_, api, $q) {
@@ -9,14 +10,15 @@ function AllowedService(_, api, $q) {
             return $q.when(values);
         }
 
-        return api.get('allowed_values').then((response) => {
-            values = {};
-            response._items.forEach((item) => {
-                values[item._id] = item.items;
-            });
+        return api.get('allowed_values')
+            .then((response) => {
+                values = {};
+                response._items.forEach((item) => {
+                    values[item._id] = item.items;
+                });
 
-            return values;
-        });
+                return values;
+            });
     }
 
     /**
@@ -26,7 +28,8 @@ function AllowedService(_, api, $q) {
      * @param {String} field
      * @return {Promise}
      */
-    this.get = (resource, field) => fetch().then(() => values[resource + '.' + field] || []);
+    this.get = (resource, field) =>
+        fetch().then(() => values[resource + '.' + field] || []);
 
     /**
      * Filter object keys using allowed values

@@ -1,3 +1,4 @@
+
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
 import {ICustomFieldType} from 'superdesk-api';

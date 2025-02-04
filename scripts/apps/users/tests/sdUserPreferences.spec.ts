@@ -1,5 +1,8 @@
+
 describe('sdUserPreferences directive', () => {
-    var fetchedPreferences, scope, $element; // the root DOM element the directive operates on
+    var fetchedPreferences,
+        scope,
+        $element; // the root DOM element the directive operates on
 
     var user = {_id: 1};
 
@@ -12,7 +15,9 @@ describe('sdUserPreferences directive', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    beforeEach(inject(($rootScope, $compile, $q, metadata, preferencesService, session, userList, desks) => {
+    beforeEach(inject((
+        $rootScope, $compile, $q, metadata, preferencesService, session, userList, desks,
+    ) => {
         var html = '<div sd-user-preferences data-user="user"></div>';
 
         // patch session service
@@ -73,21 +78,25 @@ describe('sdUserPreferences directive', () => {
     it('initializes the list of categories in scope', () => {
         scope.$digest();
 
-        expect(
-            angular.equals(scope.categories, [
+        expect(angular.equals(
+            scope.categories,
+            [
                 {name: 'Domestic Sport', qcode: 't', selected: false},
                 {name: 'Politics', qcode: 'p', selected: false},
-            ]),
-        ).toBe(true);
+            ],
+        )).toBe(true);
     });
 
-    it('initializes the list of default preferred categories in scope', () => {
-        scope.$digest();
-        expect(scope.defaultCategories).toEqual({x: true, y: true});
-    });
+    it('initializes the list of default preferred categories in scope',
+        () => {
+            scope.$digest();
+            expect(scope.defaultCategories).toEqual({x: true, y: true});
+        },
+    );
 
-    describe("scope's save() method", () => {
-        var modal, modalConfirm; // deferred modal confirmation
+    describe('scope\'s save() method', () => {
+        var modal,
+            modalConfirm; // deferred modal confirmation
 
         beforeEach(inject(($q, _modal_, preferencesService) => {
             var $newDiv;
@@ -105,7 +114,8 @@ describe('sdUserPreferences directive', () => {
         }));
 
         it('sends the preferred categories settings to server', inject((preferencesService) => {
-            var arg, callArgs;
+            var arg,
+                callArgs;
 
             scope.$digest();
 
@@ -128,64 +138,65 @@ describe('sdUserPreferences directive', () => {
             expect(arg.selected).toEqual({v: false, q: true});
         }));
 
-        it(
-            'it saves default preferred categories if none selected and ' + 'the user agrees',
-            inject((preferencesService) => {
-                var arg, callArgs;
+        it('it saves default preferred categories if none selected and ' +
+            'the user agrees', inject((preferencesService) => {
+            var arg,
+                callArgs;
 
-                scope.$digest();
+            scope.$digest();
 
-                scope.defaultCategories = {b: true, d: true};
+            scope.defaultCategories = {b: true, d: true};
 
-                // no categories have been selected by the user
-                scope.categories = [
-                    {qcode: 'a', selected: false},
-                    {qcode: 'b', selected: false},
-                    {qcode: 'c', selected: false},
-                    {qcode: 'd', selected: false},
-                ];
+            // no categories have been selected by the user
+            scope.categories = [
+                {qcode: 'a', selected: false},
+                {qcode: 'b', selected: false},
+                {qcode: 'c', selected: false},
+                {qcode: 'd', selected: false},
+            ];
 
-                scope.save();
-                modalConfirm.resolve(); // the user agrees
-                scope.$digest();
+            scope.save();
+            modalConfirm.resolve(); // the user agrees
+            scope.$digest();
 
-                // modal should have been displayed
-                expect(modal.confirm).toHaveBeenCalled();
+            // modal should have been displayed
+            expect(modal.confirm).toHaveBeenCalled();
 
-                // check if the API was called and with what data
-                callArgs = preferencesService.update.calls.allArgs();
-                expect(callArgs.length).toEqual(1);
-                callArgs = callArgs[0][0] || {}; // first arg of the first call
+            // check if the API was called and with what data
+            callArgs = preferencesService.update.calls.allArgs();
+            expect(callArgs.length).toEqual(1);
+            callArgs = callArgs[0][0] || {}; // first arg of the first call
 
-                arg = callArgs['categories:preferred'] || {};
-                expect(arg.selected).toEqual({a: false, b: true, c: false, d: true});
-            }),
-        );
+            arg = callArgs['categories:preferred'] || {};
+            expect(arg.selected).toEqual(
+                {a: false, b: true, c: false, d: true},
+            );
+        },
+        ));
 
-        it(
-            'does not save with default preferred categories if the user ' + 'does not confirm that',
-            inject((preferencesService) => {
-                scope.$digest();
-                scope.defaultCategories = {b: true, d: true};
+        it('does not save with default preferred categories if the user ' +
+            'does not confirm that', inject((preferencesService) => {
+            scope.$digest();
+            scope.defaultCategories = {b: true, d: true};
 
-                // no categories have been selected by the user
-                scope.categories = [
-                    {name: 'Advisories', qcode: 'v', selected: false},
-                    {name: 'Stockset', qcode: 'q', selected: false},
-                ];
+            // no categories have been selected by the user
+            scope.categories = [
+                {name: 'Advisories', qcode: 'v', selected: false},
+                {name: 'Stockset', qcode: 'q', selected: false},
+            ];
 
-                scope.save();
-                modalConfirm.reject(); // the user disagrees
-                scope.$digest();
+            scope.save();
+            modalConfirm.reject(); // the user disagrees
+            scope.$digest();
 
-                // modal should have been displayed
-                expect(modal.confirm).toHaveBeenCalled();
-                expect(preferencesService.update).not.toHaveBeenCalled();
-            }),
-        );
+            // modal should have been displayed
+            expect(modal.confirm).toHaveBeenCalled();
+            expect(preferencesService.update).not.toHaveBeenCalled();
+        },
+        ));
     });
 
-    describe("scope's checkAll() method", () => {
+    describe('scope\'s checkAll() method', () => {
         beforeEach(() => {
             scope.categories = [
                 {qcode: '1', selected: false},
@@ -209,7 +220,7 @@ describe('sdUserPreferences directive', () => {
         });
     });
 
-    describe("scope's checkNone() method", () => {
+    describe('scope\'s checkNone() method', () => {
         beforeEach(() => {
             scope.categories = [
                 {qcode: 'a', selected: true},
@@ -233,7 +244,7 @@ describe('sdUserPreferences directive', () => {
         });
     });
 
-    describe("scope's checkDefault() method", () => {
+    describe('scope\'s checkDefault() method', () => {
         beforeEach(() => {
             scope.categories = [
                 {qcode: 'a', selected: true},

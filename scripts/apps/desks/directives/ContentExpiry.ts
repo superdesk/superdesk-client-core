@@ -18,7 +18,7 @@ export function ContentExpiry() {
             expiryMinutes: '=',
             expiryContext: '@',
         },
-        link: function (scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
             let expiryfield = attrs.expiryfield;
 
             scope.contentExpiry = {
@@ -34,25 +34,21 @@ export function ContentExpiry() {
                 setContentExpiry(scope.item);
             });
 
-            scope.$watch(
-                'contentExpiry',
-                () => {
-                    if (!scope.item) {
-                        scope.item = {};
-                    }
+            scope.$watch('contentExpiry', () => {
+                if (!scope.item) {
+                    scope.item = {};
+                }
 
-                    scope.item[expiryfield] = getTotalExpiryMinutes(scope.contentExpiry);
-                    getActualExpiry();
-                },
-                true,
-            );
+                scope.item[expiryfield] = getTotalExpiryMinutes(scope.contentExpiry);
+                getActualExpiry();
+            }, true);
 
             function getExpiryDays(inputMin) {
                 return Math.floor(inputMin / (60 * 24));
             }
 
             function getExpiryHours(inputMin) {
-                return Math.floor((inputMin / 60) % 24);
+                return Math.floor(inputMin / 60 % 24);
             }
 
             function getExpiryMinutes(inputMin) {
@@ -76,19 +72,14 @@ export function ContentExpiry() {
              */
             function getActualExpiry() {
                 // if desk or stage or ingest content expiry then don't calculate.
-                if (
-                    scope.contentExpiry.expire &&
-                    (scope.contentExpiry.days > 0 || scope.contentExpiry.hours > 0 || scope.contentExpiry.minutes > 0)
-                ) {
+                if (scope.contentExpiry.expire && (
+                    scope.contentExpiry.days > 0 || scope.contentExpiry.hours > 0 ||
+                    scope.contentExpiry.minutes > 0)) {
                     scope.contentExpiry.actualExpiry = null;
                     return;
                 }
 
-                let days,
-                    hours,
-                    minutes,
-                    expiry = null,
-                    text = 'OFF';
+                let days, hours, minutes, expiry = null, text = 'OFF';
 
                 if (scope.expiryMinutes > 0) {
                     days = getExpiryDays(scope.expiryMinutes);
@@ -107,7 +98,7 @@ export function ContentExpiry() {
                 };
             }
 
-            const setContentExpiry = function (item) {
+            const setContentExpiry = function(item) {
                 scope.contentExpiry.header = scope.header;
                 scope.contentExpiry.expire = true;
                 scope.contentExpiry.days = 0;

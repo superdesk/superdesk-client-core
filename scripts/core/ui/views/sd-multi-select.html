@@ -1,24 +1,12 @@
 <div class="dropdown dropdown--dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
-    <button
-        class="dropdown__toggle"
-        dropdown__toggle
-        ng-disabled="disabled"
-        ng-if="!disabled"
-        aria-label="{{ 'Add new' | translate }}"
-    >
+
+    <button class="dropdown__toggle" dropdown__toggle ng-disabled="disabled" ng-if="!disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
 
     <ul class="dropdown__menu nested-menu pull-right">
         <li>
-            <div
-                sd-typeahead
-                items="listCopy"
-                term="selectedTerm"
-                search="searchTerms(term)"
-                select="selectItem(item)"
-                data-disabled="disabled"
-            >
+            <div sd-typeahead items="listCopy" term="selectedTerm" search="searchTerms(term)" select="selectItem(item)" data-disabled="disabled">
                 <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="activeList">
                     <li typeahead-item="t" ng-repeat="t in terms"><button>{{ :: t}}</button></li>
                 </ul>

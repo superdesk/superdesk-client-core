@@ -21,8 +21,8 @@ function importIframelyEmbedJs() {
 
 export function loadIframelyEmbedJs() {
     importIframelyEmbedJs().then(() => {
-        const iframely = (window.iframely = window.iframely || {});
-        const widgets = (iframely.widgets = iframely.widgets || {});
+        const iframely = window.iframely = window.iframely || {};
+        const widgets = iframely.widgets = iframely.widgets || {};
 
         if (widgets.load) {
             widgets.load();

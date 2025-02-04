@@ -20,7 +20,7 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 
         reader.onloadend = () => {
             try {
-                const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
+                const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
 
                 resolve(exif.iptcdata);
             } catch (error) {
@@ -35,12 +35,9 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 }
 
 function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticle): Promise<Partial<IArticle>> {
-    const meta: Partial<IPTCMetadata> = Object.assign(
-        {
-            'By-line': user.byline,
-        },
-        pickBy(metadata, isNotEmptyString),
-    );
+    const meta: Partial<IPTCMetadata> = Object.assign({
+        'By-line': user.byline,
+    }, pickBy(metadata, isNotEmptyString));
 
     const item = {
         byline: meta['By-line']?.toString() || user.byline,
@@ -51,25 +48,22 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticl
         creditline: meta.Credit?.toString(),
     };
 
-    return Object.values(extensions)
-        .filter(({activationResult}) => activationResult.contributions?.iptcMapping)
-        .reduce(
-            (accumulator, {activationResult}) =>
-                accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item, parent)),
-            Promise.resolve(item),
-        )
-        .then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
+    return Object.values(extensions).filter(({activationResult}) =>
+        activationResult.contributions?.iptcMapping,
+    ).reduce(
+        (accumulator, {activationResult}) =>
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item, parent)),
+        Promise.resolve(item),
+    ).then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
     let promise = Promise.resolve();
 
-    return Promise.all(
-        promiseCreators.map((promiseCreator) => {
-            promise = promise.then(promiseCreator);
-            return promise;
-        }),
-    );
+    return Promise.all(promiseCreators.map((promiseCreator) => {
+        promise = promise.then(promiseCreator);
+        return promise;
+    }));
 }
 
 UploadController.$inject = [
@@ -84,27 +78,33 @@ UploadController.$inject = [
     '$location',
     'modal',
 ];
-export function UploadController($scope, $q, upload, api, archiveService, session, desks, notify, $location, modal) {
+export function UploadController(
+    $scope,
+    $q,
+    upload,
+    api,
+    archiveService,
+    session,
+    desks,
+    notify,
+    $location,
+    modal,
+) {
     $scope.items = [];
     $scope.saving = false;
     $scope.failed = false;
     $scope.enableSave = false;
     $scope.currentUser = session.identity;
     $scope.uniqueUpload = $scope.locals && $scope.locals.data && $scope.locals.data.uniqueUpload === true;
-    $scope.maxUploads =
-        !$scope.uniqueUpload && $scope.locals && $scope.locals.data && $scope.locals.data.maxUploads
-            ? $scope.locals.data.maxUploads
-            : undefined;
+    $scope.maxUploads = !$scope.uniqueUpload && $scope.locals && $scope.locals.data &&
+        $scope.locals.data.maxUploads ? $scope.locals.data.maxUploads : undefined;
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
     $scope.parent = $scope.locals?.data?.parent || null;
-    $scope.deskSelectionAllowed =
-        !sdApi.navigation.isPersonalSpace() &&
-        $scope.locals &&
-        $scope.locals.data &&
-        $scope.locals.data.deskSelectionAllowed === true;
+    $scope.deskSelectionAllowed = !sdApi.navigation.isPersonalSpace() && $scope.locals &&
+        $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
 
     if ($scope.deskSelectionAllowed === true) {
         Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
@@ -176,8 +176,8 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         return $scope.save();
     };
 
-    var uploadFile = function (item) {
-        var handleError = function (reason) {
+    var uploadFile = function(item) {
+        var handleError = function(reason) {
             if (reason && reason.data && reason.data.code) {
                 notify.error(gettext('Upload Error:') + ' ' + reason.data.code);
             }
@@ -187,43 +187,37 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             return $q.reject(reason);
         };
 
-        return (
-            item.upload ||
-            api.archive.getUrl().then((url) => {
+        return item.upload || api.archive.getUrl()
+            .then((url) => {
                 item.upload = upload.start({
                     method: 'POST',
                     url: url,
                     data: {media: item.file},
                     headers: api.archive.getHeaders(),
                 });
-                item.upload.then(
-                    (response) => {
-                        if (response.data._issues) {
-                            return handleError(response);
-                        }
+                item.upload.then((response) => {
+                    if (response.data._issues) {
+                        return handleError(response);
+                    }
 
-                        item.progress = 100;
+                    item.progress = 100;
 
-                        item.model = response.data;
-                        return item;
-                    },
-                    handleError,
-                    (progress) => {
-                        // limit progress to 90% and set 100 only after request is done
-                        item.progress = Math.min(Math.round((progress.loaded / progress.total) * 100.0), 90);
-                    },
-                );
+                    item.model = response.data;
+                    return item;
+                }, handleError, (progress) => {
+                    // limit progress to 90% and set 100 only after request is done
+                    item.progress = Math.min(Math.round(progress.loaded / progress.total * 100.0), 90);
+                });
 
                 return item.upload;
-            })
-        );
+            });
     };
 
-    var checkFail = function () {
+    var checkFail = function() {
         $scope.failed = _.some($scope.items, {model: false});
     };
 
-    var initFile = function (file, meta, id) {
+    var initFile = function(file, meta, id) {
         var item = {
             file: file,
             meta: meta,
@@ -242,7 +236,7 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
         return item;
     };
 
-    $scope.addFiles = function (files: Array<File>) {
+    $scope.addFiles = function(files: Array<File>) {
         $scope.isDragging = false;
 
         if (!files.length) {
@@ -252,12 +246,12 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             notify.error(gettext('Only one file can be uploaded'));
             return false;
         }
-        if (!$scope.uniqueUpload && $scope.maxUploads && files.length + $scope.items.length > $scope.maxUploads) {
+        if (!$scope.uniqueUpload && $scope.maxUploads && (files.length + $scope.items.length) > $scope.maxUploads) {
             notify.error(gettext('Select at most {{maxUploads}} files to upload.', {maxUploads: $scope.maxUploads}));
             return false;
         }
 
-        let acceptedFiles: Array<{file: File; getThumbnail: (file: File) => Promise<string>}> = [];
+        let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
         let invalidFiles = [];
 
         const fileDimensionsValid = (file: File) => {
@@ -267,12 +261,9 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                         let img = document.createElement('img');
 
                         img.src = dataUrl;
-                        img.onload = function () {
-                            if (
-                                img.width &&
-                                img.width >= appConfig.pictures.minWidth &&
-                                img.height > appConfig.pictures.minHeight
-                            ) {
+                        img.onload = function() {
+                            if (img.width && img.width >= appConfig.pictures.minWidth
+                                && img.height > appConfig.pictures.minHeight) {
                                 return resolve({valid: true, name: file.name});
                             } else {
                                 return resolve({
@@ -291,43 +282,41 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
             }
         };
 
-        return Promise.all(
-            _.map(files, (file): any => {
-                if (file.type.startsWith('image')) {
-                    if (!$scope.allowPicture) {
-                        return Promise.resolve({error: {isAllowedFileType: false}});
-                    }
-                    return fileDimensionsValid(file).then((data: {[key: string]: string}) => {
-                        if (data.valid) {
-                            return {
-                                file: file,
-                                getThumbnail: () => getDataUrl(file).then((uri) => `<img src="${uri}" />`),
-                            };
-                        } else {
-                            return {error: data};
-                        }
-                    });
-                } else if (file.type.startsWith('video')) {
-                    if (!$scope.allowVideo) {
-                        return Promise.resolve({error: {isAllowedFileType: false}});
-                    }
-                    return Promise.resolve({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
-                    });
-                } else if (file.type.startsWith('audio')) {
-                    if (!$scope.allowAudio) {
-                        return Promise.resolve({error: {isAllowedFileType: false}});
-                    }
-                    return Promise.resolve({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
-                    });
-                } else {
+        return Promise.all(_.map(files, (file): any => {
+            if (file.type.startsWith('image')) {
+                if (!$scope.allowPicture) {
                     return Promise.resolve({error: {isAllowedFileType: false}});
                 }
-            }),
-        ).then((result) => {
+                return fileDimensionsValid(file).then((data: {[key: string]: string}) => {
+                    if (data.valid) {
+                        return {
+                            file: file,
+                            getThumbnail: () => getDataUrl(file).then((uri) => `<img src="${uri}" />`),
+                        };
+                    } else {
+                        return {error: data};
+                    }
+                });
+            } else if (file.type.startsWith('video')) {
+                if (!$scope.allowVideo) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
+                });
+            } else if (file.type.startsWith('audio')) {
+                if (!$scope.allowAudio) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
+                });
+            } else {
+                return Promise.resolve({error: {isAllowedFileType: false}});
+            }
+        })).then((result) => {
             let uploadOfDisallowedFileTypesAttempted: boolean = false;
 
             result.forEach((file) => {
@@ -358,9 +347,10 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
                     allowedTypes.push(gettext('audio'));
                 }
 
-                const message = gettext('Only the following files are allowed: {{fileTypes}}', {
-                    fileTypes: allowedTypes.join(', '),
-                });
+                const message = gettext(
+                    'Only the following files are allowed: {{fileTypes}}',
+                    {fileTypes: allowedTypes.join(', ')},
+                );
 
                 notify.error(message);
             }
@@ -369,70 +359,63 @@ export function UploadController($scope, $q, upload, api, archiveService, sessio
 
             return acceptedFiles.length < 1
                 ? Promise.resolve()
-                : Promise.all(
-                      acceptedFiles.map(({file, getThumbnail}) =>
-                          getExifData(file)
-                              .then(
-                                  (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
-                                  () => ({}), // proceed with upload on exif parsing error
-                              )
-                              .then((meta) => {
-                                  const item = initFile(file, meta, getPseudoId());
+                : Promise.all(acceptedFiles.map(
+                    ({file, getThumbnail}) =>
+                        getExifData(file)
+                            .then(
+                                (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
+                                () => ({}), // proceed with upload on exif parsing error
+                            )
+                            .then((meta) => {
+                                const item = initFile(file, meta, getPseudoId());
 
-                                  return getThumbnail(file).then((htmlString) => (item.thumbnailHtml = htmlString));
-                              }),
-                      ),
-                  ).then(() => {
-                      $scope.$applyAsync(() => {
-                          $scope.imagesMetadata = $scope.items.map((item) => item.meta);
-                      });
-                  });
+                                return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
+                            }),
+                )).then(() => {
+                    $scope.$applyAsync(() => {
+                        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                    });
+                });
         });
     };
 
-    $scope.upload = function () {
+    $scope.upload = function() {
         if (isEmpty($scope.items)) {
             return Promise.resolve();
         }
 
         // upload items in sequence, and resolve when all are done
-        return serializePromises(
-            $scope.items.map((item) => {
-                if (!item.model && !item.progress) {
-                    item.upload = null;
-                    return () => uploadFile(item);
-                }
+        return serializePromises($scope.items.map((item) => {
+            if (!item.model && !item.progress) {
+                item.upload = null;
+                return () => uploadFile(item);
+            }
 
-                return () => Promise.resolve(item);
-            }),
-        );
+            return () => Promise.resolve(item);
+        }));
     };
 
-    $scope.save = function () {
+    $scope.save = function() {
         $scope.saving = true;
-        return $scope
-            .upload()
-            .then(() => {
-                $q.all(
-                    _.map($scope.items, (item) => {
-                        archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
-                        return api.archive.update(item.model, item.meta);
-                    }),
-                ).then((results) => {
-                    $scope.resolve(results);
-                });
-            })
+        return $scope.upload().then(() => {
+            $q.all(_.map($scope.items, (item) => {
+                archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
+                return api.archive.update(item.model, item.meta);
+            })).then((results) => {
+                $scope.resolve(results);
+            });
+        })
             .finally(() => {
                 $scope.saving = false;
                 checkFail();
             });
     };
 
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $scope.reject();
     };
 
-    $scope.tryAgain = function () {
+    $scope.tryAgain = function() {
         $scope.failed = null;
         $scope.upload();
     };

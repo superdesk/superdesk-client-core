@@ -1,3 +1,4 @@
+
 class LinkFunction {
     scope: any;
     elem: any;

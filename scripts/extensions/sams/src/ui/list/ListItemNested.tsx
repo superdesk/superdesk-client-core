@@ -10,19 +10,25 @@ interface IProps {
 
 export class ListItemNested extends React.PureComponent<IProps> {
     render() {
-        const containerClass = classNames('sd-list-item-nested', {
-            'sd-list-item-nested--collapsed': this.props.collapsed,
-            'sd-list-item-nested--expanded': this.props.expanded,
-        });
+        const containerClass = classNames(
+            'sd-list-item-nested',
+            {
+                'sd-list-item-nested--collapsed': this.props.collapsed,
+                'sd-list-item-nested--expanded': this.props.expanded,
+            },
+        );
 
-        const childClass = classNames('sd-list-item-nested__childs', {
-            [`sd-shadow--z${this.props.shadow}`]: this.props.shadow,
-        });
+        const childClass = classNames(
+            'sd-list-item-nested__childs',
+            {[`sd-shadow--z${this.props.shadow}`]: this.props.shadow},
+        );
 
         return (
             <div className={containerClass}>
                 {this.props.parentItem}
-                <div className={childClass}>{this.props.children}</div>
+                <div className={childClass}>
+                    {this.props.children}
+                </div>
             </div>
         );
     }

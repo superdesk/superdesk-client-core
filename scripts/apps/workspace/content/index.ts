@@ -16,14 +16,13 @@ import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/
  * @description Superdesk content.
  */
 
-angular
-    .module('superdesk.apps.workspace.content', [
-        'superdesk.core.api',
-        'superdesk.core.menu',
-        'superdesk.apps.archive',
-        'superdesk.apps.templates',
-        'superdesk.apps.packaging',
-    ])
+angular.module('superdesk.apps.workspace.content', [
+    'superdesk.core.api',
+    'superdesk.core.menu',
+    'superdesk.apps.archive',
+    'superdesk.apps.templates',
+    'superdesk.apps.packaging',
+])
     .service('content', ContentService)
 
     .directive('sdItemProfile', directive.ItemProfileDirective)
@@ -38,10 +37,9 @@ angular
     )
     .controller('ContentProfilesController', ContentProfilesController)
 
-    .config([
-        'superdeskProvider',
-        function (superdesk) {
-            superdesk.activity('/settings/content-profiles', {
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('/settings/content-profiles', {
                 label: gettext('Content Profiles'),
                 controller: ContentProfilesController,
                 controllerAs: 'ctrl',
@@ -51,11 +49,7 @@ angular
                 priority: 100,
                 privileges: {content_type: 1},
             });
-        },
-    ])
-    .run([
-        'keyboardManager',
-        function (keyboardManager) {
-            keyboardManager.register('General', 'ctrl + m', gettext('Create new item'));
-        },
-    ]);
+    }])
+    .run(['keyboardManager', function(keyboardManager) {
+        keyboardManager.register('General', 'ctrl + m', gettext('Create new item'));
+    }]);

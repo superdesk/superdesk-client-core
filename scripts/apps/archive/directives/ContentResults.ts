@@ -11,7 +11,10 @@ ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags',
 export function ContentResults($location, preferencesService, packages: IPackagesService, tags, asset, search) {
     var update = {
         'archive:view': {
-            allowed: ['mgrid', 'compact'],
+            allowed: [
+                'mgrid',
+                'compact',
+            ],
             category: 'archive',
             view: 'mgrid',
             default: 'mgrid',
@@ -23,7 +26,7 @@ export function ContentResults($location, preferencesService, packages: IPackage
     return {
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
-        link: function (scope, elem, attr, controller) {
+        link: function(scope, elem, attr, controller) {
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
 
@@ -44,7 +47,7 @@ export function ContentResults($location, preferencesService, packages: IPackage
                 $location.search('_id', item ? item._id : null);
             };
 
-            scope.openSingleItem = function (packageItem) {
+            scope.openSingleItem = function(packageItem) {
                 packages.fetchItem(packageItem).then((item) => {
                     scope.selected.view = item;
                 });
@@ -76,7 +79,7 @@ export function ContentResults($location, preferencesService, packages: IPackage
             /**
              * Generates Identifier to be used by track by expression.
              */
-            scope.generateTrackByIdentifier = function (item) {
+            scope.generateTrackByIdentifier = function(item) {
                 return search.generateTrackByIdentifier(item);
             };
         },

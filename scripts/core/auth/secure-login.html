@@ -1,7 +1,8 @@
 <div class="login-screen">
     <div class="login-form-container">
+
         <div class="logo-handler">
-            <img src="images/superdesk-logo.svg" width="290" alt="Superdesk Logo" />
+            <img src="images/superdesk-logo.svg" width="290" alt="Superdesk Logo">
         </div>
 
         <div class="form-handler">
@@ -16,8 +17,8 @@
                     <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--large btn--sd-green">
                         {{ 'Secure Log In' | translate }}
                         <div class="spinner" ng-show="isLoading">
-                            <div class="dot1"></div>
-                            <div class="dot2"></div>
+                          <div class="dot1"></div>
+                          <div class="dot2"></div>
                         </div>
                     </button>
                 </fieldset>
@@ -26,9 +27,7 @@
             <div class="error-handler" ng-switch on="loginError">
                 <p class="error" ng-switch-when="401" translate>Oops! Authentication has been denied.</p>
                 <p class="error" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
-                <p class="error" ng-show="loginError" ng-switch-default translate>
-                    Sorry, but can't reach the server now.<br />Please try again later.
-                </p>
+                <p class="error" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
 
                 <div class="network-error red" ng-show="serverStatus == 1">
                     <span class="icon-unplug"></span>
@@ -39,7 +38,9 @@
                     <span class="icon-unplug"></span>
                     <p translate>Trying to reconnect...<br />Please wait.</p>
                 </div>
+
             </div>
         </div>
+
     </div>
 </div>

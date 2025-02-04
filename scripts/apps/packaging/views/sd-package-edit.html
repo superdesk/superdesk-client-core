@@ -11,8 +11,7 @@
                 ng-model="item.headline"
                 ng-change="autosave(item)"
                 ng-if="_editable"
-                ng-trim="false"
-            ></textarea>
+                ng-trim="false"></textarea>
             <div class="title" ng-if="!_editable">{{item.headline}}</div>
         </div>
     </div>
@@ -22,3 +21,5 @@
     <div sd-package-items-edit ng-model="item.groups" ng-if="_editable"></div>
     <div sd-package data-item="item" class="composite-preview" ng-if="!_editable"></div>
 </div>
+
+

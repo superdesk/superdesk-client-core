@@ -1,3 +1,4 @@
+
 function getCssNameForExtension(originalName, extensionName) {
     return extensionName + '__' + originalName;
 }

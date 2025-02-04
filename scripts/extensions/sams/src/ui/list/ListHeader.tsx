@@ -9,11 +9,18 @@ interface IProps {
 
 export class ListHeader extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('sd-list-header', {'sd-list-header--m-top': this.props.marginTop});
+        const classes = classNames(
+            'sd-list-header',
+            {'sd-list-header--m-top': this.props.marginTop},
+        );
 
         return (
             <div className={classes}>
-                {!this.props.title ? null : <span className="sd-list-header__name">{this.props.title}</span>}
+                {!this.props.title ? null : (
+                    <span className="sd-list-header__name">
+                        {this.props.title}
+                    </span>
+                )}
                 {this.props.children}
             </div>
         );

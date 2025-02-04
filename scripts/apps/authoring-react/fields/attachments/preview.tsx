@@ -21,8 +21,9 @@ export class Preview extends React.PureComponent<IProps> {
 
         const ids = (this.props.value ?? []).map(({id}) => id);
 
-        const AttachmentsEditor =
-            CC.AuthoringAttachmentsWidget != null ? CC.AuthoringAttachmentsWidget : AttachmentsWidgetComponent;
+        const AttachmentsEditor = CC.AuthoringAttachmentsWidget != null ?
+            CC.AuthoringAttachmentsWidget :
+            AttachmentsWidgetComponent;
 
         return (
             <WithLiveResources resources={[{resource: 'attachments', ids: ids}]}>

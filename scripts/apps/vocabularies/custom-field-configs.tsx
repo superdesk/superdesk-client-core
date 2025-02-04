@@ -4,7 +4,7 @@ import {getField} from 'apps/fields';
 import {CommonFieldConfiguration} from 'apps/authoring-react/fields/common-field-configuration';
 import {SpacerBlock} from 'core/ui/components/Spacer';
 
-export class CustomFieldConfigs extends React.PureComponent<{vocabulary: IVocabulary; onChange(config): void}> {
+export class CustomFieldConfigs extends React.PureComponent<{vocabulary: IVocabulary, onChange(config): void}> {
     render() {
         const field = getField(this.props.vocabulary.custom_field_type);
 

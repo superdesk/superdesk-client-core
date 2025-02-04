@@ -25,19 +25,23 @@ export class ModalSimple extends React.PureComponent<IProps> {
                 footerTemplate={
                     this.props.footerButtons != null && (
                         <ButtonGroup align="end">
-                            {this.props.footerButtons.map(({label, onClick, primary}) => (
-                                <Button
-                                    key={label}
-                                    text={label}
-                                    onClick={onClick}
-                                    type={primary === true ? 'primary' : 'default'}
-                                />
-                            ))}
+                            {
+                                this.props.footerButtons.map(({label, onClick, primary}) => (
+                                    <Button
+                                        key={label}
+                                        text={label}
+                                        onClick={onClick}
+                                        type={primary === true ? 'primary' : 'default'}
+                                    />
+                                ))
+                            }
                         </ButtonGroup>
                     )
                 }
             >
-                <div>{this.props.children}</div>
+                <div>
+                    {this.props.children}
+                </div>
             </Modal>
         );
     }

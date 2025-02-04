@@ -19,9 +19,11 @@ export class ManualSearch extends React.PureComponent<IProps> {
 
     render(): React.ReactNode {
         return (
-            <div className="sd-display--flex sd-flex--grow sd-flex--items-center sd-flex--align-self-stretch">
+            <div
+                className="sd-display--flex sd-flex--grow sd-flex--items-center sd-flex--align-self-stretch"
+            >
                 <input
-                    ref={(e) => (this.inputRef = e)}
+                    ref={(e) => this.inputRef = e}
                     onKeyUp={(e) => {
                         if (e.key === 'Enter') {
                             this.props.onSearch();

@@ -14,7 +14,7 @@ interface IFeedingServiceField {
     readonly?: boolean;
     placeholder?: string;
     default_value?: string;
-    errors?: {[key: number]: any};
+    errors?: { [key: number]: any };
     url?: string;
 }
 
@@ -48,7 +48,8 @@ interface IProvider extends IBaseRestApiResponse {
     url_id?: string;
 }
 
-IngestSourcesContent.$inject = ['ingestSources', 'api', '$location', 'modal', '$filter', 'privileges'];
+IngestSourcesContent.$inject = ['ingestSources', 'api', '$location',
+    'modal', '$filter', 'privileges'];
 
 /**
  * @ngdoc directive
@@ -66,12 +67,15 @@ IngestSourcesContent.$inject = ['ingestSources', 'api', '$location', 'modal', '$
  *
  * @description Handles the management for Ingest Sources.
  */
-export function IngestSourcesContent(ingestSources, api, $location, modal, $filter, privileges) {
+export function IngestSourcesContent(ingestSources, api, $location,
+    modal, $filter, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
-        link: function ($scope) {
-            $scope.waitForDirectiveReady = function () {
-                return Promise.all([ingestSources.fetchAllFeedingServicesAllowed()]);
+        link: function($scope) {
+            $scope.waitForDirectiveReady = function() {
+                return Promise.all([
+                    ingestSources.fetchAllFeedingServicesAllowed(),
+                ]);
             };
 
             $scope.getErrorMessage = (error) => {
@@ -126,9 +130,8 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
 
                 $scope.minutes = [0, 1, 2, 3, 4, 5, 8, 10, 15, 30, 45];
                 $scope.seconds = [0, 5, 10, 15, 30, 45];
-                $scope.hours = [
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                ];
+                $scope.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                    13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = appConfig.ingest_expiry_minutes;
 
                 $scope.statusFilters = [
@@ -138,12 +141,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 ];
 
                 $scope.activeStatusFilter = $scope.statusFilters[0];
-                $scope.filterIngestSources = function (id) {
+                $scope.filterIngestSources = function(id) {
                     $scope.activeStatusFilter = $scope.statusFilters.find((item) => item.id === id);
                     fetchProviders();
                 };
 
-                $scope.search = function (query) {
+                $scope.search = function(query) {
                     if (query) {
                         $scope.searchPage = 1;
                     }
@@ -176,12 +179,13 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                     }
                     const searchTerm = $scope.searchQuery;
 
-                    return api.ingestProviders.query(criteria).then((result) => {
-                        if ($scope.searchQuery === searchTerm) {
-                            $scope.providers = result;
-                            $scope.searchPage = null;
-                        }
-                    });
+                    return api.ingestProviders.query(criteria)
+                        .then((result) => {
+                            if ($scope.searchQuery === searchTerm) {
+                                $scope.providers = result;
+                                $scope.searchPage = null;
+                            }
+                        });
                 }
 
                 function openProviderModal() {
@@ -209,14 +213,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                     openProviderModal();
                 });
 
-                api('rule_sets')
-                    .query({max_results: 200})
+                api('rule_sets').query({max_results: 200})
                     .then((result) => {
                         $scope.rulesets = $filter('sortByName')(result._items);
                     });
 
-                api('routing_schemes')
-                    .query({max_results: 200})
+                api('routing_schemes').query({max_results: 200})
                     .then((result) => {
                         $scope.routingScheme = $filter('sortByName')(result._items);
                     });
@@ -227,13 +229,13 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 });
 
                 /**
-                 * Returns the result of evaluation of a given expression. Identifiers enclosed in {}
-                 * are replaced with the values of corresponding fields.
-                 *
-                 * @method evalExpression
-                 * @param {String} expression
-                 * @return {Boolean}
-                 */
+                * Returns the result of evaluation of a given expression. Identifiers enclosed in {}
+                * are replaced with the values of corresponding fields.
+                *
+                * @method evalExpression
+                * @param {String} expression
+                * @return {Boolean}
+                */
                 function evalExpression(
                     expression,
                     feedingService,
@@ -252,12 +254,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 }
 
                 /**
-                 * Returns true if the feeding service configuration field was required
-                 *
-                 * @method isConfigFieldRequired
-                 * @param {Object} field
-                 * @return {Boolean}
-                 */
+                * Returns true if the feeding service configuration field was required
+                *
+                * @method isConfigFieldRequired
+                * @param {Object} field
+                * @return {Boolean}
+                */
                 $scope.isConfigFieldRequired = (
                     field,
                     feedingService = $scope.currentFeedingService,
@@ -273,12 +275,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Returns true if the feeding service configuration field was visible
-                 *
-                 * @method isConfigFieldVisible
-                 * @param {Object} field
-                 * @return {Boolean}
-                 */
+                * Returns true if the feeding service configuration field was visible
+                *
+                * @method isConfigFieldVisible
+                * @param {Object} field
+                * @return {Boolean}
+                */
                 $scope.isConfigFieldVisible = (
                     field,
                     feedingService = $scope.currentFeedingService,
@@ -299,9 +301,8 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                         return false;
                     }
 
-                    const urlRequestFields = $scope.currentFeedingService.fields.filter(
-                        (field) => field.type === 'url_request',
-                    );
+                    const urlRequestFields = $scope.currentFeedingService.fields
+                        .filter((field) => field.type === 'url_request');
 
                     const newItemBeingCreated = $scope?.provider?._id == null;
 
@@ -309,12 +310,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Returns the configuration field HTML identifier
-                 *
-                 * @method getConfigFieldId
-                 * @param {String} fieldId
-                 * @return {String}
-                 */
+                * Returns the configuration field HTML identifier
+                *
+                * @method getConfigFieldId
+                * @param {String} fieldId
+                * @return {String}
+                */
                 $scope.getConfigFieldId = (fieldId) => {
                     if (!$scope.provider.feeding_service) {
                         return null;
@@ -323,14 +324,13 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Fetches the list of errors for the current feeding service
-                 *
-                 * @method fetchSourceErrors
-                 */
-                $scope.fetchSourceErrors = function () {
+                * Fetches the list of errors for the current feeding service
+                *
+                * @method fetchSourceErrors
+                */
+                $scope.fetchSourceErrors = function() {
                     if ($scope.provider && $scope.provider.feeding_service) {
-                        return api('io_errors')
-                            .query({source_type: $scope.provider.feeding_service})
+                        return api('io_errors').query({source_type: $scope.provider.feeding_service})
                             .then((result) => {
                                 $scope.provider.source_errors = result._items[0].source_errors;
                                 $scope.provider.all_errors = result._items[0].all_errors;
@@ -339,17 +339,15 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Removed the given ingest provider
-                 *
-                 * @method remove
-                 * @param {Object} provider
-                 */
-                $scope.remove = function (provider) {
-                    modal
-                        .confirm(gettext('Are you sure you want to delete Ingest Source?'))
-                        .then(function removeIngestProviderChannel() {
-                            api.ingestProviders
-                                .remove(provider)
+                * Removed the given ingest provider
+                *
+                * @method remove
+                * @param {Object} provider
+                */
+                $scope.remove = function(provider) {
+                    modal.confirm(gettext('Are you sure you want to delete Ingest Source?')).then(
+                        function removeIngestProviderChannel() {
+                            api.ingestProviders.remove(provider)
                                 .then(
                                     () => {
                                         notify.success(gettext('Ingest Source deleted.'));
@@ -363,15 +361,15 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                                     },
                                 )
                                 .then(fetchProviders);
-                        });
+                        },
+                    );
                 };
 
                 function initTupleFields() {
                     $scope.fieldAliases = {};
                     $scope.fieldsNotSelected = {};
-                    $scope.currentFeedingService = $scope.provider
-                        ? _.find($scope.feedingServices, {feeding_service: $scope.provider.feeding_service})
-                        : null;
+                    $scope.currentFeedingService = $scope.provider ? _.find($scope.feedingServices,
+                        {feeding_service: $scope.provider.feeding_service}) : null;
 
                     if (!$scope.currentFeedingService) {
                         return;
@@ -383,8 +381,8 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                         }
 
                         if (field.type === 'mapping') {
-                            let aliases =
-                                (angular.isDefined($scope.provider.config) && $scope.provider.config[field.id]) || [];
+                            let aliases = angular.isDefined($scope.provider.config)
+                                && $scope.provider.config[field.id] || [];
 
                             let aliasObj = {};
 
@@ -394,7 +392,8 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
 
                             $scope.fieldAliases[field.id] = [];
                             Object.keys(aliasObj).forEach((fieldName) => {
-                                $scope.fieldAliases[field.id].push({fieldName: fieldName, alias: aliasObj[fieldName]});
+                                $scope.fieldAliases[field.id].push(
+                                    {fieldName: fieldName, alias: aliasObj[fieldName]});
                             });
 
                             $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
@@ -411,32 +410,31 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                     });
                 }
 
-                $scope.edit = function (provider) {
-                    // also gets called when creating a new provider
+                $scope.edit = function(provider) { // also gets called when creating a new provider
                     $scope.provider = cloneDeep(provider || {});
 
-                    $scope.provider.update_schedule =
-                        $scope.provider.update_schedule || appConfig.ingest.DEFAULT_SCHEDULE;
+                    $scope.provider.update_schedule = $scope.provider.update_schedule
+                        || appConfig.ingest.DEFAULT_SCHEDULE;
                     $scope.provider.idle_time = $scope.provider.idle_time || appConfig.ingest.DEFAULT_IDLE_TIME;
 
                     initTupleFields();
                 };
 
-                $scope.cancel = function () {
+                $scope.cancel = function() {
                     $scope.provider = null;
                     $scope.error = null;
                 };
 
-                $scope.setConfig = function (provider) {
+                $scope.setConfig = function(provider) {
                     $scope.provider.config = provider.config;
                 };
 
                 /**
-                 * Appends a new (empty) item to the list of field aliases.
-                 *
-                 * @method addFieldAlias
-                 */
-                $scope.addFieldAlias = function (fieldId) {
+                * Appends a new (empty) item to the list of field aliases.
+                *
+                * @method addFieldAlias
+                */
+                $scope.addFieldAlias = function(fieldId) {
                     if (!$scope.fieldAliases[fieldId]) {
                         $scope.fieldAliases[fieldId] = [];
                     }
@@ -444,13 +442,13 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Removes a field alias from the list of field aliases at the
-                 * specified index.
-                 *
-                 * @method removeFieldAlias
-                 * @param {Number} itemIdx - index of the item to remove
-                 */
-                $scope.removeFieldAlias = function (fieldId, itemIdx) {
+                * Removes a field alias from the list of field aliases at the
+                * specified index.
+                *
+                * @method removeFieldAlias
+                * @param {Number} itemIdx - index of the item to remove
+                */
+                $scope.removeFieldAlias = function(fieldId, itemIdx) {
                     var removed = $scope.fieldAliases[fieldId].splice(itemIdx, 1);
 
                     if (removed[0].fieldName) {
@@ -459,12 +457,12 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Updates the list of content field names not selected in any
-                 * of the dropdown menus.
-                 *
-                 * @method fieldSelectionChanged
-                 */
-                $scope.fieldSelectionChanged = function (field) {
+                * Updates the list of content field names not selected in any
+                * of the dropdown menus.
+                *
+                * @method fieldSelectionChanged
+                */
+                $scope.fieldSelectionChanged = function(field) {
                     var selectedFields = {};
 
                     $scope.fieldAliases[field.id].forEach((item) => {
@@ -479,19 +477,19 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                 };
 
                 /**
-                 * Calculates a list of content field names that can be used as
-                 * options in a dropdown menu.
-                 *
-                 * The list is comprised of all field names that are currently
-                 * not selected in any of the other dropdown menus and
-                 * of a field name that should be selected in the current
-                 * dropdown menu (if any).
-                 *
-                 * @method availableFieldOptions
-                 * @param {String} [selectedName] - currently selected field
-                 * @return {String[]} list of field names
-                 */
-                $scope.availableFieldOptions = function (fieldId, selectedName) {
+                * Calculates a list of content field names that can be used as
+                * options in a dropdown menu.
+                *
+                * The list is comprised of all field names that are currently
+                * not selected in any of the other dropdown menus and
+                * of a field name that should be selected in the current
+                * dropdown menu (if any).
+                *
+                * @method availableFieldOptions
+                * @param {String} [selectedName] - currently selected field
+                * @return {String[]} list of field names
+                */
+                $scope.availableFieldOptions = function(fieldId, selectedName) {
                     if (!(fieldId in $scope.fieldsNotSelected)) {
                         return [];
                     }
@@ -509,7 +507,7 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                  *
                  * @method save
                  */
-                $scope.save = function () {
+                $scope.save = function() {
                     _.forEach($scope.currentFeedingService.fields, (field) => {
                         if (field.type !== 'mapping') {
                             return;
@@ -539,71 +537,61 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                     $scope.loading = true;
 
                     const isItemBeingCreated: boolean = originalProvider == null;
-                    const urlRequestFields = $scope.currentFeedingService.fields.filter(
-                        (field) => field.type === 'url_request',
-                    );
+                    const urlRequestFields = $scope.currentFeedingService.fields
+                        .filter((field) => field.type === 'url_request');
 
                     if (isItemBeingCreated && urlRequestFields.length > 0) {
                         // See `shouldSkipConfigTest`
                         $scope.provider.skip_config_test = true;
                     }
 
-                    api.ingestProviders
-                        .save(originalProvider || {}, $scope.provider)
-                        .then(
-                            (provider) => {
-                                const authActions = urlRequestFields
-                                    .filter((field) =>
-                                        $scope.isConfigFieldVisible(field, $scope.currentFeedingService, provider),
-                                    )
-                                    .map((field) => ({
-                                        label: field.label,
-                                        onClick: () => {
-                                            $scope.doUrlRequest(provider, field);
-                                        },
-                                    }));
+                    api.ingestProviders.save(originalProvider || {}, $scope.provider)
+                        .then((provider) => {
+                            const authActions = urlRequestFields
+                                .filter((field) => $scope.isConfigFieldVisible(
+                                    field,
+                                    $scope.currentFeedingService,
+                                    provider,
+                                ))
+                                .map((field) => ({
+                                    label: field.label,
+                                    onClick: () => {
+                                        $scope.doUrlRequest(provider, field);
+                                    },
+                                }));
 
-                                notify.success(gettext('Provider saved!'));
-                                $scope.cancel();
-                                $scope.error = null;
-                                fetchProviders();
+                            notify.success(gettext('Provider saved!'));
+                            $scope.cancel();
+                            $scope.error = null;
+                            fetchProviders();
 
-                                if (isItemBeingCreated && urlRequestFields.length > 0 && authActions.length > 0) {
-                                    authenticateIngestProvider(authActions);
-                                }
-                            },
-                            (error) => {
-                                $scope.error = error.data;
-                            },
-                        )
+                            if (isItemBeingCreated && urlRequestFields.length > 0 && authActions.length > 0) {
+                                authenticateIngestProvider(authActions);
+                            }
+                        }, (error) => {
+                            $scope.error = error.data;
+                        })
                         .finally(() => {
                             $scope.loading = null;
                         });
                 };
 
-                $scope.gotoIngest = function (provider) {
+                $scope.gotoIngest = function(provider) {
                     const contentTypes = provider.content_types;
-                    const length =
-                        provider.content_types.includes('preformatted') ||
-                        (contentTypes.includes('planning') && contentTypes.includes('event'))
-                            ? 2
-                            : 1;
+                    const length = provider.content_types.includes('preformatted') || (
+                        contentTypes.includes('planning') && contentTypes.includes('event')) ? 2 : 1;
 
-                    if (
-                        contentTypes.length === length &&
-                        (contentTypes.includes('event') || contentTypes.includes('planning'))
-                    ) {
+                    if (contentTypes.length === length && (
+                        contentTypes.includes('event') || contentTypes.includes('planning'))) {
                         const searchParams = {
                             page: 1,
                             noCalendarAssigned: false,
                             calendars: null,
                             advancedSearch: {
-                                source: [
-                                    {
-                                        id: provider._id,
-                                        name: provider.name,
-                                    },
-                                ],
+                                source: [{
+                                    id: provider._id,
+                                    name: provider.name,
+                                }],
                             },
                             spikeState: 'draft',
                             fulltext: '',
@@ -626,7 +614,9 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                             calendar: 'ALL_CALENDARS',
                         });
                     } else {
-                        $location.path('/search').search({repo: 'ingest', ingest_provider: provider._id});
+                        $location.path('/search').search(
+                            {repo: 'ingest', ingest_provider: provider._id},
+                        );
                     }
                 };
 
@@ -635,7 +625,7 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                  *
                  * @param {string} fileType
                  */
-                $scope.addOrRemoveFileType = function (fileType, editForm) {
+                $scope.addOrRemoveFileType = function(fileType, editForm) {
                     editForm.$setDirty();
                     if (!$scope.provider.content_types) {
                         $scope.provider.content_types = [];
@@ -656,18 +646,15 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                  * @param {string} fileType
                  * @return boolean
                  */
-                $scope.hasFileType = function (fileType) {
-                    return (
-                        $scope.provider &&
-                        $scope.provider.content_types &&
-                        $scope.provider.content_types.indexOf(fileType) > -1
-                    );
+                $scope.hasFileType = function(fileType) {
+                    return $scope.provider && $scope.provider.content_types &&
+                        $scope.provider.content_types.indexOf(fileType) > -1;
                 };
 
                 /**
                  * Initializes the configuration for the selected feeding service.
                  */
-                $scope.initProviderConfig = function () {
+                $scope.initProviderConfig = function() {
                     var service: any = getCurrentService();
 
                     if (service && service.config) {
@@ -682,15 +669,15 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                     $scope.feedParsers = angular.copy($scope.allFeedParsers);
 
                     if ($scope.currentFeedingService) {
-                        if (
-                            $scope.currentFeedingService.parser_restricted_values &&
-                            $scope.currentFeedingService.parser_restricted_values.length
-                        ) {
+                        if ($scope.currentFeedingService.parser_restricted_values &&
+                            $scope.currentFeedingService.parser_restricted_values.length) {
                             if ($scope.currentFeedingService.parser_restricted_values.length === 1) {
-                                $scope.provider.feed_parser = $scope.currentFeedingService.parser_restricted_values[0];
+                                $scope.provider.feed_parser =
+                                    $scope.currentFeedingService.parser_restricted_values[0];
                             }
                             $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
-                                $scope.currentFeedingService.parser_restricted_values.includes(feedParser.feed_parser),
+                                $scope.currentFeedingService.parser_restricted_values.includes(
+                                    feedParser.feed_parser),
                             );
                         } else if ($scope.currentFeedingService.parser_restricted_values === null) {
                             $scope.feedParsers = [];
@@ -703,7 +690,7 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                  * for the selected feeding service.
                  * @returns {string}
                  */
-                $scope.getConfigTemplateUrl = function () {
+                $scope.getConfigTemplateUrl = function() {
                     var feedingService: any = getCurrentService();
 
                     return feedingService ? feedingService.templateUrl : '';
@@ -760,9 +747,9 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                         const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
 
                         if (
-                            resource === 'ingest_providers' &&
-                            Object.keys(fields).length > 0 &&
-                            !itemBeingEditedOrCreated
+                            resource === 'ingest_providers'
+                            && Object.keys(fields).length > 0
+                            && !itemBeingEditedOrCreated
                         ) {
                             fetchProvidersThrottled();
                         }
@@ -774,7 +761,10 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                         const {resource} = event.extra;
                         const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
 
-                        if (resource === 'ingest_providers' && !itemBeingEditedOrCreated) {
+                        if (
+                            resource === 'ingest_providers'
+                            && !itemBeingEditedOrCreated
+                        ) {
                             fetchProvidersThrottled();
                         }
                     }),
@@ -785,7 +775,10 @@ export function IngestSourcesContent(ingestSources, api, $location, modal, $filt
                         const {resource} = event.extra;
                         const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
 
-                        if (resource === 'ingest_providers' && !itemBeingEditedOrCreated) {
+                        if (
+                            resource === 'ingest_providers'
+                            && !itemBeingEditedOrCreated
+                        ) {
                             fetchProvidersThrottled();
                         }
                     }),

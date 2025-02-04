@@ -1,3 +1,4 @@
+
 import {get} from 'lodash';
 import {IPlacesService} from './PlacesService';
 
@@ -27,8 +28,7 @@ export default function MetaPlaceDirective(places: IPlacesService) {
                 }
 
                 scope.loading = true;
-                places
-                    .searchGeonames(name, scope.item.language)
+                places.searchGeonames(name, scope.item.language)
                     .then((results) => {
                         scope.loading = false;
                         scope.terms = results;
@@ -42,8 +42,7 @@ export default function MetaPlaceDirective(places: IPlacesService) {
             };
 
             scope.selectTerm = (term) => {
-                if (!getCode(term)) {
-                    // when search is in progress and user hits enter this gets called
+                if (!getCode(term)) { // when search is in progress and user hits enter this gets called
                     return;
                 }
 

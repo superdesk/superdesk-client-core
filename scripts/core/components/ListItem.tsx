@@ -21,11 +21,17 @@ export class ListItem extends React.Component<IListItemProps> {
         return (
             <div
                 onClick={this.props.onClick}
-                className={classNames(this.props.className, 'sd-list-item', {
-                    inactive: this.props.inactive,
-                    'sd-list-item--no-hover': this.props.noHover,
-                    'sd-shadow--z1': this.props.noShadow !== true,
-                })}
+                className={
+                    classNames(
+                        this.props.className,
+                        'sd-list-item',
+                        {
+                            'inactive': this.props.inactive,
+                            'sd-list-item--no-hover': this.props.noHover,
+                            'sd-shadow--z1': this.props.noShadow !== true,
+                        },
+                    )
+                }
                 style={inlineStyles}
                 data-test-id={this.props['data-test-id']}
             >
@@ -58,7 +64,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
                 <div
                     className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}
                     style={styles}
-                    title={title}
+                    title ={title}
                 >
                     <ListItemRow justifyContent={justifyContent}>
                         <span className="sd-overflow-ellipsis">{children}</span>
@@ -66,8 +72,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
                 </div>
             );
         } else {
-            if (grow) {
-                // only when ellipsis is not used
+            if (grow) { // only when ellipsis is not used
                 styles.flexGrow = 1;
             }
 
@@ -82,7 +87,11 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
 
 export class ListItemActionsMenu extends React.Component {
     render() {
-        return <div className="sd-list-item__action-menu">{this.props.children}</div>;
+        return (
+            <div className="sd-list-item__action-menu">
+                {this.props.children}
+            </div>
+        );
     }
 }
 

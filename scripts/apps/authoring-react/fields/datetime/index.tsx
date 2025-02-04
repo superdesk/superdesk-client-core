@@ -12,12 +12,8 @@ import {Difference} from './difference';
 
 export const DATETIME_FIELD_ID = 'datetime';
 
-export function getDatetimeField(): ICustomFieldType<
-    IDateTimeValueOperational,
-    IDateTimeValueStorage,
-    IDateTimeFieldConfig,
-    IDateTimeUserPreferences
-> {
+export function getDatetimeField()
+: ICustomFieldType<IDateTimeValueOperational, IDateTimeValueStorage, IDateTimeFieldConfig, IDateTimeUserPreferences> {
     const field: ICustomFieldType<
         IDateTimeValueOperational,
         IDateTimeValueStorage,

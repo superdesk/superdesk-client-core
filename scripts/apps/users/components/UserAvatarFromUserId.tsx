@@ -33,7 +33,9 @@ class UserAvatarFromUserIdComponent extends React.PureComponent<IProps, IState> 
             return null;
         }
 
-        return <UserAvatar user={user} />;
+        return (
+            <UserAvatar user={user} />
+        );
     }
 }
 

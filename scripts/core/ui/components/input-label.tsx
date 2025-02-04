@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class InputLabel extends React.PureComponent<{text: string; errorStyle?: boolean}> {
+export class InputLabel extends React.PureComponent<{text: string, errorStyle?: boolean}> {
     render() {
         return (
             <div

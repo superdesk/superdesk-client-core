@@ -37,7 +37,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
 
     componentWillMount() {
         // There is at least one parent or multi-level option
-        this.setState({multiLevel: this.props.options.filter((o) => o.parent).length > 0});
+        this.setState({multiLevel: this.props.options.filter((o) => (o.parent)).length > 0});
     }
 
     toggleOpenSelectPopup() {
@@ -66,7 +66,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
 
         // Check if it's duplicate
         if (value && value.length > 0) {
-            if (value.find((v) => v[valueKey] === opt[valueKey])) {
+            if (value.find((v) => (v[valueKey] === opt[valueKey]))) {
                 return;
             }
 
@@ -85,15 +85,19 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                 {...props}
                 withButton={true}
                 readOnly={readOnly}
-                className={classNames('dropdown-terms', 'select__meta-terms', {
-                    'select__meta-terms--disabled': readOnly,
-                })}
+                className={classNames(
+                    'dropdown-terms',
+                    'select__meta-terms',
+                    {'select__meta-terms--disabled': readOnly},
+                )}
             >
                 {!readOnly && (
                     <button
-                        className={classNames('dropdown__toggle', 'sd-line-input__plus-btn', {
-                            'sd-line-input__plus-btn--disabled': options.length === 0,
-                        })}
+                        className={classNames(
+                            'dropdown__toggle',
+                            'sd-line-input__plus-btn',
+                            {'sd-line-input__plus-btn--disabled': options.length === 0},
+                        )}
                         onClick={options.length > 0 ? this.toggleOpenSelectPopup : null}
                         onFocus={onFocus}
                         aria-label={gettext('Add new')}

@@ -11,30 +11,33 @@ import {IActiveCell} from '../components/tables/TableBlock';
  */
 const table = (state: IEditorStore = {} as IEditorStore, action) => {
     switch (action.type) {
-        case 'TOOLBAR_ADD_TABLE': {
-            const payload: IEditor3TableData = action.payload;
+    case 'TOOLBAR_ADD_TABLE': {
+        const payload: IEditor3TableData = action.payload;
 
-            return addTable(state, {
+        return addTable(
+            state,
+            {
                 entityKind: CustomEditor3Entity.TABLE,
                 entityData: payload,
-            });
-        }
-        case 'TOOLBAR_ADD_ROW_AFTER':
-            return addRowAfter(state);
-        case 'TOOLBAR_ADD_COL_AFTER':
-            return addColAfter(state);
-        case 'TOOLBAR_REMOVE_ROW':
-            return removeRow(state);
-        case 'TOOLBAR_REMOVE_COL':
-            return removeCol(state);
-        case 'TOOLBAR_TABLE_HEADER':
-            return toggleTableHeader(state);
-        case 'TOOLBAR_TABLE_STYLE':
-            return toggleTableInlineStyle(state, action.payload);
-        case 'TOOLBAR_TABLE_BLOCK_TYPE':
-            return toggleTableBlockType(state, action.payload);
-        default:
-            return state;
+            },
+        );
+    }
+    case 'TOOLBAR_ADD_ROW_AFTER':
+        return addRowAfter(state);
+    case 'TOOLBAR_ADD_COL_AFTER':
+        return addColAfter(state);
+    case 'TOOLBAR_REMOVE_ROW':
+        return removeRow(state);
+    case 'TOOLBAR_REMOVE_COL':
+        return removeCol(state);
+    case 'TOOLBAR_TABLE_HEADER':
+        return toggleTableHeader(state);
+    case 'TOOLBAR_TABLE_STYLE':
+        return toggleTableInlineStyle(state, action.payload);
+    case 'TOOLBAR_TABLE_BLOCK_TYPE':
+        return toggleTableBlockType(state, action.payload);
+    default:
+        return state;
     }
 };
 
@@ -47,7 +50,7 @@ const table = (state: IEditorStore = {} as IEditorStore, action) => {
 export const addTable = (
     state: IEditorStore,
     data:
-        | {entityKind: CustomEditor3Entity.TABLE; entityData: IEditor3TableData}
+        {entityKind: CustomEditor3Entity.TABLE; entityData: IEditor3TableData}
         | {entityKind: CustomEditor3Entity.MULTI_LINE_QUOTE; entityData: IEditor3TableData}
         | {entityKind: CustomEditor3Entity.CUSTOM_BLOCK; entityData: IEditor3CustomBlockData},
 ) => {
@@ -55,7 +58,11 @@ export const addTable = (
     const contentStateWithEntity = contentState.createEntity(data.entityKind, 'MUTABLE', {data: data.entityData});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-    const {editorState} = insertAtomicBlockWithoutEmptyLines(state.editorState, entityKey, ' ');
+    const {editorState} = insertAtomicBlockWithoutEmptyLines(
+        state.editorState,
+        entityKey,
+        ' ',
+    );
 
     return onChange(state, editorState);
 };
@@ -69,6 +76,7 @@ const addRowAfter = (state) =>
     processCells(state, (tableData, activeCell) => {
         const {i} = activeCell;
         const {cells, numRows} = tableData;
+
 
         const nextCells = [];
 
@@ -129,24 +137,24 @@ const addColAfter = (state) =>
                 ...tableData,
                 numCols: tableData.numCols + 1,
                 cells: cells.map((_, ii) =>
-                    Array.from(new Array(numCols + 1)).map((__, jj) => {
-                        if (jj === j + 1) {
+                    Array.from(new Array(numCols + 1))
+                        .map((__, jj) => {
+                            if (jj === j + 1) {
+                                return null;
+                            }
+
+                            let orig = jj;
+
+                            if (jj > j + 1) {
+                                orig -= 1;
+                            }
+
+                            if (cells[ii] && cells[ii][orig]) {
+                                return cells[ii][orig];
+                            }
+
                             return null;
-                        }
-
-                        let orig = jj;
-
-                        if (jj > j + 1) {
-                            orig -= 1;
-                        }
-
-                        if (cells[ii] && cells[ii][orig]) {
-                            return cells[ii][orig];
-                        }
-
-                        return null;
-                    }),
-                ),
+                        })),
             },
         };
     });
@@ -192,10 +200,8 @@ const removeCol = (state) =>
  */
 export const processCells = (
     state: IEditorStore,
-    fn: (
-        tableData: IEditor3TableData | IEditor3CustomBlockData,
-        activeCell: IActiveCell,
-    ) => {data: IEditor3TableData | IEditor3CustomBlockData; newCurrentStyle?: any; popup?: any},
+    fn: (tableData: IEditor3TableData | IEditor3CustomBlockData, activeCell: IActiveCell) =>
+        {data: IEditor3TableData | IEditor3CustomBlockData; newCurrentStyle?: any; popup?: any},
 ) => {
     const {activeCell, editorState} = state;
 
@@ -247,15 +253,18 @@ export const processCells = (
  * @description Toggles the table's header.
  */
 const toggleTableHeader = (state) =>
-    processCells(state, (tableData, activeCell) => {
-        return {
-            data: {
-                ...tableData,
-                withHeader: !tableData.withHeader,
-            },
-            newCurrentStyle: activeCell.currentStyle,
-        };
-    });
+    processCells(
+        state,
+        (tableData, activeCell) => {
+            return {
+                data: {
+                    ...tableData,
+                    withHeader: !tableData.withHeader,
+                },
+                newCurrentStyle: activeCell.currentStyle,
+            };
+        },
+    );
 
 /**
  * @ngdoc method
@@ -263,48 +272,46 @@ const toggleTableHeader = (state) =>
  * @description Toggles the table's style.
  */
 const toggleTableInlineStyle = (state: IEditorStore, inlineStyle) => {
-    return processCells(state, (tableData, activeCell) => {
-        const {i, j, currentStyle, selection} = activeCell;
-        const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
-        const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
-        const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
-        const tableDataNext: IEditor3TableData | IEditor3CustomBlockData = setCell(
-            tableData,
-            i,
-            j,
-            newCellEditorState,
-        ).data;
+    return processCells(
+        state,
+        (tableData, activeCell) => {
+            const {i, j, currentStyle, selection} = activeCell;
+            const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
+            const newCellEditorState = RichUtils.toggleInlineStyle(cellStateEditor, inlineStyle);
+            const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
+            const tableDataNext: IEditor3TableData | IEditor3CustomBlockData =
+                setCell(tableData, i, j, newCellEditorState).data;
 
-        return {
-            data: {
-                ...tableData,
-                ...tableDataNext,
-            },
-            newCurrentStyle: newCurrentStyle,
-        };
-    });
+            return {
+                data: {
+                    ...tableData,
+                    ...tableDataNext,
+                },
+                newCurrentStyle: newCurrentStyle,
+            };
+        },
+    );
 };
 
 const toggleTableBlockType = (state, blockType) =>
-    processCells(state, (tableData, activeCell) => {
-        const {i, j, currentStyle, selection} = activeCell;
-        const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
-        const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, blockType);
-        const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
-        const tableDataNext: IEditor3TableData | IEditor3CustomBlockData = setCell(
-            tableData,
-            i,
-            j,
-            newCellEditorState,
-        ).data;
+    processCells(
+        state,
+        (tableData, activeCell) => {
+            const {i, j, currentStyle, selection} = activeCell;
+            const cellStateEditor = getCell(tableData, i, j, currentStyle, selection);
+            const newCellEditorState = RichUtils.toggleBlockType(cellStateEditor, blockType);
+            const newCurrentStyle = newCellEditorState.getCurrentInlineStyle().toArray();
+            const tableDataNext: IEditor3TableData | IEditor3CustomBlockData =
+                setCell(tableData, i, j, newCellEditorState).data;
 
-        return {
-            data: {
-                ...tableData,
-                ...tableDataNext,
-            },
-            newCurrentStyle: newCurrentStyle,
-        };
-    });
+            return {
+                data: {
+                    ...tableData,
+                    ...tableDataNext,
+                },
+                newCurrentStyle: newCurrentStyle,
+            };
+        },
+    );
 
 export default table;

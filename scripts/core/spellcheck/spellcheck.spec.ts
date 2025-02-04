@@ -38,17 +38,19 @@ describe('spellcheck', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
     beforeEach(inject((dictionaries, spellcheck, $q, preferencesService) => {
-        spyOn(dictionaries, 'getActive').and.returnValue(
-            $q.when([{_id: 'foo', content: DICT}, {_id: 'bar', content: {bar: 1}}, USER_DICT]),
-        );
+        spyOn(dictionaries, 'getActive').and.returnValue($q.when([
+            {_id: 'foo', content: DICT},
+            {_id: 'bar', content: {bar: 1}},
+            USER_DICT,
+        ]));
 
         spellcheck.setLanguage(LANG);
         spyOn(preferencesService, 'get').and.returnValue($q.when({enabled: true}));
         spyOn(preferencesService, 'update').and.returnValue($q.when({}));
     }));
 
-    it('can spellcheck using multiple dictionaries', (done) =>
-        inject((spellcheck, dictionaries, $rootScope) => {
+    it('can spellcheck using multiple dictionaries',
+        (done) => inject((spellcheck, dictionaries, $rootScope) => {
             var p = createParagraph('test what if foo bar baz');
 
             spellcheck.errors(p).then((errors) => {
@@ -64,8 +66,8 @@ describe('spellcheck', () => {
             $rootScope.$digest();
         }));
 
-    it('can spellcheck using base dictionary', (done) =>
-        inject((spellcheck, dictionaries, $q, $rootScope) => {
+    it('can spellcheck using base dictionary',
+        (done) => inject((spellcheck, dictionaries, $q, $rootScope) => {
             spellcheck.setLanguage('en');
             var p = createParagraph('test what if foo bar baz');
 
@@ -82,57 +84,55 @@ describe('spellcheck', () => {
             $rootScope.$digest();
         }));
 
-    it('can add words to user dictionary', (done) =>
-        inject((spellcheck, api, $rootScope) => {
-            var p = createParagraph('Test');
+    it('can add words to user dictionary', (done) => inject((spellcheck, api, $rootScope) => {
+        var p = createParagraph('Test');
 
-            spyOn(api, 'save');
+        spyOn(api, 'save');
+
+        spellcheck.errors(p).then((_err) => {
+            assignErrors(_err);
+
+            expect(errors.length).toBe(1);
+
+            spellcheck.addWordToUserDictionary('test');
+
+            spellcheck.errors(p).then((_err2) => {
+                assignErrors(_err2);
+                expect(errors.length).toBe(0);
+
+                done();
+            });
+        });
+
+        $rootScope.$digest();
+    }));
+
+    it('can report error if paragraph starts with small letter', (done) => inject((spellcheck, $rootScope) => {
+        // Test with existing words in dictionary
+        var p = createParagraph('Foo what');
+
+        spellcheck.errors(p).then((_err) => {
+            assignErrors(_err);
+            expect(errors.length).toBe(0);
+
+            // now test if existing word starts with small letter.
+            p = createParagraph('foo what');
 
             spellcheck.errors(p).then((_err) => {
                 assignErrors(_err);
 
                 expect(errors.length).toBe(1);
+                expect(errors).toContain({word: 'foo', index: 0, sentenceWord: true});
 
-                spellcheck.addWordToUserDictionary('test');
-
-                spellcheck.errors(p).then((_err2) => {
-                    assignErrors(_err2);
-                    expect(errors.length).toBe(0);
-
-                    done();
-                });
+                done();
             });
+        });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
-    it('can report error if paragraph starts with small letter', (done) =>
-        inject((spellcheck, $rootScope) => {
-            // Test with existing words in dictionary
-            var p = createParagraph('Foo what');
-
-            spellcheck.errors(p).then((_err) => {
-                assignErrors(_err);
-                expect(errors.length).toBe(0);
-
-                // now test if existing word starts with small letter.
-                p = createParagraph('foo what');
-
-                spellcheck.errors(p).then((_err) => {
-                    assignErrors(_err);
-
-                    expect(errors.length).toBe(1);
-                    expect(errors).toContain({word: 'foo', index: 0, sentenceWord: true});
-
-                    done();
-                });
-            });
-
-            $rootScope.$digest();
-        }));
-
-    it('can report error if word comes after .|?|!|: (i.e, after : or at new sentence) starts with small letter', (done) =>
-        inject((spellcheck, $rootScope) => {
+    it('can report error if word comes after .|?|!|: (i.e, after : or at new sentence) starts with small letter',
+        (done) => inject((spellcheck, $rootScope) => {
             // Test with existing words in dictionary
             var p = createParagraph('Foo what? Foo is foo. Foo is foo! What foo: Foo?');
 
@@ -155,114 +155,101 @@ describe('spellcheck', () => {
             $rootScope.$digest();
         }));
 
-    it('can report if text contains multiple spaces', (done) =>
-        inject((spellcheck, $rootScope) => {
-            // Test with existing words in dictionary
-            var p = createParagraph('Foo what? Foo is foo.');
+    it('can report if text contains multiple spaces', (done) => inject((spellcheck, $rootScope) => {
+        // Test with existing words in dictionary
+        var p = createParagraph('Foo what? Foo is foo.');
+
+        spellcheck.errors(p).then((_err) => {
+            assignErrors(_err);
+            expect(errors.length).toBe(0);
+
+            // now test if existing word comes after .|?|!|: starts with small letter.
+            p = createParagraph('Foo  what? Foo is   foo.');
 
             spellcheck.errors(p).then((_err) => {
                 assignErrors(_err);
-                expect(errors.length).toBe(0);
 
-                // now test if existing word comes after .|?|!|: starts with small letter.
-                p = createParagraph('Foo  what? Foo is   foo.');
+                expect(errors.length).toBe(2);
+
+                done();
+            });
+        });
+
+        $rootScope.$digest();
+    }));
+
+    it('can report error for sentences beginning with any quotes and starts with small letter',
+        (done) => inject((spellcheck, $rootScope) => {
+            let promises = Promise.resolve();
+
+            promises = promises.then(() => new Promise((resolve) => {
+                // Test with existing words in dictionary.
+                var p = createParagraph('"Foo what."');
 
                 spellcheck.errors(p).then((_err) => {
                     assignErrors(_err);
 
-                    expect(errors.length).toBe(2);
+                    expect(errors.length).toBe(0);
 
-                    done();
+                    resolve();
                 });
-            });
 
-            $rootScope.$digest();
-        }));
+                $rootScope.$digest();
+            }));
 
-    it('can report error for sentences beginning with any quotes and starts with small letter', (done) =>
-        inject((spellcheck, $rootScope) => {
-            let promises = Promise.resolve();
+            promises = promises.then(() => new Promise((resolve) => {
+                // now test if existing word starts with small letter within quotes.
+                const p = createParagraph('"foo what."');
 
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        // Test with existing words in dictionary.
-                        var p = createParagraph('"Foo what."');
+                spellcheck.errors(p).then((_err) => {
+                    assignErrors(_err);
+                    expect(errors.length).toBe(1);
+                    expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
 
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
+                    resolve();
+                });
 
-                            expect(errors.length).toBe(0);
+                $rootScope.$digest();
+            }));
 
-                            resolve();
-                        });
+            promises = promises.then(() => new Promise((resolve) => {
+                // now test if different variety of quote (“ ” or ' ') is used at beginning.
+                const p = createParagraph('“foo what.”');
 
-                        $rootScope.$digest();
-                    }),
-            );
+                spellcheck.errors(p).then((_err) => {
+                    assignErrors(_err);
 
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        // now test if existing word starts with small letter within quotes.
-                        const p = createParagraph('"foo what."');
+                    expect(errors.length).toBe(1);
+                    expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
 
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(1);
-                            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+                    resolve();
+                });
 
-                            resolve();
-                        });
+                $rootScope.$digest();
+            }));
 
-                        $rootScope.$digest();
-                    }),
-            );
+            promises = promises.then(() => new Promise((resolve) => {
+                const p = createParagraph('\'foo what.\'');
 
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        // now test if different variety of quote (“ ” or ' ') is used at beginning.
-                        const p = createParagraph('“foo what.”');
+                spellcheck.errors(p).then((_err) => {
+                    assignErrors(_err);
 
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
+                    expect(errors.length).toBe(1);
+                    expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
 
-                            expect(errors.length).toBe(1);
-                            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
+                    resolve();
+                });
 
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        const p = createParagraph("'foo what.'");
-
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-
-                            expect(errors.length).toBe(1);
-                            expect(errors).toContain({word: 'foo', index: 1, sentenceWord: true});
-
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
+                $rootScope.$digest();
+            }));
 
             promises = promises.then(() => {
                 done();
             });
         }));
 
-    it('can avoid reporting error if a valid word is in middle of sentence and starts with capital letter', (done) =>
-        inject((spellcheck, $rootScope) => {
+    it('can avoid reporting error if a valid word is in middle of sentence and starts with capital letter',
+        (done) => inject((spellcheck, $rootScope) => {
             // Test with existing words in dictionary
             var p = createParagraph('Foo what, Foo is foo.');
 
@@ -289,122 +276,104 @@ describe('spellcheck', () => {
         expect(api.save).toHaveBeenCalledWith('spellcheck', {word: 'test', language_id: LANG});
     }));
 
-    it('can reset dict when language is set to null', (done) =>
-        inject((spellcheck, $rootScope) => {
-            spellcheck.setLanguage(null);
-            var then = jasmine.createSpy('then');
+    it('can reset dict when language is set to null', (done) => inject((spellcheck, $rootScope) => {
+        spellcheck.setLanguage(null);
+        var then = jasmine.createSpy('then');
 
-            spellcheck.errors('test').then(then);
+        spellcheck.errors('test').then(then);
+
+        $rootScope.$digest();
+
+        setTimeout(() => {
+            expect(then).not.toHaveBeenCalled();
+
+            done();
+        }, 2000);
+    }));
+
+    it('can ignore word', (done) => inject((spellcheck, $rootScope, $location) => {
+        $location.search('item', 'foo');
+
+        const p = createParagraph('ignore errors');
+
+        let promises = Promise.resolve();
+
+        promises = promises.then(() => new Promise((resolve) => {
+            spellcheck.errors(p).then((_err) => {
+                assignErrors(_err);
+                expect(errors.length).toBe(2);
+
+                resolve();
+            });
 
             $rootScope.$digest();
-
-            setTimeout(() => {
-                expect(then).not.toHaveBeenCalled();
-
-                done();
-            }, 2000);
         }));
 
-    it('can ignore word', (done) =>
-        inject((spellcheck, $rootScope, $location) => {
+        promises = promises.then(() => new Promise((resolve) => {
+            spellcheck.ignoreWord('ignore');
+
+            spellcheck.errors(p).then((_err) => {
+                assignErrors(_err);
+                expect(errors.length).toBe(1);
+
+                resolve();
+            });
+
+            $rootScope.$digest();
+        }));
+
+        promises = promises.then(() => new Promise((resolve) => {
+            $location.search('item', 'bar');
+            $rootScope.$digest();
+
+            spellcheck.errors(p).then((_err) => {
+                assignErrors(_err);
+                expect(errors.length).toBe(2);
+
+                resolve();
+            });
+
+            $rootScope.$digest();
+        }));
+
+        promises = promises.then(() => new Promise((resolve) => {
             $location.search('item', 'foo');
+            $rootScope.$digest();
 
-            const p = createParagraph('ignore errors');
+            spellcheck.errors(p).then((_err) => {
+                assignErrors(_err);
+                expect(errors.length).toBe(1);
 
-            let promises = Promise.resolve();
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(2);
-
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        spellcheck.ignoreWord('ignore');
-
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(1);
-
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        $location.search('item', 'bar');
-                        $rootScope.$digest();
-
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(2);
-
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        $location.search('item', 'foo');
-                        $rootScope.$digest();
-
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(1);
-
-                            resolve();
-                        });
-
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(
-                () =>
-                    new Promise((resolve) => {
-                        $rootScope.$broadcast('item:unlock', {item: 'foo'});
-                        spellcheck.errors(p).then((_err) => {
-                            assignErrors(_err);
-                            expect(errors.length).toBe(2);
-
-                            resolve();
-                        });
-                        $rootScope.$digest();
-                    }),
-            );
-
-            promises = promises.then(() => {
-                done();
-            });
-        }));
-
-    it('can resolve abbreviations without language specified', (done) =>
-        inject((spellcheck, $rootScope) => {
-            spellcheck.setLanguage('');
-            spellcheck.getAbbreviationsDict().then(() => {
-                done();
+                resolve();
             });
 
             $rootScope.$digest();
         }));
+
+        promises = promises.then(() => new Promise((resolve) => {
+            $rootScope.$broadcast('item:unlock', {item: 'foo'});
+            spellcheck.errors(p).then((_err) => {
+                assignErrors(_err);
+                expect(errors.length).toBe(2);
+
+                resolve();
+            });
+            $rootScope.$digest();
+        }));
+
+        promises = promises.then(() => {
+            done();
+        });
+    }));
+
+    it('can resolve abbreviations without language specified', (done) => inject((spellcheck, $rootScope) => {
+        spellcheck.setLanguage('');
+        spellcheck.getAbbreviationsDict().then(() => {
+            done();
+        });
+
+        $rootScope.$digest();
+    }));
 
     it('can cache active dictionaries for a language', inject((spellcheck, dictionaries, $rootScope) => {
         spellcheck.getDictionary('en');

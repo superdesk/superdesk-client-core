@@ -11,7 +11,7 @@ DeskeditMacros.$inject = ['macros', 'WizardHandler'];
  */
 export function DeskeditMacros(macros, WizardHandler) {
     return {
-        link: function (scope) {
+        link: function(scope) {
             if (scope.desk && scope.desk.edit) {
                 macros.getByDesk(scope.desk.edit.name, true).then((_macros) => {
                     scope.macros = _macros;
@@ -22,7 +22,7 @@ export function DeskeditMacros(macros, WizardHandler) {
                 });
             }
 
-            scope.save = function () {
+            scope.save = function() {
                 WizardHandler.wizard('desks').finish();
             };
         },

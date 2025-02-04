@@ -18,7 +18,9 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        Promise.all(this.props.ids.map((id) => dataApi.findOne<IArticle>('archive', id))).then((items) => {
+        Promise.all(this.props.ids.map((id) =>
+            dataApi.findOne<IArticle>('archive', id),
+        )).then((items) => {
             this.setState({items});
         });
     }

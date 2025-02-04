@@ -25,6 +25,8 @@ export class StateToProps<T> extends React.PureComponent<IProps<T>, IState<T>> {
     render() {
         const Component = this.props.component;
 
-        return <Component {...this.state.toProps} />;
+        return (
+            <Component {...this.state.toProps} />
+        );
     }
 }

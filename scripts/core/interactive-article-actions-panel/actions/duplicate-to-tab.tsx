@@ -72,18 +72,20 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
 
                 <PanelFooter markupV2={markupV2}>
                     <ButtonGroup orientation="vertical">
-                        {this.props.items.length === 1 && (
-                            <Button
-                                text={gettext('Duplicate and open')}
-                                onClick={() => {
-                                    this.duplicateItems(true);
-                                }}
-                                size="large"
-                                type="primary"
-                                expand
-                                data-test-id="duplicate-and-open"
-                            />
-                        )}
+                        {
+                            this.props.items.length === 1 && (
+                                <Button
+                                    text={gettext('Duplicate and open')}
+                                    onClick={() => {
+                                        this.duplicateItems(true);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                    data-test-id="duplicate-and-open"
+                                />
+                            )
+                        }
                         <Button
                             text={gettext('Duplicate')}
                             onClick={() => {

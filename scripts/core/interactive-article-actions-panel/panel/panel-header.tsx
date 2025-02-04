@@ -5,9 +5,17 @@ import {IPropsSendToPanel} from './panel-main';
 export class PanelHeader extends React.PureComponent<IPropsSendToPanel> {
     render() {
         if (this.props.markupV2) {
-            return <Layout.PanelHeader>{this.props.children}</Layout.PanelHeader>;
+            return (
+                <Layout.PanelHeader>
+                    {this.props.children}
+                </Layout.PanelHeader>
+            );
         } else {
-            return <div className="side-panel__header">{this.props.children}</div>;
+            return (
+                <div className="side-panel__header">
+                    {this.props.children}
+                </div>
+            );
         }
     }
 }

@@ -208,12 +208,8 @@ export function processSuggestion(editorState, type, accepted, date = new Date()
     return result.editorState;
 }
 
-export function addLinkSuggestion(
-    editorState,
-    date = new Date(),
-    author = 'author_id',
-    url = 'http://wwww.sourcefabric.org',
-) {
+export function addLinkSuggestion(editorState, date = new Date(),
+    author = 'author_id', url = 'http://wwww.sourcefabric.org') {
     const result = reducer(
         {
             editorState: editorState,
@@ -235,13 +231,8 @@ export function addLinkSuggestion(
     return result.editorState;
 }
 
-export function changeLinkSuggestion(
-    editorState,
-    entity,
-    date = new Date(),
-    author = 'author_id',
-    url = 'http://dev.sourcefabric.org',
-) {
+export function changeLinkSuggestion(editorState, entity, date = new Date(),
+    author = 'author_id', url = 'http://dev.sourcefabric.org') {
     const result = reducer(
         {
             editorState: editorState,

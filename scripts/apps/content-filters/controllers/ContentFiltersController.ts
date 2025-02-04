@@ -13,12 +13,12 @@ export function ContentFiltersConfigController() {
     self.activeTab = 'filters';
 
     /**
-     * Sets the active tab name to the given value.
-     *
-     * @method changeTab
-     * @param {string} newTabName - name of the new active tab
-     */
-    self.changeTab = function (newTabName) {
+    * Sets the active tab name to the given value.
+    *
+    * @method changeTab
+    * @param {string} newTabName - name of the new active tab
+    */
+    self.changeTab = function(newTabName) {
         self.activeTab = newTabName;
     };
 }

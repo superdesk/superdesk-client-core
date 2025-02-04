@@ -80,34 +80,31 @@ core.constant('lodash', _);
 const styles = 'display: flex; height: 100%;';
 
 core.component('sdExtensionPage', reactToAngular1(ExtensionPage, ['setupFullWidthCapability'], [], styles));
-core.config([
-    '$routeProvider',
-    ($routeProvider) => {
-        // set initial default route to personal
-        // when user is logged in, it will be overwritten by a default route
-        // from configs if user has permissions to that route
-        $routeProvider.when('/', {
-            redirectTo: '/workspace/personal',
-        });
+core.config(['$routeProvider', ($routeProvider) => {
+    // set initial default route to personal
+    // when user is logged in, it will be overwritten by a default route
+    // from configs if user has permissions to that route
+    $routeProvider.when('/', {
+        redirectTo: '/workspace/personal',
+    });
 
-        ng.getServices(['superdesk', 'privileges']).then((res: Array<any>) => {
-            const __superdesk = res[0];
-            const privileges = res[1];
+    ng.getServices(['superdesk', 'privileges']).then((res: Array<any>) => {
+        const __superdesk = res[0];
+        const privileges = res[1];
 
-            const activity = __superdesk.activities[appConfig.defaultRoute];
+        const activity = __superdesk.activities[appConfig.defaultRoute];
 
-            if (activity != null) {
-                privileges.loaded.then(() => {
-                    if (privileges.userHasPrivileges(activity.privileges || {})) {
-                        $routeProvider.when('/', {
-                            redirectTo: appConfig.defaultRoute,
-                        });
-                    }
-                });
-            }
-        });
-    },
-]);
+        if (activity != null) {
+            privileges.loaded.then(() => {
+                if (privileges.userHasPrivileges(activity.privileges || {})) {
+                    $routeProvider.when('/', {
+                        redirectTo: appConfig.defaultRoute,
+                    });
+                }
+            });
+        }
+    });
+}]);
 
 // due to angular 1.6
 core.config(['$locationProvider', ($locationProvider) => $locationProvider.hashPrefix('')]);
@@ -115,16 +112,13 @@ core.config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections
 core.config(['$compileProvider', ($compileProvider) => $compileProvider.preAssignBindingsEnabled(true)]);
 
 core.run(['$injector', ng.register]);
-core.run([
-    '$document',
-    ($document) => {
-        if (window.navigator.userAgent.toLowerCase().includes('firefox')) {
-            // workaround for firefox drag event not reporting mouse coordinates
-            $document.on('dragover', (event) => {
-                window.dragPageY = event.pageY;
-            });
-        }
-    },
-]);
+core.run(['$document', ($document) => {
+    if (window.navigator.userAgent.toLowerCase().includes('firefox')) {
+        // workaround for firefox drag event not reporting mouse coordinates
+        $document.on('dragover', (event) => {
+            window.dragPageY = event.pageY;
+        });
+    }
+}]);
 
 export default core;

@@ -4,8 +4,19 @@ import {gettext} from 'core/utils';
  * Default list of fields
  */
 export const DEFAULT_LIST_CONFIG = {
-    firstLine: ['ContactName', 'JobTitle', 'Email', 'Phone', 'VersionCreated'],
-    secondLine: ['OrgName', 'ContactLocation', 'SocialInfo'],
+    firstLine: [
+        'ContactName',
+        'JobTitle',
+        'Email',
+        'Phone',
+        'VersionCreated',
+    ],
+    secondLine: [
+        'OrgName',
+        'ContactLocation',
+        'SocialInfo',
+
+    ],
     singleLine: [
         'ContactName',
         'JobTitle',

@@ -12,10 +12,8 @@ export function UserSelectList($filter, api) {
             tabindex: '=',
         },
         templateUrl: 'scripts/apps/desks/views/user-select.html',
-        link: function (scope, elem, attrs) {
-            var ARROW_UP = 38,
-                ARROW_DOWN = 40,
-                ENTER = 13;
+        link: function(scope, elem, attrs) {
+            var ARROW_UP = 38, ARROW_DOWN = 40, ENTER = 13;
 
             scope.selected = null;
             scope.search = null;
@@ -24,16 +22,13 @@ export function UserSelectList($filter, api) {
             scope.refresh = true;
             scope.message = null;
 
-            var _refresh = function () {
+            var _refresh = function() {
                 scope.users = {};
-                return api('users')
-                    .query({where: JSON.stringify(getUserSearchMongoQuery(scope.search))})
+                return api('users').query({where: JSON.stringify(getUserSearchMongoQuery(scope.search))})
                     .then((result) => {
                         scope.users = result;
-                        scope.users._items = _.filter(
-                            scope.users._items,
-                            (item) => _.findIndex(scope.exclude, {_id: item._id}) === -1,
-                        );
+                        scope.users._items = _.filter(scope.users._items,
+                            (item) => _.findIndex(scope.exclude, {_id: item._id}) === -1);
                         scope.selected = null;
                         if (scope.onsearch) {
                             scope.onsearch({search: scope.search});
@@ -74,25 +69,25 @@ export function UserSelectList($filter, api) {
             elem.bind('keydown keypress', (event) => {
                 scope.$apply(() => {
                     switch (event.which) {
-                        case ARROW_UP:
-                            event.preventDefault();
-                            previous();
-                            break;
-                        case ARROW_DOWN:
-                            event.preventDefault();
-                            next();
-                            break;
-                        case ENTER:
-                            event.preventDefault();
-                            if (getSelectedIndex() >= 0) {
-                                scope.choose(scope.selected);
-                            }
-                            break;
+                    case ARROW_UP:
+                        event.preventDefault();
+                        previous();
+                        break;
+                    case ARROW_DOWN:
+                        event.preventDefault();
+                        next();
+                        break;
+                    case ENTER:
+                        event.preventDefault();
+                        if (getSelectedIndex() >= 0) {
+                            scope.choose(scope.selected);
+                        }
+                        break;
                     }
                 });
             });
 
-            scope.choose = function (user) {
+            scope.choose = function(user) {
                 scope.onchoose({user: user});
                 if (scope.displayUser) {
                     scope.refresh = false;
@@ -103,11 +98,11 @@ export function UserSelectList($filter, api) {
                 }
             };
 
-            scope.select = function (user) {
+            scope.select = function(user) {
                 scope.selected = user;
             };
 
-            scope.getUserDisplay = function (user) {
+            scope.getUserDisplay = function(user) {
                 if (scope.displayUser) {
                     return user[scope.displayUser];
                 }

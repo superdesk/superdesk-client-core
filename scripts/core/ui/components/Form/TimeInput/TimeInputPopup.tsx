@@ -41,7 +41,7 @@ export class TimeInputPopup extends React.Component<any, any> {
         let inputDateTime = value && moment.isMoment(value) ? moment(value) : this.state.currentTime;
 
         // Round it to nearest 5 minutes mark if needed
-        const diffMins = 5 - (inputDateTime.minute() % 5);
+        const diffMins = 5 - inputDateTime.minute() % 5;
 
         if (diffMins !== 5) {
             inputDateTime = inputDateTime.add(diffMins, 'm');
@@ -71,7 +71,7 @@ export class TimeInputPopup extends React.Component<any, any> {
             this.state.currentTime.add(addMinutes, 'm');
             onChange(this.state.currentTime.format('HH:mm'));
         } else {
-            onChange(this.state.selectedHourIndex + ':' + this.state.selectedMinuteIndex * 5);
+            onChange(this.state.selectedHourIndex + ':' + (this.state.selectedMinuteIndex * 5));
         }
 
         // Close the timepicker
@@ -89,9 +89,18 @@ export class TimeInputPopup extends React.Component<any, any> {
             >
                 <Header noBorder={true}>
                     <div className="time-popup__header-row">
-                        <Button onClick={this.handleConfirm.bind(this, 30)} text={gettext('in 30 min')} />
-                        <Button onClick={this.handleConfirm.bind(this, 60)} text={gettext('in 1 hr')} />
-                        <Button onClick={this.handleConfirm.bind(this, 120)} text={gettext('in 2 hrs')} />
+                        <Button
+                            onClick={this.handleConfirm.bind(this, 30)}
+                            text={gettext('in 30 min')}
+                        />
+                        <Button
+                            onClick={this.handleConfirm.bind(this, 60)}
+                            text={gettext('in 1 hr')}
+                        />
+                        <Button
+                            onClick={this.handleConfirm.bind(this, 120)}
+                            text={gettext('in 2 hrs')}
+                        />
                     </div>
                 </Header>
 
@@ -134,7 +143,12 @@ export class TimeInputPopup extends React.Component<any, any> {
                         pullRight={true}
                         onClick={this.handleConfirm.bind(this, 0)}
                     />
-                    <Button text={gettext('Cancel')} size="small" pullRight={true} onClick={this.props.close} />
+                    <Button
+                        text={gettext('Cancel')}
+                        size="small"
+                        pullRight={true}
+                        onClick={this.props.close}
+                    />
                 </Footer>
             </Popup>
         );

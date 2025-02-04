@@ -27,6 +27,6 @@ export interface IPublishQueueItem extends IBaseRestApiResponse {
         delivery_type?: string;
         config?: {
             resource_url?: string;
-        };
+        }
     };
 }

@@ -49,10 +49,12 @@ export class CommentPopup extends React.Component<any, any> {
             ...commentData,
             data: {
                 ...commentData.data,
-                replies: commentData.data.replies.concat({
-                    msg,
-                    ...getAuthorInfo(),
-                }),
+                replies: commentData.data.replies.concat(
+                    {
+                        msg,
+                        ...getAuthorInfo(),
+                    },
+                ),
             },
         });
 
@@ -74,7 +76,9 @@ export class CommentPopup extends React.Component<any, any> {
             ...commentData,
             data: {
                 ...commentData.data,
-                replies: commentData.data.replies.map((reply, i) => (i === index ? {...reply, msg} : reply)),
+                replies: commentData.data.replies.map(
+                    (reply, i) => i === index ? {...reply, msg} : reply,
+                ),
             },
         });
     }
@@ -112,7 +116,10 @@ export class CommentPopup extends React.Component<any, any> {
             },
         };
 
-        const allResolvedComments = getCustomDataFromEditor(editorState, editor3DataKeys.RESOLVED_COMMENTS_HISTORY);
+        const allResolvedComments = getCustomDataFromEditor(
+            editorState,
+            editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
+        );
 
         const editorStateWithResolvedCommentAdded = setCustomDataForEditor__deprecated(
             editorStateWithCommentRemoved,
@@ -140,17 +147,13 @@ export class CommentPopup extends React.Component<any, any> {
         const {replies, resolutionInfo} = data;
         const isAuthor = data.email === this.currentUser;
 
-        const removeCommentPromise = () =>
-            ng
-                .get('modal')
-                .confirm(gettext('The comment will be deleted. Are you sure?'))
-                .then(() => this.removeComment());
+        const removeCommentPromise = () => ng.get('modal')
+            .confirm(gettext('The comment will be deleted. Are you sure?'))
+            .then(() => this.removeComment());
 
-        const removeReplyPromise = (index) =>
-            ng
-                .get('modal')
-                .confirm(gettext('The reply will be deleted. Are you sure?'))
-                .then(() => this.removeReply(index));
+        const removeReplyPromise = (index) => ng.get('modal')
+            .confirm(gettext('The reply will be deleted. Are you sure?'))
+            .then(() => this.removeReply(index));
 
         return (
             <HighlightsPopupPositioner editorNode={this.props.editorNode}>
@@ -162,14 +165,15 @@ export class CommentPopup extends React.Component<any, any> {
                     isReply={false}
                     editorNode={this.props.editorNode}
                     onClick={(e) => this.manageFocusForReplyInput(e)}
-                    inlineActions={
-                        resolutionInfo === null && (
-                            <button className="btn btn--hollow btn--small" onClick={() => this.resolveComment()}>
-                                {gettext('Resolve')}
-                            </button>
-                        )
-                    }
-                    scrollableContent={
+                    inlineActions={resolutionInfo === null && (
+                        <button
+                            className="btn btn--hollow btn--small"
+                            onClick={() => this.resolveComment()}
+                        >
+                            {gettext('Resolve')}
+                        </button>
+                    )}
+                    scrollableContent={(
                         <div>
                             {replies.map((reply, i) => (
                                 <Comment
@@ -182,8 +186,8 @@ export class CommentPopup extends React.Component<any, any> {
                                 />
                             ))}
                         </div>
-                    }
-                    stickyFooter={
+                    )}
+                    stickyFooter={(
                         <div
                             ref={(el) => {
                                 this.addReplyEl = el;
@@ -200,23 +204,27 @@ export class CommentPopup extends React.Component<any, any> {
                                 placeholder={'Reply'}
                                 maxHeight={189} // 10 lines
                             />
-                            {this.state.replyFieldFocused !== true ? null : (
-                                <div className="comment-box__reply-toolbar comment-box__reply-toolbar--active">
-                                    <button
-                                        onClick={() => {
-                                            this.postReply(comment, this.state.reply);
-                                        }}
-                                        className="btn btn--primary"
+                            {
+                                this.state.replyFieldFocused !== true ? null : (
+                                    <div
+                                        className="comment-box__reply-toolbar comment-box__reply-toolbar--active"
                                     >
-                                        {gettext('Reply')}
-                                    </button>
-                                    <button onClick={() => this.resetReply()} className="btn">
-                                        {gettext('Cancel')}
-                                    </button>
-                                </div>
-                            )}
+                                        <button
+                                            onClick={() => {
+                                                this.postReply(comment, this.state.reply);
+                                            }}
+                                            className="btn btn--primary"
+                                        >
+                                            {gettext('Reply')}
+                                        </button>
+                                        <button onClick={() => this.resetReply()} className="btn">
+                                            {gettext('Cancel')}
+                                        </button>
+                                    </div>
+                                )
+                            }
                         </div>
-                    }
+                    )}
                 />
             </HighlightsPopupPositioner>
         );

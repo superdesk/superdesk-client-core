@@ -1,5 +1,5 @@
 export function EmbeddedFilter() {
-    return function (input) {
+    return function(input) {
         var output = {};
 
         for (var i in input) {

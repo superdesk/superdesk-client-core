@@ -1,3 +1,4 @@
+
 describe('sdItemPreview directive', () => {
     let scope, elem, iscope;
     const archiveItem = {_id: '1', family_id: '1', _type: 'archive'};
@@ -98,10 +99,7 @@ describe('sdItemPreview directive', () => {
     }));
 
     it('can re-fetch relatedItems when navigating to the duplicates tab', () => {
-        const newRelatedItemEntries = [
-            {_id: '2', family_id: '1'},
-            {_id: '3', family_id: '1'},
-        ];
+        const newRelatedItemEntries = [{_id: '2', family_id: '1'}, {_id: '3', family_id: '1'}];
 
         relatedItems._items = relatedItemEntries;
         scope.item = archiveItem;
@@ -139,7 +137,7 @@ describe('sdItemPreview directive', () => {
         expect(iscope.close).toHaveBeenCalledTimes(6);
     });
 
-    it("can not close on events when items don't match", () => {
+    it('can not close on events when items don\'t match', () => {
         spyOn(iscope, 'close').and.returnValue(null);
         iscope.item = archiveItem;
 

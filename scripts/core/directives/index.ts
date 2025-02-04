@@ -58,5 +58,11 @@ export default angular
             'scrollContainer',
         ]),
     )
-    .component('sdOrganisationAvatar', reactToAngular1(UserOrganisationAvatar, ['size']))
-    .component('toggleFullWidth', reactToAngular1(ToggleFullWidth, ['fullWidth', 'setFullWidth']));
+    .component(
+        'sdOrganisationAvatar',
+        reactToAngular1(UserOrganisationAvatar, ['size']),
+    )
+    .component(
+        'toggleFullWidth',
+        reactToAngular1(ToggleFullWidth, ['fullWidth', 'setFullWidth']),
+    );

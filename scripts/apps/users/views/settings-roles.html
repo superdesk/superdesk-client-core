@@ -14,12 +14,8 @@
                     <h6>{{role.name}}</h6>
                     <span class="label label--primary label--hollow" ng-if="role.is_default" translate>default</span>
                     <div class="actions">
-                        <button ng-click="edit(role)" title="{{:: 'Edit role' | translate }}">
-                            <i class="icon-pencil"></i>
-                        </button>
-                        <button ng-click="remove(role)" title="{{:: 'Remove role' | translate }}">
-                            <i class="icon-trash"></i>
-                        </button>
+                        <button ng-click="edit(role)" title="{{:: 'Edit role' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(role)" title="{{:: 'Remove role' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -29,9 +25,10 @@
 
     <div sd-modal data-model="editRole">
         <div class="modal__header modal__header--flex">
+            
             <h3 class="modal__heading" ng-show="editRole._id" translate>Edit Role</h3>
             <h3 class="modal__heading" ng-show="!editRole._id" translate>New Role</h3>
-            <button class="icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></button>
+            <button class="icn-btn" ng-click="cancel()"><i class="icon-close-small"></i></button>                        
         </div>
         <div class="modal__body">
             <form name="roleForm">
@@ -39,59 +36,36 @@
                     <div class="form__row">
                         <div class="sd-line-input" ng-class="{'sd-line-input--invalid': roleForm.$error.unique}">
                             <label class="sd-line-input__label">{{ 'Role Name'|translate }}</label>
-                            <input
-                                class="sd-line-input__input"
-                                type="text"
-                                ng-model="editRole.name"
-                                required
-                                sd-role-unique
-                            />
-                            <div
-                                class="sd-line-input__message"
-                                ng-show="roleForm.$error.unique"
-                                sd-valid-error
-                                translate
-                            >
-                                Sorry, this role name already exists.
-                            </div>
+                            <input class="sd-line-input__input" type="text" ng-model="editRole.name" required sd-role-unique>
+                            <div class="sd-line-input__message" ng-show="roleForm.$error.unique" sd-valid-error translate>Sorry, this role name already exists.</div>
                         </div>
                     </div>
                     <div class="form__row">
                         <div class="sd-line-input">
                             <label class="sd-line-input__label">{{ 'Role Description'|translate }}</label>
-                            <textarea
-                                class="sd-line-input__input"
-                                sd-auto-height
-                                ng-model="editRole.description"
-                            ></textarea>
+                            <textarea class="sd-line-input__input" sd-auto-height ng-model="editRole.description"></textarea>
                         </div>
                     </div>
                     <div class="form__row">
-                        <sd-check ng-model="editRole.is_default" id="is_default" ng-disabled="defaultRole"
-                            >{{:: 'Set as default' | translate }}</sd-check
-                        >
+                        <sd-check ng-model="editRole.is_default" id="is_default" ng-disabled="defaultRole">{{:: 'Set as default' | translate }}</sd-check>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend translate>Default author roles</legend>
                     <div class="form__row" translate>
-                        If you select a default role for content creation or editing, Superdesk will prefill the Authors
-                        field with user's name and the role. The roles are managed in <b>Author roles</b> controlled
-                        vocabulary in the Metadata section.
+                        If you select a default role for content creation or editing,
+                        Superdesk will prefill the Authors field with user's name and the role.
+                        The roles are managed in <b>Author roles</b> controlled vocabulary in the Metadata section.
                     </div>
 
-                    <div ng-show="!author_roles" class="sd-alert sd-alert--hollow sd-alert--warning" translate>
-                        Author roles controlled vocabullary is missing.
-                    </div>
+                    <div ng-show="!author_roles" class="sd-alert sd-alert--hollow sd-alert--warning" translate>Author roles controlled vocabullary is missing.</div>
 
                     <div class="form__row">
                         <div class="sd-line-input">
                             <label class="sd-line-input__label" translate>Content creation</label>
-                            <select
-                                class="sd-line-input__select"
+                            <select class="sd-line-input__select"
                                 ng-model="editRole.author_role"
-                                ng-options="role.qcode as role.name for role in author_roles"
-                            >
+                                ng-options="role.qcode as role.name for role in author_roles">
                                 <option value="" translate>None</option>
                             </select>
                         </div>
@@ -99,11 +73,9 @@
                     <div class="form__row">
                         <div class="sd-line-input">
                             <label class="sd-line-input__label" translate>Content editing</label>
-                            <select
-                                class="sd-line-input__select"
+                            <select class="sd-line-input__select"
                                 ng-model="editRole.editor_role"
-                                ng-options="role.qcode as role.name for role in author_roles"
-                            >
+                                ng-options="role.qcode as role.name for role in author_roles">
                                 <option value="" translate>None</option>
                             </select>
                         </div>
@@ -113,14 +85,7 @@
         </div>
         <div class="modal__footer">
             <button class="btn" ng-click="cancel()" translate>Cancel</button>
-            <button
-                class="btn btn--primary"
-                ng-click="save(editRole)"
-                ng-disabled="!roleForm.$valid || !roleForm.$dirty"
-                translate
-            >
-                Ok
-            </button>
+            <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid || !roleForm.$dirty" translate>Ok</button>
         </div>
     </div>
 </div>

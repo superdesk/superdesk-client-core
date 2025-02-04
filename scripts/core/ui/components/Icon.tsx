@@ -28,10 +28,15 @@ const Icon: React.StatelessComponent<any> = ({icon, doubleSize, big, className, 
     );
 
     return tooltip ? (
-        <OverlayTrigger overlay={<Tooltip id="icon_list_item">{tooltip}</Tooltip>}>{iconElement}</OverlayTrigger>
-    ) : (
-        iconElement
-    );
+        <OverlayTrigger
+            overlay={
+                <Tooltip id="icon_list_item">{tooltip}</Tooltip>
+            }
+        >
+            {iconElement}
+        </OverlayTrigger>
+    ) :
+        iconElement;
 };
 
 Icon.propTypes = {

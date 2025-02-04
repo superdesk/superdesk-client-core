@@ -1,4 +1,10 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter, ISubjectCode, IDropdownConfigManualSource} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    ISubjectCode,
+    IDropdownConfigManualSource,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {store} from 'core/data';
 
@@ -7,11 +13,8 @@ export function getSubjectAdapter(): IFieldAdapter<IArticle> {
         getFieldV2: () => {
             const fieldConfig: IDropdownConfigManualSource = {
                 source: 'manual-entry',
-                options: Object.values(store.getState().subjectCodes).map((x) => ({
-                    id: x.qcode,
-                    label: x.name,
-                    parent: x.parent,
-                })),
+                options: Object.values(store.getState().subjectCodes)
+                    .map((x) => ({id: x.qcode, label: x.name, parent: x.parent})),
                 roundCorners: true,
                 type: 'text',
                 canSelectBranchWithChildren: true,

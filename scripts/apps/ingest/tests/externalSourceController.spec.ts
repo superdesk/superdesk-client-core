@@ -34,12 +34,12 @@ describe('externalSourceController', () => {
         spyOn(notify, 'error').and.returnValue(null);
     }));
 
-    it('can export to active desk', (done) =>
-        inject((api, data, desks, notify, $rootScope, $q) => {
-            desks.activeDeskId = userDesks[2]._id;
-            spyOn(api, 'save').and.returnValue($q.when({}));
+    it('can export to active desk', (done) => inject((api, data, desks, notify, $rootScope, $q) => {
+        desks.activeDeskId = userDesks[2]._id;
+        spyOn(api, 'save').and.returnValue($q.when({}));
 
-            ExternalSourceController(api, data, desks, notify).then((result) => {
+        ExternalSourceController(api, data, desks, notify)
+            .then((result) => {
                 expect(result).toEqual({actioning: {externalsource: false}});
                 expect(api.save).toHaveBeenCalledWith(
                     externalSourceData.item.fetch_endpoint,
@@ -47,9 +47,7 @@ describe('externalSourceController', () => {
                         guid: externalSourceData.item.guid,
                         desk: userDesks[2]._id,
                     },
-                    null,
-                    null,
-                    {repo: externalSourceData.item.ingest_provider},
+                    null, null, {repo: externalSourceData.item.ingest_provider},
                 );
 
                 expect(notify.success.calls.count()).toEqual(1);
@@ -57,8 +55,8 @@ describe('externalSourceController', () => {
                 done();
             });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
     it('can export to default desk', inject((api, data, desks, notify, session, $rootScope, $q) => {
         session.identity.desk = userDesks[1]._id;
@@ -73,9 +71,7 @@ describe('externalSourceController', () => {
                 guid: externalSourceData.item.guid,
                 desk: userDesks[1]._id,
             },
-            null,
-            null,
-            {repo: externalSourceData.item.ingest_provider},
+            null, null, {repo: externalSourceData.item.ingest_provider},
         );
     }));
 
@@ -91,9 +87,7 @@ describe('externalSourceController', () => {
                 guid: externalSourceData.item.guid,
                 desk: userDesks[0]._id,
             },
-            null,
-            null,
-            {repo: externalSourceData.item.ingest_provider},
+            null, null, {repo: externalSourceData.item.ingest_provider},
         );
     }));
 

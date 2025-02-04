@@ -1,3 +1,4 @@
+
 describe('Storage', () => {
     beforeEach(() => {
         window.module('superdesk.core.services.storage');

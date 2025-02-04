@@ -20,10 +20,8 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
     defaultSortOption: ISortOption,
     formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
-    return class CrudManagerHttp
-        extends React.Component<Props, ICrudManagerState<Entity>>
-        implements ICrudManagerMethods<Entity>
-    {
+    return class CrudManagerHttp extends React.Component<Props, ICrudManagerState<Entity>>
+        implements ICrudManagerMethods<Entity> {
         api: any;
 
         constructor(props) {
@@ -50,13 +48,11 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
 
         create(item: Entity): Promise<Entity> {
             // creating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.create<Entity>(endpoint, item).then((res) =>
-                this.refresh().then(() => {
-                    notify.success(gettext('The item has been created.'));
+            return dataApi.create<Entity>(endpoint, item).then((res) => this.refresh().then(() => {
+                notify.success(gettext('The item has been created.'));
 
-                    return res;
-                }),
-            );
+                return res;
+            }));
         }
 
         read(
@@ -64,38 +60,38 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
         ): Promise<IRestApiResponse<Entity>> {
-            return dataApi.query(endpoint, page, sortOption, filterValues, undefined, formatFiltersForServer).then(
-                (res: IRestApiResponse<Entity>) =>
-                    new Promise((resolve) => {
-                        this.setState(
-                            {
-                                ...res,
-                                activeSortOption: sortOption,
-                                activeFilters: filterValues,
-                            },
-                            () => {
-                                resolve(res);
-                            },
-                        );
-                    }),
-            );
+            return dataApi.query(
+                endpoint,
+                page,
+                sortOption,
+                filterValues,
+                undefined,
+                formatFiltersForServer,
+            )
+                .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
+                    this.setState({
+                        ...res,
+                        activeSortOption: sortOption,
+                        activeFilters: filterValues,
+                    }, () => {
+                        resolve(res);
+                    });
+                }));
         }
 
         update(currentItem: Entity, nextItem: Entity): Promise<Entity> {
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.patch<Entity>(endpoint, currentItem, nextItem).then((res) =>
-                this.refresh().then(() => {
+            return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
+                .then((res) => this.refresh().then(() => {
                     notify.success(gettext('The item has been updated.'));
 
                     return res;
-                }),
-            );
+                }));
         }
 
         delete(item: Entity): Promise<void> {
             // deleting an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi
-                .delete(endpoint, item)
+            return dataApi.delete(endpoint, item)
                 .then(() => this.refresh())
                 .then(() => {
                     notify.success(gettext('The item has been deleted.'));
@@ -137,7 +133,8 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
 
             return (
                 <WrappedComponent
-                    {...{
+                    {
+                    ...{
                         [name]: {
                             ...this.state,
                             create: this.create,
@@ -148,7 +145,8 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                             removeFilter: this.removeFilter,
                             goToPage: this.goToPage,
                         },
-                    }}
+                    }
+                    }
                     {...fixedProps}
                 />
             );

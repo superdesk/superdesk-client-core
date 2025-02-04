@@ -15,7 +15,15 @@ CreateTemplateController.$inject = [
     'content',
     'vocabularies',
 ];
-export function CreateTemplateController(item, templates, api, desks, $q, notify, _) {
+export function CreateTemplateController(
+    item,
+    templates,
+    api,
+    desks,
+    $q,
+    notify,
+    _,
+) {
     var self = this;
 
     this.type = 'create';
@@ -49,8 +57,7 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
     self.willCreateNew = () => willCreateNew(self.template, self.name, self.is_public);
 
     function save() {
-        return sdApi.templates
-            .createTemplateFromArticle(item, self.name, self.is_public ? self.desk : null)
+        return sdApi.templates.createTemplateFromArticle(item, self.name, self.is_public ? self.desk : null)
             .then((data) => {
                 self._issues = null;
                 return data;

@@ -6,15 +6,9 @@ class HighlightsComponent extends React.Component<IPropsItemListInfo> {
     render() {
         const props = this.props;
 
-        return React.createElement(
-            HighlightsInfo,
-            angular.extend(
-                {
-                    key: 'highlights',
-                },
-                props,
-            ),
-        );
+        return React.createElement(HighlightsInfo, angular.extend({
+            key: 'highlights',
+        }, props));
     }
 }
 

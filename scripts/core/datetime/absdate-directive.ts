@@ -12,7 +12,7 @@ import moment from 'moment';
  */
 
 angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', [
-    function () {
+    function() {
         var COMPARE_FORMAT = 'YYYY-M-D';
         var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY HH:mm';
         var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';
@@ -24,7 +24,7 @@ angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', [
                 datetime: '=',
             },
             template: '<time datetime="{{ datetimeIso }}"><span>{{ rday }}{{ rdate }}</span></time>',
-            link: function (scope) {
+            link: function(scope) {
                 scope.$watch('datetime', (datetime) => {
                     var date = moment.utc(scope.datetime);
 

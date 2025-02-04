@@ -1,7 +1,6 @@
 @import '~variables.scss';
 
-.sd-widget.inline-comments,
-.sd-widget.suggestions {
+.sd-widget.inline-comments, .sd-widget.suggestions {
     .form__row {
         display: flex;
         justify-content: center;

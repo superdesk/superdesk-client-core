@@ -1,26 +1,17 @@
 <div class="stage-header">
-    <button
-        class="stage-header__toggle"
-        ng-if="agg.state.solo._id !== group._id"
-        ng-class="{closed: !agg.getExpandedState(group._id)}"
-        ng-click="agg.switchExpandedState(group._id)"
-    >
+    <button class="stage-header__toggle"
+            ng-if="agg.state.solo._id !== group._id"
+            ng-class="{closed: !agg.getExpandedState(group._id)}"
+            ng-click="agg.switchExpandedState(group._id)">
         <i class="icon-chevron-down-thin"></i>
     </button>
     <h3 class="stage-header__name">
-        <a
-            class="stage-header__name-part"
-            href=""
-            ng-show="agg.state.solo._id !== group._id"
-            ng-click="agg.setSoloGroup(group)"
-        >
-            <span>{{ :: group.header }} </span> <span>/</span>
-            <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
+        <a class="stage-header__name-part" href="" ng-show="agg.state.solo._id !== group._id" ng-click="agg.setSoloGroup(group)">
+            <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </a>
         <span class="stage-header__name-part" ng-show="agg.state.solo._id === group._id">
             <a ng-click="agg.setSoloGroup()" class="backlink"></a>
-            <span>{{ :: group.header }} </span> <span>/</span>
-            <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
+            <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </span>
     </h3>
     <div class="stage-header__line" ng-if="agg.state.solo._id !== group._id"></div>

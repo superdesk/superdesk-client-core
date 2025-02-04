@@ -42,11 +42,14 @@ export class GridItem extends React.PureComponent<IProps> {
     }
 
     render() {
-        const classes = classNames('sd-grid-item', {
-            'sd-grid-item--with-click': this.props.onClick != null,
-            'sd-grid-item--with-click locked': this.props.locked,
-            'sd-grid-item--selected': this.props.selected,
-        });
+        const classes = classNames(
+            'sd-grid-item',
+            {
+                'sd-grid-item--with-click': this.props.onClick != null,
+                'sd-grid-item--with-click locked': this.props.locked,
+                'sd-grid-item--selected': this.props.selected,
+            },
+        );
 
         return (
             <div className={classes} onClick={this.handleClicks}>

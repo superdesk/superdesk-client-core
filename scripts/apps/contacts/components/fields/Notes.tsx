@@ -6,7 +6,15 @@ export const Notes: React.StatelessComponent<any> = ({item}) => {
     const notes = item.notes;
     const displayNotes = truncate(notes, {length: 120});
 
-    return <div key="notes">{notes && <span title={notes}>{displayNotes}</span>}</div>;
+    return (
+        <div key="notes">
+            {notes && (
+                <span title={notes}>
+                    {displayNotes}
+                </span>
+            )}
+        </div>
+    );
 };
 
 Notes.propTypes = {

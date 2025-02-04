@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 
 interface IProps {
     label: string;
-    icon?: {name: string; color?: string};
+    icon?: {name: string, color?: string};
     privateTag?: boolean;
     onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
     'data-test-id'?: string;
@@ -21,12 +21,21 @@ export class DropdownOption extends React.PureComponent<IProps> {
                 data-test-id={this.props['data-test-id']}
                 aria-label={label}
             >
-                {icon != null && (
-                    <i className={`icon-${icon.name}`} style={icon.color == null ? {} : {color: icon.color}} />
-                )}
+                {
+                    icon != null && (
+                        <i className={`icon-${icon.name}`} style={icon.color == null ? {} : {color: icon.color}} />
+                    )
+                }
                 <span>{label}</span>
 
-                {privateTag === true && <Label text={gettext('Private')} size="small" />}
+                {
+                    privateTag === true && (
+                        <Label
+                            text={gettext('Private')}
+                            size="small"
+                        />
+                    )
+                }
             </button>
         );
     }

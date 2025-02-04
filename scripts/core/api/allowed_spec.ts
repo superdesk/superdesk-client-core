@@ -1,15 +1,14 @@
+
 describe('superdesk.core.api.allowed', () => {
     beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(inject((api, $q) => {
-        spyOn(api, 'get').and.returnValue(
-            $q.when({
-                _items: [
-                    {_id: 'resource.value', items: ['foo']},
-                    {_id: 'another.value', items: ['bar']},
-                ],
-            }),
-        );
+        spyOn(api, 'get').and.returnValue($q.when({
+            _items: [
+                {_id: 'resource.value', items: ['foo']},
+                {_id: 'another.value', items: ['bar']},
+            ],
+        }));
     }));
 
     it('can get allowed values for resource/key pair', inject((allowed, $rootScope) => {

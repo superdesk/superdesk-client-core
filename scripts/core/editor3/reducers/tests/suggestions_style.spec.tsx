@@ -211,12 +211,8 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
             if (i < 4) {
                 expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
             } else {
-                expect(block.getInlineStyleAt(i).toJS()).toEqual([
-                    'TOGGLE_BOLD_SUGGESTION-1',
-                    'BOLD',
-                    'TOGGLE_ITALIC_SUGGESTION-1',
-                    'ITALIC',
-                ]);
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(
+                    ['TOGGLE_BOLD_SUGGESTION-1', 'BOLD', 'TOGGLE_ITALIC_SUGGESTION-1', 'ITALIC']);
             }
         }
 
@@ -224,12 +220,8 @@ describe('editor3.reducers.suggestion.CREATE_CHANGE_STYLE_SUGGESTION', () => {
 
         for (let i = 0; i < 10; i++) {
             if (i < 6) {
-                expect(block.getInlineStyleAt(i).toJS()).toEqual([
-                    'TOGGLE_BOLD_SUGGESTION-1',
-                    'BOLD',
-                    'TOGGLE_ITALIC_SUGGESTION-1',
-                    'ITALIC',
-                ]);
+                expect(block.getInlineStyleAt(i).toJS()).toEqual(
+                    ['TOGGLE_BOLD_SUGGESTION-1', 'BOLD', 'TOGGLE_ITALIC_SUGGESTION-1', 'ITALIC']);
             } else {
                 expect(block.getInlineStyleAt(i).toJS()).toEqual([]);
             }

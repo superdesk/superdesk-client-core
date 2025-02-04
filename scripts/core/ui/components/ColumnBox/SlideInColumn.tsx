@@ -8,7 +8,9 @@ import PropTypes from 'prop-types';
  */
 
 export const SlideInColumn: React.StatelessComponent<any> = ({children}) => (
-    <div className="sd-column-box__slide-in-column">{children}</div>
+    <div className="sd-column-box__slide-in-column">
+        {children}
+    </div>
 );
 
 SlideInColumn.propTypes = {children: PropTypes.node};

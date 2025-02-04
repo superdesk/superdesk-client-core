@@ -65,8 +65,8 @@ export function dragStart(event, item) {
 export const getSuperdeskType = (event, supportExternalFiles = true) => {
     const evt = event.originalEvent ?? event;
 
-    return evt.dataTransfer.types.find(
-        (name) => name.includes('application/superdesk') || (supportExternalFiles && name === 'Files'),
+    return evt.dataTransfer.types.find((name) =>
+        name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 };
 

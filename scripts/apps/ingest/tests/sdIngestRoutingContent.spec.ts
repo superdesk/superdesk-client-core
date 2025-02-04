@@ -1,26 +1,29 @@
+
 /**
- * Module with tests for the sdIngestRoutingContent directive
- *
- * @module sdIngestRoutingContent directive tests
- */
+* Module with tests for the sdIngestRoutingContent directive
+*
+* @module sdIngestRoutingContent directive tests
+*/
 describe('sdIngestRoutingContent directive', () => {
-    var contentFilters, fakeGetFilters, fakeTzData, getTzDataDeferred, scope;
+    var contentFilters,
+        fakeGetFilters,
+        fakeTzData,
+        getTzDataDeferred,
+        scope;
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.ingest'));
     beforeEach(window.module('superdesk.apps.content_filters'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    beforeEach(
-        window.module(($provide) => {
-            fakeTzData = {
-                $promise: null,
-                zones: {},
-                links: {},
-            };
-            $provide.constant('tzdata', fakeTzData);
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        fakeTzData = {
+            $promise: null,
+            zones: {},
+            links: {},
+        };
+        $provide.constant('tzdata', fakeTzData);
+    }));
 
     beforeEach(inject(($compile, $rootScope, $q, _contentFilters_) => {
         var html;
@@ -28,7 +31,8 @@ describe('sdIngestRoutingContent directive', () => {
         contentFilters = _contentFilters_;
 
         fakeGetFilters = $q.defer();
-        spyOn(contentFilters, 'getAllContentFilters').and.returnValue(fakeGetFilters.promise);
+        spyOn(contentFilters, 'getAllContentFilters')
+            .and.returnValue(fakeGetFilters.promise);
 
         getTzDataDeferred = $q.defer();
         fakeTzData.$promise = getTzDataDeferred.promise;
@@ -41,7 +45,8 @@ describe('sdIngestRoutingContent directive', () => {
 
     describe('on initialization', () => {
         it('retrieves all content filters', () => {
-            expect(contentFilters.getAllContentFilters).toHaveBeenCalledWith(1, []); // i.e. starting with page 1
+            expect(contentFilters.getAllContentFilters)
+                .toHaveBeenCalledWith(1, []); // i.e. starting with page 1
         });
 
         it('stores content filters list in scope on retrieval', () => {
@@ -56,7 +61,7 @@ describe('sdIngestRoutingContent directive', () => {
         });
     });
 
-    describe("scope's editRule() method", () => {
+    describe('scope\'s editRule() method', () => {
         beforeEach(() => {
             scope.contentFilters = [
                 {_id: 'filter_1', name: 'filter one'},
@@ -74,7 +79,9 @@ describe('sdIngestRoutingContent directive', () => {
             expect(scope.rule).toEqual(ruleToEdit);
         });
 
-        it("sets the scope's rule object's filter name to the name of the " + 'filter the rule references', () => {
+        it('sets the scope\'s rule object\'s filter name to the name of the ' +
+            'filter the rule references',
+        () => {
             var scopeRule,
                 ruleToEdit = {_id: 'rule_1', filter: 'filter_2', schedule: {}};
 
@@ -82,6 +89,7 @@ describe('sdIngestRoutingContent directive', () => {
 
             scopeRule = scope.rule || {};
             expect(scopeRule.filterName).toEqual('filter two');
-        });
+        },
+        );
     });
 });

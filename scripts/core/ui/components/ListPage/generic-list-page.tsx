@@ -57,7 +57,10 @@ export interface IPropsConnected<T> {
 class DefaultItemsContainerComponent extends React.PureComponent {
     render() {
         return (
-            <div data-test-id="list-page--items" className="sd-list-item-group sd-list-item-group--space-between-items">
+            <div
+                data-test-id="list-page--items"
+                className="sd-list-item-group sd-list-item-group--space-between-items"
+            >
                 {this.props.children}
             </div>
         );
@@ -135,12 +138,16 @@ export class GenericListPageComponent<T, P>
         if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
-                bodyText: gettext("Can't open a preview while in edit mode"),
+                bodyText: gettext(
+                    'Can\'t open a preview while in edit mode',
+                ),
             });
         } else if (this.state.newItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
-                bodyText: gettext("Can't open a preview while in create mode"),
+                bodyText: gettext(
+                    'Can\'t open a preview while in create mode',
+                ),
             });
         } else if (this.props.crudManager._items.find((value) => this.props.getId(value) === id) != null) {
             const newPreviewItem = this.props.crudManager._items.find((value) => this.props.getId(value) === id);
@@ -161,21 +168,18 @@ export class GenericListPageComponent<T, P>
             this.searchBarRef.resetSearchValue();
         }
 
-        this.setState(
-            (prevState) => ({
-                ...prevState,
-                filterValues: Object.keys(prevState.filterValues).reduce((acc, key) => {
-                    if (key !== fieldName) {
-                        acc[key] = prevState.filterValues[key];
-                    }
+        this.setState((prevState) => ({
+            ...prevState,
+            filterValues: Object.keys(prevState.filterValues).reduce((acc, key) => {
+                if (key !== fieldName) {
+                    acc[key] = prevState.filterValues[key];
+                }
 
-                    return acc;
-                }, {}),
-            }),
-            () => {
-                this.props.crudManager.removeFilter(fieldName);
-            },
-        );
+                return acc;
+            }, {}),
+        }), () => {
+            this.props.crudManager.removeFilter(fieldName);
+        });
     }
 
     getItemsCount() {
@@ -185,30 +189,32 @@ export class GenericListPageComponent<T, P>
     deleteItem(item: T) {
         const doDelete = () => this.props.crudManager.delete(item);
 
-        this.modal.confirm(gettext('Are you sure you want to delete this item?')).then(() => {
-            if (this.state.editItem != null) {
-                this.modal.alert({
-                    headerText: gettext('Warning'),
-                    bodyText: gettext('Edit mode must closed before you can delete an item.'),
-                });
-            } else if (this.state.previewItem != null) {
-                this.setState(
-                    {
+        this.modal.confirm(gettext('Are you sure you want to delete this item?'))
+            .then(() => {
+                if (this.state.editItem != null) {
+                    this.modal.alert({
+                        headerText: gettext('Warning'),
+                        bodyText: gettext(
+                            'Edit mode must closed before you can delete an item.',
+                        ),
+                    });
+                } else if (this.state.previewItem != null) {
+                    this.setState({
                         previewItem: null,
-                    },
-                    doDelete,
-                );
-            } else {
-                doDelete();
-            }
-        });
+                    }, doDelete);
+                } else {
+                    doDelete();
+                }
+            });
     }
 
     startEditing(id: string) {
         if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
-                bodyText: gettext("Can't edit this item, because another item is in edit mode."),
+                bodyText: gettext(
+                    'Can\'t edit this item, because another item is in edit mode.',
+                ),
             });
         } else {
             const previewItem = (() => {
@@ -290,7 +296,9 @@ export class GenericListPageComponent<T, P>
         if (this.state.editItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
-                bodyText: gettext('The item in edit mode must be closed before you can filter.'),
+                bodyText: gettext(
+                    'The item in edit mode must be closed before you can filter.',
+                ),
             });
         } else {
             this.refetchDataUsingCurrentFilters();
@@ -301,7 +309,11 @@ export class GenericListPageComponent<T, P>
         const {filterValues} = this.state;
         const filtersValidated = this.validateFilters(filterValues);
 
-        this.props.crudManager.read(1, this.props.crudManager.activeSortOption, filtersValidated);
+        this.props.crudManager.read(
+            1,
+            this.props.crudManager.activeSortOption,
+            filtersValidated,
+        );
     }
 
     closeNewItemForm() {
@@ -316,13 +328,15 @@ export class GenericListPageComponent<T, P>
         if (this.state.editItem != null || this.state.newItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
-                bodyText: gettext("Can't add a new item, because another item is in edit mode."),
+                bodyText: gettext(
+                    'Can\'t add a new item, because another item is in edit mode.',
+                ),
             });
         } else {
             this.setState({
                 newItem: {
                     ...getInitialValues(this.props.getFormConfig()),
-                    ...(this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this)),
+                    ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                     ...(initialValues ?? {}),
                 },
                 previewItem: null,
@@ -406,7 +420,9 @@ export class GenericListPageComponent<T, P>
                 if (Object.keys(activeFilters).length > 0) {
                     return (
                         <ListItem noHover>
-                            <ListItemColumn>{gettext('There are no items matching the search.')}</ListItemColumn>
+                            <ListItemColumn>
+                                {gettext('There are no items matching the search.')}
+                            </ListItemColumn>
                         </ListItem>
                     );
                 } else {
@@ -421,21 +437,25 @@ export class GenericListPageComponent<T, P>
             } else {
                 return (
                     <ItemsContainerComponent page={page} additionalProps={additionalProps}>
-                        {this.props.crudManager._items.map((item, i) => (
-                            <ItemComponent
-                                key={this.props.getId(item)}
-                                item={item}
-                                page={page}
-                                inEditMode={
-                                    this.state.editItem == null
-                                        ? false
-                                        : this.props.getId(this.state.editItem) === this.props.getId(item)
-                                }
-                                index={i}
-                                getId={this.props.getId}
-                                additionalProps={additionalProps}
-                            />
-                        ))}
+                        {
+                            this.props.crudManager._items.map(
+                                (item, i) => (
+                                    <ItemComponent
+                                        key={this.props.getId(item)}
+                                        item={item}
+                                        page={page}
+                                        inEditMode={
+                                            this.state.editItem == null
+                                                ? false
+                                                : this.props.getId(this.state.editItem) === this.props.getId(item)
+                                        }
+                                        index={i}
+                                        getId={this.props.getId}
+                                        additionalProps={additionalProps}
+                                    />
+                                ),
+                            )
+                        }
                     </ItemsContainerComponent>
                 );
             }
@@ -454,32 +474,40 @@ export class GenericListPageComponent<T, P>
                 data-test-id="generic-list-page"
             >
                 <OnlyWithChildren wrapper={subNavWrapper}>
-                    {this.props.disallowFiltering ? null : (
-                        <div>
-                            <Button
-                                icon="icon-filter-large"
-                                onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                                active={this.state.filtersOpen}
-                                darker={true}
-                                data-test-id="toggle-filters"
-                            />
-                        </div>
-                    )}
+                    {
+                        this.props.disallowFiltering ? null : (
+                            <div>
+                                <Button
+                                    icon="icon-filter-large"
+                                    onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                    active={this.state.filtersOpen}
+                                    darker={true}
+                                    data-test-id="toggle-filters"
+                                />
+                            </div>
+                        )
+                    }
 
-                    {this.props.fieldForSearch == null ? null : (
-                        <div style={{flexGrow: 1}}>
-                            <SearchBar
-                                ref={(instance) => {
-                                    this.searchBarRef = instance;
-                                }}
-                                value=""
-                                allowCollapsed={false}
-                                onSearch={(value) => {
-                                    this.handleFilterFieldChange(this.props.fieldForSearch.field, value, this.filter);
-                                }}
-                            />
-                        </div>
-                    )}
+                    {
+                        this.props.fieldForSearch == null ? null : (
+                            <div style={{flexGrow: 1}}>
+                                <SearchBar
+                                    ref={(instance) => {
+                                        this.searchBarRef = instance;
+                                    }}
+                                    value=""
+                                    allowCollapsed={false}
+                                    onSearch={(value) => {
+                                        this.handleFilterFieldChange(
+                                            this.props.fieldForSearch.field,
+                                            value,
+                                            this.filter,
+                                        );
+                                    }}
+                                />
+                            </div>
+                        )
+                    }
 
                     <OnlyWithChildren
                         style={{
@@ -489,239 +517,259 @@ export class GenericListPageComponent<T, P>
                             paddingInline: 20,
                         }}
                     >
-                        {this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null && (
-                            <span style={{display: 'flex', alignItems: 'center'}}>
-                                <span>{gettext('Total:')}</span>
-                                &nbsp;
-                                <span>
-                                    <span className="badge">{this.props.crudManager._meta.total}</span>
+                        {
+                            (this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null) && (
+                                <span style={{display: 'flex', alignItems: 'center'}}>
+                                    <span>{gettext('Total:')}</span>
+                                    &nbsp;
+                                    <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
                                 </span>
-                            </span>
-                        )}
+                            )
+                        }
 
-                        {this.props.disallowSorting !== true && (
-                            <SortBar
-                                sortOptions={sortOptions}
-                                selected={this.props.crudManager.activeSortOption}
-                                itemsCount={this.props.crudManager._meta.total}
-                                onSortOptionChange={this.props.crudManager.sort}
-                            />
-                        )}
+                        {
+                            this.props.disallowSorting !== true && (
+                                <SortBar
+                                    sortOptions={sortOptions}
+                                    selected={this.props.crudManager.activeSortOption}
+                                    itemsCount={this.props.crudManager._meta.total}
+                                    onSortOptionChange={this.props.crudManager.sort}
+                                />
+                            )
+                        }
                     </OnlyWithChildren>
 
-                    {this.props.disallowCreatingNewItem === true ? null : (
-                        <div>
-                            <Button
-                                onClick={() => {
-                                    this.openNewItemForm();
-                                }}
-                                className="sd-create-btn dropdown-toggle"
-                                icon="icon-plus-large"
-                                data-test-id="list-page--add-item"
-                            >
-                                <span className="circle" />
-                            </Button>
-                        </div>
-                    )}
+                    {
+                        this.props.disallowCreatingNewItem === true ? null : (
+                            <div>
+                                <Button
+                                    onClick={() => {
+                                        this.openNewItemForm();
+                                    }}
+                                    className="sd-create-btn dropdown-toggle"
+                                    icon="icon-plus-large"
+                                    data-test-id="list-page--add-item"
+                                >
+                                    <span className="circle" />
+                                </Button>
+                            </div>
+                        )
+                    }
                 </OnlyWithChildren>
 
                 <PageContainer>
-                    {this.state.filtersOpen ? (
-                        <PageContainerItem data-test-id="list-page--filters-form">
-                            <SidePanel side="left" width={320}>
-                                <SidePanelHeader>
-                                    <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
-                                    <SidePanelTools>
-                                        <button className="icn-btn" onClick={() => this.setFiltersVisibility(false)}>
-                                            <i className="icon-close-small" />
-                                        </button>
-                                    </SidePanelTools>
-                                </SidePanelHeader>
-                                <SidePanelContent>
-                                    <SidePanelContentBlock>
+                    {
+                        this.state.filtersOpen ? (
+                            <PageContainerItem data-test-id="list-page--filters-form">
+                                <SidePanel side="left" width={320}>
+                                    <SidePanelHeader>
+                                        <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
+                                        <SidePanelTools>
+                                            <button
+                                                className="icn-btn"
+                                                onClick={() => this.setFiltersVisibility(false)}
+                                            >
+                                                <i className="icon-close-small" />
+                                            </button>
+                                        </SidePanelTools>
+                                    </SidePanelHeader>
+                                    <SidePanelContent>
+                                        <SidePanelContentBlock>
+                                            <form
+                                                onSubmit={(event) => {
+                                                    event.preventDefault();
+                                                    this.filter();
+                                                }}
+                                            >
+                                                <FormViewEdit
+                                                    item={this.state.filterValues}
+                                                    formConfig={getFormGroupForFiltering(
+                                                        this.props.getFormConfig(this.state.filterValues),
+                                                    )}
+                                                    editMode={true}
+                                                    issues={{}}
+                                                    handleFieldChange={this.handleFilterFieldChange}
+                                                />
+
+                                            </form>
+                                        </SidePanelContentBlock>
+                                    </SidePanelContent>
+                                    <SidePanelFooter>
                                         <form
                                             onSubmit={(event) => {
                                                 event.preventDefault();
                                                 this.filter();
                                             }}
                                         >
-                                            <FormViewEdit
-                                                item={this.state.filterValues}
-                                                formConfig={getFormGroupForFiltering(
-                                                    this.props.getFormConfig(this.state.filterValues),
-                                                )}
-                                                editMode={true}
-                                                issues={{}}
-                                                handleFieldChange={this.handleFilterFieldChange}
-                                            />
+                                            <button
+                                                className="btn btn--primary btn--expanded"
+                                                type="submit"
+                                                data-test-id="filters-submit"
+                                            >
+                                                {gettext('Filter')}
+                                            </button>
                                         </form>
-                                    </SidePanelContentBlock>
-                                </SidePanelContent>
-                                <SidePanelFooter>
-                                    <form
-                                        onSubmit={(event) => {
-                                            event.preventDefault();
-                                            this.filter();
-                                        }}
-                                    >
-                                        <button
-                                            className="btn btn--primary btn--expanded"
-                                            type="submit"
-                                            data-test-id="filters-submit"
-                                        >
-                                            {gettext('Filter')}
-                                        </button>
-                                    </form>
-                                </SidePanelFooter>
-                            </SidePanel>
-                        </PageContainerItem>
-                    ) : null}
+
+                                    </SidePanelFooter>
+                                </SidePanel>
+                            </PageContainerItem>
+                        ) : null
+                    }
                     <PageContainerItem shrink>
                         <div style={{margin: this.props.contentMargin ?? 20}}>
-                            {showPagination && (
-                                <div style={{textAlign: 'center', marginBlockStart: -20}}>
-                                    <ReactPaginate
-                                        previousLabel={gettext('prev')}
-                                        nextLabel={gettext('next')}
-                                        pageCount={pageCount}
-                                        marginPagesDisplayed={2}
-                                        pageRangeDisplayed={5}
-                                        onPageChange={({selected}) => {
-                                            if (this.props.crudManager._meta.page !== selected + 1) {
-                                                this.props.crudManager.goToPage(selected + 1);
-                                            }
-                                        }}
-                                        initialPage={this.props.crudManager._meta.page - 1}
-                                        containerClassName={'bs-pagination'}
-                                        activeClassName="active"
-                                    />
-                                </div>
-                            )}
-                            {Object.keys(activeFilters).length < 1 ? null : (
-                                <div
-                                    className="subnav"
-                                    style={{background: 'transparent', boxShadow: 'none', marginBlockStart: -20}}
-                                    data-test-id="list-page--filters-active"
-                                >
-                                    {Object.keys(activeFilters).map((field_id, i) => {
-                                        const currentField = getFormFieldsFlat(formConfigForFilters).find(
-                                            ({field}) => field === field_id,
-                                        );
+                            {
+                                showPagination && (
+                                    <div style={{textAlign: 'center', marginBlockStart: -20}}>
+                                        <ReactPaginate
+                                            previousLabel={gettext('prev')}
+                                            nextLabel={gettext('next')}
+                                            pageCount={pageCount}
+                                            marginPagesDisplayed={2}
+                                            pageRangeDisplayed={5}
+                                            onPageChange={({selected}) => {
+                                                if (this.props.crudManager._meta.page !== (selected + 1)) {
+                                                    this.props.crudManager.goToPage(selected + 1);
+                                                }
+                                            }}
+                                            initialPage={this.props.crudManager._meta.page - 1}
+                                            containerClassName={'bs-pagination'}
+                                            activeClassName="active"
+                                        />
+                                    </div>
+                                )
+                            }
+                            {
+                                Object.keys(activeFilters).length < 1 ? null : (
+                                    <div
+                                        className="subnav"
+                                        style={{background: 'transparent', boxShadow: 'none', marginBlockStart: -20}}
+                                        data-test-id="list-page--filters-active"
+                                    >
+                                        {
+                                            Object.keys(activeFilters).map((field_id, i) => {
+                                                const currentField = getFormFieldsFlat(formConfigForFilters).find(
+                                                    ({field}) => field === field_id,
+                                                );
 
-                                        const filterValuePreview = getFormFieldPreviewComponent(
-                                            this.props.crudManager.activeFilters,
-                                            currentField,
-                                        );
+                                                const filterValuePreview = getFormFieldPreviewComponent(
+                                                    this.props.crudManager.activeFilters,
+                                                    currentField,
+                                                );
 
-                                        return (
-                                            <TagLabel
-                                                key={i}
-                                                onRemove={() => {
-                                                    this.removeFilter(field_id);
-                                                }}
-                                            >
-                                                {currentField.label}:&nbsp;
-                                                <strong>{filterValuePreview}</strong>
-                                            </TagLabel>
-                                        );
-                                    })}
-                                </div>
-                            )}
+                                                return (
+                                                    <TagLabel
+                                                        key={i}
+                                                        onRemove={() => {
+                                                            this.removeFilter(field_id);
+                                                        }}
+                                                    >
+                                                        {currentField.label}:&nbsp;
+                                                        <strong>{filterValuePreview}</strong>
+                                                    </TagLabel>
+                                                );
+                                            })
+                                        }
+                                    </div>
+                                )
+                            }
                             {getContents()}
                         </div>
                     </PageContainerItem>
 
-                    {this.state.newItem != null ? (
-                        <PageContainerItem data-test-id="list-page--new-item">
-                            <GenericListPageItemViewEdit
-                                key="new-item"
-                                operation="creation"
-                                item={this.state.newItem}
-                                getFormConfig={getFormConfig}
-                                editMode={true}
-                                hiddenFields={this.props.hiddenFields ?? []}
-                                onEditModeChange={() => {
-                                    this.setState((prevState) => ({
-                                        ...prevState,
-                                        newItem: null,
-                                    }));
-                                }}
-                                onSave={(item: T) => {
-                                    return this.props.crudManager.create(item).then((res) => {
-                                        setTimeout(() => {
-                                            this.closeNewItemForm();
-                                            this.openPreview(this.props.getId(res));
-                                            this.refetchDataUsingCurrentFilters();
+                    {
+                        this.state.newItem != null ? (
+                            <PageContainerItem data-test-id="list-page--new-item">
+                                <GenericListPageItemViewEdit
+                                    key="new-item"
+                                    operation="creation"
+                                    item={this.state.newItem}
+                                    getFormConfig={getFormConfig}
+                                    editMode={true}
+                                    hiddenFields={this.props.hiddenFields ?? []}
+                                    onEditModeChange={() => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            newItem: null,
+                                        }));
+                                    }}
+                                    onSave={(item: T) => {
+                                        return this.props.crudManager.create(item).then((res) => {
+                                            setTimeout(() => {
+                                                this.closeNewItemForm();
+                                                this.openPreview(this.props.getId(res));
+                                                this.refetchDataUsingCurrentFilters();
+                                            });
                                         });
-                                    });
-                                }}
-                                onClose={this.closeNewItemForm}
-                                onCancel={this.closeNewItemForm}
-                                labelForSaveButton={labelForSaveButton}
-                            />
-                        </PageContainerItem>
-                    ) : this.state.editItem != null ? (
-                        <PageContainerItem data-test-id="list-page--view-edit">
-                            <GenericListPageItemViewEdit
-                                key={'edit' + this.props.getId(this.state.editItem)}
-                                operation="editing"
-                                editMode={true}
-                                hiddenFields={this.props.hiddenFields ?? []}
-                                onEditModeChange={(nextValue) => {
-                                    if (nextValue === false) {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItem: null,
-                                        }));
+                                    }}
+                                    onClose={this.closeNewItemForm}
+                                    onCancel={this.closeNewItemForm}
+                                    labelForSaveButton={labelForSaveButton}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.editItem != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'edit' + this.props.getId(this.state.editItem)}
+                                    operation="editing"
+                                    editMode={true}
+                                    hiddenFields={this.props.hiddenFields ?? []}
+                                    onEditModeChange={(nextValue) => {
+                                        if (nextValue === false) {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItem: null,
+                                            }));
+                                        }
+                                    }}
+                                    item={this.state.editItem}
+                                    getFormConfig={getFormConfig}
+                                    onSave={(nextItem) =>
+                                        this.props.crudManager.update(this.state.editItem, nextItem)
+                                            .then((updatedItem) => {
+                                                this.setState((prevState) => ({
+                                                    ...prevState,
+                                                    editItem: null,
+                                                    previewItem: updatedItem,
+                                                }));
+                                            })
                                     }
-                                }}
-                                item={this.state.editItem}
-                                getFormConfig={getFormConfig}
-                                onSave={(nextItem) =>
-                                    this.props.crudManager.update(this.state.editItem, nextItem).then((updatedItem) => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItem: null,
-                                            previewItem: updatedItem,
-                                        }));
-                                    })
-                                }
-                                onClose={this.closePreview}
-                                labelForSaveButton={labelForSaveButton}
-                            />
-                        </PageContainerItem>
-                    ) : this.state.previewItem != null ? (
-                        <PageContainerItem data-test-id="list-page--view-edit">
-                            <GenericListPageItemViewEdit
-                                key={'preview' + this.props.getId(this.state.previewItem)}
-                                operation="editing"
-                                editMode={false}
-                                hiddenFields={this.props.hiddenFields ?? []}
-                                onEditModeChange={(nextValue) => {
-                                    if (nextValue === true) {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            previewItem: null,
-                                            editItem: prevState.previewItem,
-                                        }));
-                                    } else {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItem: null,
-                                            previewItem: prevState.editItem,
-                                        }));
-                                    }
-                                }}
-                                item={this.state.previewItem}
-                                getFormConfig={getFormConfig}
-                                onSave={() => {
-                                    throw new Error("Can't edit in preview mode!");
-                                }}
-                                onClose={this.closePreview}
-                                labelForSaveButton={labelForSaveButton}
-                            />
-                        </PageContainerItem>
-                    ) : null}
+                                    onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.previewItem != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'preview' + this.props.getId(this.state.previewItem)}
+                                    operation="editing"
+                                    editMode={false}
+                                    hiddenFields={this.props.hiddenFields ?? []}
+                                    onEditModeChange={(nextValue) => {
+                                        if (nextValue === true) {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                previewItem: null,
+                                                editItem: prevState.previewItem,
+                                            }));
+                                        } else {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItem: null,
+                                                previewItem: prevState.editItem,
+                                            }));
+                                        }
+                                    }}
+                                    item={this.state.previewItem}
+                                    getFormConfig={getFormConfig}
+                                    onSave={() => {
+                                        throw new Error('Can\'t edit in preview mode!');
+                                    }}
+                                    onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
+                                />
+                            </PageContainerItem>
+                        ) : null
+                    }
                 </PageContainer>
             </div>
         );
@@ -741,15 +789,16 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
         defaultSortOption,
         (filters: IFormGroup) => {
             const formConfigForFilters = getFormGroupForFiltering(formConfig);
-            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters).reduce(
-                (accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}),
-                {},
-            );
+            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
             let filtersFormatted = {};
 
             for (let fieldName in filters) {
-                filtersFormatted[fieldName] = generateFilterForServer(fieldTypesLookup[fieldName], filters[fieldName]);
+                filtersFormatted[fieldName] = generateFilterForServer(
+                    fieldTypesLookup[fieldName],
+                    filters[fieldName],
+                );
             }
 
             return filtersFormatted;

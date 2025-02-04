@@ -6,6 +6,10 @@ interface IProps {
 
 export class HeaderPanel extends React.PureComponent<IProps> {
     render() {
-        return <div className="sd-main-content-grid__header">{this.props.children}</div>;
+        return (
+            <div className="sd-main-content-grid__header">
+                {this.props.children}
+            </div>
+        );
     }
 }

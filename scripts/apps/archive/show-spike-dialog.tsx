@@ -18,59 +18,71 @@ export function showSpikeDialog<T>(
     const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
     const skipConfirmationPrompt = !applyDefault(appConfig.confirm_spike, true);
 
-    middlewares
-        .reduce((current, next) => {
+    middlewares.reduce(
+        (current, next) => {
             return current.then((result) => {
                 if (result.warnings != null) {
                     warnings = warnings.concat(result.warnings);
                 }
                 return next(middlewareArgument);
             });
-        }, initialValue)
-        .then((result) => {
-            // last result isn't processed by `reduce`
-            if (result.warnings != null) {
-                warnings = warnings.concat(result.warnings);
-            }
+        },
+        initialValue,
+    )
+    .then((result) => { // last result isn't processed by `reduce`
+        if (result.warnings != null) {
+            warnings = warnings.concat(result.warnings);
+        }
 
-            return result;
-        })
-        .then(() => {
-            if (skipConfirmationPrompt && warnings.length < 1) {
-                doSpike();
-            } else {
-                modal.createCustomModal('spike-modal').then(({openModal, closeModal}) => {
+        return result;
+    })
+    .then(() => {
+        if (skipConfirmationPrompt && warnings.length < 1) {
+            doSpike();
+        } else {
+            modal.createCustomModal('spike-modal')
+                .then(({openModal, closeModal}) => {
                     openModal(
                         <Modal
                             visible
                             size="small"
                             position="top"
-                            headerTemplate={gettext('Confirm')}
+                            headerTemplate={
+                                gettext('Confirm')
+                            }
                             footerTemplate={
-                                <ButtonGroup align="end">
-                                    <Button type="default" text={gettext('Cancel')} onClick={closeModal} />
-                                    <Button
-                                        type="primary"
-                                        text={gettext('Spike')}
-                                        onClick={() => {
-                                            doSpike();
-                                            closeModal();
-                                        }}
-                                    />
-                                </ButtonGroup>
+                                (
+                                    <ButtonGroup align="end">
+                                        <Button
+                                            type="default"
+                                            text={gettext('Cancel')}
+                                            onClick={closeModal}
+                                        />
+                                        <Button
+                                            type="primary"
+                                            text={gettext('Spike')}
+                                            onClick={() => {
+                                                doSpike();
+                                                closeModal();
+                                            }}
+                                        />
+                                    </ButtonGroup>
+                                )
                             }
                         >
                             <div>{promptForConfirmationMessage}</div>
-                            {warnings.length < 1 ? null : (
-                                <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
-                                    {warnings.map(({text}, i) => (
-                                        <li key={i}>{text}</li>
-                                    ))}
-                                </ul>
-                            )}
+                            {
+                                warnings.length < 1 ? null : (
+                                    <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
+                                        {
+                                            warnings.map(({text}, i) => <li key={i}>{text}</li>)
+                                        }
+                                    </ul>
+                                )
+                            }
                         </Modal>,
                     );
                 });
-            }
-        });
+        }
+    });
 }

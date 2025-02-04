@@ -9,36 +9,34 @@ export function prepareHtmlForPatching(editorState: EditorState): string {
     const content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    return blockMap
-        .map((block) => {
-            let html = '';
+    return blockMap.map((block) => {
+        let html = '';
 
-            if (block.getType() === 'atomic' && block.getEntityAt(0) != null) {
-                const entityKey = block.getEntityAt(0);
-                const entity = content.getEntity(entityKey);
-                const data = entity != null && entity.getData() != null ? entity.getData() : {media: {}};
-                const {media} = data;
+        if (block.getType() === 'atomic' && block.getEntityAt(0) != null) {
+            const entityKey = block.getEntityAt(0);
+            const entity = content.getEntity(entityKey);
+            const data = (entity != null && entity.getData() != null) ? entity.getData() : {media: {}};
+            const {media} = data;
 
-                if (media != null) {
-                    if (media.description_text != null) {
-                        html += getBlockHtml('description', block.getKey(), media.description_text);
-                    }
-
-                    if (media.alt_text != null) {
-                        html += getBlockHtml('alt', block.getKey(), media.alt_text);
-                    }
-
-                    if (media.headline != null) {
-                        html += getBlockHtml('headline', block.getKey(), media.headline);
-                    }
+            if (media != null) {
+                if (media.description_text != null) {
+                    html += getBlockHtml('description', block.getKey(), media.description_text);
                 }
-            } else {
-                html = getBlockHtml('text', block.getKey(), block.getText());
-            }
 
-            return html;
-        })
-        .join('\n');
+                if (media.alt_text != null) {
+                    html += getBlockHtml('alt', block.getKey(), media.alt_text);
+                }
+
+                if (media.headline != null) {
+                    html += getBlockHtml('headline', block.getKey(), media.headline);
+                }
+            }
+        } else {
+            html = getBlockHtml('text', block.getKey(), block.getText());
+        }
+
+        return html;
+    }).join('\n');
 }
 
 /**
@@ -116,7 +114,7 @@ function updateMedia(
 ): ContentState {
     const entityKey = block.getEntityAt(0);
     const entity = contentState.getEntity(entityKey);
-    const data = entity != null && entity.getData() != null ? entity.getData() : null;
+    const data = (entity != null && entity.getData() != null) ? entity.getData() : null;
     let newContent = contentState;
 
     if (data != null) {
@@ -212,7 +210,7 @@ function insertText(
     block: ContentBlock,
     offset: number,
     text: string,
-): {newContent: ContentState; offset: number} {
+): {newContent: ContentState, offset: number} {
     const selection = createSelectionForBlock(editorState, block, offset);
     const newContent = Modifier.insertText(content, selection, text);
 
@@ -231,7 +229,7 @@ function replaceText(
     offset: number,
     text: string,
     newText: string,
-): {newContent: ContentState; offset: number} {
+): {newContent: ContentState, offset: number} {
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 

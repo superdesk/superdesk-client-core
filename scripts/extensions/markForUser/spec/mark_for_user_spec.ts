@@ -16,9 +16,9 @@ describe('mark for user extension', () => {
         browser.wait(ECE.textToBePresentInElement(el(['marked-for-me-dropdown', 'toggle-button', 'badge']), '1'));
         el(['marked-for-me-dropdown', 'toggle-button']).click();
         els(['marked-for-me-dropdown', 'item']).get(0).click();
-        expect(el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title')).toBe(
-            Promise.resolve('first name last name'),
-        );
+        expect(
+            el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title'),
+        ).toBe(Promise.resolve('first name last name'));
 
         // change marked user
         el(['authoring-topbar', 'marked-for-user', 'user-avatar']).click();
@@ -31,8 +31,8 @@ describe('mark for user extension', () => {
         // check if marked user change is persisted after reload
         browser.refresh();
         browser.wait(ECE.presenceOf(el(['authoring-topbar', 'marked-for-user', 'user-avatar'])));
-        expect(el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title')).toBe(
-            Promise.resolve('first name2 last name2'),
-        );
+        expect(
+            el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title'),
+        ).toBe(Promise.resolve('first name2 last name2'));
     });
 });

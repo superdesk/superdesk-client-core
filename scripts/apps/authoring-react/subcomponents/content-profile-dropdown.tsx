@@ -38,17 +38,14 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
                             e.preventDefault();
                             const profileId = e.target.value;
 
-                            this.setState(
-                                {
-                                    selectedProfileId: profileId,
-                                },
-                                () => {
-                                    this.props.reinitialize({
-                                        ...this.props.item,
-                                        profile: profileId,
-                                    });
-                                },
-                            );
+                            this.setState({
+                                selectedProfileId: profileId,
+                            }, () => {
+                                this.props.reinitialize({
+                                    ...this.props.item,
+                                    profile: profileId,
+                                });
+                            });
                         }}
                     >
                         <option value="" />

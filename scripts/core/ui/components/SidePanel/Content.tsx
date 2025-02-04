@@ -8,7 +8,15 @@ import classNames from 'classnames';
  * @description Component to hold contents of a side panel
  */
 export const Content: React.StatelessComponent<any> = ({children, className, flex}) => (
-    <div className={classNames('side-panel__content', {'side-panel__content--flex': flex}, className)}>{children}</div>
+    <div
+        className={classNames(
+            'side-panel__content',
+            {'side-panel__content--flex': flex},
+            className,
+        )}
+    >
+        {children}
+    </div>
 );
 
 Content.propTypes = {

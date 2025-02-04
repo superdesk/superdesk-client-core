@@ -4,7 +4,12 @@ import {createSelector} from 'reselect';
 // Types
 import {IDesk} from 'superdesk-api';
 import {IApplicationState} from '../index';
-import {CONTENT_PANEL_STATE, ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
+import {
+    CONTENT_PANEL_STATE,
+    ISetItem,
+    IStorageDestinationItem,
+    SET_STATE,
+} from '../../interfaces';
 
 // Redux Selectors
 import {getStorageDestinationsById} from '../storageDestinations/selectors';
@@ -24,11 +29,15 @@ export function getSets(state: IApplicationState): Array<ISetItem> {
 }
 
 export function getActiveSets(state: IApplicationState): Array<ISetItem> {
-    return state.sets.sets.filter((set) => set.state === SET_STATE.USABLE);
+    return state.sets.sets.filter(
+        (set) => set.state === SET_STATE.USABLE,
+    );
 }
 
 export function getDisabledSets(state: IApplicationState): Array<ISetItem> {
-    return state.sets.sets.filter((set) => set.state === SET_STATE.DISABLED);
+    return state.sets.sets.filter(
+        (set) => set.state === SET_STATE.DISABLED,
+    );
 }
 
 export function getDisabledSetIds(state: IApplicationState): Array<string> {
@@ -45,11 +54,14 @@ export function getDisabledSetIds(state: IApplicationState): Array<string> {
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
     [getSets],
     (sets: Array<ISetItem>) => {
-        return sets.reduce<Dictionary<string, ISetItem>>((items: Dictionary<string, ISetItem>, set: ISetItem) => {
-            items[set._id] = set;
+        return sets.reduce<Dictionary<string, ISetItem>>(
+            (items: Dictionary<string, ISetItem>, set: ISetItem) => {
+                items[set._id] = set;
 
-            return items;
-        }, {});
+                return items;
+            },
+            {},
+        );
     },
 );
 
@@ -57,7 +69,7 @@ export function getSetContentPanelState(state: IApplicationState): CONTENT_PANEL
     return state.sets.contentPanelState ?? CONTENT_PANEL_STATE.CLOSED;
 }
 
-export function getSelectedSetId(state: IApplicationState): string | undefined {
+export function getSelectedSetId(state: IApplicationState): string| undefined {
     return state.sets.selectedSetId;
 }
 
@@ -66,8 +78,13 @@ export const getSelectedSet = createSelector<
     Dictionary<string, ISetItem>,
     string | undefined,
     ISetItem | undefined
->([getSetsById, getSelectedSetId], (sets: Dictionary<string, ISetItem>, setId?: string) =>
-    setId != null ? sets?.[setId] : undefined,
+>(
+    [getSetsById, getSelectedSetId],
+    (sets: Dictionary<string, ISetItem>, setId?: string) => (
+        setId != null ?
+            sets?.[setId] :
+            undefined
+    ),
 );
 
 export const getSelectedSetStorageDestination = createSelector<
@@ -77,8 +94,11 @@ export const getSelectedSetStorageDestination = createSelector<
     IStorageDestinationItem | undefined
 >(
     [getSelectedSet, getStorageDestinationsById],
-    (set: ISetItem | undefined, destinations: Dictionary<string, IStorageDestinationItem>) =>
-        set?.destination_name != null ? destinations?.[set?.destination_name] : undefined,
+    (set: ISetItem | undefined, destinations: Dictionary<string, IStorageDestinationItem>) => (
+        set?.destination_name != null ?
+            destinations?.[set?.destination_name] :
+            undefined
+    ),
 );
 
 export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISetItem>, ISetArrays>(
@@ -92,17 +112,17 @@ export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISe
 
         sets.forEach((set: ISetItem) => {
             switch (set.state) {
-                case SET_STATE.USABLE:
-                    groupedSets.usable.push(set);
-                    break;
-                case SET_STATE.DISABLED:
-                    groupedSets.disabled.push(set);
-                    break;
-                case SET_STATE.DRAFT:
-                    groupedSets.draft.push(set);
-                    break;
-                default:
-                    assertNever(set.state);
+            case SET_STATE.USABLE:
+                groupedSets.usable.push(set);
+                break;
+            case SET_STATE.DISABLED:
+                groupedSets.disabled.push(set);
+                break;
+            case SET_STATE.DRAFT:
+                groupedSets.draft.push(set);
+                break;
+            default:
+                assertNever(set.state);
             }
         });
 
@@ -119,8 +139,13 @@ export const getSelectedSetCount = createSelector<
     Dictionary<string, number>,
     string | undefined,
     number | undefined
->([getAssetsCountForSets, getSelectedSetId], (counts: Dictionary<string, number>, setId?: string) =>
-    setId != null ? counts?.[setId] : undefined,
+>(
+    [getAssetsCountForSets, getSelectedSetId],
+    (counts: Dictionary<string, number>, setId?: string) => (
+        setId != null ?
+            counts?.[setId] :
+            undefined
+    ),
 );
 
 export const getAvailableSetsForDesk = createSelector<
@@ -129,14 +154,19 @@ export const getAvailableSetsForDesk = createSelector<
     Dictionary<ISetItem['_id'], ISetItem>,
     Dictionary<ISetItem['_id'], Array<IDesk['_id']>>,
     Array<ISetItem['_id']>
->([getCurrentDeskId, getSetsById, getDesksAllowedSets], (currentDeskId, sets, deskRestrictions) => {
-    return Object.keys(sets).filter(
-        (setId) =>
-            // if in custom workspace
-            currentDeskId == null ||
-            // if the Set has no Desk restrictions
-            deskRestrictions[setId] == null ||
-            // if the Set has Desk restrictions, and current desk is available
-            deskRestrictions[setId].includes(currentDeskId),
-    );
-});
+>(
+    [getCurrentDeskId, getSetsById, getDesksAllowedSets],
+    (currentDeskId, sets, deskRestrictions) => {
+        return Object.keys(sets)
+            .filter((setId) => (
+                // if in custom workspace
+                currentDeskId == null ||
+
+                // if the Set has no Desk restrictions
+                deskRestrictions[setId] == null ||
+
+                // if the Set has Desk restrictions, and current desk is available
+                deskRestrictions[setId].includes(currentDeskId)
+            ));
+    },
+);

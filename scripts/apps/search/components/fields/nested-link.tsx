@@ -11,19 +11,21 @@ class NestedLink extends React.PureComponent<IPropsItemListInfo> {
         const {isNested, item, toggleNested, showNested} = this.props;
         const sequence = item.correction_sequence || item.rewrite_sequence;
 
-        if (
-            isNested === true ||
-            appConfig.features.nestedItemsInOutputStage !== true ||
-            sequence == null ||
-            sequence <= 1
-        ) {
+        if (isNested === true || appConfig.features.nestedItemsInOutputStage !== true
+            || sequence == null || sequence <= 1) {
             return null;
         }
 
         return (
             <div key="nestedlink" className="element-with-badge">
-                <a className="text-link" onClick={toggleNested} onDoubleClick={(event) => event.stopPropagation()}>
-                    {showNested ? gettext('Hide previous items') : gettext('Show previous items')}
+                <a
+                    className="text-link"
+                    onClick={toggleNested}
+                    onDoubleClick={(event) => event.stopPropagation()}
+                >
+                    {showNested ?
+                        gettext('Hide previous items') :
+                        gettext('Show previous items')}
                 </a>
             </div>
         );

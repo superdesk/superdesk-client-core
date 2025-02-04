@@ -17,7 +17,9 @@ export class AnnotationSelectSingleItem extends React.Component<IProps> {
 
         return (
             <div>
-                <div style={{marginBlockStart: 20}}>{this.props.annotationTypeSelect}</div>
+                <div style={{marginBlockStart: 20}}>
+                    {this.props.annotationTypeSelect}
+                </div>
                 <h3 style={{marginBlockStart: 15}}>{this.props.item.name}</h3>
                 <div
                     style={{maxHeight: '15rem', overflow: 'auto', marginBlockStart: 15}}

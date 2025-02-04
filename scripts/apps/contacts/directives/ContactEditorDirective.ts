@@ -16,7 +16,16 @@ ContactEditorDirective.$inject = [
     'lodash',
 ];
 
-export function ContactEditorDirective(contacts, notify, privileges, metadata, $filter, Keys, $rootScope, _) {
+export function ContactEditorDirective(
+    contacts,
+    notify,
+    privileges,
+    metadata,
+    $filter,
+    Keys,
+    $rootScope,
+    _,
+) {
     // contains all the injected services to be passed down to child
     // components via props
     const services = {
@@ -31,15 +40,14 @@ export function ContactEditorDirective(contacts, notify, privileges, metadata, $
             origContact: '=contact',
             oncancel: '&',
         },
-        link: function (scope, elem) {
-            scope.onCancel = function () {
+        link: function(scope, elem) {
+            scope.onCancel = function() {
                 scope.$applyAsync(() => {
                     scope.oncancel();
                 });
             };
 
-            var contactFormContainer = React.createElement(
-                ContactFormContainerComponent,
+            var contactFormContainer = React.createElement(ContactFormContainerComponent,
                 angular.extend({
                     svc: services,
                     contact: scope.origContact,

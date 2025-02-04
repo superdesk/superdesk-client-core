@@ -278,7 +278,7 @@ export default {
         englishName: 'Galician',
     },
     'gn-PY': {
-        nativeName: "Avañe'ẽ",
+        nativeName: 'Avañe\'ẽ',
         englishName: 'Guarani',
     },
     'gu-IN': {
@@ -690,11 +690,11 @@ export default {
         englishName: 'Urdu',
     },
     uz: {
-        nativeName: "O'zbek",
+        nativeName: 'O\'zbek',
         englishName: 'Uzbek',
     },
     'uz-UZ': {
-        nativeName: "O'zbek",
+        nativeName: 'O\'zbek',
         englishName: 'Uzbek',
     },
     'vi-VN': {

@@ -38,10 +38,8 @@ export class Editor3Html extends React.Component<IEditor3HtmlProps, IState> {
         // for ex: "<p><br></p><p>hello</p>" will get converted to "<p>Hello</p>"
         // due to this props value never matches HTML created from state.rawDraftContentState
         // So, to avoid infinite loop match prevProps.value with current props.value as well
-        if (
-            this.props.value !== prevProps.value &&
-            this.props.value !== editor3StateToHtml(convertFromRaw(this.state.rawDraftContentState))
-        ) {
+        if (this.props.value !== prevProps.value
+            && this.props.value !== editor3StateToHtml(convertFromRaw(this.state.rawDraftContentState))) {
             // This component holds it's own state which is derived from props
             // internal state is reloaded when it doesn't match with what's in the props
             // holding own state is required to prevent infinite loops which would happen because

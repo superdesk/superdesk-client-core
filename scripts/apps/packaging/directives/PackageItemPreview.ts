@@ -2,23 +2,17 @@ import _ from 'lodash';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$sce', 'desks', 'vocabularies'];
-export function PackageItemPreview(
-    api,
-    lock,
-    superdesk,
-    authoringWorkspace: AuthoringWorkspaceService,
-    $sce,
-    desks,
-    vocabularies,
-) {
+PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$sce',
+    'desks', 'vocabularies'];
+export function PackageItemPreview(api, lock, superdesk, authoringWorkspace: AuthoringWorkspaceService, $sce,
+    desks, vocabularies) {
     return {
         scope: {
             item: '=',
             readonly: '@',
         },
         templateUrl: 'scripts/apps/packaging/views/sd-package-item-preview.html',
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             scope.data = null;
             scope.error = null;
             scope.userLookup = desks.userLookup;
@@ -52,8 +46,8 @@ export function PackageItemPreview(
                     endpoint = 'archived';
                 }
 
-                api[endpoint].getByUrl(url).then(
-                    (result) => {
+                api[endpoint].getByUrl(url)
+                    .then((result) => {
                         scope.data = result;
                         if (scope.data.abstract) {
                             scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
@@ -61,11 +55,9 @@ export function PackageItemPreview(
                         scope.isLocked = lock.isLocked(scope.data);
                         scope.isPublished = isPublished(scope.data, false);
                         scope.isKilled = isKilled(scope.data);
-                    },
-                    (response) => {
+                    }, (response) => {
                         scope.error = true;
-                    },
-                );
+                    });
             }
 
             scope.$on('item:lock', (_e, data) => {
@@ -106,11 +98,11 @@ export function PackageItemPreview(
                 }
             });
 
-            scope.preview = function (item) {
+            scope.preview = function(item) {
                 superdesk.intent('preview', 'item', item);
             };
 
-            scope.open = function (item) {
+            scope.open = function(item) {
                 authoringWorkspace.open(item);
             };
         },

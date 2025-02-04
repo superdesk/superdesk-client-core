@@ -6,7 +6,8 @@ import {IConfig, IValueOperational} from './interfaces';
 
 const {gettext} = superdesk.localization;
 
-export class TemplateEditor extends React.PureComponent<ITemplateEditorComponentProps<IValueOperational, IConfig>> {
+export class TemplateEditor
+    extends React.PureComponent<ITemplateEditorComponentProps<IValueOperational, IConfig>> {
     render() {
         const initialConfig = this.props?.config?.initial_offset_minutes;
         const checkbox = (
@@ -30,8 +31,18 @@ export class TemplateEditor extends React.PureComponent<ITemplateEditorComponent
 
         return (
             <>
-                <div>{checkbox}</div>
-                <div>{this.props.value && <span style={{fontSize: '12px', color: '#747474'}}>{messageText}</span>}</div>
+                <div>
+                    {checkbox}
+                </div>
+                <div>
+                    {this.props.value &&
+                        (
+                            <span style={{fontSize: '12px', color: '#747474'}}>
+                                {messageText}
+                            </span>
+                        )
+                    }
+                </div>
             </>
         );
     }

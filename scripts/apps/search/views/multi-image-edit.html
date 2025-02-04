@@ -14,15 +14,7 @@
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
-        <button
-            class="btn btn--primary btn--hollow"
-            ng-click="save(true)"
-            ng-disabled="!images.length"
-            translate
-            data-test-id="multi-image-edit--start-upload"
-        >
-            Upload
-        </button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
 </div>
 
@@ -51,45 +43,28 @@
             <div class="sd-photo-preview sd-photo-preview--grid-only">
                 <div class="sd-photo-preview__thumb-strip">
                     <div class="sd-grid-list">
-                        <div
-                            class="sd-grid-item sd-grid-item--with-click"
-                            ng-click="handleItemClick($event, image)"
-                            ng-repeat="image in images track by image._id"
-                            ng-class="{'sd-grid-item--selected' : image.selected}"
-                            style="z-index: 1"
-                        >
-                            <!--  // required so it's visible on top or drag-and-drop layer -->
+                        <div class="sd-grid-item sd-grid-item--with-click"
+                             ng-click="handleItemClick($event, image)"
+                             ng-repeat="image in images track by image._id"
+                             ng-class="{'sd-grid-item--selected' : image.selected}"
+                             style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
-                                <div
-                                    ng-bind-html="trustAsHtml(getThumbnailHtml(image))"
-                                    style="display: flex; align-items: center; justify-content: center"
-                                ></div>
+                                <div ng-bind-html="trustAsHtml(getThumbnailHtml(image))"
+                                    style="display: flex; align-items: center; justify-content: center;">
+                                </div>
 
-                                <a
-                                    ng-if="onRemoveItem"
-                                    class="icn-btn sd-grid-item__remove"
-                                    sd-tooltip="{{'Remove item' | translate}}"
-                                    flow="left"
-                                >
+                                <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="{{'Remove item' | translate}}" flow="left">
                                     <i class="icon-close-small"></i>
                                 </a>
 
-                                <span
-                                    ng-if="getProgress && getProgress(image) > 0"
-                                    class="sd-grid-item__progress-circle"
-                                >
-                                    <sd-circular-progress
-                                        value="getProgress(image)"
-                                        class="sd-circular-progress--m"
-                                    ></sd-circular-progress>
+                                <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle">
+                                    <sd-circular-progress value="getProgress(image)" class="sd-circular-progress--m"></sd-circular-progress>
                                 </span>
                             </div>
                             <div class="sd-grid-item__content">
                                 <time sd-absdate datetime="image.versioncreated"></time>
                                 <p class="sd-grid-item__title">{{image.headline}}</p>
-                                <p class="sd-grid-item--element-grow sd-grid-item__text-light">
-                                    {{image.description_text}}
-                                </p>
+                                <p class="sd-grid-item--element-grow sd-grid-item__text-light">{{image.description_text}}</p>
                                 <div class="sd-grid-item__content-block">
                                     <span class="sd-grid-item__text-label" translate>Copyright:</span>
                                     <span class="sd-grid-item__text-strong">{{image.copyrightnotice}}</span>
@@ -97,10 +72,7 @@
                             </div>
                             <div class="sd-grid-item__footer">
                                 <div class="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
-                                    <i
-                                        class="sd-grid-item__type-icn sd-grid-item__footer-block-item"
-                                        ng-class="getIconForItemType(image)"
-                                    ></i>
+                                    <i class="sd-grid-item__type-icn sd-grid-item__footer-block-item" ng-class="getIconForItemType(image)"></i>
                                 </div>
                             </div>
                         </div>
@@ -111,23 +83,16 @@
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large">
-            <div
-                class="sd-column-box__slide-in-column-inner sd-slide-in-panel"
-                ng-controller="MediaFieldsController as fields"
-            >
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel" ng-controller="MediaFieldsController as fields">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>
                 </div>
                 <div class="sd-slide-in-panel__content">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
-                        <div
-                            class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
-                            style="margin: -1rem 0 3rem"
-                        >
+                        <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
                             <span translate>Currently editing: {{getSelectedItemsLength()}} items</span>
                         </div>
-                        <div
-                            sd-media-metadata-editor
+                        <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
                             data-disabled="getSelectedItemsLength() === 0"
@@ -140,15 +105,15 @@
                         ></div>
                     </div>
                 </div>
-                <div
-                    sd-media-copy-metadata
+                <div sd-media-copy-metadata
                     ng-if="getSelectedImages().length"
                     class="sd-slide-in-panel__footer"
                     data-metadata="metadata"
                     data-validator="validator"
                     data-on-change="setMetadataDirty(!metadataDirty)"
                     data-fields="fields.fields"
-                ></div>
+                    >
+                </div>
             </div>
         </div>
     </div>

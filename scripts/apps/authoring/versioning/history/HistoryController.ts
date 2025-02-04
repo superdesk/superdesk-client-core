@@ -19,9 +19,12 @@ HistoryController.$inject = [
 export type PublishType = 'publish' | 'kill' | 'correct' | 'takedown' | 'resend' | 'unpublish';
 
 export function isPublishType(x: unknown): x is PublishType {
-    return (
-        x === 'publish' || x === 'kill' || x === 'correct' || x === 'takedown' || x === 'resend' || x === 'unpublish'
-    );
+    return x === 'publish'
+        || x === 'kill'
+        || x === 'correct'
+        || x === 'takedown'
+        || x === 'resend'
+        || x === 'unpublish';
 }
 
 /**
@@ -83,20 +86,22 @@ const getHistory = (item) => {
     const criteria = {
         where: {item_id: item._id},
         max_results: 200,
-        sort: "[('_created', 1)]",
+        sort: '[(\'_created\', 1)]',
     };
 
     if (item._type === 'legal_archive') {
-        return api.query('legal_archive_history', criteria).then((historyItems) => {
-            historyItems._items.map(processLegalHistoryItem);
-            return historyItems._items;
-        });
+        return api.query('legal_archive_history', criteria)
+            .then((historyItems) => {
+                historyItems._items.map(processLegalHistoryItem);
+                return historyItems._items;
+            });
     }
 
-    return api.query('archive_history', criteria).then((historyItems) => {
-        historyItems._items.map(processHistoryItem);
-        return historyItems._items;
-    });
+    return api.query('archive_history', criteria)
+        .then((historyItems) => {
+            historyItems._items.map(processHistoryItem);
+            return historyItems._items;
+        });
 };
 
 export interface IHistoryItem extends IBaseRestApiResponse {
@@ -128,7 +133,7 @@ export function getHistoryItems(item: IArticle): Promise<Array<IHistoryItem>> {
     return new Promise((resolve, reject) => {
         getHistory(item)
             .then((historyItems) => {
-                let historyVersion = (historyItems.length && historyItems[0].version) || 200;
+                let historyVersion = historyItems.length && historyItems[0].version || 200;
 
                 const waitForVersions = new Promise<void>((resolveVersions) => {
                     if (!historyItems.length || historyItems[0].version > 1) {
@@ -171,20 +176,20 @@ export function getHistoryItems(item: IArticle): Promise<Array<IHistoryItem>> {
 
 export function getOperationLabel(operation: PublishType, state: string): string {
     switch (operation) {
-        case 'publish':
-            return state === 'scheduled' ? gettext('Scheduled by') : gettext('Published by');
-        case 'correct':
-            return gettext('Corrected by');
-        case 'kill':
-            return gettext('Killed by');
-        case 'takedown':
-            return gettext('Recalled by');
-        case 'resend':
-            return gettext('Resent by');
-        case 'unpublish':
-            return gettext('Unpublished by');
-        default:
-            assertNever(operation);
+    case 'publish':
+        return state === 'scheduled' ? gettext('Scheduled by') : gettext('Published by');
+    case 'correct':
+        return gettext('Corrected by');
+    case 'kill':
+        return gettext('Killed by');
+    case 'takedown':
+        return gettext('Recalled by');
+    case 'resend':
+        return gettext('Resent by');
+    case 'unpublish':
+        return gettext('Unpublished by');
+    default:
+        assertNever(operation);
     }
 }
 
@@ -250,21 +255,17 @@ export function HistoryController(
     const initializeServices = () => {
         let promises = [];
 
-        promises.push(
-            desks.initialize().then(() => {
-                $scope.deskLookup = desks.deskLookup;
-            }),
-        );
+        promises.push(desks.initialize().then(() => {
+            $scope.deskLookup = desks.deskLookup;
+        }));
 
-        promises.push(
-            highlightsService.get().then((result) => {
-                $scope.highlightsById = {};
+        promises.push(highlightsService.get().then((result) => {
+            $scope.highlightsById = {};
 
-                result._items.forEach((item) => {
-                    $scope.highlightsById[item._id] = item;
-                });
-            }),
-        );
+            result._items.forEach((item) => {
+                $scope.highlightsById[item._id] = item;
+            });
+        }));
 
         return $q.all(promises);
     };

@@ -21,19 +21,19 @@ export const package_items: IFieldAdapter<IArticle> = {
             ...article,
             groups: [
                 {
-                    role: 'grpRole:NEP',
-                    refs: [
+                    'role': 'grpRole:NEP',
+                    'refs': [
                         {
-                            idRef: 'main',
-                            label: 'main',
+                            'idRef': 'main',
+                            'label': 'main',
                         },
                     ],
-                    id: 'root',
+                    'id': 'root',
                 },
                 {
                     refs: value,
-                    id: 'main',
-                    role: 'grpRole:main',
+                    'id': 'main',
+                    'role': 'grpRole:main',
                 },
             ],
         };

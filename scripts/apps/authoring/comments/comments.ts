@@ -8,7 +8,7 @@ CommentsService.$inject = ['api'];
 function CommentsService(api) {
     this.comments = null;
 
-    this.fetch = function (item) {
+    this.fetch = function(item) {
         var criteria = {
             where: {
                 item: item,
@@ -16,14 +16,13 @@ function CommentsService(api) {
             embedded: {user: 1},
         };
 
-        return api.item_comments.query(criteria).then(
-            angular.bind(this, function (result) {
+        return api.item_comments.query(criteria)
+            .then(angular.bind(this, function(result) {
                 this.comments = result._items;
-            }),
-        );
+            }));
     };
 
-    this.save = function (comment) {
+    this.save = function(comment) {
         return api.item_comments.save(comment).catch((error) => {
             if (error.data._issues?.text != null) {
                 notify.error(error.data._issues.text);
@@ -39,14 +38,14 @@ function CommentsCtrl($scope, $routeParams, commentsService) {
     $scope.$watch('item._id', reload);
     $scope.users = [];
 
-    $scope.saveOnEnter = function ($event) {
+    $scope.saveOnEnter = function($event) {
         if (!$scope.saveEnterFlag || $event.keyCode !== ENTER || $event.shiftKey) {
             return;
         }
         $scope.save();
     };
 
-    $scope.save = function () {
+    $scope.save = function() {
         var text = $scope.text || '';
 
         if (!text.length) {
@@ -56,15 +55,13 @@ function CommentsCtrl($scope, $routeParams, commentsService) {
         $scope.text = '';
         $scope.flags = {saving: true};
 
-        commentsService
-            .save({
-                text: text,
-                item: $scope.item._id,
-            })
-            .then(reload);
+        commentsService.save({
+            text: text,
+            item: $scope.item._id,
+        }).then(reload);
     };
 
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $scope.text = '';
     };
 
@@ -96,7 +93,7 @@ function CommentTextDirective($compile) {
         scope: {
             comment: '=',
         },
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             var html;
 
             // replace new lines with paragraphs
@@ -110,8 +107,7 @@ function CommentTextDirective($compile) {
                 var username = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
-                    html = html.replace(
-                        token,
+                    html = html.replace(token,
                         '<i sd-user-info data-user="' + scope.comment.mentioned_users[username] + '">' + token + '</i>',
                     );
                 }
@@ -125,7 +121,8 @@ function CommentTextDirective($compile) {
                 var deskname = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {
-                    html = html.replace(token, '<a href="">' + token + '</a>');
+                    html = html.replace(token,
+                        '<a href="">' + token + '</a>');
                 }
             });
             // build element
@@ -136,17 +133,15 @@ function CommentTextDirective($compile) {
     };
 }
 
-angular
-    .module('superdesk.apps.authoring.comments', [
-        'superdesk.apps.authoring.widgets',
-        'mentio',
-        'superdesk.core.api',
-        'superdesk.core.keyboard',
-    ])
-    .config([
-        'authoringWidgetsProvider',
-        function (authoringWidgetsProvider) {
-            authoringWidgetsProvider.widget('comments', {
+angular.module('superdesk.apps.authoring.comments', [
+    'superdesk.apps.authoring.widgets',
+    'mentio',
+    'superdesk.core.api',
+    'superdesk.core.keyboard',
+])
+    .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
+        authoringWidgetsProvider
+            .widget('comments', {
                 icon: 'chat',
                 label: gettext('Comments'),
                 template: 'scripts/apps/authoring/comments/views/comments-widget.html',
@@ -162,18 +157,14 @@ angular
                     personal: true,
                 },
             });
-        },
-    ])
+    }])
 
-    .config([
-        'apiProvider',
-        function (apiProvider) {
-            apiProvider.api('item_comments', {
-                type: 'http',
-                backend: {rel: 'item_comments'},
-            });
-        },
-    ])
+    .config(['apiProvider', function(apiProvider) {
+        apiProvider.api('item_comments', {
+            type: 'http',
+            backend: {rel: 'item_comments'},
+        });
+    }])
 
     .controller('CommentsWidgetCtrl', CommentsCtrl)
     .service('commentsService', CommentsService)

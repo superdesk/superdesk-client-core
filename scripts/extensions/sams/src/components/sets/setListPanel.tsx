@@ -96,4 +96,7 @@ export class SetListPanelComponent extends React.PureComponent<IProps> {
     }
 }
 
-export const SetListPanel = connect(mapStateToProps, mapDispatchToProps)(SetListPanelComponent);
+export const SetListPanel = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SetListPanelComponent);

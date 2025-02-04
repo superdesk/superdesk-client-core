@@ -1,5 +1,9 @@
 import {convertToRaw} from 'draft-js';
-import {IEditor3Config, IEditor3ValueStorage, IStorageAdapter} from 'superdesk-api';
+import {
+    IEditor3Config,
+    IEditor3ValueStorage,
+    IStorageAdapter,
+} from 'superdesk-api';
 import {LANGUAGE} from '../constants';
 import {IRundownItem, IRundownItemTemplateInitial} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -17,19 +21,22 @@ export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemp
             const editor3Config = config as IEditor3Config;
             const rawState = (value as IEditor3ValueStorage).rawContentState;
 
-            const computed = computeEditor3Output(rawState, editor3Config, LANGUAGE);
+            const computed = computeEditor3Output(
+                rawState,
+                editor3Config,
+                LANGUAGE,
+            );
 
-            const fieldsMetaCurrent: IRundownItem['fields_meta'] = rundownItem.data.fields_meta ?? {};
-            const fieldsDataNext: IRundownItem['fields_meta'] =
-                editor3Config.readOnly === true
-                    ? fieldsMetaCurrent
-                    : {
-                          ...fieldsMetaCurrent,
-                          [fieldId]: {
-                              draftjsState: [rawState],
-                              annotations: computed.annotations,
-                          },
-                      };
+            const fieldsMetaCurrent: IRundownItem['fields_meta'] = (rundownItem.data.fields_meta ?? {});
+            const fieldsDataNext: IRundownItem['fields_meta'] = editor3Config.readOnly === true
+                ? fieldsMetaCurrent
+                : {
+                    ...fieldsMetaCurrent,
+                    [fieldId]: {
+                        draftjsState: [rawState],
+                        annotations: computed.annotations,
+                    },
+                };
 
             return {
                 ...rundownItem,
@@ -62,9 +69,8 @@ export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemp
 
                 return val;
             } else {
-                const returnValue: IEditor3ValueStorage = {
-                    rawContentState: convertToRaw(getContentStateFromHtml(value ?? '')),
-                };
+                const returnValue: IEditor3ValueStorage
+                    = {rawContentState: convertToRaw(getContentStateFromHtml(value ?? ''))};
 
                 return returnValue;
             }
@@ -80,19 +86,23 @@ export const rundownItemStorageAdapter: IStorageAdapter<IRundownItem> = {
             const editor3Config = config as IEditor3Config;
             const rawState = (value as IEditor3ValueStorage).rawContentState;
 
-            const computed = computeEditor3Output(rawState, editor3Config, LANGUAGE);
+            const computed = computeEditor3Output(
+                rawState,
+                editor3Config,
+                LANGUAGE,
+            );
 
             const fieldsMetaCurrent: IRundownItem['fields_meta'] = rundownItem.fields_meta ?? {};
             const fieldsMetaNext: IRundownItem['fields_meta'] =
                 editor3Config.readOnly === true
                     ? fieldsMetaCurrent
                     : {
-                          ...fieldsMetaCurrent,
-                          [fieldId]: {
-                              draftjsState: [rawState],
-                              annotations: computed.annotations,
-                          },
-                      };
+                        ...fieldsMetaCurrent,
+                        [fieldId]: {
+                            draftjsState: [rawState],
+                            annotations: computed.annotations,
+                        },
+                    };
 
             return {
                 ...(rundownItem ?? {}),
@@ -119,9 +129,8 @@ export const rundownItemStorageAdapter: IStorageAdapter<IRundownItem> = {
 
                 return val;
             } else {
-                const returnValue: IEditor3ValueStorage = {
-                    rawContentState: convertToRaw(getContentStateFromHtml(value ?? '')),
-                };
+                const returnValue: IEditor3ValueStorage
+                    = {rawContentState: convertToRaw(getContentStateFromHtml(value ?? ''))};
 
                 return returnValue;
             }

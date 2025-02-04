@@ -14,16 +14,8 @@
             </ul>
         </div>
         <div class="sd-page__flex-helper">
-            <div
-                class="sd-page__flex-helper"
-                ng-if="tab === 'products'"
-                ng-include="'scripts/apps/products/views/products.html'"
-            ></div>
-            <div
-                class="sd-page__flex-helper"
-                ng-if="tab === 'productTest'"
-                ng-include="'scripts/apps/products/views/product-test.html'"
-            ></div>
+            <div class="sd-page__flex-helper" ng-if="tab === 'products'" ng-include="'scripts/apps/products/views/products.html'"></div>
+            <div class="sd-page__flex-helper" ng-if="tab === 'productTest'" ng-include="'scripts/apps/products/views/product-test.html'"></div>
         </div>
     </div>
 </sd-settings-view>

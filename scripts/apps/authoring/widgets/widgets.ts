@@ -83,12 +83,12 @@ function AuthoringWidgetsProvider() {
      *     - `badgeAsync` - `{Function}` - Injectable function to get badge number
      *       returning a promise, gets `item` injected.
      */
-    this.widget = function (id, widget: IWidget) {
+    this.widget = function(id, widget: IWidget) {
         widgets = widgets.filter((_widget) => _widget._id !== id);
         widgets.push(angular.extend({}, widget, {_id: id})); // make a new instance for every widget
     };
 
-    this.$get = function () {
+    this.$get = function() {
         const widgetsFromExtensions = flatMap(
             Object.values(extensions),
             (extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [],
@@ -146,23 +146,9 @@ export const widgetReactIntegration: IWidgetIntegration = {
  */
 export let closedIntentionally = {value: false};
 
-WidgetsManagerCtrl.$inject = [
-    '$scope',
-    '$routeParams',
-    'authoringWidgets',
-    'archiveService',
-    'authoringWorkspace',
-    'keyboardManager',
-    '$location',
-    'desks',
-    'lock',
-    'content',
-    'lodash',
-    'privileges',
-    '$injector',
-    'preferencesService',
-    '$rootScope',
-];
+WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
+    '$injector', 'preferencesService', '$rootScope'];
 function WidgetsManagerCtrl(
     $scope: IScope,
     $routeParams,
@@ -182,16 +168,15 @@ function WidgetsManagerCtrl(
 ) {
     const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
     const localStorageWidgetState = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
-    const widgetValue =
-        localStorageWidget == null
-            ? null
-            : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
+    const widgetValue = localStorageWidget == null
+        ? null
+        : authoringWidgets.find((widget) => widget._id === localStorageWidgetState?.id);
 
     $scope.active = widgetValue;
 
-    preferencesService
-        .get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS)
-        .then((preferences) => (this.widgetFromPreferences = preferences));
+    preferencesService.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS).then((preferences) =>
+        this.widgetFromPreferences = preferences,
+    );
 
     $scope.$watch('item', (item: IArticle) => {
         if (!item) {
@@ -219,43 +204,37 @@ function WidgetsManagerCtrl(
         }
 
         const widgets = authoringWidgets.filter((widget) => {
-            if (widget.component != null) {
-                // widgets from extensions are themselves in control of widget visibility
+            if (widget.component != null) { // widgets from extensions are themselves in control of widget visibility
                 return widget.isAllowed?.(item) ?? true;
             } else {
-                return (
-                    !!widget.display[display] &&
-                    // If the widget requires a feature configured, then test this
-                    // feature name against the config (defaulting to true)
-                    (!widget.feature || !!_.get(appConfig.features, widget.feature, true))
-                );
+                return !!widget.display[display] &&
+                // If the widget requires a feature configured, then test this
+                // feature name against the config (defaulting to true)
+                (!widget.feature || !!_.get(appConfig.features, widget.feature, true));
             }
         });
 
         content.getType(item.profile).then((contentProfile: IContentProfile) => {
             const promises = widgets.map(
-                (widget) =>
-                    new Promise((resolve) => {
-                        Promise.all([
-                            // checking static superdesk config
-                            typeof widget.isWidgetVisible === 'function'
-                                ? $injector.invoke(widget.isWidgetVisible(item))
-                                : Promise.resolve(true),
+                (widget) => new Promise((resolve) => {
+                    Promise.all([
+                        // checking static superdesk config
+                        typeof widget.isWidgetVisible === 'function'
+                            ? $injector.invoke(widget.isWidgetVisible(item))
+                            : Promise.resolve(true),
 
-                            // checking result from plugins
-                            authoringWorkspace.isWidgetVisible(widget),
+                        // checking result from plugins
+                        authoringWorkspace.isWidgetVisible(widget),
 
-                            Promise.resolve(
-                                isWidgetVisibleForContentProfile(contentProfile.widgets_config, widget._id),
-                            ),
-                        ])
-                            .then((res) => {
-                                resolve(res.every((i) => i === true));
-                            })
-                            .catch(() => {
-                                resolve(false);
-                            });
-                    }),
+                        Promise.resolve(isWidgetVisibleForContentProfile(contentProfile.widgets_config, widget._id)),
+                    ])
+                        .then((res) => {
+                            resolve(res.every((i) => i === true));
+                        })
+                        .catch(() => {
+                            resolve(false);
+                        });
+                }),
             );
 
             Promise.all(promises).then((result) => {
@@ -278,16 +257,14 @@ function WidgetsManagerCtrl(
                         });
                     } else if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;
-                        $injector
-                            .invoke(widget.badgeAsync, null, {item})
-                            .then((value) => (widget.badgeAsyncValue = value));
+                        $injector.invoke(widget.badgeAsync, null, {item})
+                            .then((value) => widget.badgeAsyncValue = value);
                     }
                 });
 
                 if (this.widgetFromPreferences) {
-                    let widgetFromPreferences = $scope.widgets?.find(
-                        (widget) => widget._id === this.widgetFromPreferences._id,
-                    );
+                    let widgetFromPreferences = $scope.widgets?.find((widget) =>
+                        widget._id === this.widgetFromPreferences._id);
 
                     if (widgetFromPreferences) {
                         $scope.pinWidget(widgetFromPreferences);
@@ -332,19 +309,17 @@ function WidgetsManagerCtrl(
         });
     }
 
-    $scope.isWidgetLocked = function (widget: IWidget) {
+    $scope.isWidgetLocked = function(widget: IWidget) {
         if (widget) {
             var locked = lock.isLocked($scope.item) && !lock.can_unlock($scope.item);
             var isReadOnlyStage = desks.isReadOnlyStage($scope.item.task.stage);
 
-            return (
-                (widget.needUnlock && (locked || isReadOnlyStage)) ||
-                (widget.needEditable && (!$scope.item._editable || isReadOnlyStage))
-            );
+            return widget.needUnlock && (locked || isReadOnlyStage) ||
+            widget.needEditable && (!$scope.item._editable || isReadOnlyStage);
         }
     };
 
-    $scope.activate = function (widget) {
+    $scope.activate = function(widget) {
         if (!$scope.isWidgetLocked(widget)) {
             if ($scope.active === widget) {
                 $scope.closeWidget();
@@ -394,7 +369,8 @@ function WidgetsManagerCtrl(
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
-    widgetReactIntegration.getPinnedWidget = () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
+    widgetReactIntegration.getPinnedWidget =
+        () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
 
     widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
     widgetReactIntegration.WidgetLayoutComponent = WidgetLayoutComponent;
@@ -410,14 +386,14 @@ function WidgetsManagerCtrl(
     };
 
     // item is associated to an assignment
-    $scope.isAssigned = (item) =>
-        _.get(item, 'assignment_id') != null && _.get(privileges, 'privileges.planning') === 1;
+    $scope.isAssigned = (item) => _.get(item, 'assignment_id') != null
+        && _.get(privileges, 'privileges.planning') === 1;
 
-    this.activate = function (widget) {
+    this.activate = function(widget) {
         $scope.activate(widget);
     };
 
-    $scope.closeWidget = function () {
+    $scope.closeWidget = function() {
         closedIntentionally.value = false;
 
         if ($scope.active && typeof $scope.active.afterClose === 'function') {
@@ -468,7 +444,7 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
-        link: function (scope) {
+        link: function(scope) {
             scope.widget = null;
             scope.pinnedWidget = null;
 
@@ -523,17 +499,10 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
     };
 }
 
-angular
-    .module('superdesk.apps.authoring.widgets', ['superdesk.core.keyboard'])
+angular.module('superdesk.apps.authoring.widgets', ['superdesk.core.keyboard'])
     .provider('authoringWidgets', AuthoringWidgetsProvider)
     .directive('sdAuthoringWidgets', AuthoringWidgetsDir)
-    .run([
-        'keyboardManager',
-        function (keyboardManager) {
-            keyboardManager.register(
-                'Authoring',
-                'ctrl + alt + {N}',
-                gettext("Toggle Nth widget, where 'N' is order of widget it appears"),
-            );
-        },
-    ]);
+    .run(['keyboardManager', function(keyboardManager) {
+        keyboardManager.register('Authoring', 'ctrl + alt + {N}',
+            gettext('Toggle Nth widget, where \'N\' is order of widget it appears'));
+    }]);

@@ -33,10 +33,9 @@ interface ISuggestion {
         suggestionText: string;
         type: string;
         blockType?: string;
-        link?: {
-            // only for link suggestions
+        link?: { // only for link suggestions
             href: string;
-        };
+        }
     };
 
     suggestionText: string;
@@ -46,8 +45,10 @@ interface ISuggestion {
 class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
     render() {
         const {suggestionInfo, suggestionText, oldText, resolutionInfo} = this.props.suggestion;
-        const suggestionAuthor = store.getState().entities.users[suggestionInfo.author];
-        const suggestionResolver = store.getState().entities.users[resolutionInfo.resolverUserId];
+        const suggestionAuthor =
+            store.getState().entities.users[suggestionInfo.author];
+        const suggestionResolver =
+            store.getState().entities.users[resolutionInfo.resolverUserId];
 
         return (
             <Card>
@@ -58,6 +59,7 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
 
                             <div>
                                 <strong>{suggestionAuthor.display_name}</strong>:
+
                                 <div>
                                     <TimeElem date={suggestionInfo.date} />
                                 </div>
@@ -66,45 +68,67 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
                     </div>
 
                     <div>
-                        {resolutionInfo.accepted ? (
-                            <Label text={gettext('Accepted')} type="success" />
-                        ) : (
-                            <Label text={gettext('Rejected')} type="alert" />
-                        )}
+                        {
+                            resolutionInfo.accepted
+                                ? (<Label text={gettext('Accepted')} type="success" />)
+                                : (<Label text={gettext('Rejected')} type="alert" />)
+                        }
                     </div>
                 </Spacer>
 
                 <SpacerBlock v gap="8" />
 
                 <div>
-                    {suggestionInfo.type === 'REPLACE_SUGGESTION' ? (
-                        <span
-                            dangerouslySetInnerHTML={{
-                                __html: gettext('Replace {{x}} with {{y}}', {
-                                    x: `<strong>&quot;${oldText}&quot;</strong>`,
-                                    y: `<strong>&quot;${suggestionText}&quot;</strong>`,
-                                }),
-                            }}
-                        />
-                    ) : (
-                        <strong>
-                            {getLocalizedTypeText(suggestionInfo.type, suggestionInfo.blockType)}
-                            :&nbsp;
-                            <span>&quot;{suggestionText}&quot;</span>
-                            {suggestionInfo.type === 'ADD_LINK_SUGGESTION' && (
-                                <span>&nbsp;{suggestionInfo.link.href}</span>
-                            )}
-                        </strong>
-                    )}
+                    {
+                        suggestionInfo.type === 'REPLACE_SUGGESTION'
+                            ? (
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: gettext(
+                                            'Replace {{x}} with {{y}}',
+                                            {
+                                                x: `<strong>&quot;${oldText}&quot;</strong>`,
+                                                y: `<strong>&quot;${suggestionText}&quot;</strong>`,
+                                            },
+                                        ),
+                                    }}
+                                />
+                            )
+                            : (
+                                <strong>
+                                    {
+                                        getLocalizedTypeText(
+                                            suggestionInfo.type,
+                                            suggestionInfo.blockType,
+                                        )
+                                    }
+                                    :&nbsp;
+
+                                    <span>&quot;{suggestionText}&quot;</span>
+
+                                    {
+                                        suggestionInfo.type === 'ADD_LINK_SUGGESTION' && (
+                                            <span>
+                                                &nbsp;{suggestionInfo.link.href}
+                                            </span>
+                                        )
+                                    }
+                                </strong>
+                            )
+                    }
                 </div>
 
                 <SpacerBlock v gap="8" />
 
                 <div>
-                    {resolutionInfo.accepted
-                        ? gettext('Accepted by {{user}}', {user: suggestionResolver.display_name})
-                        : gettext('Rejected by {{user}}', {user: suggestionResolver.display_name})}
+                    {
+                        resolutionInfo.accepted
+                            ? gettext('Accepted by {{user}}', {user: suggestionResolver.display_name})
+                            : gettext('Rejected by {{user}}', {user: suggestionResolver.display_name})
+                    }
+
                     &nbsp;
+
                     <TimeElem date={resolutionInfo.date} />
                 </div>
             </Card>
@@ -130,17 +154,17 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
     getResolvedSuggestions() {
         const {fieldsData} = this.props;
 
-        return this.getEditor3Fields()
-            .map((field) => {
-                const value = fieldsData.get(field.id) as IEditor3ValueOperational;
+        return this.getEditor3Fields().map((field) => {
+            const value = fieldsData.get(field.id) as IEditor3ValueOperational;
 
-                return {
-                    fieldId: field.id,
-                    suggestions: (getCustomEditor3Data(value.contentState, 'RESOLVED_SUGGESTIONS_HISTORY') ??
-                        []) as Array<ISuggestion>,
-                };
-            })
-            .filter(({suggestions}) => suggestions.length > 0);
+            return {
+                fieldId: field.id,
+                suggestions: (getCustomEditor3Data(
+                    value.contentState,
+                    'RESOLVED_SUGGESTIONS_HISTORY',
+                ) ?? []) as Array<ISuggestion>,
+            };
+        }).filter(({suggestions}) => suggestions.length > 0);
     }
 
     render() {
@@ -148,36 +172,53 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
         const allFields = contentProfile.header.merge(contentProfile.content);
         const resolvedSuggestions = this.getResolvedSuggestions();
 
-        const widgetBody: JSX.Element =
-            resolvedSuggestions.length > 0 ? (
+        const widgetBody: JSX.Element = resolvedSuggestions.length > 0
+            ? (
                 <div>
                     <Spacer v gap="16">
-                        {resolvedSuggestions.map(({fieldId, suggestions}, i) => {
-                            return (
-                                <div key={i}>
-                                    <div className="field-label--base">{allFields.get(fieldId).name}</div>
+                        {
+                            resolvedSuggestions.map(({fieldId, suggestions}, i) => {
+                                return (
+                                    <div key={i}>
+                                        <div className="field-label--base">
+                                            {allFields.get(fieldId).name}
+                                        </div>
 
-                                    <SpacerBlock v gap="8" />
+                                        <SpacerBlock v gap="8" />
 
-                                    <Spacer v gap="8">
-                                        {suggestions.map((suggestion, j) => (
-                                            <Suggestion key={j} suggestion={suggestion} />
-                                        ))}
-                                    </Spacer>
-                                </div>
-                            );
-                        })}
+                                        <Spacer v gap="8">
+                                            {
+                                                suggestions.map((suggestion, j) => (
+                                                    <Suggestion
+                                                        key={j}
+                                                        suggestion={suggestion}
+                                                    />
+                                                ))
+                                            }
+                                        </Spacer>
+                                    </div>
+                                );
+                            })
+                        }
                     </Spacer>
                 </div>
-            ) : (
-                <EmptyState title={gettext('There are no resolved suggestions')} illustration="3" />
+            )
+            : (
+                <EmptyState
+                    title={gettext('There are no resolved suggestions')}
+                    illustration="3"
+                />
             );
 
         return (
             <AuthoringWidgetLayout
-                header={
-                    <AuthoringWidgetHeading widgetId={SUGGESTIONS_WIDGET_ID} widgetName={getLabel()} editMode={false} />
-                }
+                header={(
+                    <AuthoringWidgetHeading
+                        widgetId={SUGGESTIONS_WIDGET_ID}
+                        widgetName={getLabel()}
+                        editMode={false}
+                    />
+                )}
                 body={widgetBody}
                 background="grey"
             />

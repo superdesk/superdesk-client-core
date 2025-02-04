@@ -8,10 +8,17 @@ interface IProps {
 
 export class FormGroup extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('form__group', {
-            'form__group--rows': this.props.rows,
-        });
+        const classes = classNames(
+            'form__group',
+            {
+                'form__group--rows': this.props.rows,
+            },
+        );
 
-        return <div className={classes}>{this.props.children}</div>;
+        return (
+            <div className={classes}>
+                {this.props.children}
+            </div>
+        );
     }
 }

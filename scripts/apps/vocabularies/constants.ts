@@ -8,7 +8,7 @@ interface IMediaType {
     RELATED_CONTENT: {
         id: 'related_content';
         label: string;
-    };
+    }
 }
 
 export function getMediaTypes(): IMediaType {

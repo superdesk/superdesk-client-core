@@ -1,5 +1,5 @@
-<div ng-if="!loading">
-    <!-- variable managed in scripts/core/loading.ts -->
+
+<div ng-if="!loading"> <!-- variable managed in scripts/core/loading.ts -->
     <!--
         Render top menu only after a user is logged in.
         Otherwise, the extensions will initialize too soon and will be unable to access HTTP API.
@@ -16,19 +16,14 @@
 
 <div class="loading" ng-if="loading"></div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="renderMonitoring && superdesk.flags.workspace === true">
+<div
+    id="main-container"
+    ng-class="superdesk.flags"
+    ng-if="renderMonitoring && superdesk.flags.workspace === true"
+>
     <div id="workspace-container" ng-view sd-splitter-widget></div>
-    <div
-        id="authoring-container"
-        ng-show="superdesk.flags.authoring"
-        ng-if="superdesk.flags.workspace"
-        sd-authoring-container
-    ></div>
-    <div
-        id="superdesk-workqueue"
-        ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true"
-        sd-workqueue
-    ></div>
+    <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
+    <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
 
     <div ng-if="itemsForExport != null" sd-export></div>
 </div>
@@ -37,12 +32,7 @@
     <div id="authoring-container" sd-authoring-container></div>
 </div>
 
-<div
-    id="main-container"
-    ng-class="superdesk.flags"
-    ng-if="renderMonitoring && superdesk.flags.workspace === false"
-    ng-view
-></div>
+<div id="main-container" ng-class="superdesk.flags" ng-if="renderMonitoring && superdesk.flags.workspace === false" ng-view></div>
 
 <div style="z-index: 1051 !important" id="react-placeholder"></div>
 <div id="react-backdrop"></div>

@@ -4,7 +4,7 @@ import {IArticle} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    component: React.ComponentType<{article: IArticle}>;
+    component: React.ComponentType<{ article: IArticle }>;
 }
 
 export class HeaderComponentField extends React.PureComponent<IProps> {
@@ -18,6 +18,8 @@ export class HeaderComponentField extends React.PureComponent<IProps> {
          */
         const article = {...this.props.item};
 
-        return <Component article={article} />;
+        return (
+            <Component article={article} />
+        );
     }
 }

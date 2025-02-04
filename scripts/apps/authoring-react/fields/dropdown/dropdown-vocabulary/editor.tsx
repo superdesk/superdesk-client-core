@@ -20,6 +20,8 @@ interface IProps {
 
 export class EditorVocabulary extends React.PureComponent<IProps> {
     render() {
-        return <EditorUsingManualSourceOrVocabulary {...this.props} />;
+        return (
+            <EditorUsingManualSourceOrVocabulary {...this.props} />
+        );
     }
 }

@@ -2,23 +2,19 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 
-angular
-    .module('superdesk.core.itemList', ['superdesk.apps.search'])
-    /**
-     * @ngdoc directive
-     * @module superdesk.core.itemList
-     * @name sdRelatedItemListWidget
-     * @param {object} options
-     * @param {object} itemListOptions
-     * @param {object} actions
-     * @param {object} loading
-     * @description Creates a list of stories to appear in related items widget.
-     */
-    .directive('sdRelatedItemListWidget', [
-        'notify',
-        'familyService',
-        'desks',
-        function (notify, familyService, desks) {
+angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
+/**
+ * @ngdoc directive
+ * @module superdesk.core.itemList
+ * @name sdRelatedItemListWidget
+ * @param {object} options
+ * @param {object} itemListOptions
+ * @param {object} actions
+ * @param {object} loading
+ * @description Creates a list of stories to appear in related items widget.
+ */
+    .directive('sdRelatedItemListWidget', ['notify', 'familyService', 'desks',
+        function(notify, familyService, desks) {
             return {
                 scope: {
                     options: '=',
@@ -27,7 +23,7 @@ angular
                     loading: '=',
                 },
                 templateUrl: 'scripts/core/itemList/views/relatedItem-list-widget.html',
-                link: function (scope, element, attrs) {
+                link: function(scope, element, attrs) {
                     scope.items = null;
                     scope.processedItems = null;
                     scope.selected = null;
@@ -43,16 +39,12 @@ angular
                     scope.refresh = () => {
                         if (scope.options.related && scope.hasKeywords()) {
                             scope.loading = true;
-                            familyService
-                                .fetchRelatableItems(
-                                    scope.itemListOptions.keyword,
-                                    scope.itemListOptions.sluglineMatch,
-                                    scope.options.item,
-                                    scope.itemListOptions.modificationDateAfter,
-                                )
-                                .then((items) => {
-                                    scope.processedItems = items._items;
-                                })
+                            familyService.fetchRelatableItems(scope.itemListOptions.keyword,
+                                scope.itemListOptions.sluglineMatch,
+                                scope.options.item,
+                                scope.itemListOptions.modificationDateAfter).then((items) => {
+                                scope.processedItems = items._items;
+                            })
                                 .finally(() => {
                                     scope.loading = false;
                                 });
@@ -71,10 +63,8 @@ angular
                             return true;
                         }
 
-                        return (
-                            (scope.actions.update && scope.actions.update.condition(item)) ||
-                            (scope.actions.addTake && scope.actions.addTake.condition(item))
-                        );
+                        return scope.actions.update && scope.actions.update.condition(item) ||
+                            scope.actions.addTake && scope.actions.addTake.condition(item);
                     };
 
                     /**
@@ -141,13 +131,12 @@ angular
 
                     scope.$watchGroup(['options.item.slugline', 'options.existingRelations'], setProcessedItems);
 
-                    scope.hasKeywords = () =>
-                        scope.itemListOptions.keyword && scope.itemListOptions.keyword.trim().length >= 2;
+                    scope.hasKeywords = () => scope.itemListOptions.keyword &&
+                        scope.itemListOptions.keyword.trim().length >= 2;
 
                     scope.view = (item) => {
                         scope.selected = item;
                     };
                 },
             };
-        },
-    ]);
+        }]);

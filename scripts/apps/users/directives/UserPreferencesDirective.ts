@@ -16,36 +16,12 @@ import {IExtensionActivationResult, IMultiChannelNotification} from 'superdesk-a
  *   panel, allowing users to set various system preferences for
  *   themselves.
  */
-UserPreferencesDirective.$inject = [
-    'session',
-    'preferencesService',
-    'notify',
-    'asset',
-    'metadata',
-    'desks',
-    'modal',
-    '$timeout',
-    '$q',
-    'userList',
-    'lodash',
-    'search',
-    'authThemes',
-];
+UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search', 'authThemes'];
 
 export function UserPreferencesDirective(
-    session,
-    preferencesService,
-    notify,
-    asset,
-    metadata,
-    desks,
-    modal,
-    $timeout,
-    $q,
-    userList,
-    _,
-    search,
-    authThemes,
+    session, preferencesService, notify, asset, metadata, desks, modal,
+    $timeout, $q, userList, _, search, authThemes,
 ) {
     // human readable labels for server values
     const LABELS = {
@@ -66,7 +42,7 @@ export function UserPreferencesDirective(
 
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             const userLang = getUserInterfaceLanguage().replace('_', '-');
             const body = angular.element('body');
             const NOTIFICATIONS_KEY = 'notifications';
@@ -77,9 +53,7 @@ export function UserPreferencesDirective(
                 const result = {};
 
                 for (const extension of Object.values(extensions)) {
-                    for (const [notificationId, notification] of Object.entries(
-                        extension.activationResult.contributions?.notifications ?? [],
-                    )) {
+                    for (const [notificationId, notification] of Object.entries(extension.activationResult.contributions?.notifications ?? [])) {
                         result[notificationId] = notification;
                     }
                 }
@@ -96,7 +70,7 @@ export function UserPreferencesDirective(
 
             // email:notification toggling happens via `ng-model` in a template
             // this function only updates child notifications
-            scope.toggleEmailGroupNotifications = function () {
+            scope.toggleEmailGroupNotifications = function() {
                 const isGroupEnabled = scope.preferences['email:notification'].enabled;
 
                 for (const notificationId of Object.keys(scope.preferences.notifications)) {
@@ -107,7 +81,7 @@ export function UserPreferencesDirective(
                 scope.$applyAsync();
             };
 
-            scope.toggleUiTheme = function (theme) {
+            scope.toggleUiTheme = function(theme) {
                 scope.activeTheme = theme;
                 if (orig['application:theme'] == null) {
                     orig['application:theme'] = {};
@@ -115,13 +89,12 @@ export function UserPreferencesDirective(
                 orig['application:theme']['theme'] = theme;
             };
 
-            scope.toggleEmailNotification = function (notificationId: string) {
+            scope.toggleEmailNotification = function(notificationId: string) {
                 scope.preferences[NOTIFICATIONS_KEY][notificationId].email =
                     !scope.preferences[NOTIFICATIONS_KEY][notificationId].email;
 
-                scope.preferences['email:notification'].enabled = Object.values(
-                    scope.preferences[NOTIFICATIONS_KEY],
-                ).some((value: any) => value.email === true);
+                scope.preferences['email:notification'].enabled =
+                    Object.values(scope.preferences[NOTIFICATIONS_KEY]).some((value: any) => value.email === true);
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
@@ -136,14 +109,14 @@ export function UserPreferencesDirective(
                 scope.featurePreview = scope.preferences['feature:preview'];
             });
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.userPrefs.$setPristine();
                 buildPreferences(cloneDeep(orig));
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
             };
 
-            scope.goTo = function (id) {
+            scope.goTo = function(id) {
                 document.getElementById(id).scrollIntoView({
                     behavior: 'smooth',
                 });
@@ -151,7 +124,7 @@ export function UserPreferencesDirective(
                 scope.activeNavigation = id;
             };
 
-            scope.checkNavigation = function (id) {
+            scope.checkNavigation = function(id) {
                 return scope.activeNavigation === id;
             };
 
@@ -160,51 +133,47 @@ export function UserPreferencesDirective(
             });
 
             /**
-             * Saves the preferences changes on the server. It also
-             * invokes additional checks beforehand, namely the
-             * preferred categories selection.
-             *
-             * @method save
-             */
-            scope.save = function () {
+            * Saves the preferences changes on the server. It also
+            * invokes additional checks beforehand, namely the
+            * preferred categories selection.
+            *
+            * @method save
+            */
+            scope.save = function() {
                 preSaveCategoriesCheck()
-                    .then(
-                        () => {
-                            var update = createPatchObject();
+                    .then(() => {
+                        var update = createPatchObject();
 
-                            return preferencesService.update(update).then(() => {
-                                userList.getUser(scope.user._id, true).then((u) => {
-                                    scope.user = u;
-                                });
-                                return update;
+                        return preferencesService.update(update).then(() => {
+                            userList.getUser(scope.user._id, true).then((u) => {
+                                scope.user = u;
                             });
-                        },
-                        () => $q.reject('canceledByModal'),
-                    )
-                    .then(
-                        (preferences) => {
-                            // ask for browser permission if desktop notification is enable
-                            if (_.get(preferences, 'desktop:notification.enabled')) {
-                                preferencesService.desktopNotification.requestPermission();
-                            }
+                            return update;
+                        });
+                    }, () => $q.reject('canceledByModal'))
+                    .then((preferences) => {
+                        // ask for browser permission if desktop notification is enable
+                        if (_.get(preferences, 'desktop:notification.enabled')) {
+                            preferencesService.desktopNotification.requestPermission();
+                        }
 
-                            body.attr('data-theme', scope.activeTheme);
-                            notify.success(gettext('User preferences saved'));
-                            scope.cancel();
-                        },
-                        (reason) => {
-                            if (reason !== 'canceledByModal') {
-                                notify.error(gettext('User preferences could not be saved...'));
-                            }
-                        },
-                    );
+                        body.attr('data-theme', scope.activeTheme);
+                        notify.success(gettext('User preferences saved'));
+                        scope.cancel();
+                    }, (reason) => {
+                        if (reason !== 'canceledByModal') {
+                            notify.error(gettext(
+                                'User preferences could not be saved...',
+                            ));
+                        }
+                    });
             };
 
             /**
              * Invoked by the directive after updating the property in item. This method is responsible for updating
              * the properties dependent on dateline.
              */
-            scope.changeDatelinePreview = function (datelinePreference, city) {
+            scope.changeDatelinePreview = function(datelinePreference, city) {
                 if (city === '') {
                     datelinePreference.located = null;
                 }
@@ -215,12 +184,12 @@ export function UserPreferencesDirective(
             };
 
             /**
-             * Marks all categories in the preferred categories list
-             * as selected.
-             *
-             * @method checkAll
-             */
-            scope.checkAll = function () {
+            * Marks all categories in the preferred categories list
+            * as selected.
+            *
+            * @method checkAll
+            */
+            scope.checkAll = function() {
                 scope.categories.forEach((cat) => {
                     cat.selected = true;
                 });
@@ -228,12 +197,12 @@ export function UserPreferencesDirective(
             };
 
             /**
-             * Marks all categories in the preferred categories list
-             * as *not* selected.
-             *
-             * @method checkNone
-             */
-            scope.checkNone = function () {
+            * Marks all categories in the preferred categories list
+            * as *not* selected.
+            *
+            * @method checkNone
+            */
+            scope.checkNone = function() {
                 scope.categories.forEach((cat) => {
                     cat.selected = false;
                 });
@@ -241,13 +210,13 @@ export function UserPreferencesDirective(
             };
 
             /**
-             * Marks the categories in the preferred categories list
-             * that are considered default as selected, and all the
-             * other categories as *not* selected.
-             *
-             * @method checkDefault
-             */
-            scope.checkDefault = function () {
+            * Marks the categories in the preferred categories list
+            * that are considered default as selected, and all the
+            * other categories as *not* selected.
+            *
+            * @method checkDefault
+            */
+            scope.checkDefault = function() {
                 scope.categories.forEach((cat) => {
                     cat.selected = !!scope.defaultCategories[cat.qcode];
                 });
@@ -260,11 +229,11 @@ export function UserPreferencesDirective(
              *
              * @method articleDefaultsChanged
              */
-            scope.articleDefaultsChanged = function (item) {
+            scope.articleDefaultsChanged = function(item) {
                 scope.userPrefs.$setDirty();
             };
 
-            scope.showCategory = function (preference) {
+            scope.showCategory = function(preference) {
                 if (preference.category === 'rows') {
                     return appConfig.list != null && appConfig.list.singleLineView;
                 }
@@ -288,7 +257,7 @@ export function UserPreferencesDirective(
              *
              * @method showPlanning
              */
-            scope.showPlanning = function () {
+            scope.showPlanning = function() {
                 return !angular.isUndefined(scope.features.agenda);
             };
 
@@ -297,15 +266,15 @@ export function UserPreferencesDirective(
             scope.getIcon = (value) => ICONS[value] || 'list-view';
 
             /**
-             * Builds a user preferences object in scope from the given
-             * data.
-             *
-             * @function buildPreferences
-             * @param {Object} data - user preferences data, arranged in
-             *   logical groups. The keys represent these groups' names,
-             *   while the corresponding values are objects containing
-             *   user preferences settings for a particular group.
-             */
+            * Builds a user preferences object in scope from the given
+            * data.
+            *
+            * @function buildPreferences
+            * @param {Object} data - user preferences data, arranged in
+            *   logical groups. The keys represent these groups' names,
+            *   while the corresponding values are objects containing
+            *   user preferences settings for a particular group.
+            */
             function buildPreferences(data) {
                 var buckets, // names of the needed metadata buckets
                     initNeeded; // metadata service init needed?
@@ -351,15 +320,15 @@ export function UserPreferencesDirective(
             }
 
             /**
-             * Updates auxiliary scope data, such as the lists of
-             * available and content categories to choose from.
-             *
-             * @function updateScopeData
-             * @param {Object} helperData - auxiliary data used by the
-             *   preferences settings UI
-             * @param {Object} userPrefs - user's personal preferences
-             *   settings
-             */
+            * Updates auxiliary scope data, such as the lists of
+            * available and content categories to choose from.
+            *
+            * @function updateScopeData
+            * @param {Object} helperData - auxiliary data used by the
+            *   preferences settings UI
+            * @param {Object} userPrefs - user's personal preferences
+            *   settings
+            */
             function updateScopeData(helperData, userPrefs) {
                 // If the planning module is installed we save a list of the available agendas
                 if (scope.features.agenda) {
@@ -430,9 +399,10 @@ export function UserPreferencesDirective(
                     scope.preferences[NOTIFICATIONS_KEY] = {};
                 }
 
-                for (const [notificationId, notification] of Object.entries(registeredNotifications) as Array<
-                    [string, IMultiChannelNotification]
-                >) {
+                for (
+                    const [notificationId, notification]
+                    of Object.entries(registeredNotifications) as Array<[string, IMultiChannelNotification]>
+                ) {
                     if (scope.preferences[NOTIFICATIONS_KEY][notificationId] == null) {
                         scope.preferences[NOTIFICATIONS_KEY][notificationId] = {
                             email: true,
@@ -447,20 +417,22 @@ export function UserPreferencesDirective(
             }
 
             /**
-             * Checks if at least one preferred category has been
-             * selected, and if not, asks the user whether or not to
-             * proceed with a default set of categories selected.
-             *
-             * Returns a promise that is resolved if saving the
-             * preferences should continue, and rejected if it should be
-             * aborted (e.g. when no categories are selected AND the
-             * user does not confirm using a default set of categories).
-             *
-             * @function preSaveCategoriesCheck
-             * @return {Object} - a promise object
-             */
+            * Checks if at least one preferred category has been
+            * selected, and if not, asks the user whether or not to
+            * proceed with a default set of categories selected.
+            *
+            * Returns a promise that is resolved if saving the
+            * preferences should continue, and rejected if it should be
+            * aborted (e.g. when no categories are selected AND the
+            * user does not confirm using a default set of categories).
+            *
+            * @function preSaveCategoriesCheck
+            * @return {Object} - a promise object
+            */
             function preSaveCategoriesCheck() {
-                var modalResult, msg, someSelected;
+                var modalResult,
+                    msg,
+                    someSelected;
 
                 someSelected = scope.categories.some((cat) => cat.selected);
 
@@ -469,9 +441,7 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                msg = gettext(
-                    'No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.',
-                );
+                msg = gettext('No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.');
 
                 modalResult = modal.confirm(msg).then(() => {
                     scope.checkDefault();
@@ -481,13 +451,13 @@ export function UserPreferencesDirective(
             }
 
             /**
-             * Creates and returns a user preferences object that can
-             * be used as a parameter in a PATCH request to the server
-             * when user preferences are saved.
-             *
-             * @function createPatchObject
-             * @return {Object}
-             */
+            * Creates and returns a user preferences object that can
+            * be used as a parameter in a PATCH request to the server
+            * when user preferences are saved.
+            *
+            * @function createPatchObject
+            * @return {Object}
+            */
             function createPatchObject() {
                 var patchObject = {};
 
@@ -518,14 +488,12 @@ export function UserPreferencesDirective(
                 if (orig['editor:theme'] != null) {
                     patchObject['editor:theme'] = {
                         ...orig['editor:theme'],
-                        theme: JSON.stringify(
-                            authThemes.syncWithApplicationTheme(
-                                scope.activeTheme,
-                                orig['editor:theme'].theme.length
-                                    ? orig['editor:theme'].theme
-                                    : JSON.stringify(DEFAULT_EDITOR_THEME.theme),
-                            ),
-                        ),
+                        theme: JSON.stringify(authThemes.syncWithApplicationTheme(
+                            scope.activeTheme,
+                            orig['editor:theme'].theme.length
+                                ? orig['editor:theme'].theme
+                                : JSON.stringify(DEFAULT_EDITOR_THEME.theme),
+                        )),
                     };
                 }
 

@@ -33,10 +33,9 @@ export function registerExtensions(
             priority: page.priority ?? 100,
             adminTools: false,
             controller: noop,
-            template:
-                '<sd-extension-page ' +
-                'data-setup-full-width-capability="setupFullWidthCapability">' +
-                '</sd-extension-page>',
+            template: '<sd-extension-page '
+                + 'data-setup-full-width-capability="setupFullWidthCapability">'
+                + '</sd-extension-page>',
         };
 
         if (page.addToMainMenu ?? true) {
@@ -77,40 +76,41 @@ export function registerExtensions(
     }
 
     return Promise.all(
-        extensionLoaders.map(({id, load, configuration}) => {
-            const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
-                id,
-                extensionsWithActivationResult,
-                modal,
-                privileges,
-                lock,
-                session,
-                authoringWorkspace,
-                config,
-                metadata,
-                preferencesService,
-            );
+        extensionLoaders.map(
+            ({id, load, configuration}) => {
+                const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
+                    id,
+                    extensionsWithActivationResult,
+                    modal,
+                    privileges,
+                    lock,
+                    session,
+                    authoringWorkspace,
+                    config,
+                    metadata,
+                    preferencesService,
+                );
 
-            window['extensionsApiInstances'][id] = apiInstance;
+                window['extensionsApiInstances'][id] = apiInstance;
 
-            return load()
-                .then((module) => module.default)
-                .then((extension) => {
-                    extensionsWithActivationResult[id] = {
-                        extension,
-                        activationResult: {},
-                        configuration: configuration ?? {},
-                    };
-                });
-        }),
+                return load()
+                    .then((module) => module.default)
+                    .then((extension) => {
+                        extensionsWithActivationResult[id] = {
+                            extension,
+                            activationResult: {},
+                            configuration: configuration ?? {},
+                        };
+                    });
+            },
+        ),
     )
         .then(() => {
             return Promise.all(
                 Object.keys(extensionsWithActivationResult).map((extensionId) => {
                     const extensionObject = extensionsWithActivationResult[extensionId];
 
-                    return extensionObject.extension
-                        .activate(window['extensionsApiInstances'][extensionId])
+                    return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
                         .then((activationResult) => {
                             extensionObject.activationResult = activationResult;
 
@@ -125,14 +125,17 @@ export function registerExtensions(
                     ),
                 );
 
-                flatMap(activationResults, (activationResult) => activationResult.contributions?.pages ?? []).forEach(
-                    registerPage,
-                );
+                flatMap(
+                    activationResults,
+                    (activationResult) => activationResult.contributions?.pages ?? [],
+                )
+                    .forEach(registerPage);
 
                 flatMap(
                     activationResults,
                     (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
-                ).forEach(registerWorkspaceMenu);
+                )
+                    .forEach(registerWorkspaceMenu);
             });
         })
         .then(() => {

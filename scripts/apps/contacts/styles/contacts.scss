@@ -45,16 +45,14 @@
         background-color: rgba(94, 169, 200, 0.11);
         padding: 10px 0 0;
 
-        h2 {
-            //used as contact's display name
+        h2 { //used as contact's display name
             text-align: center;
             font-size: 18px;
             line-height: 20px;
             margin: 10px 0 4px 0;
             padding: 0 20px;
         }
-        h5 {
-            // to be use for job_title
+        h5 { // to be use for job_title
             text-align: center;
             font-size: 14px;
             font-weight: normal;
@@ -84,9 +82,9 @@
     .alert-info-msg {
         font-size: 1.2rem;
         line-height: 1.4rem;
-        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+        transition: all .3s cubic-bezier(.55,0,.55,.2);
         color: grey;
-        letter-spacing: 0.03em;
+        letter-spacing: .03em;
     }
 
     .error-holder {
@@ -239,8 +237,7 @@
 }
 
 .contacts-section {
-    .contact-editor,
-    .content-item-preview {
+    .contact-editor, .content-item-preview {
         display: flex;
     }
 }

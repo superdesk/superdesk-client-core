@@ -30,7 +30,7 @@ export function AuthoringTopbarDirective(
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
-        link: function (scope) {
+        link: function(scope) {
             function setActionsFromExtensions() {
                 const [nonPlanningActions, planningActions] = partition(
                     getAuthoringActionsFromExtensions(scope.item),
@@ -48,8 +48,8 @@ export function AuthoringTopbarDirective(
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
-            scope.isCorrection = (item) =>
-                appConfig?.corrections_workflow && item.state === ITEM_STATE.CORRECTION && scope.action === 'edit';
+            scope.isCorrection = (item) => appConfig?.corrections_workflow
+                && item.state === ITEM_STATE.CORRECTION && scope.action === 'edit';
 
             scope.handleArticleChange = (article) => {
                 Object.assign(scope.item, article);
@@ -96,7 +96,7 @@ export function AuthoringTopbarDirective(
              * Save item
              * @return {promise}
              */
-            scope.saveTopbar = function () {
+            scope.saveTopbar = function() {
                 scope.$applyAsync(() => {
                     scope.saveTopbarLoading = true;
                 });
@@ -119,12 +119,12 @@ export function AuthoringTopbarDirective(
             };
 
             // Activate preview formatted item
-            scope.previewFormattedItem = function () {
+            scope.previewFormattedItem = function() {
                 scope.previewFormatted = true;
             };
 
             // Close preview formatted item
-            scope.closePreviewFormatted = function () {
+            scope.closePreviewFormatted = function() {
                 scope.previewFormatted = false;
             };
 
@@ -132,7 +132,7 @@ export function AuthoringTopbarDirective(
              * Check if item is available for translating
              * @return {Boolean}
              */
-            scope.isTranslationAvailable = function () {
+            scope.isTranslationAvailable = function() {
                 return TranslationService.checkAvailability(scope.item);
             };
 
@@ -141,17 +141,15 @@ export function AuthoringTopbarDirective(
             };
 
             scope.itemActionsHighlightsSectionDisplayed = () =>
-                scope.nonPlanningActions.some(({groupId}) => groupId === 'highlights') ||
-                (scope.item.task.desk &&
-                    (scope.itemActions.mark_item_for_desks || scope.itemActions.mark_item_for_highlight));
+                scope.nonPlanningActions.some(({groupId}) => groupId === 'highlights')
+                || (
+                    scope.item.task.desk
+                    && (scope.itemActions.mark_item_for_desks || scope.itemActions.mark_item_for_highlight)
+                );
 
-            scope.$watch(
-                'item',
-                () => {
-                    setActionsFromExtensions();
-                },
-                true,
-            );
+            scope.$watch('item', () => {
+                setActionsFromExtensions();
+            }, true);
 
             const removeSaveEventListener = addInternalEventListener('saveArticleInEditMode', () => {
                 scope.saveTopbar();
@@ -161,14 +159,11 @@ export function AuthoringTopbarDirective(
                 removeSaveEventListener();
             });
 
-            scope.$watch(
-                () => {
-                    return superdeskFlags.flags.hideMonitoring;
-                },
-                (value) => {
-                    scope.fullWidth = value;
-                },
-            );
+            scope.$watch(() => {
+                return superdeskFlags.flags.hideMonitoring;
+            }, (value) => {
+                scope.fullWidth = value;
+            });
 
             scope.setFullWidth = () => {
                 scope.$applyAsync(() => {
@@ -178,9 +173,9 @@ export function AuthoringTopbarDirective(
             };
 
             // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
-            scope.hideMonitoring = function (state, e) {
-                const fullWidthConfig: IFullWidthPageCapabilityConfiguration =
-                    scope.$parent.$parent.$parent.$parent.fullWidthConfig;
+            scope.hideMonitoring = function(state, e) {
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.$parent.fullWidthConfig;
 
                 if (fullWidthConfig.enabled) {
                     if (fullWidthConfig.allowed) {

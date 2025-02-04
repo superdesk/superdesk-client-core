@@ -12,7 +12,7 @@ export const SocialInfo: React.StatelessComponent<any> = ({item}) => {
     return (
         <div key="contact-social" className="social-info">
             <Spacer h gap="8">
-                {keys.map((k) => item[k] && <ItemContainer key={k} item={item} field={k} />)}
+                {keys.map((k) => (item[k] && <ItemContainer key={k} item={item} field={k} />))}
             </Spacer>
         </div>
     );

@@ -72,19 +72,20 @@ export class SetPreviewPanelComponent extends React.Component<IProps, IState> {
         if (this.props.set?._id == null || !this.props.allowedDesksForSet[this.props.set._id]?.length) {
             this.setState({deskNames: []});
         } else {
-            superdeskApi.dataApi
-                .query<IDesk>(
-                    'desks',
-                    1,
-                    {field: '_id', direction: 'ascending'},
-                    {
-                        _id: {
-                            $in: this.props.allowedDesksForSet[this.props.set._id],
-                        },
+            superdeskApi.dataApi.query<IDesk>(
+                'desks',
+                1,
+                {field: '_id', direction: 'ascending'},
+                {
+                    _id: {
+                        $in: this.props.allowedDesksForSet[this.props.set._id],
                     },
-                )
+                },
+            )
                 .then((response) => {
-                    this.setState({deskNames: response._items.map((desk) => desk.name)});
+                    this.setState({deskNames: response._items.map(
+                        (desk) => desk.name,
+                    )});
                 });
         }
     }
@@ -97,20 +98,17 @@ export class SetPreviewPanelComponent extends React.Component<IProps, IState> {
             return null;
         }
 
-        let topTools: Array<IPanelTools> = [
-            {
-                title: gettext('Edit'),
-                icon: 'pencil',
-                onClick: () => this.props.onEdit(set),
-                ariaValue: 'edit',
-            },
-            {
-                title: gettext('Close'),
-                icon: 'close-small',
-                onClick: this.props.onClose,
-                ariaValue: 'close',
-            },
-        ];
+        let topTools: Array<IPanelTools> = [{
+            title: gettext('Edit'),
+            icon: 'pencil',
+            onClick: () => this.props.onEdit(set),
+            ariaValue: 'edit',
+        }, {
+            title: gettext('Close'),
+            icon: 'close-small',
+            onClick: this.props.onClose,
+            ariaValue: 'close',
+        }];
 
         if (set.state === SET_STATE.DRAFT || (set.state === SET_STATE.DISABLED && !count)) {
             topTools = [
@@ -165,7 +163,12 @@ export class SetPreviewPanelComponent extends React.Component<IProps, IState> {
                             <FormRow>
                                 <FormLabel text={gettext('Allowed Desks')} style="light" />
                                 {this.state.deskNames.map((deskName) => (
-                                    <Label key={deskName} text={deskName} style="translucent" size="large" />
+                                    <Label
+                                        key={deskName}
+                                        text={deskName}
+                                        style="translucent"
+                                        size="large"
+                                    />
                                 ))}
                             </FormRow>
                         </PanelContentBlockInner>
@@ -176,4 +179,7 @@ export class SetPreviewPanelComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const SetPreviewPanel = connect(mapStateToProps, mapDispatchToProps)(SetPreviewPanelComponent);
+export const SetPreviewPanel = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SetPreviewPanelComponent);

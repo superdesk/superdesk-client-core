@@ -43,19 +43,8 @@ ContentService.$inject = [
     'session',
     'renditions',
 ];
-export function ContentService(
-    api,
-    templates,
-    desks,
-    packages: IPackagesService,
-    archiveService,
-    notify,
-    $filter,
-    $q,
-    $rootScope,
-    session,
-    renditions,
-) {
+export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
+    $filter, $q, $rootScope, session, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -93,7 +82,7 @@ export function ContentService(
      * @param {string} type
      * @return {Promise}
      */
-    this.createItem = function (type, initializeAsUpdated) {
+    this.createItem = function(type, initializeAsUpdated) {
         var item = newItem(type, initializeAsUpdated);
 
         archiveService.addTaskToArticle(item);
@@ -106,7 +95,7 @@ export function ContentService(
      * @param {Object} item
      * @return {Promise}
      */
-    this.createPackageFromItems = function (item) {
+    this.createPackageFromItems = function(item) {
         return packages.createPackageFromItems([item]);
     };
 
@@ -123,7 +112,7 @@ export function ContentService(
      *
      * @return {Promise}
      */
-    this.createItemFromTemplate = function (template, initializeAsUpdated) {
+    this.createItemFromTemplate = function(template, initializeAsUpdated) {
         var item: Partial<IArticle> = newItem(template.data.type || null, initializeAsUpdated);
 
         angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
@@ -151,7 +140,7 @@ export function ContentService(
      * @param {Object} data
      * @return {Promise}
      */
-    this.createProfile = function (data) {
+    this.createProfile = function(data) {
         return api.save('content_types', data);
     };
 
@@ -162,7 +151,7 @@ export function ContentService(
      * @param {Object} updates
      * @return {Promise}
      */
-    this.updateProfile = function (item, updates) {
+    this.updateProfile = function(item, updates) {
         return api.update('content_types', item, updates);
     };
 
@@ -172,7 +161,7 @@ export function ContentService(
      * @param {Object} item
      * @return {Promise}
      */
-    this.removeProfile = function (item) {
+    this.removeProfile = function(item) {
         return api.remove(item, {}, 'content_types');
     };
 
@@ -182,7 +171,7 @@ export function ContentService(
      * @param {Boolean} includeDisabled
      * @return {Promise}
      */
-    this.getTypes = function (type?: IContentProfile['type'] | null, includeDisabled?) {
+    this.getTypes = function(type?: IContentProfile['type'] | null, includeDisabled?) {
         var params: {where?: any} = {};
 
         if (!includeDisabled) {
@@ -195,8 +184,7 @@ export function ContentService(
             params.where.type = type;
         }
 
-        return api
-            .getAll('content_types', params, !!includeDisabled)
+        return api.getAll('content_types', params, !!includeDisabled)
             .then((result) => result.sort((a, b) => b.priority - a.priority));
     };
 
@@ -205,7 +193,7 @@ export function ContentService(
      *
      * @return {Promise}
      */
-    this.getTypesLookup = function () {
+    this.getTypesLookup = function() {
         return this.getTypes(null, true).then((profiles) => {
             var lookup = {};
 
@@ -223,8 +211,9 @@ export function ContentService(
      * @param {string} id
      * @return {Promise}
      */
-    this.getType = function (id) {
-        return getCustomFields().then(() => api.find('content_types', id));
+    this.getType = function(id) {
+        return getCustomFields()
+            .then(() => api.find('content_types', id));
     };
 
     /**
@@ -233,8 +222,9 @@ export function ContentService(
      * @param {string} id
      * @return {Promise}
      */
-    this.getTypeMetadata = function (id) {
-        return getCustomFields().then(() => api.find('content_types', id, {edit: true}));
+    this.getTypeMetadata = function(id) {
+        return getCustomFields()
+            .then(() => api.find('content_types', id, {edit: true}));
     };
 
     /**
@@ -244,7 +234,7 @@ export function ContentService(
      * @param {String} contentType
      * @return {Object}
      */
-    this.schema = function (profile: IContentProfile, contentType) {
+    this.schema = function(profile: IContentProfile, contentType) {
         return angular.extend({}, profile.schema);
     };
 
@@ -255,7 +245,7 @@ export function ContentService(
      * @param {String} contentType
      * @return {Object}
      */
-    this.editor = function (profile: IContentProfile, contentType) {
+    this.editor = function(profile: IContentProfile, contentType) {
         return angular.extend({}, profile.editor);
     };
 
@@ -275,8 +265,7 @@ export function ContentService(
      * Get fields with preview enabled
      */
     this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IVocabulary>): Array<IVocabulary> =>
-        editor == null || fields == null
-            ? []
+        editor == null || fields == null ? []
             : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 
     /**
@@ -286,11 +275,10 @@ export function ContentService(
      * @param {string} profileId if profileId is set add such profile to the list
      * @return {Promise}
      */
-    this.getDeskProfiles = function (desk, profileId) {
-        return this.getTypes('text').then((profiles) =>
-            !desk || isEmpty(desk.content_profiles)
-                ? profiles
-                : profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
+    this.getDeskProfiles = function(desk, profileId) {
+        return this.getTypes('text').then((profiles) => !desk || isEmpty(desk.content_profiles) ?
+            profiles :
+            profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
         );
     };
 
@@ -310,12 +298,14 @@ export function ContentService(
         }
 
         if (!self._fieldsPromise) {
-            self._fieldsPromise = api
-                .getAll('vocabularies', {
-                    where: {
-                        $or: [{field_type: {$in: constant.CUSTOM_FIELD_TYPES}}, {service: {$exists: true}}],
-                    },
-                })
+            self._fieldsPromise = api.getAll('vocabularies', {
+                where: {
+                    $or: [
+                        {field_type: {$in: constant.CUSTOM_FIELD_TYPES}},
+                        {service: {$exists: true}},
+                    ],
+                },
+            })
                 .then((response) => {
                     self._fields = response;
                     self._fieldsPromise = null;
@@ -332,16 +322,14 @@ export function ContentService(
         const associations = item.associations || {};
         const keys = Object.keys(associations);
 
-        return Promise.all(
-            keys.map((key) => {
-                // there is only _id, maybe _type for related items
-                if (associations[key] && Object.keys(associations[key]).length <= 3) {
-                    return api.find('archive', associations[key]._id);
-                }
+        return Promise.all(keys.map((key) => {
+            // there is only _id, maybe _type for related items
+            if (associations[key] && Object.keys(associations[key]).length <= 3) {
+                return api.find('archive', associations[key]._id);
+            }
 
-                return Promise.resolve(associations[key]);
-            }),
-        ).then((values) => zipObject(keys, values));
+            return Promise.resolve(associations[key]);
+        })).then((values) => zipObject(keys, values));
     };
 
     /**

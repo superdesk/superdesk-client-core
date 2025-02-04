@@ -8,15 +8,14 @@
         li {
             margin: 5px 0;
         }
-        span,
-        i {
+    	span, i {
             float: inline-start;
             text-align: start;
         }
-        overflow-y: scroll;
-        overflow-x: hidden;
-        max-height: 200px;
-        padding: 5px 10px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		max-height: 200px;
+		padding: 5px 10px;
     }
 
     &-item {
@@ -27,9 +26,9 @@
             overflow: hidden;
             white-space: nowrap;
         }
-        &:hover {
-            background: $sd-hover;
-        }
+		&:hover {
+			background: $sd-hover;
+		}
 
         &--active {
             background: $sd-hover;

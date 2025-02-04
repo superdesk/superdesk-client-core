@@ -1,11 +1,6 @@
 <h1 id="workspace-heading" class="a11y-only"><span translate>Workspace:</span> {{ selected.name }}</h1>
 <div id="workspace-dropdown" class="dropdown navbtn">
-    <button
-        data-toggle="dropdown"
-        class="dropdown__toggle {{workspaceType}} pull-left"
-        data-test-id="monitoring--selected-desk"
-        ng-if="initialized"
-    >
+    <button data-toggle="dropdown" class="dropdown__toggle {{workspaceType}} pull-left" data-test-id="monitoring--selected-desk" ng-if="initialized">
         <span class="name" ng-if="selected.name">{{ selected.name | uppercase }}</span>
         <span class="name" ng-if="!selected" translate>Select Workspace</span>
         <span class="name" ng-if="selected && !selected.name && workspaceType">{{ :: 'Untitled' | translate }}</span>
@@ -15,23 +10,23 @@
     <ul id="select-desk-menu" class="dropdown__menu" role="menu" data-test-id="monitoring--select-desk-options">
         <li class="dropdown__menu-label"><div translate>DESKS</div></li>
         <li class="desk-item" ng-repeat="desk in desks track by desk._id" id="desk-item-{{ :: desk._id }}">
-            <button ng-click="selectDesk(desk)" ng-disabled="desk._id === selected._id">{{ :: desk.name }}</button>
+            <button
+                ng-click="selectDesk(desk)"
+                ng-disabled="desk._id === selected._id"
+            >{{ :: desk.name }}</button>
         </li>
         <li class="desk-item" ng-show="desks.length === 0"><i class="no-desk">No Desks Assigned</i></li>
 
         <li class="dropdown__menu-label"><div translate>CUSTOM WORKSPACES</div></li>
         <li class="workspace-item" ng-repeat="workspace in wsList track by workspace._id">
-            <button ng-click="selectWorkspace(workspace)" ng-disabled="workspace._id === selected._id">
+            <button ng-click="selectWorkspace(workspace)"
+                    ng-disabled="workspace._id === selected._id">
                 {{ :: workspace.name }}
                 <span ng-if="!workspace.name">{{ :: 'Untitled' | translate }}</span>
             </button>
         </li>
         <li>
-            <button
-                class="action-btn"
-                ng-click="createWorkspace()"
-                aria-label="{{ :: 'create new workspace' | translate"
-            >
+            <button class="action-btn" ng-click="createWorkspace()" aria-label="{{ :: 'create new workspace' | translate">
                 <i class="icon-plus-sign icon--blue"></i>
                 <span class="circle"></span>
                 {{ :: 'CREATE NEW WORKSPACE' | translate }}

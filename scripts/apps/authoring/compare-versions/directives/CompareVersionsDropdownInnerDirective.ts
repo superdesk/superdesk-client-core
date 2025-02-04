@@ -29,24 +29,18 @@ class LinkFunction {
     init() {
         // watches the selected versions of an item and filter out unselected versions
         // to provide in inner dropdown as a rest of available versions.
-        this.scope.$watch(
-            () => this.compareVersions.items,
-            (items) => {
-                this.compareVersionsItems = _.map(this.compareVersions.items, (board) => board.article);
-                this.filter();
-            },
-            true,
-        );
+        this.scope.$watch(() => this.compareVersions.items, (items) => {
+            this.compareVersionsItems = _.map(this.compareVersions.items, (board) => board.article);
+            this.filter();
+        }, true);
 
         this.scope.open = this.open.bind(this);
     }
 
     // provides unselected versions to fill in inner dropdown
     filter() {
-        this.scope.items = _.reject(
-            this.compareVersions.versions,
-            (item) => !!_.find(this.compareVersionsItems, {id: item._id, version: item._current_version}),
-        );
+        this.scope.items = _.reject(this.compareVersions.versions, (item) =>
+            !!_.find(this.compareVersionsItems, {id: item._id, version: item._current_version}));
     }
 
     /**

@@ -47,9 +47,14 @@ export class SelectShow extends React.PureComponent<IProps> {
                         this.props.onChange(val);
                     }
                 }}
-                itemTemplate={({entity: show}: {entity: IShow}) =>
-                    show == null ? <span>{gettext('Select show')}</span> : <span>{show.title}</span>
-                }
+                itemTemplate={({entity: show}: {entity: IShow}) => (
+                    show == null
+                        ? (
+                            <span>{gettext('Select show')}</span>
+                        ) : (
+                            <span>{show.title}</span>
+                        )
+                )}
                 readOnly={this.props.readOnly}
                 validationError={this.props.validationError}
                 required={this.props.required}

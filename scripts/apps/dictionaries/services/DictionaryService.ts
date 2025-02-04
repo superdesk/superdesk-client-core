@@ -16,24 +16,23 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         }
     }
 
-    this.fetch = function (success, error) {
-        return session.getIdentity().then((identity) =>
-            api
-                .query('dictionaries', {
-                    projection: {content: 0},
-                    where: {
-                        $or: [{user: {$exists: false}}, {user: identity._id}],
-                    },
-                })
-                .then(success, error),
-        );
+    this.fetch = function(success, error) {
+        return session.getIdentity().then((identity) => api.query('dictionaries', {
+            projection: {content: 0},
+            where: {
+                $or: [
+                    {user: {$exists: false}},
+                    {user: identity._id},
+                ]},
+        })
+            .then(success, error));
     };
 
-    this.open = function (dictionary, success, error) {
+    this.open = function(dictionary, success, error) {
         return api.find('dictionaries', dictionary._id).then(success, error);
     };
 
-    this.upload = function (dictionary, data, file, success, error, progress) {
+    this.upload = function(dictionary, data, file, success, error, progress) {
         var hasId = _.has(dictionary, '_id') && dictionary._id !== null;
         var method = hasId ? 'PATCH' : 'POST';
         var headers = hasId ? {'If-Match': dictionary._etag} : {};
@@ -70,7 +69,7 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         }, error);
     };
 
-    this.update = function (dictionary, data, success, error) {
+    this.update = function(dictionary, data, success, error) {
         var sendData = {};
 
         angular.forEach(data, (val, key) => {
@@ -83,11 +82,11 @@ export function DictionaryService(api, urls, session, Upload, $q) {
         return api.save('dictionaries', dictionary, sendData).then(success, error);
     };
 
-    this.remove = function (dictionary, success, error) {
+    this.remove = function(dictionary, success, error) {
         return api.remove(dictionary).then(success, error);
     };
 
-    this.isAbbreviationsDictionary = function (dict) {
+    this.isAbbreviationsDictionary = function(dict) {
         return dict && dict.type === 'abbreviations';
     };
 
@@ -104,13 +103,13 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 languageIds.push({language_id: baseLang});
             }
 
-            return api
-                .query('dictionaries', {
-                    where: {
-                        $and: [{$or: languageIds}, {is_active: 'true'}, {type: 'abbreviations'}, {user: identity._id}],
-                    },
-                })
-                .then((items) => items._items);
+            return api.query('dictionaries', {
+                where: {$and:
+                [{$or: languageIds},
+                    {is_active: 'true'},
+                    {type: 'abbreviations'},
+                    {user: identity._id}],
+                }}).then((items) => items._items);
         });
     }
 
@@ -127,19 +126,14 @@ export function DictionaryService(api, urls, session, Upload, $q) {
                 languageIds.push({language_id: baseLang});
             }
 
-            return api
-                .query('dictionaries', {
-                    projection: {content: 0},
-                    where: {
-                        $and: [
-                            {$or: languageIds},
-                            {is_active: {$in: ['true', null]}},
-                            {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
-                            {$or: [{user: identity._id}, {user: {$exists: false}}]},
-                        ],
-                    },
-                })
-                .then((items) => $q.all(items._items.map(fetchItem)));
+            return api.query('dictionaries', {
+                projection: {content: 0},
+                where: {$and:
+                [{$or: languageIds},
+                    {is_active: {$in: ['true', null]}},
+                    {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
+                    {$or: [{user: identity._id}, {user: {$exists: false}}]}],
+                }}).then((items) => $q.all(items._items.map(fetchItem)));
         });
 
         function fetchItem(item) {
@@ -157,23 +151,19 @@ export function DictionaryService(api, urls, session, Upload, $q) {
             var where = {
                 where: {
                     $and: [
-                        {language_id: lang},
-                        {user: identity._id},
+                        {language_id: lang}, {user: identity._id},
                         {$or: [{type: {$exists: 0}}, {type: 'dictionary'}]},
                     ],
                 },
             };
 
-            return api.query('dictionaries', where).then((response) =>
-                response._items.length
-                    ? response._items[0]
-                    : {
-                          name: identity._id + ':' + lang,
-                          content: {},
-                          language_id: lang,
-                          user: identity._id,
-                      },
-            );
+            return api.query('dictionaries', where)
+                .then((response) => response._items.length ? response._items[0] : {
+                    name: identity._id + ':' + lang,
+                    content: {},
+                    language_id: lang,
+                    user: identity._id,
+                });
         });
     }
 

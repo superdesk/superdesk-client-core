@@ -2,46 +2,19 @@
     <h2 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h2>
 
     <div class="subnav__button-stack--square-buttons">
-        <button
-            ng-if="configurable"
-            class="navbtn"
-            ng-click="dashboard.edit = true"
-            ng-show="dashboard.widgets.length && !dashboard.edit"
-            sd-tooltip="{{ :: 'Rearrange widgets' | translate }}"
-            flow="left"
-        >
+        <button ng-if="configurable" class="navbtn" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit" sd-tooltip="{{ :: 'Rearrange widgets' | translate }}" flow="left">
             <i class="icon-switches"></i>
         </button>
 
-        <button
-            class="navbtn navbtn--blue"
-            ng-click="dashboard.save()"
-            ng-show="dashboard.edit"
-            sd-tooltip="{{ :: 'Accept' | translate }}"
-            flow="left"
-        >
+        <button class="navbtn navbtn--blue" ng-click="dashboard.save()" ng-show="dashboard.edit" sd-tooltip="{{ :: 'Accept' | translate }}" flow="left">
             <i class="svg-icon-ok inverse"></i>
         </button>
 
         <div sd-tooltip="{{ :: 'Add widget' | translate }}" flow="left" ng-show="!dashboard.edit">
-            <button
-                ng-if="configurable"
-                class="navbtn sd-create-btn"
-                ng-disabled="dashboard.edit"
-                ng-click="dashboard.add = true"
-                aria-label="{{ :: 'Add widget' | translate }}"
-            ></button>
+            <button ng-if="configurable" class="navbtn sd-create-btn" ng-disabled="dashboard.edit" ng-click="dashboard.add = true" aria-label="{{ :: 'Add widget' | translate }}"></button>
         </div>
-        <div
-            class="dropdown__menu pull-right"
-            sd-multiedit-dropdown
-            ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"
-        ></div>
-        <div
-            class="dropdown"
-            dropdown
-            ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"
-        >
+        <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
+        <div class="dropdown" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">
             <button class="navbtn dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
@@ -72,25 +45,19 @@
 
 <div class="dashboard-container" ng-if="dashboard.current" data-test-id="dashboard">
     <div class="content clearfix">
-        <div
-            sd-grid
+        <div sd-grid
             data-status="dashboard.edit"
             data-widgets="dashboard.widgets"
             data-save="dashboard.save()"
             data-configurable="configurable"
-        ></div>
-        <div
-            class="content-state__empty-container content-state__empty-container--absolute"
-            ng-show="dashboard.widgets.length === 0"
-        >
+            ></div>
+        <div class="content-state__empty-container content-state__empty-container--absolute" ng-show="dashboard.widgets.length === 0">
             <div class="content-state__empty-info">
                 <figure class="content-state__image content-state__image--large">
-                    <img src="{{emptyState}}" alt="Empty state illustration" />
+                    <img src="{{emptyState}}" alt="Empty state illustration">
                 </figure>
                 <h3 class="content-state__heading" translate>Dashboard is empty</h3>
-                <p class="content-state__description sd-padding-x--5" translate>
-                    Click on the "+" button in the top right corner to add some widgets.
-                </p>
+                <p class="content-state__description sd-padding-x--5" translate>Click on the "+" button in the top right corner to add some widgets.</p>
             </div>
         </div>
         <div class="empty-dashboard loading" ng-show="dashboard.widgets == null" translate>Loading...</div>
@@ -106,16 +73,9 @@
     <div class="modal__body" ng-if="!dashboard.selectedWidget">
         <div class="modal__body-content">
             <ul class="widget-list">
-                <li
-                    ng-repeat="widget in dashboard.availableWidgets"
-                    ng-click="dashboard.selectWidget(widget)"
-                    ng-class="{selected: dashboard.isSelected(widget)}"
-                    class="widget {{ widget._id }}"
-                    data-test-id="widget-item"
-                    data-test-value="{{ widget._id }}"
-                >
-                    <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}" /></div>
-                    <div class="title">{{ :: widget.label | translate}}</div>
+                <li ng-repeat="widget in dashboard.availableWidgets" ng-click="dashboard.selectWidget(widget)" ng-class="{selected: dashboard.isSelected(widget)}" class="widget {{ widget._id }}" data-test-id="widget-item" data-test-value="{{ widget._id }}">
+                <div class="thumbnail"><img ng-src="{{ :: widget.thumbnail }}"></div>
+                <div class="title">{{ :: widget.label | translate}}</div>
                 </li>
             </ul>
         </div>
@@ -130,26 +90,16 @@
         </div>
         <div class="modal__body-content widget-detail">
             <div class="thumbnail-box {{ dashboard.selectedWidget._id }}">
-                <img ng-src="{{ :: dashboard.selectedWidget.thumbnail }}" />
+                <img ng-src="{{ :: dashboard.selectedWidget.thumbnail }}">
             </div>
             <div class="content-box">
                 <div class="title">{{ :: dashboard.selectedWidget.label | translate }}</div>
-                <div class="description" ng-if="dashboard.selectedWidget.description">
-                    {{ :: dashboard.selectedWidget.description | translate }}
-                </div>
-                <div
-                    class="description"
-                    ng-if="dashboard.selectedWidget.descriptionHtml"
-                    ng-bind-html="dashboard.selectedWidget.descriptionHtml"
-                ></div>
-                <button
-                    class="btn btn--primary btn--large"
+                <div class="description" ng-if="dashboard.selectedWidget.description">{{ :: dashboard.selectedWidget.description | translate }}</div>
+                <div class="description" ng-if="dashboard.selectedWidget.descriptionHtml" ng-bind-html="dashboard.selectedWidget.descriptionHtml"></div>
+                <button class="btn btn--primary btn--large"
                     ng-click="dashboard.addWidget(dashboard.selectedWidget)"
                     ng-disabled="!dashboard.selectedWidget"
-                    translate
-                >
-                    Add This Widget
-                </button>
+                    translate>Add This Widget</button>
             </div>
         </div>
         <div class="modal__footer" ng-if="dashboard.selectedWidget"></div>

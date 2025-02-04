@@ -81,19 +81,16 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
 
     const entitiesGroupedAndSortedByConfig = entitiesGrouped
         .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
-        .sortBy(
-            (_, key) => iMatricsConfig.entities[key].order,
-            (a, b) => a - b,
-        );
+        .sortBy((_, key) => iMatricsConfig.entities[key].order,
+            (a, b) => a - b);
 
     const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
         .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
-        .sortBy(
-            (_, key) => key!.toString().toLocaleLowerCase(),
-            (a, b) => a.localeCompare(b),
-        );
+        .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+            (a, b) => a.localeCompare(b));
 
-    const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig.concat(entitiesGroupedAndSortedNotInConfig);
+    const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
+        .concat(entitiesGroupedAndSortedNotInConfig);
 
     const others = items.filter((tag) => isEntity(tag) === false);
     const othersGrouped = others.groupBy((tag) => tag.group.value);
@@ -110,20 +107,28 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
             size="small"
             position="top"
             onHide={closeModal}
-            headerTemplate={gettext('iMatrics service error')}
+            headerTemplate={
+                gettext('iMatrics service error')
+            }
             footerTemplate={
-                <Button
-                    text={gettext('close')}
-                    onClick={() => {
-                        closeModal();
-                    }}
-                />
+                (
+                    <Button
+                        text={gettext('close')}
+                        onClick={() => {
+                            closeModal();
+                        }}
+                    />
+                )
             }
         >
             <h3>{gettext('Some tags can not be displayed')}</h3>
 
             <p>
-                {gettext('iMatrics service has returned tags referencing parents that do not exist in the response.')}
+                {
+                    gettext(
+                        'iMatrics service has returned tags referencing parents that do not exist in the response.',
+                    )
+                }
             </p>
 
             <table className="table">
@@ -136,13 +141,15 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
                 </thead>
 
                 <tbody>
-                    {errors.map((tag) => (
-                        <tr key={tag.qcode}>
-                            <td>{tag.name}</td>
-                            <td>{tag.qcode}</td>
-                            <td>{tag.parent}</td>
-                        </tr>
-                    ))}
+                    {
+                        errors.map((tag) => (
+                            <tr key={tag.qcode}>
+                                <td>{tag.name}</td>
+                                <td>{tag.qcode}</td>
+                                <td>{tag.parent}</td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </table>
         </Modal>
@@ -191,10 +198,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.setState({data: 'loading'}, () => {
                 const {guid, language, headline, body_html, abstract} = this.props.article;
-                const tags =
-                    dataBeforeLoading !== 'not-initialized' && dataBeforeLoading !== 'loading'
-                        ? dataBeforeLoading.changes.analysis
-                        : OrderedMap<string, ITagUi>();
+                const tags = dataBeforeLoading !== 'not-initialized' && dataBeforeLoading !== 'loading' ?
+                    dataBeforeLoading.changes.analysis :
+                    OrderedMap<string, ITagUi>();
 
                 httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
@@ -216,10 +222,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     if (this._mounted) {
                         this.setState({
                             data: {
-                                original:
-                                    dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                        ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
-                                        : dataBeforeLoading.original, // use previous data
+                                original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
+                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                    : dataBeforeLoading.original, // use previous data
                                 changes: {analysis: resClient},
                             },
                         });
@@ -269,7 +274,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 group: newItem.group,
             };
 
-            this.updateTags(data.changes.analysis.set(tag.qcode, tag), data);
+            this.updateTags(
+                data.changes.analysis.set(tag.qcode, tag),
+                data,
+            );
 
             this.setState({newItem: null});
         }
@@ -278,10 +286,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
              * Contains parents of all items returned in search results,
              * not only the one that was eventually chosen
              */
-            const parentsMixed =
-                searchResponse?.result?.broader != null
-                    ? toClientFormat(searchResponse.result.broader)
-                    : OrderedMap<string, ITagUi>();
+            const parentsMixed = searchResponse?.result?.broader != null
+                ? toClientFormat(searchResponse.result.broader)
+                : OrderedMap<string, ITagUi>();
 
             const parentsForChosenTag: Array<ITagUi> = [];
 
@@ -305,7 +312,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 result = result.set(parent.qcode, parent);
             }
 
-            this.updateTags(result, data);
+            this.updateTags(
+                result,
+                data,
+            );
         }
         getGroupName(group: string, vocabularyLabels: Map<string, string>) {
             return this.iMatricsFields.others[group]?.name ?? vocabularyLabels?.get(group) ?? group;
@@ -322,12 +332,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 return;
             }
 
-            superdesk.entities.article
-                .patch(this.props.article, createTagsPatch(this.props.article, data.changes.analysis, superdesk))
-                .then(() => {
-                    this.reload();
-                    this.sendFeedback(this.props.article, data.changes.analysis);
-                });
+            superdesk.entities.article.patch(
+                this.props.article,
+                createTagsPatch(this.props.article, data.changes.analysis, superdesk),
+            ).then(() => {
+                this.reload();
+                this.sendFeedback(this.props.article, data.changes.analysis);
+            });
         }
         sendFeedback(article: IArticle, tags: IAutoTaggingResponse['analysis']): Promise<any> {
             const {guid, language, headline, body_html, abstract} = article;
@@ -378,68 +389,89 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             }
 
             const {data} = this.state;
-            const dirty =
-                data === 'loading' || data === 'not-initialized' ? false : this.isDirty(data.original, data.changes);
+            const dirty = data === 'loading' || data === 'not-initialized' ? false :
+                this.isDirty(data.original, data.changes);
 
             const readOnly = superdesk.entities.article.isLockedInOtherSession(this.props.article);
 
             return (
                 <AuthoringWidgetLayout
-                    header={
-                        <AuthoringWidgetHeading widgetId={AUTO_TAGGING_WIDGET_ID} widgetName={label} editMode={dirty}>
-                            {data === 'loading' || data === 'not-initialized' || !dirty ? null : (
-                                <ButtonGroup align="end">
-                                    <Button text={gettext('Save')} type="primary" onClick={this.save} />
+                    header={(
+                        <AuthoringWidgetHeading
+                            widgetId={AUTO_TAGGING_WIDGET_ID}
+                            widgetName={label}
+                            editMode={dirty}
+                        >
+                            {
+                                data === 'loading' || data === 'not-initialized' || !dirty ? null : (
+                                    <ButtonGroup align="end">
+                                        <Button
+                                            text={gettext('Save')}
+                                            type="primary"
+                                            onClick={this.save}
+                                        />
 
-                                    <Button text={gettext('Cancel')} onClick={this.reload} />
-                                </ButtonGroup>
-                            )}
+                                        <Button
+                                            text={gettext('Cancel')}
+                                            onClick={this.reload}
+                                        />
+                                    </ButtonGroup>
+                                )
+                            }
                         </AuthoringWidgetHeading>
-                    }
-                    body={
-                        <React.Fragment>
-                            {(() => {
-                                if (data === 'loading' || data === 'not-initialized') {
-                                    return null;
-                                } else {
-                                    const treeErrors = arrayToTree(
-                                        data.changes.analysis.toArray(),
-                                        (item) => item.qcode,
-                                        (item) => item.parent,
-                                    ).errors;
+                    )}
 
-                                    // only show errors when there are unsaved changes
-                                    if (treeErrors.length > 0 && dirty) {
-                                        return (
-                                            <div>
-                                                <Alert
-                                                    type="warning"
-                                                    size="small"
-                                                    title={gettext('iMatrics service error')}
-                                                    message={gettextPlural(
-                                                        treeErrors.length,
-                                                        '1 tag can not be displayed',
-                                                        '{{n}} tags can not be displayed',
-                                                        {n: treeErrors.length},
-                                                    )}
-                                                    actions={[
-                                                        {
-                                                            label: gettext('details'),
-                                                            onClick: () => {
-                                                                showImatricsServiceErrorModal(superdesk, treeErrors);
-                                                            },
-                                                            icon: 'info-sign',
-                                                        },
-                                                    ]}
-                                                />
-                                                <br />
-                                            </div>
-                                        );
-                                    } else {
+                    body={(
+                        <React.Fragment>
+                            {
+                                (() => {
+                                    if (data === 'loading' || data === 'not-initialized') {
                                         return null;
+                                    } else {
+                                        const treeErrors = arrayToTree(
+                                            data.changes.analysis.toArray(),
+                                            (item) => item.qcode,
+                                            (item) => item.parent,
+                                        ).errors;
+
+                                        // only show errors when there are unsaved changes
+                                        if (treeErrors.length > 0 && dirty) {
+                                            return (
+                                                <div>
+                                                    <Alert
+                                                        type="warning"
+                                                        size="small"
+                                                        title={gettext('iMatrics service error')}
+                                                        message={
+                                                            gettextPlural(
+                                                                treeErrors.length,
+                                                                '1 tag can not be displayed',
+                                                                '{{n}} tags can not be displayed',
+                                                                {n: treeErrors.length},
+                                                            )
+                                                        }
+                                                        actions={[
+                                                            {
+                                                                label: gettext('details'),
+                                                                onClick: () => {
+                                                                    showImatricsServiceErrorModal(
+                                                                        superdesk,
+                                                                        treeErrors,
+                                                                    );
+                                                                },
+                                                                icon: 'info-sign',
+                                                            },
+                                                        ]}
+                                                    />
+                                                    <br />
+                                                </div>
+                                            );
+                                        } else {
+                                            return null;
+                                        }
                                     }
-                                }
-                            })()}
+                                })()
+                            }
 
                             <div>
                                 <div>
@@ -453,7 +485,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                                     this.setState({runAutomaticallyPreference: newValue});
 
-                                                    superdesk.preferences.set(RUN_AUTOMATICALLY_PREFERENCE, newValue);
+                                                    superdesk.preferences.set(
+                                                        RUN_AUTOMATICALLY_PREFERENCE,
+                                                        newValue,
+                                                    );
 
                                                     if (newValue && this.state.data === 'not-initialized') {
                                                         this.runAnalysis();
@@ -476,107 +511,122 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         </ButtonGroup>
                                     </div>
 
-                                    {data === 'loading' || data === 'not-initialized' ? null : (
-                                        <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
-                                            <div style={{flexGrow: 1}}>
-                                                <Autocomplete
-                                                    value={''}
-                                                    keyValue="keyValue"
-                                                    items={[]}
-                                                    search={(searchString, callback) => {
-                                                        let cancelled = false;
+                                    {
+                                        data === 'loading' || data === 'not-initialized' ? null : (
+                                            <div
+                                                className="form__row form__row--flex"
+                                                style={{alignItems: 'center'}}
+                                            >
+                                                <div style={{flexGrow: 1}}>
+                                                    <Autocomplete
+                                                        value={''}
+                                                        keyValue="keyValue"
+                                                        items={[]}
+                                                        search={(searchString, callback) => {
+                                                            let cancelled = false;
 
-                                                        httpRequestJsonLocal<IAutoTaggingSearchResult>({
-                                                            method: 'POST',
-                                                            path: '/ai_data_op/',
-                                                            payload: {
-                                                                service: 'imatrics',
-                                                                operation: 'search',
-                                                                data: {term: searchString},
-                                                            },
-                                                        }).then((res) => {
-                                                            if (cancelled !== true) {
-                                                                const result = toClientFormat(
-                                                                    res.result.tags,
-                                                                ).toArray();
+                                                            httpRequestJsonLocal<IAutoTaggingSearchResult>({
+                                                                method: 'POST',
+                                                                path: '/ai_data_op/',
+                                                                payload: {
+                                                                    service: 'imatrics',
+                                                                    operation: 'search',
+                                                                    data: {term: searchString},
+                                                                },
+                                                            }).then((res) => {
+                                                                if (cancelled !== true) {
+                                                                    const result =
+                                                                        toClientFormat(res.result.tags).toArray();
 
-                                                                const withoutExistingTags = result.filter(
-                                                                    (searchTag) =>
-                                                                        tagAlreadyExists(data, searchTag.qcode) !==
-                                                                        true,
-                                                                );
+                                                                    const withoutExistingTags = result.filter(
+                                                                        (searchTag) => tagAlreadyExists(
+                                                                            data,
+                                                                            searchTag.qcode,
+                                                                        ) !== true,
+                                                                    );
 
-                                                                const withResponse = withoutExistingTags.map((tag) => ({
-                                                                    // required for Autocomplete component
-                                                                    keyValue: tag.name,
+                                                                    const withResponse = withoutExistingTags.map(
+                                                                        (tag) => ({
+                                                                            // required for Autocomplete component
+                                                                            keyValue: tag.name,
 
-                                                                    tag,
+                                                                            tag,
 
-                                                                    // required to be able to
-                                                                    // get all parents
-                                                                    // when an item is selected
-                                                                    entireResponse: res,
-                                                                }));
+                                                                            // required to be able to
+                                                                            // get all parents
+                                                                            // when an item is selected
+                                                                            entireResponse: res,
+                                                                        }),
+                                                                    );
 
-                                                                callback(withResponse);
-                                                            }
-                                                        });
+                                                                    callback(withResponse);
+                                                                }
+                                                            });
 
-                                                        return {
-                                                            cancel: () => {
-                                                                cancelled = true;
-                                                            },
-                                                        };
-                                                    }}
-                                                    listItemTemplate={(__item: any) => {
-                                                        const _item: ITagUi = __item.tag;
+                                                            return {
+                                                                cancel: () => {
+                                                                    cancelled = true;
+                                                                },
+                                                            };
+                                                        }}
+                                                        listItemTemplate={(__item: any) => {
+                                                            const _item: ITagUi = __item.tag;
 
-                                                        return (
-                                                            <div className={'auto-tagging-widget__autocomplete-item'}>
-                                                                <b>{_item.name}</b>
+                                                            return (
+                                                                <div
+                                                                    className={
+                                                                        'auto-tagging-widget__autocomplete-item'
+                                                                    }
+                                                                >
+                                                                    <b>{_item.name}</b>
 
-                                                                {_item?.group?.value == null ? null : (
-                                                                    <p>{_item.group.value}</p>
-                                                                )}
+                                                                    {
+                                                                        _item?.group?.value == null ? null : (
+                                                                            <p>{_item.group.value}</p>
+                                                                        )
+                                                                    }
 
-                                                                {_item?.description == null ? null : (
-                                                                    <p>{_item.description}</p>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    }}
-                                                    onSelect={(_value: any) => {
-                                                        const tag: ITagUi = _value.tag;
-                                                        const entireResponse: IAutoTaggingSearchResult =
-                                                            _value.entireResponse;
+                                                                    {
+                                                                        _item?.description == null ? null : (
+                                                                            <p>{_item.description}</p>
+                                                                        )
+                                                                    }
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        onSelect={(_value: any) => {
+                                                            const tag: ITagUi = _value.tag;
+                                                            const entireResponse: IAutoTaggingSearchResult =
+                                                                _value.entireResponse;
 
-                                                        this.insertTagFromSearch(tag, data, entireResponse);
-                                                        // TODO: clear autocomplete?
-                                                    }}
-                                                    onChange={noop}
-                                                />
+                                                            this.insertTagFromSearch(tag, data, entireResponse);
+                                                            // TODO: clear autocomplete?
+                                                        }}
+                                                        onChange={noop}
+                                                    />
+                                                </div>
+
+                                                <div style={{marginInlineStart: 10, marginBlockStart: 14}}>
+                                                    <Button
+                                                        type="primary"
+                                                        icon="plus-large"
+                                                        size="small"
+                                                        shape="round"
+                                                        text={gettext('Add')}
+                                                        iconOnly={true}
+                                                        disabled={readOnly}
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                newItem: {
+                                                                    name: '',
+                                                                },
+                                                            });
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
-
-                                            <div style={{marginInlineStart: 10, marginBlockStart: 14}}>
-                                                <Button
-                                                    type="primary"
-                                                    icon="plus-large"
-                                                    size="small"
-                                                    shape="round"
-                                                    text={gettext('Add')}
-                                                    iconOnly={true}
-                                                    disabled={readOnly}
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            newItem: {
-                                                                name: '',
-                                                            },
-                                                        });
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
+                                        )
+                                    }
                                 </div>
 
                                 {(() => {
@@ -590,14 +640,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         return (
                                             <EmptyState
                                                 title={gettext('No tags yet')}
-                                                description={readOnly ? undefined : gettext('Click "Run" to generate')}
+                                                description={
+                                                    readOnly ?
+                                                        undefined
+                                                        : gettext('Click "Run" to generate')
+                                                }
                                             />
                                         );
                                     } else {
-                                        const {entitiesGroupedAndSorted, othersGrouped} = getAutoTaggingData(
-                                            data,
-                                            this.iMatricsFields,
-                                        );
+                                        const {
+                                            entitiesGroupedAndSorted,
+                                            othersGrouped,
+                                        } = getAutoTaggingData(data, this.iMatricsFields);
 
                                         const savedTags = data.original.analysis.keySeq().toSet();
 
@@ -605,8 +659,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         othersGrouped.forEach((tags, groupId) => {
                                             if (tags != null && groupId != null) {
-                                                allGrouped = allGrouped.set(
-                                                    groupId,
+                                                allGrouped = allGrouped.set(groupId,
                                                     <ToggleBoxNext
                                                         key={groupId}
                                                         title={this.getGroupName(groupId, vocabularyLabels)}
@@ -633,72 +686,73 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         });
 
                                         if (entitiesGroupedAndSorted.size > 0) {
-                                            allGrouped = allGrouped.set(
-                                                'entities',
+                                            allGrouped = allGrouped.set('entities',
                                                 <ToggleBoxNext
                                                     title={this.getGroupName('entities', vocabularyLabels)}
                                                     style="circle"
                                                     isOpen={true}
                                                     key="entities"
                                                 >
-                                                    {entitiesGroupedAndSorted
-                                                        .map((tags, key) => (
-                                                            <div key={key}>
-                                                                <div className="form-label" style={{display: 'block'}}>
-                                                                    {groupLabels.get(key).plural}
-                                                                </div>
-                                                                <TagListComponent
-                                                                    savedTags={savedTags}
-                                                                    tags={tags.toMap()}
-                                                                    readOnly={readOnly}
-                                                                    onRemove={(ids) => {
-                                                                        this.updateTags(
-                                                                            ids.reduce(
-                                                                                (analysis, id) => analysis.remove(id),
-                                                                                data.changes.analysis,
-                                                                            ),
-                                                                            data,
-                                                                        );
-                                                                    }}
-                                                                />
+                                                    {entitiesGroupedAndSorted.map((tags, key) => (
+                                                        <div key={key}>
+                                                            <div
+                                                                className="form-label"
+                                                                style={{display: 'block'}}
+                                                            >
+                                                                {groupLabels.get(key).plural}
                                                             </div>
-                                                        ))
-                                                        .toArray()}
+                                                            <TagListComponent
+                                                                savedTags={savedTags}
+                                                                tags={tags.toMap()}
+                                                                readOnly={readOnly}
+                                                                onRemove={(ids) => {
+                                                                    this.updateTags(
+                                                                        ids.reduce(
+                                                                            (analysis, id) => analysis.remove(id),
+                                                                            data.changes.analysis,
+                                                                        ),
+                                                                        data,
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )).toArray()}
                                                 </ToggleBoxNext>,
                                             );
                                         }
 
                                         const allGroupedAndSortedByConfig = allGrouped
                                             .filter((_, key) => hasConfig(key, this.iMatricsFields.others))
-                                            .sortBy(
-                                                (_, key) => this.iMatricsFields.others[key].order,
-                                                (a, b) => a - b,
-                                            );
+                                            .sortBy((_, key) => this.iMatricsFields.others[key].order,
+                                                (a, b) => a - b);
 
-                                        const allGroupedAndSortedNotInConfig = allGrouped.filter(
-                                            (_, key) => !hasConfig(key, this.iMatricsFields.others),
-                                        );
+                                        const allGroupedAndSortedNotInConfig = allGrouped
+                                            .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
 
-                                        const allGroupedAndSorted =
-                                            allGroupedAndSortedByConfig.concat(allGroupedAndSortedNotInConfig);
+                                        const allGroupedAndSorted = allGroupedAndSortedByConfig
+                                            .concat(allGroupedAndSortedNotInConfig);
 
                                         return (
                                             <React.Fragment>
-                                                {this.state.newItem == null ? null : (
-                                                    <NewItemComponent
-                                                        item={this.state.newItem}
-                                                        onChange={(newItem) => {
-                                                            this.setState({newItem});
-                                                        }}
-                                                        save={(newItem: INewItem) => {
-                                                            this.createNewTag(newItem, data);
-                                                        }}
-                                                        cancel={() => {
-                                                            this.setState({newItem: null});
-                                                        }}
-                                                        tagAlreadyExists={(qcode) => tagAlreadyExists(data, qcode)}
-                                                    />
-                                                )}
+                                                {
+                                                    this.state.newItem == null ? null : (
+                                                        <NewItemComponent
+                                                            item={this.state.newItem}
+                                                            onChange={(newItem) => {
+                                                                this.setState({newItem});
+                                                            }}
+                                                            save={(newItem: INewItem) => {
+                                                                this.createNewTag(newItem, data);
+                                                            }}
+                                                            cancel={() => {
+                                                                this.setState({newItem: null});
+                                                            }}
+                                                            tagAlreadyExists={
+                                                                (qcode) => tagAlreadyExists(data, qcode)
+                                                            }
+                                                        />
+                                                    )
+                                                }
 
                                                 <div className="widget-content__main">
                                                     {allGroupedAndSorted.map((item) => item).toArray()}
@@ -716,36 +770,38 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 })()}
                             </div>
                         </React.Fragment>
+                    )}
+                    footer={
+                        (() => {
+                            if (data === 'loading') {
+                                return undefined;
+                            } else if (data === 'not-initialized') {
+                                return (
+                                    <Button
+                                        type="primary"
+                                        text={gettext('Run')}
+                                        expand={true}
+                                        disabled={readOnly}
+                                        onClick={() => {
+                                            this.runAnalysis();
+                                        }}
+                                    />
+                                );
+                            } else {
+                                return (
+                                    <Button
+                                        type="primary"
+                                        text={gettext('Refresh')}
+                                        expand={true}
+                                        disabled={readOnly}
+                                        onClick={() => {
+                                            this.runAnalysis();
+                                        }}
+                                    />
+                                );
+                            }
+                        })()
                     }
-                    footer={(() => {
-                        if (data === 'loading') {
-                            return undefined;
-                        } else if (data === 'not-initialized') {
-                            return (
-                                <Button
-                                    type="primary"
-                                    text={gettext('Run')}
-                                    expand={true}
-                                    disabled={readOnly}
-                                    onClick={() => {
-                                        this.runAnalysis();
-                                    }}
-                                />
-                            );
-                        } else {
-                            return (
-                                <Button
-                                    type="primary"
-                                    text={gettext('Refresh')}
-                                    expand={true}
-                                    disabled={readOnly}
-                                    onClick={() => {
-                                        this.runAnalysis();
-                                    }}
-                                />
-                            );
-                        }
-                    })()}
                 />
             );
         }

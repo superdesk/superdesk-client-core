@@ -2,7 +2,7 @@ import {dragStart} from 'utils/dragging';
 
 export function DraggableItem() {
     return {
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             if (scope.item) {
                 elem.attr('draggable', true);
 

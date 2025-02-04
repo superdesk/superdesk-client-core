@@ -4,7 +4,12 @@ import {get, set, isEqual, cloneDeep, isEmpty, extend, each, omit, isNil, isObje
 import {gettext} from 'core/utils';
 import {StretchBar} from 'core/ui/components/SubNav';
 
-import {validateRequiredFormFields, getContactType, validateAssignableType, getContactTypeObject} from '../../helpers';
+import {
+    validateRequiredFormFields,
+    getContactType,
+    validateAssignableType,
+    getContactTypeObject,
+} from '../../helpers';
 import {FB_URL, IG_URL} from '../../constants';
 import {ProfileDetail} from './ProfileDetail';
 import {IContactsService} from '../../Contacts';
@@ -59,8 +64,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     validateForm() {
         const {metadata} = this.props.svc;
 
-        const valid =
-            validateRequiredFormFields(this.state.currentContact, metadata.values.contact_type) &&
+        const valid = validateRequiredFormFields(this.state.currentContact, metadata.values.contact_type) &&
             !Object.values(this.state.errors).some((value) => value && value.length > 0);
 
         this.setState({isFormValid: valid});
@@ -96,11 +100,15 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         const metadata = this.props.svc.metadata;
 
         if (!validateAssignableType(diff, metadata.values.contact_type)) {
-            const contactType = getContactTypeObject(metadata.values.contact_type, diff.contact_type);
+            const contactType = getContactTypeObject(
+                metadata.values.contact_type,
+                diff.contact_type,
+            );
 
-            fieldValidationErrors.contact_email = gettext('Contact type "{{ contact_type }}" MUST have an email', {
-                contact_type: contactType.name,
-            });
+            fieldValidationErrors.contact_email = gettext(
+                'Contact type "{{ contact_type }}" MUST have an email',
+                {contact_type: contactType.name},
+            );
         } else if (fieldValidationErrors['contact_email']) {
             delete fieldValidationErrors.contact_email;
         }
@@ -167,25 +175,21 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         // clean diff
         diff = omit(diff, 'type');
 
-        return contacts.save(origContact, diff).then(
-            (result: IContact) => {
+        return contacts.save(origContact, diff)
+            .then((result: IContact) => {
                 notify.pop();
                 notify.success(gettext('contact saved.'));
 
-                this.setState(
-                    {
-                        originalContact: result,
-                        currentContact: result,
-                        dirty: false,
-                    },
-                    () => {
-                        if (this.props.onSave) {
-                            this.props.onSave(result);
-                        }
-                    },
-                );
-            },
-            (response) => {
+                this.setState({
+                    originalContact: result,
+                    currentContact: result,
+                    dirty: false,
+                }, () => {
+                    if (this.props.onSave) {
+                        this.props.onSave(result);
+                    }
+                });
+            }, (response) => {
                 notify.pop();
 
                 let errorMessage = gettext('There was an error when saving the contact.');
@@ -197,8 +201,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                 }
 
                 notify.error(errorMessage);
-            },
-        );
+            });
     }
 
     onChange(field, value, e) {
@@ -208,29 +211,36 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         set(diff, field, value);
 
-        this.setState(
-            {
-                currentContact: diff,
-                dirty: !isEqual(origContact, diff),
-                errors: this.validateField(field, value, e, diff),
-            },
-            this.validateForm,
-        );
+        this.setState({
+            currentContact: diff,
+            dirty: !isEqual(origContact, diff),
+            errors: this.validateField(field, value, e, diff),
+        }, this.validateForm);
     }
 
     render() {
         const {svc, contact, onCancel, hideActionBar = false, formClass} = this.props;
-        const {isFormValid = false, dirty = false, errors = {}} = this.state;
+        const {
+            isFormValid = false,
+            dirty = false,
+            errors = {},
+        } = this.state;
         const {privileges} = svc;
 
         const readOnly = !get(privileges, 'privileges.contacts', false);
         const currentContact: IContact = this.state.currentContact || null;
         const contactType: string = getContactType(currentContact) || 'person';
-        const iconName = contactType === 'organisation' ? 'icon-business' : 'icon-user';
+        const iconName = contactType === 'organisation' ?
+            'icon-business' :
+            'icon-user';
 
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
-                <form name="contactForm" className={formClass} onSubmit={(e) => e.preventDefault()}>
+                <form
+                    name="contactForm"
+                    className={formClass}
+                    onSubmit={(e) => e.preventDefault()}
+                >
                     {!hideActionBar && (
                         <div className="subnav subnav--darker">
                             <StretchBar>
@@ -252,9 +262,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                                             className="btn btn--primary"
                                             onClick={this.save}
                                             disabled={!isFormValid || !dirty}
-                                        >
-                                            {gettext('Save')}
-                                        </button>
+                                        >{gettext('Save')}</button>
                                     )}
                                 </div>
                             </StretchBar>
@@ -275,3 +283,4 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         );
     }
 }
+

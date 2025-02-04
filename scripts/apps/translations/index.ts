@@ -20,40 +20,33 @@ import {SESSION_EVENTS} from 'core/auth/auth';
  * @packageName superdesk.apps
  * @description Superdesk authoring application module.
  */
-angular
-    .module('superdesk.apps.translations', ['superdesk.core.api'])
+angular.module('superdesk.apps.translations', [
+    'superdesk.core.api',
+])
 
     .service('TranslationService', svc.TranslationService)
 
     .directive('sdTranslationDropdown', directive.TranslationDropdown)
 
-    .run([
-        'TranslationService',
-        '$rootScope',
-        (service, $rootScope) => {
-            // trigger loading of languages to make them available
-            // for the check in translate activity
-            $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, service.init);
-        },
-    ])
+    .run(['TranslationService', '$rootScope', (service, $rootScope) => {
+        // trigger loading of languages to make them available
+        // for the check in translate activity
+        $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, service.init);
+    }])
 
-    .config([
-        'superdeskProvider',
-        function (superdesk) {
-            superdesk.activity('translate', {
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('translate', {
                 label: gettext('Translate'),
                 icon: 'globe',
                 dropdown: directive.TranslationReactDropdown,
                 keyboardShortcut: 'ctrl+t',
                 templateUrl: 'scripts/apps/translations/views/TranslationDropdownTemplate.html',
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: [
-                    'TranslationService',
-                    'item',
-                    function (TranslationService, item) {
-                        return TranslationService.checkAvailability(item);
-                    },
+                filters: [
+                    {action: 'list', type: 'archive'},
                 ],
+                additionalCondition: ['TranslationService', 'item', function(TranslationService, item) {
+                    return TranslationService.checkAvailability(item);
+                }],
             });
-        },
-    ]);
+    }]);

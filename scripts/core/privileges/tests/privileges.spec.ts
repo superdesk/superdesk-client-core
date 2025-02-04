@@ -1,3 +1,4 @@
+
 describe('privileges', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.privileges'));

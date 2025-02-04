@@ -37,7 +37,7 @@ export function isCheckAllowed(item) {
         item._type === 'items' ||
         (item._type === 'externalsource' && !item._fetchable) ||
         isKilled(item) ||
-        (item._type === 'published' && !item.last_published_version)
+        item._type === 'published' && !item.last_published_version
     );
 }
 
@@ -98,8 +98,7 @@ export function renderToBody(elem, target, zIndex = 1000) {
 export function positionPopup(target, zIndex = 1000) {
     const node: any = menuHolderElem().firstChild;
 
-    if (node == null) {
-        // when loading
+    if (node == null) { // when loading
         return;
     }
 
@@ -163,7 +162,7 @@ interface IItemProps {
 export function renderArea(
     area: 'firstLine' | 'secondLine' | 'singleLine' | 'priority',
     itemProps: IItemProps,
-    props?: {className?: string},
+    props?: { className?: string },
     customRender: any = {},
 ) {
     // If singleline preference is set, don't show second line
@@ -182,38 +181,40 @@ export function renderArea(
     }
 
     const elemProps = angular.extend({key: area}, props);
-    const components = specs
-        .map((value: string | IListViewFieldWithOptions, i) => {
-            let field;
-            let options: IListViewFieldWithOptions['options'] | undefined;
+    const components = specs.map((value: string | IListViewFieldWithOptions, i) => {
+        let field;
+        let options: IListViewFieldWithOptions['options'] | undefined;
 
-            if (typeof value === 'string') {
-                field = value;
-            } else {
-                field = value.field;
-                options = value.options;
-            }
+        if (typeof value === 'string') {
+            field = value;
+        } else {
+            field = value.field;
+            options = value.options;
+        }
 
-            if (customRender.fields && field in customRender.fields) {
-                return customRender.fields[field](itemProps);
-            }
+        if (customRender.fields && field in customRender.fields) {
+            return customRender.fields[field](itemProps);
+        }
 
-            const Component = fields[field];
+        const Component = fields[field];
 
-            if (Component != null) {
-                return (
-                    <ErrorBoundary key={i}>
-                        <Component {...itemProps} options={options} />
-                    </ErrorBoundary>
-                );
-            }
+        if (Component != null) {
+            return (
+                <ErrorBoundary key={i}>
+                    <Component {...itemProps} options={options} />
+                </ErrorBoundary>
+            );
+        }
 
-            return null;
-        })
-        .filter(Boolean);
+        return null;
+    }).filter(Boolean);
 
     if (components.length > 0) {
-        return <div {...elemProps}>{components}</div>;
+        return (
+            <div {...elemProps}>
+                {components}
+            </div>
+        );
     }
 
     return null;
@@ -243,10 +244,18 @@ export function bindMarkItemShortcut(label) {
             moreOptions.find('button:not([disabled])').first().focus();
 
             keyboardManager.push('up', () => {
-                option.find('button:focus').parent('li').prev().children('button').focus();
+                option.find('button:focus')
+                    .parent('li')
+                    .prev()
+                    .children('button')
+                    .focus();
             });
             keyboardManager.push('down', () => {
-                option.find('button:focus').parent('li').next().children('button').focus();
+                option.find('button:focus')
+                    .parent('li')
+                    .next()
+                    .children('button')
+                    .focus();
             });
             keyboardManager.push('escape', () => {
                 let actionMenu = angular.element('.more-activity-menu.open');

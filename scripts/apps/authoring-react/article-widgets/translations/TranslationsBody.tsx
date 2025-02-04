@@ -5,7 +5,7 @@ import {IArticle} from 'superdesk-api';
 interface IProps {
     item: IArticle;
     wrapperTemplate: React.ComponentType<{children: Array<JSX.Element>}>;
-    translationTemplate: React.ComponentType<{translation: IArticle; getTranslatedFromLanguage: () => string}>;
+    translationTemplate: React.ComponentType<{translation: IArticle, getTranslatedFromLanguage: () => string}>;
     initialState?: IState;
 }
 
@@ -31,8 +31,7 @@ export class TranslationsBody extends React.PureComponent<IProps, IState> {
 
         const {item} = this.props;
 
-        ng.get('TranslationService')
-            .getTranslations(item)
+        ng.get('TranslationService').getTranslations(item)
             .then((response) => {
                 const translations: Array<IArticle> = response._items;
 
@@ -58,17 +57,19 @@ export class TranslationsBody extends React.PureComponent<IProps, IState> {
 
         return (
             <WrapperTemplate>
-                {this.state.translations.sort(sortOldestFirst).map((translation: IArticle, i) => {
-                    return (
-                        <TranslationTemplate
-                            key={i}
-                            translation={translation}
-                            getTranslatedFromLanguage={() =>
-                                this.state.translationsLookup[translation.translated_from]?.language
-                            }
-                        />
-                    );
-                })}
+                {
+                    this.state.translations.sort(sortOldestFirst).map((translation: IArticle, i) => {
+                        return (
+                            <TranslationTemplate
+                                key={i}
+                                translation={translation}
+                                getTranslatedFromLanguage={
+                                    () => this.state.translationsLookup[translation.translated_from]?.language
+                                }
+                            />
+                        );
+                    })
+                }
             </WrapperTemplate>
         );
     }

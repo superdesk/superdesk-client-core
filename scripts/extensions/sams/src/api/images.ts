@@ -21,7 +21,7 @@ export function getAssetRenditionUrl(
     }
     params['keep_proportions'] = keepProportions;
 
-    const urlParams = new URLSearchParams(params).toString();
+    const urlParams = (new URLSearchParams(params)).toString();
 
     return server.url + '/' + baseUrl + (urlParams ? `?${urlParams}` : '');
 }

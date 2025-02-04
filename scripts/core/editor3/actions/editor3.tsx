@@ -91,30 +91,28 @@ export function dragDrop(
 
             const canEmbedArticle = _canAddArticleEmbed ?? (() => canAddArticleEmbedDefault);
 
-            return canEmbedArticle(partialArticle._id)
-                .then((res) => {
-                    if (res.ok === true) {
-                        const payload: IEditorDragDropPayload = {
-                            data: {
-                                item: res.src,
-                            },
-                            blockKey,
-                            contentType: 'article-embed',
-                        };
+            return canEmbedArticle(partialArticle._id).then((res) => {
+                if (res.ok === true) {
+                    const payload: IEditorDragDropPayload = {
+                        data: {
+                            item: res.src,
+                        },
+                        blockKey,
+                        contentType: 'article-embed',
+                    };
 
-                        const action = {
-                            type: 'EDITOR_DRAG_DROP',
-                            payload: payload,
-                        };
+                    const action = {
+                        type: 'EDITOR_DRAG_DROP',
+                        payload: payload,
+                    };
 
-                        dispatch(action);
-                    } else {
-                        notify.error(res.error);
-                    }
-                })
-                .finally(() => {
-                    dispatch({type: 'EDITOR_LOADING', payload: false});
-                });
+                    dispatch(action);
+                } else {
+                    notify.error(res.error);
+                }
+            }).finally(() => {
+                dispatch({type: 'EDITOR_LOADING', payload: false});
+            });
         };
     }
 
@@ -125,8 +123,7 @@ export function dragDrop(
 
         const item: IArticle = JSON.parse(dataTransfer.getData(type));
 
-        return content
-            .dropItem(item, {fetchExternal: true})
+        return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
                 const payload: IEditorDragDropPayload = {
                     data,
@@ -255,7 +252,9 @@ export function moveBlock(block, dest, insertionMode) {
 }
 
 export function processEmbedCode(data) {
-    if (typeof data !== 'string' && typeof data !== 'object' && typeof data.html !== 'string') {
+    if (typeof data !== 'string' &&
+        (typeof data !== 'object' && typeof data.html !== 'string')
+    ) {
         logger.error(new Error('embed format not recognized'));
     }
     return data;
@@ -286,7 +285,7 @@ export function changeCase(changeTo: ITextCase, selection: SelectionState) {
     };
 }
 
-export type EditorLimit = {ui: CharacterLimitUiBehavior; chars: number};
+export type EditorLimit = {ui: CharacterLimitUiBehavior, chars: number};
 export function changeLimitConfig(payload: EditorLimit) {
     const config = payload.ui ? payload : {...payload, ui: DEFAULT_UI_FOR_EDITOR_LIMIT};
 
@@ -303,9 +302,8 @@ export function autocomplete(value: string) {
     };
 }
 
-export type IActionPayloadSetExternalOptions = Partial<
-    Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>
->;
+export type IActionPayloadSetExternalOptions =
+    Partial<Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>>;
 
 export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
     return {

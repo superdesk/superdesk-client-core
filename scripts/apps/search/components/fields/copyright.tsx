@@ -9,9 +9,11 @@ class CopyrightComponent extends React.Component<IPropsItemListInfo> {
             const title = item.usageterms || item.copyrightnotice || '';
 
             return (
-                <small key="copyright" className="copyright container" title={title}>
-                    &copy; {item.copyrightholder}
-                </small>
+                <small
+                    key="copyright"
+                    className="copyright container"
+                    title={title}
+                >&copy; {item.copyrightholder}</small>
             );
         }
 

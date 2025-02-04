@@ -5,6 +5,7 @@
 @import '~variables.scss';
 
 .world-clock {
+
     .widget-content {
         .clock-container {
             height: 185px;
@@ -53,9 +54,7 @@
                 background-color: var(--sd-colour-bg--02);
                 color: var(--sd-colour-bg--99);
 
-                header {
-                    color: var(--sd-colour-bg--99);
-                }
+                header { color: var(--sd-colour-bg--99); }
 
                 time {
                     padding-block-start: 27px;
@@ -75,9 +74,7 @@
         .tab-content {
             padding: 20px;
             position: absolute;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            inset-block-end: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
             inset-block-start: $nav-height;
             margin: 0;
             padding: 20px;
@@ -89,7 +86,7 @@
             max-height: 280px;
             overflow: auto;
             &::-webkit-scrollbar {
-                width: 10px;
+                width:10px;
                 border-inline-start: 3px solid var(--color-modal-Bg);
             }
             &::-webkit-scrollbar-thumb {
@@ -100,3 +97,4 @@
         }
     }
 }
+

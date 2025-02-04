@@ -68,7 +68,8 @@ const allowEditSuggestion = (editorState, author, isBackward) => {
     if (!selection.isCollapsed()) {
         newEditorState = initSelectionIterator(editorState);
         while (hasNextSelection(newEditorState, selection)) {
-            const data = Highlights.getHighlightDataAtCurrentPosition(newEditorState, getSuggestionsTypes());
+            const data = Highlights.getHighlightDataAtCurrentPosition(
+                newEditorState, getSuggestionsTypes());
 
             if (!allowEditForData(data, author, false)) {
                 return false;
@@ -106,7 +107,7 @@ const allowEditForData = (data, author, checkDelete = true) => {
         return true;
     }
 
-    const allow = !checkDelete || data.type !== 'DELETE_SUGGESTION';
+    const allow = (!checkDelete || data.type !== 'DELETE_SUGGESTION');
 
     return author === data.author && allow;
 };

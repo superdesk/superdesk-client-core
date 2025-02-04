@@ -40,13 +40,11 @@ interface IFetchedData<T, IToJoin> {
     };
 }
 
-class VirtualListFromQueryComponent<
-    T extends IBaseRestApiResponse,
-    IToJoin extends {[key: string]: any},
-> extends SuperdeskReactComponent<
-    IPropsVirtualListFromQuery<T, IToJoin> & {onInitialized(): void},
-    IState<T, IToJoin>
-> {
+class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin extends {[key: string]: any}>
+    extends SuperdeskReactComponent<
+        IPropsVirtualListFromQuery<T, IToJoin> & {onInitialized(): void},
+        IState<T, IToJoin>
+    > {
     private virtualListRef: IExposedFromVirtualList | null;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
@@ -72,13 +70,9 @@ class VirtualListFromQueryComponent<
 
         this.eventListenersToRemoveBeforeUnmounting = [];
 
-        this.reloadAllDebounced = debounce(
-            () => {
-                this.virtualListRef.reloadAll();
-            },
-            2000,
-            {leading: true, maxWait: 5000},
-        );
+        this.reloadAllDebounced = debounce(() => {
+            this.virtualListRef.reloadAll();
+        }, 2000, {leading: true, maxWait: 5000});
     }
 
     fetchData(pageToFetch: number, pageSize: number): Promise<IFetchedData<T, IToJoin>> {
@@ -90,13 +84,13 @@ class VirtualListFromQueryComponent<
             max_results: pageSize,
         };
 
-        return this.asyncHelpers
-            .httpRequestJsonLocal<IRestApiResponse<T>>(prepareSuperdeskQuery(this.props.query.endpoint, query))
+        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>(
+            prepareSuperdeskQuery(this.props.query.endpoint, query),
+        )
             .then((resEntities): Promise<IFetchedData<T, IToJoin>> => {
-                const resourceName =
-                    resEntities._links == null
-                        ? trimStart(this.props.query.endpoint, '/')
-                        : resEntities._links.self.title;
+                const resourceName = resEntities._links == null
+                    ? trimStart(this.props.query.endpoint, '/')
+                    : resEntities._links.self.title;
 
                 const relatedEntitiesToFetch: IEntitiesToFetch = {};
 
@@ -123,9 +117,8 @@ class VirtualListFromQueryComponent<
                                 relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] = Set([]);
                             }
 
-                            relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] = relatedEntitiesToFetch[
-                                getStringEndpoint(endpoint, entity)
-                            ].add(getId(entity));
+                            relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] =
+                                relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)].add(getId(entity));
                         }
                     }
 
@@ -175,16 +168,13 @@ class VirtualListFromQueryComponent<
                             ? fetchedData
                             : this.state.initialData;
 
-                    this.setState(
-                        {
-                            totalItems: fetchedData._meta.total,
-                            resourceName: fetchedData._meta.resourceName,
-                            initialData: initialData,
-                        },
-                        () => {
-                            resolve(fetchedData);
-                        },
-                    );
+                    this.setState({
+                        totalItems: fetchedData._meta.total,
+                        resourceName: fetchedData._meta.resourceName,
+                        initialData: initialData,
+                    }, () => {
+                        resolve(fetchedData);
+                    });
                 });
             });
     }
@@ -199,7 +189,7 @@ class VirtualListFromQueryComponent<
         const {pageSize, nextPage} = getPaginationInfo(fromIndex, toIndex);
 
         return this.fetchData(nextPage, pageSize).then((res) => {
-            const start = pageSize * nextPage - pageSize;
+            const start = (pageSize * nextPage) - pageSize;
 
             return Map<number, IFetchedItem<T, IToJoin>>(res.items.map((item, i) => [start + i, item]));
         });
@@ -296,7 +286,9 @@ class VirtualListFromQueryComponent<
                 itemTemplate={({item}) => {
                     const Template = this.props.itemTemplate;
 
-                    return <Template entity={item.entity} joined={item.joined} />;
+                    return (
+                        <Template entity={item.entity} joined={item.joined} />
+                    );
                 }}
                 totalItemsCount={totalItems}
                 initialItems={Map<number, IFetchedItem<T, IToJoin>>(initialData.items.map((item, i) => [i, item]))}
@@ -310,9 +302,8 @@ class VirtualListFromQueryComponent<
     }
 }
 
-export class VirtualListFromQuery<T extends IBaseRestApiResponse, IToJoin> extends React.PureComponent<
-    IPropsVirtualListFromQuery<T, IToJoin>
-> {
+export class VirtualListFromQuery<T extends IBaseRestApiResponse, IToJoin>
+    extends React.PureComponent<IPropsVirtualListFromQuery<T, IToJoin>> {
     private smoothLoaderRef: SmoothLoaderForKey;
 
     constructor(props: IPropsVirtualListFromQuery<T, IToJoin>) {
@@ -326,14 +317,12 @@ export class VirtualListFromQuery<T extends IBaseRestApiResponse, IToJoin> exten
     }
 
     render() {
-        const key = JSON.stringify(
-            omit(
-                this.props,
-                'children',
-                nameof<IPropsVirtualListFromQuery<T, IToJoin>>('width'),
-                nameof<IPropsVirtualListFromQuery<T, IToJoin>>('height'),
-            ),
-        );
+        const key = JSON.stringify(omit(
+            this.props,
+            'children',
+            nameof<IPropsVirtualListFromQuery<T, IToJoin>>('width'),
+            nameof<IPropsVirtualListFromQuery<T, IToJoin>>('height'),
+        ));
 
         return (
             <div>
@@ -343,7 +332,10 @@ export class VirtualListFromQuery<T extends IBaseRestApiResponse, IToJoin> exten
                         this.smoothLoaderRef = ref;
                     }}
                 >
-                    <VirtualListFromQueryComponent {...this.props} onInitialized={this.setLoaded} />
+                    <VirtualListFromQueryComponent
+                        {...this.props}
+                        onInitialized={this.setLoaded}
+                    />
                 </SmoothLoaderForKey>
             </div>
         );

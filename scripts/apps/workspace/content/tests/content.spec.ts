@@ -19,33 +19,30 @@ describe('superdesk.apps.workspace.content', () => {
             spyOn(preferencesService, 'update').and.returnValue(true);
         }));
 
-        it('can create plain text items', (done) =>
-            inject((api, content, $rootScope) => {
-                content.createItem('text').then((result) => {
-                    expect(result).toEqual(ITEM);
-                    expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
+        it('can create plain text items', (done) => inject((api, content, $rootScope) => {
+            content.createItem('text').then((result) => {
+                expect(result).toEqual(ITEM);
+                expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can create packages', (done) =>
-            inject((api, packages: IPackagesService, desks, session, $rootScope) => {
-                session.identity = {_id: '1'};
-                desks.userDesks = {_items: []};
-                spyOn(desks, 'getCurrentDesk').and.returnValue({
-                    _id: '1',
-                    name: 'sport',
-                    working_stage: '2',
-                    incoming_stage: '3',
-                });
+        it('can create packages', (done) => inject((api, packages: IPackagesService, desks, session, $rootScope) => {
+            session.identity = {_id: '1'};
+            desks.userDesks = {_items: []};
+            spyOn(desks, 'getCurrentDesk')
+                .and
+                .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-                packages.createEmptyPackage().then((result) => {
-                    expect(result).toEqual(ITEM);
+            packages.createEmptyPackage().then((result) => {
+                expect(result).toEqual(ITEM);
 
-                    expect(api.save).toHaveBeenCalledWith('archive', {
+                expect(api.save).toHaveBeenCalledWith(
+                    'archive',
+                    {
                         headline: '',
                         slugline: '',
                         description_text: '',
@@ -64,124 +61,109 @@ describe('superdesk.apps.workspace.content', () => {
                         ],
                         version: 0,
                         task: {desk: '1', stage: '2', user: '1'},
-                    });
+                    },
+                );
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can create packages from items', (done) =>
-            inject((api, content, session, desks, $rootScope) => {
-                session.identity = {_id: '1'};
+        it('can create packages from items', (done) => inject((api, content, session, desks, $rootScope) => {
+            session.identity = {_id: '1'};
 
-                spyOn(desks, 'getCurrentDesk').and.returnValue({
-                    _id: '1',
-                    name: 'sport',
-                    working_stage: '2',
-                    incoming_stage: '3',
-                });
+            spyOn(desks, 'getCurrentDesk')
+                .and
+                .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-                content.createPackageFromItems({data: 123}).then(() => {
-                    expect(api.save).toHaveBeenCalledWith('archive', {
-                        headline: '',
-                        slugline: '',
-                        description_text: '',
-                        state: 'draft',
-                        type: 'composite',
-                        version: 0,
-                        task: {desk: '1', stage: '2', user: '1'},
-                        groups: [
-                            {role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
-                            {
-                                refs: [
-                                    {
-                                        headline: '',
-                                        residRef: undefined,
-                                        location: 'archive',
-                                        slugline: '',
-                                        renditions: {},
-                                        itemClass: '',
-                                        type: '',
-                                    },
-                                ],
-                                id: 'main',
-                                role: 'grpRole:main',
-                            },
-                        ],
-                    });
+            content.createPackageFromItems({data: 123}).then(() => {
+                expect(api.save).toHaveBeenCalledWith('archive', {
+                    headline: '', slugline: '',
+                    description_text: '',
+                    state: 'draft',
+                    type: 'composite',
+                    version: 0,
+                    task: {desk: '1', stage: '2', user: '1'},
+                    groups: [
+                        {role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
+                        {refs: [{headline: '', residRef: undefined, location: 'archive',
+                            slugline: '', renditions: {}, itemClass: '', type: ''}],
+                        id: 'main', role: 'grpRole:main'}]});
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can fetch content types', (done) =>
-            inject((api, content, $rootScope, $q) => {
-                var types = [{_id: 'foo'}];
+        it('can fetch content types', (done) => inject((api, content, $rootScope, $q) => {
+            var types = [{_id: 'foo'}];
 
-                spyOn(api, 'getAll').and.returnValue($q.when(types));
+            spyOn(api, 'getAll').and.returnValue($q.when(types));
 
-                content.getTypes().then((result) => {
-                    expect(result).toEqual(types);
+            content.getTypes().then((result) => {
+                expect(result).toEqual(types);
 
-                    expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
+                expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can fetch content types and filter by desk', (done) =>
-            inject((content, $rootScope, $q) => {
-                spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}]));
+        it('can fetch content types and filter by desk', (done) => inject((content, $rootScope, $q) => {
+            spyOn(content, 'getTypes').and.returnValue($q.when([
+                {_id: 'foo'},
+                {_id: 'bar'},
+                {_id: 'baz'},
+            ]));
 
-                content.getDeskProfiles({content_profiles: {bar: 1}}, 'baz').then((profiles) => {
-                    expect(profiles.length).toBe(2);
-                    expect(profiles[0]._id).toBe('bar');
-                    expect(profiles[1]._id).toBe('baz');
+            content.getDeskProfiles({content_profiles: {bar: 1}}, 'baz').then((profiles) => {
+                expect(profiles.length).toBe(2);
+                expect(profiles[0]._id).toBe('bar');
+                expect(profiles[1]._id).toBe('baz');
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can generate content types lookup dict', (done) =>
-            inject((content, $q, $rootScope) => {
-                spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
+        it('can generate content types lookup dict', (done) => inject((content, $q, $rootScope) => {
+            spyOn(content, 'getTypes').and.returnValue($q.when([{_id: 'foo', name: 'Foo'}, {_id: 'bar'}]));
 
-                content.getTypesLookup().then((lookup) => {
-                    expect(lookup.foo.name).toBe('Foo');
+            content.getTypesLookup().then((lookup) => {
+                expect(lookup.foo.name).toBe('Foo');
 
-                    done();
-                });
+                done();
+            });
 
-                $rootScope.$digest();
-            }));
+            $rootScope.$digest();
+        }));
 
-        it('can get content type', (done) =>
-            inject((api, content, $rootScope, $q) => {
-                var type = {_id: 'foo'};
+        it('can get content type', (done) => inject((api, content, $rootScope, $q) => {
+            var type = {_id: 'foo'};
 
-                spyOn(api, 'getAll').and.returnValue($q.when([]));
-                spyOn(api, 'find').and.returnValue($q.when(type));
+            spyOn(api, 'getAll').and.returnValue($q.when([]));
+            spyOn(api, 'find').and.returnValue($q.when(type));
 
-                content.getType('foo').then((res) => {
-                    expect(res).toEqual(type);
+            content.getType('foo').then((res) => {
+                expect(res).toEqual(type);
 
-                    expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
+                expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
 
-                    done();
-                });
-                $rootScope.$digest();
-            }));
+                done();
+            });
+            $rootScope.$digest();
+        }));
 
         it('can filter custom fields per profile', inject((content) => {
-            content._fields = [{_id: 'foo'}, {_id: 'bar'}];
+            content._fields = [
+                {_id: 'foo'},
+                {_id: 'bar'},
+            ];
 
             const fields = content.fields({editor: {foo: {enabled: true}}});
 
@@ -205,17 +187,10 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('should notify appropriate error when created profile is not unique', inject((
-            notify,
-            $controller,
-            content,
-            $q,
-            $rootScope,
-        ) => {
-            spyOn(content, 'createProfile').and.returnValue(
-                $q.reject({
-                    data: {_issues: {label: {unique: 1}}},
-                }),
-            );
+            notify, $controller, content, $q, $rootScope) => {
+            spyOn(content, 'createProfile').and.returnValue($q.reject({
+                data: {_issues: {label: {unique: 1}}},
+            }));
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
 
@@ -229,17 +204,10 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('should log appropriate error when created profile is unique', inject((
-            notify,
-            $controller,
-            content,
-            $q,
-            $rootScope,
-        ) => {
-            spyOn(content, 'createProfile').and.returnValue(
-                $q.reject({
-                    data: {_issues: {label: {other_error: 1}}},
-                }),
-            );
+            notify, $controller, content, $q, $rootScope) => {
+            spyOn(content, 'createProfile').and.returnValue($q.reject({
+                data: {_issues: {label: {other_error: 1}}},
+            }));
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
             var ctrl = $controller('ContentProfilesController', {$scope: scope});

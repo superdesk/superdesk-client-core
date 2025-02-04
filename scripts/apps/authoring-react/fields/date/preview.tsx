@@ -10,6 +10,8 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        return <div>{formatDate(new Date(this.props.value))}</div>;
+        return (
+            <div>{formatDate(new Date(this.props.value))}</div>
+        );
     }
 }

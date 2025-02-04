@@ -19,17 +19,10 @@ import {gettext} from 'core/utils';
  *
  * @description Provides set of methods to manipulate with tags in search bar
  */
-TagService.$inject = [
-    '$location',
-    'desks',
-    'userList',
-    'metadata',
-    'search',
-    'ingestSources',
-    'subscribersService',
-    '$q',
-];
-export function TagService($location, desks, userList, metadata, search, ingestSources, subscribersService, $q) {
+TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
+    'ingestSources', 'subscribersService', '$q'];
+export function TagService($location, desks, userList, metadata, search,
+    ingestSources, subscribersService, $q) {
     const PARAMETERS = getParameters();
     const EXCLUDE_FACETS = getExcludeFacets();
     var tags: any = {};
@@ -72,25 +65,21 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     }
 
     /**
-     * @param params search parameters
-     * @param objectOnly A boolean to decide what needs to be returned
-     */
+    * @param params search parameters
+    * @param objectOnly A boolean to decide what needs to be returned
+    */
     function initSelectedParameters(params, objectOnly?: boolean) {
         let parameters = params;
 
         let selectedParameters = [];
         const paramObject = {};
 
-        while (
-            parameters.indexOf(':') > 0 &&
-            parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
-            parameters.indexOf(':') < parameters.indexOf(')', parameters.indexOf(':'))
-        ) {
+        while (parameters.indexOf(':') > 0 &&
+               parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
+               parameters.indexOf(':') < parameters.indexOf(')', parameters.indexOf(':'))) {
             var colonIndex = parameters.indexOf(':');
-            var parameter = parameters.substring(
-                parameters.lastIndexOf(' ', colonIndex),
-                parameters.indexOf(')', colonIndex) + 1,
-            );
+            var parameter = parameters.substring(parameters.lastIndexOf(' ', colonIndex),
+                parameters.indexOf(')', colonIndex) + 1);
             var added = false;
 
             cvs.forEach((cv) => {
@@ -177,21 +166,20 @@ export function TagService($location, desks, userList, metadata, search, ingestS
     function getDatePublishedFilter(index, key) {
         let label = Object.keys(PARAMETERS).includes(key) ? PARAMETERS[key] : null;
         let dateFilterLabel = getDateFilters().find((dateFilter) => dateFilter.labelBlock === label);
-        let predefinedLabel = dateFilterLabel?.predefinedFilters.find(
-            (predefinedFilter) => predefinedFilter.key === index,
-        );
+        let predefinedLabel = dateFilterLabel?.predefinedFilters
+            .find((predefinedFilter) => predefinedFilter.key === index);
 
         return label && predefinedLabel
             ? (() => {
-                  const tagValue = label + ': ' + predefinedLabel.label;
+                const tagValue = label + ': ' + predefinedLabel.label;
 
-                  return tag(tagValue, tagValue);
-              })()
+                return tag(tagValue, tagValue);
+            })()
             : (() => {
-                  const tagValue = label + ': ' + index;
+                const tagValue = label + ': ' + index;
 
-                  return tag(tagValue, tagValue);
-              })();
+                return tag(tagValue, tagValue);
+            })();
     }
 
     /**
@@ -202,19 +190,16 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      */
     var fieldProcessors = {
         original_creator: (index, value) => {
-            userList.getUser(index).then(
-                (user) => {
-                    const tagValue = value + ':' + user.display_name;
+            userList.getUser(index).then((user) => {
+                const tagValue = value + ':' + user.display_name;
 
-                    tags.selectedParameters.push(tag(tagValue, tagValue));
-                },
-                (error) => {
-                    const tagLabel = `${value}:${gettext('Unknown')}`;
-                    const tagValue = value + ':Unknown';
+                tags.selectedParameters.push(tag(tagValue, tagValue));
+            }, (error) => {
+                const tagLabel = `${value}:${gettext('Unknown')}`;
+                const tagValue = value + ':Unknown';
 
-                    tags.selectedParameters.push(tag(tagLabel, tagValue));
-                },
-            );
+                tags.selectedParameters.push(tag(tagLabel, tagValue));
+            });
         },
         from_desk: processFromToDesk,
         to_desk: processFromToDesk,
@@ -283,11 +268,9 @@ export function TagService($location, desks, userList, metadata, search, ingestS
             if (key in fieldProcessors) {
                 fieldProcessors[key](params[key], value, key);
             } else if (dateFilterTags.includes(key)) {
-                if (
-                    metadata.search_config[key] ||
-                    metadata.search_config[key.split('from')[0]] ||
-                    metadata.search_config[key.split('to')[0]]
-                ) {
+                if (metadata.search_config[key]
+                    || metadata.search_config[key.split('from')[0]]
+                    || metadata.search_config[key.split('to')[0]]) {
                     tags.selectedParameters.push(getDatePublishedFilter(params[key], key));
                 }
             } else {
@@ -336,8 +319,8 @@ export function TagService($location, desks, userList, metadata, search, ingestS
      * @param {String} key
      */
     function removeFacet(type, key) {
-        const dateFilter = getDateFilters().find(({labelBlock, labelFrom, labelTo}) =>
-            [labelBlock, labelFrom, labelTo].includes(type),
+        const dateFilter = getDateFilters().find(
+            ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type),
         );
 
         if (dateFilter != null) {
@@ -446,8 +429,7 @@ export function TagService($location, desks, userList, metadata, search, ingestS
                     _.forEach(selectedDesks, (selectedDesk) => {
                         tags.selectedFacets[key].push({
                             label: desks.deskLookup[selectedDesk].name,
-                            value: selectedDesk,
-                        });
+                            value: selectedDesk});
                     });
                 } else if (key === 'language') {
                     tags.selectedFacets[key] = [];

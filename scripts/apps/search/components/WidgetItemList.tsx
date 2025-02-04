@@ -15,7 +15,7 @@ interface IProps {
     itemIds: Array<string> | null;
     itemsById: any | null;
     loading: boolean;
-    selected?: {_id: string};
+    selected?: { _id: string };
 }
 
 /**
@@ -50,9 +50,14 @@ export class WidgetItemList extends React.Component<IProps> {
                             <WidgetItem
                                 key={generateTrackByIdentifier(item)}
                                 item={item}
-                                selected={this.props.selected && this.props.selected._id === item._id}
+                                selected={
+                                    this.props.selected &&
+                                    this.props.selected._id === item._id
+                                }
                                 canEdit={this.props.canEdit}
-                                customMonitoringWidget={this.props.customMonitoringWidget}
+                                customMonitoringWidget={
+                                    this.props.customMonitoringWidget
+                                }
                                 select={this.props.select}
                                 edit={this.props.edit}
                             />

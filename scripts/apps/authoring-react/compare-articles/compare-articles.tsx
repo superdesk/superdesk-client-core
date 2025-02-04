@@ -47,7 +47,10 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
         const {authoringStorage, fieldsAdapter, item1, item2} = this.props;
 
         Promise.all(
-            [item1.entity, item2.entity].map((item) => authoringStorage.getContentProfile(item, fieldsAdapter)),
+            [
+                item1.entity,
+                item2.entity,
+            ].map((item) => authoringStorage.getContentProfile(item, fieldsAdapter)),
         ).then((res) => {
             let profilesMap = Map<T, IContentProfileV2>();
 
@@ -60,7 +63,12 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
         });
     }
     render() {
-        const {contentProfiles, primaryColumnShown, secondaryColumnShown, differenceColumnShown} = this.state;
+        const {
+            contentProfiles,
+            primaryColumnShown,
+            secondaryColumnShown,
+            differenceColumnShown,
+        } = this.state;
 
         const {item1, item2, getLanguage, fieldsAdapter, authoringStorage, storageAdapter} = this.props;
 
@@ -113,10 +121,10 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                 maximized
                 maximizable
                 onHide={this.props.closeModal}
-                headerTemplate={gettext('Comparing "{{x}}"(primary) to "{{y}}"(secondary)', {
-                    x: entity1Label,
-                    y: entity2Label,
-                })}
+                headerTemplate={gettext(
+                    'Comparing "{{x}}"(primary) to "{{y}}"(secondary)',
+                    {x: entity1Label, y: entity2Label},
+                )}
                 contentPadding="none"
             >
                 <div style={{background: '#e8eaed', padding: '8px', height: '100%'}}>
@@ -156,41 +164,47 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
                                 minHeight: 0,
                             }}
                         >
-                            {primaryColumnShown && (
-                                <div style={scrollableColumnCss}>
-                                    <PreviewAuthoringItem
-                                        item={entity1}
-                                        profile={profile1}
-                                        fieldsData={fieldsData1}
-                                        fieldPadding={fieldPadding}
-                                    />
-                                </div>
-                            )}
+                            {
+                                primaryColumnShown && (
+                                    <div style={scrollableColumnCss}>
+                                        <PreviewAuthoringItem
+                                            item={entity1}
+                                            profile={profile1}
+                                            fieldsData={fieldsData1}
+                                            fieldPadding={fieldPadding}
+                                        />
+                                    </div>
+                                )
+                            }
 
-                            {secondaryColumnShown && (
-                                <div style={scrollableColumnCss}>
-                                    <PreviewAuthoringItem
-                                        item={entity2}
-                                        profile={profile2}
-                                        fieldsData={fieldsData2}
-                                        fieldPadding={fieldPadding}
-                                    />
-                                </div>
-                            )}
+                            {
+                                secondaryColumnShown && (
+                                    <div style={scrollableColumnCss}>
+                                        <PreviewAuthoringItem
+                                            item={entity2}
+                                            profile={profile2}
+                                            fieldsData={fieldsData2}
+                                            fieldPadding={fieldPadding}
+                                        />
+                                    </div>
+                                )
+                            }
 
-                            {differenceColumnShown && (
-                                <div style={scrollableColumnCss}>
-                                    <ViewDifference
-                                        profile1={profile1}
-                                        profile2={profile2}
-                                        fieldsData1={fieldsData1}
-                                        fieldsData2={fieldsData2}
-                                        item1={entity1}
-                                        item2={entity2}
-                                        fieldPadding={fieldPadding}
-                                    />
-                                </div>
-                            )}
+                            {
+                                differenceColumnShown && (
+                                    <div style={scrollableColumnCss}>
+                                        <ViewDifference
+                                            profile1={profile1}
+                                            profile2={profile2}
+                                            fieldsData1={fieldsData1}
+                                            fieldsData2={fieldsData2}
+                                            item1={entity1}
+                                            item2={entity2}
+                                            fieldPadding={fieldPadding}
+                                        />
+                                    </div>
+                                )
+                            }
                         </div>
                     </Spacer>
                 </div>
@@ -200,5 +214,10 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
 }
 
 export function compareAuthoringEntities<T>(comparisonData: IComparisonData<T>) {
-    showModal(({closeModal}) => <CompareAuthoringEntities {...comparisonData} closeModal={closeModal} />);
+    showModal(({closeModal}) => (
+        <CompareAuthoringEntities
+            {...comparisonData}
+            closeModal={closeModal}
+        />
+    ));
 }

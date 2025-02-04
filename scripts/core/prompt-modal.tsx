@@ -28,20 +28,22 @@ export class PromptModal extends React.Component<IProps, IState> {
                 visible
                 onHide={() => this.props.closeModal({value: null})}
                 footerTemplate={
-                    <Spacer h gap="4" justifyContent="end" noWrap>
-                        <Button
-                            type="default"
-                            text={this.props.cancelButtonText ?? gettext('Cancel')}
-                            onClick={() => this.props.closeModal({value: null})}
-                        />
-                        <Button
-                            type="primary"
-                            text={this.props.okButtonText ?? gettext('Ok')}
-                            onClick={() => {
-                                this.props.closeModal({value: this.state.value});
-                            }}
-                        />
-                    </Spacer>
+                    (
+                        <Spacer h gap="4" justifyContent="end" noWrap>
+                            <Button
+                                type="default"
+                                text={this.props.cancelButtonText ?? gettext('Cancel')}
+                                onClick={() => this.props.closeModal({value: null})}
+                            />
+                            <Button
+                                type="primary"
+                                text={this.props.okButtonText ?? gettext('Ok')}
+                                onClick={() => {
+                                    this.props.closeModal({value: this.state.value});
+                                }}
+                            />
+                        </Spacer>
+                    )
                 }
             >
                 <Input

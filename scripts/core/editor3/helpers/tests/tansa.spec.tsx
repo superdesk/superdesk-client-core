@@ -15,8 +15,7 @@ describe('editor3.helpers.tansa', () => {
         const editorState = Setup.getInitialEditorState(rawContent);
 
         expect(prepareHtmlForPatching(editorState)).toEqual(
-            '<p id="text-4vu4i">paragraph1 foo&amp;amp;bar</p>\n<p id="text-9d99u">paragraph2</p>',
-        );
+            '<p id="text-4vu4i">paragraph1 foo&amp;amp;bar</p>\n<p id="text-9d99u">paragraph2</p>');
     });
 
     it('should update the text added', () => {
@@ -30,10 +29,8 @@ describe('editor3.helpers.tansa', () => {
 
         let editorState = Setup.getInitialEditorState(rawContent);
 
-        editorState = patchHTMLonTopOfEditorState(
-            editorState,
-            '<p id="text-4vu4i">para-graph-1 foo&amp;bar</p>\n<p id="text-9d99u">para-graph-2</p>\n',
-        );
+        editorState = patchHTMLonTopOfEditorState(editorState,
+            '<p id="text-4vu4i">para-graph-1 foo&amp;bar</p>\n<p id="text-9d99u">para-graph-2</p>\n');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -56,8 +53,7 @@ describe('editor3.helpers.tansa', () => {
 
         editorState = patchHTMLonTopOfEditorState(
             editorState,
-            '<p id="text-4vu4i">pargrap1</p>\n<p id="text-9d99u">pargrap2</p>\n',
-        );
+            '<p id="text-4vu4i">pargrap1</p>\n<p id="text-9d99u">pargrap2</p>\n');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
@@ -71,9 +67,7 @@ describe('editor3.helpers.tansa', () => {
         const rawContent = {
             blocks: [
                 {
-                    key: '4vu4i',
-                    text: ' ',
-                    type: 'atomic',
+                    key: '4vu4i', text: ' ', type: 'atomic',
                     entityRanges: [{key: 0, offset: 0, length: 1}],
                 },
                 {key: '9d99u', text: 'paragraph2'},
@@ -108,9 +102,7 @@ describe('editor3.helpers.tansa', () => {
         const rawContent = {
             blocks: [
                 {
-                    key: '4vu4i',
-                    text: ' ',
-                    type: 'atomic',
+                    key: '4vu4i', text: ' ', type: 'atomic',
                     entityRanges: [{key: 0, offset: 0, length: 1}],
                 },
                 {key: '9d99u', text: 'paragraph2'},
@@ -132,11 +124,10 @@ describe('editor3.helpers.tansa', () => {
 
         let editorState = Setup.getInitialEditorState(rawContent);
 
-        const tansaHtml =
-            '<p id="description-4vu4i">paragraph1</p>\n' +
-            '<p id="alt-4vu4i">paragraph2</p>\n' +
-            '<p id="headline-4vu4i">paragraph3</p>\n' +
-            '<p id="text-9d99u">paragraph4</p>\n';
+        const tansaHtml = '<p id="description-4vu4i">paragraph1</p>\n'
+            + '<p id="alt-4vu4i">paragraph2</p>\n'
+            + '<p id="headline-4vu4i">paragraph3</p>\n'
+            + '<p id="text-9d99u">paragraph4</p>\n';
 
         editorState = patchHTMLonTopOfEditorState(editorState, tansaHtml);
 

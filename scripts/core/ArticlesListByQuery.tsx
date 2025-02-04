@@ -55,35 +55,33 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
         };
 
         return this.props.setLoading(true).then(() => {
-            return this.asyncHelpers
-                .httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-                    method: 'GET',
-                    path: '/search',
-                    urlParams: {
-                        aggregations: 0,
-                        es_highlight: 1,
-                        projections: JSON.stringify(ng.get('search').getProjectedFields()),
-                        ...toElasticQuery(withPagination),
-                    },
-                })
-                .then((res) => {
-                    return new Promise((resolve) => {
-                        const firstLoad = this.state.itemCount === 'loading';
+            return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                method: 'GET',
+                path: '/search',
+                urlParams: {
+                    aggregations: 0,
+                    es_highlight: 1,
+                    projections: JSON.stringify(ng.get('search').getProjectedFields()),
+                    ...toElasticQuery(withPagination),
+                },
+            }).then((res) => {
+                return new Promise((resolve) => {
+                    const firstLoad = this.state.itemCount === 'loading';
 
-                        // update item count
-                        this.setState({itemCount: res._meta.total}, () => {
-                            resolve(res);
+                    // update item count
+                    this.setState({itemCount: res._meta.total}, () => {
+                        resolve(res);
 
-                            if (!firstLoad) {
-                                // Add a delay to allow child components to re-render.
-                                // Avoids a state with loader no longer displayed, but items list still empty.
-                                setTimeout(() => {
-                                    this.props.setLoading(false);
-                                });
-                            }
-                        });
+                        if (!firstLoad) {
+                            // Add a delay to allow child components to re-render.
+                            // Avoids a state with loader no longer displayed, but items list still empty.
+                            setTimeout(() => {
+                                this.props.setLoading(false);
+                            });
+                        }
                     });
                 });
+            });
         });
     }
 
@@ -112,17 +110,13 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                 }),
             );
         } else if (isSpikeView) {
-            this.eventListenersToRemoveBeforeUnmounting.push(
-                addInternalWebsocketEventListener('item:spike', () => {
-                    this.articlesListComponentRef.reloadList();
-                }),
-            );
+            this.eventListenersToRemoveBeforeUnmounting.push(addInternalWebsocketEventListener('item:spike', () => {
+                this.articlesListComponentRef.reloadList();
+            }));
 
-            this.eventListenersToRemoveBeforeUnmounting.push(
-                addInternalWebsocketEventListener('item:unspike', () => {
-                    this.articlesListComponentRef.reloadList();
-                }),
-            );
+            this.eventListenersToRemoveBeforeUnmounting.push(addInternalWebsocketEventListener('item:unspike', () => {
+                this.articlesListComponentRef.reloadList();
+            }));
         }
     }
 
@@ -141,10 +135,13 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                {this.props.header == null ? null : (
-                    // adding a wrapper in order to have a "clean" flex child
-                    <div>{this.props.header(itemCount)}</div>
-                )}
+                {
+                    this.props.header == null
+                        ? null
+
+                        // adding a wrapper in order to have a "clean" flex child
+                        : <div>{this.props.header(itemCount)}</div>
+                }
 
                 <div style={{flexGrow: 1, overflow: 'hidden'}}>
                     <ArticlesListV2
@@ -222,6 +219,12 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {initialize
         // // re-mount the component when the query changes
         const key = JSON.stringify(this.props.query);
 
-        return <ArticlesListByQueryComponent {...this.props} setLoading={this.setLoading} key={key} />;
+        return (
+            <ArticlesListByQueryComponent
+                {...this.props}
+                setLoading={this.setLoading}
+                key={key}
+            />
+        );
     }
 }

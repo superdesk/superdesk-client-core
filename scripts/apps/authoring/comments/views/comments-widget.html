@@ -1,29 +1,15 @@
 <div ng-controller="CommentsWidgetCtrl" class="sd-wrap-helper" data-test-id="comments-widget">
     <ul class="widget-content__main boxed-list sd-padding-all--2">
-        <li
-            ng-repeat="comment in comments"
-            class="boxed-list__item boxed-list__item--comfortable"
-            ng-class="{'boxed-list__item--selected': comment._id === active}"
-        >
+        <li ng-repeat="comment in comments" class="boxed-list__item boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': comment._id === active}">
             <div class="boxed-list__item-media">
                 <sd-user-avatar data-user="comment.user"></sd-user-avatar>
             </div>
             <div class="boxed-list__item-content">
                 <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
-                    <time
-                        class="sd-text__date-time sd-text__date-time--small"
-                        sd-reldate
-                        datetime="comment._created"
-                    ></time>
+                    <time class="sd-text__date-time sd-text__date-time--small" sd-reldate datetime="comment._created"></time>
                 </div>
                 <div class="boxed-list__item-content-row">
-                    <span
-                        class="text"
-                        sd-comment-text
-                        data-comment="comment"
-                        data-name="{{comment.user.display_name || comment.user.username}}"
-                        data-text="{{comment.text}}"
-                    ></span>
+                    <span class="text" sd-comment-text data-comment="comment" data-name="{{comment.user.display_name || comment.user.username}}" data-text="{{comment.text}}"></span>
                 </div>
             </div>
         </li>
@@ -56,15 +42,13 @@
                 data-test-id="new-comment-input"
             ></textarea>
             <div class="actions">
-                <div class="pull-left post">
-                    <input type="checkbox" ng-model="saveEnterFlag" /> <span translate>Post on 'Enter'</span>
-                </div>
+                <div class="pull-left post"><input type="checkbox" ng-model="saveEnterFlag"> <span translate>Post on 'Enter'</span></div>
                 <button
                     id="comment-post"
                     class="btn btn--primary pull-right"
                     ng-click="save()"
                     ng-show="!saveEnterFlag"
-                    ng-disabled="!text"
+                    ng-disabled='!text'
                     translate
                     data-test-id="new-comment-submit"
                 >

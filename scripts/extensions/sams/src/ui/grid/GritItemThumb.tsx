@@ -21,9 +21,12 @@ export class GridItemThumb extends React.PureComponent<IProps> {
     }
 
     render() {
-        const classes = classNames('sd-grid-item__thumb', {
-            'sd-grid-item__thumb--uploading': this.props.uploading,
-        });
+        const classes = classNames(
+            'sd-grid-item__thumb',
+            {
+                'sd-grid-item__thumb--uploading': this.props.uploading,
+            },
+        );
 
         return (
             <div className={classes}>
@@ -37,15 +40,17 @@ export class GridItemThumb extends React.PureComponent<IProps> {
                         <i className="icon-close-small" />
                     </a>
                 )}
-                {this.props.toggleSelected == null ? null : (
-                    <div className="sd-grid-item__checkbox" onClick={this.props.onCheckboxClick}>
-                        <Checkbox
-                            checked={this.props.selected ?? false}
-                            label={{text: ''}}
-                            onChange={() => this.onChange}
-                        />
-                    </div>
-                )}
+                {this.props.toggleSelected == null ?
+                    null : (
+                        <div className="sd-grid-item__checkbox" onClick={this.props.onCheckboxClick}>
+                            <Checkbox
+                                checked={this.props.selected ?? false}
+                                label={{text: ''}}
+                                onChange={() => this.onChange}
+                            />
+                        </div>
+                    )
+                }
                 {this.props.children}
             </div>
         );

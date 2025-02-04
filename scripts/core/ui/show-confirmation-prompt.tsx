@@ -15,7 +15,7 @@ export function showConfirmationPrompt({title, message}: {title: string; message
                     resolve(false);
                 }}
                 headerTemplate={title}
-                footerTemplate={
+                footerTemplate={(
                     <Spacer h gap="4" justifyContent="end" noGrow>
                         <Button
                             onClick={() => {
@@ -36,7 +36,7 @@ export function showConfirmationPrompt({title, message}: {title: string; message
                             type="primary"
                         />
                     </Spacer>
-                }
+                )}
             >
                 {message}
             </Modal>

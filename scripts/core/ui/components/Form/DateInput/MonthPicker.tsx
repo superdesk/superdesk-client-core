@@ -25,8 +25,10 @@ export const MonthPicker: React.StatelessComponent<any> = ({selectedDate, onChan
                         {row.map((date, index) => (
                             <td key={index} className="text-center">
                                 <Button
-                                    className={rowIndex * 3 + index === selectedDate.month() ? 'active' : null}
-                                    onClick={onChange.bind(this, moment(selectedDate).month(rowIndex * 3 + index))}
+                                    className={(rowIndex * 3 + index) === selectedDate.month() ? 'active' : null}
+                                    onClick={
+                                        onChange.bind(this, (moment(selectedDate).month((rowIndex * 3 + index))))
+                                    }
                                 >
                                     <span>{date}</span>
                                 </Button>

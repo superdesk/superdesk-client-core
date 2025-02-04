@@ -81,10 +81,17 @@ export class SearchBar extends React.Component<IProps, IState> {
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeydown}
                 />
-                <button className="sd-searchbar__cancel" onClick={this.clearValue}>
+                <button
+                    className="sd-searchbar__cancel"
+                    onClick={this.clearValue}
+                >
                     <Icon name="remove-sign" />
                 </button>
-                <button id="sd-searchbar__search-btn" className="sd-searchbar__search-btn" onClick={this.handleSubmit}>
+                <button
+                    id="sd-searchbar__search-btn"
+                    className="sd-searchbar__search-btn"
+                    onClick={this.handleSubmit}
+                >
                     <Icon name="chevron-right-thin" />
                 </button>
             </div>

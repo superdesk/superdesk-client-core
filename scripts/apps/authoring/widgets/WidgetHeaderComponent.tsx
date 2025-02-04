@@ -28,11 +28,15 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                     </span>
                 </div>
 
-                {this.props.editMode && (
-                    <div className="widget__sliding-toolbar widget__sliding-toolbar--right widget-heading--children">
-                        {this.props.children}
-                    </div>
-                )}
+                {
+                    this.props.editMode && (
+                        <div
+                            className="widget__sliding-toolbar widget__sliding-toolbar--right widget-heading--children"
+                        >
+                            {this.props.children}
+                        </div>
+                    )
+                }
             </div>
         );
     }

@@ -9,11 +9,16 @@ angular.module('superdesk.core.auth.session').service('session', [
     '$rootScope',
     'storage',
     'SESSION_EVENTS',
-    function ($q, $rootScope, storage, SESSION_EVENTS) {
+    function($q, $rootScope, storage, SESSION_EVENTS) {
         var TOKEN_KEY = 'sess:token';
         var TOKEN_HREF = 'sess:href';
         var SESSION_ID = 'sess:id';
-        var IDENTITY_BLACKLIST = ['session_preferences', 'user_preferences', 'allowed_actions', 'workspace'];
+        var IDENTITY_BLACKLIST = [
+            'session_preferences',
+            'user_preferences',
+            'allowed_actions',
+            'workspace',
+        ];
         var defer;
 
         this.token = null;
@@ -21,11 +26,11 @@ angular.module('superdesk.core.auth.session').service('session', [
         this.sessionId = null;
 
         /**
-         * Get identity when available
-         *
-         * @returns {object} promise
-         */
-        this.getIdentity = function () {
+     * Get identity when available
+     *
+     * @returns {object} promise
+     */
+        this.getIdentity = function() {
             if (this.identity && this.token) {
                 return $q.when(this.identity);
             }
@@ -35,12 +40,12 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-         * Update identity
-         *
-         * @param {object} updates
-         * @returns {object} identity
-         */
-        this.updateIdentity = function (updates) {
+     * Update identity
+     *
+     * @param {object} updates
+     * @returns {object} identity
+     */
+        this.updateIdentity = function(updates) {
             var identity = this.identity || {};
 
             _.extend(identity, updates);
@@ -50,12 +55,12 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-         * Start a new session
-         *
-         * @param {object} session
-         * @param {object} identity
-         */
-        this.start = function (session, identity) {
+     * Start a new session
+     *
+     * @param {object} session
+     * @param {object} identity
+     */
+        this.start = function(session, identity) {
             this.token = session.token;
             this.sessionId = session._id;
             setToken(session.token);
@@ -73,7 +78,7 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-        this.expire = function () {
+        this.expire = function() {
             this.token = null;
             this.sessionId = null;
             setToken(null);
@@ -82,42 +87,39 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-         * Return session url for delete
-         *
-         * @returns {string}
-         */
-        this.getSessionHref = function () {
+     * Return session url for delete
+     *
+     * @returns {string}
+     */
+        this.getSessionHref = function() {
             return localStorage.getItem(TOKEN_HREF);
         };
 
         /**
-         * Setup test user with given id.
-         *
-         * @param {string} _id
-         */
-        this.testUser = function (_id) {
+     * Setup test user with given id.
+     *
+     * @param {string} _id
+     */
+        this.testUser = function(_id) {
             this.token = 1;
             this.identity = {_id: _id};
             this.sessionId = 's' + _id;
         };
 
-        $rootScope.$watch(
-            getToken,
-            angular.bind(this, function (token) {
-                this.token = token;
-                this.identity = storage.getItem(IDENTITY_KEY);
-                this.sessionId = localStorage.getItem(SESSION_ID);
-                if (this.identity && this.token) {
-                    resolveIdentity(this.identity);
-                }
-            }),
-        );
+        $rootScope.$watch(getToken, angular.bind(this, function(token) {
+            this.token = token;
+            this.identity = storage.getItem(IDENTITY_KEY);
+            this.sessionId = localStorage.getItem(SESSION_ID);
+            if (this.identity && this.token) {
+                resolveIdentity(this.identity);
+            }
+        }));
 
         /**
-         * Save token into local storage
-         *
-         * @param {string} token
-         */
+     * Save token into local storage
+     *
+     * @param {string} token
+     */
         function setToken(token) {
             if (token) {
                 localStorage.setItem(TOKEN_KEY, token);
@@ -127,10 +129,10 @@ angular.module('superdesk.core.auth.session').service('session', [
         }
 
         /**
-         * Save session id into local storage
-         *
-         * @param {string} sessionId
-         */
+     * Save session id into local storage
+     *
+     * @param {string} sessionId
+     */
         function setSessionId(sessionId) {
             if (sessionId) {
                 localStorage.setItem(SESSION_ID, sessionId);
@@ -148,14 +150,13 @@ angular.module('superdesk.core.auth.session').service('session', [
         }
 
         /**
-         * Get token from local storage
-         *
-         * it's used via watch so it skips json serialization withing storage service
-         *
-         * @returns string
-         */
+     * Get token from local storage
+     *
+     * it's used via watch so it skips json serialization withing storage service
+     *
+     * @returns string
+     */
         function getToken() {
             return localStorage.getItem(TOKEN_KEY) || null;
         }
-    },
-]);
+    }]);

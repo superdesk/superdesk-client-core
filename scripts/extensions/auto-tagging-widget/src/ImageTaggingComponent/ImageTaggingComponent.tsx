@@ -106,7 +106,10 @@ const cardStyle: React.CSSProperties = {
     borderRadius: '2px',
 };
 
-const prepareForDropping = (event: React.DragEvent<HTMLDivElement>, image: IImage | null) => {
+const prepareForDropping = (
+    event: React.DragEvent<HTMLDivElement>,
+    image: IImage | null,
+) => {
     if (image == null) {
         return;
     }
@@ -189,7 +192,9 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
     }
 
     runFetchImages() {
-        const formattedTags: Array<ITagInput> = this.formatTags(toServerFormat(this.props.data, superdesk));
+        const formattedTags: Array<ITagInput> = this.formatTags(
+            toServerFormat(this.props.data, superdesk),
+        );
 
         if ((formattedTags?.length ?? 0) < 1) {
             this.setState({
@@ -254,11 +259,11 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
             }
         }
         return res;
-    };
+    }
 
     handleClickImage = (image: IImage) => {
         this.setState({selectedImage: image});
-    };
+    }
 
     render() {
         const {style} = this.props;
@@ -274,7 +279,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                         : gettext('image suggestions ({{n}})', {n: images.length})
                 }
                 initiallyOpen={true}
-                badge={
+                badge={(
                     <IconButton
                         id="image-suggestions-info-btn"
                         icon="info-sign"
@@ -282,7 +287,7 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                         ariaValue="info"
                         onClick={noop}
                     />
-                }
+                )}
             >
                 <Popover
                     title={gettext('Information')}
@@ -290,8 +295,8 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                     triggerSelector="#image-suggestions-info-btn"
                 >
                     {gettext(
-                        'Image suggestions are based on generated tags' +
-                            ' and can be added to article content by dragging.',
+                        'Image suggestions are based on generated tags'
+                        + ' and can be added to article content by dragging.',
                     )}
                 </Popover>
 
@@ -338,7 +343,11 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                                         <div style={imageContentStyle}>
                                             {images.map((image, index) => (
                                                 <div key={index} style={cardStyle}>
-                                                    <div style={imageWrapperStyle}>
+                                                    <div
+                                                        style={
+                                                            imageWrapperStyle
+                                                        }
+                                                    >
                                                         <img
                                                             style={imageStyle}
                                                             key={index}
@@ -346,7 +355,9 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
                                                             onClick={() => {
                                                                 this.handleClickImage(image);
                                                             }}
-                                                            onDragStart={(event) => prepareForDropping(event, image)}
+                                                            onDragStart={(event) =>
+                                                                prepareForDropping(event, image)
+                                                            }
                                                         />
                                                     </div>
                                                 </div>

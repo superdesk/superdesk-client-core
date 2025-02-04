@@ -50,9 +50,10 @@ class ReactRenderAsync extends React.Component<IPropsReactRenderAsync, IStateRea
     render() {
         const Component = this.props.component;
 
-        return this.state.loading === true ? null : (
-            <Component {...{...this.props.originalProps, ...this.state.mappedProps}} />
-        );
+        return this.state.loading === true
+            ? null
+            : <Component {...{...this.props.originalProps, ...this.state.mappedProps}} />
+        ;
     }
 }
 
@@ -64,9 +65,15 @@ ReactRenderAsync.propTypes = {
 
 /* eslint-disable react/no-multi-comp */
 export function connectPromiseResults<T>(getPromises) {
-    return function (component): React.ComponentType<T> {
+    return function(component): React.ComponentType<T> {
         return function connectPromiseComponent(props) {
-            return <ReactRenderAsync promises={getPromises(props)} component={component} originalProps={props} />;
+            return (
+                <ReactRenderAsync
+                    promises={getPromises(props)}
+                    component={component}
+                    originalProps={props}
+                />
+            );
         };
     };
 }

@@ -157,8 +157,7 @@ export default class CompareVersionsService {
     }
 
     init(item) {
-        this.desks
-            .initialize()
+        this.desks.initialize()
             .then(() => this.archiveService.getVersions(item, this.desks, 'versions'))
             .then((versions) => {
                 this.versions = versions;
@@ -166,22 +165,14 @@ export default class CompareVersionsService {
                     itemVersion.author = this.desks.userLookup[itemVersion.version_creator];
                 });
 
-                this.create([
-                    {
-                        id: item._id,
-                        version: item._current_version,
-                        author: this.desks.userLookup[item.version_creator],
-                    },
-                ]);
+                this.create([{
+                    id: item._id,
+                    version: item._current_version,
+                    author: this.desks.userLookup[item.version_creator],
+                }]);
             });
     }
 }
 
-CompareVersionsService.$inject = [
-    'superdesk',
-    'authoringWorkspace',
-    'referrer',
-    'desks',
-    'archiveService',
-    '$location',
-];
+CompareVersionsService.$inject = ['superdesk', 'authoringWorkspace', 'referrer',
+    'desks', 'archiveService', '$location'];

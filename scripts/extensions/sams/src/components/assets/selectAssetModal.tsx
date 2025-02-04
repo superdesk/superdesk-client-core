@@ -44,7 +44,10 @@ interface IProps {
     filterPanelOpen: boolean;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    updateAssetSearchParamsAndListItems(params: Partial<IAssetSearchParams>, listAction: LIST_ACTION): void;
+    updateAssetSearchParamsAndListItems(
+        params: Partial<IAssetSearchParams>,
+        listAction: LIST_ACTION,
+    ): void;
     onAssetsSelected(assets: Dictionary<string, IAssetItem>): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
 }
@@ -66,12 +69,18 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     loadNextPage: () => dispatch<any>(loadNextAssetsPage()),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) => {
-        dispatch<any>(updateAssetSearchParamsAndListItems(params, listAction));
+        dispatch<any>(
+            updateAssetSearchParamsAndListItems(
+                params,
+                listAction,
+            ),
+        );
     },
     toggleFilterPanel: () => {
         dispatch<any>(toggleFilterPanelState());
     },
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
+
 });
 
 export function showSelectAssetModal(): Promise<Dictionary<string, IAssetItem>> {
@@ -102,8 +111,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
     onScroll(event: React.UIEvent<HTMLDivElement>) {
         const node = event.currentTarget;
 
-        if (
-            node != null &&
+        if (node != null &&
             this.state.nextPageLoading === false &&
             this.props.totalAssets > this.props.assets.length &&
             node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
@@ -144,18 +152,36 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
         const selectedAssetIds = Object.keys(this.state.selectedItems);
 
         return (
-            <Modal id="SelectAssetModal" size="fullscreen" closeModal={this.props.closeModal} theme="dark-ui">
-                <ModalHeader text={gettext('Select Asset(s)')} flex={true}>
+            <Modal
+                id="SelectAssetModal"
+                size="fullscreen"
+                closeModal={this.props.closeModal}
+                theme="dark-ui"
+            >
+                <ModalHeader
+                    text={gettext('Select Asset(s)')}
+                    flex={true}
+                >
                     <ButtonGroup align="end">
-                        <Button text={gettext('Cancel')} onClick={this.closeModal} style="hollow" />
-                        <Button text={gettext('Attach Asset(s)')} type="primary" onClick={this.attachAssets} />
+                        <Button
+                            text={gettext('Cancel')}
+                            onClick={this.closeModal}
+                            style="hollow"
+                        />
+                        <Button
+                            text={gettext('Attach Asset(s)')}
+                            type="primary"
+                            onClick={this.attachAssets}
+                        />
                     </ButtonGroup>
                 </ModalHeader>
                 <ModalBody noPadding={true}>
                     <PageLayout
-                        header={<WorkspaceSubnav />}
+                        header={(
+                            <WorkspaceSubnav />
+                        )}
                         leftPanelOpen={this.props.filterPanelOpen}
-                        leftPanel={
+                        leftPanel={(
                             this.props.filterPanelOpen === false ? (
                                 <div />
                             ) : (
@@ -165,10 +191,10 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                                     updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
                                 />
                             )
-                        }
+                        )}
                         mainClassName="sd-padding--2"
                         mainProps={{onScroll: this.onScroll}}
-                        main={
+                        main={(
                             <AssetListPanel
                                 assets={this.props.assets}
                                 listStyle={this.props.listStyle}
@@ -177,7 +203,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                                 selectedAssetIds={selectedAssetIds}
                                 updateSelectedAssetIds={this.toggleItemSelected}
                             />
-                        }
+                        )}
                     />
                 </ModalBody>
             </Modal>
@@ -185,4 +211,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const SelectAssetModal = connect(mapStateToProps, mapDispatchToProps)(SelectAssetModalComponent);
+export const SelectAssetModal = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SelectAssetModalComponent);

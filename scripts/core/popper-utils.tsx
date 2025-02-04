@@ -56,7 +56,8 @@ export const flipCustomModifier: Modifier<any, any> = {
     fn: ({state}) => {
         if (state.placement.includes('bottom')) {
             const availableSpaceAtTheBottom =
-                document.documentElement.clientHeight - (state.rects.reference.y + state.rects.reference.height);
+                document.documentElement.clientHeight
+                - (state.rects.reference.y + state.rects.reference.height);
 
             if (availableSpaceAtTheBottom < 120) {
                 state.placement = flipVertically(state.placement);

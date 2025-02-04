@@ -146,12 +146,19 @@ export const changeSuggestionsTypes = [DELETE_SUGGESTION, ADD_SUGGESTION];
 export function getStyleSuggestionsTypes() {
     const highlightsConfig = getHighlightsConfig();
 
-    return Object.keys(highlightsConfig).filter((key) => highlightsConfig[key].type === 'STYLE');
+    return Object.keys(highlightsConfig).filter(
+        (key) => highlightsConfig[key].type === 'STYLE',
+    );
 }
 
-export const blockSuggestionTypes = ['BLOCK_STYLE_SUGGESTION'];
+export const blockSuggestionTypes = [
+    'BLOCK_STYLE_SUGGESTION',
+];
 
-export const paragraphSuggestionTypes = ['SPLIT_PARAGRAPH_SUGGESTION', 'MERGE_PARAGRAPHS_SUGGESTION'];
+export const paragraphSuggestionTypes = [
+    'SPLIT_PARAGRAPH_SUGGESTION',
+    'MERGE_PARAGRAPHS_SUGGESTION',
+];
 
 export function getSuggestionsTypes() {
     return [
@@ -165,7 +172,8 @@ export function getSuggestionsTypes() {
     ];
 }
 
-export const isSuggestion = (highlightId) =>
-    getSuggestionsTypes().some((suggestionType) => highlightId.indexOf(suggestionType) === 0);
+export const isSuggestion = (highlightId) => getSuggestionsTypes().some(
+    (suggestionType) => highlightId.indexOf(suggestionType) === 0,
+);
 
 export const isComment = (highlightId) => highlightId.startsWith(getHighlightsConfig().COMMENT.type);

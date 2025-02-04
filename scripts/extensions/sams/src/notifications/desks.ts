@@ -22,7 +22,10 @@ export function onActiveDeskChanged(event: IEvents['activeDeskChanged']) {
     // If the currently selected Set is not available in the new Desk
     // then change the set to `All Sets`
     if (currentSetId == null || !availableSets.includes(currentSetId)) {
-        store.dispatch<any>(updateAssetSearchParamsAndListItems({setId: undefined}, LIST_ACTION.REPLACE));
+        store.dispatch<any>(updateAssetSearchParamsAndListItems(
+            {setId: undefined},
+            LIST_ACTION.REPLACE,
+        ));
     }
 }
 

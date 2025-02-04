@@ -59,45 +59,48 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
                 <SpacerBlock v gap="8" />
 
                 <Spacer v gap="8">
-                    {config.increment_steps.map((value, i) => (
-                        <Spacer h gap="8" justifyContent="start" noGrow key={i}>
-                            <IconButton
-                                icon="remove-sign"
-                                ariaValue={gettext('Remove')}
-                                onClick={() => {
-                                    onChange({
-                                        ...config,
-                                        increment_steps: config.increment_steps.filter((_, _i) => i !== _i),
-                                    });
-                                }}
-                            />
-
-                            <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
-                                <input
-                                    className="sd-line-input__input"
-                                    type="number"
-                                    value={value}
-                                    onChange={(event) => {
-                                        const nextIncrementSteps = config.increment_steps.map((_value, j) => {
-                                            if (j === i) {
-                                                return parseInt(event.target.value, 10);
-                                            } else {
-                                                return _value;
-                                            }
-                                        });
-
+                    {
+                        config.increment_steps.map((value, i) => (
+                            <Spacer h gap="8" justifyContent="start" noGrow key={i}>
+                                <IconButton
+                                    icon="remove-sign"
+                                    ariaValue={gettext('Remove')}
+                                    onClick={() => {
                                         onChange({
                                             ...config,
-                                            increment_steps: nextIncrementSteps,
+                                            increment_steps: config.increment_steps.filter((_, _i) => i !== _i),
                                         });
                                     }}
-                                    style={{width: 54}}
                                 />
-                            </div>
 
-                            <span>{gettext('minutes')}</span>
-                        </Spacer>
-                    ))}
+                                <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
+                                    <input
+                                        className="sd-line-input__input"
+                                        type="number"
+                                        value={value}
+                                        onChange={(event) => {
+                                            const nextIncrementSteps = config.increment_steps
+                                                .map((_value, j) => {
+                                                    if (j === i) {
+                                                        return parseInt(event.target.value, 10);
+                                                    } else {
+                                                        return _value;
+                                                    }
+                                                });
+
+                                            onChange({
+                                                ...config,
+                                                increment_steps: nextIncrementSteps,
+                                            });
+                                        }}
+                                        style={{width: 54}}
+                                    />
+                                </div>
+
+                                <span>{gettext('minutes')}</span>
+                            </Spacer>
+                        ))
+                    }
                 </Spacer>
 
                 <SpacerBlock v gap="16" />

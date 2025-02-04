@@ -11,9 +11,12 @@ const QumuString = 'KV.widget';
 function getQumuData(html) {
     const configString = getQumuConfigString(html);
 
-    return extend(json5.parse(configString), {
-        selector: `#qumu-${uuid()}`,
-    });
+    return extend(
+        json5.parse(configString),
+        {
+            selector: `#qumu-${uuid()}`,
+        },
+    );
 }
 
 export const isQumuWidget = (html) => {

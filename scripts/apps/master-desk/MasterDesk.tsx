@@ -32,14 +32,14 @@ export const USER_PREFERENCE_SETTINGS = 'masterdesk:desks';
 
 export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     switch (tab) {
-        case IMasterDeskTab.overview:
-            return gettext('Overview');
-        case IMasterDeskTab.users:
-            return gettext('Users');
-        case IMasterDeskTab.assignments:
-            return gettext('Assignments');
-        default:
-            return assertNever(tab);
+    case IMasterDeskTab.overview:
+        return gettext('Overview');
+    case IMasterDeskTab.users:
+        return gettext('Users');
+    case IMasterDeskTab.assignments:
+        return gettext('Assignments');
+    default:
+        return assertNever(tab);
     }
 }
 
@@ -83,9 +83,9 @@ export class MasterDesk extends React.Component<{}, IState> {
 
     componentDidMount() {
         this.services.preferences.get(USER_PREFERENCE_SETTINGS).then((desks) => {
-            desks && (desks.showAllDesks || desks.showAllDesks === undefined)
-                ? this.getDeskList()
-                : this.getDeskList(desks.items);
+            desks && (desks.showAllDesks || desks.showAllDesks === undefined) ?
+                this.getDeskList() :
+                this.getDeskList(desks.items);
         });
 
         if (appConfig?.apps?.includes('superdesk-planning')) {
@@ -101,9 +101,9 @@ export class MasterDesk extends React.Component<{}, IState> {
 
             let filteredDesks;
 
-            enabledDeskIds && !showAll
-                ? (filteredDesks = desks.desks._items.filter((item) => enabledDeskIds.includes(item._id)))
-                : (filteredDesks = desks.desks._items);
+            enabledDeskIds && !showAll ?
+                filteredDesks = desks.desks._items.filter((item) => enabledDeskIds.includes(item._id)) :
+                filteredDesks = desks.desks._items;
 
             this.setState({desks: filteredDesks});
         });
@@ -143,43 +143,50 @@ export class MasterDesk extends React.Component<{}, IState> {
                         onFilterChange={(filters) => this.setState({filters})}
                         filters={this.state.filters}
                     />
-                ) : null}
+                )
+                    : null}
 
                 <div className="sd-main-content-grid__content">
                     {this.isFilterAllowed() ? (
                         <FilterBarComponent
                             filters={this.state.filters}
                             removeFilter={(id) => this.setState({filters: {...this.state.filters, [id]: []}})}
-                            removeAllFilters={() => this.setState({filters: {}})}
+                            removeAllFilters = {() => this.setState({filters: {}})}
                         />
-                    ) : null}
+                    )
+                        : null}
 
                     <div className="sd-main-content-grid__content-inner">
                         {(() => {
                             switch (this.state.currentTab) {
-                                case IMasterDeskTab.overview:
-                                    return (
-                                        <OverviewComponent
-                                            desks={this.state.desks}
-                                            stages={this.state.stages}
-                                            deskFilter={this.state.deskFilter}
-                                            selectedDesk={this.state.selectedDesk}
-                                            filters={this.state.filters}
-                                            onFilterChange={(filters) => this.setState({filters: filters})}
-                                            onDeskChange={(desk) => this.setState({selectedDesk: desk})}
-                                        />
-                                    );
-                                case IMasterDeskTab.users:
-                                    return (
-                                        <UsersComponent
-                                            desks={this.state.desks}
-                                            onUserSelect={(user) => this.setState({activeUser: user})}
-                                        />
-                                    );
-                                case IMasterDeskTab.assignments:
-                                    return <AssignmentsComponent desks={this.state.desks} stages={this.state.stages} />;
-                                default:
-                                    return assertNever(this.state.currentTab);
+                            case IMasterDeskTab.overview:
+                                return (
+                                    <OverviewComponent
+                                        desks={this.state.desks}
+                                        stages={this.state.stages}
+                                        deskFilter={this.state.deskFilter}
+                                        selectedDesk={this.state.selectedDesk}
+                                        filters={this.state.filters}
+                                        onFilterChange={(filters) => this.setState({filters: filters})}
+                                        onDeskChange={(desk) => this.setState({selectedDesk: desk})}
+                                    />
+                                );
+                            case IMasterDeskTab.users:
+                                return (
+                                    <UsersComponent
+                                        desks={this.state.desks}
+                                        onUserSelect={(user) => this.setState({activeUser: user})}
+                                    />
+                                );
+                            case IMasterDeskTab.assignments:
+                                return (
+                                    <AssignmentsComponent
+                                        desks={this.state.desks}
+                                        stages={this.state.stages}
+                                    />
+                                );
+                            default:
+                                return assertNever(this.state.currentTab);
                             }
                         })()}
                     </div>

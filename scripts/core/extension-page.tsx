@@ -23,7 +23,11 @@ export class ExtensionPage extends React.Component<IProps> {
         if (currentPage != null) {
             const Component = currentPage.component;
 
-            return <Component setupFullWidthCapability={this.props.setupFullWidthCapability} />;
+            return (
+                <Component
+                    setupFullWidthCapability={this.props.setupFullWidthCapability}
+                />
+            );
         } else {
             logger.error(new Error(`Could not find a component for extension page. URL: ${currentUrl}`));
             return null;

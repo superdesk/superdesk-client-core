@@ -22,16 +22,24 @@ export const getDesksAllowedSets = createSelector<
     IApplicationState,
     Dictionary<IDesk['_id'], IDesk['sams_settings']>,
     Dictionary<ISetItem['_id'], Array<IDesk['_id']>>
->([getDesksSamsSettings], (deskSettings) =>
-    Object.keys(deskSettings).reduce<Dictionary<ISetItem['_id'], Array<IDesk['_id']>>>((items, deskId) => {
-        (deskSettings[deskId]?.allowed_sets ?? []).forEach((setId) => {
-            if (items[setId] == null) {
-                items[setId] = [deskId];
-            } else {
-                items[setId].push(deskId);
-            }
-        });
+>(
+    [getDesksSamsSettings],
+    (deskSettings) => (
+        Object.keys(deskSettings).reduce<Dictionary<ISetItem['_id'], Array<IDesk['_id']>>>(
+            (items, deskId) => {
+                (deskSettings[deskId]?.allowed_sets ?? []).forEach(
+                    (setId) => {
+                        if (items[setId] == null) {
+                            items[setId] = [deskId];
+                        } else {
+                            items[setId].push(deskId);
+                        }
+                    },
+                );
 
-        return items;
-    }, {}),
+                return items;
+            },
+            {},
+        )
+    ),
 );

@@ -6,36 +6,41 @@ import {gettext} from 'core/utils';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
     render() {
-        const {pinned, pinWidget, customContent} = this.props;
+        const {
+            pinned,
+            pinWidget,
+            customContent,
+        } = this.props;
         const sidebarPinnedId = widgetReactIntegration.getPinnedWidget();
 
         return (
             <Layout.PanelHeader
                 title={customContent == null ? this.props.widgetName : ''}
                 onClose={pinned ? undefined : () => this.props.closeWidget()}
-                iconButtons={
-                    widgetReactIntegration.disableWidgetPinning == null
-                        ? undefined
-                        : sidebarPinnedId != null && sidebarPinnedId !== widgetReactIntegration.getActiveWidget()
-                          ? []
-                          : [
-                                <Rotate degrees={pinned ? 90 : 0} key="noop">
-                                    <IconButton
-                                        icon="pin"
-                                        ariaValue={gettext('Pin')}
-                                        onClick={() => {
-                                            pinWidget();
-                                        }}
-                                    />
-                                </Rotate>,
-                            ]
+                iconButtons={widgetReactIntegration.disableWidgetPinning == null
+                    ? undefined
+                    : sidebarPinnedId != null && (sidebarPinnedId !== widgetReactIntegration.getActiveWidget()) ? [] : [
+                        <Rotate degrees={pinned ? 90 : 0} key="noop">
+                            <IconButton
+                                icon="pin"
+                                ariaValue={gettext('Pin')}
+                                onClick={() => {
+                                    pinWidget();
+                                }}
+                            />
+                        </Rotate>,
+                    ]
                 }
             >
                 {customContent ?? null}
 
-                {this.props.editMode && (
-                    <Layout.PanelHeaderSlidingToolbar right>{this.props.children}</Layout.PanelHeaderSlidingToolbar>
-                )}
+                {
+                    this.props.editMode && (
+                        <Layout.PanelHeaderSlidingToolbar right>
+                            {this.props.children}
+                        </Layout.PanelHeaderSlidingToolbar>
+                    )
+                }
             </Layout.PanelHeader>
         );
     }

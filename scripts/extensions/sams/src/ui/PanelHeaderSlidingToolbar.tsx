@@ -7,10 +7,17 @@ interface IProps {
 
 export class PanelHeaderSlidingToolbar extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('subnav__sliding-toolbar', {
-            'subnav__sliding-toolbar--right': this.props.right,
-        });
+        const classes = classNames(
+            'subnav__sliding-toolbar',
+            {
+                'subnav__sliding-toolbar--right': this.props.right,
+            },
+        );
 
-        return <div className={classes}>{this.props.children}</div>;
+        return (
+            <div className={classes}>
+                {this.props.children}
+            </div>
+        );
     }
 }

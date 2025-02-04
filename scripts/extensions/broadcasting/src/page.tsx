@@ -132,12 +132,12 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                 rundownItemActionNext == null || sidePanel == null
                     ? rundownItemActionNext
                     : {
-                          ...rundownItemActionNext,
-                          sideWidget: {
-                              activeId: sidePanel,
-                              pinnedId: undefined,
-                          },
-                      };
+                        ...rundownItemActionNext,
+                        sideWidget: {
+                            activeId: sidePanel,
+                            pinnedId: undefined,
+                        },
+                    };
 
             this.setState({
                 rundownAction: rundownViewEditNext,
@@ -177,246 +177,255 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                 }}
             >
                 <div
-                    className={classnames('sd-content sd-content-wrapper', {
-                        'sd-content-wrapper--editor-full': rundownsListVisible !== true,
-                    })}
+                    className={classnames(
+                        'sd-content sd-content-wrapper',
+                        {'sd-content-wrapper--editor-full': rundownsListVisible !== true},
+                    )}
                 >
-                    {rundownsListVisible && (
-                        <React.Fragment>
-                            <Layout.LayoutContainer>
-                                <Layout.HeaderPanel>
-                                    <SubNav>
-                                        <SearchBar
-                                            placeholder={gettext('Search')}
-                                            value={this.state.searchString}
-                                            onSubmit={(val) => {
-                                                if (typeof val === 'number') {
-                                                    throw new Error('invalid state');
-                                                }
+                    {
+                        rundownsListVisible && (
+                            <React.Fragment>
+                                <Layout.LayoutContainer>
+                                    <Layout.HeaderPanel>
+                                        <SubNav>
+                                            <SearchBar
+                                                placeholder={gettext('Search')}
+                                                value={this.state.searchString}
+                                                onSubmit={(val) => {
+                                                    if (typeof val === 'number') {
+                                                        throw new Error('invalid state');
+                                                    }
 
-                                                this.setState({
-                                                    searchString: val,
-                                                });
-                                            }}
-                                        />
-
-                                        <ButtonGroup align="end" spaces="no-space">
-                                            <Dropdown
-                                                items={[
-                                                    {
-                                                        type: 'group',
-                                                        label: gettext('Settings'),
-                                                        items: [
-                                                            'divider',
-                                                            {
-                                                                icon: 'switches',
-                                                                label: gettext('Manage Rundown Templates'),
-                                                                onSelect: () => {
-                                                                    showModal(({closeModal}) => (
-                                                                        <ManageRundownTemplates
-                                                                            dialogTitle={gettext(
-                                                                                'Manage rundown templates',
-                                                                            )}
-                                                                            closeModal={closeModal}
-                                                                        />
-                                                                    ));
-                                                                },
-                                                            },
-                                                            {
-                                                                icon: 'switches',
-                                                                label: gettext('Manage Shows'),
-                                                                onSelect: () => {
-                                                                    showModal(({closeModal}) => (
-                                                                        <Modal
-                                                                            visible
-                                                                            headerTemplate={gettext('Manage Shows')}
-                                                                            contentBg="medium"
-                                                                            contentPadding="none"
-                                                                            size="large"
-                                                                            onHide={() => {
-                                                                                closeModal();
-                                                                            }}
-                                                                        >
-                                                                            <ManageShows />
-                                                                        </Modal>
-                                                                    ));
-                                                                },
-                                                            },
-                                                        ],
-                                                    },
-                                                ]}
-                                            >
-                                                <NavButton icon="settings" onClick={() => false} />
-                                            </Dropdown>
-
-                                            <Dropdown
-                                                header={[
-                                                    {
-                                                        type: 'group',
-                                                        label: gettext('Create new'),
-                                                        items: [
-                                                            {
-                                                                icon: 'rundown',
-                                                                label: gettext('Rundown'),
-                                                                onSelect: () => {
-                                                                    showModal(({closeModal}) => (
-                                                                        <CreateRundownFromTemplate
-                                                                            onClose={closeModal}
-                                                                        />
-                                                                    ));
-                                                                },
-                                                            },
-                                                        ],
-                                                    },
-                                                ]}
-                                                items={[]}
-                                                footer={[
-                                                    {
-                                                        type: 'group',
-                                                        items: [
-                                                            {
-                                                                icon: 'rundown',
-                                                                label: gettext('Create new Show'),
-                                                                onSelect: () => {
-                                                                    showModal(CreateShowModal);
-                                                                },
-                                                            },
-                                                        ],
-                                                    },
-                                                ]}
-                                            >
-                                                <CreateButton ariaValue={gettext('Create')} onClick={noop} />
-                                            </Dropdown>
-                                        </ButtonGroup>
-                                    </SubNav>
-                                    <SubNav>
-                                        <ButtonGroup align="start">
-                                            <NavButton
-                                                icon="filter-large"
-                                                onClick={() => {
                                                     this.setState({
-                                                        filtersOpen: !this.state.filtersOpen,
+                                                        searchString: val,
                                                     });
                                                 }}
                                             />
 
-                                            <div>
-                                                <AppliedFilters
-                                                    filters={this.state.filtersApplied}
-                                                    onChange={(val) => {
+                                            <ButtonGroup align="end" spaces="no-space">
+                                                <Dropdown
+                                                    items={[
+                                                        {
+                                                            type: 'group',
+                                                            label: gettext('Settings'),
+                                                            items: [
+                                                                'divider',
+                                                                {
+                                                                    icon: 'switches',
+                                                                    label: gettext('Manage Rundown Templates'),
+                                                                    onSelect: () => {
+                                                                        showModal(({closeModal}) => (
+                                                                            <ManageRundownTemplates
+                                                                                dialogTitle={
+                                                                                    gettext('Manage rundown templates')
+                                                                                }
+                                                                                closeModal={closeModal}
+                                                                            />
+                                                                        ));
+                                                                    },
+                                                                },
+                                                                {
+                                                                    icon: 'switches',
+                                                                    label: gettext('Manage Shows'),
+                                                                    onSelect: () => {
+                                                                        showModal(({closeModal}) => (
+                                                                            <Modal
+                                                                                visible
+                                                                                headerTemplate={gettext('Manage Shows')}
+                                                                                contentBg="medium"
+                                                                                contentPadding="none"
+                                                                                size="large"
+                                                                                onHide={() => {
+                                                                                    closeModal();
+                                                                                }}
+                                                                            >
+                                                                                <ManageShows />
+                                                                            </Modal>
+                                                                        ));
+                                                                    },
+                                                                },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                >
+                                                    <NavButton icon="settings" onClick={() => false} />
+                                                </Dropdown>
+
+                                                <Dropdown
+                                                    header={[
+                                                        {
+                                                            type: 'group',
+                                                            label: gettext('Create new'),
+                                                            items: [
+                                                                {
+                                                                    icon: 'rundown',
+                                                                    label: gettext('Rundown'),
+                                                                    onSelect: () => {
+                                                                        showModal(({closeModal}) => (
+                                                                            <CreateRundownFromTemplate
+                                                                                onClose={closeModal}
+                                                                            />
+                                                                        ));
+                                                                    },
+                                                                },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                    items={[]}
+                                                    footer={[
+                                                        {
+                                                            type: 'group',
+                                                            items: [
+                                                                {
+                                                                    icon: 'rundown',
+                                                                    label: gettext('Create new Show'),
+                                                                    onSelect: () => {
+                                                                        showModal(CreateShowModal);
+                                                                    },
+                                                                },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                >
+
+                                                    <CreateButton
+                                                        ariaValue={gettext('Create')}
+                                                        onClick={noop}
+                                                    />
+                                                </Dropdown>
+                                            </ButtonGroup>
+                                        </SubNav>
+                                        <SubNav>
+                                            <ButtonGroup align="start">
+                                                <NavButton
+                                                    icon="filter-large"
+                                                    onClick={() => {
                                                         this.setState({
-                                                            filters: val,
-                                                            filtersApplied: val,
+                                                            filtersOpen: !this.state.filtersOpen,
                                                         });
                                                     }}
                                                 />
-                                            </div>
-                                        </ButtonGroup>
-                                    </SubNav>
-                                </Layout.HeaderPanel>
 
-                                <Layout.LeftPanel open={this.state.filtersOpen}>
-                                    <Layout.Panel side="left" background="grey">
-                                        <Layout.PanelHeader
-                                            title="Advanced filters"
-                                            onClose={() => {
-                                                this.setState({filtersOpen: false});
-                                            }}
-                                        />
+                                                <div>
+                                                    <AppliedFilters
+                                                        filters={this.state.filtersApplied}
+                                                        onChange={(val) => {
+                                                            this.setState({
+                                                                filters: val,
+                                                                filtersApplied: val,
+                                                            });
+                                                        }}
+                                                    />
+                                                </div>
+                                            </ButtonGroup>
+                                        </SubNav>
+                                    </Layout.HeaderPanel>
 
-                                        <Layout.PanelContent>
-                                            <Layout.PanelContentBlock>
-                                                <FilteringInputs
-                                                    filters={this.state.filters}
-                                                    onChange={this.setFilter}
+                                    <Layout.LeftPanel open={this.state.filtersOpen}>
+                                        <Layout.Panel side="left" background="grey">
+                                            <Layout.PanelHeader
+                                                title="Advanced filters"
+                                                onClose={() => {
+                                                    this.setState({filtersOpen: false});
+                                                }}
+                                            />
+
+                                            <Layout.PanelContent>
+                                                <Layout.PanelContentBlock>
+                                                    <FilteringInputs
+                                                        filters={this.state.filters}
+                                                        onChange={this.setFilter}
+                                                    />
+                                                </Layout.PanelContentBlock>
+                                            </Layout.PanelContent>
+                                            <Layout.PanelFooter>
+                                                <Button
+                                                    text={gettext('Clear')}
+                                                    style="hollow"
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            filters: {},
+                                                            filtersApplied: {},
+                                                        });
+                                                    }}
                                                 />
-                                            </Layout.PanelContentBlock>
-                                        </Layout.PanelContent>
-                                        <Layout.PanelFooter>
-                                            <Button
-                                                text={gettext('Clear')}
-                                                style="hollow"
-                                                onClick={() => {
-                                                    this.setState({
-                                                        filters: {},
-                                                        filtersApplied: {},
-                                                    });
-                                                }}
-                                            />
 
-                                            <Button
-                                                text={gettext('Filter')}
-                                                type="primary"
-                                                onClick={() => {
-                                                    this.setState({filtersApplied: this.state.filters});
-                                                }}
-                                            />
-                                        </Layout.PanelFooter>
-                                    </Layout.Panel>
-                                </Layout.LeftPanel>
+                                                <Button
+                                                    text={gettext('Filter')}
+                                                    type="primary"
+                                                    onClick={() => {
+                                                        this.setState({filtersApplied: this.state.filters});
+                                                    }}
+                                                />
+                                            </Layout.PanelFooter>
+                                        </Layout.Panel>
+                                    </Layout.LeftPanel>
 
-                                <Layout.MainPanel>
-                                    <RundownsList
-                                        rundownAction={rundownAction}
-                                        preview={(id) => {
-                                            this.setState({
-                                                rundownAction: {
-                                                    mode: 'view',
-                                                    fullWidth: this.state.rundownAction?.fullWidth ?? false,
-                                                    id,
-                                                },
-                                            });
-                                        }}
-                                        onEditModeChange={(id, rundownItemAction) => {
-                                            Promise.all([
-                                                this.prepareRundownEditing(id),
-                                                this.prepareNextRundownItemAction(rundownItemAction ?? null),
-                                            ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
+                                    <Layout.MainPanel>
+                                        <RundownsList
+                                            rundownAction={rundownAction}
+                                            preview={(id) => {
                                                 this.setState({
-                                                    rundownAction: rundownViewEditNext,
-                                                    rundownItemAction: rundownItemActionNext,
+                                                    rundownAction: {
+                                                        mode: 'view',
+                                                        fullWidth: this.state.rundownAction?.fullWidth ?? false,
+                                                        id,
+                                                    },
                                                 });
-                                            });
-                                        }}
-                                        searchString={this.state.searchString}
-                                        filters={this.state.filtersApplied}
-                                        rundownItemAction={this.state.rundownItemAction}
-                                    />
-                                </Layout.MainPanel>
+                                            }}
+                                            onEditModeChange={(id, rundownItemAction) => {
+                                                Promise.all([
+                                                    this.prepareRundownEditing(id),
+                                                    this.prepareNextRundownItemAction(rundownItemAction ?? null),
+                                                ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
+                                                    this.setState({
+                                                        rundownAction: rundownViewEditNext,
+                                                        rundownItemAction: rundownItemActionNext,
+                                                    });
+                                                });
+                                            }}
+                                            searchString={this.state.searchString}
+                                            filters={this.state.filtersApplied}
+                                            rundownItemAction={this.state.rundownItemAction}
+                                        />
+                                    </Layout.MainPanel>
 
-                                <Layout.OverlayPanel />
-                            </Layout.LayoutContainer>
+                                    <Layout.OverlayPanel />
+                                </Layout.LayoutContainer>
 
-                            <Layout.ContentSplitter visible={true} disabled />
-                        </React.Fragment>
-                    )}
+                                <Layout.ContentSplitter visible={true} disabled />
+                            </React.Fragment>
+                        )
+                    }
                     <Layout.AuthoringContainer open={rundownAction != null}>
-                        {rundownAction != null && (
-                            <RundownViewEdit
-                                key={rundownAction.id + rundownAction.mode}
-                                rundownAction={rundownAction}
-                                rundownId={rundownAction.id}
-                                onClose={(rundown: IRundown) => {
-                                    const doUnlock = isLockedInCurrentSession(rundown)
-                                        ? tryUnlocking('/rundowns', rundown._id)
-                                        : Promise.resolve();
+                        {
+                            rundownAction != null && (
+                                <RundownViewEdit
+                                    key={rundownAction.id + rundownAction.mode}
+                                    rundownAction={rundownAction}
+                                    rundownId={rundownAction.id}
+                                    onClose={(rundown: IRundown) => {
+                                        const doUnlock = isLockedInCurrentSession(rundown)
+                                            ? tryUnlocking('/rundowns', rundown._id)
+                                            : Promise.resolve();
 
-                                    doUnlock.finally(() => {
-                                        this.setState({rundownAction: null, rundownItemAction: null});
-                                    });
-                                }}
-                                readOnly={rundownAction == null || rundownAction.mode === 'view'}
-                                rundownItemAction={this.state.rundownItemAction}
-                                onRundownActionChange={(actionNext) => {
-                                    this.setState({rundownAction: actionNext});
-                                }}
-                                onRundownItemActionChange={(rundownItemAction) => {
-                                    this.prepareNextRundownItemAction(rundownItemAction).then((next) => {
-                                        this.setState({rundownItemAction: next});
-                                    });
-                                }}
-                            />
-                        )}
+                                        doUnlock.finally(() => {
+                                            this.setState({rundownAction: null, rundownItemAction: null});
+                                        });
+                                    }}
+                                    readOnly={rundownAction == null || rundownAction.mode === 'view'}
+                                    rundownItemAction={this.state.rundownItemAction}
+                                    onRundownActionChange={(actionNext) => {
+                                        this.setState({rundownAction: actionNext});
+                                    }}
+                                    onRundownItemActionChange={(rundownItemAction) => {
+                                        this.prepareNextRundownItemAction(rundownItemAction).then((next) => {
+                                            this.setState({rundownItemAction: next});
+                                        });
+                                    }}
+                                />
+                            )
+                        }
                     </Layout.AuthoringContainer>
                 </div>
             </div>

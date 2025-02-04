@@ -29,7 +29,8 @@ export class SearchPanelWidgets extends React.PureComponent<IProps> {
                         params={this.props.params}
                         setParams={(updates) => this.props.setParams(updates)}
                     />
-                ))}
+                ),
+                )}
             </React.Fragment>
         );
     }

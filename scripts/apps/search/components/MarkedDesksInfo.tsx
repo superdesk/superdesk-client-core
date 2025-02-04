@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 
 import {MarkedDesksList} from './index';
 
-import {closeActionsMenu, openActionsMenu, isCheckAllowed} from '../helpers';
+import {
+    closeActionsMenu,
+    openActionsMenu,
+    isCheckAllowed,
+} from '../helpers';
 
 /**
  * @ngdoc React
@@ -39,11 +43,8 @@ export class MarkedDesksInfo extends React.Component<any, any> {
         let markedDesks = [];
 
         if (isCheckAllowed(this.props.item)) {
-            if (
-                this.props.item.archive_item &&
-                this.props.item.archive_item.marked_desks &&
-                this.props.item.archive_item.marked_desks.length
-            ) {
+            if (this.props.item.archive_item && this.props.item.archive_item.marked_desks &&
+                this.props.item.archive_item.marked_desks.length) {
                 markedDesks = this.props.item.archive_item.marked_desks;
             } else {
                 markedDesks = this.props.item.marked_desks || [];
@@ -58,13 +59,16 @@ export class MarkedDesksInfo extends React.Component<any, any> {
 
         return (
             <div className="highlights-box" onClick={this.toggle}>
-                {markedDesks.length ? (
-                    <div className="highlights-list dropdown">
-                        <button className="dropdown__toggle">
-                            <i className="icon-bell" />
-                        </button>
-                    </div>
-                ) : null}
+                {markedDesks.length
+                    ? (
+                        <div className="highlights-list dropdown">
+                            <button className="dropdown__toggle">
+                                <i className="icon-bell" />
+                            </button>
+                        </div>
+                    )
+                    : null
+                }
             </div>
         );
     }
@@ -79,7 +83,8 @@ export class MarkedDesksInfo extends React.Component<any, any> {
         // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 
-        const icon = thisNode.getElementsByClassName('icon-bell')[0] || thisNode.getElementsByClassName('icon-bell')[0];
+        const icon = thisNode.getElementsByClassName('icon-bell')[0] ||
+        thisNode.getElementsByClassName('icon-bell')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);
     }

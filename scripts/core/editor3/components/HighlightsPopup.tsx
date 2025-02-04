@@ -74,9 +74,14 @@ export class HighlightsPopup extends React.Component<any, any> {
         return (
             <Provider store={this.context}>
                 <div>
-                    {highlightsAndSuggestions.map((obj, i) => (
-                        <div key={i}>{this.createHighlight(obj.type, obj.value, obj.highlightId)}</div>
-                    ))}
+                    {
+                        highlightsAndSuggestions
+                            .map((obj, i) => (
+                                <div key={i}>
+                                    {this.createHighlight(obj.type, obj.value, obj.highlightId)}
+                                </div>
+                            ))
+                    }
                 </div>
             </Provider>
         );
@@ -112,16 +117,20 @@ export class HighlightsPopup extends React.Component<any, any> {
                 />
             );
         } else if (getSuggestionsTypes().indexOf(type) !== -1) {
-            return <SuggestionPopup suggestion={h} editorNode={this.props.editorNode.current} />;
+            return (
+                <SuggestionPopup
+                    suggestion={h}
+                    editorNode={this.props.editorNode.current}
+                />
+            );
         } else {
             console.error('Invalid highlight type in HighlightsPopup: ', type);
         }
     }
 
     styleBasedHighlightsExist() {
-        return this.getInlineStyleForCollapsedSelection().some(
-            this.props.highlightsManager.styleNameBelongsToHighlight,
-        );
+        return this.getInlineStyleForCollapsedSelection()
+            .some(this.props.highlightsManager.styleNameBelongsToHighlight);
     }
 
     /**
@@ -189,12 +198,9 @@ export class HighlightsPopup extends React.Component<any, any> {
         const nextSelection = nextProps.editorState.getSelection();
         const selection = this.props.editorState.getSelection();
         const hadHighlightsChanged = this.props.highlightsManager.hadHighlightsChanged(
-            this.props.editorState,
-            nextProps.editorState,
-        );
+            this.props.editorState, nextProps.editorState);
 
-        const cursorMoved =
-            nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
+        const cursorMoved = nextSelection.getAnchorOffset() !== selection.getAnchorOffset() ||
             nextSelection.getAnchorKey() !== selection.getAnchorKey();
 
         return cursorMoved || hadHighlightsChanged;
@@ -232,7 +238,7 @@ export class HighlightsPopup extends React.Component<any, any> {
     componentDidUpdate() {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(() => (this.shouldRender() ? this.renderCustom() : this.unmountCustom()), 0);
+        setTimeout(() => this.shouldRender() ? this.renderCustom() : this.unmountCustom(), 0);
     }
 
     componentWillUnmount() {

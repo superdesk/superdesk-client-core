@@ -8,7 +8,7 @@ let $injector = null;
  * application's injector. In order for this service to work, the application
  * must register the $injector (ideally via a .run clause) after loading.
  */
-export default new (class ProviderService {
+export default new class ProviderService {
     /**
      * @name ProviderService#register
      * @param {Object} injector The Angular $injector
@@ -41,9 +41,10 @@ export default new (class ProviderService {
     }
     getServices(names) {
         return new Promise((resolve, reject) => {
-            this.waitForServicesToBeAvailable().then(() => {
-                resolve(names.map((name) => $injector.get(name)));
-            });
+            this.waitForServicesToBeAvailable()
+                .then(() => {
+                    resolve(names.map((name) => $injector.get(name)));
+                });
         });
     }
-})();
+}();

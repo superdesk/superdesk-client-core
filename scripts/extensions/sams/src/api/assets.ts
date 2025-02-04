@@ -1,5 +1,10 @@
 // Types
-import {IAttachment, IElasticRangeQueryParams, IRestApiResponse, IRootElasticQuery} from 'superdesk-api';
+import {
+    IAttachment,
+    IElasticRangeQueryParams,
+    IRestApiResponse,
+    IRootElasticQuery,
+} from 'superdesk-api';
 import {
     ASSET_LIST_STYLE,
     ASSET_SORT_FIELD,
@@ -37,12 +42,18 @@ const UNLOCK_ASSET = `${RESOURCE}/unlock`;
 
 import {downloadBlob} from '@superdesk/common';
 
-export function uploadAsset(data: FormData, onProgress: (event: ProgressEvent) => void): Promise<IAssetItem> {
+export function uploadAsset(
+    data: FormData,
+    onProgress: (event: ProgressEvent) => void,
+): Promise<IAssetItem> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .uploadFileWithProgress<IAssetItem>('/' + RESOURCE, data, onProgress)
+    return superdeskApi.dataApi.uploadFileWithProgress<IAssetItem>(
+        '/' + RESOURCE,
+        data,
+        onProgress,
+    )
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -204,15 +215,15 @@ function queryMimetypes(source: IRootElasticQuery, params: IAssetSearchParams) {
         let typeString: string;
 
         switch (params.mimetypes) {
-            case ASSET_TYPE_FILTER.IMAGES:
-                typeString = 'image';
-                break;
-            case ASSET_TYPE_FILTER.VIDEOS:
-                typeString = 'video';
-                break;
-            case ASSET_TYPE_FILTER.AUDIO:
-                typeString = 'audio';
-                break;
+        case ASSET_TYPE_FILTER.IMAGES:
+            typeString = 'image';
+            break;
+        case ASSET_TYPE_FILTER.VIDEOS:
+            typeString = 'video';
+            break;
+        case ASSET_TYPE_FILTER.AUDIO:
+            typeString = 'audio';
+            break;
         }
 
         if (typeString != null) {
@@ -239,7 +250,9 @@ function queryDateRange(source: IRootElasticQuery, params: IAssetSearchParams) {
             args.lte = params.dateTo.toISOString();
         }
 
-        source.query.bool.must.push(superdeskApi.elasticsearch.range(args));
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.range(args),
+        );
     }
 }
 
@@ -255,7 +268,9 @@ function querySizeRange(source: IRootElasticQuery, params: IAssetSearchParams) {
             args.lte = params.sizeTo * 1048576; // MB -> bytes
         }
 
-        source.query.bool.must.push(superdeskApi.elasticsearch.range(args));
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.range(args),
+        );
     }
 }
 
@@ -265,7 +280,9 @@ export function queryAssets(
 ): Promise<IRestApiResponse<IAssetItem>> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
-    const pageSize = listStyle === ASSET_LIST_STYLE.GRID ? GRID_PAGE_SIZE : LIST_PAGE_SIZE;
+    const pageSize = listStyle === ASSET_LIST_STYLE.GRID ?
+        GRID_PAGE_SIZE :
+        LIST_PAGE_SIZE;
 
     const source: IRootElasticQuery = {
         query: {
@@ -298,11 +315,13 @@ export function queryAssets(
     const sortOrder = params.sortOrder === SORT_ORDER.ASCENDING ? 1 : 0;
     const sort = `[("${params.sortField}",${sortOrder})]`;
 
-    return superdeskApi.dataApi
-        .queryRawJson<IRestApiResponse<IAssetItem>>(RESOURCE, {
+    return superdeskApi.dataApi.queryRawJson<IRestApiResponse<IAssetItem>>(
+        RESOURCE,
+        {
             source: JSON.stringify(source),
             sort: sort,
-        })
+        },
+    )
         .then(fixItemResponseVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
@@ -324,7 +343,7 @@ export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
         setId: urlParams.getString('setId'),
         name: urlParams.getString('name'),
         description: urlParams.getString('description'),
-        tags: urlParams.getStringArray('tags')?.map((tag) => ({code: tag, name: tag})),
+        tags: urlParams.getStringArray('tags')?.map((tag) => ({'code': tag, 'name': tag})),
         state: urlParams.getString('state') as ASSET_STATE,
         filename: urlParams.getString('filename'),
         mimetypes: urlParams.getString('mimetypes', ASSET_TYPE_FILTER.ALL) as ASSET_TYPE_FILTER,
@@ -344,10 +363,7 @@ export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
     urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
-    urlParams.setStringArray(
-        'tags',
-        (params.tags ?? []).map((tag) => tag.code),
-    );
+    urlParams.setStringArray('tags', (params.tags ?? []).map((tag) => (tag.code)));
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);
@@ -363,8 +379,9 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .queryRawJson<Dictionary<string, number>>(COUNT_RESOURCE + JSON.stringify(set_ids))
+    return superdeskApi.dataApi.queryRawJson<Dictionary<string, number>>(
+        COUNT_RESOURCE + JSON.stringify(set_ids),
+    )
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -380,8 +397,7 @@ export function getAssetById(assetId: string): Promise<IAssetItem> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .findOne<IAssetItem>(RESOURCE, assetId)
+    return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
         .then(fixItemVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
@@ -398,21 +414,21 @@ export function getAssetsByIds(ids: Array<string>): Promise<IRestApiResponse<IAs
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .queryRawJson<IRestApiResponse<IAssetItem>>(RESOURCE, {
-            source: JSON.stringify({
-                query: {
-                    bool: {
-                        must: [
-                            superdeskApi.elasticsearch.terms({
-                                field: '_id',
-                                value: ids,
-                            }),
-                        ],
-                    },
+    return superdeskApi.dataApi.queryRawJson<IRestApiResponse<IAssetItem>>(
+        RESOURCE,
+        {source: JSON.stringify({
+            query: {
+                bool: {
+                    must: [
+                        superdeskApi.elasticsearch.terms({
+                            field: '_id',
+                            value: ids,
+                        }),
+                    ],
                 },
-            }),
-        })
+            },
+        })},
+    )
         .then(fixItemResponseVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
@@ -440,15 +456,16 @@ export function updateAssetMetadata(
             description: updates.description,
             internal: updates.state !== ASSET_STATE.PUBLIC,
         }),
-        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates).catch((error: any) => {
-            if (isSamsApiError(error)) {
-                notify.error(getApiErrorMessage(error));
-            } else {
-                notify.error(gettext('Failed to update asset.'));
-            }
+        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates)
+            .catch((error: any) => {
+                if (isSamsApiError(error)) {
+                    notify.error(getApiErrorMessage(error));
+                } else {
+                    notify.error(gettext('Failed to update asset.'));
+                }
 
-            return Promise.reject(error);
-        }),
+                return Promise.reject(error);
+            }),
     ]);
 }
 
@@ -458,20 +475,24 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
     const store = getStoreSync();
 
     // (re)load all the Sets into the Redux store
-    store.dispatch<any>(loadSets()).then((sets: Array<ISetItem>) => {
-        // Check if there are any usable Sets found
-        // Otherwise notify the user to enable one first
-        if (sets.filter((set) => set.state === SET_STATE.USABLE).length === 0) {
-            notify.error(gettext('No usable Sets found. Enable one first'));
-            return;
-        }
+    store.dispatch<any>(loadSets())
+        .then((sets: Array<ISetItem>) => {
+            // Check if there are any usable Sets found
+            // Otherwise notify the user to enable one first
+            if (sets.filter((set) => set.state === SET_STATE.USABLE).length === 0) {
+                notify.error(gettext('No usable Sets found. Enable one first'));
+                return;
+            }
 
-        // Finally show the upload asset modal
-        showModalConnectedToStore<Partial<IUploadAssetModalProps>>(UploadAssetModal, {
-            modalSize: 'fill',
-            ...(props ?? {}),
+            // Finally show the upload asset modal
+            showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
+                UploadAssetModal,
+                {
+                    modalSize: 'fill',
+                    ...props ?? {},
+                },
+            );
         });
-    });
 }
 
 export function getAssetDownloadUrl(assetId: IAssetItem['_id']): string {
@@ -484,13 +505,13 @@ export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .queryRaw<void | Response>(BINARY_RESOURCE + asset._id)
-        .then((res) =>
-            res.arrayBuffer().then((blob: any) => {
+    return superdeskApi.dataApi.queryRaw<void | Response>(
+        BINARY_RESOURCE + asset._id,
+    )
+        .then((res) => res.arrayBuffer()
+            .then((blob: any) => {
                 downloadBlob(blob, res.headers.get('Content-type')!, asset.filename);
-            }),
-        )
+            }))
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -506,13 +527,13 @@ export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<voi
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .queryRaw<void | Response>(COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids))
-        .then((res) =>
-            res.arrayBuffer().then((blob: any) => {
+    return superdeskApi.dataApi.queryRaw<void | Response>(
+        COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids),
+    )
+        .then((res) => res.arrayBuffer()
+            .then((blob: any) => {
                 downloadBlob(blob, 'application/zip', 'download');
-            }),
-        )
+            }))
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -528,8 +549,7 @@ export function deleteAsset(item: IAssetItem): Promise<void> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .delete<IAssetItem>(RESOURCE, item)
+    return superdeskApi.dataApi.delete<IAssetItem>(RESOURCE, item)
         .then(() => {
             notify.success(gettext('Asset deleted successfully'));
 
@@ -552,8 +572,7 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .patch<IAssetItem>(RESOURCE, original, updates)
+    return superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, original, updates)
         .then((asset: IAssetItem) => {
             notify.success(gettext('Asset updated successfully'));
 
@@ -574,8 +593,7 @@ export function lockAsset(original: IAssetItem, updates: Dictionary<string, any>
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .patch<IAssetItem>(LOCK_ASSET, original, updates)
+    return superdeskApi.dataApi.patch<IAssetItem>(LOCK_ASSET, original, updates)
         .then((asset: IAssetItem) => {
             return asset;
         })
@@ -594,8 +612,7 @@ export function unlockAsset(original: IAssetItem, updates: Dictionary<string, an
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .patch<IAssetItem>(UNLOCK_ASSET, original, updates)
+    return superdeskApi.dataApi.patch<IAssetItem>(UNLOCK_ASSET, original, updates)
         .then((asset: IAssetItem) => {
             return asset;
         })
@@ -620,8 +637,7 @@ export function searchTags(searchString: string): Promise<IAutoTaggingSearchResu
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .queryRawJson<IAutoTaggingSearchResult>('sams/assets/tags', {query: searchString})
+    return superdeskApi.dataApi.queryRawJson<IAutoTaggingSearchResult>('sams/assets/tags', {'query': searchString})
         .then((res: IAutoTaggingSearchResult) => {
             return res;
         })

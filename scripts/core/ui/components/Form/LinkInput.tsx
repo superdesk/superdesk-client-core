@@ -81,22 +81,21 @@ export class LinkInput extends React.Component<any, any> {
 
         const url = 'https://iframe.ly/api/iframely?url=' + link + '&api_key=' + this.props.iframelyKey;
 
-        fetch(url)
-            .then((response) => {
-                // Need to do HTTP response status check manually for whatwg-fetch
-                // refer: https://www.npmjs.com/package/whatwg-fetch
-                if (response.status >= 200 && response.status < 300) {
-                    return response.json();
-                } else {
-                    this.setState({title: this.errorTitle});
-                }
-            })
+        fetch(url).then((response) => {
+            // Need to do HTTP response status check manually for whatwg-fetch
+            // refer: https://www.npmjs.com/package/whatwg-fetch
+            if (response.status >= 200 && response.status < 300) {
+                return response.json();
+            } else {
+                this.setState({title: this.errorTitle});
+            }
+        })
             .then((json) => {
                 this.setState({title: json.meta.title});
             })
             .catch(() => {
-                // This is in cases of network failure issues
-                // refer: https://www.npmjs.com/package/whatwg-fetch
+            // This is in cases of network failure issues
+            // refer: https://www.npmjs.com/package/whatwg-fetch
                 this.setState({title: this.errorTitle});
             });
     }
@@ -104,15 +103,15 @@ export class LinkInput extends React.Component<any, any> {
     render() {
         const {value, field, remove, onChange, label, readOnly, iframelyKey, onFocus, ...props} = this.props;
 
-        const showLink = this.state.title && !props.message && get(value, 'length', 0) > 0;
+        const showLink = this.state.title &&
+            !props.message &&
+            get(value, 'length', 0) > 0;
 
         return readOnly ? (
             <Row>
                 <LineInput noMargin={true}>
                     <Label text={this.state.title} />
-                    <a href={this.getAbsoulteURL(value)} target="_blank" rel="noopener noreferrer">
-                        {value}
-                    </a>
+                    <a href={this.getAbsoulteURL(value)} target="_blank" rel="noopener noreferrer">{value}</a>
                 </LineInput>
             </Row>
         ) : (
@@ -134,15 +133,30 @@ export class LinkInput extends React.Component<any, any> {
                     />
 
                     {showLink && iframelyKey && (
-                        <a href={this.getAbsoulteURL(value)} target="_blank" rel="noopener noreferrer">
+                        <a
+                            href={this.getAbsoulteURL(value)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             {this.state.title}
                         </a>
                     )}
 
                     <span className="sd-line-input__icon-bottom-right">
-                        {showLink && <IconButton href={this.getAbsoulteURL(value)} target="_blank" icon="icon-link" />}
+                        {showLink && (
+                            <IconButton
+                                href={this.getAbsoulteURL(value)}
+                                target="_blank"
+                                icon="icon-link"
+                            />
+                        )}
 
-                        <IconButton onClick={remove} tabIndex={0} icon="icon-trash" enterKeyIsClick={true} />
+                        <IconButton
+                            onClick={remove}
+                            tabIndex={0}
+                            icon="icon-trash"
+                            enterKeyIsClick={true}
+                        />
                     </span>
                 </LineInput>
             </Row>

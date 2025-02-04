@@ -67,21 +67,25 @@ export class ResizeObserverComponent extends React.PureComponent<IPropsResizeObs
                  * but if parent of `ResizeObserverComponent` is resized down,
                  * it would include its own size(which is based on the initial result from this component),
                  * including children, into calculation and would produce a wrong result.
-                 */}
+                */}
                 <div
                     style={
                         this.props.position === 'absolute'
                             ? {
-                                  position: 'absolute',
-                                  insetBlockStart: 0,
-                                  insetInlineStart: 0,
-                                  width: '100%',
-                                  height: '100%',
-                              }
+                                position: 'absolute',
+                                insetBlockStart: 0,
+                                insetInlineStart: 0,
+                                width: '100%',
+                                height: '100%',
+                            }
                             : undefined
                     }
                 >
-                    {dimensions === 'not-initialized' ? null : this.props.children(dimensions)}
+                    {
+                        dimensions === 'not-initialized'
+                            ? null
+                            : this.props.children(dimensions)
+                    }
                 </div>
             </div>
         );

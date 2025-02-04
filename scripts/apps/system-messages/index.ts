@@ -14,22 +14,28 @@ export interface ISystemMessage extends IBaseRestApiResponse {
 
 export const RESOURCE = 'system_messages';
 
-angular
-    .module('superdesk.apps.system-messages', ['superdesk.core.activity'])
-    .component('sdSystemMessagesSettings', reactToAngular1(SystemMessagesSettingsComponent, [], []))
+angular.module('superdesk.apps.system-messages', [
+    'superdesk.core.activity',
+])
+    .component('sdSystemMessagesSettings', reactToAngular1(
+        SystemMessagesSettingsComponent,
+        [],
+        [],
+    ))
 
-    .component('sdSystemMessages', reactToAngular1(SystemMessagesComponent, [], []))
+    .component('sdSystemMessages', reactToAngular1(
+        SystemMessagesComponent,
+        [],
+        [],
+    ))
 
-    .config([
-        'superdeskProvider',
-        function config(superdesk) {
-            superdesk.activity('/settings/system-messages', {
-                label: gettext('System Message'),
-                template: '<sd-system-messages-settings></sd-system-messages-settings>',
-                category: superdesk.MENU_MAIN,
-                priority: 1000,
-                adminTools: true,
-                privileges: {[RESOURCE]: 1},
-            });
-        },
-    ]);
+    .config(['superdeskProvider', function config(superdesk) {
+        superdesk.activity('/settings/system-messages', {
+            label: gettext('System Message'),
+            template: '<sd-system-messages-settings></sd-system-messages-settings>',
+            category: superdesk.MENU_MAIN,
+            priority: 1000,
+            adminTools: true,
+            privileges: {[RESOURCE]: 1},
+        });
+    }]);

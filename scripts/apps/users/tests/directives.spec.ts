@@ -1,3 +1,4 @@
+
 var template = [
     '<form name="userForm">',
     '<input type="text" name="username" ng-model="user.username"',
@@ -13,24 +14,22 @@ describe('sdUserUnique Directive', () => {
 
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
-    beforeEach(
-        window.module(($provide) => {
-            $provide.service('api', function ($q) {
-                this.users = {
-                    // make it find foo but not any other
-                    query: function (criteria) {
-                        if (criteria.where && criteria.where.username === 'foo') {
-                            return $q.when({
-                                _items: [{_id: 9, username: 'foo'}],
-                            });
-                        }
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', function($q) {
+            this.users = {
+                // make it find foo but not any other
+                query: function(criteria) {
+                    if (criteria.where && criteria.where.username === 'foo') {
+                        return $q.when({
+                            _items: [{_id: 9, username: 'foo'}],
+                        });
+                    }
 
-                        return $q.when({_items: []});
-                    },
-                };
-            });
-        }),
-    );
+                    return $q.when({_items: []});
+                },
+            };
+        });
+    }));
 
     beforeEach(inject(($rootScope) => {
         scope = $rootScope.$new(true);
@@ -102,20 +101,18 @@ describe('user edit directive', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(
-        window.module(($provide) => {
-            $provide.service('api', noop);
-            $provide.service('notify', noop);
-            $provide.service('resource', noop);
-            $provide.service('$route', noop);
-            $provide.service('superdesk', noop);
-            $provide.provider('translateFilter', function () {
-                this.$get = function () {
-                    return angular.identity;
-                };
-            });
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        $provide.service('api', noop);
+        $provide.service('notify', noop);
+        $provide.service('resource', noop);
+        $provide.service('$route', noop);
+        $provide.service('superdesk', noop);
+        $provide.provider('translateFilter', function() {
+            this.$get = function() {
+                return angular.identity;
+            };
+        });
+    }));
 
     it('checks username for valid characters', inject((usersService) => {
         expect(usersService.usernamePattern.test('!')).toBe(false);
@@ -126,7 +123,7 @@ describe('user edit directive', () => {
         expect(usersService.usernamePattern.test('.')).toBe(true);
         expect(usersService.usernamePattern.test('_')).toBe(true);
         expect(usersService.usernamePattern.test('-')).toBe(true);
-        expect(usersService.usernamePattern.test("'")).toBe(true);
+        expect(usersService.usernamePattern.test('\'')).toBe(true);
 
         expect(usersService.usernamePattern.test('b')).toBe(true);
         expect(usersService.usernamePattern.test('B')).toBe(true);

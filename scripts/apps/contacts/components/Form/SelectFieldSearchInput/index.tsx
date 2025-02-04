@@ -42,40 +42,30 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
 
         if (querySearch) {
             onQuerySearch(filterTextNoCase);
-            this.setState(
-                {
-                    searchText: value,
-                    openFilterList: !isEmpty(value),
-                },
-                onChange(this.props.field, value),
-            );
+            this.setState({
+                searchText: value,
+                openFilterList: !isEmpty(value),
+            }, onChange(this.props.field, value));
         } else {
             if (!value) {
-                this.setState(
-                    {
-                        filteredDataList: dataList,
-                        searchText: '',
-                        openFilterList: false,
-                    },
-                    onChange(this.props.field, value),
-                );
+                this.setState({
+                    filteredDataList: dataList,
+                    searchText: '',
+                    openFilterList: false,
+                }, onChange(this.props.field, value));
                 return;
             }
 
-            const newDataList = dataList.filter(
-                (fieldItem) =>
-                    fieldItem.toLowerCase().substr(0, value.length) === filterTextNoCase ||
-                    fieldItem.toLowerCase().indexOf(filterTextNoCase) >= 0,
-            );
+            const newDataList = dataList.filter((fieldItem) => (
+                fieldItem.toLowerCase().substr(0, value.length) === filterTextNoCase ||
+                    fieldItem.toLowerCase().indexOf(filterTextNoCase) >= 0
+            ));
 
-            this.setState(
-                {
-                    filteredDataList: newDataList,
-                    searchText: value,
-                    openFilterList: true,
-                },
-                onChange(this.props.field, value),
-            );
+            this.setState({
+                filteredDataList: newDataList,
+                searchText: value,
+                openFilterList: true,
+            }, onChange(this.props.field, value));
         }
     }
 

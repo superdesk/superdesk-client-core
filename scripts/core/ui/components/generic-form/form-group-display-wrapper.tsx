@@ -19,7 +19,10 @@ export class FormGroupDisplayWrapper extends React.Component<IProps> {
             return <div {...omit(this.props, ['group'])} />;
         } else if (isIFormGroupCollapsible(group.type)) {
             return (
-                <ToggleBoxNext title={group.type.label} isOpen={group.type.openByDefault}>
+                <ToggleBoxNext
+                    title={group.type.label}
+                    isOpen={group.type.openByDefault}
+                >
                     {this.props.children}
                 </ToggleBoxNext>
             );

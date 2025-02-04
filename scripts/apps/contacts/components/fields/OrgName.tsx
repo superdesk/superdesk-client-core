@@ -7,7 +7,10 @@ import PropTypes from 'prop-types';
 export const OrgName: React.StatelessComponent<any> = ({item}) => (
     <div key="org-name" className="container">
         {item.first_name && item.organisation && <i className="icon-business" />}
-        {item.first_name && item.organisation && <span>{item.organisation}</span>}
+        {
+            item.first_name && item.organisation &&
+                <span>{item.organisation}</span>
+        }
     </div>
 );
 

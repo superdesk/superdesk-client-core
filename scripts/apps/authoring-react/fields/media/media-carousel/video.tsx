@@ -24,8 +24,16 @@ interface IProps {
 
 export class MediaCarouselVideo extends React.PureComponent<IProps> {
     render() {
-        const {item, title, removeButton, metadata, paginationBar, titleInput, descriptionInput, canRemoveItems} =
-            this.props;
+        const {
+            item,
+            title,
+            removeButton,
+            metadata,
+            paginationBar,
+            titleInput,
+            descriptionInput,
+            canRemoveItems,
+        } = this.props;
 
         return (
             <div>
@@ -51,9 +59,17 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
 
                 <div style={{padding: mediaDetailsPadding}}>
                     <Spacer v gap="16" noWrap>
-                        {titleInput != null && <div style={{width: '100%'}}>{titleInput}</div>}
+                        {
+                            titleInput != null && (
+                                <div style={{width: '100%'}}>{titleInput}</div>
+                            )
+                        }
 
-                        {descriptionInput != null && <div style={{width: '100%'}}>{descriptionInput}</div>}
+                        {
+                            descriptionInput != null && (
+                                <div style={{width: '100%'}}>{descriptionInput}</div>
+                            )
+                        }
 
                         <Spacer h gap="16" justifyContent="space-between" noWrap>
                             <VideoThumbnailEditor
@@ -70,11 +86,10 @@ export class MediaCarouselVideo extends React.PureComponent<IProps> {
                                 size="small"
                                 disabled={this.props.readOnly}
                                 onClick={() => {
-                                    editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view').then(
-                                        (item) => {
+                                    editMetadata(this.props.prepareForExternalEditing(this.props.item), 'view')
+                                        .then((item) => {
                                             this.props.onChange(item);
-                                        },
-                                    );
+                                        });
                                 }}
                             />
                         </Spacer>

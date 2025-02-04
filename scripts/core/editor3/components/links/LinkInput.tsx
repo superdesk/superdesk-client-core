@@ -4,7 +4,13 @@ import {EntityInstance} from 'draft-js';
 import {getSelectedEntity} from './entityUtils';
 import {Dropdown, NavTabs} from 'core/ui/components';
 import {AttachmentList} from './AttachmentList';
-import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion, applyLinkOnTableCell} from '../../actions';
+import {
+    applyLink,
+    hidePopups,
+    createLinkSuggestion,
+    changeLinkSuggestion,
+    applyLinkOnTableCell,
+} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
@@ -38,7 +44,7 @@ interface IProps extends Partial<IEditorStore> {
     item?: IArticle;
     createLinkSuggestion?(link): void;
     changeLinkSuggestion?(link, entity): void;
-    localDomains?: Array<{is_active: boolean; domain: string}>;
+    localDomains?: Array<{is_active: boolean, domain: string}>;
 }
 
 export class LinkInputComponent extends React.Component<IProps, any> {
@@ -56,10 +62,14 @@ export class LinkInputComponent extends React.Component<IProps, any> {
         // when non-null, holds the entity whos URL is being edited
         this.entity = null;
 
-        this.tabs = [{label: gettext('URL'), render: this.renderURL.bind(this)}];
+        this.tabs = [
+            {label: gettext('URL'), render: this.renderURL.bind(this)},
+        ];
 
         if (props.item) {
-            this.tabs.push({label: gettext('Attachment'), render: this.renderAttachment.bind(this)});
+            this.tabs.push(
+                {label: gettext('Attachment'), render: this.renderAttachment.bind(this)},
+            );
         }
 
         this.activeTab = 0;
@@ -106,7 +116,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
             const isLocalDomain = (localDomains || []).some((item) => url.includes(item.domain));
 
             link = {href: url};
-            if (appConfig.linksBlankTarget === true || (!isLocalDomain && localDomains != null)) {
+            if ((appConfig.linksBlankTarget === true) || (!isLocalDomain && localDomains != null)) {
                 link.target = '_blank';
             }
         } else if (linkType === linkTypes.attachement) {
@@ -200,7 +210,10 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
                     <div className="button-group button-group--end button-group--comfort" role="group">
-                        <button className="btn btn--cancel" onClick={this.props.hidePopups}>
+                        <button
+                            className="btn btn--cancel"
+                            onClick={this.props.hidePopups}
+                        >
                             {gettext('Cancel')}
                         </button>
                         <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
@@ -223,7 +236,10 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button className="btn btn--cancel" onClick={this.props.hidePopups}>
+                    <button
+                        className="btn btn--cancel"
+                        onClick={this.props.hidePopups}
+                    >
                         {gettext('Cancel')}
                     </button>
                     <button
@@ -248,9 +264,7 @@ const mapStateToProps = (state) => ({
 });
 
 const LinkInputComponentWithDependenciesLoaded = connectPromiseResults<IProps>(() => ({
-    localDomains: ng
-        .get('metadata')
-        .initialize()
+    localDomains: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.local_domains),
 }))(LinkInputComponent);
 

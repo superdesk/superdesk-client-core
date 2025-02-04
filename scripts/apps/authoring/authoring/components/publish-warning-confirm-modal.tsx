@@ -8,7 +8,10 @@ interface IProps {
     closeModal(): void;
 }
 
-export function getPublishWarningConfirmModal(warnings: Array<string>, publishingAction: () => any) {
+export function getPublishWarningConfirmModal(
+    warnings: Array<string>,
+    publishingAction: () => any,
+) {
     return new Promise((resolve, reject) => {
         class PublishWarningsModal extends React.PureComponent<IProps> {
             render() {
@@ -20,22 +23,30 @@ export function getPublishWarningConfirmModal(warnings: Array<string>, publishin
                         onHide={this.props.closeModal}
                         headerTemplate={gettext('Confirm Publish Warnings')}
                         footerTemplate={
-                            <ButtonGroup align="end">
-                                <Button type="default" text={gettext('Cancel')} onClick={this.props.closeModal} />
-                                <Button
-                                    type="primary"
-                                    text={gettext('Confirm')}
-                                    onClick={() => {
-                                        publishingAction().then(resolve, reject);
-                                        this.props.closeModal();
-                                    }}
-                                />
-                            </ButtonGroup>
+                            (
+                                <ButtonGroup align="end">
+                                    <Button
+                                        type="default"
+                                        text={gettext('Cancel')}
+                                        onClick={this.props.closeModal}
+                                    />
+                                    <Button
+                                        type="primary"
+                                        text={gettext('Confirm')}
+                                        onClick={() => {
+                                            publishingAction().then(resolve, reject);
+                                            this.props.closeModal();
+                                        }}
+                                    />
+                                </ButtonGroup>
+                            )
                         }
                     >
                         <ul>
                             {warnings.map((warning, index) => (
-                                <li key={index}>{warning}</li>
+                                <li key={index}>
+                                    {warning}
+                                </li>
                             ))}
                         </ul>
                     </Modal>

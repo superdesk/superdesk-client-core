@@ -47,15 +47,10 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                         }}
                         getId={(item) => getArticleLabel(item)}
                         getLabel={(item) => getArticleLabel(item)}
-                        getOptions={() =>
-                            sdApi.article
-                                .getWorkQueueItems()
-                                .filter(
-                                    (article) =>
-                                        this.state.selectedArticles.map(({_id}) => _id).includes(article._id) === false,
-                                )
-                                .map((item) => ({value: item}))
-                        }
+                        getOptions={() => sdApi.article.getWorkQueueItems().filter((article) =>
+                            this.state.selectedArticles.map(({_id}) => _id)
+                                .includes(article._id) === false,
+                        ).map((item) => ({value: item}))}
                     />
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button
@@ -74,7 +69,11 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                                 this.props.onClose();
                             }}
                         />
-                        <Button text={gettext('Close')} style="filled" onClick={this.props.onClose} />
+                        <Button
+                            text={gettext('Close')}
+                            style="filled"
+                            onClick={this.props.onClose}
+                        />
                     </Spacer>
                 </Spacer>
             </Modal>

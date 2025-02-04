@@ -25,11 +25,19 @@ export const description_text: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) =>
-        retrieveStoredValueEditor3Generic(DESCRIPTION_TEXT_FIELD_ID, item, authoringStorage),
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        DESCRIPTION_TEXT_FIELD_ID,
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(DESCRIPTION_TEXT_FIELD_ID, item, value, config);
+        const result = storeEditor3ValueBase(
+            DESCRIPTION_TEXT_FIELD_ID,
+            item,
+            value,
+            config,
+        );
 
         const articleUpdated = {...result.article};
 

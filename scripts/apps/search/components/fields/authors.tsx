@@ -24,7 +24,10 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
                 .filter(({_id}) => _id != null) // _id is not present in ingested items
                 .map((author) => ({endpoint: endpointUsers, id: author._id[0]}));
 
-            return [...userIds, {endpoint: endpointVocabularies, id: 'author_roles'}];
+            return [
+                ...userIds,
+                {endpoint: endpointVocabularies, id: 'author_roles'},
+            ];
         }
     }
 
@@ -73,54 +76,62 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         const renderUser = (userId: string) => {
             const user = this.related.getUser(userId);
 
-            return <strong>{user[options.displayField] ?? user.display_name}</strong>;
+            return (
+                <strong>{user[options.displayField] ?? user.display_name}</strong>
+            );
         };
 
         return (
             <React.Fragment>
                 <span className="container" style={{marginInlineEnd: 0}}>
-                    {authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
-                        <span key={userId}>
-                            {index > 0 && SEPARATOR}
-                            <span>{renderAuthorRole(roleId)}</span>
-                            <span>{renderUser(userId)}</span>{' '}
-                        </span>
-                    ))}
+                    {
+                        authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
+                            <span key={userId}>
+                                {index > 0 && SEPARATOR}
+                                <span>{renderAuthorRole(roleId)}</span>
+                                <span>{renderUser(userId)}</span>{' '}
+                            </span>
+                        ))
+                    }
                 </span>
 
                 {/** rendering outside of .container in order to prevent ellipsis hiding "All authors" button */}
-                {authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
-                    <span>
-                        {SEPARATOR}
+                {
+                    authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
+                        <span>
+                            {SEPARATOR}
 
-                        <button
-                            id="more-authors-button"
-                            className="icon-button--small"
-                            aria-label={gettext('All authors')}
-                        >
-                            <i className="icon-dots" />
-                        </button>
+                            <button
+                                id="more-authors-button"
+                                className="icon-button--small"
+                                aria-label={gettext('All authors')}
+                            >
+                                <i className="icon-dots" />
+                            </button>
 
-                        <Popover
-                            title={gettext('Authors')}
-                            placement="bottom-end"
-                            triggerSelector="#more-authors-button"
-                        >
-                            <table style={{lineHeight: 1.5}}>
-                                <tbody>
-                                    {authors.map(({userId, roleId}) => (
-                                        <tr key={userId}>
-                                            <td style={{paddingInlineEnd: 4, opacity: 0.6}}>
-                                                {renderAuthorRole(roleId)}
-                                            </td>
-                                            <td>{renderUser(userId)}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </Popover>
-                    </span>
-                )}
+                            <Popover
+                                title={gettext('Authors')}
+                                placement="bottom-end"
+                                triggerSelector="#more-authors-button"
+                            >
+                                <table style={{lineHeight: 1.5}}>
+                                    <tbody>
+                                        {
+                                            authors.map(({userId, roleId}) => (
+                                                <tr key={userId}>
+                                                    <td style={{paddingInlineEnd: 4, opacity: 0.6}}>
+                                                        {renderAuthorRole(roleId)}
+                                                    </td>
+                                                    <td>{renderUser(userId)}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            </Popover>
+                        </span>
+                    )
+                }
 
                 <span style={{marginInlineEnd: '1.2rem'}} />
             </React.Fragment>

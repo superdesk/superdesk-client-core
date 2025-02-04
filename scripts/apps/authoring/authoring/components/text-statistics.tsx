@@ -22,7 +22,11 @@ export class TextStatistics extends React.PureComponent<IProps> {
                     {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
                 </span>
 
-                <CharacterCount2 limit={this.props.limit} html={false} item={this.props.text} />
+                <CharacterCount2
+                    limit={this.props.limit}
+                    html={false}
+                    item={this.props.text}
+                />
 
                 <span className="char-count-base">{readingTime}</span>
             </Spacer>

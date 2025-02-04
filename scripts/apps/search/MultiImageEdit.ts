@@ -28,9 +28,23 @@ interface IScope extends ng.IScope {
     areSomeSelected: () => boolean;
 }
 
-MultiImageEditController.$inject = ['$scope', 'modal', 'notify', 'lock', 'session', 'content'];
+MultiImageEditController.$inject = [
+    '$scope',
+    'modal',
+    'notify',
+    'lock',
+    'session',
+    'content',
+];
 
-export function MultiImageEditController($scope: IScope, modal, notify, lock, session, content) {
+export function MultiImageEditController(
+    $scope: IScope,
+    modal,
+    notify,
+    lock,
+    session,
+    content,
+) {
     const saveHandler = $scope.saveHandler;
     let unsavedChangesExist = false;
 
@@ -133,30 +147,32 @@ export function MultiImageEditController($scope: IScope, modal, notify, lock, se
                     $scope.validator,
                     metadata,
                     content.schema({}, 'picture'),
-                    getLabelForFieldId,
-                );
+                    getLabelForFieldId);
             });
         } catch (e) {
             notify.error(e);
             return;
         }
 
-        saveHandler(imagesForSaving).then((res: any) => {
-            if (res != null) {
-                $scope.images = angular.copy(Array.isArray(res) && res.length > 0 ? res : [res]);
-            }
-            unsavedChangesExist = false;
+        saveHandler(imagesForSaving)
+            .then((res: any) => {
+                if (res != null) {
+                    $scope.images = angular.copy(Array.isArray(res) && res.length > 0 ? res : [res]);
+                }
+                unsavedChangesExist = false;
 
-            if (close && typeof $scope.successHandler === 'function') {
-                unlockAndCloseModal($scope.successHandler);
-            }
-        });
+                if (close && typeof $scope.successHandler === 'function') {
+                    unlockAndCloseModal($scope.successHandler);
+                }
+            });
     };
 
     $scope.close = () => {
         if ($scope.isDirty()) {
-            modal
-                .confirm(gettext('You have unsaved changes, do you want to continue?'), gettext('Confirm'))
+            modal.confirm(
+                gettext('You have unsaved changes, do you want to continue?'),
+                gettext('Confirm'),
+            )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
                         unlockAndCloseModal($scope.cancelHandler);
@@ -179,9 +195,10 @@ export function MultiImageEditController($scope: IScope, modal, notify, lock, se
             const unlockedItem = imagesOriginal.find((image) => image._id === data.item);
 
             notify.error(
-                gettext('Item {{headline}} unlocked by another user.', {
-                    headline: unlockedItem.headline || unlockedItem.slugline,
-                }),
+                gettext(
+                    'Item {{headline}} unlocked by another user.',
+                    {headline: unlockedItem.headline || unlockedItem.slugline},
+                ),
             );
             $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
             $scope.metadata = {};
@@ -233,12 +250,11 @@ export function MultiImageEditController($scope: IScope, modal, notify, lock, se
     function getUniqueValues(field: string) {
         const uniqueValues = {};
 
-        $scope
-            .getSelectedImages()
+        $scope.getSelectedImages()
             .map((item) => get(item, field))
             .filter((value) => value != null && value !== '')
             .map((value) => JSON.stringify(value))
-            .forEach((value) => (uniqueValues[value] = 1));
+            .forEach((value) => uniqueValues[value] = 1);
         return Object.keys(uniqueValues);
     }
 
@@ -322,11 +338,11 @@ export function MultiImageEditDirective(asset, $sce) {
         },
         controller: MultiImageEditController,
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
-        link: function (scope) {
+        link: function(scope) {
             scope.trustAsHtml = $sce.trustAsHtml;
             scope.metadataDirty = false;
 
-            scope.handleItemClick = function (event, image) {
+            scope.handleItemClick = function(event, image) {
                 if (event.target != null && event.target.classList.contains('icon-close-small')) {
                     scope.onRemoveItem(image);
                 } else {

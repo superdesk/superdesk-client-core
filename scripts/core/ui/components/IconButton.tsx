@@ -38,7 +38,10 @@ const IconButton: React.StatelessComponent<any> = ({
 
     return (
         <a
-            className={classNames({'icn-btn': useDefaultClass}, className)}
+            className={classNames(
+                {'icn-btn': useDefaultClass},
+                className,
+            )}
             onClick={onClick}
             onFocus={onFocus}
             tabIndex={tabIndex}

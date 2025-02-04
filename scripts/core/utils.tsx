@@ -14,7 +14,7 @@ import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
 
-export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {language: 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
+export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 
 const language = getUserInterfaceLanguage();
 const filename = `/languages/${language}.json?nocache=${Date.now()}`;
@@ -31,8 +31,8 @@ function applyTranslations(translations) {
 
 export function isMacOS() {
     if (
-        navigator.userAgent.toLowerCase().includes('macintosh') ||
-        navigator.userAgent.toLowerCase().includes('mac os')
+        navigator.userAgent.toLowerCase().includes('macintosh')
+        || navigator.userAgent.toLowerCase().includes('mac os')
     ) {
         return true;
     }
@@ -65,7 +65,12 @@ export const i18n = gettextjs();
 if (window.translations != null) {
     const lang = window.translations['']['language'];
 
-    i18n.setMessages('messages', lang, window.translations, window.translations['']['plural-forms']);
+    i18n.setMessages(
+        'messages',
+        lang,
+        window.translations,
+        window.translations['']['plural-forms'],
+    );
 
     i18n.setLocale(lang);
 }
@@ -84,27 +89,30 @@ export function arrayInsert<T>(array: Array<T>, item: T, index: number): Array<T
     return array.slice(0, index).concat(item).concat(array.slice(index, array.length));
 }
 
-export const promiseAllObject = (promises) =>
-    new Promise((resolve, reject) => {
-        const keys = Object.keys(promises);
-        const promisesArray = keys.map((key) => promises[key]);
+export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
+    const keys = Object.keys(promises);
+    const promisesArray = keys.map((key) => promises[key]);
 
-        return Promise.all(promisesArray)
-            .then((promiseAllResults) => {
-                const promiseResultsObject = keys.reduce((obj, key, i) => {
-                    obj[keys[i]] = promiseAllResults[i];
-                    return obj;
-                }, {});
+    return Promise.all(promisesArray)
+        .then((promiseAllResults) => {
+            const promiseResultsObject = keys.reduce((obj, key, i) => {
+                obj[keys[i]] = promiseAllResults[i];
+                return obj;
+            }, {});
 
-                resolve(promiseResultsObject);
-            })
-            .catch(reject);
-    });
+            resolve(promiseResultsObject);
+        })
+        .catch(reject);
+});
 
 export function getProjectedFieldsArticle(): Array<string> {
     const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
-    const uiFields = [...(uiConfig.priority ?? []), ...(uiConfig.firstLine ?? []), ...(uiConfig.secondLine ?? [])];
+    const uiFields = [
+        ...(uiConfig.priority ?? []),
+        ...(uiConfig.firstLine ?? []),
+        ...(uiConfig.secondLine ?? []),
+    ];
 
     const projectedFields: Set<string> = new Set();
 
@@ -137,7 +145,7 @@ const gettextReact = (
     text: string,
     params: {[placeholder: string]: string | number | React.ComponentType},
 ): Array<JSX.Element> => {
-    let matches: Array<{index: number; str: string; placeholder: string}> = [];
+    let matches: Array<{index: number, str: string, placeholder: string}> = [];
 
     for (const placeholder of Object.keys(params)) {
         /**
@@ -187,7 +195,10 @@ const gettextReact = (
 };
 
 // example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
-export const gettext = (text: string, params: {[placeholder: string]: string | number | React.ComponentType} = {}) => {
+export const gettext = (
+    text: string,
+    params: {[placeholder: string]: string | number | React.ComponentType} = {},
+) => {
     if (!text) {
         return '';
     }
@@ -253,32 +264,34 @@ export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: s
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 
-    return term.translations?.name?.[_language] ?? term.translations?.name?.[_language.replace('_', '-')] ?? term.name;
+    return term.translations?.name?.[_language]
+        ?? term.translations?.name?.[_language.replace('_', '-')]
+        ?? term.name;
 }
 
 export function translateArticleType(type: IArticle['type']) {
     switch (type) {
-        case 'audio':
-            return gettext('audio');
-        case 'composite':
-            return gettext('composite');
-        case 'graphic':
-            return gettext('graphic');
-        case 'picture':
-            return gettext('picture');
-        case 'preformatted':
-            return gettext('preformatted');
-        case 'text':
-            return gettext('text');
-        case 'video':
-            return gettext('video');
-        default:
-            assertNever(type);
+    case 'audio':
+        return gettext('audio');
+    case 'composite':
+        return gettext('composite');
+    case 'graphic':
+        return gettext('graphic');
+    case 'picture':
+        return gettext('picture');
+    case 'preformatted':
+        return gettext('preformatted');
+    case 'text':
+        return gettext('text');
+    case 'video':
+        return gettext('video');
+    default:
+        assertNever(type);
     }
 }
 
 type IUserFieldQuery = {
-    [field in keyof IUser]?: {$regex: string; $options: string};
+    [field in keyof IUser]?: {$regex: string, $options: string};
 };
 
 interface IMongoQuery {
@@ -330,15 +343,33 @@ export function getItemTypes() {
         {type: 'audio', label: gettext('audio')},
     ];
 
-    return item_types.filter((item) =>
-        appConfig.features.hideCreatePackage ? item.type !== 'composite' && item.type !== 'highlight-pack' : true,
-    );
+    return item_types.filter(
+        (item) => (
+            appConfig.features.hideCreatePackage ?
+                item.type !== 'composite' && item.type !== 'highlight-pack' :
+                true
+        ));
 }
 
-type IWeekday = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
+type IWeekday =
+    'sunday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday';
 
 export function getWeekDayIndex(weekday: IWeekday): number {
-    return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].indexOf(weekday);
+    return [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+    ].indexOf(weekday);
 }
 
 export function isElasticDateFormat(date: string) {
@@ -367,15 +398,9 @@ export function toQueryString(
         return '';
     }
 
-    return (
-        '?' +
-        Object.keys(params)
-            .map(
-                (key) =>
-                    `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
-            )
-            .join('&')
-    );
+    return '?' + Object.keys(params).map((key) =>
+        `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
+    ).join('&');
 }
 
 /**
@@ -420,7 +445,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
 }
 
 export function stripBaseRestApiFields<T extends {}>(entity: T): T {
-    type IKeys = {[P in keyof Required<IBaseRestApiResponse>]: 1};
+    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
 
     const keysObject: IKeys = {
         _updated: 1,
@@ -439,7 +464,7 @@ export function stripBaseRestApiFields<T extends {}>(entity: T): T {
 }
 
 export function stripLockingFields<T extends {}>(entity: T): T {
-    type IKeys = {[P in keyof Required<ILockInfo>]: 1};
+    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
 
     const keysObject: IKeys = {
         _lock: 1,

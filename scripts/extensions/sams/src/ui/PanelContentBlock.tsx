@@ -12,11 +12,19 @@ interface IProps {
 
 export class PanelContentBlock extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('side-panel__content-block', this.props.className, {
-            'side-panel__content-block--flex': this.props.flex,
-            [`side-panel__content-block--padding-${this.props.padding}`]: this.props.padding,
-        });
+        const classes = classNames(
+            'side-panel__content-block',
+            this.props.className,
+            {
+                'side-panel__content-block--flex': this.props.flex,
+                [`side-panel__content-block--padding-${this.props.padding}`]: this.props.padding,
+            },
+        );
 
-        return <div className={classes}>{this.props.children}</div>;
+        return (
+            <div className={classes}>
+                {this.props.children}
+            </div>
+        );
     }
 }

@@ -2,7 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
-import {ISpellcheckWarning, ISpellchecker, ISpellcheckerSuggestion} from './interfaces';
+import {
+    ISpellcheckWarning,
+    ISpellchecker,
+    ISpellcheckerSuggestion,
+} from './interfaces';
 import {gettext} from 'core/utils';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IReplaceWordData} from 'core/editor3/reducers/spellchecker';
@@ -47,7 +51,9 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         };
 
         if (this.props.acceptSuggestion === 'store-based') {
-            this.props.dispatch(actions.replaceWord(replaceWordData));
+            this.props.dispatch(
+                actions.replaceWord(replaceWordData),
+            );
         } else {
             this.props.acceptSuggestion(replaceWordData);
         }
@@ -60,13 +66,13 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         // If the message exists, and suggestion is whitespace suggestion
         // use message as the button text instead of the suggestion
         const messageExists = Boolean(message);
-        const whitespaceSuggestionExists =
-            suggestions.filter((suggestion) => suggestion.text.trim().length === 0).length > 0;
+        const whitespaceSuggestionExists = suggestions.filter(
+            (suggestion) => suggestion.text.trim().length === 0).length > 0;
 
         return (
             <div
                 className={'dropdown open suggestions-dropdown'}
-                ref={(el) => (this.dropdownElement = el)}
+                ref={(el) => this.dropdownElement = el}
                 style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
                 data-test-id="spellchecker-menu"
             >
@@ -77,51 +83,56 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                             <li className="dropdown__menu-divider" />
                         </React.Fragment>
                     )}
-                    <div className="form-label" style={{margin: '0 16px'}}>
-                        {gettext('Suggestions')}
-                    </div>
-                    {suggestions.length === 0 ? (
-                        <li>
-                            <button>{gettext('SORRY, NO SUGGESTIONS.')}</button>
-                        </li>
-                    ) : (
-                        suggestions.map((suggestion, index) => (
-                            <li key={index}>
-                                <button
-                                    onMouseDown={() => this.onSuggestionClick(suggestion)}
-                                    data-test-id="spellchecker-menu--suggestion"
-                                >
-                                    {suggestion.text.trim().length === 0 && messageExists ? message : suggestion.text}
-                                </button>
-                            </li>
-                        ))
-                    )}
-                    {Object.keys(spellchecker.actions).length < 1 ? null : (
-                        <div>
-                            <li className="divider" />
-                            <div className="form-label" style={{margin: '0 16px'}}>
-                                {gettext('Actions')}
-                            </div>
-                            {Object.keys(spellchecker.actions).map((key, i) => {
-                                const action = spellchecker.actions[key];
+                    <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
+                    {
+                        suggestions.length === 0
+                            ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
+                            : suggestions.map((suggestion, index) => (
+                                <li key={index}>
+                                    <button
+                                        onMouseDown={() =>
+                                            this.onSuggestionClick(suggestion)
+                                        }
+                                        data-test-id="spellchecker-menu--suggestion"
+                                    >
+                                        {suggestion.text.trim().length === 0 && messageExists
+                                            ? message : suggestion.text}
+                                    </button>
+                                </li>
+                            ),
+                            )
+                    }
+                    {
+                        Object.keys(spellchecker.actions).length < 1 ? null : (
+                            <div>
+                                <li className="divider" />
+                                <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
+                                {
+                                    Object.keys(spellchecker.actions).map((key, i) => {
+                                        const action = spellchecker.actions[key];
 
-                                return (
-                                    <li key={i}>
-                                        <button
-                                            onMouseDown={() => {
-                                                action.perform(this.props.warning).then(() => {
-                                                    dispatchInternalEvent('editor3SpellcheckerActionWasExecuted', null);
-                                                });
-                                            }}
-                                            data-test-id="spellchecker-menu--action"
-                                        >
-                                            {action.label}
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                        </div>
-                    )}
+                                        return (
+                                            <li key={i}>
+                                                <button
+                                                    onMouseDown={() => {
+                                                        action.perform(this.props.warning).then(() => {
+                                                            dispatchInternalEvent(
+                                                                'editor3SpellcheckerActionWasExecuted',
+                                                                null,
+                                                            );
+                                                        });
+                                                    }}
+                                                    data-test-id="spellchecker-menu--action"
+                                                >
+                                                    {action.label}
+                                                </button>
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </div>
+                        )
+                    }
                 </ul>
             </div>
         );

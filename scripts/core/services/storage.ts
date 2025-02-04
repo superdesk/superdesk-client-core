@@ -1,5 +1,4 @@
-angular
-    .module('superdesk.core.services.storage', [])
+angular.module('superdesk.core.services.storage', [])
     /**
      * @ngdoc service
      * @module superdesk.core.services
@@ -10,7 +9,7 @@ angular
      *
      * it stores data as json to keep its type
      */
-    .service('storage', function () {
+    .service('storage', function() {
         /**
          * @ngdoc method
          * @name storage#getItem
@@ -21,7 +20,7 @@ angular
          *
          * @description Get item from storage
          */
-        this.getItem = function (key) {
+        this.getItem = function(key) {
             return angular.fromJson(localStorage.getItem(key));
         };
 
@@ -35,7 +34,7 @@ angular
          *
          * @description Set storage item
          */
-        this.setItem = function (key, data) {
+        this.setItem = function(key, data) {
             localStorage.setItem(key, angular.toJson(data));
         };
 
@@ -48,7 +47,7 @@ angular
          *
          * @description Remove item from storage.
          */
-        this.removeItem = function (key) {
+        this.removeItem = function(key) {
             localStorage.removeItem(key);
         };
 
@@ -59,7 +58,7 @@ angular
          *
          * @description Remove all items from storage.
          */
-        this.clear = function () {
+        this.clear = function() {
             localStorage.clear();
         };
     });

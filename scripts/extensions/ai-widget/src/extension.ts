@@ -10,7 +10,7 @@ const extension: IExtension = {
         const hasConfiguredServices = Object.keys(configuration).length > 0;
 
         if (hasConfiguredServices === false) {
-            superdesk.ui.notify.error("You haven't registered any services for the Ai Assistant Widget!", 5000);
+            superdesk.ui.notify.error('You haven\'t registered any services for the Ai Assistant Widget!', 5000);
             return Promise.resolve({});
         }
 
@@ -37,22 +37,17 @@ const extension: IExtension = {
 
         const result: IExtensionActivationResult = {
             contributions: {
-                authoringSideWidgets: [
-                    {
-                        _id: AI_WIDGET_ID,
-                        component: AiAssistantWidget,
-                        icon: 'open-ai',
-                        label: superdesk.localization.gettext('Ai Assistant'),
-                        order: 2,
-                    },
-                ],
+                authoringSideWidgets: [{
+                    _id: AI_WIDGET_ID,
+                    component: AiAssistantWidget,
+                    icon: 'open-ai',
+                    label: superdesk.localization.gettext('Ai Assistant'),
+                    order: 2,
+                }],
                 entities: {
-                    article:
-                        configuration.translations?.translateActionIntegration === true
-                            ? {
-                                  onTranslateAfter: onTranslateAfterIntegration,
-                              }
-                            : {},
+                    article: configuration.translations?.translateActionIntegration === true ? {
+                        onTranslateAfter: onTranslateAfterIntegration,
+                    } : {},
                 },
             },
         };

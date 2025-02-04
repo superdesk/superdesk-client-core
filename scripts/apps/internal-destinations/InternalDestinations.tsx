@@ -86,11 +86,13 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
                 <ListItemColumn ellipsisAndGrow noBorder>
                     {getFormFieldPreviewComponent(item, getNameField())}
                 </ListItemColumn>
-                {item.is_active ? null : (
-                    <ListItemColumn noBorder>
-                        <span className="label label--hollow label--alert">{gettext('Inactive')}</span>
-                    </ListItemColumn>
-                )}
+                {
+                    item.is_active ? null : (
+                        <ListItemColumn noBorder>
+                            <span className="label label--hollow label--alert">{gettext('Inactive')}</span>
+                        </ListItemColumn>
+                    )
+                }
                 <ListItemActionsMenu>
                     <div style={{display: 'flex'}}>
                         <button
@@ -138,11 +140,12 @@ export class InternalDestinations extends React.Component {
             ],
         };
 
-        const InternalDestinationsPageComponent = getGenericHttpEntityListPageComponent<IInternalDestination, never>(
-            'internal_destinations',
-            formConfig,
-            {field: 'name', direction: 'ascending'},
-        );
+        const InternalDestinationsPageComponent =
+            getGenericHttpEntityListPageComponent<IInternalDestination, never>(
+                'internal_destinations',
+                formConfig,
+                {field: 'name', direction: 'ascending'},
+            );
 
         return (
             <InternalDestinationsPageComponent

@@ -21,27 +21,27 @@ export function isUploadValid(files: Array<File>, readOnly: boolean, currentAtta
     if (files.length === 0 || readOnly) {
         return false;
     } else if (files.length + currentAttachments.length >= appConfig.attachments_max_files) {
-        notify.error(
-            gettextPlural(
-                appConfig.attachments_max_files,
-                'Too many files selected. Only 1 file is allowed',
-                'Too many files selected. Only {{count}} files are allowed',
-                {count: appConfig.attachments_max_files},
-            ),
-        );
+        notify.error(gettextPlural(
+            appConfig.attachments_max_files,
+            'Too many files selected. Only 1 file is allowed',
+            'Too many files selected. Only {{count}} files are allowed',
+            {count: appConfig.attachments_max_files},
+        ));
 
         return false;
     }
 
-    const filenames = files.filter((file) => file.size > appConfig.attachments_max_size).map((file) => file.name);
+    const filenames = files.filter((file) => file.size > appConfig.attachments_max_size)
+        .map((file) => file.name);
 
     if (filenames.length > 0) {
-        notify.error(
-            gettext('Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}})', {
+        notify.error(gettext(
+            'Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}})',
+            {
                 filenames: filenames.join(', '),
                 limit: filesize(appConfig.attachments_max_size),
-            }),
-        );
+            },
+        ));
         return false;
     }
 
@@ -50,12 +50,14 @@ export function isUploadValid(files: Array<File>, readOnly: boolean, currentAtta
 
 export class AttachmentsWidget extends React.PureComponent<IProps> {
     render() {
-        const Widget =
-            CC.AuthoringAttachmentsWidget != null ? CC.AuthoringAttachmentsWidget : AttachmentsWidgetComponent;
+        const Widget = CC.AuthoringAttachmentsWidget != null ?
+            CC.AuthoringAttachmentsWidget :
+            AttachmentsWidgetComponent;
 
-        const editable =
-            this.props.readOnly !== true &&
-            (sdApi.article.isLocked(this.props.item) !== true || isArticleLockedInCurrentSession(this.props.item));
+        const editable = this.props.readOnly !== true && (
+            sdApi.article.isLocked(this.props.item) !== true
+            || isArticleLockedInCurrentSession(this.props.item)
+        );
 
         const readOnly = editable !== true;
 

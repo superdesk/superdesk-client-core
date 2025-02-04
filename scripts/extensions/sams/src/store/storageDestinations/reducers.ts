@@ -1,5 +1,9 @@
 // Types
-import {IStorageDestinationActionTypes, IStorageDestinationState, RECEIVE} from './types';
+import {
+    IStorageDestinationActionTypes,
+    IStorageDestinationState,
+    RECEIVE,
+} from './types';
 
 const initialState: IStorageDestinationState = {
     destinations: [],
@@ -10,12 +14,12 @@ export function storageDestinationReducer(
     action: IStorageDestinationActionTypes,
 ): IStorageDestinationState {
     switch (action.type) {
-        case RECEIVE:
-            return {
-                ...state,
-                destinations: action.payload,
-            };
-        default:
-            return state;
+    case RECEIVE:
+        return {
+            ...state,
+            destinations: action.payload,
+        };
+    default:
+        return state;
     }
 }

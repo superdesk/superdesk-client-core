@@ -59,15 +59,15 @@
             inset-inline-end: 0;
             inset-block-end: 0;
             overflow-y: auto;
-            @include transition(all 0.3s);
+            @include transition(all .3s);
             @include border-box();
-            padding: 0 !important;
+            padding: 0!important;
             &.monitoring__content {
                 display: flex;
                 flex-direction: column;
             }
             .list {
-                padding-block-start: 9px;
+                padding-block-start: 9px
             }
             .stage {
                 padding: 0;
@@ -88,8 +88,7 @@
                     box-shadow: 0 0 10px 0 hsla(0, 0%, 0%, 0.32);
                     outline: 1px solid var(--sd-colour-line--strong);
                 }
-                .compact-view,
-                .mlist-view {
+                .compact-view, .mlist-view {
                     box-shadow: none;
                 }
                 &.refresh {
@@ -146,7 +145,7 @@
             inset-inline-end: 0;
             inset-block-end: 0;
             width: $sidepreview-width + 160;
-            @media only screen and (max-width: 1430px) {
+            @media only screen and (max-width : 1430px) {
                 width: $sidepreview-width - 40;
             }
             .shift-preview__toggle {
@@ -156,10 +155,11 @@
         &.with-preview {
             .sd-preview-panel {
                 width: $sidepreview-width + 160;
-                @media only screen and (max-width: 1430px) {
+                @media only screen and (max-width : 1430px) {
                     width: $sidepreview-width - 40;
                 }
                 flex-shrink: 0;
+
             }
             [sd-item-preview] {
                 position: relative;
@@ -171,7 +171,7 @@
                     position: absolute;
                     overflow: visible;
                     inset-block-start: 9.6rem;
-                    inset-inline-end: 0;
+                    inset-inline-end:0;
                     inset-block-end: 0;
                     width: 0;
                     z-index: 3;
@@ -180,15 +180,10 @@
                         transition: all ease-in-out 0.2s;
                         overflow-y: visible !important;
                         inset-inline-end: 80 - $sidepreview-width - 4;
-                        box-shadow:
-                            inset 3px 0 2px -1px rgba(0, 0, 0, 0.12),
-                            2px 0 8px 0 rgba(0, 0, 0, 0.3),
-                            0 0 2px 0 rgba(0, 0, 0, 0.12);
+                        box-shadow: inset 3px 0 2px -1px rgba(0, 0, 0, 0.12), 2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
                         &.shift {
-                            inset-inline-end: 0;
-                            box-shadow:
-                                -2px 0 8px 0 rgba(0, 0, 0, 0.3),
-                                0 0 2px 0 rgba(0, 0, 0, 0.12);
+                            inset-inline-end:0;
+                            box-shadow: -2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
                         }
                         .shift-preview__toggle {
                             display: inline-block;
@@ -200,11 +195,12 @@
                 .content-list {
                     overflow-y: visible;
                 }
+
             }
         }
         &.search-page-container {
             .content-item-preview {
-                inset-block-start: $nav-height;
+            inset-block-start: $nav-height;
             }
         }
         &.search {
@@ -217,6 +213,7 @@
                     opacity: 1;
                 }
             }
+
         }
     }
 }
@@ -231,23 +228,17 @@
     inset-inline-end: -24px;
     border: 0;
     line-height: 0;
-    opacity: 0.65;
+    opacity: .65;
     background-color: $white;
     @include border-radius(0 2px 2px 0);
-    box-shadow:
-        0 0 2px 0 rgba(0, 0, 0, 0.2),
-        2px 0 10px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2), 2px 0 10px 0 rgba(0, 0, 0, 0.3);
 
-    i {
-        height: 15px;
-    }
+    i { height: 15px; }
 
     &:hover {
         opacity: 1;
         background-color: $sd-blue;
-        i {
-            color: $white;
-        }
+        i { color: $white; }
     }
     &.shift {
         inset-block-start: 1px;
@@ -261,21 +252,21 @@
     .main-section {
         .content-item-preview {
             width: $sidepreview-width;
-            @media only screen and (max-width: 1630px) {
+            @media only screen and (max-width : 1630px) {
                 width: $sidepreview-width - 40;
             }
         }
         &.with-preview {
             .sd-preview-panel {
                 width: $sidepreview-width;
-                @media only screen and (max-width: 1630px) {
+                @media only screen and (max-width : 1630px) {
                     width: $sidepreview-width - 40;
                 }
             }
             .navbtn {
                 &.btnRearrange {
                     width: 80px !important;
-                    @media only screen and (max-width: 1430px) {
+                    @media only screen and (max-width : 1430px) {
                         display: none !important;
                     }
                 }
@@ -301,8 +292,7 @@
 .sd-kanban-list {
     overflow: auto;
 
-    .fix-stage {
-        // there should be no div for .stage, but it's needed for list view
+    .fix-stage { // there should be no div for .stage, but it's needed for list view
         flex: 1 1 0;
     }
 }
@@ -362,9 +352,7 @@
             white-space: nowrap;
         }
 
-        .headline,
-        .desk,
-        .stage {
+        .headline, .desk, .stage {
             color: #686b6c;
         }
 
@@ -414,6 +402,6 @@
 }
 .navbtn.navbtn--text-only {
     &.navbtn--padding-s {
-        padding: 0 0.4rem;
+        padding: 0 0.4rem
     }
 }

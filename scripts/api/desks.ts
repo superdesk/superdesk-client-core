@@ -59,7 +59,7 @@ interface IDesksApi {
     getCurrentDeskId(): IDesk['_id'] | null;
     waitTilReady(): Promise<void>;
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
-    getDeskById(id: IDesk['_id']): IDesk;
+    getDeskById(id: IDesk['_id']): IDesk ;
     getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
     getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
     getDeskMembers(deskId: IDesk['_id']): Array<IUser>; // members of the desk

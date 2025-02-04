@@ -7,7 +7,14 @@ import {Checkbox, Label, LineInput} from '.';
  * @name RadioButtonInput
  * @description Component to show radio-button
  */
-export const RadioButtonInput: React.StatelessComponent<any> = ({field, value, onChange, label, options, readOnly}) => (
+export const RadioButtonInput: React.StatelessComponent<any> = ({
+    field,
+    value,
+    onChange,
+    label,
+    options,
+    readOnly,
+}) => (
     <LineInput>
         <Label text={label} />
         <div className="flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2">
@@ -23,7 +30,8 @@ export const RadioButtonInput: React.StatelessComponent<any> = ({field, value, o
                     labelPosition="inside"
                     readOnly={readOnly}
                 />
-            ))}
+            ),
+            )}
         </div>
     </LineInput>
 );

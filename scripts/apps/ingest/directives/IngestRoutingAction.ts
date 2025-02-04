@@ -10,7 +10,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
             updateRule: '=',
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-action.html',
-        link: function (scope) {
+        link: function(scope) {
             scope.newFetch = {};
             scope.newPublish = {};
             scope.deskLookup = {};
@@ -19,10 +19,11 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
             scope.customSubscribers = [];
             scope.target_types = [];
 
-            desks.initialize().then(() => {
-                scope.deskLookup = desks.deskLookup;
-                scope.stageLookup = desks.stageLookup;
-            });
+            desks.initialize()
+                .then(() => {
+                    scope.deskLookup = desks.deskLookup;
+                    scope.stageLookup = desks.stageLookup;
+                });
 
             macros.get(true).then((_macros) => {
                 _.transform(_macros, (lookup, macro: any, idx) => {
@@ -37,20 +38,20 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
                 });
             });
 
-            metadata.initialize().then(() => {
-                scope.target_types = metadata.values.subscriberTypes;
-            });
+            metadata.initialize()
+                .then(() => {
+                    scope.target_types = metadata.values.subscriberTypes;
+                });
 
-            scope.getActionString = function (action) {
+            scope.getActionString = function(action) {
                 if (scope.deskLookup[action.desk] && scope.stageLookup[action.stage]) {
                     var actionValues = [];
 
                     actionValues.push(scope.deskLookup[action.desk].name);
                     actionValues.push(scope.stageLookup[action.stage].name);
                     if (action.macro) {
-                        actionValues.push(
-                            scope.macroLookup[action.macro].label || scope.macroLookup[action.macro].name,
-                        );
+                        actionValues.push(scope.macroLookup[action.macro].label ||
+                            scope.macroLookup[action.macro].name);
                     } else {
                         actionValues.push(' - ');
                     }
@@ -72,18 +73,18 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
                 }
             };
 
-            scope.addFetch = function () {
+            scope.addFetch = function() {
                 if (scope.newFetch.desk && scope.newFetch.stage) {
                     scope.rule.actions.fetch.push(scope.newFetch);
                     scope.newFetch = {};
                 }
             };
 
-            scope.removeFetch = function (fetchAction) {
+            scope.removeFetch = function(fetchAction) {
                 _.remove(scope.rule.actions.fetch, (f) => f === fetchAction);
             };
 
-            scope.addPublish = function () {
+            scope.addPublish = function() {
                 if (scope.newPublish.desk && scope.newPublish.stage) {
                     scope.rule.actions.publish.push(scope.newPublish);
                     scope.newPublish = {};
@@ -92,7 +93,7 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
                 }
             };
 
-            scope.removePublish = function (publishAction) {
+            scope.removePublish = function(publishAction) {
                 _.remove(scope.rule.actions.publish, (p) => p === publishAction);
             };
         },

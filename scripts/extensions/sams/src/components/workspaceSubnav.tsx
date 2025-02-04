@@ -71,7 +71,10 @@ interface IProps {
     toggleFilterPanel(): void;
     toggleListStyle(): void;
     closeMultiActionBar(): void;
-    updateAssetSearchParamsAndListItems(params: Partial<IAssetSearchParams>, listAction: LIST_ACTION): void;
+    updateAssetSearchParamsAndListItems(
+        params: Partial<IAssetSearchParams>,
+        listAction: LIST_ACTION,
+    ): void;
     deleteMultipleAssets(): void;
 }
 
@@ -96,7 +99,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch<any>(toggleAssetListStyle());
     },
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) => {
-        dispatch<any>(updateAssetSearchParamsAndListItems(params, listAction));
+        dispatch<any>(
+            updateAssetSearchParamsAndListItems(
+                params,
+                listAction,
+            ),
+        );
     },
     closeMultiActionBar: () => dispatch(closeMultiActionBar()),
     deleteMultipleAssets: () => dispatch<any>(deleteAssets()),
@@ -135,99 +143,109 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
             });
         }
 
-        return actions.length === 0
-            ? []
-            : [
-                  {
-                      type: 'group',
-                      label: gettext('Actions'),
-                      items: ['divider', ...actions],
-                  },
-              ];
+        return actions.length === 0 ?
+            [] :
+            [{
+                type: 'group',
+                label: gettext('Actions'),
+                items: [
+                    'divider',
+                    ...actions,
+                ],
+            }];
     }
 
     getSortFieldOptions(): Array<IMenuGroup> {
         const {gettext} = superdeskApi.localization;
 
-        return [
-            {
-                type: 'group',
-                label: gettext('Sort By'),
-                items: [
-                    {
-                        label: gettext('Name'),
-                        onSelect: () => this.setSortField(ASSET_SORT_FIELD.NAME),
-                    },
-                    {
-                        label: gettext('Filename'),
-                        onSelect: () => this.setSortField(ASSET_SORT_FIELD.FILENAME),
-                    },
-                    {
-                        label: gettext('Created'),
-                        onSelect: () => this.setSortField(ASSET_SORT_FIELD.CREATED),
-                    },
-                    {
-                        label: gettext('Updated'),
-                        onSelect: () => this.setSortField(ASSET_SORT_FIELD.UPDATED),
-                    },
-                    {
-                        label: gettext('Size'),
-                        onSelect: () => this.setSortField(ASSET_SORT_FIELD.SIZE),
-                    },
-                ],
-            },
-        ];
+        return [{
+            type: 'group',
+            label: gettext('Sort By'),
+            items: [{
+                label: gettext('Name'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.NAME),
+            }, {
+                label: gettext('Filename'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.FILENAME),
+            }, {
+                label: gettext('Created'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.CREATED),
+            }, {
+                label: gettext('Updated'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.UPDATED),
+            }, {
+                label: gettext('Size'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.SIZE),
+            }],
+        }];
     }
 
     getMenuItems(): Array<IMenuGroup> {
         const {gettext} = superdeskApi.localization;
-        const filterActiveSets = (set: ISetItem) => this.props.availableSetIds.includes(set._id);
+        const filterActiveSets = (set: ISetItem) => (
+            this.props.availableSetIds.includes(set._id)
+        );
 
-        const activeSets = this.props.activeSets.filter(filterActiveSets).map((set) => ({
-            label: set.name,
-            onSelect: () => this.setSearchParamSetId(set._id),
-        }));
+        const activeSets = this.props.activeSets
+            .filter(filterActiveSets)
+            .map((set) => ({
+                label: set.name,
+                onSelect: () => this.setSearchParamSetId(set._id),
+            }));
 
-        const disabledSets = this.props.disabledSets.filter(filterActiveSets).map((set) => ({
-            label: set.name + ' ' + gettext('(disabled)'),
-            icon: 'lock',
-            onSelect: () => this.setSearchParamSetId(set._id),
-        }));
+        const disabledSets = this.props.disabledSets
+            .filter(filterActiveSets)
+            .map((set) => ({
+                label: set.name + ' ' + gettext('(disabled)'),
+                icon: 'lock',
+                onSelect: () => this.setSearchParamSetId(set._id),
+            }));
 
-        return [
-            {
-                type: 'group',
-                label: gettext('Sets'),
-                items: [
-                    'divider',
-                    {
-                        label: gettext('All Sets'),
-                        onSelect: () => this.setSearchParamSetId(),
-                    },
-                    ...activeSets,
-                    ...disabledSets,
-                ],
-            },
-        ];
+        return [{
+            type: 'group',
+            label: gettext('Sets'),
+            items: [
+                'divider',
+                {
+                    label: gettext('All Sets'),
+                    onSelect: () => this.setSearchParamSetId(),
+                },
+                ...activeSets,
+                ...disabledSets,
+            ],
+        }];
     }
 
     toggleSortOrder() {
-        const sortOrder =
-            this.props.searchParams.sortOrder === SORT_ORDER.ASCENDING ? SORT_ORDER.DESCENDING : SORT_ORDER.ASCENDING;
+        const sortOrder = this.props.searchParams.sortOrder === SORT_ORDER.ASCENDING ?
+            SORT_ORDER.DESCENDING :
+            SORT_ORDER.ASCENDING;
 
-        this.props.updateAssetSearchParamsAndListItems({sortOrder: sortOrder}, LIST_ACTION.REPLACE);
+        this.props.updateAssetSearchParamsAndListItems(
+            {sortOrder: sortOrder},
+            LIST_ACTION.REPLACE,
+        );
     }
 
     setSortField(field: ASSET_SORT_FIELD) {
-        this.props.updateAssetSearchParamsAndListItems({sortField: field}, LIST_ACTION.REPLACE);
+        this.props.updateAssetSearchParamsAndListItems(
+            {sortField: field},
+            LIST_ACTION.REPLACE,
+        );
     }
 
     setSearchParamSetId(setId?: string) {
-        this.props.updateAssetSearchParamsAndListItems({setId: setId}, LIST_ACTION.REPLACE);
+        this.props.updateAssetSearchParamsAndListItems(
+            {setId: setId},
+            LIST_ACTION.REPLACE,
+        );
     }
 
     setSearchParamText(searchText?: string) {
-        this.props.updateAssetSearchParamsAndListItems({textSearch: searchText}, LIST_ACTION.REPLACE);
+        this.props.updateAssetSearchParamsAndListItems(
+            {textSearch: searchText},
+            LIST_ACTION.REPLACE,
+        );
     }
 
     onDownloadMultipleAssetsCompressedBinary(): void {
@@ -253,13 +271,16 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
 
         return (
             <React.Fragment>
-                {this.props.selectedAssetIds?.length !== 0 ? (
+                {(this.props.selectedAssetIds?.length !== 0) ? (
                     <SubNav>
                         <div className="multi-action-bar">
                             <button className="toggle" onClick={this.props.closeMultiActionBar}>
                                 <i className="icon-chevron-up-thin" />
                             </button>
-                            <button className="btn" onClick={this.props.closeMultiActionBar}>
+                            <button
+                                className="btn"
+                                onClick={this.props.closeMultiActionBar}
+                            >
                                 {gettext('cancel')}
                             </button>
                             <span id="multi-select-count">
@@ -271,18 +292,23 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 )}
                             </span>
                             <div className="pull-right">
-                                {getBulkActions(this.props.selectedAssets, [
-                                    {
-                                        action: ASSET_ACTIONS.DELETE,
-                                        onSelect: this.onDeleteMultipleAssets,
-                                    },
-                                    {
-                                        action: ASSET_ACTIONS.DOWNLOAD,
-                                        onSelect: this.onDownloadMultipleAssetsCompressedBinary,
-                                    },
-                                ]).map((action) => (
-                                    <Tooltip key={action.id} text={action.label} flow="down">
-                                        <NavButton icon={action.icon} text={action.label} onClick={action.onSelect} />
+                                {getBulkActions(this.props.selectedAssets, [{
+                                    action: ASSET_ACTIONS.DELETE,
+                                    onSelect: this.onDeleteMultipleAssets,
+                                }, {
+                                    action: ASSET_ACTIONS.DOWNLOAD,
+                                    onSelect: this.onDownloadMultipleAssetsCompressedBinary,
+                                }]).map((action) => (
+                                    <Tooltip
+                                        key={action.id}
+                                        text={action.label}
+                                        flow="down"
+                                    >
+                                        <NavButton
+                                            icon={action.icon}
+                                            text={action.label}
+                                            onClick={action.onSelect}
+                                        />
                                     </Tooltip>
                                 ))}
                             </div>
@@ -297,8 +323,12 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                     data-sd-tooltip={gettext('Change Set filter')}
                                     data-flow="right"
                                 >
-                                    {!buttonIcon ? null : <i className={`icon-${buttonIcon}`} />}
-                                    <span className="sd-navbtn__text">{buttonLabel}</span>
+                                    {!buttonIcon ? null : (
+                                        <i className={`icon-${buttonIcon}`} />
+                                    )}
+                                    <span className="sd-navbtn__text">
+                                        {buttonLabel}
+                                    </span>
                                 </button>
                             </Dropdown>
                         </ButtonGroup>
@@ -310,18 +340,24 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                             initialValue={this.props.searchParams.textSearch}
                         />
                         <ButtonGroup align="end">
-                            {this.subNavMenuActions.length === 0 ? null : (
-                                <Dropdown items={this.subNavMenuActions}>
-                                    <button
-                                        className="sd-navbtn"
-                                        data-sd-tooltip={gettext('Manage SAMS')}
-                                        data-flow="down"
-                                    >
-                                        <i className="icon-dots-vertical" />
-                                    </button>
-                                </Dropdown>
-                            )}
-                            <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
+                            {this.subNavMenuActions.length === 0 ?
+                                null :
+                                (
+                                    <Dropdown items={this.subNavMenuActions}>
+                                        <button
+                                            className="sd-navbtn"
+                                            data-sd-tooltip={gettext('Manage SAMS')}
+                                            data-flow="down"
+                                        >
+                                            <i className="icon-dots-vertical" />
+                                        </button>
+                                    </Dropdown>
+                                )
+                            }
+                            <Tooltip
+                                text={gettext('Upload New Asset(s)')}
+                                flow="left"
+                            >
                                 <Button
                                     type="primary"
                                     icon="upload"
@@ -336,11 +372,17 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                 )}
                 <SubNav>
                     <ButtonGroup align="inline">
-                        <Tooltip text={gettext('Toggle filters')} flow="right">
+                        <Tooltip
+                            text={gettext('Toggle filters')}
+                            flow="right"
+                        >
                             <NavButton
                                 icon="filter-large"
                                 onClick={this.props.toggleFilterPanel}
-                                type={this.props.filterPanelOpen === true ? 'primary' : 'default'}
+                                type={this.props.filterPanelOpen === true ?
+                                    'primary' :
+                                    'default'
+                                }
                             />
                         </Tooltip>
                     </ButtonGroup>
@@ -349,30 +391,38 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                         <SubNavSpacer noMargin={true} />
                         <ContentBar>
                             <Tooltip
-                                text={gettext('Total Assets: {{ total }}', {total: this.props.totalAssets})}
+                                text={gettext(
+                                    'Total Assets: {{ total }}',
+                                    {total: this.props.totalAssets},
+                                )}
                                 flow="down"
                             >
                                 <span className="sd-margin-end--1">
-                                    <span className="sd-margin-end--1">{gettext('Total:')}</span>
+                                    <span className="sd-margin-end--1">
+                                        {gettext('Total:')}
+                                    </span>
                                     <Badge text={numberToString(this.props.totalAssets)} />
                                 </span>
                             </Tooltip>
                             <Dropdown items={this.sortFieldOptions}>
                                 <button
                                     className="dropdown__toggle dropdown-toggle"
-                                    data-sd-tooltip={gettext('Sort by: {{ field }}', {field: sortFieldText})}
+                                    data-sd-tooltip={gettext(
+                                        'Sort by: {{ field }}',
+                                        {field: sortFieldText},
+                                    )}
                                     data-flow="down"
                                 >
                                     {sortFieldText}
                                     <span className="dropdown__caret" />
                                 </button>
+
                             </Dropdown>
                             <Tooltip
                                 key={this.props.searchParams.sortOrder}
-                                text={
-                                    this.props.searchParams.sortOrder === 'ascending'
-                                        ? gettext('Sort order: Ascending')
-                                        : gettext('Sort order: Descending')
+                                text={this.props.searchParams.sortOrder === 'ascending' ?
+                                    gettext('Sort order: Ascending') :
+                                    gettext('Sort order: Descending')
                                 }
                                 flow="down"
                             >
@@ -385,15 +435,16 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                         </ContentBar>
                         <Tooltip
                             key={this.props.listStyle}
-                            text={
-                                this.props.listStyle === 'list'
-                                    ? gettext('Switch to grid view')
-                                    : gettext('Switch to list view')
-                            }
+                            text={this.props.listStyle === 'list' ?
+                                gettext('Switch to grid view') :
+                                gettext('Switch to list view')}
                             flow="left"
                         >
                             <NavButton
-                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ? 'list-view' : 'grid-view'}
+                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                    'list-view' :
+                                    'grid-view'
+                                }
                                 onClick={this.props.toggleListStyle}
                             />
                         </Tooltip>
@@ -404,4 +455,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     }
 }
 
-export const WorkspaceSubnav = connect(mapStateToProps, mapDispatchToProps)(WorkspaceSubnavComponent);
+export const WorkspaceSubnav = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(WorkspaceSubnavComponent);

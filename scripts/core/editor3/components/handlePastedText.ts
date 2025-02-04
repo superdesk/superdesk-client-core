@@ -30,8 +30,7 @@ function pasteContentFromOpenEditor(
     onChange: (e: EditorState) => void,
     editorFormat: Array<string>,
 ): DraftHandleValue {
-    if (html.includes(editorKey)) {
-        // comes from the same editor
+    if (html.includes(editorKey)) { // comes from the same editor
         return 'not-handled';
     }
 
@@ -64,10 +63,7 @@ function pasteContentFromOpenEditor(
 // preserve line breaks when pasting or forcing plain text
 // \r are important for draft convertFromHTML to preserve initial spaces on each line
 export const createHtmlFromText = (text: string): string =>
-    escapeHtml(text)
-        .split('\n')
-        .map((line) => `<p>${line}</p>`)
-        .join('');
+    escapeHtml(text).split('\n').map((line) => `<p>${line}</p>`).join('');
 
 /**
  * @ngdoc method
@@ -97,10 +93,8 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
     }
 
     if (suggestingMode) {
-        if (
-            !Suggestions.allowEditSuggestionOnLeft(editorState, author) &&
-            !Suggestions.allowEditSuggestionOnRight(editorState, author)
-        ) {
+        if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+            && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
             return 'handled';
         }
 
@@ -110,7 +104,8 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
-    if (html && pasteContentFromOpenEditor(html, editorState, this.editorKey, onChange, editorFormat) === 'handled') {
+    if (html &&
+        pasteContentFromOpenEditor(html, editorState, this.editorKey, onChange, editorFormat) === 'handled') {
         return 'handled';
     }
 
@@ -124,14 +119,14 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
 export function insertContentInState(
     editorState: EditorState,
     pastedContent: ContentState,
-    editorFormat: Array<string>,
-): EditorState {
+    editorFormat: Array<string>): EditorState {
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
-    const acceptedInlineStyles = Object.keys(inlineStyles)
-        .filter((style) => editorFormat.includes(style))
-        .map((style) => inlineStyles[style]);
+    const acceptedInlineStyles =
+            Object.keys(inlineStyles)
+                .filter((style) => editorFormat.includes(style))
+                .map((style) => inlineStyles[style]);
 
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
@@ -142,10 +137,8 @@ export function insertContentInState(
         selection = contentState.getSelectionAfter();
     }
 
-    _pastedContent = sanitizeContent(
-        EditorState.createWithContent(_pastedContent),
-        acceptedInlineStyles,
-    ).getCurrentContent();
+    _pastedContent = sanitizeContent(EditorState.createWithContent(_pastedContent), acceptedInlineStyles)
+        .getCurrentContent();
 
     blockMap.forEach((block) => {
         if (!hasAtomicBlocks || block.getType() !== 'atomic') {
@@ -157,7 +150,9 @@ export function insertContentInState(
 
         contentState = contentState.addEntity(entity);
 
-        blocks = blocks.concat(atomicBlock(block.getData(), contentState.getLastCreatedEntityKey()));
+        blocks = blocks.concat(
+            atomicBlock(block.getData(), contentState.getLastCreatedEntityKey()),
+        );
     });
 
     if (hasAtomicBlocks) {
@@ -166,7 +161,7 @@ export function insertContentInState(
         blocks = blocks.concat(emptyBlock()); // add empty block to ensure writting afterwards
     }
 
-    const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => [b.getKey(), b]));
+    const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
     const customData = getAllCustomDataFromEditor(editorState);
 
     const newContent = Modifier.replaceWithFragment(
@@ -191,11 +186,14 @@ function processPastedHtml(
     html: string,
     editorState: EditorState,
     onChange: (e: EditorState) => void,
-    editorFormat: Array<string>,
-): DraftHandleValue {
+    editorFormat: Array<string>): DraftHandleValue {
     const pastedContent = getContentStateFromHtml(html);
 
-    const editorWithPastedText = insertContentInState(editorState, pastedContent, editorFormat);
+    const editorWithPastedText = insertContentInState(
+        editorState,
+        pastedContent,
+        editorFormat,
+    );
 
     onChange(editorWithPastedText);
 
@@ -203,20 +201,13 @@ function processPastedHtml(
 }
 
 // Returns an empty block.
-const emptyBlock = () =>
-    new ContentBlock({
-        key: genKey(),
-        type: 'unstyled',
-        text: '',
-        characterList: List(),
-    });
+const emptyBlock = () => new ContentBlock({
+    key: genKey(), type: 'unstyled', text: '', characterList: List(),
+});
 
 // Returns an atomic block with the given data, linked to the given entity key.
-const atomicBlock = (data, entity) =>
-    new ContentBlock({
-        key: genKey(),
-        type: 'atomic',
-        text: ' ',
-        characterList: List([CharacterMetadata.create({entity})]),
-        data: data,
-    });
+const atomicBlock = (data, entity) => new ContentBlock({
+    key: genKey(), type: 'atomic', text: ' ',
+    characterList: List([CharacterMetadata.create({entity})]),
+    data: data,
+});

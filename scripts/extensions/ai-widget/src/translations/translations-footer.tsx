@@ -27,16 +27,14 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
     }
 
     componentDidMount(): void {
-        superdesk
-            .httpRequestJsonLocal<IRestApiResponse<ITranslationLanguageWithLabel>>({
-                method: 'GET',
-                path: '/languages',
-            })
-            .then((response) => {
-                this.setState({
-                    languages: response._items,
-                });
+        superdesk.httpRequestJsonLocal<IRestApiResponse<ITranslationLanguageWithLabel>>({
+            method: 'GET',
+            path: '/languages',
+        }).then((response) => {
+            this.setState({
+                languages: response._items,
             });
+        });
     }
 
     render(): ReactNode {
@@ -47,7 +45,11 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
         const activeLanguageValue = availableLanguages.find((x) => x._id === activeLanguageId);
 
         if (Object.keys(availableLanguages ?? {}).length < 1) {
-            return <Text>{gettext('Languages are not available.')}</Text>;
+            return (
+                <Text>
+                    {gettext('Languages are not available.')}
+                </Text>
+            );
         }
 
         if (activeLanguageValue == null) {
@@ -73,7 +75,12 @@ export default class TranslationFooter extends React.Component<IProps, IState> {
                         fullWidth
                         required
                     />
-                    <Button expand onClick={generateTranslations} text={gettext('Translate')} style="hollow" />
+                    <Button
+                        expand
+                        onClick={generateTranslations}
+                        text={gettext('Translate')}
+                        style="hollow"
+                    />
                 </Spacer>
             </>
         );

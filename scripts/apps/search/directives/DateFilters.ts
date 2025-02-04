@@ -4,8 +4,8 @@ interface IDateRange {
     key: string;
     label: string;
     elasticSearchDateRange: {
-        lte?: string;
-        gte?: string;
+        lte?: string,
+        gte?: string,
     };
 }
 
@@ -134,7 +134,10 @@ export function mapPredefinedDateFiltersClientToServer(search) {
         if (predefinedFilter != null) {
             nextSearch = {
                 ...search,
-                ...elasticSearchDateRangeToFieldNames(predefinedFilter.elasticSearchDateRange, dateFilter.fieldname),
+                ...elasticSearchDateRangeToFieldNames(
+                    predefinedFilter.elasticSearchDateRange,
+                    dateFilter.fieldname,
+                ),
             };
 
             delete nextSearch[dateFilter.fieldname];

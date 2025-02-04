@@ -37,8 +37,8 @@ export class TimeInput extends React.Component<any, any> {
     }
 
     componentWillReceiveProps(nextProps) {
-        const val =
-            nextProps.value && moment.isMoment(nextProps.value) ? nextProps.value.format(this.props.timeFormat) : '';
+        const val = nextProps.value && moment.isMoment(nextProps.value) ?
+            nextProps.value.format(this.props.timeFormat) : '';
 
         this.setState({
             viewValue: val,
@@ -82,10 +82,10 @@ export class TimeInput extends React.Component<any, any> {
     }
 
     /**
-     * @ngdoc method
-     * @name TimeInput#handleInputBlur
-     * @description handleInputBlur resets view-value incase of invalid time input
-     */
+    * @ngdoc method
+    * @name TimeInput#handleInputBlur
+    * @description handleInputBlur resets view-value incase of invalid time input
+    */
     handleInputBlur() {
         if (this.state.invalid) {
             this.setState({
@@ -136,8 +136,9 @@ export class TimeInput extends React.Component<any, any> {
                         if (event.keyCode === KEYCODES.ENTER) {
                             this.setState({openTimePicker: true});
                         }
-                    }}
-                    refNode={(ref) => (this.dom.inputField = ref)}
+                    }
+                    }
+                    refNode={(ref) => this.dom.inputField = ref}
                 />
                 {this.state.openTimePicker && (
                     <TimeInputPopup
@@ -156,7 +157,10 @@ export class TimeInput extends React.Component<any, any> {
 TimeInput.propTypes = {
     field: PropTypes.string.isRequired,
     label: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(moment)]),
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(moment),
+    ]),
     onChange: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     timeFormat: PropTypes.string.isRequired,

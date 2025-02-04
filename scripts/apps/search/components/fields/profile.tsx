@@ -10,7 +10,9 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
         if (item.profile == null) {
             return [];
         } else {
-            return [{endpoint: endpoint, id: item.profile}];
+            return [
+                {endpoint: endpoint, id: item.profile},
+            ];
         }
     }
 
@@ -27,7 +29,11 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
             return null;
         }
 
-        return <div className="profile-label">{contentProfile.label}</div>;
+        return (
+            <div className="profile-label">
+                {contentProfile.label}
+            </div>
+        );
     }
 }
 

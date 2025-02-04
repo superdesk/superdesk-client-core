@@ -45,6 +45,7 @@ export class ArticleEmbed extends React.Component<IProps> {
                     <div dangerouslySetInnerHTML={{__html: item.body_html}} />
                 </div>
             </Card>
+
         );
     }
 }

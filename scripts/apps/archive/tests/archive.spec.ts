@@ -39,12 +39,8 @@ describe('content', () => {
 
             spyOn(preferencesService, 'update').and.returnValue(true);
 
-            desks.userDesks = {
-                _items: [
-                    {_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'},
-                    {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'},
-                ],
-            };
+            desks.userDesks = {_items: [{_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'},
+                {_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'}]};
             desks.setCurrentDeskId('2');
 
             item = {_id: '123'};
@@ -57,7 +53,7 @@ describe('content', () => {
             expect(item.task).not.toBeDefined();
         }));
 
-        it("can add an item to user's active desk", inject((archiveService, desks) => {
+        it('can add an item to user\'s active desk', inject((archiveService, desks) => {
             spyOn(desks, 'getCurrentDesk').and.returnValue({_id: '2', working_stage: '4'});
             archiveService.addTaskToArticle(item);
             expect(item.task.desk).toBe('2');
@@ -132,11 +128,8 @@ describe('content', () => {
 
             item._links = {_id: '123'};
             archiveService.getVersions(item, {}, 'versions');
-            expect(api.find).toHaveBeenCalledWith('archive', '123', {
-                version: 'all',
-                embedded: {user: 1},
-                max_results: 200,
-            });
+            expect(api.find).toHaveBeenCalledWith('archive', '123',
+                {version: 'all', embedded: {user: 1}, max_results: 200});
 
             item._type = 'legal_archive';
             item._links = {collection: {href: '/legal_archive'}};
@@ -158,10 +151,7 @@ describe('content', () => {
         }));
 
         it('can get list of items', inject((multi) => {
-            var items = [
-                {_id: 1, selected: true},
-                {_id: 2, selected: true},
-            ];
+            var items = [{_id: 1, selected: true}, {_id: 2, selected: true}];
 
             multi.toggle(items[0]);
             multi.toggle(items[1]);
@@ -214,16 +204,11 @@ describe('content', () => {
 
             $controller(DuplicateController, {data: data});
 
-            expect(api.save).toHaveBeenCalledWith(
-                'duplicate',
-                {},
-                {
-                    desk: 'sports',
-                    type: 'archive',
-                    item_id: 'foo',
-                },
-                data.item,
-            );
+            expect(api.save).toHaveBeenCalledWith('duplicate', {}, {
+                desk: 'sports',
+                type: 'archive',
+                item_id: 'foo',
+            }, data.item);
         }));
     });
 });

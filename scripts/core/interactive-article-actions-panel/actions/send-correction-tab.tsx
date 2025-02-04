@@ -23,16 +23,17 @@ export class SendCorrectionTab extends React.PureComponent<IProps> {
     }
 
     doSendCorrection(): void {
-        this.props
-            .handleUnsavedChanges()
+        this.props.handleUnsavedChanges()
             .then((item) => {
                 // Cloning to prevent objects from being modified by angular
-                ng.get('authoring')
-                    .publish(cloneDeep(item), cloneDeep(item), 'correct')
-                    .then(() => {
-                        ng.get('authoringWorkspace').close();
-                        notify.success('Correction sent');
-                    });
+                ng.get('authoring').publish(
+                    cloneDeep(item),
+                    cloneDeep(item),
+                    'correct',
+                ).then(() => {
+                    ng.get('authoringWorkspace').close();
+                    notify.success('Correction sent');
+                });
             })
             .catch(() => {
                 // cancelled by user
@@ -45,7 +46,9 @@ export class SendCorrectionTab extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
-                    <div>{gettext('No options available.')}</div>
+                    <div>
+                        {gettext('No options available.')}
+                    </div>
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>

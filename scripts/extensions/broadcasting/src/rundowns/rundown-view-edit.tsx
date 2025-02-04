@@ -14,7 +14,7 @@ import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
 export type IRundownAction =
-    | null
+    null
     | {mode: 'view'; id: string; fullWidth: boolean}
     | {mode: 'edit'; id: string; fullWidth: boolean};
 
@@ -95,7 +95,10 @@ function handleUnsavedRundownChanges(
     }
 }
 
-const sideWidgets = [superdesk.authoringGeneric.sideWidgets.inlineComments, commentsWidget];
+const sideWidgets = [
+    superdesk.authoringGeneric.sideWidgets.inlineComments,
+    commentsWidget,
+];
 
 const rundownValidator: CreateValidators<Partial<IRundown>> = {
     title: stringNotEmpty,
@@ -163,15 +166,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             throw new Error('invalid operation');
         }
 
-        this.setState(
-            {
-                rundownWithChanges: {
-                    ...rundownWithChanges,
-                    ...data,
-                },
+        this.setState({
+            rundownWithChanges: {
+                ...rundownWithChanges,
+                ...data,
             },
-            callback,
-        );
+        }, callback);
     }
 
     save(): void {
@@ -283,7 +283,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                  * Starting editing even if item can't be locked at the moment.
                  * There will be a button in the UI to force-unlock.
                  */
-                this.props.onRundownItemActionChange(prepareForEditing(this.props.rundownItemAction, id));
+                this.props.onRundownItemActionChange(
+                    prepareForEditing(this.props.rundownItemAction, id),
+                );
             });
         });
     }
@@ -319,9 +321,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketMessageListener('resource:updated', ({detail}) => {
                 if (
-                    detail.event === 'resource:updated' &&
-                    detail.extra.resource === 'rundowns' &&
-                    detail.extra._id === this.state.rundown?._id
+                    detail.event === 'resource:updated'
+                    && detail.extra.resource === 'rundowns'
+                    && detail.extra._id === this.state.rundown?._id
                 ) {
                     this.initializeData();
                 }
@@ -357,7 +359,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         );
 
         function getAvailableSideWidgets(item: IRundownItem) {
-            return sideWidgets.filter(({isAllowed}) => isAllowed(item));
+            return sideWidgets.filter(
+                ({isAllowed}) => isAllowed(
+                    item,
+                ),
+            );
         }
 
         return (
@@ -374,11 +380,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     style={{paddingInlineStart: 16}}
                                 >
                                     {
-                                        lockedInOtherSession ? (
-                                            <RundownLockInfo entity={rundown} endpoint={`/rundowns/${rundown._id}`} />
-                                        ) : (
-                                            <span />
-                                        ) // needed for spacer
+                                        lockedInOtherSession
+                                            ? (
+                                                <RundownLockInfo
+                                                    entity={rundown}
+                                                    endpoint={`/rundowns/${rundown._id}`}
+                                                />
+                                            )
+                                            : (<span />) // needed for spacer
                                     }
 
                                     <Spacer h gap="4" noGrow justifyContent="start" noWrap>
@@ -422,10 +431,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                         this.save();
                                                                     }
                                                                 }}
-                                                                disabled={isEqual(
-                                                                    this.state.rundown,
-                                                                    this.state.rundownWithChanges,
-                                                                )}
+                                                                disabled={
+                                                                    isEqual(
+                                                                        this.state.rundown,
+                                                                        this.state.rundownWithChanges,
+                                                                    )
+                                                                }
                                                                 type="primary"
                                                             />
                                                         </div>
@@ -457,7 +468,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 },
                                             ]}
                                         >
-                                            <MoreActionsButton aria-label={gettext('Actions')} onClick={noop} />
+                                            <MoreActionsButton
+                                                aria-label={gettext('Actions')}
+                                                onClick={noop}
+                                            />
                                         </Dropdown>
                                     </Spacer>
                                 </Spacer>
@@ -467,14 +481,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
                                 headerPadding={{top: 8}}
-                                authoringHeader={
+                                authoringHeader={(
                                     <AiringInfoBlock
                                         value={rundown}
                                         onChange={this.setRundownField}
                                         readOnly={editingDisallowed}
                                         validationErrors={validationErrors}
                                     />
-                                }
+                                )}
                                 headerCollapsed={true}
                             >
                                 <div>
@@ -527,7 +541,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     }}
                                                     onDelete={(_item) => {
                                                         this.setRundownField({
-                                                            items: rundown.items.filter(({_id}) => _id !== _item._id),
+                                                            items: rundown.items.filter(
+                                                                ({_id}) => _id !== _item._id,
+                                                            ),
                                                         });
                                                     }}
                                                     selectedItem={
@@ -546,196 +562,201 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         <Layout.RightPanel open={rundownItemAction != null}>
                             <Layout.Panel side="right" background="grey" size="xx-large">
                                 <Layout.PanelContent>
-                                    {rundownItemAction != null && (
-                                        <AuthoringReact
-                                            headerCollapsed={false}
-                                            key={rundownItemAction.authoringReactKey}
-                                            itemId=""
-                                            resourceNames={['rundown_items']}
-                                            onClose={() => {
-                                                if (rundownItemAction.type !== 'create') {
-                                                    tryUnlocking<IRundown>('/rundown_items', rundownItemAction.itemId);
-                                                }
+                                    {
+                                        rundownItemAction != null && (
+                                            <AuthoringReact
+                                                headerCollapsed={false}
+                                                key={rundownItemAction.authoringReactKey}
+                                                itemId=""
+                                                resourceNames={['rundown_items']}
+                                                onClose={() => {
+                                                    if (rundownItemAction.type !== 'create') {
+                                                        tryUnlocking<IRundown>(
+                                                            '/rundown_items',
+                                                            rundownItemAction.itemId,
+                                                        );
+                                                    }
 
-                                                this.props.onRundownItemActionChange(null);
-                                            }}
-                                            fieldsAdapter={{}}
-                                            authoringStorage={rundownItemAction.authoringStorage}
-                                            storageAdapter={rundownItemStorageAdapter}
-                                            getLanguage={() => LANGUAGE}
-                                            getInlineToolbarActions={({
-                                                item,
-                                                hasUnsavedChanges,
-                                                save,
-                                                initiateClosing,
-                                                stealLock,
-                                            }) => {
-                                                const actions: Array<ITopBarWidget<IRundownItem>> = [
-                                                    {
-                                                        availableOffline: true,
+                                                    this.props.onRundownItemActionChange(null);
+                                                }}
+                                                fieldsAdapter={{}}
+                                                authoringStorage={rundownItemAction.authoringStorage}
+                                                storageAdapter={rundownItemStorageAdapter}
+                                                getLanguage={() => LANGUAGE}
+                                                getInlineToolbarActions={({
+                                                    item,
+                                                    hasUnsavedChanges,
+                                                    save,
+                                                    initiateClosing,
+                                                    stealLock,
+                                                }) => {
+                                                    const actions: Array<ITopBarWidget<IRundownItem>> = [
+                                                        {
+                                                            availableOffline: true,
+                                                            group: 'start',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <IconButton
+                                                                    ariaValue={gettext('Close')}
+                                                                    icon="close-small"
+                                                                    onClick={() => {
+                                                                        initiateClosing();
+                                                                    }}
+                                                                />
+                                                            ),
+                                                        },
+                                                    ];
+
+                                                    actions.push({
+                                                        availableOffline: false,
                                                         group: 'start',
-                                                        priority: 0.1,
+                                                        priority: 0.2,
                                                         component: () => (
-                                                            <IconButton
-                                                                ariaValue={gettext('Close')}
-                                                                icon="close-small"
-                                                                onClick={() => {
-                                                                    initiateClosing();
-                                                                }}
+                                                            <RundownItemLockInfo
+                                                                allowUnlocking={rundownItemAction.type === 'edit'}
+                                                                entity={item}
+                                                                forceUnlock={stealLock}
                                                             />
                                                         ),
-                                                    },
-                                                ];
+                                                    });
 
-                                                actions.push({
-                                                    availableOffline: false,
-                                                    group: 'start',
-                                                    priority: 0.2,
-                                                    component: () => (
-                                                        <RundownItemLockInfo
-                                                            allowUnlocking={rundownItemAction.type === 'edit'}
-                                                            entity={item}
-                                                            forceUnlock={stealLock}
+                                                    if (rundownItemAction.type !== 'preview') {
+                                                        actions.push({
+                                                            availableOffline: false,
+                                                            group: 'end',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <Button
+                                                                    text={gettext('Save item')}
+                                                                    onClick={() => {
+                                                                        save();
+                                                                    }}
+                                                                    type="primary"
+                                                                    style="hollow"
+                                                                    disabled={hasUnsavedChanges() !== true}
+                                                                />
+                                                            ),
+                                                        });
+                                                    }
+
+                                                    if (rundownItemAction.type === 'preview') {
+                                                        actions.push({
+                                                            availableOffline: false,
+                                                            group: 'end',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <Button
+                                                                    text={gettext('Edit item')}
+                                                                    onClick={() => {
+                                                                        this.initiateEditing(item._id);
+                                                                    }}
+                                                                    type="primary"
+                                                                    style="hollow"
+                                                                />
+                                                            ),
+                                                        });
+                                                    }
+
+                                                    return {
+                                                        readOnly: rundownItemAction.type === 'preview'
+                                                            || isLockedInOtherSession(item),
+                                                        toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
+                                                        actions: actions,
+                                                    };
+                                                }}
+                                                getAuthoringPrimaryToolbarWidgets={() => []}
+                                                getSidebarWidgetsCount={({item}) => {
+                                                    return getAvailableSideWidgets(item).length;
+                                                }}
+                                                getSidebar={({item, toggleSideWidget}) => {
+                                                    const sideWidgetsAllowed = getAvailableSideWidgets(item);
+
+                                                    if (sideWidgetsAllowed.length < 1) {
+                                                        return <span />;
+                                                    }
+
+                                                    if (rundownItemAction.type === 'create') {
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <Nav.SideBarTabs
+                                                            activeTab={sideWidget?.activeId ?? null}
+                                                            onActiveTabChange={(nextWidget) => {
+                                                                if (sideWidget?.pinnedId && nextWidget == null) {
+                                                                    toggleSideWidget(sideWidget.pinnedId);
+                                                                } else {
+                                                                    toggleSideWidget(nextWidget);
+                                                                }
+                                                            }}
+                                                            items={sideWidgetsAllowed.map(({icon, _id}) => {
+                                                                const sidebarTab: ISideBarTab = {
+                                                                    id: _id,
+                                                                    size: 'big',
+                                                                    icon,
+                                                                };
+
+                                                                return sidebarTab;
+                                                            })}
                                                         />
-                                                    ),
-                                                });
-
-                                                if (rundownItemAction.type !== 'preview') {
-                                                    actions.push({
-                                                        availableOffline: false,
-                                                        group: 'end',
-                                                        priority: 0.1,
-                                                        component: () => (
-                                                            <Button
-                                                                text={gettext('Save item')}
-                                                                onClick={() => {
-                                                                    save();
-                                                                }}
-                                                                type="primary"
-                                                                style="hollow"
-                                                                disabled={hasUnsavedChanges() !== true}
-                                                            />
-                                                        ),
+                                                    );
+                                                }}
+                                                sideWidget={sideWidget}
+                                                onSideWidgetChange={(sideWidgetNext) => {
+                                                    this.props.onRundownItemActionChange({
+                                                        ...rundownItemAction,
+                                                        sideWidget: sideWidgetNext,
                                                     });
-                                                }
+                                                }}
+                                                getSidePanel={({
+                                                    item,
+                                                    contentProfile,
+                                                    fieldsData,
+                                                    handleFieldsDataChange,
+                                                    fieldsAdapter,
+                                                    storageAdapter,
+                                                    authoringStorage,
+                                                    handleUnsavedChanges,
+                                                }) => {
+                                                    const sideWidgetName = sideWidget?.activeId ?? null;
 
-                                                if (rundownItemAction.type === 'preview') {
-                                                    actions.push({
-                                                        availableOffline: false,
-                                                        group: 'end',
-                                                        priority: 0.1,
-                                                        component: () => (
-                                                            <Button
-                                                                text={gettext('Edit item')}
-                                                                onClick={() => {
-                                                                    this.initiateEditing(item._id);
-                                                                }}
-                                                                type="primary"
-                                                                style="hollow"
-                                                            />
-                                                        ),
-                                                    });
-                                                }
+                                                    if (
+                                                        sideWidgetName == null
 
-                                                return {
-                                                    readOnly:
-                                                        rundownItemAction.type === 'preview' ||
-                                                        isLockedInOtherSession(item),
-                                                    toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
-                                                    actions: actions,
-                                                };
-                                            }}
-                                            getAuthoringPrimaryToolbarWidgets={() => []}
-                                            getSidebarWidgetsCount={({item}) => {
-                                                return getAvailableSideWidgets(item).length;
-                                            }}
-                                            getSidebar={({item, toggleSideWidget}) => {
-                                                const sideWidgetsAllowed = getAvailableSideWidgets(item);
+                                                        // Widgets are not allowed in creation mode.
+                                                        // Some require item ID.
+                                                        || item._id == null
+                                                    ) {
+                                                        return null;
+                                                    }
 
-                                                if (sideWidgetsAllowed.length < 1) {
-                                                    return <span />;
-                                                }
+                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidgetName);
 
-                                                if (rundownItemAction.type === 'create') {
-                                                    return null;
-                                                }
+                                                    if (widget == null) {
+                                                        return null;
+                                                    }
 
-                                                return (
-                                                    <Nav.SideBarTabs
-                                                        activeTab={sideWidget?.activeId ?? null}
-                                                        onActiveTabChange={(nextWidget) => {
-                                                            if (sideWidget?.pinnedId && nextWidget == null) {
-                                                                toggleSideWidget(sideWidget.pinnedId);
-                                                            } else {
-                                                                toggleSideWidget(nextWidget);
-                                                            }
-                                                        }}
-                                                        items={sideWidgetsAllowed.map(({icon, _id}) => {
-                                                            const sidebarTab: ISideBarTab = {
-                                                                id: _id,
-                                                                size: 'big',
-                                                                icon,
-                                                            };
+                                                    const Component = widget.component;
 
-                                                            return sidebarTab;
-                                                        })}
-                                                    />
-                                                );
-                                            }}
-                                            sideWidget={sideWidget}
-                                            onSideWidgetChange={(sideWidgetNext) => {
-                                                this.props.onRundownItemActionChange({
-                                                    ...rundownItemAction,
-                                                    sideWidget: sideWidgetNext,
-                                                });
-                                            }}
-                                            getSidePanel={({
-                                                item,
-                                                contentProfile,
-                                                fieldsData,
-                                                handleFieldsDataChange,
-                                                fieldsAdapter,
-                                                storageAdapter,
-                                                authoringStorage,
-                                                handleUnsavedChanges,
-                                            }) => {
-                                                const sideWidgetName = sideWidget?.activeId ?? null;
-
-                                                if (
-                                                    sideWidgetName == null ||
-                                                    // Widgets are not allowed in creation mode.
-                                                    // Some require item ID.
-                                                    item._id == null
-                                                ) {
-                                                    return null;
-                                                }
-
-                                                const widget = sideWidgets.find(({_id}) => _id === sideWidgetName);
-
-                                                if (widget == null) {
-                                                    return null;
-                                                }
-
-                                                const Component = widget.component;
-
-                                                return (
-                                                    <Component
-                                                        entityId={item._id}
-                                                        readOnly={editingDisallowed}
-                                                        contentProfile={contentProfile}
-                                                        fieldsData={fieldsData}
-                                                        authoringStorage={authoringStorage}
-                                                        fieldsAdapter={fieldsAdapter}
-                                                        storageAdapter={storageAdapter}
-                                                        handleUnsavedChanges={handleUnsavedChanges}
-                                                        onFieldsDataChange={handleFieldsDataChange}
-                                                    />
-                                                );
-                                            }}
-                                            getSideWidgetIdAtIndex={(_item, index) => sideWidgets[index]._id}
-                                            disableWidgetPinning
-                                        />
-                                    )}
+                                                    return (
+                                                        <Component
+                                                            entityId={item._id}
+                                                            readOnly={editingDisallowed}
+                                                            contentProfile={contentProfile}
+                                                            fieldsData={fieldsData}
+                                                            authoringStorage={authoringStorage}
+                                                            fieldsAdapter={fieldsAdapter}
+                                                            storageAdapter={storageAdapter}
+                                                            handleUnsavedChanges={handleUnsavedChanges}
+                                                            onFieldsDataChange={handleFieldsDataChange}
+                                                        />
+                                                    );
+                                                }}
+                                                getSideWidgetIdAtIndex={(_item, index) => sideWidgets[index]._id}
+                                                disableWidgetPinning
+                                            />
+                                        )
+                                    }
                                 </Layout.PanelContent>
                             </Layout.Panel>
                         </Layout.RightPanel>
@@ -747,6 +768,5 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 }
 
 // wrap it and use key so the component re-mounts if rundownId changes
-export const RundownViewEdit: React.ComponentType<IProps> = (props) => (
-    <RundownViewEditComponent {...props} key={props.rundownId} />
-);
+export const RundownViewEdit: React.ComponentType<IProps> =
+    (props) => <RundownViewEditComponent {...props} key={props.rundownId} />;

@@ -41,14 +41,13 @@ interface IReceiveAssetsCountAction {
     payload: Dictionary<string, number>;
 }
 
-export type ISetActionTypes =
-    | IReceiveSetsAction
-    | IRemoveSetInStoreAction
-    | IEditSetAction
-    | IPreviewSetAction
-    | ICloseSetAction
-    | IManageSetsOnModalClosed
-    | IReceiveAssetsCountAction;
+export type ISetActionTypes = IReceiveSetsAction |
+    IRemoveSetInStoreAction |
+    IEditSetAction |
+    IPreviewSetAction |
+    ICloseSetAction |
+    IManageSetsOnModalClosed |
+    IReceiveAssetsCountAction;
 
 export interface ISetState {
     sets: Array<ISetItem>;

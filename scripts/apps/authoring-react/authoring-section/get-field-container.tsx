@@ -7,7 +7,10 @@ import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 
 export const RequiredIndicatorForHeader = () => (
-    <span className="sd-font-size--x-small" style={{color: 'var(--sd-colour-alert)'}}>
+    <span
+        className="sd-font-size--x-small"
+        style={{color: 'var(--sd-colour-alert)'}}
+    >
         *
     </span>
 );
@@ -24,17 +27,24 @@ export const RequiredIndicatorForContent = () => (
 );
 
 export interface IGetFieldContainerOptions {
-    useHeaderLayout: boolean;
-    canBeToggled: boolean;
-    field: IAuthoringFieldV2;
-    toggledOn: boolean;
-    toggleField: (fieldId: string) => void;
-    validationError?: string;
+    useHeaderLayout: boolean,
+    canBeToggled: boolean,
+    field: IAuthoringFieldV2,
+    toggledOn: boolean,
+    toggleField: (fieldId: string) => void,
+    validationError?: string,
     fieldTemplate: React.ComponentType<IPropsAuthoringFieldTemplate> | null;
 }
 
 export function getFieldContainer(options: IGetFieldContainerOptions) {
-    const {useHeaderLayout, canBeToggled, field, toggledOn, toggleField, validationError} = options;
+    const {
+        useHeaderLayout,
+        canBeToggled,
+        field,
+        toggledOn,
+        toggleField,
+        validationError,
+    } = options;
 
     const FieldTemplate = options.fieldTemplate;
 
@@ -65,17 +75,25 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
         />
     );
 
+
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
             const {miniToolbar} = this.props;
 
             return (
                 <Spacer v gap="0">
-                    <span className={classNames('form-label', {'form-label--invalid': validationError != null})}>
+                    <span
+                        className={classNames(
+                            'form-label',
+                            {'form-label--invalid': validationError != null},
+                        )}
+                    >
                         <Spacer h gap="8" noGrow noWrap>
                             <Spacer h gap="4" noGrow noWrap>
                                 {field.name}
-                                {field.fieldConfig.required && <RequiredIndicatorForHeader />}
+                                {field.fieldConfig.required && (
+                                    <RequiredIndicatorForHeader />
+                                )}
                             </Spacer>
                             <span>{toggle}</span>
                         </Spacer>
@@ -85,9 +103,17 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         {this.props.children}
 
                         <Spacer h gap="8" justifyContent="end" noGrow noWrap>
-                            {validationError != null && <div className="input-field-error">{validationError}</div>}
+                            {
+                                validationError != null && (
+                                    <div className="input-field-error">{validationError}</div>
+                                )
+                            }
 
-                            {miniToolbar != null && <div>{miniToolbar}</div>}
+                            {
+                                miniToolbar != null && (
+                                    <div>{miniToolbar}</div>
+                                )
+                            }
                         </Spacer>
                     </div>
                 </Spacer>
@@ -111,25 +137,36 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         <Spacer h gap="8" noGrow>
                             <Spacer h gap="8" noGrow noWrap>
                                 <span
-                                    className={classNames('field-label--base', {
-                                        'field-label--base--invalid': validationError != null,
-                                    })}
+                                    className={classNames(
+                                        'field-label--base',
+                                        {'field-label--base--invalid': validationError != null},
+                                    )}
                                 >
                                     {field.name}
                                 </span>
 
-                                {field.fieldConfig.required && <RequiredIndicatorForContent />}
+                                {field.fieldConfig.required && (
+                                    <RequiredIndicatorForContent />
+                                )}
                             </Spacer>
 
                             <span>{toggle}</span>
                         </Spacer>
 
-                        {miniToolbar != null && <div>{miniToolbar}</div>}
+                        {
+                            miniToolbar != null && (
+                                <div>{miniToolbar}</div>
+                            )
+                        }
                     </div>
 
                     <SpacerBlock v gap="4" />
 
-                    {validationError != null && <div className="input-field-error">{validationError}</div>}
+                    {
+                        validationError != null && (
+                            <div className="input-field-error">{validationError}</div>
+                        )
+                    }
 
                     <SpacerBlock v gap="8" />
 

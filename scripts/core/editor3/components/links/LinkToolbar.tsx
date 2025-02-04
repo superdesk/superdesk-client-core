@@ -39,23 +39,21 @@ export class LinkToolbarComponent extends React.Component<IProps, any> {
         const {link} = getSelectedEntityData(editorState);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
-            dropdown: true,
+            'dropdown': true,
             'link-toolbar': true,
             'is-link': isLink,
         });
 
         return (
             <div className={cx}>
-                {!isLink ? (
-                    <span>&nbsp;</span>
-                ) : (
+                {!isLink ? <span>&nbsp;</span> : (
                     <span>
                         {gettext('Link controls:')}
-                        {link && link.href ? (
-                            <a href={link.href} target="_blank" rel="noopener noreferrer">
-                                {gettext('Open')}
-                            </a>
-                        ) : null}
+                        {
+                            link && link.href
+                                ? <a href={link.href} target="_blank" rel="noopener noreferrer">{gettext('Open')}</a>
+                                : null
+                        }
                         <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
                         <a onClick={this.onRemove}>{gettext('Delete')}</a>
                     </span>
@@ -77,6 +75,12 @@ const mapDispatchToPropsTableCell = (dispatch) => ({
     removeLinkSuggestion: () => noop, // not supported for tables
 });
 
-export const LinkToolbar = connect(mapStateToProps, mapDispatchToProps)(LinkToolbarComponent);
+export const LinkToolbar = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(LinkToolbarComponent);
 
-export const LinkToolbarForTableCell = connect(mapStateToProps, mapDispatchToPropsTableCell)(LinkToolbarComponent);
+export const LinkToolbarForTableCell = connect(
+    mapStateToProps,
+    mapDispatchToPropsTableCell,
+)(LinkToolbarComponent);

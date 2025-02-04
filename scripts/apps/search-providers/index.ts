@@ -14,9 +14,7 @@ import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
-function SearchProviderSettingsController($scope, privileges) {
-    /* no-op */
-}
+function SearchProviderSettingsController($scope, privileges) { /* no-op */ }
 
 /**
  * @ngdoc module
@@ -25,16 +23,17 @@ function SearchProviderSettingsController($scope, privileges) {
  * @packageName superdesk.apps
  * @description Adds support for various search providers to Superesk.
  */
-export default angular
-    .module('superdesk.apps.searchProviders', ['superdesk.core.activity', 'superdesk.core.api'])
+export default angular.module('superdesk.apps.searchProviders', [
+    'superdesk.core.activity',
+    'superdesk.core.api',
+])
     .value('providerTypes', providerTypes)
     .directive('sdSearchProviderConfig', SearchProviderConfigDirective)
     .service('searchProviderService', SearchProviderService)
 
-    .config([
-        'superdeskProvider',
-        function (superdesk) {
-            superdesk.activity('/settings/searchProviders', {
+    .config(['superdeskProvider', function(superdesk) {
+        superdesk
+            .activity('/settings/searchProviders', {
                 label: gettext('Search Providers'),
                 templateUrl: 'scripts/apps/search-providers/views/settings.html',
                 controller: SearchProviderSettingsController,
@@ -43,15 +42,11 @@ export default angular
                 privileges: {search_providers: 1},
                 priority: 2000,
             });
-        },
-    ])
+    }])
 
-    .config([
-        'apiProvider',
-        function (apiProvider) {
-            apiProvider.api('search_providers', {
-                type: 'http',
-                backend: {rel: 'search_providers'},
-            });
-        },
-    ]);
+    .config(['apiProvider', function(apiProvider) {
+        apiProvider.api('search_providers', {
+            type: 'http',
+            backend: {rel: 'search_providers'},
+        });
+    }]);

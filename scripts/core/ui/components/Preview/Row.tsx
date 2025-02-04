@@ -7,34 +7,36 @@ import classNames from 'classnames';
  * @name Row
  * @description Row Component to be used in an item preview to show an item's detail
  */
-export const Row: React.StatelessComponent<any> = ({
-    label,
-    value,
-    className,
-    children,
-    noPadding,
-    enabled,
-    flex,
-    rowItem,
-}) =>
-    enabled ? (
-        <div
-            className={classNames({
-                form__row: !rowItem,
-                'form__row-item': rowItem,
-                'no-padding': noPadding,
-                'form__row--flex': flex,
-            })}
-        >
-            {label && <label className="form-label form-label--light">{label}</label>}
-            {value && <p className={'sd-text__' + className}>{value}</p>}
-            {children}
-        </div>
-    ) : null;
+export const Row: React.StatelessComponent<any> = (
+    {label, value, className, children, noPadding, enabled, flex, rowItem},
+) => (
+    enabled
+        ? (
+            <div
+                className={classNames(
+                    {
+                        'form__row': !rowItem,
+                        'form__row-item': rowItem,
+                        'no-padding': noPadding,
+                        'form__row--flex': flex,
+                    },
+                )}
+            >
+                {label && <label className="form-label form-label--light">{label}</label>}
+                {value && <p className={'sd-text__' + className}>{value}</p>}
+                {children}
+            </div>
+        )
+        : null
+);
 
 Row.propTypes = {
     label: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.node]),
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.node,
+    ]),
     className: PropTypes.string,
     children: PropTypes.node,
     noPadding: PropTypes.bool,

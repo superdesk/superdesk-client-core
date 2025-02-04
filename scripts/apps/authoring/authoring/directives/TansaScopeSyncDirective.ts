@@ -8,7 +8,7 @@ TansaScopeSyncDirective.$inject = ['$rootScope'];
 export function TansaScopeSyncDirective($rootScope) {
     return {
         require: ['ngModel'],
-        link: function (scope, elem, attrs, controllers) {
+        link: function(scope, elem, attrs, controllers) {
             let ngModel = controllers[0];
 
             var deregisterTansa = $rootScope.$on('tansa:after', () => {

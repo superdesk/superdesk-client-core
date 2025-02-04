@@ -34,7 +34,10 @@ export function isButtonClicked(event): boolean {
 const CLICK_TIMEOUT = 300;
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
-    <div className="item-right toolbox" style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+    <div
+        className="item-right toolbox"
+        style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}
+    >
         <button
             onClick={toggle}
             onDoubleClick={stopEvent}
@@ -146,16 +149,15 @@ export class Item extends React.Component<IProps, IState> {
         const superdesk = ng.get('superdesk');
         const activityService: IActivityService = ng.get('activityService');
 
-        if (
-            !['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
-            get(this.props, 'item.lock_user') !== session.identity._id ||
-            get(this.props, 'item.lock_session') !== session.sessionId
-        ) {
+        if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
+                get(this.props, 'item.lock_user') !== session.identity._id ||
+                get(this.props, 'item.lock_session') !== session.sessionId) {
             return;
         }
 
         let planningActivity: IActivity | null;
-        const activities = superdesk.findActivities({action: 'list', type: 'archive'}, this.props.item);
+        const activities = superdesk.findActivities({action: 'list', type: 'archive'},
+            this.props.item);
 
         // Planning: if page probably was refreshed / loaded during the add-to-planning operation,
         // reload the add-to-planning modal
@@ -176,25 +178,23 @@ export class Item extends React.Component<IProps, IState> {
 
         if (planningActivity) {
             this.setActioningState(true);
-            activityService.start(planningActivity, {data: {item: this.props.item}}).finally(() => {
-                if (this._mounted) {
-                    this.setActioningState(false);
-                }
-            });
+            activityService.start(planningActivity, {data: {item: this.props.item}})
+                .finally(() => {
+                    if (this._mounted) {
+                        this.setActioningState(false);
+                    }
+                });
         }
     }
 
     shouldComponentUpdate(nextProps: IProps, nextState) {
-        return (
-            nextProps.swimlane !== this.props.swimlane ||
-            nextProps.item !== this.props.item ||
+        return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
             nextProps.actioning !== this.props.actioning ||
             nextProps.multiSelect !== this.props.multiSelect ||
-            nextState !== this.state
-        );
+            nextState !== this.state;
     }
 
     handleClick(event) {
@@ -289,22 +289,21 @@ export class Item extends React.Component<IProps, IState> {
                             must_not: {term: {_id: item.item_id}},
                         },
                     },
-                    sort: [{versioncreated: 'desc'}],
+                    sort: [{'versioncreated': 'desc'}],
                 },
             },
-        })
-            .then((data) => {
-                this.setState({loading: false, nested: data._items});
-            })
-            .catch(() => {
-                this.setState({loading: false});
-            });
+        }).then((data) => {
+            this.setState({loading: false, nested: data._items});
+        }).catch(() => {
+            this.setState({loading: false});
+        });
     }
 
     render() {
         const {item} = this.props;
-        let classes =
-            this.props.view === 'photogrid' ? 'sd-grid-item sd-grid-item--with-click' : 'media-box media-' + item.type;
+        let classes = this.props.view === 'photogrid' ?
+            'sd-grid-item sd-grid-item--with-click' :
+            'media-box media-' + item.type;
 
         const selectedInSingleSelectMode = this.props.flags.selected;
         const selectedInMultiSelectMode = this.props.item.selected;
@@ -318,141 +317,147 @@ export class Item extends React.Component<IProps, IState> {
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && (this.state.hover || itemSelected) && !item.gone ? (
-                <ActionsMenu
-                    item={item}
-                    onActioning={this.setActioningState}
-                    template={template}
-                    scopeApply={this.props.scopeApply}
-                />
-            ) : null;
+            this.props.hideActions !== true
+            && (this.state.hover || itemSelected)
+            && !item.gone
+                ? (
+                    <ActionsMenu
+                        item={item}
+                        onActioning={this.setActioningState}
+                        template={template}
+                        scopeApply={this.props.scopeApply}
+                    />
+                ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
-                case 'swimlane2':
-                    return (
-                        <ItemSwimlane
-                            item={item}
-                            itemSelected={itemSelected}
-                            isLocked={isLocked}
-                            getActionsMenu={getActionsMenu}
-                            multiSelect={this.props.multiSelect}
-                        />
-                    );
-                case 'mgrid':
-                    return (
-                        <ItemMgridTemplate
-                            item={item}
-                            itemSelected={itemSelected}
-                            desk={this.props.desk}
-                            swimlane={this.props.swimlane}
-                            ingestProvider={this.props.ingestProvider}
-                            getActionsMenu={getActionsMenu}
-                            multiSelect={this.props.multiSelect}
-                        />
-                    );
-                case 'photogrid':
-                    return (
-                        <ItemPhotoGrid
-                            item={item}
-                            itemSelected={itemSelected}
-                            desk={this.props.desk}
-                            swimlane={this.props.swimlane}
-                            multiSelect={this.props.multiSelect}
-                            getActionsMenu={getActionsMenu}
-                        />
-                    );
-                default:
-                    return (
-                        <ListItemTemplate
-                            loading={this.state.loading}
-                            item={item}
-                            relatedEntities={this.props.relatedEntities}
-                            itemSelected={itemSelected}
-                            desk={this.props.desk}
-                            openAuthoringView={this.openAuthoringView}
-                            ingestProvider={this.props.ingestProvider}
-                            highlightsById={this.props.highlightsById}
-                            markedDesksById={this.props.markedDesksById}
-                            profilesById={this.props.profilesById}
-                            swimlane={this.props.swimlane}
-                            versioncreator={this.props.versioncreator}
-                            narrow={this.props.narrow}
-                            multiSelect={this.props.multiSelect}
-                            getActionsMenu={getActionsMenu}
-                            selectingDisabled={this.props.multiSelectDisabled}
-                            isNested={this.props.isNested}
-                            showNested={this.state.showNested}
-                            toggleNested={this.toggleNested}
-                            singleLine={this.props.singleLine}
-                            customRender={this.props.customRender}
-                        />
-                    );
+            case 'swimlane2':
+                return (
+                    <ItemSwimlane
+                        item={item}
+                        itemSelected={itemSelected}
+                        isLocked={isLocked}
+                        getActionsMenu={getActionsMenu}
+                        multiSelect={this.props.multiSelect}
+                    />
+                );
+            case 'mgrid':
+                return (
+                    <ItemMgridTemplate
+                        item={item}
+                        itemSelected={itemSelected}
+                        desk={this.props.desk}
+                        swimlane={this.props.swimlane}
+                        ingestProvider={this.props.ingestProvider}
+                        getActionsMenu={getActionsMenu}
+                        multiSelect={this.props.multiSelect}
+                    />
+                );
+            case 'photogrid':
+                return (
+                    <ItemPhotoGrid
+                        item={item}
+                        itemSelected={itemSelected}
+                        desk={this.props.desk}
+                        swimlane={this.props.swimlane}
+                        multiSelect={this.props.multiSelect}
+                        getActionsMenu={getActionsMenu}
+                    />
+                );
+            default:
+                return (
+                    <ListItemTemplate
+                        loading={this.state.loading}
+                        item={item}
+                        relatedEntities={this.props.relatedEntities}
+                        itemSelected={itemSelected}
+                        desk={this.props.desk}
+                        openAuthoringView={this.openAuthoringView}
+                        ingestProvider={this.props.ingestProvider}
+                        highlightsById={this.props.highlightsById}
+                        markedDesksById={this.props.markedDesksById}
+                        profilesById={this.props.profilesById}
+                        swimlane={this.props.swimlane}
+                        versioncreator={this.props.versioncreator}
+                        narrow={this.props.narrow}
+                        multiSelect={this.props.multiSelect}
+                        getActionsMenu={getActionsMenu}
+                        selectingDisabled={this.props.multiSelectDisabled}
+                        isNested={this.props.isNested}
+                        showNested={this.state.showNested}
+                        toggleNested={this.toggleNested}
+                        singleLine={this.props.singleLine}
+                        customRender={this.props.customRender}
+                    />
+                );
             }
         };
 
         const getNested = () => {
             switch (this.props.view) {
-                case 'swimlane2':
-                case 'mgrid':
-                case 'photogrid':
+            case 'swimlane2':
+            case 'mgrid':
+            case 'photogrid':
+                return null;
+            default:
+                if (!this.state.nested.length) {
                     return null;
-                default:
-                    if (!this.state.nested.length) {
-                        return null;
-                    }
+                }
 
-                    return (
-                        <div className="sd-list-item-nested__childs sd-shadow--z1">
-                            {this.state.nested.map((childItem) => (
-                                <Item
-                                    item={childItem}
-                                    relatedEntities={this.props.relatedEntities}
-                                    key={childItem._id + childItem._current_version}
-                                    flags={{}}
-                                    profilesById={this.props.profilesById}
-                                    isNested={true}
-                                    narrow={true}
-                                    hideActions={true}
-                                    onSelect={() => null}
-                                    multiSelectDisabled={false}
-                                    swimlane={this.props.swimlane}
-                                    highlightsById={this.props.highlightsById}
-                                    markedDesksById={this.props.markedDesksById}
-                                    ingestProvider={this.props.ingestProvider}
-                                    desk={this.props.desk}
-                                    view={this.props.view}
-                                    versioncreator={this.props.versioncreator}
-                                    onEdit={this.props.onEdit}
-                                    onDbClick={this.props.onDbClick}
-                                    multiSelect={this.props.multiSelect}
-                                    actioning={false}
-                                    singleLine={this.props.singleLine}
-                                    customRender={this.props.customRender}
-                                    scopeApply={this.props.scopeApply}
-                                />
-                            ))}
-                        </div>
-                    );
+                return (
+                    <div className="sd-list-item-nested__childs sd-shadow--z1">
+                        {this.state.nested.map((childItem) => (
+                            <Item
+                                item={childItem}
+                                relatedEntities={this.props.relatedEntities}
+                                key={childItem._id + childItem._current_version}
+                                flags={{}}
+                                profilesById={this.props.profilesById}
+                                isNested={true}
+                                narrow={true}
+                                hideActions={true}
+                                onSelect={() => null}
+                                multiSelectDisabled={false}
+                                swimlane={this.props.swimlane}
+                                highlightsById={this.props.highlightsById}
+                                markedDesksById={this.props.markedDesksById}
+                                ingestProvider={this.props.ingestProvider}
+                                desk={this.props.desk}
+                                view={this.props.view}
+                                versioncreator={this.props.versioncreator}
+                                onEdit={this.props.onEdit}
+                                onDbClick={this.props.onDbClick}
+                                multiSelect={this.props.multiSelect}
+                                actioning={false}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                scopeApply={this.props.scopeApply}
+                            />
+                        ))}
+                    </div>
+                );
             }
         };
 
         // avoid any actions on nested items
-        const getCallback = (func) => (this.props.isNested ? (event) => event.stopPropagation() : func);
+        const getCallback = (func) => this.props.isNested ? (event) => event.stopPropagation() : func;
 
         return React.createElement(
             this.props.isNested ? 'div' : 'li',
             {
                 id: item._id,
                 key: item._id,
-                className: classNames('list-item-view', {
-                    'actions-visible': this.props.hideActions !== true,
-                    active: itemSelected,
-                    selected: this.props.item.selected && !this.props.flags.selected,
-                    'sd-list-item-nested': this.state.nested.length,
-                    'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
-                    'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
-                }),
+                className: classNames(
+                    'list-item-view',
+                    {
+                        'actions-visible': this.props.hideActions !== true,
+                        'active': itemSelected,
+                        'selected': this.props.item.selected && !this.props.flags.selected,
+                        'sd-list-item-nested': this.state.nested.length,
+                        'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
+                        'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
+                    },
+                ),
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
@@ -476,8 +481,7 @@ export class Item extends React.Component<IProps, IState> {
                 onClick: getCallback(this.handleClick),
                 onDoubleClick: getCallback(this.handleDoubleClick),
                 onKeyDown: (event) => {
-                    if (event.key === ' ') {
-                        // display item actions when space is clicked
+                    if (event.key === ' ') { // display item actions when space is clicked
                         const el = event.target?.querySelector('.more-activity-toggle-ref');
 
                         if (typeof el?.click === 'function') {
@@ -491,18 +495,20 @@ export class Item extends React.Component<IProps, IState> {
                 'data-test-id': 'article-item',
                 'data-test-value': getArticleLabel(item),
             },
-            <div
-                className={classNames(classes, {
-                    active: itemSelected,
-                    locked: isLocked,
-                    selected: itemSelected,
-                    archived: item.archived || item.created,
-                    gone: item.gone,
-                    actioning: this.state.actioning || this.props.actioning,
-                })}
-            >
-                {getTemplate()}
-            </div>,
+            (
+                <div
+                    className={classNames(classes, {
+                        active: itemSelected,
+                        locked: isLocked,
+                        selected: itemSelected,
+                        archived: item.archived || item.created,
+                        gone: item.gone,
+                        actioning: this.state.actioning || this.props.actioning,
+                    })}
+                >
+                    {getTemplate()}
+                </div>
+            ),
             getNested(),
         );
     }

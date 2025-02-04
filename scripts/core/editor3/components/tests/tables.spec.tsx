@@ -18,9 +18,7 @@ describe('editor3.component.table-block', () => {
         window.module('superdesk.apps.spellcheck');
 
         // init the tests module to get the actual provider
-        inject(() => {
-            /* no-op */
-        });
+        inject(() => { /* no-op */ });
     });
 
     it('should render 2 rows and 6 cells', () => {
@@ -31,9 +29,7 @@ describe('editor3.component.table-block', () => {
                 block={block}
                 setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
-                parentOnChange={() => {
-                    /* no-op */
-                }}
+                parentOnChange={() => { /* no-op */ }}
                 readOnly={false}
                 spellchecking={spellchecking}
             />,
@@ -51,16 +47,17 @@ describe('editor3.component.table-block', () => {
                 block={block}
                 setActiveCell={() => null}
                 editorState={EditorState.createWithContent(contentState)}
-                parentOnChange={() => {
-                    /* no-op */
-                }}
+                parentOnChange={() => { /* no-op */ }}
                 readOnly={true}
                 spellchecking={spellchecking}
             />,
         );
 
         ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, i) => {
-            const cellEditorState: any = wrapper.find('TableCell').at(i).prop('editorState');
+            const cellEditorState: any = wrapper
+                .find('TableCell')
+                .at(i)
+                .prop('editorState');
             const cellContentState = cellEditorState.getCurrentContent();
             const cellText = cellContentState.getPlainText('');
 
@@ -76,19 +73,11 @@ describe('editor3.component.table-cell', () => {
                 fullWidth
                 editorState={EditorState.createWithContent(ContentState.createFromText('abc'))}
                 spellchecking={spellchecking}
-                onChange={() => {
-                    /* no-op */
-                }}
+                onChange={() => { /* no-op */ }}
                 readOnly={false}
-                onFocus={() => {
-                    /* no-op */
-                }}
-                onRedo={() => {
-                    /* no-op */
-                }}
-                onUndo={() => {
-                    /* no-op */
-                }}
+                onFocus={() => { /* no-op */ }}
+                onRedo={() => { /* no-op */ }}
+                onUndo={() => { /* no-op */ }}
             />,
         );
 

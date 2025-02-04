@@ -16,9 +16,9 @@ export class UnorderedList extends React.PureComponent<IProps> {
     render() {
         return (
             <ul style={defaultStyles}>
-                {this.props.items.map((item, i) => (
-                    <li key={i}>{item}</li>
-                ))}
+                {
+                    this.props.items.map((item, i) => <li key={i}>{item}</li>)
+                }
             </ul>
         );
     }

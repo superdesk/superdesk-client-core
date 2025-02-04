@@ -3,7 +3,7 @@ export function nameof<T>(name: keyof T): string {
 }
 
 // eslint-disable-next-line space-infix-ops
-export type Writeable<T> = {-readonly [P in keyof T]-?: T[P]};
+export type Writeable<T> = { -readonly [P in keyof T]-?: T[P] };
 
 export function applyDefault<T>(value: T, defaultValue: T) {
     return value != null ? value : defaultValue;
@@ -41,7 +41,9 @@ export function filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T> {
 }
 
 export function stringToNumber(value?: string, radix?: number): number | undefined {
-    return value?.length > 0 ? parseInt(value, radix ?? 10) : undefined;
+    return value?.length > 0 ?
+        parseInt(value, radix ?? 10) :
+        undefined;
 }
 
 export function numberToString(value?: number): string | undefined {

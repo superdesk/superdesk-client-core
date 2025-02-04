@@ -28,9 +28,12 @@ export interface IPropsAuthoringSection<T> {
 }
 
 function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
-    const itemGroups: Array<Array<T>> = [[]];
+    const itemGroups: Array<Array<T>> = [
+        [],
+    ];
 
     let rowWidth = 0; // percent
+
 
     for (let i = 0; i < items.length; i++) {
         const item = items[i];
@@ -87,8 +90,8 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
 
     render() {
         const {toggledFields} = this.props;
-        const themeApplies: boolean =
-            this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
+        const themeApplies: boolean
+            = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
         const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width ?? 100);
 
         return (
@@ -101,42 +104,47 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                     padding: this.props.padding,
                 }}
             >
-                {grouped.map((group, index) => (
-                    <div key={index} style={{display: 'flex', gap: 'var(--gap-1-5)'}}>
-                        {group.map((field) => {
-                            const canBeToggled = toggledFields[field.id] != null;
-                            const toggledOn = toggledFields[field.id];
+                {
+                    grouped.map((group, index) => (
+                        <div key={index} style={{display: 'flex', gap: 'var(--gap-1-5)'}}>
+                            {
+                                group.map((field) => {
+                                    const canBeToggled = toggledFields[field.id] != null;
+                                    const toggledOn = toggledFields[field.id];
 
-                            return (
-                                <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
-                                    <AuthoringSectionField
-                                        fieldRef={this.props.fieldRefs[field.id]}
-                                        uiTheme={themeApplies ? this.props.uiTheme : undefined}
-                                        field={field}
-                                        fieldsData={this.props.fieldsData}
-                                        onChange={this.props.onChange}
-                                        reinitialize={this.props.reinitialize}
-                                        readOnly={this.props.readOnly}
-                                        language={this.props.language}
-                                        canBeToggled={canBeToggled}
-                                        toggledOn={toggledOn}
-                                        toggleField={this.props.toggleField}
-                                        editorPreferences={
-                                            this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
-                                        }
-                                        onEditorPreferencesChange={this.onEditorPreferencesChange}
-                                        useHeaderLayout={this.props.useHeaderLayout}
-                                        getVocabularyItems={this.props.getVocabularyItems}
-                                        validationError={this.props.validationErrors[field.id]}
-                                        item={this.props.item}
-                                        computeLatestEntity={this.props.computeLatestEntity}
-                                        fieldTemplate={this.props.fieldTemplate}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
+                                    return (
+                                        <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
+                                            <AuthoringSectionField
+                                                fieldRef={this.props.fieldRefs[field.id]}
+                                                uiTheme={themeApplies ? this.props.uiTheme : undefined}
+                                                field={field}
+                                                fieldsData={this.props.fieldsData}
+                                                onChange={this.props.onChange}
+                                                reinitialize={this.props.reinitialize}
+                                                readOnly={this.props.readOnly}
+                                                language={this.props.language}
+                                                canBeToggled={canBeToggled}
+                                                toggledOn={toggledOn}
+                                                toggleField={this.props.toggleField}
+                                                editorPreferences={
+                                                    this.props.userPreferencesForFields[field.id]
+                                                        ?? defaultUserPreferences
+                                                }
+                                                onEditorPreferencesChange={this.onEditorPreferencesChange}
+                                                useHeaderLayout={this.props.useHeaderLayout}
+                                                getVocabularyItems={this.props.getVocabularyItems}
+                                                validationError={this.props.validationErrors[field.id]}
+                                                item={this.props.item}
+                                                computeLatestEntity={this.props.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
+                                            />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </div>
+                    ))
+                }
             </div>
         );
     }

@@ -3,7 +3,13 @@ import {createSelector} from 'reselect';
 
 // Types
 import {IApplicationState} from '../index';
-import {IAssetItem, IAssetSearchParams, ISetItem, ASSET_LIST_STYLE, ASSET_CONTENT_PANEL_STATE} from '../../interfaces';
+import {
+    IAssetItem,
+    IAssetSearchParams,
+    ISetItem,
+    ASSET_LIST_STYLE,
+    ASSET_CONTENT_PANEL_STATE,
+} from '../../interfaces';
 
 // Redux Selectors
 import {getSetsById} from '../sets/selectors';
@@ -16,7 +22,11 @@ export function getAssetSearchParams(state: IApplicationState): IAssetSearchPara
     return state.assets.searchParams;
 }
 
-export const getSelectedSetId = createSelector<IApplicationState, IAssetSearchParams, ISetItem['_id'] | undefined>(
+export const getSelectedSetId = createSelector<
+    IApplicationState,
+    IAssetSearchParams,
+    ISetItem['_id'] | undefined
+>(
     [getAssetSearchParams],
     (searchParams) => searchParams?.setId,
 );
@@ -50,8 +60,13 @@ export const getAssetSetFilter = createSelector<
     Dictionary<string, ISetItem>,
     IAssetSearchParams,
     ISetItem | undefined
->([getSetsById, getAssetSearchParams], (sets, searchParams) =>
-    searchParams.setId != null ? sets[searchParams.setId] : undefined,
+>(
+    [getSetsById, getAssetSearchParams],
+    (sets, searchParams) => (
+        searchParams.setId != null ?
+            sets[searchParams.setId] :
+            undefined
+    ),
 );
 
 export const getAssetSearchResults = createSelector<
@@ -59,15 +74,27 @@ export const getAssetSearchResults = createSelector<
     Array<string>,
     Dictionary<string, IAssetItem>,
     Array<IAssetItem>
->([getAssetListItemIds, getAssets], (assetIds, assets) => assetIds.map((assetId) => assets[assetId]));
+>(
+    [getAssetListItemIds, getAssets],
+    (assetIds, assets) => (
+        assetIds.map(
+            (assetId) => assets[assetId],
+        )
+    ),
+);
 
 export const getSelectedAsset = createSelector<
     IApplicationState,
     Dictionary<string, IAssetItem>,
     string | undefined,
     IAssetItem | undefined
->([getAssets, getSelectedAssetId], (assets: Dictionary<string, IAssetItem>, assetId?: string) =>
-    assetId != null ? assets?.[assetId] : undefined,
+>(
+    [getAssets, getSelectedAssetId],
+    (assets: Dictionary<string, IAssetItem>, assetId?: string) => (
+        assetId != null ?
+            assets?.[assetId] :
+            undefined
+    ),
 );
 
 export const getSetNameForSelectedAsset = createSelector<
@@ -75,8 +102,13 @@ export const getSetNameForSelectedAsset = createSelector<
     Dictionary<string, ISetItem>,
     IAssetItem | undefined,
     string | undefined
->([getSetsById, getSelectedAsset], (sets: Dictionary<string, ISetItem>, asset?: IAssetItem) =>
-    asset != null ? sets?.[asset.set_id].name : undefined,
+>(
+    [getSetsById, getSelectedAsset],
+    (sets: Dictionary<string, ISetItem>, asset?: IAssetItem) => (
+        asset != null ?
+            sets?.[asset.set_id].name :
+            undefined
+    ),
 );
 
 export const getSelectedAssetItems = createSelector<
@@ -84,4 +116,11 @@ export const getSelectedAssetItems = createSelector<
     Array<string>,
     Dictionary<string, IAssetItem>,
     Array<IAssetItem>
->([getSelectedAssetIds, getAssets], (assetIds, assets) => assetIds.map((assetId) => assets[assetId]));
+>(
+    [getSelectedAssetIds, getAssets],
+    (assetIds, assets) => (
+        assetIds.map(
+            (assetId) => assets[assetId],
+        )
+    ),
+);

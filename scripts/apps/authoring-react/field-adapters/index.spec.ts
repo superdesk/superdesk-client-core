@@ -75,17 +75,19 @@ describe('field adapters', () => {
 
     it('dropdown adapters can handle `null` as value', () => {
         const baseAdapter = getBaseFieldsAdapter();
-        const dropdownAdapters = Object.values(baseAdapter).filter((adapter) => {
-            const fieldAdapter = adapter.getFieldV2({}, {}, () => false);
+        const dropdownAdapters =
+            Object.values(baseAdapter)
+                .filter((adapter) => {
+                    const fieldAdapter = adapter.getFieldV2({}, {}, () => false);
 
-            /**
-             * Subject only works in multi-select mode,
-             * thus `null` would never be passed to it.
-             */
-            const skipField = fieldAdapter.id === 'subject';
+                    /**
+                     * Subject only works in multi-select mode,
+                     * thus `null` would never be passed to it.
+                     */
+                    const skipField = fieldAdapter.id === 'subject';
 
-            return fieldAdapter.fieldType === 'dropdown' && skipField !== true;
-        });
+                    return fieldAdapter.fieldType === 'dropdown' && skipField !== true;
+                });
 
         for (const dropdownAdapter of dropdownAdapters) {
             if (dropdownAdapter.storeValue != null) {

@@ -1,6 +1,10 @@
 import React from 'react';
 import {OrderedMap, Set} from 'immutable';
-import {IWebsocketMessage, IResourceUpdateEvent, IResourceDeletedEvent} from 'superdesk-api';
+import {
+    IWebsocketMessage,
+    IResourceUpdateEvent,
+    IResourceDeletedEvent,
+} from 'superdesk-api';
 import {addWebsocketEventListener} from './notification/notification';
 import {throttleAndCombineSet} from './itemList/throttleAndCombine';
 
@@ -78,8 +82,7 @@ export class MultiSelectHoc<T> extends React.PureComponent<IProps<T>, IState<T>>
     unselectAll() {
         this.setState({selected: OrderedMap<string, T>()});
     }
-    _maybeUnselectItems(ids: globalThis.Set<string>) {
-        // only throttled version should be used internally
+    _maybeUnselectItems(ids: globalThis.Set<string>) { // only throttled version should be used internally
         this.props.shouldUnselect(Set(Array.from(ids))).then((idsToUnselect) => {
             if (idsToUnselect.size > 0) {
                 let {selected} = this.state;

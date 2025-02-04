@@ -27,11 +27,10 @@ export function sanitizeContent(editorState, styles = acceptedInlineStyles) {
     let contentState = editorState.getCurrentContent();
 
     const ignoreStyle = (style) => styles.indexOf(style) === -1;
-    const getSelection = (block, start, end) =>
-        SelectionState.createEmpty(block.getKey()).merge({
-            anchorOffset: start,
-            focusOffset: end,
-        });
+    const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
+        anchorOffset: start,
+        focusOffset: end,
+    });
 
     let nextEditorState = editorState;
 
@@ -48,9 +47,17 @@ export function sanitizeContent(editorState, styles = acceptedInlineStyles) {
         );
     });
 
-    nextEditorState = EditorState.push(nextEditorState, contentState, 'change-inline-style');
+    nextEditorState = EditorState.push(
+        nextEditorState,
+        contentState,
+        'change-inline-style',
+    );
 
-    nextEditorState = EditorState.push(nextEditorState, contentState, 'apply-entity');
+    nextEditorState = EditorState.push(
+        nextEditorState,
+        contentState,
+        'apply-entity',
+    );
 
     return nextEditorState;
 }

@@ -4,22 +4,8 @@
             <div class="sd-margin-b--3">
                 <label class="form-label">{{'Clock type'|translate}}</label>
                 <div class="button-group button-group--start">
-                    <button
-                        type="button"
-                        class="toggle-button"
-                        ng-class="{'toggle-button--active': !configuration.digital}"
-                        ng-click="configuration.digital = false"
-                    >
-                        Analog
-                    </button>
-                    <button
-                        type="button"
-                        class="toggle-button"
-                        ng-class="{'toggle-button--active': configuration.digital}"
-                        ng-click="configuration.digital = true"
-                    >
-                        Digital
-                    </button>
+                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': !configuration.digital}" ng-click="configuration.digital = false">Analog</button>
+                    <button type="button" class="toggle-button" ng-class="{'toggle-button--active': configuration.digital}" ng-click="configuration.digital = true">Digital</button>
                 </div>
             </div>
             <div class="sd-margin-b--2">
@@ -28,12 +14,7 @@
                     <ul class="list-group">
                         <li class="list-group-item list-group-item--no-click" ng-repeat="zone in configuration.zones">
                             <a class="sd-margin-e--auto" href="">{{ getTimezoneLabel(zone) }}</a>
-                            <a
-                                href=""
-                                class="icn-btn"
-                                ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"
-                                ><i class="icon-trash"></i
-                            ></a>
+                            <a href="" class="icn-btn" ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"><i class="icon-trash"></i></a>
                         </li>
                     </ul>
                     <div class="alert alert-info" ng-hide="configuration.zones.length" translate>No clock here!</div>
@@ -51,26 +32,15 @@
                             ng-model="search"
                             ng-change="searchZones(search)"
                             placeholder="{{ 'Search for clock'|translate }}"
-                        />
+                        >
                     </div>
                 </div>
                 <div class="form__item form__item--auto-width">
-                    <button
-                        class="btn btn--hollow"
-                        ng-disabled="!search"
-                        ng-click="search = ''; searchZones('')"
-                        translate
-                    >
-                        Clear
-                    </button>
+                    <button class="btn btn--hollow" ng-disabled="!search" ng-click="search = ''; searchZones('')" translate>Clear</button>
                 </div>
             </div>
             <ul class="list-group">
-                <li
-                    class="list-group-item"
-                    ng-repeat="zone in availableZones|filter:notIn(configuration.zones)"
-                    ng-click="configuration.zones.push(zone); notify('add', zone)"
-                >
+                <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)" ng-click="configuration.zones.push(zone); notify('add', zone)">
                     <a href="">{{ getTimezoneLabel(zone) }}</a>
                 </li>
             </ul>

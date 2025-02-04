@@ -15,16 +15,20 @@ class Label extends React.PureComponent<IProps> {
                 <div className="dropdown__menu-label">
                     {label}
 
-                    {label === 'Actions' ? (
-                        <button
-                            className="dropdown__menu-close"
-                            onClick={this.props.onClose}
-                            aria-label={gettext('Close')}
-                            data-test-id="close"
-                        >
-                            <i className="icon-close-small" />
-                        </button>
-                    ) : null}
+                    {
+                        label === 'Actions'
+                            ? (
+                                <button
+                                    className="dropdown__menu-close"
+                                    onClick={this.props.onClose}
+                                    aria-label={gettext('Close')}
+                                    data-test-id="close"
+                                >
+                                    <i className="icon-close-small" />
+                                </button>
+                            )
+                            : null
+                    }
                 </div>
             </li>
         );

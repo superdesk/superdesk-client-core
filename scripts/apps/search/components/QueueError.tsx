@@ -14,7 +14,9 @@ export class QueueError extends React.Component<any, any> {
 
     render() {
         if (this.props.item.queue_state && this.props.item.queue_state === 'error') {
-            return <div className="icon-warning-sign queue-error" title={this.props.item.error_message} />;
+            return (
+                <div className="icon-warning-sign queue-error" title={this.props.item.error_message} />
+            );
         }
 
         return null;

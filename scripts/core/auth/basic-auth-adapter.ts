@@ -6,10 +6,8 @@
  * to backend endpoints.
  */
 
-angular.module('superdesk.core.auth.basic', []).service('authAdapter', [
-    '$http',
-    'urls',
-    function ($http, urls) {
+angular.module('superdesk.core.auth.basic', [])
+    .service('authAdapter', ['$http', 'urls', function($http, urls) {
         /**
          * Set token using response object
          *
@@ -30,11 +28,9 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', [
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using database auth
          */
-        this.authenticate = (username, password) =>
-            urls
-                .resource('auth_db')
-                .then((url) => $http.post(url, {username: username, password: password}))
-                .then(this.setToken);
+        this.authenticate = (username, password) => urls.resource('auth_db')
+            .then((url) => $http.post(url, {username: username, password: password}))
+            .then(this.setToken);
 
         /**
          * @ngdoc method
@@ -43,11 +39,9 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', [
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using oidc auth
          */
-        this.authenticateOIDC = (authorization_code) =>
-            urls
-                .resource('auth_oidc')
-                .then((url) => $http.post(url, {}, {headers: {Authorization: formatTokenBearer(authorization_code)}}))
-                .then(this.setToken);
+        this.authenticateOIDC = (authorization_code) => urls.resource('auth_oidc')
+            .then((url) => $http.post(url, {}, {headers: {Authorization: formatTokenBearer(authorization_code)}}))
+            .then(this.setToken);
 
         /**
          * @ngdoc method
@@ -57,11 +51,9 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', [
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using XMPP auth (aka secure login)
          */
-        this.authenticateXMPP = (jid, transactionId) =>
-            urls
-                .resource('auth_xmpp')
-                .then((url) => $http.post(url, {jid: jid, transactionId: transactionId}))
-                .then(this.setToken);
+        this.authenticateXMPP = (jid, transactionId) => urls.resource('auth_xmpp')
+            .then((url) => $http.post(url, {jid: jid, transactionId: transactionId}))
+            .then(this.setToken);
 
         /**
          * Format token for basic auth
@@ -76,5 +68,4 @@ angular.module('superdesk.core.auth.basic', []).service('authAdapter', [
         function formatTokenBearer(token) {
             return token.startsWith('Bearer') ? token : 'Bearer ' + token;
         }
-    },
-]);
+    }]);

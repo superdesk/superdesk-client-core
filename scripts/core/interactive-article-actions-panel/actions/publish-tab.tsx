@@ -67,22 +67,19 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
     }
 
     otherDeskSelected(): boolean {
-        return (
-            this.state.selectedDestination.type === 'desk' &&
-            this.state.selectedDestination.desk !== this.props.item.task?.desk
-        );
+        return this.state.selectedDestination.type === 'desk'
+            && this.state.selectedDestination.desk !== this.props.item.task?.desk;
     }
 
     doPublish(applyDestination?: boolean): void {
-        this.props
-            .handleUnsavedChanges()
+        this.props.handleUnsavedChanges()
             .then((item) => {
                 const emptyPatches: Array<Partial<IArticle>> = [{}];
 
                 const afterSending =
-                    applyDestination === true &&
-                    this.state.selectedDestination.type === 'desk' &&
-                    this.otherDeskSelected()
+                    applyDestination === true
+                    && this.state.selectedDestination.type === 'desk'
+                    && this.otherDeskSelected()
                         ? sdApi.article.sendItems([item], this.state.selectedDestination)
                         : Promise.resolve(emptyPatches);
 
@@ -94,15 +91,18 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                         ...getPublishingTargetPatch(item, this.state.publishingTarget),
                     };
 
-                    const confirmed =
-                        appConfig?.features?.confirmDueDate === true
-                            ? confirmPublish([itemToPublish])
-                            : Promise.resolve();
+                    const confirmed = appConfig?.features?.confirmDueDate === true
+                        ? confirmPublish([itemToPublish])
+                        : Promise.resolve();
 
                     confirmed.then(() => {
                         // Cloning to prevent objects from being modified by angular
-                        sdApi.article
-                            .publishItem(cloneDeep(item), cloneDeep(itemToPublish), 'publish', this.props.onError)
+                        sdApi.article.publishItem(
+                            cloneDeep(item),
+                            cloneDeep(itemToPublish),
+                            'publish',
+                            this.props.onError,
+                        )
                             .then(() => {
                                 ng.get('authoringWorkspace').close();
                                 ng.get('$rootScope').$applyAsync(); // required for authoring close to take effect
@@ -138,8 +138,7 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        if (this.state.subscribers == null) {
-            // loading
+        if (this.state.subscribers == null) { // loading
             return null;
         }
 
@@ -150,14 +149,12 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
         );
         const publishFromEnabled = (appConfig.ui.sendAndPublish ?? true) === true;
 
-        const sectionsFromExtensions = Object.values(extensions).flatMap(
-            ({activationResult}) => activationResult?.contributions?.publishingSections ?? [],
-        );
+        const sectionsFromExtensions = Object.values(extensions)
+            .flatMap(({activationResult}) => activationResult?.contributions?.publishingSections ?? []);
 
-        const style: CSSProperties | undefined =
-            sectionsFromExtensions.length > 0
-                ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: 32, height: '100%'}
-                : undefined;
+        const style: CSSProperties | undefined = sectionsFromExtensions.length > 0
+            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: 32, height: '100%'}
+            : undefined;
 
         const childrenStyle: CSSProperties = {
             flex: 1, // equal width for columns
@@ -172,114 +169,133 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                     <PanelContent markupV2={markupV2} data-test-id="publishing-section">
                         <div style={style}>
                             <div style={childrenStyle}>
-                                {publishFromEnabled && (
-                                    <ToggleBox variant="simple" title={gettext('From')} initiallyOpen>
-                                        <DestinationSelect
-                                            value={this.state.selectedDestination}
-                                            onChange={(value) => {
-                                                this.setState({
-                                                    selectedDestination: value,
-                                                });
+                                {
+                                    publishFromEnabled && (
+                                        <ToggleBox variant="simple" title={gettext('From')} initiallyOpen>
+                                            <DestinationSelect
+                                                value={this.state.selectedDestination}
+                                                onChange={(value) => {
+                                                    this.setState({
+                                                        selectedDestination: value,
+                                                    });
+
+                                                    /**
+                                                     * do not persist destination
+                                                     * article desk isn't supposed to be changed,
+                                                     * except when user chooses "publish from" option
+                                                     * that sends to another desk and publishes at the same time.
+                                                     * If operation is cancelled, "publish from" value must not be saved
+                                                     */
+                                                }}
+                                                includePersonalSpace={false}
 
                                                 /**
-                                                 * do not persist destination
-                                                 * article desk isn't supposed to be changed,
-                                                 * except when user chooses "publish from" option
-                                                 * that sends to another desk and publishes at the same time.
-                                                 * If operation is cancelled, "publish from" value must not be saved
+                                                 * Changing the destination is only used
+                                                 * to control which desk's output stage
+                                                 * the published item appears in, thus
+                                                 * choosing a stage would not have an impact
                                                  */
-                                            }}
-                                            includePersonalSpace={false}
-                                            /**
-                                             * Changing the destination is only used
-                                             * to control which desk's output stage
-                                             * the published item appears in, thus
-                                             * choosing a stage would not have an impact
-                                             */
-                                            hideStages={true}
-                                            availableDesks={sdApi.desks
-                                                .getAllDesks()
-                                                .filter((desk) => sdApi.article.canPublishOnDesk(desk.desk_type))
-                                                .toOrderedMap()}
-                                        />
-                                    </ToggleBox>
-                                )}
+                                                hideStages={true}
+
+                                                availableDesks={sdApi.desks.getAllDesks()
+                                                    .filter((desk) => sdApi.article.canPublishOnDesk(desk.desk_type))
+                                                    .toOrderedMap()
+                                                }
+                                            />
+                                        </ToggleBox>
+                                    )
+                                }
 
                                 <PublishingDateOptions
                                     items={[this.props.item]}
                                     value={this.state.publishingDateOptions}
                                     onChange={(val) => {
-                                        this.setState({publishingDateOptions: val}, () => {
-                                            this.props.onDataChange?.({
-                                                ...this.props.item,
-                                                ...getPublishingDatePatch(
-                                                    this.props.item,
-                                                    this.state.publishingDateOptions,
-                                                ),
-                                            });
-                                        });
+                                        this.setState(
+                                            {publishingDateOptions: val},
+                                            () => {
+                                                this.props.onDataChange?.({
+                                                    ...this.props.item,
+                                                    ...getPublishingDatePatch(
+                                                        this.props.item,
+                                                        this.state.publishingDateOptions,
+                                                    ),
+                                                });
+                                            },
+                                        );
                                     }}
                                     allowSettingEmbargo={appConfig.ui.publishEmbargo}
-                                    allowSettingPublishSchedule={appConfig.authoring.panels.publish.publishSchedule}
+                                    allowSettingPublishSchedule={
+                                        appConfig.authoring.panels.publish.publishSchedule
+                                    }
                                 />
 
                                 {appConfig.authoring.panels.publish.publishingTarget && (
                                     <PublishingTargetSelect
                                         value={this.state.publishingTarget}
                                         onChange={(val) => {
-                                            this.setState({publishingTarget: val}, () => {
-                                                this.props.onDataChange?.({
-                                                    ...this.props.item,
-                                                    ...getPublishingTargetPatch(
-                                                        this.props.item,
-                                                        this.state.publishingTarget,
-                                                    ),
-                                                });
-                                            });
+                                            this.setState(
+                                                {publishingTarget: val},
+                                                () => {
+                                                    this.props.onDataChange?.({
+                                                        ...this.props.item,
+                                                        ...getPublishingTargetPatch(
+                                                            this.props.item,
+                                                            this.state.publishingTarget,
+                                                        ),
+                                                    });
+                                                },
+                                            );
                                         }}
                                     />
                                 )}
                             </div>
 
-                            {sectionsFromExtensions.map((panel, i) => {
-                                const Component = panel.component;
+                            {
+                                sectionsFromExtensions.map((panel, i) => {
+                                    const Component = panel.component;
 
-                                return (
-                                    <div style={childrenStyle} key={i}>
-                                        <Component item={this.props.item} />
-                                    </div>
-                                );
-                            })}
+                                    return (
+                                        <div style={childrenStyle} key={i}>
+                                            <Component item={this.props.item} />
+                                        </div>
+                                    );
+                                })
+                            }
+
                         </div>
                     </PanelContent>
 
                     <PanelFooter markupV2={markupV2}>
-                        {canPreview && (
-                            <Button
-                                text={gettext('Preview')}
-                                onClick={() => {
-                                    this.doPreview();
-                                }}
-                                size="large"
-                                expand
-                                style="hollow"
-                            />
-                        )}
+                        {
+                            canPreview && (
+                                <Button
+                                    text={gettext('Preview')}
+                                    onClick={() => {
+                                        this.doPreview();
+                                    }}
+                                    size="large"
+                                    expand
+                                    style="hollow"
+                                />
+                            )
+                        }
 
-                        {publishFromEnabled && (
-                            <Button
-                                text={gettext('Publish from')}
-                                onClick={() => {
-                                    this.doPublish(true);
-                                }}
-                                disabled={!otherDeskSelected}
-                                size="large"
-                                type="primary"
-                                expand
-                                style="hollow"
-                                data-test-id="publish-from"
-                            />
-                        )}
+                        {
+                            publishFromEnabled && (
+                                <Button
+                                    text={gettext('Publish from')}
+                                    onClick={() => {
+                                        this.doPublish(true);
+                                    }}
+                                    disabled={!otherDeskSelected}
+                                    size="large"
+                                    type="primary"
+                                    expand
+                                    style="hollow"
+                                    data-test-id="publish-from"
+                                />
+                            )
+                        }
 
                         <Button
                             text={gettext('Publish')}

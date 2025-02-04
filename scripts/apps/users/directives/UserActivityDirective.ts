@@ -7,7 +7,7 @@ export function UserActivityDirective(profileService, asset) {
         scope: {
             user: '=',
         },
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             var page = 1;
             var maxResults = 5;
 
@@ -19,7 +19,7 @@ export function UserActivityDirective(profileService, asset) {
                 });
             });
 
-            scope.loadMore = function () {
+            scope.loadMore = function() {
                 page++;
                 profileService.getUserActivity(scope.user, maxResults, page).then((next) => {
                     Array.prototype.push.apply(scope.activityFeed._items, next._items);

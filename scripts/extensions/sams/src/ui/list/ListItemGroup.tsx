@@ -11,12 +11,20 @@ interface IProps {
 
 export class ListItemGroup extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames(this.props.className, 'sd-list-item-group', {
-            'sd-list-item-group--space-between-items': this.props.spaceBetweenItems,
-            'sd-list-item-group--margin': this.props.margin,
-            [`sd-shadow--z${this.props.shadow}`]: this.props.shadow,
-        });
+        const classes = classNames(
+            this.props.className,
+            'sd-list-item-group',
+            {
+                'sd-list-item-group--space-between-items': this.props.spaceBetweenItems,
+                'sd-list-item-group--margin': this.props.margin,
+                [`sd-shadow--z${this.props.shadow}`]: this.props.shadow,
+            },
+        );
 
-        return <div className={classes}>{this.props.children}</div>;
+        return (
+            <div className={classes}>
+                {this.props.children}
+            </div>
+        );
     }
 }

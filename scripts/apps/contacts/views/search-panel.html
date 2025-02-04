@@ -1,11 +1,7 @@
 <div id="contacts-search-panel">
     <div class="header">
-        <h3 class="panel__heading" translate>Filter contacts</h3>
-        <button
-            aria-label="{{ :: 'Close panel' | translate }}"
-            class="doopen"
-            ng-click="openAdvanceSearch = !openAdvanceSearch"
-        >
+        <h3 class="panel__heading" translate>Filter contacts</h3> 
+        <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="openAdvanceSearch = !openAdvanceSearch">
             <i class="icon-close-small"></i>
         </button>
     </div>
@@ -17,102 +13,77 @@
                         <div class="field">
                             <label for="search-fname" translate>First Name</label>
                             <div class="control">
-                                <input
-                                    type="text"
-                                    ng-keypress="keyPressed($event)"
-                                    id="search-fname"
-                                    ng-model="meta.first_name"
-                                />
+                                <input type="text" ng-keypress="keyPressed($event)" id="search-fname"
+                                    ng-model="meta.first_name">
                             </div>
                         </div>
 
                         <div class="field">
                             <label for="search-lname" translate>Last Name</label>
                             <div class="control">
-                                <input
-                                    type="text"
-                                    id="search-lname"
-                                    ng-keypress="keyPressed($event)"
-                                    ng-model="meta.last_name"
-                                />
+                                <input type="text" id="search-lname" ng-keypress="keyPressed($event)"
+                                    ng-model="meta.last_name">
                             </div>
                         </div>
                     </div>
                     <div id="org-field"></div>
                     <div class="field">
                         <label for="search-contact_type" translate>Contact Type</label>
-                        <select
-                            ng-model="meta.contact_type"
-                            name="contact_type"
-                            id="contact_type"
-                            ng-options="type.qcode as type.name for type in metadata.contact_type | orderBy:'name'"
-                        ></select>
+                        <select ng-model="meta.contact_type"
+                                name="contact_type"
+                                id="contact_type"
+                                ng-options="type.qcode as type.name for type in metadata.contact_type | orderBy:'name'">
+                        </select>
                     </div>
                     <div class="field">
                         <label for="search-job_title" translate>Job Title</label>
-                        <select
-                            ng-model="meta.job_title"
-                            name="job_title"
-                            id="job_title"
-                            ng-options="job.name as job.name for job in metadata.contact_job_titles | orderBy:'name'"
-                        ></select>
+                        <select ng-model="meta.job_title"
+                                name="job_title"
+                                id="job_title"
+                                ng-options="job.name as job.name for job in metadata.contact_job_titles | orderBy:'name'">
+                        </select>
                     </div>
                     <div class="field">
                         <label for="search-postcode" translate>Email</label>
                         <div class="control">
-                            <input
-                                type="text"
-                                id="search-email"
-                                ng-keypress="keyPressed($event)"
-                                ng-model="meta.contact_email"
-                            />
+                            <input type="text" id="search-email" ng-keypress="keyPressed($event)"
+                                ng-model="meta.contact_email">
                         </div>
                     </div>
                     <div class="field">
                         <label for="search-postcode" translate>Post Code</label>
                         <div class="control">
-                            <input
-                                type="text"
-                                id="search-postcode"
-                                ng-keypress="keyPressed($event)"
-                                ng-model="meta.postcode"
-                            />
+                            <input type="text" id="search-postcode" ng-keypress="keyPressed($event)"
+                                ng-model="meta.postcode">
                         </div>
                     </div>
                     <div class="field">
                         <label for="search-city" translate>City</label>
                         <div class="control">
-                            <input type="text" id="search-city" ng-keypress="keyPressed($event)" ng-model="meta.city" />
+                            <input type="text" id="search-city" ng-keypress="keyPressed($event)"
+                                ng-model="meta.city">
                         </div>
                     </div>
                     <div class="field">
                         <label for="search-state" translate>State</label>
                         <div class="control">
-                            <input
-                                type="text"
-                                id="search-state"
-                                ng-keypress="keyPressed($event)"
-                                ng-model="meta.contact_state"
-                            />
+                            <input type="text" id="search-state" ng-keypress="keyPressed($event)"
+                                ng-model="meta.contact_state">
                         </div>
                     </div>
                     <div class="field">
                         <label for="search-country" translate>Country</label>
                         <div class="control">
-                            <input
-                                type="text"
-                                id="search-country"
-                                ng-keypress="keyPressed($event)"
-                                ng-model="meta.country"
-                            />
+                            <input type="text" id="search-country" ng-keypress="keyPressed($event)"
+                                ng-model="meta.country">
                         </div>
                     </div>
                 </fieldset>
             </form>
         </div>
     </div>
-    <div class="float-search-btn">
+   <div class="float-search-btn">
         <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
         <button class="btn btn--primary btn--full searchItemsch" ng-click="searchItems()" translate>Search</button>
-    </div>
+   </div>
 </div>

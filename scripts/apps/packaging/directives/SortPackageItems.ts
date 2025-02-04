@@ -1,6 +1,6 @@
 export function SortPackageItems() {
     return {
-        link: function (scope, element) {
+        link: function(scope, element) {
             var updated = false;
 
             element.sortable({
@@ -9,32 +9,50 @@ export function SortPackageItems() {
                 containment: '.package-edit-container',
                 tolerance: 'pointer',
                 placeholder: {
-                    element: function (current) {
+                    element: function(current) {
                         var height = current.height() - 40;
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function () {
-                        /* no-op */
-                    },
+                    update: function() { /* no-op */ },
                 },
-                start: function (event, ui) {
-                    ui.item.data('start_index', ui.item.parent().find('li.sort-item').index(ui.item));
+                start: function(event, ui) {
+                    ui.item
+                        .data(
+                            'start_index',
+                            ui.item
+                                .parent()
+                                .find('li.sort-item')
+                                .index(ui.item),
+                        );
 
-                    ui.item.data('start_group', ui.item.parent().data('group'));
+                    ui.item
+                        .data(
+                            'start_group',
+                            ui.item
+                                .parent()
+                                .data('group'),
+                        );
                 },
-                stop: function (event, ui) {
+                stop: function(event, ui) {
                     if (updated) {
                         updated = false;
                         var start = {
-                            index: ui.item.data('start_index'),
+                            index: ui.item
+                                .data('start_index'),
 
-                            group: ui.item.data('start_group'),
+                            group: ui.item
+                                .data('start_group'),
                         };
                         var end = {
-                            index: ui.item.parent().find('li.sort-item').index(ui.item),
+                            index: ui.item
+                                .parent()
+                                .find('li.sort-item')
+                                .index(ui.item),
 
-                            group: ui.item.parent().data('group'),
+                            group: ui.item
+                                .parent()
+                                .data('group'),
                         };
 
                         if (start.group !== end.group) {
@@ -44,7 +62,7 @@ export function SortPackageItems() {
                         scope.$apply();
                     }
                 },
-                update: function (event, ui) {
+                update: function(event, ui) {
                     updated = true;
                 },
                 cancel: '.fake',

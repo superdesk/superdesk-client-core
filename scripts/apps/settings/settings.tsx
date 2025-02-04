@@ -38,9 +38,8 @@ class SettingsComponent extends React.Component<IProps, IState> {
 
         superdesk.getMenu(superdesk.MENU_SETTINGS).then((flatMenuItems) => {
             this.setState({
-                flatMenuItems: flatMenuItems.sort(
-                    (a, b) => b.settings_menu_group.priority - a.settings_menu_group.priority,
-                ),
+                flatMenuItems: flatMenuItems.sort((a, b) =>
+                    b.settings_menu_group.priority - a.settings_menu_group.priority),
                 loading: false,
             });
         });
@@ -86,9 +85,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
             const groupLabel = coreMenuGroups[key].getLabel();
 
             listToRender.push(
-                <li key={++reactKey} className="sd-left-nav__group-header">
-                    {groupLabel}
-                </li>,
+                <li key={++reactKey} className="sd-left-nav__group-header">{groupLabel}</li>,
             );
 
             let blockGroupHeading = (
@@ -105,32 +102,38 @@ class SettingsComponent extends React.Component<IProps, IState> {
             let blockListItems = [];
 
             menuItemsByGroup[key].forEach((item) => {
-                const className =
-                    'sd-left-nav__btn' + (currentRoute._id === item._id ? ' sd-left-nav__btn--active' : '');
+                const className = 'sd-left-nav__btn'
+                    + (currentRoute._id === item._id ? ' sd-left-nav__btn--active' : '');
 
                 listToRender.push(
-                    <li key={++reactKey}>
-                        <a href={'#' + item.href} className={className}>
-                            {gettext(item.label)}
-                        </a>
-                    </li>,
+                    (
+                        <li key={++reactKey}>
+                            <a href={'#' + item.href} className={className}>
+                                {gettext(item.label)}
+                            </a>
+                        </li>
+                    ),
                 );
 
                 blockListItems.push(
-                    <a key={++reactKey} href={'#' + item.href} className="text-link">
+                    <a
+                        key={++reactKey}
+                        href={'#' + item.href}
+                        className="text-link"
+                    >
                         {gettext(item.label)}
                     </a>,
                 );
             });
 
-            blockToRender.push(
-                <div className="sd-card" key={++reactKey}>
-                    {blockGroupHeading}
-                    <div className="sd-card__content sd-padding-all--3">
-                        <div className="text-link__group">{blockListItems}</div>
+            blockToRender.push(<div className="sd-card" key={++reactKey}>
+                {blockGroupHeading}
+                <div className="sd-card__content sd-padding-all--3">
+                    <div className="text-link__group">
+                        {blockListItems}
                     </div>
-                </div>,
-            );
+                </div>
+            </div>);
         }
 
         const defaultSettingsPage = (

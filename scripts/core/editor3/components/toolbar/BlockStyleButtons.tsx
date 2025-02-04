@@ -60,22 +60,27 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
         const {editorState, editorFormat} = this.props;
         const selection = editorState.getSelection();
         const blockStyleKeys = Object.keys(blockStyles);
-        const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+        const blockType = editorState
+            .getCurrentContent()
+            .getBlockForKey(selection.getStartKey())
+            .getType();
 
         return (
             <span>
-                {blockStyleKeys
-                    .filter((type) => editorFormat.indexOf(type) > -1)
-                    .map((type) => (
-                        <StyleButton
-                            uiTheme={this.props.uiTheme}
-                            key={type}
-                            active={blockStyles[type] === blockType}
-                            label={type}
-                            onToggle={this.onToggle}
-                            style={blockStyles[type]}
-                        />
-                    ))}
+                {
+                    blockStyleKeys
+                        .filter((type) => editorFormat.indexOf(type) > -1)
+                        .map((type) => (
+                            <StyleButton
+                                uiTheme={this.props.uiTheme}
+                                key={type}
+                                active={blockStyles[type] === blockType}
+                                label={type}
+                                onToggle={this.onToggle}
+                                style={blockStyles[type]}
+                            />
+                        ))
+                }
             </span>
         );
     }
@@ -97,8 +102,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     toggleBlockStyle: (blockType) => dispatch(actions.toggleBlockStyle(blockType)),
-    createChangeBlockStyleSuggestion: (type, active) =>
-        dispatch(actions.createChangeBlockStyleSuggestion(type, active)),
+    createChangeBlockStyleSuggestion:
+        (type, active) => dispatch(actions.createChangeBlockStyleSuggestion(type, active)),
 });
 
 const BlockStyleButtons = connect(mapStateToProps, mapDispatchToProps)(BlockStyleButtonsComponent);

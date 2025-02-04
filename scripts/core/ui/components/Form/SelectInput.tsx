@@ -23,7 +23,9 @@ export const SelectInput: React.StatelessComponent<any> = ({
     onFocus,
     ...props
 }) => {
-    const key = clearable ? get(value, keyField, '') : get(value, keyField, get(options, `[0].${keyField}`));
+    const key = clearable ?
+        get(value, keyField, '') :
+        get(value, keyField, get(options, `[0].${keyField}`));
 
     const opts = options.map((opt) => ({
         key: get(opt, keyField),
@@ -31,7 +33,9 @@ export const SelectInput: React.StatelessComponent<any> = ({
     }));
 
     const onChangeHandler = (_field, _key) => {
-        const _value = options.find((option) => get(option, keyField) === _key) || null;
+        const _value = options.find(
+            (option) => get(option, keyField) === _key,
+        ) || null;
 
         onChange(_field, _value);
     };
@@ -66,13 +70,15 @@ SelectInput.propTypes = {
     boxed: PropTypes.bool,
     noMargin: PropTypes.bool,
 
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            key: PropTypes.string,
-            label: PropTypes.string,
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]),
-        }),
-    ).isRequired,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        label: PropTypes.string,
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.object,
+            PropTypes.number,
+        ]),
+    })).isRequired,
     keyField: PropTypes.string,
     labelField: PropTypes.string,
     clearable: PropTypes.bool,

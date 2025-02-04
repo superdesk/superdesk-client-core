@@ -58,19 +58,22 @@ export class AutocompleteSuggestions extends React.PureComponent<IProps, IState>
     componentDidMount() {
         this._mounted = true;
 
-        this.popper = createPopper(this.props.referenceNode, this.el, {
-            placement: 'bottom',
-            modifiers: [sameWidth, maxSize, applyMaxSize, flipCustomModifier],
-        });
+        this.popper = createPopper(
+            this.props.referenceNode,
+            this.el,
+            {
+                placement: 'bottom',
+                modifiers: [sameWidth, maxSize, applyMaxSize, flipCustomModifier],
+            });
     }
 
     componentDidUpdate() {
         const selectedOptionElement = this.el?.querySelector('[aria-selected=true]');
 
         if (
-            selectedOptionElement instanceof HTMLElement &&
-            this.el != null &&
-            isScrolledIntoViewVertically(selectedOptionElement, this.el) === false
+            selectedOptionElement instanceof HTMLElement
+            && this.el != null
+            && isScrolledIntoViewVertically(selectedOptionElement, this.el) === false
         ) {
             selectedOptionElement.scrollIntoView();
         }
@@ -126,22 +129,24 @@ export class AutocompleteSuggestions extends React.PureComponent<IProps, IState>
                     }
                 }}
             >
-                {this.props.items.map((value, i) => {
-                    const selected = i === this.state.selectedIndex;
+                {
+                    this.props.items.map((value, i) => {
+                        const selected = i === this.state.selectedIndex;
 
-                    return (
-                        <button
-                            key={value}
-                            aria-selected={selected}
-                            className={classNames('item', {selected})}
-                            onClick={() => {
-                                this.handleSelect(i);
-                            }}
-                        >
-                            {value}
-                        </button>
-                    );
-                })}
+                        return (
+                            <button
+                                key={value}
+                                aria-selected={selected}
+                                className={classNames('item', {selected})}
+                                onClick={() => {
+                                    this.handleSelect(i);
+                                }}
+                            >
+                                {value}
+                            </button>
+                        );
+                    })
+                }
             </div>
         );
     }

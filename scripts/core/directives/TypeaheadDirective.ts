@@ -1,7 +1,6 @@
 import {debounce} from 'lodash';
 
-export default angular
-    .module('superdesk.core.directives.typeahead', [])
+export default angular.module('superdesk.core.directives.typeahead', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -29,228 +28,202 @@ export default angular
      *  </ul>
      * ```
      */
-    .directive('sdTypeahead', [
-        '$timeout',
-        'Keys',
-        '$document',
-        function ($timeout, Keys, $document) {
-            return {
-                restrict: 'A',
-                transclude: true,
-                replace: true,
-                templateUrl: 'scripts/core/views/sdTypeahead.html',
-                scope: {
-                    search: '&',
-                    select: '&',
-                    items: '=',
-                    term: '=',
-                    alwaysVisible: '=',
-                    disabled: '=',
-                    blur: '&',
-                    placeholder: '@',
-                    tabindex: '=',
-                    style: '=',
-                    keepinput: '=',
-                    debounce: '@',
-                },
-                controller: [
-                    '$scope',
-                    function ($scope) {
+    .directive('sdTypeahead', ['$timeout', 'Keys', '$document', function($timeout, Keys, $document) {
+        return {
+            restrict: 'A',
+            transclude: true,
+            replace: true,
+            templateUrl: 'scripts/core/views/sdTypeahead.html',
+            scope: {
+                search: '&',
+                select: '&',
+                items: '=',
+                term: '=',
+                alwaysVisible: '=',
+                disabled: '=',
+                blur: '&',
+                placeholder: '@',
+                tabindex: '=',
+                style: '=',
+                keepinput: '=',
+                debounce: '@',
+            },
+            controller: ['$scope', function($scope) {
+                $scope.hide = true;
+
+                this.activate = function(item) {
+                    $scope.active = item;
+                };
+
+                this.activateNextItem = function() {
+                    var index = $scope.items.indexOf($scope.active);
+
+                    this.activate($scope.items[(index + 1) % $scope.items.length]);
+                };
+
+                this.activatePreviousItem = function() {
+                    var index = $scope.items.indexOf($scope.active);
+
+                    this.activate($scope.items[index === 0 ? $scope.items.length - 1 : index - 1]);
+                };
+
+                this.isActive = function(item) {
+                    return $scope.active === item;
+                };
+
+                this.selectActive = function() {
+                    this.select($scope.active);
+                    $scope.focused = true; // don't loose focus on enter
+                };
+
+                this.select = function(item) {
+                    if (!$scope.hide) {
                         $scope.hide = true;
+                        $scope.focused = false;
+                        $scope.select({item: item});
+                        $scope.active = null;
 
-                        this.activate = function (item) {
-                            $scope.active = item;
-                        };
+                        // triggers closing of dropdown when adding item on search by pressing enter
+                        if (item) {
+                            $document.triggerHandler('click');
 
-                        this.activateNextItem = function () {
-                            var index = $scope.items.indexOf($scope.active);
-
-                            this.activate($scope.items[(index + 1) % $scope.items.length]);
-                        };
-
-                        this.activatePreviousItem = function () {
-                            var index = $scope.items.indexOf($scope.active);
-
-                            this.activate($scope.items[index === 0 ? $scope.items.length - 1 : index - 1]);
-                        };
-
-                        this.isActive = function (item) {
-                            return $scope.active === item;
-                        };
-
-                        this.selectActive = function () {
-                            this.select($scope.active);
-                            $scope.focused = true; // don't loose focus on enter
-                        };
-
-                        this.select = function (item) {
-                            if (!$scope.hide) {
-                                $scope.hide = true;
-                                $scope.focused = false;
-                                $scope.select({item: item});
-                                $scope.active = null;
-
-                                // triggers closing of dropdown when adding item on search by pressing enter
-                                if (item) {
-                                    $document.triggerHandler('click');
-
-                                    // Clear text input
-                                    if (!$scope.keepinput) {
-                                        $scope.term = null;
-                                    }
-                                }
-                            }
-                        };
-
-                        $scope.isVisible = function () {
-                            return (
-                                !$scope.hide &&
-                                ($scope.focused || $scope.mousedOver) &&
-                                $scope.items &&
-                                $scope.items.length > 0
-                            );
-                        };
-
-                        $scope.query = debounce(
-                            () => {
-                                $scope.$applyAsync(() => {
-                                    $scope.hide = false;
-                                    $scope.search({term: $scope.term});
-                                });
-                            },
-                            parseInt($scope.debounce || '0', 10),
-                        );
-                    },
-                ],
-
-                link: function (scope, element, attrs, controller) {
-                    var $input = element.find('.input-term > input');
-                    var $list = element.find('.item-list');
-
-                    $input.on('focus', () => {
-                        scope.$applyAsync(() => {
-                            scope.focused = true;
-                        });
-                    });
-
-                    $input.on('blur', () => {
-                        scope.$applyAsync(() => {
-                            scope.focused = false;
-                            if (typeof scope.blur === 'function') {
-                                scope.blur({item: scope.active});
-                            }
-                        });
-                    });
-
-                    $list.on('mouseover', () => {
-                        scope.$applyAsync(() => {
-                            scope.mousedOver = true;
-                        });
-                    });
-
-                    $list.on('mouseleave', () => {
-                        scope.$applyAsync(() => {
-                            scope.mousedOver = false;
-                        });
-                    });
-
-                    $input.on('keydown', (e) => {
-                        if (e.keyCode === Keys.enter) {
-                            scope.$applyAsync(() => {
-                                controller.selectActive();
-                            });
-                            e.preventDefault();
-                        }
-
-                        if (e.keyCode === Keys.escape) {
-                            scope.$applyAsync(() => {
-                                scope.hide = true;
-                            });
-                        }
-
-                        var list = element.find('.item-list')[0];
-                        var active = element.find('.active')[0];
-
-                        if (e.keyCode === Keys.down) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (list && list.children.length) {
-                                scope.$applyAsync(() => {
-                                    controller.activateNextItem();
-                                    scrollToActive(list, active);
-                                });
+                            // Clear text input
+                            if (!$scope.keepinput) {
+                                $scope.term = null;
                             }
                         }
+                    }
+                };
 
-                        if (e.keyCode === Keys.up) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (list && list.children.length) {
-                                scope.$applyAsync(() => {
-                                    controller.activatePreviousItem();
-                                    scrollToActive(list, active);
-                                });
-                            }
+                $scope.isVisible = function() {
+                    return !$scope.hide && ($scope.focused || $scope.mousedOver)
+                        && ($scope.items && $scope.items.length > 0);
+                };
+
+                $scope.query = debounce(() => {
+                    $scope.$applyAsync(() => {
+                        $scope.hide = false;
+                        $scope.search({term: $scope.term});
+                    });
+                }, parseInt($scope.debounce || '0', 10));
+            }],
+
+            link: function(scope, element, attrs, controller) {
+                var $input = element.find('.input-term > input');
+                var $list = element.find('.item-list');
+
+                $input.on('focus', () => {
+                    scope.$applyAsync(() => {
+                        scope.focused = true;
+                    });
+                });
+
+                $input.on('blur', () => {
+                    scope.$applyAsync(() => {
+                        scope.focused = false;
+                        if (typeof scope.blur === 'function') {
+                            scope.blur({item: scope.active});
                         }
                     });
+                });
 
-                    scope.$on('$destroy', () => {
-                        $input.off();
-                        $list.off();
+                $list.on('mouseover', () => {
+                    scope.$applyAsync(() => {
+                        scope.mousedOver = true;
                     });
+                });
 
-                    function scrollToActive(list, active) {
-                        $timeout(
-                            () => {
-                                if (list && active) {
-                                    list.scrollTop = Math.max(0, active.offsetTop - 2 * active.clientHeight);
-                                }
-                            },
-                            10,
-                            false,
-                        ); // requires a timeout to scroll once the active item gets its class
+                $list.on('mouseleave', () => {
+                    scope.$applyAsync(() => {
+                        scope.mousedOver = false;
+                    });
+                });
+
+                $input.on('keydown', (e) => {
+                    if (e.keyCode === Keys.enter) {
+                        scope.$applyAsync(() => {
+                            controller.selectActive();
+                        });
+                        e.preventDefault();
                     }
 
-                    scope.$watch('focused', (focused) => {
-                        if (focused) {
-                            $timeout(
-                                () => {
-                                    $input.focus();
-                                },
-                                0,
-                                false,
-                            );
-                        } else {
-                            scope.active = null;
-                        }
-                    });
+                    if (e.keyCode === Keys.escape) {
+                        scope.$applyAsync(() => {
+                            scope.hide = true;
+                        });
+                    }
 
-                    scope.$watch('isVisible()', (visible) => {
-                        if (visible || scope.alwaysVisible) {
-                            scope.hide = false;
-                        } else {
-                            scope.active = null;
+                    var list = element.find('.item-list')[0];
+                    var active = element.find('.active')[0];
+
+                    if (e.keyCode === Keys.down) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (list && list.children.length) {
+                            scope.$applyAsync(() => {
+                                controller.activateNextItem();
+                                scrollToActive(list, active);
+                            });
                         }
-                    });
-                },
-            };
-        },
-    ])
+                    }
+
+                    if (e.keyCode === Keys.up) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (list && list.children.length) {
+                            scope.$applyAsync(() => {
+                                controller.activatePreviousItem();
+                                scrollToActive(list, active);
+                            });
+                        }
+                    }
+                });
+
+                scope.$on('$destroy', () => {
+                    $input.off();
+                    $list.off();
+                });
+
+                function scrollToActive(list, active) {
+                    $timeout(() => {
+                        if (list && active) {
+                            list.scrollTop = Math.max(0, active.offsetTop - 2 * active.clientHeight);
+                        }
+                    }, 10, false); // requires a timeout to scroll once the active item gets its class
+                }
+
+                scope.$watch('focused', (focused) => {
+                    if (focused) {
+                        $timeout(() => {
+                            $input.focus();
+                        }, 0, false);
+                    } else {
+                        scope.active = null;
+                    }
+                });
+
+                scope.$watch('isVisible()', (visible) => {
+                    if (visible || scope.alwaysVisible) {
+                        scope.hide = false;
+                    } else {
+                        scope.active = null;
+                    }
+                });
+            },
+        };
+    }])
     .directive('typeaheadItem', () => ({
         require: '^sdTypeahead',
-        link: function (scope, element, attrs, controller) {
+        link: function(scope, element, attrs, controller) {
             var item = scope.$eval(attrs.typeaheadItem);
 
-            scope.$watch(
-                () => controller.isActive(item),
-                (active) => {
-                    if (active) {
-                        element.addClass('active');
-                    } else {
-                        element.removeClass('active');
-                    }
-                },
-            );
+            scope.$watch(() => controller.isActive(item), (active) => {
+                if (active) {
+                    element.addClass('active');
+                } else {
+                    element.removeClass('active');
+                }
+            });
 
             element.on('mouseenter', (e) => {
                 scope.$applyAsync(() => {

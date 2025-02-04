@@ -92,15 +92,16 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
                 onMouseDown={this.onToggle}
                 style={this.props.uiTheme == null ? undefined : {color: this.props.uiTheme.textColor}}
             >
-                {iconClass ? (
-                    <i
-                        data-test-id="formatting-option"
-                        data-test-value={getEditor3RichTextFormattingOptions()[label]}
-                        className={iconClass}
-                    />
-                ) : (
-                    <b>{label}</b>
-                )}
+                {iconClass
+                    ? (
+                        <i
+                            data-test-id="formatting-option"
+                            data-test-value={getEditor3RichTextFormattingOptions()[label]}
+                            className={iconClass}
+                        />
+                    )
+                    : <b>{label}</b>
+                }
             </span>
         );
     }

@@ -60,17 +60,13 @@ export class ItemList extends React.Component<IProps, IState> {
         this.setSelectedItem(item);
 
         $timeout.cancel(this.updateTimeout);
-        this.updateTimeout = $timeout(
-            () => {
-                if (item && scope.preview) {
-                    scope.$apply(() => {
-                        scope.preview(item);
-                    });
-                }
-            },
-            0,
-            false,
-        );
+        this.updateTimeout = $timeout(() => {
+            if (item && scope.preview) {
+                scope.$apply(() => {
+                    scope.preview(item);
+                });
+            }
+        }, 0, false);
     }
 
     setSelectedItem(item) {
@@ -90,15 +86,15 @@ export class ItemList extends React.Component<IProps, IState> {
         let diff;
 
         switch (event.keyCode) {
-            case Keys.right:
-            case Keys.down:
-                diff = 1;
-                break;
+        case Keys.right:
+        case Keys.down:
+            diff = 1;
+            break;
 
-            case Keys.left:
-            case Keys.up:
-                diff = -1;
-                break;
+        case Keys.left:
+        case Keys.up:
+            diff = -1;
+            break;
         }
 
         const highlightSelected = () => {
@@ -132,20 +128,14 @@ export class ItemList extends React.Component<IProps, IState> {
             if (selectedItemElem.length > 0) {
                 // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
 
-                const distanceOfSelItemFromVisibleTop =
-                    $(selectedItemElem[0]).offset().top -
-                    $(document).scrollTop() -
-                    $(container[0]).offset().top -
-                    $(document).scrollTop();
+                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
+                $(container[0]).offset().top - $(document).scrollTop();
 
                 // If the selected item goes beyond container view, scroll it to middle.
-                if (
-                    distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
-                    distanceOfSelItemFromVisibleTop < 0
-                ) {
-                    container.scrollTop(
-                        container.scrollTop() + distanceOfSelItemFromVisibleTop - container[0].offsetHeight * 0.5,
-                    );
+                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
+                    distanceOfSelItemFromVisibleTop < 0) {
+                    container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
+                    container[0].offsetHeight * 0.5);
                 }
             }
         };
@@ -179,20 +169,21 @@ export class ItemList extends React.Component<IProps, IState> {
         const isEmpty = !this.state.itemsList.length;
 
         const cssClass = classNames(
-            this.state.view === 'photogrid'
-                ? 'sd-grid-list sd-grid-list--large sd-grid-list--small-margin'
-                : (this.state.view || 'compact') + '-view list-view',
+            this.state.view === 'photogrid' ?
+                'sd-grid-list sd-grid-list--large sd-grid-list--small-margin' :
+                (this.state.view || 'compact') + '-view list-view',
             {'list-without-items': isEmpty},
         );
 
-        const listItems =
-            isEmpty && !scope.loading ? (
-                <span key="no-items">{gettext('There are currently no items')}</span>
-            ) : (
-                this.state.itemsList.map(_createItem)
-            );
+        const listItems = isEmpty && !scope.loading ?
+            <span key="no-items">{gettext('There are currently no items')}</span>
+            : this.state.itemsList.map(_createItem);
 
-        return <ul className={cssClass}>{listItems}</ul>;
+        return (
+            <ul className={cssClass}>
+                {listItems}
+            </ul>
+        );
     }
 }
 

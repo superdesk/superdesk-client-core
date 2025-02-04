@@ -4,12 +4,12 @@ export function PasswordConfirmDirective() {
     return {
         require: 'ngModel',
         scope: {password: '='},
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
             function isMatch(password, confirm) {
                 return !password || password === confirm;
             }
 
-            ctrl.$validators[NAME] = function (modelValue, viewValue) {
+            ctrl.$validators[NAME] = function(modelValue, viewValue) {
                 var value = modelValue || viewValue;
 
                 return isMatch(scope.password, value);

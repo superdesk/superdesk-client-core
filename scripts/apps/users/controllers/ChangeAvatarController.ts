@@ -14,7 +14,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, noti
         }
     });
 
-    $scope.activate = function (method) {
+    $scope.activate = function(method) {
         $scope.active = method;
         $scope.preview = {};
         $scope.progress = {width: 0};
@@ -22,11 +22,11 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, noti
 
     $scope.activate($scope.methods[0]);
 
-    $scope.removeImage = function () {
+    $scope.removeImage = function() {
         return $scope.resolve(null);
     };
 
-    $scope.upload = function (config) {
+    $scope.upload = function(config) {
         var form: any = {};
 
         form.CropLeft = Math.round(Math.min(config.cords.x, config.cords.x2));
@@ -42,37 +42,27 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, noti
             return;
         }
 
-        return urls.resource('upload').then((uploadUrl) =>
-            upload
-                .start({
-                    url: uploadUrl,
-                    method: 'POST',
-                    data: form,
-                })
-                .then(
-                    (response) => {
-                        if (response.data._status === 'ERR') {
-                            notify.error(gettext('There was a problem with your upload'));
-                            return;
-                        }
+        return urls.resource('upload').then((uploadUrl) => upload.start({
+            url: uploadUrl,
+            method: 'POST',
+            data: form,
+        }).then((response) => {
+            if (response.data._status === 'ERR') {
+                notify.error(gettext('There was a problem with your upload'));
+                return;
+            }
 
-                        var pictureUrl = response.data.renditions.viewImage.href;
+            var pictureUrl = response.data.renditions.viewImage.href;
 
-                        $scope.locals.data.avatar = response.data._id;
+            $scope.locals.data.avatar = response.data._id;
 
-                        return $scope.resolve(pictureUrl);
-                    },
-                    (error) => {
-                        notify.error(
-                            error.statusText !== ''
-                                ? error.statusText
-                                : gettext('There was a problem with your upload'),
-                        );
-                    },
-                    (update) => {
-                        $scope.progress.width = Math.round((update.loaded / update.total) * 100.0);
-                    },
-                ),
-        );
+            return $scope.resolve(pictureUrl);
+        }, (error) => {
+            notify.error(error.statusText !== '' ?
+                error.statusText :
+                gettext('There was a problem with your upload'));
+        }, (update) => {
+            $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
+        }));
     };
 }

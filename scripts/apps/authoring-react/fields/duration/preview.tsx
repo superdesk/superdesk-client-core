@@ -10,6 +10,8 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        return <div>{getDurationString(this.props.value)}</div>;
+        return (
+            <div>{getDurationString(this.props.value)}</div>
+        );
     }
 }

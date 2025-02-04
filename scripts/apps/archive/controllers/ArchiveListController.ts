@@ -2,22 +2,8 @@ import {BaseListController} from './BaseListController';
 import _ from 'lodash';
 
 export class ArchiveListController extends BaseListController {
-    constructor(
-        $scope,
-        $injector,
-        $location,
-        $q,
-        $timeout,
-        superdesk,
-        session,
-        api,
-        desks,
-        content,
-        StagesCtrl,
-        notify,
-        multi,
-        search,
-    ) {
+    constructor($scope, $injector, $location, $q, $timeout, superdesk, session, api, desks, content,
+        StagesCtrl, notify, multi, search) {
         super($scope, $location, search, desks);
 
         const setTotalCount = super.setTotalCount.bind(this);
@@ -60,7 +46,7 @@ export class ArchiveListController extends BaseListController {
             $scope.stages.select(null);
         };
 
-        $scope.stageSelect = function (stage) {
+        $scope.stageSelect = function(stage) {
             if ($scope.spike) {
                 $scope.toggleSpike();
             }
@@ -80,18 +66,15 @@ export class ArchiveListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
-            resource.query(criteria).then(
-                (items) => {
-                    $scope.loading = false;
-                    $scope.items = search.mergeItems(items, $scope.items, next);
-                    $scope.total = items._meta.total;
+            resource.query(criteria).then((items) => {
+                $scope.loading = false;
+                $scope.items = search.mergeItems(items, $scope.items, next);
+                $scope.total = items._meta.total;
 
-                    setTotalCount(items._meta.total);
-                },
-                () => {
-                    $scope.loading = false;
-                },
-            );
+                setTotalCount(items._meta.total);
+            }, () => {
+                $scope.loading = false;
+            });
         };
 
         this.fetchItem = function fetchItem(id) {
@@ -103,7 +86,7 @@ export class ArchiveListController extends BaseListController {
         };
 
         var refreshPromise,
-            refreshItems = function () {
+            refreshItems = function() {
                 $timeout.cancel(refreshPromise);
                 refreshPromise = $timeout(_refresh, 100, false);
             };
@@ -131,10 +114,9 @@ export class ArchiveListController extends BaseListController {
         }
 
         $scope.$on('task:stage', (_e, data) => {
-            if (
-                $scope.stages.selected &&
-                ($scope.stages.selected._id === data.new_stage || $scope.stages.selected._id === data.old_stage)
-            ) {
+            if ($scope.stages.selected && (
+                $scope.stages.selected._id === data.new_stage ||
+                $scope.stages.selected._id === data.old_stage)) {
                 refreshItems();
             }
         });
@@ -155,18 +137,15 @@ export class ArchiveListController extends BaseListController {
 
         desks.fetchCurrentUserDesks().then(() => {
             // only watch desk/stage after we get current user desk
-            $scope.$watch(
-                () => desks.active,
-                (active) => {
-                    $scope.selected = active;
-                    if ($location.search().page) {
-                        $location.search('page', null);
-                        return; // will reload via $routeUpdate
-                    }
+            $scope.$watch(() => desks.active, (active) => {
+                $scope.selected = active;
+                if ($location.search().page) {
+                    $location.search('page', null);
+                    return; // will reload via $routeUpdate
+                }
 
-                    refreshItems();
-                },
-            );
+                refreshItems();
+            });
         });
 
         // reload on route change if there is still the same _id
@@ -184,18 +163,6 @@ export class ArchiveListController extends BaseListController {
 }
 
 ArchiveListController.$inject = [
-    '$scope',
-    '$injector',
-    '$location',
-    '$q',
-    '$timeout',
-    'superdesk',
-    'session',
-    'api',
-    'desks',
-    'content',
-    'StagesCtrl',
-    'notify',
-    'multi',
-    'search',
+    '$scope', '$injector', '$location', '$q', '$timeout', 'superdesk',
+    'session', 'api', 'desks', 'content', 'StagesCtrl', 'notify', 'multi', 'search',
 ];

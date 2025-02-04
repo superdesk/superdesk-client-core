@@ -10,7 +10,7 @@ SaveSearch.$inject = ['$location', 'asset', 'api', 'notify', '$rootScope'];
 export function SaveSearch($location, asset, api, notify, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/save-search.html'),
-        link: function (scope, _elem) {
+        link: function(scope, _elem) {
             scope.edit = null;
             scope.activateSearchPane = false;
 
@@ -20,12 +20,12 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 scope.edit = create(scope.editingSearch) || {};
             });
 
-            scope.editItem = function () {
+            scope.editItem = function() {
                 scope.activateSearchPane = true;
                 scope.edit = create(scope.editingSearch) || {};
             };
 
-            scope.saveas = function () {
+            scope.saveas = function() {
                 scope.activateSearchPane = true;
                 scope.edit = clone(scope.editingSearch) || {};
                 delete scope.edit._id;
@@ -33,21 +33,22 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 scope.edit.description = '';
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.sTab = scope.editingSearch ? 'savedSearches' : 'advancedSearch';
                 scope.editingSearch = false;
                 scope.edit = null;
                 scope.activateSearchPane = false;
             };
 
-            scope.isValid = function (edit) {
+            scope.isValid = function(edit) {
                 if (edit.filter.query.raw == null) {
                     return isEmptyString(edit.name);
                 }
-                return edit.filter.query && isEmptyString(edit.filter.query.raw) && isEmptyString(edit.name);
+                return edit.filter.query && isEmptyString(edit.filter.query.raw)
+                    && isEmptyString(edit.name);
             };
 
-            scope.clear = function () {
+            scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
                 $location.search('');
@@ -59,14 +60,14 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 $rootScope.$broadcast('tag:removed');
             };
 
-            scope.search = function () {
+            scope.search = function() {
                 $rootScope.$broadcast('search:parameters');
             };
 
             /**
              * Patches or posts the given search
              */
-            scope.save = function (editSearch) {
+            scope.save = function(editSearch) {
                 function onSuccess() {
                     notify.success(gettext('Search was saved successfully'));
                     scope.cancel();
@@ -86,8 +87,8 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 // perform search with selected parameters before saving
                 // so parameters get in the url where they are later read from
                 scope.search();
-                const rawSearchQuery =
-                    editSearch.filter && editSearch.filter.query ? editSearch.filter.query.raw : null;
+                const rawSearchQuery = editSearch.filter && editSearch.filter.query
+                    ? editSearch.filter.query.raw : null;
 
                 editSearch.filter = {query: clone($location.search())};
                 if (rawSearchQuery) {
@@ -95,7 +96,8 @@ export function SaveSearch($location, asset, api, notify, $rootScope) {
                 }
                 var originalSearch = editSearch._id ? scope.editingSearch : {};
 
-                saveOrUpdateSavedSearch(api, originalSearch, editSearch).then(onSuccess, onFail);
+                saveOrUpdateSavedSearch(api, originalSearch, editSearch)
+                    .then(onSuccess, onFail);
             };
         },
     };

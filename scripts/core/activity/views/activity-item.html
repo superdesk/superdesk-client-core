@@ -1,23 +1,16 @@
-<button
-    title="{{ :: activity.label | translate }}"
+<button title="{{ :: activity.label | translate }}"
     ng-if=":: !activity.dropdown"
     class="icn-btn"
-    ng-click="run(activity, $event)"
->
-    <i
-        class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}"
-        ng-show=":: activity.icon"
-    ></i>
+    ng-click="run(activity, $event)">
+    <i class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show=":: activity.icon"></i>
     <span>{{ :: activity.label | translate }}</span>
 </button>
-<div
-    ng-if=":: activity.dropdown"
-    class="dropdown dropdown--noarrow"
-    ng-class="{open: dropdownOpen}"
-    ng-mouseenter="dropdownOpen=true"
-    ng-mouseleave="dropdownOpen=false"
-    dropdown
->
+<div ng-if=":: activity.dropdown"
+     class="dropdown dropdown--noarrow"
+     ng-class="{open: dropdownOpen}"
+     ng-mouseenter="dropdownOpen=true"
+     ng-mouseleave="dropdownOpen=false"
+     dropdown>
     <a class="dropdown__toggle" title="{{ :: activity.label | translate }}" dropdown__toggle>
         <i class="icon-{{ :: activity.icon }}" ng-show=":: activity.icon"></i>
         <span>{{ :: activity.label | translate }}</span>

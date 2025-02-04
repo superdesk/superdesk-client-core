@@ -46,19 +46,15 @@ export function hasNextSelection(editorState, selection, backward = false) {
     const startBlock = content.getBlockForKey(selection.getStartKey());
     const endBlock = content.getBlockForKey(selection.getEndKey());
 
-    if ((startBlock == null && backward) || (endBlock == null && !backward)) {
+    if (startBlock == null && backward || endBlock == null && !backward) {
         throw new Error('The following selection is invalid: ' + selection);
     }
 
     if (backward) {
-        return (
-            selection.getStartOffset() < currentSelection.getStartOffset() ||
-            selection.getStartKey() !== currentSelection.getStartKey()
-        );
+        return selection.getStartOffset() < currentSelection.getStartOffset() ||
+            selection.getStartKey() !== currentSelection.getStartKey();
     } else {
-        return (
-            selection.getEndOffset() > currentSelection.getEndOffset() ||
-            selection.getEndKey() !== currentSelection.getEndKey()
-        );
+        return selection.getEndOffset() > currentSelection.getEndOffset() ||
+            selection.getEndKey() !== currentSelection.getEndKey();
     }
 }

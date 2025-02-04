@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'notify', 'modal', '$rootScope', '$q'];
-export function DictionaryEditController($scope, dictionaries, upload, notify, modal, $rootScope, $q) {
+DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'notify',
+    'modal', '$rootScope', '$q'];
+export function DictionaryEditController($scope, dictionaries, upload, notify,
+    modal, $rootScope, $q) {
     function onSuccess(result) {
         if ($scope.isAbbreviations()) {
             $rootScope.$broadcast('abbreviations:updated', result.content);
@@ -35,24 +37,26 @@ export function DictionaryEditController($scope, dictionaries, upload, notify, m
         });
     });
 
-    $scope.save = function () {
+    $scope.save = function() {
         $scope._errorUniqueness = false;
         $scope.progress = {width: 1};
         if ($scope.file) {
-            dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file, onSuccess, onError, (update) => {
-                $scope.progress.width = Math.round((update.loaded / update.total) * 100.0);
-            });
+            dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file,
+                onSuccess, onError, (update) => {
+                    $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
+                },
+            );
         } else {
             dictionaries.update($scope.origDictionary, $scope.dictionary, onSuccess, onError);
         }
     };
 
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $scope._errorUniqueness = false;
         $scope.closeDictionary();
     };
 
-    $scope.addWord = function (word) {
+    $scope.addWord = function(word) {
         if (!$scope.dictionary.content.hasOwnProperty(word)) {
             addWordToTrie(word);
         }
@@ -62,7 +66,7 @@ export function DictionaryEditController($scope, dictionaries, upload, notify, m
         $scope.wordsCount++;
     };
 
-    $scope.removeWord = function (word, search) {
+    $scope.removeWord = function(word, search) {
         $scope.dictionary.content[word] = 0;
         $scope.filterWords(search);
         $scope.wordsCount--;
@@ -132,33 +136,32 @@ export function DictionaryEditController($scope, dictionaries, upload, notify, m
         }
     }
 
-    $scope.isAbbreviations = function () {
+    $scope.isAbbreviations = function() {
         return dictionaries.isAbbreviationsDictionary($scope.dictionary);
     };
 
-    $scope.editAbbreviations = function (abbreviation, phrase) {
+    $scope.editAbbreviations = function(abbreviation, phrase) {
         $scope.dictionary.content[abbreviation] = phrase;
     };
 
-    $scope.removeAbbreviation = function (abbreviation) {
-        modal.confirm(gettext('Do you want to remove Abbreviation?')).then(() => {
-            delete $scope.dictionary.content[abbreviation];
-            init();
-        });
+    $scope.removeAbbreviation = function(abbreviation) {
+        modal.confirm(gettext('Do you want to remove Abbreviation?'))
+            .then(() => {
+                delete $scope.dictionary.content[abbreviation];
+                init();
+            });
     };
 
     function confirmAdd() {
         if ($scope.dictionary.content[$scope.abbreviation.key]) {
-            return modal.confirm(gettext('Abbreviation already exists. Do you want to overwrite it?')).then(
-                () => true,
-                () => false,
-            );
+            return modal.confirm(gettext('Abbreviation already exists. Do you want to overwrite it?'))
+                .then(() => true, () => false);
         }
 
         return $q.when(true);
     }
 
-    $scope.addAbbreviation = function () {
+    $scope.addAbbreviation = function() {
         confirmAdd().then((result) => {
             if (result) {
                 $scope.dictionary.content[$scope.abbreviation.key] = $scope.abbreviation.phrase;
@@ -170,8 +173,7 @@ export function DictionaryEditController($scope, dictionaries, upload, notify, m
     function init() {
         if ($scope.isAbbreviations()) {
             $scope.abbreviation = {
-                key: '',
-                phrase: '',
+                key: '', phrase: '',
             };
 
             $scope.abbreviationKeys = _.sortBy(Object.keys($scope.dictionary.content));

@@ -19,11 +19,11 @@ export class MultiSelect extends React.PureComponent<IProps> {
                     }}
                     value={this.props.values}
                 >
-                    {this.props.items.map(({id, label}) => (
-                        <option key={id} value={id}>
-                            {label}
-                        </option>
-                    ))}
+                    {
+                        this.props.items.map(({id, label}) => (
+                            <option key={id} value={id}>{label}</option>
+                        ))
+                    }
                 </select>
 
                 <div style={{paddingBlockStart: 6}}>

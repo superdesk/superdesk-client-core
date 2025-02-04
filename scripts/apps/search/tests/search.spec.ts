@@ -162,12 +162,8 @@ describe('search service', () => {
         expect(nextItems._items[0]._id).toBe('foo');
 
         // can merge content updates from matching newItem
-        nextItems = search.mergeItems(
-            {_items: [{_id: 'foo', _current_version: 2, slugline: 'slugline updated'}]},
-            {_items: [{_id: 'foo', _current_version: 1, slugline: 'slugline'}]},
-            null,
-            false,
-        );
+        nextItems = search.mergeItems({_items: [{_id: 'foo', _current_version: 2, slugline: 'slugline updated'}]},
+            {_items: [{_id: 'foo', _current_version: 1, slugline: 'slugline'}]}, null, false);
         expect(nextItems._items.length).toBe(1);
         expect(nextItems._items[0].slugline).toBe('slugline updated');
     }));
@@ -250,52 +246,53 @@ describe('search service', () => {
 });
 
 describe('sdSearchPanel directive', () => {
-    var desks, facetsInit, fakeApi, fakeMetadata, isoScope, $element; // directive's DOM element
+    var desks,
+        facetsInit,
+        fakeApi,
+        fakeMetadata,
+        isoScope,
+        $element; // directive's DOM element
 
-    beforeEach(
-        window.module(
-            'superdesk.apps.authoring.metadata',
-            'superdesk.apps.searchProviders',
-            'superdesk.apps.search',
-            'superdesk.core.services.pageTitle',
-            'superdesk.templates-cache',
-            'superdesk.apps.searchProviders',
-        ),
-    );
+    beforeEach(window.module(
+        'superdesk.apps.authoring.metadata',
+        'superdesk.apps.searchProviders',
+        'superdesk.apps.search',
+        'superdesk.core.services.pageTitle',
+        'superdesk.templates-cache',
+        'superdesk.apps.searchProviders',
+    ));
 
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(
-        window.module(($provide) => {
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                model: {
-                    timeformat: 'HH:mm:ss',
-                    dateformat: 'DD/MM/YYYY',
-                },
-                view: {
-                    timeformat: 'HH:mm',
-                    dateformat: 'MM/DD/YYYY',
-                },
-                server: {url: undefined, ws: undefined},
-            };
+    beforeEach(window.module(($provide) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            model: {
+                timeformat: 'HH:mm:ss',
+                dateformat: 'DD/MM/YYYY',
+            },
+            view: {
+                timeformat: 'HH:mm',
+                dateformat: 'MM/DD/YYYY',
+            },
+            server: {url: undefined, ws: undefined},
+        };
 
-            Object.assign(appConfig, testConfig);
+        Object.assign(appConfig, testConfig);
 
-            fakeApi = {
-                ingestProviders: {
-                    query: jasmine.createSpy(),
-                },
-            };
+        fakeApi = {
+            ingestProviders: {
+                query: jasmine.createSpy(),
+            },
+        };
 
-            fakeMetadata = {
-                values: {subjectcodes: []},
-                fetchSubjectcodes: jasmine.createSpy(),
-            };
+        fakeMetadata = {
+            values: {subjectcodes: []},
+            fetchSubjectcodes: jasmine.createSpy(),
+        };
 
-            $provide.value('metadata', fakeMetadata);
-        }),
-    );
+        $provide.value('metadata', fakeMetadata);
+    }));
 
     /**
      * Mock some of the dependencies of the tag service
@@ -307,8 +304,11 @@ describe('sdSearchPanel directive', () => {
     /**
      * Mock even more dependencies and compile the directive under test.
      */
-    beforeEach(inject(($templateCache, $compile, $rootScope, $q, _desks_, tags, search) => {
-        var html, scope;
+    beforeEach(inject((
+        $templateCache, $compile, $rootScope, $q, _desks_, tags, search,
+    ) => {
+        var html,
+            scope;
 
         // more services mocking...
         spyOn(search, 'getSubjectCodes').and.returnValue([]);
@@ -319,10 +319,16 @@ describe('sdSearchPanel directive', () => {
         facetsInit = $q.defer();
         spyOn(tags, 'initSelectedFacets').and.returnValue(facetsInit.promise);
 
-        fakeApi.ingestProviders.query.and.returnValue($q.when({_items: [{foo: 'bar'}]}));
+        fakeApi.ingestProviders.query.and.returnValue(
+            $q.when({_items: [{foo: 'bar'}]}),
+        );
 
         // directive compilation...
-        html = ['<div sd-search-container>', '    <div sd-search-panel></div>', '</div>'].join('');
+        html = [
+            '<div sd-search-container>',
+            '    <div sd-search-panel></div>',
+            '</div>',
+        ].join('');
 
         scope = $rootScope.$new();
 
@@ -359,7 +365,9 @@ describe('sort service', () => {
         {field: 'urgency', label: gettext('Urgency')},
     ];
 
-    beforeEach(window.module('superdesk.apps.search'));
+    beforeEach(window.module(
+        'superdesk.apps.search',
+    ));
 
     it('can sort items (sort service)', inject((sort, $location, $rootScope) => {
         sort.setSort('urgency', sortOptions);

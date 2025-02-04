@@ -39,7 +39,8 @@ const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !is
 const isLockedByCurrentUser = (_article: IArticle) => _article.lock_user === ng.get('session').identity._id;
 const isLockedByOtherUser = (_article: IArticle) => isLocked(_article) && !isLockedByCurrentUser(_article);
 const isPublished = (item: IArticle, includeScheduled = true) =>
-    PUBLISHED_STATES.includes(item.state) && (includeScheduled || item.state !== ITEM_STATE.SCHEDULED);
+    PUBLISHED_STATES.includes(item.state) &&
+    (includeScheduled || item.state !== ITEM_STATE.SCHEDULED);
 const isArchived = (_article: IArticle) => _article._type === 'archived';
 const isPersonal = (_article: IArticle) =>
     _article.task == null || _article.task.desk == null || _article.task.stage == null;
@@ -62,13 +63,14 @@ const getPackageItemIds = (item: IArticle): Array<IArticle['_id']> => {
  */
 export const isKilled = (item: IArticle) => KILLED_STATES.includes(item.state);
 
-export const isIngested = (item: IArticle) => item.state === ITEM_STATE.INGESTED;
+export const isIngested = (item: IArticle) =>
+    item.state === ITEM_STATE.INGESTED;
 
 function canPublish(item: IArticle): boolean {
     if (
-        sdApi.user.hasPrivilege('publish') !== true ||
-        item.flags?.marked_for_not_publication === true ||
-        item.state === 'draft'
+        sdApi.user.hasPrivilege('publish') !== true
+        || item.flags?.marked_for_not_publication === true
+        || item.state === 'draft'
     ) {
         return false;
     }
@@ -201,13 +203,14 @@ function sendItemToNextStage(item: IArticle): Promise<void> {
     const currentStageIndex = deskStages.indexOf(currentStage);
     const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
 
-    return sdApi.article
-        .sendItems([item], {
+    return sdApi.article.sendItems(
+        [item],
+        {
             type: 'desk',
             desk: deskId,
             stage: deskStages[nextStageIndex]._id,
-        })
-        .then(() => undefined);
+        },
+    ).then(() => undefined);
 }
 
 function createNewUsingDeskTemplate(): void {
@@ -223,12 +226,16 @@ function createNewUsingDeskTemplate(): void {
 }
 
 function createNewWithData(data: Partial<IArticle>, contentProfileId: string): void {
-    dataApi.create('archive', {type: 'text', ...data, profile: contentProfileId}).then((item) => {
-        openArticle(item._id, 'edit');
-    });
+    dataApi.create('archive', {type: 'text', ...data, profile: contentProfileId})
+        .then((item) => {
+            openArticle(item._id, 'edit');
+        });
 }
 
-function translate(item: IArticle, language: string): Promise<IArticle> {
+function translate(
+    item: IArticle,
+    language: string,
+): Promise<IArticle> {
     return httpRequestJsonLocal<IArticle>({
         method: 'POST',
         path: '/archive/translate',
@@ -254,19 +261,16 @@ function checkMediaAssociatedToUpdate(
     action: string,
     autosave: (item: IArticle) => void,
 ): Promise<boolean> {
-    if (
-        !appConfig.features?.confirmMediaOnUpdate ||
-        !appConfig.features?.editFeaturedImage ||
-        !item.rewrite_of ||
-        ['kill', 'correct', 'takedown'].includes(action) ||
-        item.associations?.featuremedia
+    if (!appConfig.features?.confirmMediaOnUpdate
+        || !appConfig.features?.editFeaturedImage
+        || !item.rewrite_of
+        || ['kill', 'correct', 'takedown'].includes(action)
+        || item.associations?.featuremedia
     ) {
         return Promise.resolve(true);
     }
 
-    return ng
-        .get('api')
-        .find('archive', item.rewrite_of)
+    return ng.get('api').find('archive', item.rewrite_of)
         .then((rewriteOfItem) => {
             if (rewriteOfItem?.associations?.featuremedia) {
                 return ng.get('confirm').confirmFeatureMedia(rewriteOfItem);
@@ -286,13 +290,9 @@ function checkMediaAssociatedToUpdate(
 }
 
 function notifyPreconditionFailed($scope: any) {
-    notify.error(
-        gettext(
-            'Item has changed since it was opened. ' +
-                'Please close and reopen the item to continue. ' +
-                'Regrettably, your changes cannot be saved.',
-        ),
-    );
+    notify.error(gettext('Item has changed since it was opened. ' +
+        'Please close and reopen the item to continue. ' +
+        'Regrettably, your changes cannot be saved.'));
     $scope._editable = false;
     $scope.dirty = false;
 }
@@ -314,33 +314,26 @@ function publishItem(
 ): Promise<boolean | IArticle> {
     const scope: IScope = {};
 
-    return publishItem_legacy(orig, item, scope, action, onError).then((published) =>
-        published ? scope.item : published,
-    );
+    return publishItem_legacy(orig, item, scope, action, onError)
+        .then((published) => published ? scope.item : published);
 }
 
 function canPublishOnDesk(deskType: string): boolean {
-    return (
-        !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-        ng.get('privileges').userHasPrivileges({publish: 1})
-    );
+    return !(deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+        ng.get('privileges').userHasPrivileges({publish: 1});
 }
 
 function showPublishAndContinue(item: IArticle, dirty: boolean): boolean {
-    return (
-        appConfig.features?.customAuthoringTopbar?.publishAndContinue &&
-        !sdApi.navigation.isPersonalSpace() &&
-        canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type) &&
-        authoringApiCommon.checkShortcutButtonAvailability(item, dirty)
-    );
+    return appConfig.features?.customAuthoringTopbar?.publishAndContinue
+        && !sdApi.navigation.isPersonalSpace()
+        && canPublishOnDesk(sdApi.desks.getDeskById(sdApi.desks.getCurrentDeskId()).desk_type)
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
 }
 
 function showCloseAndContinue(item: IArticle, dirty: boolean): boolean {
-    return (
-        appConfig.features?.customAuthoringTopbar?.closeAndContinue &&
-        !sdApi.navigation.isPersonalSpace() &&
-        authoringApiCommon.checkShortcutButtonAvailability(item, dirty)
-    );
+    return appConfig.features?.customAuthoringTopbar?.closeAndContinue
+        && !sdApi.navigation.isPersonalSpace()
+        && authoringApiCommon.checkShortcutButtonAvailability(item, dirty);
 }
 
 function publishItem_legacy(
@@ -358,24 +351,18 @@ function publishItem_legacy(
     return flatMap(
         Object.values(extensions).map(({activationResult}) => activationResult),
         (activationResult) => activationResult.contributions?.entities?.article?.onPublish ?? [],
-    )
-        .reduce((current, next) => {
-            return current.then((result) => {
-                if ((result?.warnings?.length ?? 0) > 0) {
-                    warnings = warnings.concat(result.warnings);
-                }
+    ).reduce((current, next) => {
+        return current.then((result) => {
+            if ((result?.warnings?.length ?? 0) > 0) {
+                warnings = warnings.concat(result.warnings);
+            }
 
-                return next(
-                    Object.assign(
-                        {
-                            _id: orig._id,
-                            type: orig.type,
-                        },
-                        item,
-                    ),
-                );
-            });
-        }, initialValue)
+            return next(Object.assign({
+                _id: orig._id,
+                type: orig.type,
+            }, item));
+        });
+    }, initialValue)
         .then((result) => {
             if ((result?.warnings?.length ?? 0) > 0) {
                 warnings = warnings.concat(result.warnings);
@@ -384,9 +371,10 @@ function publishItem_legacy(
             return result;
         })
         .then(() => checkMediaAssociatedToUpdate(item, action, scope.autosave))
-        .then((result) =>
-            result && warnings.length < 1 ? ng.get('authoring').publish(orig, item, action) : Promise.reject(false),
-        )
+        .then((result) => (result && warnings.length < 1
+            ? ng.get('authoring').publish(orig, item, action)
+            : Promise.reject(false)
+        ))
         .then((response: IArticle) => {
             notify.success(gettext('Item published.'));
             scope.item = response;
@@ -403,7 +391,7 @@ function publishItem_legacy(
                 const modifiedErrors = errors.replace(/\[/g, '').replace(/\]/g, '').split(',');
 
                 modifiedErrors.forEach((error) => {
-                    const message = trim(error, "' ");
+                    const message = trim(error, '\' ');
                     // the message format is 'Field error text' (contains ')
                     const field = message.split(' ')[0];
 
@@ -423,13 +411,11 @@ function publishItem_legacy(
                 scope.$applyAsync?.(); // make $scope.error changes visible
 
                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
-                    ng.get('authoring')
-                        .open(item._id, true)
-                        .then((res) => {
-                            scope.origItem = res;
-                            scope.dirty = false;
-                            scope.item = copyJson(scope.origItem);
-                        });
+                    ng.get('authoring').open(item._id, true).then((res) => {
+                        scope.origItem = res;
+                        scope.dirty = false;
+                        scope.item = copyJson(scope.origItem);
+                    });
                 }
             } else if (issues?.unique_name?.unique) {
                 notify.error(gettext('Error: Unique Name is not unique.'));
@@ -445,9 +431,9 @@ function publishItem_legacy(
 
 function edit(
     item: {
-        _id: IArticle['_id'];
-        _type?: IArticle['_type'];
-        state?: IArticle['state'];
+        _id: IArticle['_id'],
+        _type?: IArticle['_type'],
+        state?: IArticle['state']
     },
     action?: IAuthoringActionType,
 ): void {
@@ -456,8 +442,8 @@ function edit(
         // that are not editable (editFeaturedImage false or not available)
 
         if (
-            item._type === 'externalsource' &&
-            !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
         ) {
             return;
         }
@@ -476,7 +462,10 @@ function edit(
 function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle> {
     const itemForTemplate = {
         template_name: action,
-        item: pick(item, [...keys(CONTENT_FIELDS_DEFAULTS), '_id', 'versioncreated', 'task']),
+        item: pick(
+            item,
+            [...(keys(CONTENT_FIELDS_DEFAULTS)), '_id', 'versioncreated', 'task'],
+        ),
     };
 
     return httpRequestJsonLocal({
@@ -514,25 +503,25 @@ function isEditable(_article: IArticle): boolean {
     const authoring = ng.get('authoring');
 
     switch (itemState) {
-        case ITEM_STATE.DRAFT:
-        case ITEM_STATE.CORRECTION:
-        case ITEM_STATE.SUBMITTED:
-        case ITEM_STATE.IN_PROGRESS:
-        case ITEM_STATE.ROUTED:
-        case ITEM_STATE.FETCHED:
-        case ITEM_STATE.UNPUBLISHED:
-            return authoring.itemActions(_article).edit === true;
-        case ITEM_STATE.INGESTED:
-        case ITEM_STATE.SPIKED:
-        case ITEM_STATE.SCHEDULED:
-        case ITEM_STATE.PUBLISHED:
-        case ITEM_STATE.CORRECTED:
-        case ITEM_STATE.BEING_CORRECTED:
-        case ITEM_STATE.KILLED:
-        case ITEM_STATE.RECALLED:
-            return false;
-        default:
-            assertNever(itemState);
+    case ITEM_STATE.DRAFT:
+    case ITEM_STATE.CORRECTION:
+    case ITEM_STATE.SUBMITTED:
+    case ITEM_STATE.IN_PROGRESS:
+    case ITEM_STATE.ROUTED:
+    case ITEM_STATE.FETCHED:
+    case ITEM_STATE.UNPUBLISHED:
+        return authoring.itemActions(_article).edit === true;
+    case ITEM_STATE.INGESTED:
+    case ITEM_STATE.SPIKED:
+    case ITEM_STATE.SCHEDULED:
+    case ITEM_STATE.PUBLISHED:
+    case ITEM_STATE.CORRECTED:
+    case ITEM_STATE.BEING_CORRECTED:
+    case ITEM_STATE.KILLED:
+    case ITEM_STATE.RECALLED:
+        return false;
+    default:
+        assertNever(itemState);
     }
 }
 
@@ -571,7 +560,10 @@ interface IArticleApi {
 
     deschedule(item: IArticle): Promise<void>;
 
-    fetchItems(items: Array<IArticle>, selectedDestination: ISendToDestinationDesk): Promise<Array<IArticle>>;
+    fetchItems(
+        items: Array<IArticle>,
+        selectedDestination: ISendToDestinationDesk,
+    ): Promise<Array<IArticle>>;
 
     fetchItemsToCurrentDesk(items: Array<IArticle>): Promise<Array<IArticle>>;
 
@@ -609,9 +601,9 @@ interface IArticleApi {
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(
         item: {
-            _id: IArticle['_id'];
-            _type?: IArticle['_type'];
-            state?: IArticle['state'];
+            _id: IArticle['_id'],
+            _type?: IArticle['_type'],
+            state?: IArticle['state']
         },
         action?: IAuthoringActionType,
     ): void;

@@ -1,3 +1,4 @@
+
 import {applyMiddleware} from '../middleware';
 
 describe('middleware', () => {
@@ -11,7 +12,11 @@ describe('middleware', () => {
     });
 
     it('can call all middlewares', (done) => {
-        const middleware = [incMiddleware, incMiddleware, incMiddleware];
+        const middleware = [
+            incMiddleware,
+            incMiddleware,
+            incMiddleware,
+        ];
 
         applyMiddleware(middleware, {foo: 0}, 'foo').then((foo) => {
             expect(foo).toBe(3);
@@ -21,24 +26,26 @@ describe('middleware', () => {
 
     it('chains promises', (done) => {
         const middleware = [
-            ({calls}) =>
-                new Promise((resolve) =>
-                    setTimeout(() => {
-                        calls.push('first');
-                        resolve(calls);
-                    }, 100),
-                ),
+            ({calls}) => new Promise((resolve) => setTimeout(() => {
+                calls.push('first');
+                resolve(calls);
+            }, 100)),
             ({calls}) => calls.concat(['second']),
         ];
 
-        applyMiddleware(middleware, {calls: []}, 'calls').then((calls) => {
-            expect(calls).toEqual(['first', 'second']);
-            done();
-        });
+        applyMiddleware(middleware, {calls: []}, 'calls')
+            .then((calls) => {
+                expect(calls).toEqual(['first', 'second']);
+                done();
+            });
     });
 
     it('cat stop chain via reject', (done) => {
-        const middleware = [incMiddleware, () => Promise.reject('reason'), incMiddleware];
+        const middleware = [
+            incMiddleware,
+            () => Promise.reject('reason'),
+            incMiddleware,
+        ];
 
         const success = jasmine.createSpy('success');
         const reject = jasmine.createSpy('reject');

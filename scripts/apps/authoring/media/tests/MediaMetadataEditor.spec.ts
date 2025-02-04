@@ -13,24 +13,18 @@ describe('media metadata editor', () => {
 
         Object.assign(appConfig, testConfig);
     });
-    beforeEach(
-        window.module(($provide) => {
-            $provide.service('metadata', ($q) => ({
-                initialize: () => $q.when({}),
-                cvs: [],
-            }));
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        $provide.service('metadata', ($q) => ({
+            initialize: () => $q.when({}),
+            cvs: [],
+        }));
+    }));
 
     beforeEach(window.module('superdesk.config'));
     beforeEach(window.module('superdesk.apps.authoring.media'));
 
     beforeEach(inject(($q, metadata) => {
-        spyOn(helper, 'getLabelNameResolver').and.returnValue(
-            $q.when(() => {
-                /* no-op */
-            }),
-        );
+        spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
         spyOn(metadata, 'initialize').and.returnValue($q.when({}));
     }));
 

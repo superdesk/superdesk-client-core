@@ -22,7 +22,12 @@ interface IState {
 }
 
 function searchDesks(query: any) {
-    return superdeskApi.dataApi.query<IDesk>('desks', 1, {field: 'name', direction: 'ascending'}, query);
+    return superdeskApi.dataApi.query<IDesk>(
+        'desks',
+        1,
+        {field: 'name', direction: 'ascending'},
+        query,
+    );
 }
 
 export class DesksSelectInput extends React.Component<IProps, IState> {
@@ -37,9 +42,10 @@ export class DesksSelectInput extends React.Component<IProps, IState> {
 
     componentDidMount() {
         if (this.props.value?.length) {
-            searchDesks({_id: {$in: this.props.value}}).then((response) => {
-                this.setState({desks: response._items});
-            });
+            searchDesks({_id: {$in: this.props.value}})
+                .then((response) => {
+                    this.setState({desks: response._items});
+                });
         }
     }
 
@@ -48,12 +54,16 @@ export class DesksSelectInput extends React.Component<IProps, IState> {
         const selectedDeskIds = this.state.desks.map((desk) => desk._id);
 
         searchDesks({
-            $and: [{name: {$regex: searchString, $options: 'i'}}, {_id: {$nin: selectedDeskIds}}],
-        }).then((response) => {
-            if (cancelled !== true) {
-                callback(response._items);
-            }
-        });
+            $and: [
+                {name: {$regex: searchString, $options: 'i'}},
+                {_id: {$nin: selectedDeskIds}},
+            ],
+        })
+            .then((response) => {
+                if (cancelled !== true) {
+                    callback(response._items);
+                }
+            });
 
         return {
             cancel: () => {
@@ -63,29 +73,28 @@ export class DesksSelectInput extends React.Component<IProps, IState> {
     }
 
     addDesk(desk: any) {
-        this.setState(
-            (prevState) => {
-                return {
-                    desks: [...prevState.desks, desk],
-                };
-            },
-            () => {
-                this.props.onChange(this.state.desks.map((d) => d._id));
-            },
-        );
+        this.setState((prevState) => {
+            return {
+                desks: [
+                    ...prevState.desks,
+                    desk,
+                ],
+            };
+        }, () => {
+            this.props.onChange(this.state.desks.map((d) => d._id));
+        });
     }
 
     removeDesk(desk: IDesk) {
-        this.setState(
-            (prevState) => {
-                return {
-                    desks: prevState.desks.filter((d) => d._id !== desk._id),
-                };
-            },
-            () => {
-                this.props.onChange(this.state.desks.map((d) => d._id));
-            },
-        );
+        this.setState((prevState) => {
+            return {
+                desks: prevState.desks.filter(
+                    (d) => d._id !== desk._id,
+                ),
+            };
+        }, () => {
+            this.props.onChange(this.state.desks.map((d) => d._id));
+        });
     }
 
     render() {
@@ -111,13 +120,22 @@ export class DesksSelectInput extends React.Component<IProps, IState> {
                 {!this.state.desks.length ? null : (
                     <FormGroup>
                         <FormRow>
-                            {this.state.desks.map((desk) =>
+                            {this.state.desks.map((desk) => (
                                 this.props.disabled ? (
-                                    <Label key={desk._id} text={desk.name} style="translucent" size="large" />
+                                    <Label
+                                        key={desk._id}
+                                        text={desk.name}
+                                        style="translucent"
+                                        size="large"
+                                    />
                                 ) : (
-                                    <Tag key={desk._id} text={desk.name} onClick={this.removeDesk.bind(this, desk)} />
-                                ),
-                            )}
+                                    <Tag
+                                        key={desk._id}
+                                        text={desk.name}
+                                        onClick={this.removeDesk.bind(this, desk)}
+                                    />
+                                )
+                            ))}
                         </FormRow>
                     </FormGroup>
                 )}

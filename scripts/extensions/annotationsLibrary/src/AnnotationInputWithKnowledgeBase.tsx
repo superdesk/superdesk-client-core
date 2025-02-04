@@ -2,7 +2,12 @@ import * as React from 'react';
 import {AnnotationsSelect} from './AnnotationsSelect';
 import {IKnowledgeBaseItem} from './interfaces';
 
-import {ICrudManager, IPropsAnnotationInputComponent, ISuperdesk, ISortOption} from 'superdesk-api';
+import {
+    ICrudManager,
+    IPropsAnnotationInputComponent,
+    ISuperdesk,
+    ISortOption,
+} from 'superdesk-api';
 import {getFields} from './GetFields';
 
 interface IPropsConnected {
@@ -12,17 +17,18 @@ interface IPropsConnected {
 const defaultSortOption: ISortOption = {field: 'name', direction: 'ascending'};
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
-    class AnnotationInputWithKnowledgeBaseComponent extends React.Component<
-        IPropsAnnotationInputComponent & IPropsConnected
-    > {
+    class AnnotationInputWithKnowledgeBaseComponent
+        extends React.Component<IPropsAnnotationInputComponent & IPropsConnected> {
         componentDidMount() {
             const {generateFilterForServer} = superdesk.forms;
 
             const {nameField} = getFields(superdesk);
 
-            this.props.conceptItems.read(1, defaultSortOption, {
-                name: generateFilterForServer(nameField.type, this.props.annotationText),
-            });
+            this.props.conceptItems.read(
+                1,
+                defaultSortOption,
+                {name: generateFilterForServer(nameField.type, this.props.annotationText)},
+            );
         }
 
         render() {

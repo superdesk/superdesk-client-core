@@ -39,7 +39,9 @@ export const SelectInput: React.StatelessComponent<any> = ({
     }));
 
     const onChangeHandler = (_field, _key) => {
-        const _value = options.find((option) => get(option, keyField) === _key) || null;
+        const _value = options.find(
+            (option) => get(option, keyField) === _key,
+        ) || null;
 
         onChange(_field, get(_value, keyField, ''));
     };
@@ -62,7 +64,10 @@ export const SelectInput: React.StatelessComponent<any> = ({
 SelectInput.propTypes = {
     field: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+    ]),
     onChange: PropTypes.func.isRequired,
 
     required: PropTypes.bool,
@@ -71,13 +76,15 @@ SelectInput.propTypes = {
     boxed: PropTypes.bool,
     noMargin: PropTypes.bool,
 
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            key: PropTypes.string,
-            label: PropTypes.string,
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.number]),
-        }),
-    ).isRequired,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        label: PropTypes.string,
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.object,
+            PropTypes.number,
+        ]),
+    })).isRequired,
     keyField: PropTypes.string,
     labelField: PropTypes.string,
     clearable: PropTypes.bool,

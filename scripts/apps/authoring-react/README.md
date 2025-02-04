@@ -29,6 +29,7 @@ Field adapters are needed for two purposes.
 
 The code is simplified by using adapters, since there is only one place where storage details are defined, and the rest of the authoring code doesn't know about it.
 
+
 ## Article adapter
 
-React based authoring isn't using "extra>" prefix for custom fields in `IArticle['fields_meta']`, because there can't be multiple fields with the same ID. I didn't know this when originally implementing `IArticle['fields_meta']`. An upgrade script may be written and prefix dropped completely when angular based authoring code is removed. In the meanwhile, the adapter makes it so the prefix isn't needed in authoring-react code, but is outputted when saving, to make the output compatible with angular based authoring.
+React based authoring isn't using "extra>" prefix for custom fields in `IArticle['fields_meta']`, because there can't be multiple fields with the same ID. I didn't know this when originally implementing `IArticle['fields_meta']`. An upgrade script may be written and prefix dropped completely when angular based authoring code is removed. In the meanwhile, the adapter makes it so the prefix isn't needed in authoring-react code, but is outputted when saving, to make the output compatible with angular based authoring. 

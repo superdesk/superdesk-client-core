@@ -1,10 +1,6 @@
 <ul>
     <li ng-if="languages.length" ng-repeat="language in languages track by language._id">
-        <button
-            ng-disabled="isCurrentLanguage(language)"
-            option="{{ language.label}}"
-            ng-click="translateItem(language);"
-        >
+        <button ng-disabled="isCurrentLanguage(language)" option="{{ language.label}}" ng-click="translateItem(language);">
             {{ :: language.label | translate }}
         </button>
     </li>

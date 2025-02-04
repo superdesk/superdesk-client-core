@@ -17,23 +17,31 @@ export class Translations extends React.PureComponent<IProps> {
     }
 
     renderOriginalArticle(referenceElement: HTMLElement) {
-        showPopup(referenceElement, 'bottom', ({closePopup}) => (
-            <TranslationsListWrapper
-                ids={[this.props.item.translated_from]}
-                label={gettext('Original Article')}
-                close={closePopup}
-            />
-        ));
+        showPopup(
+            referenceElement,
+            'bottom',
+            ({closePopup}) => (
+                <TranslationsListWrapper
+                    ids={[this.props.item.translated_from]}
+                    label={gettext('Original Article')}
+                    close={closePopup}
+                />
+            ),
+        );
     }
 
     renderTranslations(referenceElement: HTMLElement) {
-        showPopup(referenceElement, 'bottom', ({closePopup}) => (
-            <TranslationsListWrapper
-                ids={this.props.item.translations}
-                label={gettext('Translations')}
-                close={closePopup}
-            />
-        ));
+        showPopup(
+            referenceElement,
+            'bottom',
+            ({closePopup}) => (
+                <TranslationsListWrapper
+                    ids={this.props.item.translations}
+                    label={gettext('Translations')}
+                    close={closePopup}
+                />
+            ),
+        );
     }
 
     render() {
@@ -59,9 +67,8 @@ export class Translations extends React.PureComponent<IProps> {
                             this.renderTranslations(event.target as HTMLElement);
                         }}
                     >
-                        {'('}
-                        <b>{this.props.item.translations.length}</b>
-                        {')'}{' '}
+                        {'('}<b>{this.props.item.translations.length}</b>{')'}
+                        {' '}
                         {this.props.item.translations.length === 1 ? gettext('Translation') : gettext('Translations')}
                     </button>
                 )}

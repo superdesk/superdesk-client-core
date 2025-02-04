@@ -16,7 +16,8 @@ export class PreviewSubject extends React.PureComponent<IProps> {
         const subjects = [];
 
         this.props.fields.forEach((field) => {
-            const fieldSubjects = this.props.item.subject.filter((subj) => subj.scheme === field._id && subj.name);
+            const fieldSubjects = this.props.item.subject
+                .filter((subj) => subj.scheme === field._id && subj.name);
 
             fieldSubjects.forEach((subject, index) => {
                 if (index === 0) {
@@ -24,10 +25,10 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                     first time so that seems scheme subjects are grouped together.*/
 
                     subjects.push(
-                        <span key={field._id} className="inline-label">
-                            <br />
-                            {gettext(field.display_name)}:
-                        </span>,
+                        <span
+                            key={field._id}
+                            className="inline-label"
+                        ><br />{gettext(field.display_name)}:</span>,
                     );
                 }
                 subjects.push(
@@ -35,10 +36,8 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                         key={subject.scheme + ':' + subject.qcode}
                         className="tag-label"
                         title={getVocabularyItemNameTranslated(subject, this.props.item.language)}
-                        // longer names might not fit the area
-                    >
-                        {getVocabularyItemNameTranslated(subject, this.props.item.language)}
-                    </span>,
+                    // longer names might not fit the area
+                    >{getVocabularyItemNameTranslated(subject, this.props.item.language)}</span>,
                 );
             });
         });

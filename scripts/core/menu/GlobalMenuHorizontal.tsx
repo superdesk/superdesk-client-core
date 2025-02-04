@@ -7,16 +7,15 @@ export class GlobalMenuHorizontal extends React.PureComponent {
         const globalMenuHorizontalItems = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
             (activationResult) =>
-                activationResult.contributions != null && activationResult.contributions.globalMenuHorizontal != null
+                activationResult.contributions != null
+                && activationResult.contributions.globalMenuHorizontal != null
                     ? activationResult.contributions.globalMenuHorizontal
                     : [],
         );
 
         return (
             <div style={{display: 'flex', height: 48, alignItems: 'stretch'}}>
-                {globalMenuHorizontalItems.map((Component, i) => (
-                    <Component key={i} />
-                ))}
+                {globalMenuHorizontalItems.map((Component, i) => (<Component key={i} />))}
             </div>
         );
     }

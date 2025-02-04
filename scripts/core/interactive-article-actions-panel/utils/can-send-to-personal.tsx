@@ -5,5 +5,7 @@ import {sdApi} from 'api';
 export function canSendToPersonal(items: Array<IArticle>) {
     const haveDeskSet = items.every((item) => item.task?.desk != null);
 
-    return haveDeskSet && appConfig?.features?.sendToPersonal === true && sdApi.user.hasPrivilege('send_to_personal');
+    return haveDeskSet
+        && appConfig?.features?.sendToPersonal === true
+        && sdApi.user.hasPrivilege('send_to_personal');
 }

@@ -1,5 +1,8 @@
 import React from 'react';
-import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
+import {
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -26,12 +29,12 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
     render() {
         return (
             <AuthoringWidgetLayout
-                header={
+                header={(
                     <AuthoringWidgetHeading
                         widgetId={VERSIONS_AND_HISTORY_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
-                        customContent={
+                        customContent={(
                             <TabList
                                 tabs={[
                                     {id: 'versions', label: gettext('Versions')},
@@ -42,14 +45,18 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
                                 }}
                                 selectedTabId={this.state.selectedTab}
                             />
-                        }
+                        )}
                     />
-                }
+                )}
                 body={(() => {
                     if (this.state.selectedTab === 'history') {
-                        return <HistoryTab {...this.props} />;
+                        return (
+                            <HistoryTab {...this.props} />
+                        );
                     } else if (this.state.selectedTab === 'versions') {
-                        return <VersionsTab {...this.props} />;
+                        return (
+                            <VersionsTab {...this.props} />
+                        );
                     } else {
                         assertNever(this.state.selectedTab);
                     }

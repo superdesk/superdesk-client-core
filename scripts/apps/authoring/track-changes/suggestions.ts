@@ -1,4 +1,7 @@
-import {editor3DataKeys, getCustomDataFromEditorRawState} from 'core/editor3/helpers/editor3CustomData';
+import {
+    editor3DataKeys,
+    getCustomDataFromEditorRawState,
+} from 'core/editor3/helpers/editor3CustomData';
 import * as Highlights from 'core/editor3/helpers/highlights';
 
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -48,14 +51,15 @@ function SuggestionsCtrl($scope, userList, content) {
                 [fieldsMetaKeys.draftjsState]: getFieldMetadata($scope.item, contentKey, fieldsMetaKeys.draftjsState),
             }))
             .filter((obj) => obj[fieldsMetaKeys.draftjsState] != null)
-            .map((obj) => ({
-                fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
-                suggestions:
-                    getCustomDataFromEditorRawState(
+            .map((obj) => (
+                {
+                    fieldName: getLabelForFieldId(getFieldId(obj.contentKey)),
+                    suggestions: getCustomDataFromEditorRawState(
                         obj[fieldsMetaKeys.draftjsState],
                         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
                     ) || [],
-            }))
+                }
+            ))
             .filter((obj) => obj.suggestions.length > 0);
 
         if (suggestions.length === 0) {
@@ -65,24 +69,28 @@ function SuggestionsCtrl($scope, userList, content) {
 
         const userIds = getAllUserIdsFromSuggestions([].concat(...suggestions.map((obj) => obj.suggestions)));
 
-        userList.getAll().then((users) => {
-            $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
-            $scope.items = suggestions;
-        });
+        userList.getAll()
+            .then((users) => {
+                $scope.users = convertUsersArrayToObject(filterUsers(users, userIds));
+                $scope.items = suggestions;
+            });
 
         $scope.getLocalizedTypeText = getLocalizedTypeText;
     });
 }
 
 angular
-    .module('superdesk.apps.authoring.track-changes.suggestions', ['superdesk.apps.authoring.widgets'])
+    .module('superdesk.apps.authoring.track-changes.suggestions', [
+        'superdesk.apps.authoring.widgets',
+    ])
     .config([
         'authoringWidgetsProvider',
-        function (authoringWidgetsProvider) {
+        function(authoringWidgetsProvider) {
             authoringWidgetsProvider.widget('suggestions', {
                 icon: 'suggestion',
                 label: gettext('Suggestions'),
-                template: 'scripts/apps/authoring/track-changes/views/suggestions-widget.html',
+                template:
+                'scripts/apps/authoring/track-changes/views/suggestions-widget.html',
                 order: 10,
                 side: 'right',
                 display: {
@@ -94,25 +102,22 @@ angular
                     picture: true,
                     personal: true,
                 },
-                isWidgetVisible: (item) => [
-                    'content',
-                    function (content) {
-                        if (item.profile == null) {
-                            return Promise.resolve(true);
-                        }
+                isWidgetVisible: (item) => ['content', function(content) {
+                    if (item.profile == null) {
+                        return Promise.resolve(true);
+                    }
 
-                        return new Promise((resolve) => {
-                            content.getType(item.profile).then((type) => {
-                                /**
-                                 * It used to be checked whether editor3 is enabled,
-                                 * but now that editor3 is the only editor
-                                 * it is only checked whether content profile has body_html field
-                                 */
-                                resolve(type?.editor?.body_html != null);
-                            });
+                    return new Promise((resolve) => {
+                        content.getType(item.profile).then((type) => {
+                            /**
+                             * It used to be checked whether editor3 is enabled,
+                             * but now that editor3 is the only editor
+                             * it is only checked whether content profile has body_html field
+                             */
+                            resolve(type?.editor?.body_html != null);
                         });
-                    },
-                ],
+                    });
+                }],
                 feature: 'editorSuggestions',
             });
         },

@@ -28,7 +28,11 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
             const title = gettext('Article is scheduled for {{schedule}}', {schedule: datetimeFormatted.long});
 
             return (
-                <span key="scheduledDateTime" style={{color: '#da7200', marginInlineEnd: 4}} title={title}>
+                <span
+                    key="scheduledDateTime"
+                    style={{color: '#da7200', marginInlineEnd: 4}}
+                    title={title}
+                >
                     {datetimeFormatted.short}
                 </span>
             );

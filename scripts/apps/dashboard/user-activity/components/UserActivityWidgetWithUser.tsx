@@ -17,11 +17,9 @@ export default class UserActivityWidgetWithUser extends React.Component<{}, ISta
     }
 
     componentDidMount() {
-        ng.get('session')
-            .getIdentity()
-            .then((user) => {
-                this.setState({user});
-            });
+        ng.get('session').getIdentity().then((user) => {
+            this.setState({user});
+        });
     }
 
     render() {
@@ -29,6 +27,8 @@ export default class UserActivityWidgetWithUser extends React.Component<{}, ISta
             return null;
         }
 
-        return <UserActivityWidget user={this.state.user} onUserChange={(user) => this.setState({user})} />;
+        return (
+            <UserActivityWidget user={this.state.user} onUserChange={(user) => this.setState({user})} />
+        );
     }
 }

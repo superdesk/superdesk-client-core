@@ -18,7 +18,9 @@ export class EmbedPreview extends React.Component<IProps> {
 
         return (
             <div>
-                {description != null && <div>{description}</div>}
+                {
+                    description != null && <div>{description}</div>
+                }
 
                 <div
                     ref={(el) => {

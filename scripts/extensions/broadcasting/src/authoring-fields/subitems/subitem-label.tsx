@@ -10,6 +10,13 @@ export class SubitemLabel extends React.PureComponent<IProps> {
     render() {
         const {name, color} = this.props.subitem;
 
-        return <Label text={name} hexColor={color} style="translucent" size="normal" />;
+        return (
+            <Label
+                text={name}
+                hexColor={color}
+                style="translucent"
+                size="normal"
+            />
+        );
     }
 }

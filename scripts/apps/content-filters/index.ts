@@ -29,29 +29,27 @@ import {gettext} from 'core/utils';
  * @packageName superdesk.apps
  * @description Superdesk package containing content filters.
  */
-angular
-    .module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
-    .config([
-        'superdeskProvider',
-        function (superdesk) {
-            var templateUrl = 'scripts/apps/content-filters/' + 'views/settings.html';
+angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
+    .config(['superdeskProvider', function(superdesk) {
+        var templateUrl = 'scripts/apps/content-filters/' +
+                          'views/settings.html';
 
-            superdesk.activity('/settings/content-filters', {
-                label: gettext('Content Filters'),
-                controller: ctrl.ContentFiltersConfigController,
-                controllerAs: 'ctrl',
-                templateUrl: templateUrl,
-                category: superdesk.MENU_SETTINGS,
-                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
-                priority: -800,
-                privileges: {dictionaries: 1},
-            });
-        },
-    ])
+        superdesk.activity('/settings/content-filters', {
+            label: gettext('Content Filters'),
+            controller: ctrl.ContentFiltersConfigController,
+            controllerAs: 'ctrl',
+            templateUrl: templateUrl,
+            category: superdesk.MENU_SETTINGS,
+            settings_menu_group: coreMenuGroups.CONTENT_FLOW,
+            priority: -800,
+            privileges: {dictionaries: 1},
+        });
+    }])
     .service('contentFilters', ContentFiltersService)
     .controller('ContentFiltersConfigCtrl', ctrl.ContentFiltersConfigController)
     .controller('FilterConditionsCtrl', ctrl.FilterConditionsController)
     .controller('ManageContentFiltersCtrl', ctrl.ManageContentFiltersController)
     .controller('ProductionTestCtrl', ctrl.ProductionTestController)
     .controller('FilterSearchCtrl', ctrl.FilterSearchController)
-    .directive('sdManageFiltersTab', ManageFiltersTab);
+    .directive('sdManageFiltersTab', ManageFiltersTab)
+;

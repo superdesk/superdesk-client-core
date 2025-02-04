@@ -16,8 +16,7 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
     }
 
     generateSummary() {
-        configuration
-            .generateSummary?.(this.props.article, this.abortController.signal)
+        configuration.generateSummary?.(this.props.article, this.abortController.signal)
             .then((res) => {
                 this.props.setTabState({
                     activeSection: 'summary',
@@ -25,8 +24,7 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
                     loading: false,
                     summary: res,
                 });
-            })
-            .catch(() => {
+            }).catch(() => {
                 this.props.setTabState({
                     activeSection: 'summary',
                     error: true,
@@ -53,7 +51,13 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
             header: (
                 <>
                     <div className="p-1">
-                        <Spacer h gap="64" noGrow justifyContent="start" alignItems="center">
+                        <Spacer
+                            h
+                            gap="64"
+                            noGrow
+                            justifyContent="start"
+                            alignItems="center"
+                        >
                             <IconButton
                                 size="small"
                                 icon="arrow-left"
@@ -75,14 +79,11 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
                     article={article}
                     error={error}
                     generateSummary={() => {
-                        setTabState(
-                            {
-                                ...this.props.state,
-                                loading: true,
-                                error: false,
-                            },
-                            () => this.generateSummary(),
-                        );
+                        setTabState({
+                            ...this.props.state,
+                            loading: true,
+                            error: false,
+                        }, () => this.generateSummary());
                     }}
                     summary={summary}
                     loading={loading}
@@ -91,14 +92,11 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
             footer: (
                 <Button
                     onClick={() => {
-                        setTabState(
-                            {
-                                ...this.props.state,
-                                loading: true,
-                                error: false,
-                            },
-                            () => this.generateSummary(),
-                        );
+                        setTabState({
+                            ...this.props.state,
+                            loading: true,
+                            error: false,
+                        }, () => this.generateSummary());
                     }}
                     text={gettext('Regenerate')}
                     style="hollow"

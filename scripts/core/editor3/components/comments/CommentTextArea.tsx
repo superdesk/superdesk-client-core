@@ -91,26 +91,25 @@ class CommentTextArea extends React.Component<any, any> {
     renderSuggestion(item: IUserSuggestion | IDeskSuggestion, search, highlightedDisplay) {
         return (
             <div className="entry">
-                {item.type === 'desk' ? <i className="icon-tasks" /> : <UserAvatar size="small" user={item.user} />}
+                {item.type === 'desk'
+                    ? <i className="icon-tasks" />
+                    : <UserAvatar size="small" user={item.user} />
+                }
                 {highlightedDisplay}
             </div>
         );
     }
 
     render() {
-        const mentionsInputStyle =
-            typeof this.props.maxHeight !== 'number'
-                ? mentionsStyle.input
-                : {
-                      ...mentionsStyle.input,
-                      '&multiLine': {
-                          ...mentionsStyle.input['&multiLine'],
-                          input: {
-                              ...mentionsStyle.input['&multiLine'].input,
-                              maxHeight: this.props.maxHeight,
-                          },
-                      },
-                  };
+        const mentionsInputStyle = typeof this.props.maxHeight !== 'number'
+            ? mentionsStyle.input
+            : {...mentionsStyle.input, '&multiLine': {
+                ...mentionsStyle.input['&multiLine'],
+                input: {
+                    ...mentionsStyle.input['&multiLine'].input,
+                    maxHeight: this.props.maxHeight,
+                },
+            }};
 
         return (
             <div className="comment-textarea">

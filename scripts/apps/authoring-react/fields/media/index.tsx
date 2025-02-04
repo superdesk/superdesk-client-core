@@ -13,12 +13,8 @@ import {Config} from './config';
 
 export const MEDIA_FIELD_ID = 'media';
 
-export function getMediaField(): ICustomFieldType<
-    IMediaValueOperational,
-    IMediaValueStorage,
-    IMediaConfig,
-    IMediaUserPreferences
-> {
+export function getMediaField()
+: ICustomFieldType<IMediaValueOperational, IMediaValueStorage, IMediaConfig, IMediaUserPreferences> {
     const field: ReturnType<typeof getMediaField> = {
         id: MEDIA_FIELD_ID,
         generic: true,

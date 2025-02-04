@@ -19,32 +19,28 @@ export const patchArticle = (
         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
         .filter((middleware) => middleware != null);
 
-    return onPatchBeforeMiddlewares
-        .reduce(
-            (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
-            Promise.resolve(patch),
-        )
-        .then((patchFinal) => {
-            return dataApi
-                .patchRaw<IArticle>(
-                    // distinction between handling published and non-published items
-                    // should be removed: SDESK-4687
-                    sdApi.article.isPublished(article) ? 'published' : 'archive',
-                    article._id,
-                    article._etag,
-                    patchFinal,
-                )
-                .then((res) => {
-                    if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
-                        dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
-                            item: {...patch, _etag: res._etag, _id: res._id},
-                        });
-                    }
-                });
-        })
-        .catch((err) => {
-            if (err instanceof Error) {
-                logger.error(err);
+    return onPatchBeforeMiddlewares.reduce(
+        (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
+        Promise.resolve(patch),
+    ).then((patchFinal) => {
+        return dataApi.patchRaw<IArticle>(
+            // distinction between handling published and non-published items
+            // should be removed: SDESK-4687
+            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
+            article._id,
+            article._etag,
+            patchFinal,
+        ).then((res) => {
+            if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
+                dispatchInternalEvent(
+                    'dangerouslyOverwriteAuthoringData',
+                    {item: {...patch, _etag: res._etag, _id: res._id}},
+                );
             }
         });
+    }).catch((err) => {
+        if (err instanceof Error) {
+            logger.error(err);
+        }
+    });
 };

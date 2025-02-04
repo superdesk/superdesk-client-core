@@ -1,3 +1,4 @@
+
 describe('sdPasswordStrength', () => {
     var $compile, $rootScope, compileDirective;
 
@@ -6,7 +7,7 @@ describe('sdPasswordStrength', () => {
     beforeEach(inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
-        compileDirective = function (scopeValues) {
+        compileDirective = function(scopeValues) {
             var html = '<input type="password" ng-model="pwd" sd-password-strength>';
             var newScope = $rootScope.$new();
 
@@ -28,13 +29,19 @@ describe('sdPasswordStrength', () => {
     it('should start of with strength as "Short" if empty', () => {
         var $el = compileDirective();
 
-        expect($el.next().find('.label').text()).toBe('Short');
+        expect($el.next()
+            .find('.label')
+            .text(),
+        ).toBe('Short');
     });
 
     it('should start of with correct strength when model is pre-populated', () => {
         var $el = compileDirective({pwd: 'abcdE123'});
 
-        expect($el.next().find('.label').text()).toBe('OK');
+        expect($el.next()
+            .find('.label')
+            .text(),
+        ).toBe('OK');
     });
 
     it('should update strength when model changes', () => {

@@ -32,18 +32,21 @@ export function getSelectSingleValue(
 
             this.initialValue = props.value;
 
-            this.dependentFields = typeof getDependentFields === 'function' ? getDependentFields(props) : [];
+            this.dependentFields = typeof getDependentFields === 'function'
+                ? getDependentFields(props)
+                : [];
 
             this.fetchData = this.fetchData.bind(this);
         }
         fetchData() {
             this.setState({loading: true});
 
-            getItems(this.props).then((items) => {
-                if (this._mounted) {
-                    this.setState({items, loading: false});
-                }
-            });
+            getItems(this.props)
+                .then((items) => {
+                    if (this._mounted) {
+                        this.setState({items, loading: false});
+                    }
+                });
         }
         componentDidMount() {
             this._mounted = true;
@@ -54,7 +57,9 @@ export function getSelectSingleValue(
             this._mounted = false;
         }
         componentDidUpdate(prevProps: IProps) {
-            if (this.dependentFields.some((field) => prevProps.formValues[field] !== this.props.formValues[field])) {
+            if (
+                this.dependentFields.some((field) => prevProps.formValues[field] !== this.props.formValues[field])
+            ) {
                 this.props.onChange(this.initialValue); // resetting the value since dependent field changed
                 this.fetchData();
             }
@@ -82,10 +87,15 @@ export function getSelectSingleValue(
 
             return (
                 <div
-                    className={classNames('sd-line-input', {
-                        'sd-line-input--invalid': this.props.issues.length > 0,
-                        'sd-line-input--required': this.props.formField.required === true,
-                    })}
+                    className={
+                        classNames(
+                            'sd-line-input',
+                            {
+                                'sd-line-input--invalid': this.props.issues.length > 0,
+                                'sd-line-input--required': this.props.formField.required === true,
+                            },
+                        )
+                    }
                 >
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <select
@@ -98,19 +108,19 @@ export function getSelectSingleValue(
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     >
                         <option value="">{getFirstItemMessage()}</option>
-                        {this.state.items == null
-                            ? null
-                            : this.state.items.map(({id, label}, i) => (
-                                  <option key={i} value={id}>
-                                      {label}
-                                  </option>
-                              ))}
+                        {
+                            this.state.items == null
+                                ? null
+                                : this.state.items.map(({id, label}, i) => (
+                                    <option key={i} value={id}>{label}</option>
+                                ))
+                        }
                     </select>
-                    {this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">
-                            {str}
-                        </div>
-                    ))}
+                    {
+                        this.props.issues.map((str, i) => (
+                            <div key={i} className="sd-line-input__message">{str}</div>
+                        ))
+                    }
                 </div>
             );
         }

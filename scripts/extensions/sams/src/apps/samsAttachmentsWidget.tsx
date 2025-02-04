@@ -81,13 +81,12 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
             defaultAssetState: ASSET_STATE.PUBLIC,
             allowedStates: [ASSET_STATE.INTERNAL, ASSET_STATE.PUBLIC],
             onAssetUploaded: (asset: IAssetItem) => {
-                return superdeskApi.entities.attachment
-                    .create({
-                        media: asset._id,
-                        title: asset.name,
-                        description: asset.description,
-                        internal: asset.state !== ASSET_STATE.PUBLIC,
-                    })
+                return superdeskApi.entities.attachment.create({
+                    media: asset._id,
+                    title: asset.name,
+                    description: asset.description,
+                    internal: asset.state !== ASSET_STATE.PUBLIC,
+                })
                     .then((attachment) => {
                         this.props.addAttachments([attachment]);
                     });
@@ -97,9 +96,10 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
     }
 
     showEditAssetModal(attachment: IAttachment) {
-        showEditAttachmentModal(attachment).then(([updatedAttachment, _updatedAsset]) => {
-            this.props.onAttachmentUpdated(updatedAttachment);
-        });
+        showEditAttachmentModal(attachment)
+            .then(([updatedAttachment, _updatedAsset]) => {
+                this.props.onAttachmentUpdated(updatedAttachment);
+            });
     }
 
     showSelectAssetModal() {
@@ -107,27 +107,28 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
             sizeTo: superdeskApi.instance.config.attachments_max_size / 1048576, // bytes -> MB
             states: [ASSET_STATE.PUBLIC, ASSET_STATE.INTERNAL],
             setIds: this.props.activeSetIds,
-            excludedAssetIds: this.props.attachments.map((attachment) =>
-                typeof attachment.media === 'string' ? attachment.media : attachment.media._id,
-            ),
+            excludedAssetIds: this.props.attachments.map((attachment) => (
+                typeof attachment.media === 'string' ?
+                    attachment.media :
+                    attachment.media._id
+            )),
         });
 
         showSelectAssetModal()
             .then((selectedAssets: Dictionary<string, IAssetItem>) => {
-                Promise.all(
-                    Object.keys(selectedAssets).map((assetId) => {
-                        const asset = selectedAssets[assetId];
+                Promise.all(Object.keys(selectedAssets).map((assetId) => {
+                    const asset = selectedAssets[assetId];
 
-                        return superdeskApi.entities.attachment.create({
-                            media: asset._id,
-                            title: asset.name,
-                            description: asset.description,
-                            internal: asset.state !== ASSET_STATE.PUBLIC,
-                        });
-                    }),
-                ).then((attachments: Array<IAttachment>) => {
-                    this.props.addAttachments(attachments);
-                });
+                    return superdeskApi.entities.attachment.create({
+                        media: asset._id,
+                        title: asset.name,
+                        description: asset.description,
+                        internal: asset.state !== ASSET_STATE.PUBLIC,
+                    });
+                }))
+                    .then((attachments: Array<IAttachment>) => {
+                        this.props.addAttachments(attachments);
+                    });
             })
             .finally(() => {
                 this.props.popSearchParams();
@@ -142,10 +143,11 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
         }
 
         this.showUploadAssetModal({
-            initialFiles: Array.from(event.dataTransfer.files).map((file) => ({
-                id: Math.random().toString(36).substr(1),
-                file: file,
-            })),
+            initialFiles: Array.from(event.dataTransfer.files)
+                .map((file) => ({
+                    id: Math.random().toString(36).substr(1),
+                    file: file,
+                })),
         });
     }
 
@@ -175,14 +177,20 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                         removeFile={this.props.removeAttachment}
                     />
                 </div>
-                <div className="widget-content__footer" onDragOver={this.onDragFiles} onDrop={this.onDropFiles}>
+                <div
+                    className="widget-content__footer"
+                    onDragOver={this.onDragFiles}
+                    onDrop={this.onDropFiles}
+                >
                     {this.props.isWidget === true ? (
                         <div className="form__row">
                             <div className="basic-drag-block">
                                 <i className="big-icon--upload-alt" />
                                 {this.props.readOnly ? null : (
                                     <React.Fragment>
-                                        <span className="basic-drag-block__text">{gettext('Drag files here or')}</span>
+                                        <span className="basic-drag-block__text">
+                                            {gettext('Drag files here or')}
+                                        </span>
                                         <a className="text-link link" onClick={() => this.showUploadAssetModal()}>
                                             &nbsp;{gettext('browse')}
                                         </a>
@@ -208,7 +216,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                                                 {gettext('Drag files here or')}
                                             </span>
                                             <a className="text-link link" onClick={() => this.showUploadAssetModal()}>
-                                                &nbsp;{gettext('browse')}
+                                            &nbsp;{gettext('browse')}
                                             </a>
                                         </div>
                                         <div>

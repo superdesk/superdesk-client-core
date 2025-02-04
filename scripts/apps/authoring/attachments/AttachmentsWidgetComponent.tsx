@@ -68,10 +68,11 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 closeEdit={closeModal}
                 attachment={attachment}
                 saveAttachment={(original, updates) => {
-                    attachmentsApi.save(original, updates).then((updated) => {
-                        this.props.onAttachmentUpdated(updated);
-                        closeModal();
-                    });
+                    attachmentsApi.save(original, updates)
+                        .then((updated) => {
+                            this.props.onAttachmentUpdated(updated);
+                            closeModal();
+                        });
                 }}
             />
         ));
@@ -81,7 +82,11 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
         const showUpload = this.props.attachments.length < appConfig.attachments_max_files && !this.props.readOnly;
 
         return (
-            <div className="attachments-pane" onDragOver={this.onDragFiles} onDrop={this.onDropFiles}>
+            <div
+                className="attachments-pane"
+                onDragOver={this.onDragFiles}
+                onDrop={this.onDropFiles}
+            >
                 <AttachmentsList
                     attachments={this.props.attachments}
                     readOnly={this.props.readOnly}
@@ -117,7 +122,9 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                     >
                         <div className="subtext">
                             <i className="icon-attachment-large" />
-                            <span>{gettext('Drag one or more files here to upload them, or just click here.')}</span>
+                            <span>
+                                {gettext('Drag one or more files here to upload them, or just click here.')}
+                            </span>
                         </div>
                     </button>
                 )}

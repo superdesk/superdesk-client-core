@@ -29,8 +29,6 @@
     border-radius: var(--b-radius--full);
     background-color: var(--sd-editor-colour__main-bg);
     color: var(--sd-editor-colour__txt);
-    box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.16),
-        0 0 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 }

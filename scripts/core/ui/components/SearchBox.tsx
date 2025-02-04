@@ -20,16 +20,13 @@ class SearchBox extends React.Component<any, any> {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.value !== nextProps.value && this.props.activeFilter !== nextProps.activeFilter) {
+        if (this.props.value !== nextProps.value &&
+         this.props.activeFilter !== nextProps.activeFilter) {
             this.setState({inputValue: nextProps.value});
         }
 
-        if (
-            this.state.inputValue !== '' &&
-            this.props.value !== '' &&
-            nextProps.value === '' &&
-            this.props.activeFilter === nextProps.activeFilter
-        ) {
+        if (this.state.inputValue !== '' && this.props.value !== '' &&
+            nextProps.value === '' && this.props.activeFilter === nextProps.activeFilter) {
             this.setState({inputValue: nextProps.value});
         }
     }
@@ -58,7 +55,10 @@ class SearchBox extends React.Component<any, any> {
                     onChange={this.onChangeHandler}
                     onKeyPress={this.onKeyPressHandler}
                 />
-                <button className="sd-searchbar__search-btn" onClick={() => this.props.search(this.state.inputValue)}>
+                <button
+                    className="sd-searchbar__search-btn"
+                    onClick={() => this.props.search(this.state.inputValue)}
+                >
                     <i className="big-icon--chevron-right" />
                 </button>
             </div>

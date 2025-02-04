@@ -57,13 +57,15 @@ export class FileInput extends React.Component<any, any> {
     onAdd(field, fileList) {
         const files = Array.from(fileList).map((f) => [f]);
 
-        this.props.onChange(this.props.field, [...this.props.value, ...files]);
+        this.props.onChange(this.props.field,
+            [...this.props.value, ...files]);
     }
 
     onRemove(index) {
         this.handleOnFocus();
         this.props.value.splice(index, 1);
-        this.props.onChange(this.props.field, [...this.props.value]);
+        this.props.onChange(this.props.field,
+            [...this.props.value]);
     }
 
     getComponent(val, index = 0) {
@@ -82,16 +84,18 @@ export class FileInput extends React.Component<any, any> {
             </Row>
         ) : (
             <Row className="file-input" key={index} noPadding>
-                {(get(val, 'media') && (
+                {get(val, 'media') && (
                     <LineInput>
                         <a className="icn-btn sd-line-input__icon-right" onClick={this.onRemove.bind(null, index)}>
                             <i className="icon-trash" />
                         </a>
                         <a href={createLink(val)} target="_blank" rel="noopener noreferrer" onFocus={onFocus}>
-                            {val.media.name}&nbsp; ({Math.round(val.media.length / 1024)}kB)
+                            {val.media.name}&nbsp;
+                            ({Math.round(val.media.length / 1024)}kB)
                         </a>
                     </LineInput>
-                )) || (
+                ) ||
+                (
                     <LineInput readOnly={readOnly} noMargin>
                         <TextArea
                             field={field}
@@ -123,16 +127,14 @@ export class FileInput extends React.Component<any, any> {
 
         return (
             <Row>
-                {(value &&
-                    Array.isArray(value) &&
-                    value.map((val, index) => this.getComponent(get(val, '[0]', val), index))) ||
-                    (value && this.getComponent(value))}
+                {value && Array.isArray(value) &&
+                (value.map((val, index) => (this.getComponent(get(val, '[0]', val), index)))) ||
+                (value && (this.getComponent(value)))}
                 {!readOnly && (
                     <div onDrop={this.onDrop} onDragEnter={this.onDragEnter} className="basic-drag-block">
                         <i className="big-icon--upload-alt" />
                         <span className="basic-drag-block__text">{gettext('Drag files here or ')}</span>
-                        <a className="text-link link" onClick={this.onBrowseClick}>
-                            &nbsp;{gettext('browse')}
+                        <a className="text-link link" onClick={this.onBrowseClick}>&nbsp;{gettext('browse')}
                             <Input
                                 className="file-input--hidden"
                                 field={field}

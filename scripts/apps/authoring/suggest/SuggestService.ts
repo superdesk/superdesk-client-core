@@ -38,21 +38,19 @@ export default class SuggestService {
          * @description Holds the function that will be called when new suggestions
          * have been received.
          */
-        this._listener = (data) => {
-            /* no-op */
-        };
+        this._listener = (data) => { /* no-op */ };
     }
 
     /**
-     * @ngdoc method
-     * @name suggest#_get
-     * @param {(Array|Object)} item Array of items or item.
-     * @returns {Promise} If resolved, suggestions were obtained successfully,
-     * and all listeners were triggered.
-     * @private
-     * @description Requests a list of suggestions from the server and triggers
-     * all listeners on success.
-     */
+      * @ngdoc method
+      * @name suggest#_get
+      * @param {(Array|Object)} item Array of items or item.
+      * @returns {Promise} If resolved, suggestions were obtained successfully,
+      * and all listeners were triggered.
+      * @private
+      * @description Requests a list of suggestions from the server and triggers
+      * all listeners on success.
+      */
     _get(item) {
         let isArray = Array.isArray(item) && item.length > 0;
         let isObject = angular.isObject(item) && item.hasOwnProperty('_id');
@@ -63,7 +61,9 @@ export default class SuggestService {
 
         let id = isArray ? item[0]._id : item._id;
 
-        return this.api.get(`suggestions/${id}`).then(this._triggerListeners.bind(this));
+        return this.api
+            .get(`suggestions/${id}`)
+            .then(this._triggerListeners.bind(this));
     }
 
     /**

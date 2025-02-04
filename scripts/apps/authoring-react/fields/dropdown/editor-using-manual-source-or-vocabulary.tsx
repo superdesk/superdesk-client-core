@@ -62,10 +62,11 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
             }
         })();
 
-        const selected = values
-            .map((val) => options.lookup[val.toString()])
-            .filter(notNullOrUndefined)
-            .map(({value}) => value);
+        const selected =
+            values
+                .map((val) => options.lookup[val.toString()])
+                .filter(notNullOrUndefined)
+                .map(({value}) => value);
 
         const noPadding = selected.every(({color}) => color == null);
 
@@ -83,13 +84,21 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                     onChange={(_values) => {
                         const ids = _values.map((val) => val.id);
 
-                        this.props.onChange(config.multiple ? ids : (ids[0] ?? null));
+                        this.props.onChange(config.multiple ? ids : ids[0] ?? null);
                     }}
                     optionTemplate={({item}) => (
-                        <DropdownItemTemplate option={item} config={config} noPadding={false} />
+                        <DropdownItemTemplate
+                            option={item}
+                            config={config}
+                            noPadding={false}
+                        />
                     )}
                     valueTemplate={({item}) => (
-                        <DropdownItemTemplate option={item} config={config} noPadding={noPadding} />
+                        <DropdownItemTemplate
+                            option={item}
+                            config={config}
+                            noPadding={noPadding}
+                        />
                     )}
                     getId={(option) => option.id.toString()}
                     getLabel={(option) => option.label}

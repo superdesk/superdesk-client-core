@@ -12,8 +12,7 @@ const testItems = [
         links: 'links',
         comments: ['a', 'b'],
         body_html: 'body',
-    },
-    {
+    }, {
         _id: 2,
         slugline: 'slugline2',
         word_count: 11,
@@ -78,26 +77,22 @@ describe('suggest', () => {
         expect(api.get).toHaveBeenCalledWith(`suggestions/${item._id}`);
     }));
 
-    it('should get suggestion of first item in array when triggered', inject((
-        suggest,
-        autosave,
-        $q,
-        api,
-        $rootScope,
-    ) => {
-        const item = testItems[0];
+    it('should get suggestion of first item in array when triggered',
+        inject((suggest, autosave, $q, api, $rootScope) => {
+            const item = testItems[0];
 
-        spyOn(autosave, 'save').and.returnValue($q.when(testItems));
-        spyOn(api, 'get').and.returnValue($q.reject());
+            spyOn(autosave, 'save').and.returnValue($q.when(testItems));
+            spyOn(api, 'get').and.returnValue($q.reject());
 
-        suggest.setActive();
-        suggest.trigger(item, item);
+            suggest.setActive();
+            suggest.trigger(item, item);
 
-        $rootScope.$digest();
+            $rootScope.$digest();
 
-        expect(api.get.calls.count()).toBe(1);
-        expect(api.get).toHaveBeenCalledWith(`suggestions/${item._id}`);
-    }));
+            expect(api.get.calls.count()).toBe(1);
+            expect(api.get).toHaveBeenCalledWith(`suggestions/${item._id}`);
+        }),
+    );
 
     it('should trigger listeners on success', inject((suggest, autosave, $q, api, $rootScope) => {
         const item = testItems[0];

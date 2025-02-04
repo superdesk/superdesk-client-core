@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-import {DESK_OUTPUT, SENT_OUTPUT, SCHEDULED_OUTPUT} from 'apps/desks/constants';
+import {
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+} from 'apps/desks/constants';
 import {getLabelForStage} from 'apps/workspace/content/constants';
 
 AggregateSettings.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
@@ -25,7 +29,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             displayOnlyCurrentStep: '=',
             columnsLimit: '=',
         },
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             var PREFERENCES_KEY = 'agg:view';
             var defaultMaxItems = 10;
 
@@ -59,10 +63,11 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 },
             ];
 
-            desks.initialize().then(() => {
-                scope.userLookup = desks.userLookup;
-                scope.setCurrentStep();
-            });
+            desks.initialize()
+                .then(() => {
+                    scope.userLookup = desks.userLookup;
+                    scope.setCurrentStep();
+                });
 
             scope.$watch('step.current', (step) => {
                 if (step === 'searches') {
@@ -82,18 +87,18 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
             scope.labelForStage = getLabelForStage;
 
-            scope.closeModal = function () {
+            scope.closeModal = function() {
                 scope.step.current = 'desks';
                 scope.modalActive = false;
                 scope.showGlobalSavedSearches = false;
                 scope.onclose();
             };
 
-            scope.previous = function () {
+            scope.previous = function() {
                 WizardHandler.wizard('aggregatesettings').previous();
             };
 
-            scope.next = function () {
+            scope.next = function() {
                 WizardHandler.wizard('aggregatesettings').next();
             };
 
@@ -103,27 +108,25 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * @param {String} code name of this step in wizard, i.e: desks, searches, reorder, maxitems
              * @returns {Boolean}
              */
-            scope.shouldHideStep = function (code) {
-                return (
-                    !_.isNil(scope.displayOnlyCurrentStep) &&
-                    !(scope.displayOnlyCurrentStep && scope.currentStep === code)
-                );
+            scope.shouldHideStep = function(code) {
+                return !_.isNil(scope.displayOnlyCurrentStep) && !(scope.displayOnlyCurrentStep
+                    && scope.currentStep === code);
             };
 
             /**
              * @description Sets current step in wizard, default is 'desks'.
              */
-            scope.setCurrentStep = function () {
+            scope.setCurrentStep = function() {
                 scope.step = {
                     current: scope.currentStep || 'desks',
                 };
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.closeModal();
             };
 
-            scope.setDeskInfo = function (_id) {
+            scope.setDeskInfo = function(_id) {
                 var item = scope.editGroups[_id];
 
                 item._id = _id;
@@ -145,7 +148,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
 
             scope.labelForStage = getLabelForStage;
 
-            scope.setStageInfo = function (_id) {
+            scope.setStageInfo = function(_id) {
                 var item = scope.editGroups[_id];
 
                 if (!item.type) {
@@ -156,7 +159,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             };
 
-            scope.setDeskOutputInfo = function (_id, type) {
+            scope.setDeskOutputInfo = function(_id, type) {
                 var item = scope.editGroups[_id];
 
                 item._id = _id;
@@ -167,7 +170,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 scope.editGroups[_id] = item;
             };
 
-            scope.setSearchInfo = function (_id) {
+            scope.setSearchInfo = function(_id) {
                 var item = scope.editGroups[_id];
 
                 if (!item.type) {
@@ -178,7 +181,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             };
 
-            scope.setPersonalInfo = function () {
+            scope.setPersonalInfo = function() {
                 var item = scope.editGroups.personal;
 
                 if (!item.type) {
@@ -192,7 +195,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             /**
              * Init private saved searches with all saved searches for this user
              */
-            scope.initPrivateSavedSearches = function () {
+            scope.initPrivateSavedSearches = function() {
                 var user = session.identity._id;
 
                 if (scope.privateSavedSearches.length > 0) {
@@ -209,7 +212,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * Init global saved searches with all saved searches for all users
              * where is_global flag is true
              */
-            scope.initGlobalSavedSearches = function () {
+            scope.initGlobalSavedSearches = function() {
                 if (scope.globalSavedSearches.length > 0) {
                     scope.globalSavedSearches.length = 0;
                 }
@@ -229,7 +232,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
              * Return the list of selected groups (stages, personal or saved searches)
              * @return {Array} list of groups
              */
-            scope.getValues = function () {
+            scope.getValues = function() {
                 var values = Object.keys(scope.editGroups).map((key) => scope.editGroups[key]);
 
                 values = _.filter(values, (item) => {
@@ -260,7 +263,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 return values;
             };
 
-            scope.reorder = function (start, end, uiItem) {
+            scope.reorder = function(start, end, uiItem) {
                 var values = scope.getValues();
 
                 if (end.index !== start.index) {
@@ -271,7 +274,7 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             };
 
-            scope.save = function () {
+            scope.save = function() {
                 var groups = [];
 
                 _.each(scope.getValues(), (item, index) => {
@@ -285,43 +288,50 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 });
 
                 if (scope.widget) {
-                    workspaces.getActive().then((workspace) => {
-                        var widgets = angular.copy(workspace.widgets);
+                    workspaces.getActive()
+                        .then((workspace) => {
+                            var widgets = angular.copy(workspace.widgets);
 
-                        _.each(widgets, (widget) => {
-                            if (scope.widget._id === widget._id && scope.widget.multiple_id === widget.multiple_id) {
-                                widget.configuration = {};
-                                widget.configuration.groups = groups;
-                                if (scope.widget.configuration.label) {
-                                    widget.configuration.label = scope.widget.configuration.label;
+                            _.each(widgets, (widget) => {
+                                if (scope.widget._id === widget._id
+                                    && scope.widget.multiple_id === widget.multiple_id) {
+                                    widget.configuration = {};
+                                    widget.configuration.groups = groups;
+                                    if (scope.widget.configuration.label) {
+                                        widget.configuration.label = scope.widget.configuration.label;
+                                    }
                                 }
+                            });
+                            workspaces.save(workspace, {widgets: widgets})
+                                .then(() => {
+                                    scope.showGlobalSavedSearches = false;
+                                    scope.onclose();
+                                });
+                        });
+                } else if (scope.settings && scope.settings.desk) {
+                    desks.save(scope.deskLookup[scope.settings.desk._id], {monitoring_settings: groups})
+                        .then(() => {
+                            WizardHandler.wizard('aggregatesettings').finish();
+                        });
+                } else {
+                    workspaces.getActiveId()
+                        .then((activeWorkspace) => {
+                            if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
+                                preferencesService.get(PREFERENCES_KEY)
+                                    .then((preferences) => {
+                                        var updates = {};
+
+                                        if (preferences) {
+                                            updates[PREFERENCES_KEY] = preferences;
+                                        }
+                                        updates[PREFERENCES_KEY][activeWorkspace.id] = {groups: groups};
+                                        preferencesService.update(updates, PREFERENCES_KEY)
+                                            .then(() => {
+                                                WizardHandler.wizard('aggregatesettings').finish();
+                                            });
+                                    });
                             }
                         });
-                        workspaces.save(workspace, {widgets: widgets}).then(() => {
-                            scope.showGlobalSavedSearches = false;
-                            scope.onclose();
-                        });
-                    });
-                } else if (scope.settings && scope.settings.desk) {
-                    desks.save(scope.deskLookup[scope.settings.desk._id], {monitoring_settings: groups}).then(() => {
-                        WizardHandler.wizard('aggregatesettings').finish();
-                    });
-                } else {
-                    workspaces.getActiveId().then((activeWorkspace) => {
-                        if (activeWorkspace.type === 'workspace' || activeWorkspace.type === 'desk') {
-                            preferencesService.get(PREFERENCES_KEY).then((preferences) => {
-                                var updates = {};
-
-                                if (preferences) {
-                                    updates[PREFERENCES_KEY] = preferences;
-                                }
-                                updates[PREFERENCES_KEY][activeWorkspace.id] = {groups: groups};
-                                preferencesService.update(updates, PREFERENCES_KEY).then(() => {
-                                    WizardHandler.wizard('aggregatesettings').finish();
-                                });
-                            });
-                        }
-                    });
                     scope.showGlobalSavedSearches = false;
                     scope.onclose();
                 }

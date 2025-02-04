@@ -17,7 +17,12 @@ import {loadAssetsByIds} from '../../store/assets/actions';
 
 // UI
 import {Icon, Label, IconButton} from 'superdesk-ui-framework/react';
-import {ListItem, ListItemColumn, ListItemRow, ListItemActionMenu} from '../../ui/list';
+import {
+    ListItem,
+    ListItemColumn,
+    ListItemRow,
+    ListItemActionMenu,
+} from '../../ui/list';
 
 // Utils
 import {getIconTypeFromMimetype} from '../../utils/ui';
@@ -71,11 +76,14 @@ class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
     loadAssets() {
         this.setState({loading: true});
         const {getMediaId} = superdeskApi.entities.attachment;
-        const mediaIds = this.props.files.map((file) => getMediaId(file));
+        const mediaIds = this.props.files.map(
+            (file) => getMediaId(file),
+        );
 
-        this.props.loadAssetsByIds(mediaIds).then(() => {
-            this.setState({loading: false});
-        });
+        this.props.loadAssetsByIds(mediaIds)
+            .then(() => {
+                this.setState({loading: false});
+            });
     }
 
     getAttachmentSet(file: IAttachment): ISetItem | undefined {
@@ -100,32 +108,50 @@ class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
                         <h4>{file.title}</h4>
                     </ListItemRow>
                     <ListItemRow>
-                        <h5>
-                            {file.filename} {`(${getHumanReadableFileSize(file.media.length)})`}
-                        </h5>
+                        <h5>{file.filename} {`(${getHumanReadableFileSize(file.media.length)})`}</h5>
                     </ListItemRow>
                     <ListItemRow>
-                        <div className="description">{file.description}</div>
+                        <div className="description">
+                            {file.description}
+                        </div>
                     </ListItemRow>
                     {file.internal === false ? null : (
                         <ListItemRow>
-                            <Label text={gettext('internal')} color="label--orange2" />
+                            <Label
+                                text={gettext('internal')}
+                                color="label--orange2"
+                            />
                         </ListItemRow>
                     )}
                     {set?.state !== SET_STATE.DISABLED ? null : (
                         <ListItemRow>
-                            <Label text={gettext('Set Disabled')} color="label--orange2" />
+                            <Label
+                                text={gettext('Set Disabled')}
+                                color="label--orange2"
+                            />
                         </ListItemRow>
                     )}
                 </ListItemColumn>
                 <ListItemActionMenu row={true}>
-                    <IconButton ariaValue="download" onClick={() => this.props.download(file)} icon="download" />
+                    <IconButton
+                        ariaValue="download"
+                        onClick={() => this.props.download(file)}
+                        icon="download"
+                    />
                     {this.props.readOnly === true ? null : (
                         <React.Fragment>
                             {canEdit === false ? null : (
-                                <IconButton ariaValue="edit" onClick={() => this.props.editFile(file)} icon="pencil" />
+                                <IconButton
+                                    ariaValue="edit"
+                                    onClick={() => this.props.editFile(file)}
+                                    icon="pencil"
+                                />
                             )}
-                            <IconButton ariaValue="delete" onClick={() => this.props.removeFile(file)} icon="trash" />
+                            <IconButton
+                                ariaValue="delete"
+                                onClick={() => this.props.removeFile(file)}
+                                icon="trash"
+                            />
                         </React.Fragment>
                     )}
                 </ListItemActionMenu>
@@ -136,11 +162,20 @@ class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
     render() {
         return (
             <div className="attachments-list">
-                {this.state.loading === false ? null : <div className="sd-loader" />}
-                {this.props.files.length === 0 ? null : <ul>{this.props.files.map(this.renderFile)}</ul>}
+                {this.state.loading === false ? null : (
+                    <div className="sd-loader" />
+                )}
+                {this.props.files.length === 0 ? null : (
+                    <ul>
+                        {this.props.files.map(this.renderFile)}
+                    </ul>
+                )}
             </div>
         );
     }
 }
 
-export const SamsAttachmentsList = connect(mapStateToProps, mapDispatchToProps)(SamsAttachmentsListComponent);
+export const SamsAttachmentsList = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsAttachmentsListComponent);

@@ -10,13 +10,12 @@ export function PieChartDashboard(colorSchemes) {
             theme: '@',
             colors: '=',
         },
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             var appendTarget = element[0];
             var horizBlocks = attrs.x ? parseInt(attrs.x, 10) : 1;
             var vertBlocks = attrs.y ? parseInt(attrs.y, 10) : 1;
 
-            var graphSettings = {
-                // thightly depends on CSS
+            var graphSettings = { // thightly depends on CSS
                 blockWidth: 300,
                 blockHeight: 197,
                 mergeSpaceLeft: 60, // 30 + 2 + 20
@@ -30,20 +29,16 @@ export function PieChartDashboard(colorSchemes) {
             colorSchemes.get((colorsData) => {
                 var colorScheme = colorsData.schemes[0];
 
-                var arc = d3.svg
-                    .arc()
+                var arc = d3.svg.arc()
                     .outerRadius(radius)
-                    .innerRadius((radius * 8) / 13 / 2);
+                    .innerRadius(radius * 8 / 13 / 2);
 
                 var sort = attrs.sort || null;
-                var pie = d3.layout
-                    .pie()
+                var pie = d3.layout.pie()
                     .value((d) => d.doc_count)
                     .sort(sort ? (a, b) => d3.ascending(a[sort], b[sort]) : null);
 
-                var svg = d3
-                    .select(appendTarget)
-                    .append('svg')
+                var svg = d3.select(appendTarget).append('svg')
                     .attr('width', width)
                     .attr('height', height)
                     .append('g')
@@ -55,11 +50,16 @@ export function PieChartDashboard(colorSchemes) {
                             colorScheme = colorsData.schemes[_.findKey(colorsData.schemes, {name: newData[1]})];
                         }
 
-                        var colorScale = d3.scale.ordinal().range(colorScheme.charts);
+                        var colorScale = d3.scale.ordinal()
+                            .range(colorScheme.charts);
 
                         svg.selectAll('.arc').remove();
 
-                        var g = svg.selectAll('.arc').data(pie(newData[0])).enter().append('g').attr('class', 'arc');
+                        var g = svg.selectAll('.arc')
+                            .data(pie(newData[0]))
+                            .enter()
+                            .append('g')
+                            .attr('class', 'arc');
 
                         g.append('path')
                             .attr('d', arc)
@@ -80,35 +80,37 @@ export function PieChartDashboard(colorSchemes) {
 
                     while (move > 0) {
                         move = 0;
-                        svg.selectAll('.place-label').each(rerangeLabels);
+                        svg.selectAll('.place-label')
+                            .each(rerangeLabels);
                     }
                     function rerangeLabels() {
                         /* jshint validthis: true */
                         var self = this,
                             a = self.getBoundingClientRect();
 
-                        svg.selectAll('.place-label').each(function () {
-                            if (this !== self) {
-                                var b = this.getBoundingClientRect();
+                        svg.selectAll('.place-label')
+                            .each(function() {
+                                if (this !== self) {
+                                    var b = this.getBoundingClientRect();
 
-                                if (
-                                    Math.abs(a.left - b.left) * 2 < a.width + b.width &&
-                                    Math.abs(a.top - b.top) * 2 < a.height + b.height
-                                ) {
-                                    var dx = (Math.max(0, a.right - b.left) + Math.min(0, a.left - b.right)) * 0.01,
-                                        dy = (Math.max(0, a.bottom - b.top) + Math.min(0, a.top - b.bottom)) * 0.02,
-                                        tt = d3.transform(d3.select(this).attr('transform')),
-                                        to = d3.transform(d3.select(self).attr('transform'));
+                                    if (Math.abs(a.left - b.left) * 2 < a.width + b.width &&
+                                                Math.abs(a.top - b.top) * 2 < a.height + b.height) {
+                                        var dx = (Math.max(0, a.right - b.left) +
+                                                    Math.min(0, a.left - b.right)) * 0.01,
+                                            dy = (Math.max(0, a.bottom - b.top) +
+                                                            Math.min(0, a.top - b.bottom)) * 0.02,
+                                            tt = d3.transform(d3.select(this).attr('transform')),
+                                            to = d3.transform(d3.select(self).attr('transform'));
 
-                                    move += Math.abs(dx) + Math.abs(dy);
-                                    to.translate = [to.translate[0] + dx, to.translate[1] + dy];
-                                    tt.translate = [tt.translate[0] - dx, tt.translate[1] - dy];
-                                    d3.select(this).attr('transform', 'translate(' + tt.translate + ')');
-                                    d3.select(self).attr('transform', 'translate(' + to.translate + ')');
-                                    a = this.getBoundingClientRect();
+                                        move += Math.abs(dx) + Math.abs(dy);
+                                        to.translate = [to.translate[0] + dx, to.translate[1] + dy];
+                                        tt.translate = [tt.translate[0] - dx, tt.translate[1] - dy];
+                                        d3.select(this).attr('transform', 'translate(' + tt.translate + ')');
+                                        d3.select(self).attr('transform', 'translate(' + to.translate + ')');
+                                        a = this.getBoundingClientRect();
+                                    }
                                 }
-                            }
-                        });
+                            });
                     }
                 }
             });

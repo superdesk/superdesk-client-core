@@ -45,10 +45,9 @@ export class Config extends React.PureComponent<IProps, IState> {
                     multiple: false,
                 };
 
-                const currentConfig: IDropdownConfigManualSource =
-                    this.props.config?.source === 'manual-entry'
-                        ? this.props.config // has value set already
-                        : defaults;
+                const currentConfig: IDropdownConfigManualSource = this.props.config?.source === 'manual-entry'
+                    ? this.props.config // has value set already
+                    : defaults;
 
                 return currentConfig;
             } else if (this.state.source === 'vocabulary') {
@@ -58,10 +57,9 @@ export class Config extends React.PureComponent<IProps, IState> {
                     multiple: false,
                 };
 
-                const currentConfig: IDropdownConfigVocabulary =
-                    this.props.config?.source === 'vocabulary'
-                        ? this.props.config // has value set already
-                        : defaults;
+                const currentConfig: IDropdownConfigVocabulary = this.props.config?.source === 'vocabulary'
+                    ? this.props.config // has value set already
+                    : defaults;
 
                 return currentConfig;
             } else if (this.state.source === 'remote-source') {
@@ -99,7 +97,10 @@ export class Config extends React.PureComponent<IProps, IState> {
                 {(() => {
                     if (config.source === 'manual-entry') {
                         return (
-                            <ConfigManualEntry config={config} onChange={(_config) => this.props.onChange(_config)} />
+                            <ConfigManualEntry
+                                config={config}
+                                onChange={(_config) => this.props.onChange(_config)}
+                            />
                         );
                     } else if (config.source === 'vocabulary') {
                         return (

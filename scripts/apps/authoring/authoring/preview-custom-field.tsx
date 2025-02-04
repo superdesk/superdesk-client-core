@@ -28,7 +28,11 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
                 {appConfig?.authoring?.preview?.hideContentLabels === true || isEmpty(label) ? null : (
                     <FormLabel text={label} />
                 )}
-                <FieldType.previewComponent item={item} value={value} config={field.custom_field_config} />
+                <FieldType.previewComponent
+                    item={item}
+                    value={value}
+                    config={field.custom_field_config}
+                />
             </div>
         );
     }

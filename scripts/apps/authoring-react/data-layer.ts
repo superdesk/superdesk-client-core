@@ -46,54 +46,57 @@ export function getArticleContentProfile<T>(
      */
     function adjustId(fieldId: string): string {
         switch (fieldId) {
-            case 'sms':
-                // in content profile the field ID is "sms"
-                // but value is written to `IArticle['sms_message']`
-                return 'sms_message';
-            default:
-                return fieldId;
+        case 'sms':
+            // in content profile the field ID is "sms"
+            // but value is written to `IArticle['sms_message']`
+            return 'sms_message';
+        default:
+            return fieldId;
         }
     }
 
-    return Promise.all([getLabelNameResolver(), ng.get('content').setupAuthoring(item.profile, fakeScope, item)]).then(
-        (res) => {
-            const [getLabelForFieldId] = res;
+    return Promise.all([
+        getLabelNameResolver(),
+        ng.get('content').setupAuthoring(item.profile, fakeScope, item),
+    ]).then((res) => {
+        const [getLabelForFieldId] = res;
 
-            const {editor, fields, schema} = fakeScope;
-            const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
+        const {editor, fields, schema} = fakeScope;
+        const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
+
+        /**
+         * Insert a field which alongside the adapter will use the media field type
+         * to enable viewing and editing of the original media item.
+         */
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            editor['_media_self'] = {
+                'order': 0,
+                'sdWidth': 'full',
+                'section': 'content',
+                'enabled': true,
+            };
+        }
+
+        const fieldsToOmit = [
+            /**
+             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
+             * authoring-react doesn't support companion fields like 'footer' that don't have data on
+             * their own but simply modify the data of other fields.
+             */
+            'footer',
 
             /**
-             * Insert a field which alongside the adapter will use the media field type
-             * to enable viewing and editing of the original media item.
+             * `media_description` isn't used anywhere. It might still be present in content profiles, so
+             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
              */
-            if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
-                editor['_media_self'] = {
-                    order: 0,
-                    sdWidth: 'full',
-                    section: 'content',
-                    enabled: true,
-                };
-            }
+            'media_description',
+        ];
 
-            const fieldsToOmit = [
-                /**
-                 * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
-                 * authoring-react doesn't support companion fields like 'footer' that don't have data on
-                 * their own but simply modify the data of other fields.
-                 */
-                'footer',
-
-                /**
-                 * `media_description` isn't used anywhere. It might still be present in content profiles, so
-                 * I'm omitting it here to prevent authoring-react from crashing trying to render it.
-                 */
-                'media_description',
-            ];
-
-            const fieldsOrdered = Object.keys(editor)
+        const fieldsOrdered =
+            Object.keys(editor)
                 .filter((key) => editor[key] != null && !fieldsToOmit.includes(key)) // don't take disabled ones
                 .map((key) => {
-                    const result: {fieldId: string; editorItem: any} = {
+                    const result: {fieldId: string, editorItem: any} = {
                         fieldId: key,
                         editorItem: editor[key],
                     };
@@ -102,99 +105,100 @@ export function getArticleContentProfile<T>(
                 })
                 .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
-            let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
-            let contentFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
+        let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
+        let contentFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
 
-            for (const _field of fieldsOrdered) {
-                const {editorItem} = _field;
-                const fieldId = adjustId(_field.fieldId);
+        for (const _field of fieldsOrdered) {
+            const {editorItem} = _field;
+            const fieldId = adjustId(_field.fieldId);
 
-                const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
-                const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+            const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+            const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
 
-                const convertWidth = (width: string): number => {
-                    if (width === 'full') {
-                        return 100;
-                    } else if (width === 'half') {
-                        return 50;
-                    } else if (width === 'quarter') {
-                        return 25;
-                    } else {
-                        return 100;
-                    }
-                };
-
-                const commonConfigs: ICommonFieldConfig = {
-                    readOnly: fieldEditor.readonly === true,
-                    required: fieldEditor.required === true,
-                    allow_toggling: fieldEditor.allow_toggling === true,
-                    width: convertWidth(fieldEditor.sdWidth),
-                };
-
-                const fieldV2: IAuthoringFieldV2 = (() => {
-                    if (fieldsAdapter.hasOwnProperty(fieldId)) {
-                        // main, hardcoded fields
-                        const f: IAuthoringFieldV2 = fieldsAdapter[fieldId].getFieldV2(
-                            fieldEditor,
-                            fieldSchema,
-                            fieldExists,
-                        );
-
-                        return {
-                            ...f,
-                            fieldConfig: {
-                                ...commonConfigs,
-                                ...f.fieldConfig, // adapter should be capable of overwriting common configs
-                            },
-                        };
-                    } else {
-                        // custom fields
-                        const field = fields.find(({_id}) => _id === fieldId);
-
-                        const f: IAuthoringFieldV2 = {
-                            id: fieldId,
-                            name: getLabelForFieldId(fieldId),
-                            fieldType: field.custom_field_type,
-                            fieldConfig: {
-                                ...commonConfigs,
-                                ...(field.custom_field_config ?? {}),
-                            },
-                        };
-
-                        return f;
-                    }
-                })();
-
-                if (editorItem.section === 'header') {
-                    headerFields = headerFields.set(fieldV2.id, fieldV2);
-                } else if (editorItem.section === 'content') {
-                    contentFields = contentFields.set(fieldV2.id, fieldV2);
+            const convertWidth = (width: string): number => {
+                if (width === 'full') {
+                    return 100;
+                } else if (width === 'half') {
+                    return 50;
+                } else if (width === 'quarter') {
+                    return 25;
                 } else {
-                    throw new Error('invalid section');
+                    return 100;
                 }
-            }
-
-            // TODO: write an upgrade script and remove hardcoding
-            // after angular based authoring is removed from the codebase
-            if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
-                const description_field = description_text.getFieldV2(fakeScope.editor, fakeScope.schema, fieldExists);
-
-                contentFields = contentFields.set(description_field.id, description_field);
-            }
-
-            const profile: IContentProfileV2 = {
-                id: item.profile,
-                name: 'test content profile',
-                header: headerFields,
-                content: contentFields,
             };
 
-            return profile;
-        },
-    );
+            const commonConfigs: ICommonFieldConfig = {
+                readOnly: fieldEditor.readonly === true,
+                required: fieldEditor.required === true,
+                allow_toggling: fieldEditor.allow_toggling === true,
+                width: convertWidth(fieldEditor.sdWidth),
+            };
+
+            const fieldV2: IAuthoringFieldV2 = (() => {
+                if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
+                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId]
+                        .getFieldV2(fieldEditor, fieldSchema, fieldExists);
+
+                    return {
+                        ...f,
+                        fieldConfig: {
+                            ...commonConfigs,
+                            ...f.fieldConfig, // adapter should be capable of overwriting common configs
+                        },
+                    };
+                } else { // custom fields
+                    const field = fields.find(({_id}) => _id === fieldId);
+
+                    const f: IAuthoringFieldV2 = {
+                        id: fieldId,
+                        name: getLabelForFieldId(fieldId),
+                        fieldType: field.custom_field_type,
+                        fieldConfig: {
+                            ...commonConfigs,
+                            ...(field.custom_field_config ?? {}),
+                        },
+                    };
+
+                    return f;
+                }
+            })();
+
+            if (editorItem.section === 'header') {
+                headerFields = headerFields.set(fieldV2.id, fieldV2);
+            } else if (editorItem.section === 'content') {
+                contentFields = contentFields.set(fieldV2.id, fieldV2);
+            } else {
+                throw new Error('invalid section');
+            }
+        }
+
+        // TODO: write an upgrade script and remove hardcoding
+        // after angular based authoring is removed from the codebase
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            const description_field = description_text.getFieldV2(
+                fakeScope.editor,
+                fakeScope.schema,
+                fieldExists,
+            );
+
+            contentFields = contentFields.set(description_field.id, description_field);
+        }
+
+        const profile: IContentProfileV2 = {
+            id: item.profile,
+            name: 'test content profile',
+            header: headerFields,
+            content: contentFields,
+        };
+
+        return profile;
+    });
 }
 
-function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+function getPackagesContentProfile<T>(
+    item: IArticle,
+    fieldsAdapter: IFieldsAdapter<T>,
+): Promise<IContentProfileV2> {
     const headlineField: IAuthoringFieldV2 = {
         id: 'headline',
         name: gettext('Headline'),
@@ -217,8 +221,12 @@ function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdap
     return Promise.resolve<IContentProfileV2>({
         id: 'packages-profile',
         name: gettext('Packages profile'),
-        header: OrderedMap([[headlineField.id, headlineField]]),
-        content: OrderedMap([[articlesInPackageField.id, articlesInPackageField]]),
+        header: OrderedMap([
+            [headlineField.id, headlineField],
+        ]),
+        content: OrderedMap([
+            [articlesInPackageField.id, articlesInPackageField],
+        ]),
     });
 }
 
@@ -243,7 +251,13 @@ export function omitFields(
         'linked_in_packages',
     ];
 
-    const baseApiFields = ['_created', '_links', '_updated', '_etag', '_status'];
+    const baseApiFields = [
+        '_created',
+        '_links',
+        '_updated',
+        '_etag',
+        '_status',
+    ];
 
     if (omitId) {
         baseApiFields.push('_id');
@@ -263,8 +277,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
     },
     isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
     forceLock(entity) {
-        return sdApi.article
-            .unlock(entity._id)
+        return sdApi.article.unlock(entity._id)
             .then(() => sdApi.article.lock(entity._id))
             .then((article) => {
                 const adapter = getArticleAdapter();
@@ -307,7 +320,9 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
 
             diff = adapter.fromAuthoringReact(diff);
 
-            const queryString = appConfig.features.publishFromPersonal === true ? '?publish_from_personal=true' : '';
+            const queryString = appConfig.features.publishFromPersonal === true
+                ? '?publish_from_personal=true'
+                : '';
 
             return httpRequestJsonLocal<IArticle>({
                 method: 'PATCH',
@@ -331,12 +346,11 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
         }
     },
     closeAuthoring: (current, original, hasUnsavedChanges, cancelAutosave, doClose) => {
-        const unlockArticle = (id: string) =>
-            httpRequestJsonLocal<void>({
-                method: 'POST',
-                payload: {},
-                path: `/archive/${id}/unlock`,
-            });
+        const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
+            method: 'POST',
+            payload: {},
+            path: `/archive/${id}/unlock`,
+        });
 
         return authoringApiCommon.closeAuthoring(
             original,
@@ -359,7 +373,10 @@ class AutoSaveKill implements IAuthoringAutoSave<IArticle> {
         return Promise.resolve();
     }
 
-    schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void) {
+    schedule(
+        getItem: () => IArticle,
+        callback: (autosaved: IArticle) => void,
+    ) {
         callback(getItem());
     }
 

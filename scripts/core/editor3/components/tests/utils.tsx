@@ -47,9 +47,9 @@ export default function mockStore(state = {}) {
  * @returns {Object} editorState
  */
 export function stateWithLink() {
-    const contentState = ContentState.createFromText('click HERE to open page').createEntity('LINK', 'MUTABLE', {
-        link: {href: 'entity-url'},
-    });
+    const contentState = ContentState
+        .createFromText('click HERE to open page')
+        .createEntity('LINK', 'MUTABLE', {link: {href: 'entity-url'}});
 
     const entityKey = contentState.getLastCreatedEntityKey();
     const blockKey = contentState.getFirstBlock().getKey();
@@ -95,9 +95,7 @@ export function createBlockAndContent(type: CustomEditor3Entity, data) {
     const entityKey = contentState.getLastCreatedEntityKey();
     const {editorState} = insertAtomicBlockWithoutEmptyLines(
         EditorState.createWithContent(contentState),
-        entityKey,
-        ' ',
-    );
+        entityKey, ' ');
     const block = editorState.getCurrentContent().getBlocksAsArray()[1];
 
     return {block: block, contentState: editorState.getCurrentContent()};
@@ -122,31 +120,24 @@ export function embedBlockAndContent() {
  * @returns {ContentState}
  */
 export function blocksWithText(list) {
-    return ContentState.createFromBlockArray(
-        list.map((htmlData) => {
-            const type = htmlData[0] || 'unstyled';
-            const depth = htmlData[1] || 0;
-            const text = htmlData[2] || '';
-            const data = htmlData[3] || {};
+    return ContentState.createFromBlockArray(list.map((htmlData) => {
+        const type = htmlData[0] || 'unstyled';
+        const depth = htmlData[1] || 0;
+        const text = htmlData[2] || '';
+        const data = htmlData[3] || {};
 
-            return new ContentBlock({
-                type: type,
-                key: genKey(),
-                depth: depth,
-                data: Map(data),
-                text: text,
-                characterList: List(
-                    Repeat(
-                        CharacterMetadata.create({
-                            style: OrderedSet([]),
-                            entity: null,
-                        }),
-                        text.length,
-                    ),
-                ),
-            });
-        }),
-    );
+        return new ContentBlock({
+            type: type,
+            key: genKey(),
+            depth: depth,
+            data: Map(data),
+            text: text,
+            characterList: List(Repeat(CharacterMetadata.create({
+                style: OrderedSet([]),
+                entity: null,
+            }), text.length)),
+        });
+    }));
 }
 
 /**
@@ -197,7 +188,9 @@ export function cursorAtEndPosition(editorState): EditorState {
  * @returns {Object} editorState
  */
 export function cursorAtPosition(editorState, pos, n = 0) {
-    const blockKey = editorState.getCurrentContent().getFirstBlock().getKey();
+    const blockKey = editorState.getCurrentContent()
+        .getFirstBlock()
+        .getKey();
 
     const selection = SelectionState.createEmpty(blockKey).merge({
         anchorOffset: pos,

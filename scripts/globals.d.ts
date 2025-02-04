@@ -48,8 +48,8 @@ interface Window {
             parentAppVersion: string;
             checkboxPreference: boolean;
             clientExtenstionJs: string;
-        };
-        useDocumentWriteFun: boolean;
+        },
+        useDocumentWriteFun: boolean,
     };
     afterProofing: (isCanceled: boolean) => void;
     tansaJQuery: {
@@ -57,7 +57,7 @@ interface Window {
             os: {
                 name: string;
                 fullVersion: string;
-            };
+            }
         };
     };
 
@@ -82,9 +82,9 @@ interface Window {
 }
 
 // Allow importing json/html/svg files
-declare module '*.json';
-declare module '*.html';
-declare module '*.svg' {
+declare module "*.json";
+declare module "*.html";
+declare module "*.svg" {
     const content: string;
     export default content;
 }

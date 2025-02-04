@@ -1,8 +1,14 @@
-import {EditorState} from 'draft-js';
+import {
+    EditorState,
+} from 'draft-js';
 import {getEditorFieldCharactersCount} from 'apps/authoring/authoring/components/CharacterCount';
 import getFragmentFromSelection from '@sourcefabric/draft-js/lib/getFragmentFromSelection';
 
-export function preventInputWhenLimitIsPassed(editorState: EditorState, newChars: string, limit: number) {
+export function preventInputWhenLimitIsPassed(
+    editorState: EditorState,
+    newChars: string,
+    limit: number,
+) {
     const length =
         getEditorFieldCharactersCount(editorState.getCurrentContent().getPlainText(), false) +
         newChars.length -

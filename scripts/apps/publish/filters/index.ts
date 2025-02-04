@@ -12,7 +12,7 @@ export function SubscribersFilter() {
      * @param {Object} search - The filter. search by name and subscriber type.
      * @returns {Array<Object>} The filtered array.
      */
-    return function (items, search) {
+    return function(items, search) {
         if (!items) {
             return;
         }

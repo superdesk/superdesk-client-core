@@ -11,10 +11,10 @@ export default class Popup extends React.Component<any, any> {
     static defaultProps: any;
 
     dom: {
-        portal: any;
-        child: any;
-        root: any;
-        parent: any;
+        portal: any,
+        child: any,
+        root: any,
+        parent: any,
     };
 
     constructor(props) {
@@ -146,9 +146,14 @@ export default class Popup extends React.Component<any, any> {
 
         return (
             <div ref={this.setParentNode}>
-                <Portal ref={this.setPortalNodes} node={popupContainer && popupContainer()}>
-                    <div ref={(node) => (this.dom.child = node)} className={className ? `popup ${className}` : 'popup'}>
-                        <Menu noPadding={noPadding}>{children}</Menu>
+                <Portal
+                    ref={this.setPortalNodes}
+                    node={popupContainer && popupContainer()}
+                >
+                    <div ref={(node) => this.dom.child = node} className={className ? `popup ${className}` : 'popup'}>
+                        <Menu noPadding={noPadding}>
+                            {children}
+                        </Menu>
                     </div>
                 </Portal>
             </div>

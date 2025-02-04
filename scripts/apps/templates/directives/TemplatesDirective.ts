@@ -13,22 +13,12 @@ const defaultTemplate: Partial<IArticle> = {
     body_html: '',
 };
 
-TemplatesDirective.$inject = [
-    'notify',
-    'api',
-    'templates',
-    'modal',
-    'desks',
-    'weekdays',
-    'content',
-    '$filter',
-    'session',
-    'lodash',
-];
+TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
+    'content', '$filter', 'session', 'lodash'];
 export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, session, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
-        link: function ($scope) {
+        link: function($scope) {
             const TEMPLATEFILTERS = getTemplateFilters();
 
             $scope.weekdays = weekdays;
@@ -40,10 +30,12 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             $scope.error = {};
 
             function fetchTemplates() {
-                templates.fetchAllTemplates(1, 200).then((result) => {
-                    result._items = $filter('sortByName')(result._items, 'template_name');
-                    $scope.content_templates = result;
-                });
+                templates.fetchAllTemplates(1, 200).then(
+                    (result) => {
+                        result._items = $filter('sortByName')(result._items, 'template_name');
+                        $scope.content_templates = result;
+                    },
+                );
             }
 
             $scope.$on('template:update', (e, data) => fetchTemplates());
@@ -60,35 +52,34 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Returns true if desks selection should be displayed
              */
-            $scope.showDesks = function () {
-                return (
-                    !_.isNil($scope.template) &&
+            $scope.showDesks = function() {
+                return !_.isNil($scope.template) &&
                     !_.isNil($scope.template.template_type) &&
                     $scope.template.template_type !== 'kill' &&
-                    $scope.template.is_public
-                );
+                    $scope.template.is_public;
             };
 
             /*
              * Returns true if stage selection should be displayed
              */
-            $scope.showStages = function () {
-                return $scope.showScheduling() && !_.isNil($scope.stages) && $scope.stages.length > 0;
+            $scope.showStages = function() {
+                return $scope.showScheduling() &&
+                    !_.isNil($scope.stages) && $scope.stages.length > 0;
             };
 
             /*
              * Returns true if scheduling should be displayed
              */
-            $scope.showScheduling = function () {
-                return (
-                    !_.isNil($scope.template) && $scope.template.template_type !== 'kill' && $scope.template.is_public
-                );
+            $scope.showScheduling = function() {
+                return !_.isNil($scope.template) &&
+                    $scope.template.template_type !== 'kill' &&
+                    $scope.template.is_public;
             };
 
             /*
              * Called on desk toggle on multiple desk selection
              */
-            $scope.toggleDesk = function (desk) {
+            $scope.toggleDesk = function(desk) {
                 desk.selected = !desk.selected;
                 $scope.onDeskToggle(desk);
             };
@@ -98,7 +89,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Called on desk toggle on multiple desk selection
              */
-            $scope.onDeskToggle = function (desk) {
+            $scope.onDeskToggle = function(desk) {
                 if (desk.selected && !$scope.template.template_desks) {
                     $scope.template.template_desks = [desk._id];
                     return;
@@ -139,7 +130,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Sets the template template_desks list to null if deskId is null/empty or to a list with one element.
              */
-            $scope.setTemplateDesks = function (deskId) {
+            $scope.setTemplateDesks = function(deskId) {
                 if (_.isNil(deskId) || deskId === '') {
                     $scope.template.template_desks = null;
                     selectDesk(null);
@@ -152,12 +143,10 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Truncates the template template_desks list to the first element.
              */
-            $scope.resetDesks = function () {
-                if (
-                    !_.isNil($scope.template.template_desks) &&
-                    $scope.template.template_type !== 'create' &&
-                    $scope.template.template_desks.length > 0
-                ) {
+            $scope.resetDesks = function() {
+                if (!_.isNil($scope.template.template_desks) &&
+                        $scope.template.template_type !== 'create' &&
+                        $scope.template.template_desks.length > 0) {
                     $scope.template.template_desks.splice(1, $scope.template.template_desks.length - 1);
                     selectDesk($scope.template.template_desks[0]);
                 }
@@ -169,7 +158,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Returns desks names
              */
-            $scope.getTemplateDesks = function (template) {
+            $scope.getTemplateDesks = function(template) {
                 var templateDesks = [];
 
                 _.forEach(template.template_desks, (deskId) => {
@@ -185,7 +174,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Returns the schedule desk stage name
              */
-            $scope.getScheduleDesk = function (template) {
+            $scope.getScheduleDesk = function(template) {
                 if (!_.isNil(template)) {
                     let desk = _.find($scope.desks._items, {_id: template.schedule_desk});
 
@@ -197,7 +186,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             /*
              * Returns the schedule desk stage name
              */
-            $scope.getScheduleStage = function (template) {
+            $scope.getScheduleStage = function(template) {
                 if (!_.isNil(template)) {
                     let stage = _.find(desks.stages._items, {_id: template.schedule_stage});
 
@@ -208,15 +197,15 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
             /*
              * Returns true if the template is not public and does not belong to the current user
-             */
-            $scope.isPrivate = function (template) {
-                return !template.is_public && session.identity._id !== template.user;
+            */
+            $scope.isPrivate = function(template) {
+                return !template.is_public && (session.identity._id !== template.user);
             };
 
             /*
              * Returns the display name of the user that owns the template
-             */
-            $scope.getTemplateOwner = function (template) {
+            */
+            $scope.getTemplateOwner = function(template) {
                 var owner = desks.userLookup[template.user];
 
                 return owner.display_name;
@@ -237,20 +226,15 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
             $scope.requestEditor3DirectivesToGenerateHtml = [];
 
-            $scope.save = function () {
+            $scope.save = function() {
                 for (const fn of $scope.requestEditor3DirectivesToGenerateHtml) {
                     fn();
                 }
 
                 $scope.template.schedule.cron_list = [];
                 _.forEach($scope.cron_times, (time) => {
-                    $scope.template.schedule.cron_list.push(
-                        time.substring(3, 5) +
-                            ' ' +
-                            time.substring(0, 2) +
-                            ' * * ' +
-                            $scope.template.schedule.day_of_week.join(','),
-                    );
+                    $scope.template.schedule.cron_list.push(time.substring(3, 5) + ' ' + time.substring(0, 2) +
+                        ' * * ' + $scope.template.schedule.day_of_week.join(','));
                 });
                 if (validate($scope.origTemplate, $scope.template)) {
                     // if template is made private, set current user as template owner
@@ -258,15 +242,16 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         $scope.template.user = session.identity._id;
                     }
 
-                    templates.save($scope.origTemplate, $scope.template).then(
-                        () => {
-                            notify.success(gettext('Template saved.'));
-                            $scope.cancel();
-                        },
-                        (response) => {
-                            notifySaveError(response, notify);
-                        },
-                    );
+                    templates.save($scope.origTemplate, $scope.template)
+                        .then(
+                            () => {
+                                notify.success(gettext('Template saved.'));
+                                $scope.cancel();
+                            },
+                            (response) => {
+                                notifySaveError(response, notify);
+                            },
+                        );
                 }
             };
 
@@ -279,31 +264,27 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 return times;
             }
 
-            $scope.removeCronTime = function (cron) {
+            $scope.removeCronTime = function(cron) {
                 _.remove($scope.cron_times, (c) => c === cron);
             };
 
-            $scope.addCronTime = function () {
-                if (
-                    $scope.new_time &&
-                    $scope.new_time.picked &&
-                    _.findIndex($scope.cron_times, (t) => t.toString() === $scope.new_time.picked.substring(0, 5)) ===
-                        -1
-                ) {
+            $scope.addCronTime = function() {
+                if ($scope.new_time && $scope.new_time.picked && _.findIndex($scope.cron_times,
+                    (t) => t.toString() === $scope.new_time.picked.substring(0, 5)) === -1) {
                     $scope.cron_times.push($scope.new_time.picked.substring(0, 5));
                     $scope.cron_times = _.sortBy($scope.cron_times);
                     $scope.new_time = {picked: null};
                 }
             };
 
-            $scope.edit = function (template) {
+            $scope.edit = function(template) {
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
                 $scope.template.data = $scope.origTemplate.data || defaultTemplate;
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
-                $scope.template_desk =
-                    $scope.template.template_desks.length > 0 ? $scope.template.template_desks[0] : '';
+                $scope.template_desk = $scope.template.template_desks.length > 0 ?
+                    $scope.template.template_desks[0] : '';
                 $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                 $scope.template.template_type = $scope.origTemplate.template_type;
 
@@ -353,8 +334,12 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 }
 
                 if (newValue != null && newValue !== '') {
-                    dataApi
-                        .query('macros', 1, {field: 'name', direction: 'ascending'}, {deskId: newValue})
+                    dataApi.query(
+                        'macros',
+                        1,
+                        {field: 'name', direction: 'ascending'},
+                        {deskId: newValue},
+                    )
                         .then((res) => {
                             $scope.macros = res._items;
                             $scope.$apply();
@@ -362,58 +347,55 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 }
             });
 
-            $scope.remove = function (template) {
-                const _desks = _.filter($scope.desks._items, (desk) => desk.default_content_template === template._id);
+            $scope.remove = function(template) {
+                const _desks = _.filter($scope.desks._items, (desk) =>
+                    desk.default_content_template === template._id);
 
                 const deskNames = _desks.map((desk) => desk.name).join(', ');
 
                 if (deskNames) {
                     return notify.error(
                         gettext('This is a default template of the following desk(s): {{deskNames}}.', {deskNames}) +
-                            ' ' +
-                            gettext('Please change the default templates first.'),
+                        ' ' + gettext('Please change the default templates first.'),
                     );
                 }
 
-                modal
-                    .confirm(gettext('Are you sure you want to delete the template?'))
+                modal.confirm(gettext('Are you sure you want to delete the template?'))
                     .then(() => api.remove(template))
-                    .then(
-                        (result) => {
-                            _.remove($scope.templates, template);
-                        },
-                        (response) => {
-                            if (angular.isDefined(response.data._message)) {
-                                notify.error(gettext('Error: ' + response.data._message));
-                            } else {
-                                notify.error(gettext('There was an error. Template cannot be deleted.'));
-                            }
-                        },
-                    );
+                    .then((result) => {
+                        _.remove($scope.templates, template);
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Error: ' + response.data._message));
+                        } else {
+                            notify.error(gettext('There was an error. Template cannot be deleted.'));
+                        }
+                    });
             };
 
-            $scope.cancel = function () {
+            $scope.cancel = function() {
                 $scope.origTemplate = null;
                 $scope.template = null;
                 $scope.vars = null;
                 fetchTemplates();
             };
 
-            $scope.updateStages = function (desk) {
+            $scope.updateStages = function(desk) {
                 $scope.stages = desk ? desks.deskStages[desk] : null;
                 $scope.template.schedule_stage = null;
             };
 
-            $scope.isScheduleValid = () =>
-                $scope.showScheduling() && $scope.template.schedule.is_active
-                    ? $scope.template.schedule.day_of_week &&
-                      $scope.template.schedule.day_of_week.length > 0 &&
-                      $scope.cron_times.length > 0 &&
-                      $scope.template.schedule_desk &&
-                      $scope.template.schedule_stage
-                    : true;
+            $scope.isScheduleValid = () => $scope.showScheduling() && $scope.template.schedule.is_active ?
+                $scope.template.schedule.day_of_week &&
+                    $scope.template.schedule.day_of_week.length > 0 &&
+                    $scope.cron_times.length > 0 &&
+                    $scope.template.schedule_desk &&
+                    $scope.template.schedule_stage : true;
 
-            $scope.filters = [TEMPLATEFILTERS.All, TEMPLATEFILTERS.Personal];
+            $scope.filters = [
+                TEMPLATEFILTERS.All,
+                TEMPLATEFILTERS.Personal,
+            ];
 
             if ($scope.privileges.personal_template) {
                 $scope.filters.push(TEMPLATEFILTERS.Private);
@@ -425,7 +407,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             $scope.activeFilter = 0;
 
             // sets the active filter to another index.
-            $scope.filterBy = function (idx) {
+            $scope.filterBy = function(idx) {
                 $scope.activeFilter = idx;
             };
 
@@ -434,7 +416,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 // the list of filters.
 
                 desks.fetchDesks().then((_desks) => {
-                    $scope.filters = $scope.filters.concat(_desks._items.map((d) => ({label: d.name, value: d._id})));
+                    $scope.filters = $scope.filters.concat(
+                        _desks._items.map((d) => ({label: d.name, value: d._id})),
+                    );
                 });
             }
 

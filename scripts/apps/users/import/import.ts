@@ -11,17 +11,18 @@ function UserImportService(api, $q) {
     }
 
     this.importUser = function importUser(importUserData) {
-        return api.save('import_profile', importUserData).then(null, function handleErrorResponse(response) {
-            var data = response.data;
+        return api.save('import_profile', importUserData)
+            .then(null, function handleErrorResponse(response) {
+                var data = response.data;
 
-            if (response.status === 404) {
-                return reject('profile_to_import', data._message);
-            } else if (response.status === 400) {
-                return reject(data._issues.profile_to_import ? 'profile_to_import' : 'credentials', data._message);
-            }
+                if (response.status === 404) {
+                    return reject('profile_to_import', data._message);
+                } else if (response.status === 400) {
+                    return reject(data._issues.profile_to_import ? 'profile_to_import' : 'credentials', data._message);
+                }
 
-            return reject('credentials', data._message);
-        });
+                return reject('credentials', data._message);
+            });
     };
 }
 
@@ -32,24 +33,20 @@ function UserImportController($scope, userImport) {
 
     $scope.importUser = function importUser(user) {
         $scope.error = null;
-        userImport.importUser(user).then(
-            function finishImport(importedUser) {
+        userImport.importUser(user)
+            .then(function finishImport(importedUser) {
                 $scope.resolve(importedUser);
-            },
-            function renderErrors(error) {
+            }, function renderErrors(error) {
                 $scope.error = error;
-            },
-        );
+            });
     };
 }
 
-angular
-    .module('superdesk.apps.users.import', ['superdesk.core.activity', 'superdesk.core.api'])
+angular.module('superdesk.apps.users.import', ['superdesk.core.activity', 'superdesk.core.api'])
     .service('userImport', UserImportService)
-    .config([
-        'superdeskProvider',
-        function (superdeskProvider) {
-            superdeskProvider.activity('import.user', {
+    .config(['superdeskProvider', function(superdeskProvider) {
+        superdeskProvider
+            .activity('import.user', {
                 label: gettext('Import user'),
                 modal: true,
                 controller: UserImportController,
@@ -57,5 +54,4 @@ angular
                 filters: [{action: 'create', type: 'user'}],
                 features: {import_profile: 1},
             });
-        },
-    ]);
+    }]);

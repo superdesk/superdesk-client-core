@@ -35,18 +35,18 @@ export class SelectTagPopup extends React.Component<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-                case KEYCODES.ENTER:
-                    onEventCapture(event);
-                    this.handleEnterKey(event);
-                    break;
-                case KEYCODES.DOWN:
-                    onEventCapture(event);
-                    this.handleDownKey(event);
-                    break;
-                case KEYCODES.UP:
-                    onEventCapture(event);
-                    this.handleUpKey(event);
-                    break;
+            case KEYCODES.ENTER:
+                onEventCapture(event);
+                this.handleEnterKey(event);
+                break;
+            case KEYCODES.DOWN:
+                onEventCapture(event);
+                this.handleDownKey(event);
+                break;
+            case KEYCODES.UP:
+                onEventCapture(event);
+                this.handleUpKey(event);
+                break;
             }
         }
     }
@@ -93,7 +93,13 @@ export class SelectTagPopup extends React.Component<any, any> {
     }
 
     render() {
-        const {onClose, target, popupContainer, options, labelKey} = this.props;
+        const {
+            onClose,
+            target,
+            popupContainer,
+            options,
+            labelKey,
+        } = this.props;
 
         return (
             <Popup
@@ -111,9 +117,10 @@ export class SelectTagPopup extends React.Component<any, any> {
                             {options.map((o, index) => (
                                 <li
                                     key={index}
-                                    className={classNames('select-tag__popup-item', {
-                                        'select-tag__popup-item--active': index === this.state.activeOptionIndex,
-                                    })}
+                                    className={classNames(
+                                        'select-tag__popup-item',
+                                        {'select-tag__popup-item--active': index === this.state.activeOptionIndex},
+                                    )}
                                 >
                                     <button onClick={this.props.onChange.bind(null, o)}>
                                         <span>&nbsp;&nbsp;{get(o, labelKey, '')}</span>

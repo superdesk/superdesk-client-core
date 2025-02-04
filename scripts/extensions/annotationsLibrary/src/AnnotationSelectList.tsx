@@ -21,9 +21,7 @@ export class AnnotationSelectList extends React.Component<IProps> {
                     {this.props.items.map((item, i) => (
                         <Item key={i} onClick={() => this.props.onSelect(item)}>
                             <Column grow>
-                                <Row>
-                                    <strong>{item.name}</strong>
-                                </Row>
+                                <Row><strong>{item.name}</strong></Row>
                                 <Row>
                                     <span className="sd-overflow-ellipsis sd-list-item--element-grow">
                                         <UserHtmlSingleLine html={item.definition_html} />

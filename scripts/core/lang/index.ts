@@ -9,7 +9,7 @@
  * @param {string} input
  * @return {string} unmodified input
  */
-window.gettext = function (input) {
+window.gettext = function(input) {
     return input;
 };
 

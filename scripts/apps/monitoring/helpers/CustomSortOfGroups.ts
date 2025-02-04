@@ -7,8 +7,8 @@ export type GroupSortOptions = Array<string>;
 type OrderType = 'desc' | 'asc';
 
 export type GroupSortConfig = {
-    default?: {field: string; order: OrderType};
-    allowed_fields_to_sort: GroupSortOptions;
+    default?: { field: string, order: OrderType },
+    allowed_fields_to_sort: GroupSortOptions
 };
 
 function isOrderType(o: string): o is OrderType {

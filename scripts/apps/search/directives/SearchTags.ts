@@ -22,28 +22,26 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
             urlParams: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/search-tags.html'),
-        link: function (scope) {
+        link: function(scope) {
             const PARAMETERS = getParameters();
 
             scope.cvs = metadata.search_cvs;
             const urlParams = scope.urlParams || PARAMETERS;
 
-            scope.$watch(
-                function getSearchParams() {
-                    return _.omit($location.search(), ['_id', 'item', 'action']);
-                },
-                (newValue, oldValue) => {
-                    if (newValue !== oldValue) {
-                        reloadTags();
-                    }
-                },
-                true,
-            );
+            scope.$watch(function getSearchParams() {
+                return _.omit($location.search(), ['_id', 'item', 'action']);
+            }, (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    reloadTags();
+                }
+            }, true);
 
             function init() {
-                metadata.initialize().then(() => {
-                    scope.metadata = metadata.values;
-                });
+                metadata
+                    .initialize()
+                    .then(() => {
+                        scope.metadata = metadata.values;
+                    });
 
                 reloadTags();
             }
@@ -60,7 +58,7 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
                 $rootScope.$broadcast('refresh:list');
             };
 
-            scope.removeFilter = function (type, key) {
+            scope.removeFilter = function(type, key) {
                 tags.removeFacet(type, key);
             };
 
@@ -70,16 +68,12 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
                 tags.removeFacet('marked_desks', deskId);
             };
 
-            scope.removeParameter = function (param) {
+            scope.removeParameter = function(param) {
                 var searchParameters = $location.search();
 
                 if (searchParameters.q && searchParameters.q.indexOf(param) >= 0) {
-                    let newQuery = _.uniq(
-                        searchParameters.q
-                            .replace(param, '')
-                            .trim()
-                            .split(/[\s,]+/),
-                    );
+                    let newQuery = _.uniq(searchParameters.q.replace(param, '').trim()
+                        .split(/[\s,]+/));
 
                     searchParameters.q = newQuery.join(' ');
                     $location.search('q', searchParameters.q || null);
@@ -113,10 +107,8 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
                 angular.forEach(scope.cvs, (cv) => {
                     if (param.indexOf(cv.name) !== -1) {
                         var codeList = scope.metadata[cv.list];
-                        var qcode = _.result(
-                            _.find(codeList, (code) => code.name === parameterValue || code.qcode === parameterValue),
-                            'qcode',
-                        );
+                        var qcode = _.result(_.find(codeList,
+                            (code) => code.name === parameterValue || code.qcode === parameterValue), 'qcode');
 
                         if (qcode) {
                             if (searchParameters[cv.id]) {

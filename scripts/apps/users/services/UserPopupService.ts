@@ -4,7 +4,7 @@ export function UserPopupService($compile, $timeout, userList) {
     var holdInterval = 300;
 
     // Create element
-    popover.get = function (create) {
+    popover.get = function(create) {
         if (!popover.element && create) {
             popover.element = $('<div class="user-popup"></div>');
             popover.element.appendTo('BODY');
@@ -15,7 +15,7 @@ export function UserPopupService($compile, $timeout, userList) {
     };
 
     // Set content
-    popover.set = function (userId, el, scope) {
+    popover.set = function(userId, el, scope) {
         preventClose();
         resetContent();
 
@@ -29,20 +29,18 @@ export function UserPopupService($compile, $timeout, userList) {
         });
 
         // get data
-        userList.getUser(userId).then(
-            (user) => {
+        userList.getUser(userId)
+            .then((user) => {
                 buildTemplate(user, scope);
-            },
-            (response) => {
+            }, (response) => {
                 console.error(response);
-            },
-        );
+            });
 
         box.show();
     };
 
     // Close element
-    popover.close = function () {
+    popover.close = function() {
         var box = popover.get();
 
         if (!box) {
@@ -87,8 +85,7 @@ export function UserPopupService($compile, $timeout, userList) {
             <div class="title">{{user.display_name}}</div>
             <div class="actions">
                 <a href="#/users/{{user._id}}">go to profile</a>
-            </div>`,
-        );
+            </div>`);
         var popupScope = scope.$new(true);
 
         popupScope.user = user;

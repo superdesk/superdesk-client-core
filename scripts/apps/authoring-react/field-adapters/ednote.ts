@@ -23,11 +23,20 @@ export const ednote: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) =>
-        retrieveStoredValueEditor3Generic('ednote', item, authoringStorage),
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        'ednote',
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase('ednote', item, value, config, true);
+        const result = storeEditor3ValueBase(
+            'ednote',
+            item,
+            value,
+            config,
+            true,
+        );
 
         const articleUpdated = {...result.article};
 

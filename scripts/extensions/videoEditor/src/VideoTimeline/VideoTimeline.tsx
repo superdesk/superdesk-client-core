@@ -134,11 +134,14 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const secondPerFrame = this.props.video.duration / (this.props.thumbnails.length - 1);
         const startPosition = width / 2 + (this.controlbar.current?.getBoundingClientRect()?.x ?? 0);
 
-        const thumbnailsIndex = Array.from(Array(total).keys(), (i) => {
-            const videoTime = this.getPositionInBar(startPosition + i * width) * this.props.video.duration;
+        const thumbnailsIndex = Array.from(
+            Array(total).keys(),
+            (i) => {
+                const videoTime = this.getPositionInBar(startPosition + i * width) * this.props.video.duration;
 
-            return Math.round(videoTime / secondPerFrame);
-        });
+                return Math.round(videoTime / secondPerFrame);
+            },
+        );
 
         let thumbnails = this.props.thumbnails.filter((_, index) => thumbnailsIndex.includes(index));
 
@@ -228,7 +231,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         if (this.timeline.current != null) {
             const timelineStyle = window.getComputedStyle(this.timeline.current);
             const timelinePadding =
-                parseInt(timelineStyle.paddingInlineStart, 10) + parseInt(timelineStyle.paddingInlineEnd, 10);
+                parseInt(timelineStyle.paddingInlineStart, 10)
+                + parseInt(timelineStyle.paddingInlineEnd, 10);
 
             timelineWidth = this.timeline.current.offsetWidth - timelinePadding;
         }
@@ -236,7 +240,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const totalThumbnails = Math.floor(timelineWidth / thumbnailWidth);
 
         if (!totalThumbnails) {
-            return <div className={getClass('timeline-controls')} ref={this.timeline} />;
+            return (<div className={getClass('timeline-controls')} ref={this.timeline} />);
         }
 
         return (

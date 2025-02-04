@@ -48,12 +48,10 @@ export class ContentAPISearchService {
 
         // set filters for parameters
         if (params.subject) {
-            filters.push({
-                or: [
-                    {terms: {'subject.code': JSON.parse(params.subject)}},
-                    {terms: {'subject.parent': JSON.parse(params.subject)}},
-                ],
-            });
+            filters.push({or: [
+                {terms: {'subject.code': JSON.parse(params.subject)}},
+                {terms: {'subject.parent': JSON.parse(params.subject)}},
+            ]});
         }
 
         if (params.company_codes) {
@@ -104,11 +102,8 @@ export class ContentAPISearchService {
 
         const buildRangeFilter = (paramsObject, _filters) => {
             // created & modified date filters
-            let hasParams =
-                paramsObject.beforefirstcreated ||
-                paramsObject.afterfirstcreated ||
-                paramsObject.beforeversioncreated ||
-                paramsObject.afterversioncreated;
+            let hasParams = paramsObject.beforefirstcreated || paramsObject.afterfirstcreated ||
+                paramsObject.beforeversioncreated || paramsObject.afterversioncreated;
             let zeroHourSuffix = 'T00:00:00',
                 midnightSuffix = 'T23:59:59';
 
@@ -124,10 +119,8 @@ export class ContentAPISearchService {
                 }
 
                 if (paramsObject.beforeversioncreated) {
-                    range.versioncreated.lte = this.search.formatDate(
-                        paramsObject.beforeversioncreated,
-                        midnightSuffix,
-                    );
+                    range.versioncreated.lte =
+                        this.search.formatDate(paramsObject.beforeversioncreated, midnightSuffix);
                 }
 
                 if (paramsObject.afterversioncreated) {

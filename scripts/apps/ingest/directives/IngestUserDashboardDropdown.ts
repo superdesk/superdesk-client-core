@@ -6,7 +6,7 @@ export function IngestUserDashboardDropdown(privileges) {
             items: '=',
             setUserPreferences: '&',
         },
-        link: function (scope) {
+        link: function(scope) {
             scope.showIngest = Boolean(privileges.privileges.ingest_providers);
         },
     };

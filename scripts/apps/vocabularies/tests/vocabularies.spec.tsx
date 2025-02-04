@@ -10,16 +10,14 @@ describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(
-        window.module(($provide) => {
-            $provide.service('metadata', () => ({
-                initialize: getPromise,
-            }));
-            $provide.service('relationsService', () => ({}));
-            $provide.service('sortByNameFilter', () => ({}));
-            $provide.service('$filter', () => () => (a) => a);
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        $provide.service('metadata', () => ({
+            initialize: getPromise,
+        }));
+        $provide.service('relationsService', () => ({}));
+        $provide.service('sortByNameFilter', () => ({}));
+        $provide.service('$filter', () => () => (a) => a);
+    }));
 
     it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {
         var fixture = {foo: 'bar'};
@@ -27,9 +25,11 @@ describe('vocabularies', () => {
         spyOn(api, 'getAll').and.returnValue($q.when(fixture));
         var result;
 
-        vocabularies.getVocabularies().then((vocabs) => {
-            result = vocabs;
-        });
+        vocabularies.getVocabularies().then(
+            (vocabs) => {
+                result = vocabs;
+            },
+        );
         $rootScope.$digest();
         expect(api.getAll).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}});
         expect(result).toBe(fixture);
@@ -38,19 +38,18 @@ describe('vocabularies', () => {
 
     it('convert values for qcode having integer type', () => {
         const items = [{name: 'foo', qcode: '1', is_active: true}];
-        const schemaFields = [
-            {key: 'name', required: true},
-            {key: 'qcode', type: 'integer'},
-        ];
+        const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
 
         const wrapper = mount(
-            <VocabularyItemsViewEdit
-                items={items}
-                schemaFields={schemaFields}
-                newItemTemplate={{}}
-                setDirty={noop}
-                setItemsValid={noop}
-            />,
+            (
+                <VocabularyItemsViewEdit
+                    items={items}
+                    schemaFields={schemaFields}
+                    newItemTemplate={{}}
+                    setDirty={noop}
+                    setItemsValid={noop}
+                />
+            ),
         );
 
         wrapper.setState({languages: []});
@@ -90,26 +89,19 @@ describe('vocabularies', () => {
             it('being detected correctly', inject(($rootScope, $compile, $timeout) => {
                 var scope = $rootScope.$new();
 
-                scope.vocabulary = {
-                    items: [
-                        {foo: 'flareon', bar: 'beedrill', is_active: true},
-                        {bar: 'bellsprout', spam: 'sandslash', is_active: true},
-                        {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true},
-                    ],
-                };
+                scope.vocabulary = {items: [
+                    {foo: 'flareon', bar: 'beedrill', is_active: true},
+                    {bar: 'bellsprout', spam: 'sandslash', is_active: true},
+                    {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true},
+                ]};
                 scope.matchFieldTypeToTab = angular.noop;
 
                 $compile('<div sd-vocabulary-config-modal></div>')(scope);
                 $timeout.flush();
 
-                expect(scope.model).toEqual({
-                    foo: null,
-                    bar: null,
-                    spam: null,
-                    qux: null,
-                    corge: null,
-                    is_active: null,
-                });
+                expect(scope.model).toEqual(
+                    {foo: null, bar: null, spam: null, qux: null, corge: null, is_active: null},
+                );
             }));
         });
 
@@ -152,66 +144,59 @@ describe('vocabularies', () => {
                 expect(metadata.initialize).toHaveBeenCalled();
             }));
 
-            it('can validate crop_size vocabulary for minimum value(200)', inject((
-                api,
-                $q,
-                $rootScope,
-                metadata,
-                $timeout,
-                $compile,
-            ) => {
-                scope.vocabulary._id = 'crop_sizes';
-                scope.vocabulary.items[0].name = '4-3';
-                scope.vocabulary.items[0].is_active = true;
-                scope.vocabulary.items[0].width = 200; // minimum 200 allowed
-                scope.vocabulary.items[0].height = 100; // minimum 200 allowed
+            it('can validate crop_size vocabulary for minimum value(200)',
+                inject((api, $q, $rootScope, metadata, $timeout, $compile) => {
+                    scope.vocabulary._id = 'crop_sizes';
+                    scope.vocabulary.items[0].name = '4-3';
+                    scope.vocabulary.items[0].is_active = true;
+                    scope.vocabulary.items[0].width = 200; // minimum 200 allowed
+                    scope.vocabulary.items[0].height = 100; // minimum 200 allowed
 
-                $compile('<div sd-vocabulary-config-modal></div>')(scope);
-                $timeout.flush();
+                    $compile('<div sd-vocabulary-config-modal></div>')(scope);
+                    $timeout.flush();
 
-                spyOn(api, 'save').and.returnValue($q.when());
-                spyOn(metadata, 'initialize').and.returnValue($q.when());
-                scope.save();
+                    spyOn(api, 'save').and.returnValue($q.when());
+                    spyOn(metadata, 'initialize').and.returnValue($q.when());
+                    scope.save();
 
-                $rootScope.$digest();
-                expect(scope.errorMessage).toBe('Minimum height and width should be greater than or equal to 200');
-                expect(api.save).not.toHaveBeenCalled();
-                expect(metadata.initialize).toHaveBeenCalled();
-            }));
+                    $rootScope.$digest();
+                    expect(scope.errorMessage).toBe(
+                        'Minimum height and width should be greater than or equal to 200',
+                    );
+                    expect(api.save).not.toHaveBeenCalled();
+                    expect(metadata.initialize).toHaveBeenCalled();
+                }));
 
             it('validates items according to schema fields', (done) => {
                 const items = [{name: '', qcode: ''}];
-                const schemaFields = [
-                    {key: 'name', required: true},
-                    {key: 'qcode', required: true},
-                ];
+                const schemaFields = [{key: 'name', required: true}, {key: 'qcode', required: true}];
                 const waitForDebouncing = 300;
 
                 const onSetItemValidSpy = jasmine.createSpy('onSetItemValidSpy');
 
                 const wrapper = mount(
-                    <VocabularyItemsViewEdit
-                        items={items}
-                        schemaFields={schemaFields}
-                        newItemTemplate={{}}
-                        setDirty={noop}
-                        setItemsValid={onSetItemValidSpy}
-                    />,
+                    (
+                        <VocabularyItemsViewEdit
+                            items={items}
+                            schemaFields={schemaFields}
+                            newItemTemplate={{}}
+                            setDirty={noop}
+                            setItemsValid={onSetItemValidSpy}
+                        />
+                    ),
                 );
 
                 wrapper.setState({languages: []});
 
                 wrapper.update();
 
-                wrapper
-                    .find(s('vocabulary-items-view-edit', 'vocabulary-item-field=name'))
+                wrapper.find(s('vocabulary-items-view-edit', 'vocabulary-item-field=name'))
                     .simulate('change', {target: {value: 'abc'}});
 
                 setTimeout(() => {
                     expect(onSetItemValidSpy).toHaveBeenCalledWith(false);
 
-                    wrapper
-                        .find(s('vocabulary-items-view-edit', 'vocabulary-item-field=qcode'))
+                    wrapper.find(s('vocabulary-items-view-edit', 'vocabulary-item-field=qcode'))
                         .simulate('change', {target: {value: 'abc'}});
 
                     setTimeout(() => {
@@ -224,13 +209,18 @@ describe('vocabularies', () => {
 
             it('can remove an item', () => {
                 const wrapper = mount(
-                    <VocabularyItemsViewEdit
-                        items={[{name: 'foo', qcode: 'bar'}]}
-                        schemaFields={[{key: 'name'}, {key: 'qcode'}]}
-                        newItemTemplate={{}}
-                        setDirty={noop}
-                        setItemsValid={noop}
-                    />,
+                    (
+                        <VocabularyItemsViewEdit
+                            items={[{name: 'foo', qcode: 'bar'}]}
+                            schemaFields={[
+                                {key: 'name'},
+                                {key: 'qcode'},
+                            ]}
+                            newItemTemplate={{}}
+                            setDirty={noop}
+                            setItemsValid={noop}
+                        />
+                    ),
                 );
 
                 wrapper.setState({languages: []});
@@ -239,7 +229,8 @@ describe('vocabularies', () => {
 
                 expect(instance.getItemsForSaving().length).toBe(1);
 
-                wrapper.find(s('vocabulary-items-view-edit', 'remove')).simulate('click');
+                wrapper.find(s('vocabulary-items-view-edit', 'remove'))
+                    .simulate('click');
 
                 expect(instance.getItemsForSaving().length).toBe(0);
             });

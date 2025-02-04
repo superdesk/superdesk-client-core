@@ -25,7 +25,10 @@ export function FamilyService(api, desks) {
      * @returns {Object}
      */
     this.fetchItems = (familyId, excludeItem) => {
-        let filter: Array<any> = [{not: {term: {state: 'spiked'}}}, {term: {family_id: familyId}}];
+        let filter: Array<any> = [
+            {not: {term: {state: 'spiked'}}},
+            {term: {family_id: familyId}},
+        ];
 
         if (excludeItem && excludeItem.unique_id) {
             filter.push({not: {term: {unique_id: excludeItem.unique_id}}});
@@ -43,23 +46,23 @@ export function FamilyService(api, desks) {
      * @returns {Array}
      */
     this.fetchMediaUsedItems = (mediaUniqueId) => {
-        let filter = [{not: {term: {state: 'spiked'}}}, {term: {'associations.featuremedia.unique_id': mediaUniqueId}}];
+        let filter = [
+            {not: {term: {state: 'spiked'}}},
+            {term: {'associations.featuremedia.unique_id': mediaUniqueId}},
+        ];
 
         return query(filter, 'versioncreated', 'desc');
     };
 
-    this.fetchLinks = (item: IArticle) =>
-        dataApi
-            .query('links', 1, null, {uri: item.uri, guid: item.guid || item._id})
-            .then((resp) => {
-                if (resp._items.length === 0 && item.used) {
-                    // fallback
-                    return this.fetchMediaUsedItems(item.unique_id);
-                }
+    this.fetchLinks = (item: IArticle) => dataApi.query('links', 1, null, {uri: item.uri, guid: item.guid || item._id})
+        .then((resp) => {
+            if (resp._items.length === 0 && item.used) {
+                // fallback
+                return this.fetchMediaUsedItems(item.unique_id);
+            }
 
-                return resp;
-            })
-            .then((resp) => resp._items);
+            return resp;
+        }).then((resp) => resp._items);
 
     /**
      * @ngdoc method
@@ -76,13 +79,9 @@ export function FamilyService(api, desks) {
         let params: any = {
             repo: repo,
             source: {
-                query: {
-                    filtered: {
-                        filter: {
-                            and: filter,
-                        },
-                    },
-                },
+                query: {filtered: {filter: {
+                    and: filter,
+                }}},
                 size: 200,
                 from: 0,
             },
@@ -116,14 +115,9 @@ export function FamilyService(api, desks) {
     };
 
     this.fetchRelatedByState = (item: IArticle, state: Array<string>) =>
-        api
-            .query(
-                'archive_related',
-                {
-                    source: {query: {bool: {must: {terms: {state: state}}}}},
-                },
-                item,
-            )
+        api.query('archive_related', {
+            source: {query: {bool: {must: {terms: {state: state}}}}},
+        }, item)
             .then((data) => data._items);
 
     /**
@@ -151,7 +145,7 @@ export function FamilyService(api, desks) {
         let sanitizedKeyword = keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
         let queryWords = sanitizedKeyword.split(' ');
 
-        const addSlugs = function (list, words) {
+        const addSlugs = function(list, words) {
             words.forEach((w) => {
                 if (w) {
                     list.push('slugline:(' + w + ')');
@@ -170,39 +164,39 @@ export function FamilyService(api, desks) {
         }
 
         switch (sluglineMatch) {
-            case 'ANY': // any words in the slugline
-                if (keyword.indexOf(' ') >= 0) {
-                    queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
-                }
+        case 'ANY': // any words in the slugline
+            if (keyword.indexOf(' ') >= 0) {
+                queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
+            }
 
-                addSlugs(queryRelatedItem, queryWords);
+            addSlugs(queryRelatedItem, queryWords);
 
-                if (queryRelatedItem.length) {
-                    queryString = {
-                        query_string: {
-                            query: queryRelatedItem.join(' '),
-                            lenient: true,
-                            default_operator: 'OR',
-                        },
-                    };
-                }
-
-                break;
-            case 'PREFIX': // phrase prefix
-                queryString = {
-                    match_phrase_prefix: {
-                        'slugline.phrase': sanitizedKeyword,
-                    },
-                };
-                break;
-            default:
-                // exact match on slugline
+            if (queryRelatedItem.length) {
                 queryString = {
                     query_string: {
-                        query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                        query: queryRelatedItem.join(' '),
                         lenient: true,
+                        default_operator: 'OR',
                     },
                 };
+            }
+
+            break;
+        case 'PREFIX': // phrase prefix
+            queryString = {
+                match_phrase_prefix: {
+                    'slugline.phrase': sanitizedKeyword,
+                },
+            };
+            break;
+        default:
+            // exact match on slugline
+            queryString = {
+                query_string: {
+                    query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                    lenient: true,
+                },
+            };
         }
 
         return query(filter, 'firstcreated', 'asc', queryString);
@@ -217,31 +211,31 @@ export function FamilyService(api, desks) {
      * @param {bookean} excludeSelf
      * @returns {Object}
      */
-    this.fetchDesks = (item, excludeSelf) =>
-        this.fetchItems(item.state === 'ingested' ? item._id : item.family_id, excludeSelf ? item : undefined).then(
-            (items) => {
-                let deskList = [];
-                let deskIdList = [];
+    this.fetchDesks = (item, excludeSelf) => this.fetchItems(item.state === 'ingested' ?
+        item._id : item.family_id, excludeSelf ? item : undefined)
+        .then((items) => {
+            let deskList = [];
+            let deskIdList = [];
 
-                _.each(items._items, (i) => {
-                    if (i.task && i.task.desk && desks.deskLookup[i.task.desk]) {
-                        if (deskIdList.indexOf(i.task.desk) < 0) {
-                            var _isMember = !_.isEmpty(_.find(desks.userDesks, {_id: i.task.desk}));
+            _.each(items._items, (i) => {
+                if (i.task && i.task.desk && desks.deskLookup[i.task.desk]) {
+                    if (deskIdList.indexOf(i.task.desk) < 0) {
+                        var _isMember = !_.isEmpty(_.find(desks.userDesks, {_id: i.task.desk}));
 
-                            deskList.push({
+                        deskList.push(
+                            {
                                 desk: desks.deskLookup[i.task.desk],
                                 count: 1,
                                 itemId: i._id,
                                 isUserDeskMember: _isMember,
                                 item: i,
                             });
-                            deskIdList.push(i.task.desk);
-                        } else {
-                            deskList[deskIdList.indexOf(i.task.desk)].count += 1;
-                        }
+                        deskIdList.push(i.task.desk);
+                    } else {
+                        deskList[deskIdList.indexOf(i.task.desk)].count += 1;
                     }
-                });
-                return deskList;
-            },
-        );
+                }
+            });
+            return deskList;
+        });
 }

@@ -12,15 +12,18 @@ export function getEntityMap(contentState: ContentState): Map<string, DraftEntit
     let entityMap = Map<string, DraftEntityInstance>();
 
     contentState.getBlockMap().forEach((block) => {
-        block.findEntityRanges((char) => {
-            const entityKey = char.getEntity();
+        block.findEntityRanges(
+            (char) => {
+                const entityKey = char.getEntity();
 
-            if (entityKey != null) {
-                entityMap = entityMap.set(entityKey, contentState.getEntity(entityKey));
-            }
+                if (entityKey != null) {
+                    entityMap = entityMap.set(entityKey, contentState.getEntity(entityKey));
+                }
 
-            return false;
-        }, noop);
+                return false;
+            },
+            noop,
+        );
     });
 
     return entityMap;

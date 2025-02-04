@@ -6,10 +6,9 @@
         <div class="sd-page__header">
             <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
 
-            <div class="sd-check-button__group sd-check-button__group--left" style="flex-wrap: nowrap">
+            <div class="sd-check-button__group sd-check-button__group--left" style="flex-wrap: nowrap;">
                 <div class="sd-check__wrapper" ng-repeat="type in contentProfileTypes track by type.value">
-                    <button
-                        class="sd-checkbox sd-checkbox--button-style sd-checkbox--radio"
+                    <button class="sd-checkbox sd-checkbox--button-style sd-checkbox--radio"
                         ng-click="toggleContentProfileFilter(type.value)"
                         ng-class="{'checked': contentTypeFilter === type.value}"
                     >
@@ -18,27 +17,19 @@
                 </div>
             </div>
 
-            <span
-                class="button-group__divider button-group__divider--small button-group__divider--border sd-margin-l--2"
-            ></span>
+            <span class="button-group__divider button-group__divider--small button-group__divider--border sd-margin-l--2"></span>
 
             <sd-switch ng-model="active_only"></sd-switch><label>{{:: 'Active only'| translate}}</label>
 
             <span class="sd-page__element-grow"></span>
-            <button
-                id="add-new-content-profile"
-                class="btn btn--primary"
-                ng-click="ctrl.toggleCreate()"
-                data-close="cancel()"
-            >
+            <button id="add-new-content-profile" class="btn btn--primary" ng-click="ctrl.toggleCreate()" data-close="cancel()">
                 <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
             </button>
         </div>
 
         <div class="sd-page__content profile-settings desk-settings">
             <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-                <div
-                    class="flex-item card-box"
+                <div class="flex-item card-box"
                     ng-repeat="type in ctrl.items| orderBy: 'label' | filter: query track by type._id"
                     ng-class="{inactive: !type.enabled}"
                     ng-show="(!active_only || (active_only && type.enabled)) && (contentTypeFilter == null || contentTypeFilter === type.type)"
@@ -47,51 +38,19 @@
                 >
                     <div class="card-box__header">
                         <div class="dropdown" dropdown data-test-id="content-profile-actions-popover">
-                            <button
-                                class="dropdown__toggle"
-                                dropdown__toggle
-                                aria-label="{{:: 'Actions' | translate }}"
-                                data-test-id="content-profile-actions"
-                            >
+                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }}" data-test-id="content-profile-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
-                            <ul
-                                class="dropdown__menu more-activity-menu pull-right"
-                                data-test-id="content-profile-actions--options"
-                            >
+                            <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="content-profile-actions--options">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
-                                <li>
-                                    <button
-                                        ng-click="ctrl.toggleEdit(type)"
-                                        title="{{:: 'Edit Content Profile' | translate }}"
-                                        aria-label="Edit"
-                                    >
-                                        <i class="icon-pencil"></i>{{:: 'Edit'| translate}}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        ng-click="ctrl.delete(type)"
-                                        ng-disabled="type.is_used"
-                                        title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"
-                                    >
-                                        <i class="icon-trash"></i>{{:: 'Remove'| translate}}
-                                    </button>
-                                </li>
+                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}" aria-label="Edit"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                             </ul>
                         </div>
                         <div class="card-box__heading sd-d-flex sd-flex-align-items-center">
-                            <i
-                                ng-if="type.icon == null"
-                                class="icon--white sd-margin-r--1 {{getContentProfileIconByProfileType(type.type)}}"
-                            ></i>
-                            <i
-                                ng-if="type.icon != null"
-                                class="icon--white sd-margin-r--1 icon-{{type.icon}}"
-                                data-test-id="icon"
-                                data-test-value="{{type.icon}}"
-                            ></i>
+                            <i ng-if="type.icon == null" class="icon--white sd-margin-r--1 {{getContentProfileIconByProfileType(type.type)}}"></i>
+                            <i ng-if="type.icon != null" class="icon--white sd-margin-r--1 icon-{{type.icon}}" data-test-id="icon" data-test-value="{{type.icon}}"></i>
                             {{ type.label}}
                         </div>
                     </div>
@@ -123,21 +82,12 @@
     <div class="modal__body">
         <form name="createForm">
             <div class="sd-alert__container">
-                <p
-                    class="sd-alert sd-alert--hollow sd-alert--small sd-alert--primary sd-margin-b--2"
-                    ng-class="{'sd-alert--hidden': !showInfoLabel}"
-                    translate
-                >
+                <p class="sd-alert sd-alert--hollow sd-alert--small sd-alert--primary sd-margin-b--2" ng-class="{'sd-alert--hidden': !showInfoLabel}" translate>
                     <button class="sd-alert__close" ng-click="showInfoLabel = false"></button>
-                    Please note that only one content profile per content type other than text is allowed. If the
-                    content type is disabled, the limit is already reached.
+                    Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached.
                 </p>
 
-                <span
-                    class="sd-alert__info-btn sd-alert__info-btn--primary sd-shadow--z2"
-                    ng-click="showInfoLabel = true"
-                    ng-class="{'sd-alert__info-btn--hidden': showInfoLabel}"
-                >
+                <span class="sd-alert__info-btn sd-alert__info-btn--primary sd-shadow--z2" ng-click="showInfoLabel = true" ng-class="{'sd-alert__info-btn--hidden': showInfoLabel}">
                     <i class="icon-info-large"></i>
                 </span>
             </div>
@@ -161,22 +111,10 @@
                     </div>
                 </div>
                 <div class="form__row sd-padding--0">
-                    <div
-                        class="sd-line-input sd-line-input--boxed sd-line-input--required"
-                        ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}"
-                    >
+                    <div class="sd-line-input sd-line-input--boxed sd-line-input--required" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
-                        <input
-                            type="text"
-                            name="label"
-                            class="sd-line-input__input"
-                            ng-model="new.label"
-                            required
-                            ng-maxlength="40"
-                        />
-                        <div class="sd-line-input__message" ng-show="createForm.label.$error.maxlength" translate>
-                            Please use less than 40 characters
-                        </div>
+                        <input type="text" name="label" class="sd-line-input__input" ng-model="new.label" required ng-maxlength="40"/>
+                        <div class="sd-line-input__message" ng-show="createForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
                     </div>
                 </div>
                 <div class="form__row sd-padding--0">
@@ -190,28 +128,13 @@
     </div>
     <div class="modal__footer">
         <button class="btn" ng-click="ctrl.toggleCreate()" translate>Cancel</button>
-        <button
-            id="profile-save"
-            class="btn btn--primary"
-            ng-disabled="createForm.$invalid || new.type == null"
-            ng-click="ctrl.save()"
-            translate
-        >
-            Save &amp; Continue
-        </button>
+        <button id="profile-save" class="btn btn--primary" ng-disabled="createForm.$invalid || new.type == null" ng-click="ctrl.save()" translate>Save &amp; Continue</button>
     </div>
 </div>
 <!-- END Create profile modal -->
 <!-- Edit profile modal -->
-<div
-    sd-modal
-    class="modal--large"
-    data-model="editing"
-    data-close="ctrl.toggleEdit()"
-    data-test-id="'content-profile-editing-modal'"
->
-    <div class="modal__header">
-        <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
+<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()" data-test-id="'content-profile-editing-modal'">
+    <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
     <div class="modal__body sd-padding--0 sd-padding-t--2" data-test-id="content-profile-edit-view">
@@ -219,59 +142,37 @@
             <fieldset ng-init="setNgForm(editForm)">
                 <div class="form__row form__row--flex sd-padding-x--2" style="align-items: start">
                     <div class="form__row-item sd-flex-no-grow">
-                        <sd-icon-picker
-                            data-value="editing.form.icon"
-                            data-on-change="ctrl.onIconChange"
-                        ></sd-icon-picker>
+                        <sd-icon-picker data-value="editing.form.icon" data-on-change="ctrl.onIconChange"></sd-icon-picker>
                     </div>
                     <div class="form__row-item">
-                        <div
-                            class="sd-line-input sd-line-input--boxed"
-                            style="padding-block-start: 16px"
-                            ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}"
-                        >
+                        <div class="sd-line-input sd-line-input--boxed" style="padding-block-start: 16px;" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                             <label class="sd-line-input__label" translate>Label</label>
-                            <input
-                                type="text"
-                                name="label"
-                                class="sd-line-input__input"
-                                ng-model="editing.form.label"
-                                required
-                                ng-maxlength="40"
-                            />
-                            <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>
-                                Please use less than 40 characters
-                            </div>
+                            <input type="text" name="label" class="sd-line-input__input" ng-model="editing.form.label" required ng-maxlength="40"/>
+                            <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
                         </div>
                     </div>
                 </div>
                 <div class="form__row sd-padding-x--2">
                     <div class="sd-line-input sd-line-input--boxed">
                         <label class="sd-line-input__label" translate>Description</label>
-                        <textarea
-                            name="description"
+                        <textarea name="description"
                             class="sd-line-input__input"
                             ng-model="editing.form.description"
-                            sd-auto-height
-                        >
+                            sd-auto-height>
                         </textarea>
                     </div>
                 </div>
                 <div class="form__row form__row--flex sd-padding-x--2">
                     <div class="form__row-item">
-                        <span ng-model="editing.form.enabled" sd-switch></span
-                        ><label>{{:: 'Active' | translate }}</label>
+                        <span ng-model="editing.form.enabled" sd-switch></span><label>{{:: 'Active' | translate }}</label>
                     </div>
                 </div>
 
                 <div class="form__row form__row--flex sd-padding-x--2">
-                    <div class="form__row-item" style="display: flex; align-items: center; gap: 8px">
+                    <div class="form__row-item" style="display: flex; align-items: center; gap: 8px;">
                         <span ng-model="editing.form.embeddable" sd-switch></span>
                         <label style="margin: 0">{{:: 'Can be embedded' | translate }}</label>
-                        <i
-                            class="icon-info-sign"
-                            title="{{:: 'If enabled, it will be possible to embed articles using this content profile into other articles that accept embeds (configurable in content profile field settings)' | translate }}"
-                        ></i>
+                        <i class="icon-info-sign" title="{{:: 'If enabled, it will be possible to embed articles using this content profile into other articles that accept embeds (configurable in content profile field settings)' | translate }}"></i>
                     </div>
                 </div>
 
@@ -287,15 +188,10 @@
     </div>
     <div class="modal__footer" data-test-id="content-profile-edit-view--footer">
         <button class="btn" ng-click="ctrl.toggleEdit()" translate>Cancel</button>
-        <button
-            id="profile-update"
-            class="btn btn--primary"
-            ng-disabled="editForm.$invalid || !editForm.$dirty || ctrl.savingInProgress"
-            ng-click="ctrl.update()"
-            translate
-        >
-            Save
-        </button>
+        <button id="profile-update" class="btn btn--primary" ng-disabled="editForm.$invalid || !editForm.$dirty || ctrl.savingInProgress" ng-click="ctrl.update()" translate>Save</button>
     </div>
     <!-- END Edit profile modal -->
 </div>
+
+
+

@@ -21,32 +21,14 @@ import _ from 'lodash';
  *   A directive that generates search parameter form.
  */
 SearchParameters.$inject = [
-    '$location',
-    'asset',
-    'tags',
-    'metadata',
-    'searchCommon',
-    'desks',
-    'userList',
-    'ingestSources',
-    'subscribersService',
-    '$templateCache',
-    'search',
+    '$location', 'asset', 'tags', 'metadata',
+    'searchCommon', 'desks', 'userList',
+    'ingestSources', 'subscribersService',
+    '$templateCache', 'search',
 ];
 
-export function SearchParameters(
-    $location,
-    asset,
-    tags,
-    metadata,
-    common,
-    desks,
-    userList,
-    ingestSources,
-    subscribersService,
-    $templateCache,
-    search,
-) {
+export function SearchParameters($location, asset, tags, metadata, common, desks,
+    userList, ingestSources, subscribersService, $templateCache, search) {
     return {
         scope: {
             repo: '=',
@@ -54,22 +36,21 @@ export function SearchParameters(
             providerType: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/search-parameters.html'),
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             const PARAMETERS = getParameters();
             var ENTER = 13;
 
-            scope.dateFilters = getDateFilters().filter(
-                (dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null,
-            );
+            scope.dateFilters = getDateFilters()
+                .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null);
 
-            scope.keyPressed = function (event) {
+            scope.keyPressed = function(event) {
                 if (event.keyCode === ENTER) {
                     searchParameters();
                     event.preventDefault();
                 }
             };
 
-            scope.toggleDateFilter = function (fieldname, predefinedFilters) {
+            scope.toggleDateFilter = function(fieldname, predefinedFilters) {
                 predefinedFilters.forEach((filters) => {
                     if (filters.key === scope.fields[fieldname]) {
                         filters.active = !filters.active;
@@ -88,27 +69,21 @@ export function SearchParameters(
                 });
             };
 
-            scope.togglePredefinedDateFilter = function (dateFilter, predefinedFilter) {
+            scope.togglePredefinedDateFilter = function(dateFilter, predefinedFilter) {
                 scope.fields[dateFilter.fieldname] = predefinedFilter;
             };
 
-            scope.clearPredefinedFilters = function (fieldname) {
+            scope.clearPredefinedFilters = function(fieldname) {
                 const clearDateFilter = scope.dateFilters.find((dateFilter) => dateFilter.fieldname === fieldname);
 
                 scope.fields[fieldname] = null;
-                clearDateFilter.predefinedFilters.forEach((predefinedFilter) => (predefinedFilter.active = false));
+                clearDateFilter.predefinedFilters.forEach((predefinedFilter) => predefinedFilter.active = false);
             };
 
             const getSearchConfig = () => {
                 if (scope.isContentApi()) {
-                    let searchConfig: any = _.pick(metadata.search_config, [
-                        'slugline',
-                        'headline',
-                        'byline',
-                        'story_text',
-                        'sign_off',
-                        'firstpublished',
-                    ]);
+                    let searchConfig: any = _.pick(metadata.search_config, ['slugline', 'headline',
+                        'byline', 'story_text', 'sign_off', 'firstpublished']);
 
                     searchConfig.subscribers = 1;
                     return searchConfig;
@@ -116,7 +91,7 @@ export function SearchParameters(
                 return metadata.search_config;
             };
 
-            scope.isContentApi = function () {
+            scope.isContentApi = function() {
                 return _.get(scope, 'repo.search') === 'content-api';
             };
 
@@ -160,9 +135,8 @@ export function SearchParameters(
 
                 // Date filter start.
 
-                let parameters = getDateFilters().filter(
-                    (dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null,
-                );
+                let parameters = getDateFilters()
+                    .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null);
                 let paramsParameters = Object.keys($location.search());
 
                 function initialDatePublishedFromTo(fieldname) {
@@ -175,9 +149,8 @@ export function SearchParameters(
 
                     if (paramsParameters.includes(parameter.fieldname)) {
                         let fieldname = $location.search()[parameter['fieldname']];
-                        let _predefinedFilter = parameter.predefinedFilters.find(
-                            (predefinedFilter) => predefinedFilter.key === fieldname,
-                        );
+                        let _predefinedFilter = parameter.predefinedFilters
+                            .find((predefinedFilter) => predefinedFilter.key === fieldname);
 
                         scope.fields[parameter.fieldname] = fieldname;
                         _predefinedFilter.active = true;
@@ -233,10 +206,11 @@ export function SearchParameters(
              * Initialize the creator drop down selection.
              */
             function fetchUsers() {
-                userList.getAll().then((users) => {
-                    scope.userList = users;
-                    initializeCreators();
-                });
+                userList.getAll()
+                    .then((users) => {
+                        scope.userList = users;
+                        initializeCreators();
+                    });
             }
 
             /*
@@ -244,20 +218,22 @@ export function SearchParameters(
              */
             function fetchDesks() {
                 scope.desks = [];
-                desks.initialize().then(() => {
-                    scope.desks = desks.desks;
-                    initializeDesksDropDown();
-                });
+                desks.initialize()
+                    .then(() => {
+                        scope.desks = desks.desks;
+                        initializeDesksDropDown();
+                    });
             }
 
             function fetchSubscribers() {
                 if (scope.repo.search !== 'content-api') {
                     return;
                 }
-                subscribersService.initialize().then(() => {
-                    scope.subscribers = subscribersService.subscribers;
-                    initializeSubscriber();
-                });
+                subscribersService.initialize()
+                    .then(() => {
+                        scope.subscribers = subscribersService.subscribers;
+                        initializeSubscriber();
+                    });
             }
 
             /*
@@ -266,8 +242,7 @@ export function SearchParameters(
             function fetchProviders() {
                 ingestSources.fetchAllIngestProviders().then((items) => {
                     scope.providers = items.filter((provider) =>
-                        provider.content_types.some((type) => type !== 'event' && type !== 'planning'),
-                    );
+                        provider.content_types.some((type) => type !== 'event' && type !== 'planning'));
                     initializeProviders();
                 });
             }
@@ -327,11 +302,9 @@ export function SearchParameters(
                             var match = _.find(scope.metadata[cv.list], (m) => m.qcode === qcode);
 
                             if (match) {
-                                scope.selecteditems[cv.id].push(
-                                    angular.extend(match, {
-                                        scheme: cv.id,
-                                    }),
-                                );
+                                scope.selecteditems[cv.id].push(angular.extend(match, {
+                                    scheme: cv.id,
+                                }));
                                 scope.fields[cv.id].push(match);
                             }
                         });
@@ -494,10 +467,7 @@ export function SearchParameters(
 
                 if (scope.fields[field]) {
                     deskId = scope.fields[field];
-                    var deskType = _.result(
-                        _.find(scope.desks._items, (item) => item._id === deskId),
-                        'desk_type',
-                    );
+                    var deskType = _.result(_.find(scope.desks._items, (item) => item._id === deskId), 'desk_type');
 
                     return deskId + '-' + deskType;
                 }
@@ -508,7 +478,7 @@ export function SearchParameters(
             /*
              * Filter content by subject search
              */
-            scope.itemSearch = function (items, type) {
+            scope.itemSearch = function(items, type) {
                 if (items[type].length) {
                     scope.fields[type] = items[type];
                 } else {

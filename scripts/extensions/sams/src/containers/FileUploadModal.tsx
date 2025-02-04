@@ -97,15 +97,17 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
         const items: Array<IUploadItem> = [];
 
         if (this.props.initialFiles != null && this.props.initialFiles?.length > 0) {
-            this.props.initialFiles.forEach((item) => {
-                items.push({
-                    id: item.id,
-                    binary: item.file,
-                    uploadProgress: 0,
-                    error: false,
-                    completed: false,
-                });
-            });
+            this.props.initialFiles.forEach(
+                (item) => {
+                    items.push({
+                        id: item.id,
+                        binary: item.file,
+                        uploadProgress: 0,
+                        error: false,
+                        completed: false,
+                    });
+                },
+            );
         }
 
         return items;
@@ -114,21 +116,26 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
     addFiles(event: React.ChangeEvent<HTMLInputElement>) {
         const newItems: Array<IUploadItem> = [];
 
-        Array.from(event.target.files ?? []).forEach((file: File) => {
-            const id = Math.random().toString(36).substr(1);
+        Array.from(event.target.files ?? []).forEach(
+            (file: File) => {
+                const id = Math.random().toString(36).substr(1);
 
-            this.props.onFileAdded(id, file);
-            newItems.push({
-                id: id,
-                binary: file,
-                uploadProgress: 0,
-                error: false,
-                completed: false,
-            });
-        });
+                this.props.onFileAdded(id, file);
+                newItems.push({
+                    id: id,
+                    binary: file,
+                    uploadProgress: 0,
+                    error: false,
+                    completed: false,
+                });
+            },
+        );
 
         this.setState((state: IState) => ({
-            items: [...state.items, ...newItems],
+            items: [
+                ...state.items,
+                ...newItems,
+            ],
         }));
 
         event.target.value = ''; // reset to allow selecting same file again
@@ -178,71 +185,80 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
         let requestsCompleted = 0;
         let failed = false;
 
-        this.state.items.forEach((item, index) => {
-            if (item.completed) {
-                if (item.error === false) {
-                    requestsCompleted += 1;
-                    return;
-                } else {
-                    this.updateAssetState(index, {
-                        error: false,
-                        completed: false,
-                        uploadProgress: 0,
-                    });
-                }
-            }
-
-            const onSuccess = () => {
-                this.updateAssetState(index, {
-                    error: false,
-                    completed: true,
-                    uploadProgress: 100,
-                });
-            };
-
-            const onFail = () => {
-                failed = true;
-                this.updateAssetState(index, {
-                    error: true,
-                    completed: true,
-                    uploadProgress: 100,
-                });
-            };
-
-            const onCompleted = () => {
-                const {notify} = superdeskApi.ui;
-                const {gettext, gettextPlural} = superdeskApi.localization;
-
-                requestsCompleted += 1;
-
-                if (requestsCompleted === this.state.items.length) {
-                    if (failed === false) {
-                        setTimeout(this.props.closeModal, 500);
-                        notify.success(
-                            gettextPlural(
-                                requestsCompleted,
-                                'File uploaded successfully',
-                                '{{count}} files uploaded successfully',
-                                {count: requestsCompleted},
-                            ),
-                        );
+        this.state.items.forEach(
+            (item, index) => {
+                if (item.completed) {
+                    if (item.error === false) {
+                        requestsCompleted += 1;
+                        return;
                     } else {
-                        this.setState({submitting: false});
-                        // TODO: Improve displaying error messages to the user
-                        notify.error(gettext('Failed to upload files'));
+                        this.updateAssetState(index, {
+                            error: false,
+                            completed: false,
+                            uploadProgress: 0,
+                        });
                     }
                 }
-            };
 
-            const onProgress = (progressEvent: ProgressEvent) => {
-                // limit progress to 90% and set 100 only after request is done
-                let uploadProgress = Math.min(Math.round((progressEvent.loaded / progressEvent.total) * 100.0), 90);
+                const onSuccess = () => {
+                    this.updateAssetState(index, {
+                        error: false,
+                        completed: true,
+                        uploadProgress: 100,
+                    });
+                };
 
-                this.updateAssetState(index, {uploadProgress: uploadProgress});
-            };
+                const onFail = () => {
+                    failed = true;
+                    this.updateAssetState(index, {
+                        error: true,
+                        completed: true,
+                        uploadProgress: 100,
+                    });
+                };
 
-            this.props.uploadFile(item, onProgress).then(onSuccess, onFail).finally(onCompleted);
-        });
+                const onCompleted = () => {
+                    const {notify} = superdeskApi.ui;
+                    const {gettext, gettextPlural} = superdeskApi.localization;
+
+                    requestsCompleted += 1;
+
+                    if (requestsCompleted === this.state.items.length) {
+                        if (failed === false) {
+                            setTimeout(this.props.closeModal, 500);
+                            notify.success(
+                                gettextPlural(
+                                    requestsCompleted,
+                                    'File uploaded successfully',
+                                    '{{count}} files uploaded successfully',
+                                    {count: requestsCompleted},
+                                ),
+                            );
+                        } else {
+                            this.setState({submitting: false});
+                            // TODO: Improve displaying error messages to the user
+                            notify.error(gettext('Failed to upload files'));
+                        }
+                    }
+                };
+
+                const onProgress = (progressEvent: ProgressEvent) => {
+                    // limit progress to 90% and set 100 only after request is done
+                    let uploadProgress = Math.min(
+                        Math.round(
+                            progressEvent.loaded / progressEvent.total * 100.0,
+                        ),
+                        90,
+                    );
+
+                    this.updateAssetState(index, {uploadProgress: uploadProgress});
+                };
+
+                this.props.uploadFile(item, onProgress)
+                    .then(onSuccess, onFail)
+                    .finally(onCompleted);
+            },
+        );
     }
 
     render() {
@@ -258,7 +274,10 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 closeOnEsc={true}
                 theme={this.props.theme}
             >
-                <ModalHeader text={this.props.title} flex={true}>
+                <ModalHeader
+                    text={this.props.title}
+                    flex={true}
+                >
                     <ButtonGroup align="end">
                         <Button
                             text={gettext('Close')}
@@ -282,7 +301,7 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 </ModalHeader>
                 <PageLayout
                     mainClassName="sd-padding--2"
-                    main={
+                    main={(
                         <GridList>
                             {this.state.items.map((item, index) => (
                                 <ListItemComponent
@@ -291,31 +310,30 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                                     asset={this.props.assets[item.id]}
                                     selected={this.state.selectedIndex === index}
                                     selectFile={() => this.selectFile(index)}
-                                    removeFile={
-                                        this.state.submitting === true ? undefined : () => this.removeFile(index)
+                                    removeFile={this.state.submitting === true ?
+                                        undefined :
+                                        () => this.removeFile(index)
                                     }
                                 />
                             ))}
                         </GridList>
-                    }
+                    )}
                     rightPanelOpen={currentItem != null}
-                    rightPanel={
-                        currentItem == null ? (
-                            <div />
-                        ) : (
-                            <PanelContent>
-                                <PanelContentBlock flex={true}>
-                                    <PanelContentBlockInner grow={true}>
-                                        <RightPanelComponent
-                                            key={currentItem.id}
-                                            item={currentItem}
-                                            submitting={this.state.submitting}
-                                        />
-                                    </PanelContentBlockInner>
-                                </PanelContentBlock>
-                            </PanelContent>
-                        )
-                    }
+                    rightPanel={currentItem == null ? (
+                        <div />
+                    ) : (
+                        <PanelContent>
+                            <PanelContentBlock flex={true}>
+                                <PanelContentBlockInner grow={true}>
+                                    <RightPanelComponent
+                                        key={currentItem.id}
+                                        item={currentItem}
+                                        submitting={this.state.submitting}
+                                    />
+                                </PanelContentBlockInner>
+                            </PanelContentBlock>
+                        </PanelContent>
+                    )}
                 />
                 <ModalFooter>
                     <input

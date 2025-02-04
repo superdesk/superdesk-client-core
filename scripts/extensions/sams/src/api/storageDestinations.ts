@@ -15,10 +15,17 @@ export function getAllStorageDestinations(): Promise<Array<IStorageDestinationIt
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi
-        .query(RESOURCE, 1, {field: 'name', direction: 'ascending'}, {})
+    return superdeskApi.dataApi.query(
+        RESOURCE,
+        1,
+        {field: 'name', direction: 'ascending'},
+        {},
+    )
         .then((response: IRestApiResponse<IStorageDestinationItem>) => {
-            return sortBy<IStorageDestinationItem>(response?._items ?? [], ['_id']);
+            return sortBy<IStorageDestinationItem>(
+                response?._items ?? [],
+                ['_id'],
+            );
         })
         .catch((error: any) => {
             if (isSamsApiError(error)) {

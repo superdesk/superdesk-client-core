@@ -1,4 +1,12 @@
-import {BlockMapBuilder, CharacterMetadata, ContentBlock, ContentState, Modifier, EditorState, genKey} from 'draft-js';
+import {
+    BlockMapBuilder,
+    CharacterMetadata,
+    ContentBlock,
+    ContentState,
+    Modifier,
+    EditorState,
+    genKey,
+} from 'draft-js';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor__deprecated} from './editor3CustomData';
 
 import Immutable from 'immutable';
@@ -31,7 +39,7 @@ function insertAtomicBlockWithoutEmptyLines(
     editorState: EditorState,
     entityKey: string,
     character: string,
-): {editorState: EditorState; blockKey: string} {
+): { editorState: EditorState, blockKey: string } {
     var selectionState = editorState.getSelection();
     var target = getInsertionTarget(editorState.getCurrentContent(), selectionState);
     var asAtomicBlock = Modifier.setBlockType(target.contentState, target.selectionState, 'atomic');
@@ -39,40 +47,35 @@ function insertAtomicBlockWithoutEmptyLines(
     var fragmentArray = [];
 
     if (asAtomicBlock.getFirstBlock().getKey() === target.selectionState.getAnchorKey()) {
-        fragmentArray.push(
-            new ContentBlock({
-                key: genKey(),
-                type: 'unstyled',
-                text: '',
-                characterList: List(),
-            }),
-        );
+        fragmentArray.push(new ContentBlock({
+            key: genKey(),
+            type: 'unstyled',
+            text: '',
+            characterList: List(),
+        }));
     }
 
-    fragmentArray.push(
-        new ContentBlock({
-            key: genKey(),
-            type: 'atomic',
-            text: character,
-            characterList: List(Repeat(charData, character.length)),
-        }),
-    );
+    fragmentArray.push(new ContentBlock({
+        key: genKey(),
+        type: 'atomic',
+        text: character,
+        characterList: List(Repeat(charData, character.length)),
+    }));
 
     if (
         // check if atomic is the last block in the editor
-        asAtomicBlock.getLastBlock().getKey() === target.selectionState.getAnchorKey() ||
+        asAtomicBlock.getLastBlock().getKey() === target.selectionState.getAnchorKey()
+        ||
         // check if cursor is not at the end of the block
-        target.selectionState.getFocusOffset() !==
-            target.contentState.getBlockForKey(target.selectionState.getFocusKey()).getText().length
+        target.selectionState.getFocusOffset()
+        !== target.contentState.getBlockForKey(target.selectionState.getFocusKey()).getText().length
     ) {
-        fragmentArray.push(
-            new ContentBlock({
-                key: genKey(),
-                type: 'unstyled',
-                text: '',
-                characterList: List(),
-            }),
-        );
+        fragmentArray.push(new ContentBlock({
+            key: genKey(),
+            type: 'unstyled',
+            text: '',
+            characterList: List(),
+        }));
     }
 
     var fragment = BlockMapBuilder.createFromArray(fragmentArray);
@@ -86,8 +89,7 @@ function insertAtomicBlockWithoutEmptyLines(
         selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
     }) as ContentState;
 
-    const {block: blockKeyForEntity} = newContent
-        .getBlocksAsArray()
+    const {block: blockKeyForEntity} = newContent.getBlocksAsArray()
         .map((b) => ({entity: b.getEntityAt(0), block: b.getKey()}))
         .find((b) => b.entity === entityKey);
 

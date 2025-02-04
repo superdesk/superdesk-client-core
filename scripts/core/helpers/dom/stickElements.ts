@@ -14,7 +14,7 @@ export function stickElements(target, source, preferredPosition) {
 
     const placeOnTheRight = () => {
         source.style.left = '';
-        source.style.right = clientWidth - targetRect.right + 'px';
+        source.style.right = (clientWidth - targetRect.right) + 'px';
     };
 
     const enoughSpaceOnTheLeft = clientWidth > targetRect.left + source.offsetWidth;
@@ -33,12 +33,12 @@ export function stickElements(target, source, preferredPosition) {
 
     const placeAtTheTop = () => {
         source.style.top = '';
-        source.style.bottom = clientHeight - targetRect.top + 'px';
+        source.style.bottom = (clientHeight - targetRect.top) + 'px';
     };
 
     const placeAtTheBottom = () => {
         source.style.bottom = '';
-        source.style.top = targetRect.top + targetRect.height + 'px';
+        source.style.top = (targetRect.top + targetRect.height) + 'px';
     };
 
     const spaceBelowTarget = clientHeight - targetRect.bottom;

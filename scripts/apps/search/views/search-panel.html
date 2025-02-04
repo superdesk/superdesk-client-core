@@ -1,42 +1,25 @@
 <aside id="advanced_search_filters" role="region" aria-labelledby="search_filter_heading">
     <h3 id="search_filter_heading" class="a11y-only" translate>Advanced search panel</h3>
     <div class="header">
-        <div class="backlink-toolbar" ng-show="editingSearch && !activateSearchPane">
-            <button ng-click="cancel()" class="backlink"><span translate>Back / Cancel</span></button>
-        </div>
+      <div class="backlink-toolbar" ng-show="editingSearch && !activateSearchPane">
+        <button ng-click="cancel()" class="backlink"><span translate>Back / Cancel</span></button>
+      </div>
         <ul ng-show="!editingSearch || activateSearchPane" role="tablist">
-            <li
-                role="tab"
-                ng-class="{active: sTab === 'advancedSearch'}"
-                ng-click="changeTab('advancedSearch')"
-                translate
-            >
-                Advanced Search
-            </li>
-            <li
-                id="saved_searches_tab"
-                role="tab"
+            <li role="tab" ng-class="{active: sTab === 'advancedSearch'}" ng-click="changeTab('advancedSearch')" translate>Advanced Search</li>
+            <li id="saved_searches_tab"
+                role="tab" 
                 ng-show="privileges.saved_searches == 1"
                 ng-class="{active: sTab === 'savedSearches'}"
-                ng-click="changeTab('savedSearches')"
-                translate
-            >
-                Saved
+                ng-click="changeTab('savedSearches')" translate>Saved
             </li>
-            <li
-                id="raw_search_tab"
-                role="tab"
+            <li id="raw_search_tab"
+                role="tab" 
                 ng-if="isAdmin()"
                 ng-class="{active: sTab === 'rawSearch'}"
                 ng-click="changeTab('rawSearch')"
-                translate
-            >
-                Raw
-            </li>
+                translate>Raw</li>
         </ul>
-        <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="closeFacets()">
-            <i class="icon-close-small"></i>
-        </button>
+        <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="closeFacets()"><i class="icon-close-small"></i></button>
     </div>
 
     <div
@@ -48,29 +31,25 @@
         }"
         data-test-id="advanced-search-panel"
     >
+
         <div id="edit-search-name" class="edit-search" ng-show="editingSearch && !activateSearchPane">
             <div
                 ng-if="userHasPrivileges({saved_searches_subscriptions_admin: 1})"
-                class="saved-search-subscriptions--manage-toolbar"
-            >
+                class="saved-search-subscriptions--manage-toolbar">
                 <span>
                     <strong>
                         {{wrapper.edit.subscribers == null ? '0' : wrapper.edit.subscribers.user_subscriptions.length}}
                     </strong>
                     <span translate>subscriptions</span>
                 </span>
-                <button class="btn btn--small btn--hollow" ng-click="setIsManagingSubscriptions(true)" translate>
-                    Manage
-                </button>
+                <button class="btn btn--small btn--hollow" ng-click="setIsManagingSubscriptions(true)" translate>Manage</button>
             </div>
 
             <div
                 ng-if="isManagingSubscriptions"
                 set-is-managing-subscriptions="setIsManagingSubscriptions"
                 on-subscriptions-change="onSubscriptionsChange"
-                sd-saved-search-manage-subscribers
-                data-saved-search="wrapper.edit"
-            ></div>
+                sd-saved-search-manage-subscribers data-saved-search="wrapper.edit"></div>
 
             <form name="viewsForm">
                 <div ng-include="'scripts/apps/search/views/save-search-dialog.html'"></div>
@@ -81,39 +60,18 @@
         <div sd-item-repo data-repo="repo" data-toggle-repo="toggleRepo" data-context="context"></div>
 
         <div class="tab-box" role="tablist">
-            <button
-                role="tab"
-                id="parameters-tab"
-                type="button"
-                class="tab-box__item"
-                ng-class="{'tab-box__item--active': innerTab==='parameters'}"
-                ng-click="display('parameters')"
-                translate
-            >
-                Parameters
-            </button>
-            <button
-                role="tab"
-                id="filters-tab"
-                type="button"
-                class="tab-box__item"
-                ng-class="{'tab-box__item--active': innerTab==='filters'}"
-                ng-click="display('filters')"
-                translate
-            >
-                Filters
-            </button>
+            <button role="tab" id="parameters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='parameters'}" ng-click="display('parameters')" translate>Parameters</button>
+            <button role="tab" id="filters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='filters'}" ng-click="display('filters')" translate>Filters</button>
         </div>
 
-        <div
-            sd-search-parameters
-            ng-if="innerTab==='parameters'"
+        <div sd-search-parameters ng-if="innerTab==='parameters'"
             data-repo="repo"
             data-context="context"
-            data-provider-type="providerType"
-        ></div>
+            data-provider-type="providerType">
+        </div>
 
         <div sd-search-filters ng-if="innerTab==='filters'"></div>
+
     </div>
     <div class="content pull pull-heigher" ng-if="sTab==='rawSearch'">
         <div sd-raw-search></div>

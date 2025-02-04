@@ -7,13 +7,8 @@
             <sd-search-handler ng-model="query" data-debounce="200"></sd-search-handler>
 
             <span class="sd-page__element-grow"></span>
-            <div
-                class="dropdown dropdown--align-right"
-                dropdown
-                style="margin-right: -20px"
-                data-sd-tooltip="{{ :: 'Add new' | translate }}"
-                data-flow="left"
-            >
+            <div class="dropdown dropdown--align-right" dropdown style="margin-right: -20px;" data-sd-tooltip="{{ :: 'Add new' | translate }}" data-flow="left">
+
                 <button class="navbtn dropdown sd-create-btn" dropdown__toggle>
                     <i class="icon-plus-large"></i>
                     <span class="circle"></span>
@@ -40,35 +35,24 @@
                     </li>
                 </ul>
             </div>
+
         </div>
 
         <div class="sd-page__content dictionary-settings" sd-loading="loading">
             <ul class="pills-list">
-                <li
-                    ng-repeat="dictionary in dictionaries | filter:searchDictionary track by dictionary._id"
-                    ng-class="{inactive: dictionary.is_active === 'false'}"
-                >
+                <li ng-repeat="dictionary in dictionaries | filter:searchDictionary track by dictionary._id" ng-class="{inactive: dictionary.is_active === 'false'}">
                     <div ng-if="!dictionary.user">
-                        <h6>{{ dictionary.name }}</h6>
-                        &nbsp;<em><strong>({{ :: dictionary.language_id }})</strong></em>
+                        <h6>{{ dictionary.name }}</h6>&nbsp;<em><strong>({{ :: dictionary.language_id }})</strong></em>
                     </div>
                     <div ng-if="dictionary.user">
-                        <h6 id="{{dictionary.language_id}}">
-                            {{ :: 'Personal' | translate }}{{ :: (isAbbreviations(dictionary) ? ' - Abbreviations' : '')
-                            | translate }}
-                        </h6>
-                        &nbsp;
+                        <h6 id="{{dictionary.language_id}}">{{ :: 'Personal' | translate }}{{ :: (isAbbreviations(dictionary) ? ' - Abbreviations' : '') | translate }}</h6>&nbsp;
                         <em>
                             <strong>({{ :: dictionary.language_id }})</strong>
                         </em>
                     </div>
                     <div class="actions">
-                        <button ng-click="openDictionary(dictionary)" title="{{:: 'Edit dictionary' | translate }}">
-                            <i class="icon-pencil"></i>
-                        </button>
-                        <button ng-click="remove(dictionary)" title="{{:: 'Remove dictionary' | translate }}">
-                            <i class="icon-trash"></i>
-                        </button>
+                        <button ng-click="openDictionary(dictionary)" title="{{:: 'Edit dictionary' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(dictionary)" title="{{:: 'Remove dictionary' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </li>
             </ul>

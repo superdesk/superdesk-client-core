@@ -105,11 +105,8 @@ export function extendItem(dest, src) {
  */
 export function filterDefaultValues(diff, orig) {
     Object.keys(CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-        if (
-            diff.hasOwnProperty(key) &&
-            angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) &&
-            !orig.hasOwnProperty(key)
-        ) {
+        if (diff.hasOwnProperty(key) && angular.equals(diff[key], CONTENT_FIELDS_DEFAULTS[key]) &&
+            !orig.hasOwnProperty(key)) {
             delete diff[key];
         }
     });
@@ -159,19 +156,17 @@ export function forcedExtend(dest, src) {
 }
 
 /**
- * Clean the given html by removing tags and embeds, in order to count words and characters later
- */
+* Clean the given html by removing tags and embeds, in order to count words and characters later
+*/
 export function cleanHtml(data) {
-    return (
-        data
-            // remove embeds by using the comments around them. Embeds don't matter for word counters
-            .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
-            .replace(/<br[^>]*>/gi, '&nbsp;')
-            .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
-            .replace(/<\/?[^>]+>/gi, '')
-            .trim()
-            .replace(/&nbsp;/g, ' ')
-    );
+    return data
+    // remove embeds by using the comments around them. Embeds don't matter for word counters
+        .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
+        .replace(/<br[^>]*>/gi, '&nbsp;')
+        .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
+        .replace(/<\/?[^>]+>/gi, '')
+        .trim()
+        .replace(/&nbsp;/g, ' ');
 }
 
 /**
@@ -210,9 +205,9 @@ export function itemHasUnresolvedHighlight(item, isHighlightFn) {
     return Object.keys(item[META_FIELD_NAME] || {})
         .map((contentKey) => getFieldMetadata(item, contentKey, fieldsMetaKeys.draftjsState))
         .filter((draftjsState) => draftjsState != null)
-        .some((draftjsState) =>
-            (draftjsState.blocks || []).some((block) =>
-                (block.inlineStyleRanges || []).some((inlineStyleRange) => isHighlightFn(inlineStyleRange.style)),
+        .some((draftjsState) => (draftjsState.blocks || [])
+            .some((block) => (block.inlineStyleRanges || [])
+                .some((inlineStyleRange) => isHighlightFn(inlineStyleRange.style)),
             ),
         );
 }
@@ -262,13 +257,11 @@ export function cutoffPreviousRenditions(update, origItem) {
             // walk through all renditions
             Object.keys(origRenditions).forEach((_key) => {
                 // ignore default renditions, because all images have default renditions
-                if (
-                    !(_key in defaultRenditions) &&
+                if (!(_key in defaultRenditions) &&
                     _key in updateRenditions &&
                     origRenditions[_key] !== null &&
                     // image was changed, but rendition(s) still equal
-                    origRenditions[_key].href === updateRenditions[_key].href
-                ) {
+                    origRenditions[_key].href === updateRenditions[_key].href) {
                     // remove rendition from previously used image
                     delete updateRenditions[_key];
                 }

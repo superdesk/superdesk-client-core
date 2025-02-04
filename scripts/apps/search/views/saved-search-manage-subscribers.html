@@ -17,39 +17,27 @@
                 </div>
 
                 <div>
-                    <button id="saved-search-subscriptions--add-new" class="btn btn--hollow btn--primary">
-                        <i class="icon-plus-sign"></i>Add new
-                    </button>
+                    <button
+                        id="saved-search-subscriptions--add-new"
+                        class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
 
-                    <sd-positioner
-                        placement="'bottom-end'"
-                        class-name="'dropdown2'"
-                        trigger-selector="'#saved-search-subscriptions--add-new'"
-                        z-index="1050"
-                    >
-                        <div style="width: 439px">
+                    <sd-positioner placement="'bottom-end'" class-name="'dropdown2'" trigger-selector="'#saved-search-subscriptions--add-new'" z-index="1050">
+                        <div style="width: 439px;">
                             <div class="flat-searchbar extended">
-                                <div
-                                    class="search-handler"
-                                    style="height: auto !important; padding: 4px 8px; padding-right: 0; border: 0"
-                                >
-                                    <label for="saved-search-add-subscriber" class="trigger-icon"
-                                        ><i class="icon-search"></i
-                                    ></label>
+                                <div class="search-handler" style="height: auto!important; padding: 4px 8px; padding-right: 0; border: 0">
+                                    <label
+                                        for="saved-search-add-subscriber"
+                                        class="trigger-icon"><i class="icon-search"></i></label>
                                     <input
                                         id="saved-search-add-subscriber"
                                         type="text"
                                         placeholder="{{ :: 'Search' | translate }}"
                                         ng-model="wrapper.newSubscriptionFilterText"
-                                        style="width: 100%"
-                                    />
+                                        style="width: 100%;">
                                 </div>
                             </div>
 
-                            <div
-                                ng-if="wrapper.newSubscriptionFilterText.length > 0"
-                                style="border-top: 1px solid #f5f5f5; margin-bottom: 6px"
-                            ></div>
+                            <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="border-top: 1px solid #F5F5F5; margin-bottom: 6px;"></div>
 
                             <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
                                 <ul class="users-list-embed">
@@ -67,8 +55,7 @@
 
                             <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
                                 <ul class="users-list-embed">
-                                    <li
-                                        ng-click="subscribeUser(user)"
+                                    <li ng-click="subscribeUser(user)"
                                         ng-repeat="user in wrapper.users | filter: usersFilter"
                                         class="flex-row sibling-spacer-10"
                                     >
@@ -88,17 +75,14 @@
             <div
                 ng-repeat="deskSubscription in savedSearch.subscribers.desk_subscriptions track by deskSubscription.desk"
                 class="sd-list-item sd-shadow--z1"
-                ng-class='{"sd-list-item--activated":itemActive2}'
-                style="margin-bottom: 6px"
-            >
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
                 <div class="sd-list-item__column">
                     <sd-organisation-avatar></sd-organisation-avatar>
                 </div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
-                        <strong class="sd-overflow-ellipsis"
-                            >{{wrapper.desks.deskLookup[deskSubscription.desk].name}}</strong
-                        >
+                        <strong class="sd-overflow-ellipsis">{{wrapper.desks.deskLookup[deskSubscription.desk].name}}</strong>
                     </div>
                     <div class="sd-list-item__row">
                         <span translate>Desk subscription</span>
@@ -106,12 +90,8 @@
                 </div>
                 <div class="sd-list-item__column">
                     <div class="actions">
-                        <button ng-click="editDeskSubscription(wrapper.desks.deskLookup[deskSubscription.desk])">
-                            <i class="icon-pencil"></i>
-                        </button>
-                        <button ng-click="unsubscribeDesk(wrapper.desks.deskLookup[deskSubscription.desk])">
-                            <i class="icon-trash"></i>
-                        </button>
+                        <button ng-click="editDeskSubscription(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-pencil"></i></button>
+                        <button ng-click="unsubscribeDesk(wrapper.desks.deskLookup[deskSubscription.desk])"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </div>
@@ -119,9 +99,8 @@
             <div
                 ng-repeat="user in wrapper.userSubscribers track by user._id"
                 class="sd-list-item sd-shadow--z1"
-                ng-class='{"sd-list-item--activated":itemActive2}'
-                style="margin-bottom: 6px"
-            >
+                ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                style="margin-bottom: 6px">
                 <div class="sd-list-item__column">
                     <sd-user-avatar data-user="user"></sd-user-avatar>
                 </div>
@@ -129,7 +108,9 @@
                     <div class="sd-list-item__row">
                         <strong class="sd-overflow-ellipsis">{{user.display_name}}</strong>
                     </div>
-                    <div class="sd-list-item__row">{{user.username}}</div>
+                    <div class="sd-list-item__row">
+                        {{user.username}}
+                    </div>
                 </div>
                 <div class="sd-list-item__column">
                     <div class="actions">
@@ -142,24 +123,19 @@
         <!-- else -->
 
         <div ng-if="wrapper.subscriptionInCreateOrEditMode != null">
-            <div style="margin: -20px -20px 10px -20px">
-                <div class="space-between" style="background: #fff; padding: 9px 20px">
+            <div style="margin: -20px -20px 10px -20px;">
+                <div class="space-between" style="background: #fff; padding: 9px 20px;">
                     <button class="backlink" ng-click="backToList()" translate>Back</button>
-                    <button class="btn btn--primary" ng-click="saveChanges()" ng-disabled="!savingEnabled()" translate>
-                        Save changes
-                    </button>
+                    <button class="btn btn--primary" ng-click="saveChanges()" ng-disabled="!savingEnabled()" translate>Save changes</button>
                 </div>
 
                 <div
                     ng-if="editingUserSubscription()"
                     class="sd-list-item"
-                    ng-class='{"sd-list-item--activated":itemActive2}'
-                    style="margin-bottom: 6px; padding: 0 10px; background-color: #e6edef !important; cursor: default"
-                >
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
                     <div class="sd-list-item__column">
-                        <sd-user-avatar
-                            data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]"
-                        ></sd-user-avatar>
+                        <sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]"></sd-user-avatar>
                     </div>
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
@@ -176,9 +152,8 @@
                 <div
                     ng-if="editingDeskSubscription()"
                     class="sd-list-item"
-                    ng-class='{"sd-list-item--activated":itemActive2}'
-                    style="margin-bottom: 6px; padding: 0 10px; background-color: #e6edef !important; cursor: default"
-                >
+                    ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
+                    style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
                     <div class="sd-list-item__column">
                         <sd-organisation-avatar></sd-organisation-avatar>
                     </div>
@@ -198,9 +173,9 @@
             <div
                 sd-edit-time-interval
                 data-initial-value="wrapper.subscriptionInCreateOrEditMode.scheduling"
-                on-change="handleIntervalChange"
-            ></div>
+                on-change="handleIntervalChange"></div>
         </div>
         <!-- if/else end-->
+
     </div>
 </div>

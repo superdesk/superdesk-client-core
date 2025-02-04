@@ -19,7 +19,7 @@
 export function ExtensionPointsService() {
     this.extensions = {};
 
-    this.register = function (type, componentClass, props = {}, data = [], onInit = null) {
+    this.register = function(type, componentClass, props = {}, data = [], onInit = null) {
         if (typeof this.extensions[type] === 'undefined') {
             this.extensions[type] = [];
         }

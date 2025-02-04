@@ -34,7 +34,10 @@ import {getDisabledSetIds} from '../sets/selectors';
 // Utils
 import {verifyAssetBeforeLocking} from '../../utils/assets';
 
-export function receiveAssets(response: IRestApiResponse<IAssetItem>, listAction?: LIST_ACTION): IAssetActionTypes {
+export function receiveAssets(
+    response: IRestApiResponse<IAssetItem>,
+    listAction?: LIST_ACTION,
+): IAssetActionTypes {
     return {
         type: RECEIVE_ASSETS,
         payload: {
@@ -102,11 +105,11 @@ export function setAssetListStyle(style: ASSET_LIST_STYLE): IAssetActionTypes {
 
 export function toggleAssetListStyle(): IThunkAction<void> {
     return (dispatch, getState) => {
-        dispatch(
-            setAssetListStyle(
-                getAssetListStyle(getState()) === ASSET_LIST_STYLE.GRID ? ASSET_LIST_STYLE.LIST : ASSET_LIST_STYLE.GRID,
-            ),
-        );
+        dispatch(setAssetListStyle(
+            getAssetListStyle(getState()) === ASSET_LIST_STYLE.GRID ?
+                ASSET_LIST_STYLE.LIST :
+                ASSET_LIST_STYLE.GRID,
+        ));
 
         return dispatch<any>(queryAssetsFromCurrentSearch());
     };
@@ -147,9 +150,15 @@ export function closeMultiActionBar(): IAssetActionTypes {
 
 export function queryAssets(params: IAssetSearchParams, listAction?: LIST_ACTION): IThunkAction<void> {
     return (dispatch, getState) => {
-        return samsApi.assets.query(params, getAssetListStyle(getState())).then((response) => {
-            dispatch(receiveAssets(response, listAction));
-        });
+        return samsApi.assets.query(params, getAssetListStyle(getState()))
+            .then((response) => {
+                dispatch(
+                    receiveAssets(
+                        response,
+                        listAction,
+                    ),
+                );
+            });
     };
 }
 
@@ -176,12 +185,10 @@ export function updateAssetSearchParamsAndListItems(
 ): IThunkAction<void> {
     return (dispatch, getState) => {
         if (listAction === LIST_ACTION.REPLACE) {
-            dispatch(
-                setAssetSearchParams({
-                    ...params,
-                    page: 1,
-                }),
-            );
+            dispatch(setAssetSearchParams({
+                ...params,
+                page: 1,
+            }));
         } else {
             dispatch(setAssetSearchParams(params));
         }
@@ -223,39 +230,41 @@ export function editAsset(assetId?: string): IAssetActionTypes {
 
 export function unlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>> {
     return (dispatch, getState) => {
-        return samsApi.assets.unlockAsset(asset, {}).then((unlockedAsset: Partial<IAssetItem>) => {
-            dispatch(updateAssetInStore(unlockedAsset, asset._id));
-            const getassets = getAssets(getState());
+        return samsApi.assets.unlockAsset(asset, {})
+            .then((unlockedAsset: Partial<IAssetItem>) => {
+                dispatch(updateAssetInStore(unlockedAsset, asset._id));
+                const getassets = getAssets(getState());
 
-            return getassets[asset._id];
-        });
+                return getassets[asset._id];
+            });
     };
 }
 
 export function forceUnlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>> {
     return (dispatch, getState) => {
-        return samsApi.assets.unlockAsset(asset, {force: true}).then((unlockedAsset: Partial<IAssetItem>) => {
-            dispatch(updateAssetInStore(unlockedAsset, asset._id));
-            const getassets = getAssets(getState());
-
-            return getassets[asset._id];
-        });
-    };
-}
-
-export function lockAsset(
-    asset: IAssetItem,
-): (dispatch: any, getState: any) => Promise<void | IAssetItem | Partial<IAssetItem>> {
-    return (dispatch, getState) => {
-        if (verifyAssetBeforeLocking(asset, 'edit')) {
-            return Promise.resolve();
-        } else {
-            return samsApi.assets.lockAsset(asset, {lock_action: 'edit'}).then((lockedAsset: Partial<IAssetItem>) => {
-                dispatch(updateAssetInStore(lockedAsset, asset._id));
+        return samsApi.assets.unlockAsset(asset, {'force': true})
+            .then((unlockedAsset: Partial<IAssetItem>) => {
+                dispatch(updateAssetInStore(unlockedAsset, asset._id));
                 const getassets = getAssets(getState());
 
                 return getassets[asset._id];
             });
+    };
+}
+
+export function lockAsset(asset: IAssetItem): (dispatch: any, getState: any) =>
+    Promise<void | IAssetItem | Partial<IAssetItem>> {
+    return (dispatch, getState) => {
+        if (verifyAssetBeforeLocking(asset, 'edit')) {
+            return Promise.resolve();
+        } else {
+            return samsApi.assets.lockAsset(asset, {'lock_action': 'edit'})
+                .then((lockedAsset: Partial<IAssetItem>) => {
+                    dispatch(updateAssetInStore(lockedAsset, asset._id));
+                    const getassets = getAssets(getState());
+
+                    return getassets[asset._id];
+                });
         }
     };
 }
@@ -265,20 +274,22 @@ export function onEditAsset(asset: IAssetItem): (dispatch: any, getState: any) =
         const disabledSetIds = getDisabledSetIds(getState());
 
         if (disabledSetIds.indexOf(asset.set_id) === -1) {
-            dispatch(lockAsset(asset)).then(() => {
-                dispatch(editAsset(asset._id));
-            });
+            dispatch(lockAsset(asset))
+                .then(() => {
+                    dispatch(editAsset(asset._id));
+                });
         }
     };
 }
 
 export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): IThunkAction<IAssetItem> {
     return (dispatch) => {
-        return samsApi.assets.update(original, updates).then((updatedAsset: IAssetItem) => {
-            // Wait for the Assets to update before returning the updated Asset
-            dispatch(updateAssetInStore(updatedAsset, updatedAsset._id));
-            return updatedAsset;
-        });
+        return samsApi.assets.update(original, updates)
+            .then((updatedAsset: IAssetItem) => {
+                // Wait for the Assets to update before returning the updated Asset
+                dispatch(updateAssetInStore(updatedAsset, updatedAsset._id));
+                return updatedAsset;
+            });
     };
 }
 
@@ -287,39 +298,44 @@ export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
         const selectedAssetId = getSelectedAssetId(getState());
         const selectedAssetIds = getSelectedAssetIds(getState());
 
-        return samsApi.assets.deleteAsset(asset).then(() => {
-            if (selectedAssetId === asset._id) {
-                dispatch(closeAssetContentPanel());
-            }
-            if (selectedAssetIds.indexOf(asset._id) !== -1) {
-                dispatch(updateSelectedAssetIds(asset._id));
-            }
-        });
+        return samsApi.assets.deleteAsset(asset)
+            .then(() => {
+                if (selectedAssetId === asset._id) {
+                    dispatch(closeAssetContentPanel());
+                }
+                if (selectedAssetIds.indexOf(asset._id) !== -1) {
+                    dispatch(updateSelectedAssetIds(asset._id));
+                }
+            });
     };
 }
 
 export function deleteAssets(asset?: IAssetItem): IThunkAction<void> {
     return (dispatch, getState) => {
         if (asset !== undefined) {
-            return openDeleteConfirmationModal(asset.name).then((response: boolean) => {
-                if (response === true) {
-                    dispatch(deleteAsset(asset));
-                }
-            });
+            return openDeleteConfirmationModal(asset.name)
+                .then((response: boolean) => {
+                    if (response === true) {
+                        dispatch(deleteAsset(asset));
+                    }
+                });
         } else {
             const selectedAssets = getSelectedAssetItems(getState());
-            const assetName = selectedAssets.length === 1 ? selectedAssets[0].name : undefined;
+            const assetName = (selectedAssets.length === 1) ? selectedAssets[0].name : undefined;
 
-            return openDeleteConfirmationModal(assetName, selectedAssets.length).then((response: boolean) => {
-                if (response === true) {
-                    Promise.all(selectedAssets.map((selectedAsset) => dispatch(deleteAsset(selectedAsset)))).finally(
-                        () => {
+            return openDeleteConfirmationModal(assetName, selectedAssets.length)
+                .then((response: boolean) => {
+                    if (response === true) {
+                        Promise.all(
+                            selectedAssets.map(
+                                (selectedAsset) => dispatch(deleteAsset(selectedAsset)),
+                            ),
+                        ).finally(() => {
                             dispatch(closeMultiActionBar());
-                        },
-                    );
-                }
-                return Promise.resolve();
-            });
+                        });
+                    }
+                    return Promise.resolve();
+                });
         }
     };
 }
@@ -327,20 +343,25 @@ export function deleteAssets(asset?: IAssetItem): IThunkAction<void> {
 export function loadAssetsByIds(ids: Array<string>): IThunkAction<void> {
     return (dispatch, getState) => {
         const loadedAssetIds = Object.keys(getAssets(getState()));
-        const attachmentsToLoad = ids.filter((id) => loadedAssetIds.includes(id));
+        const attachmentsToLoad = ids.filter(
+            (id) => loadedAssetIds.includes(id),
+        );
 
         if (attachmentsToLoad.length === 0) {
             return Promise.resolve();
         }
 
-        return samsApi.assets.getByIds(attachmentsToLoad).then((response) => {
-            dispatch(receiveAssets(response));
-        });
+        return samsApi.assets.getByIds(attachmentsToLoad)
+            .then((response) => {
+                dispatch(receiveAssets(response));
+            });
     };
 }
 
 export function reloadAssetList(): IThunkAction<void> {
-    return (dispatch) => dispatch(updateAssetSearchParamsAndListItems({}, LIST_ACTION.REPLACE));
+    return (dispatch) => (
+        dispatch(updateAssetSearchParamsAndListItems({}, LIST_ACTION.REPLACE))
+    );
 }
 
 function openDeleteConfirmationModal(assetName?: string, asset_length?: number): Promise<boolean> {
@@ -361,18 +382,20 @@ function openDeleteConfirmationModal(assetName?: string, asset_length?: number):
         return confirm(
             gettext('Are you sure you want to delete the asset "{{name}}"?', {name: assetName}),
             gettext('Delete Asset?'),
-        ).then((response: boolean) => {
-            el.remove();
-            return response;
-        });
+        )
+            .then((response: boolean) => {
+                el.remove();
+                return response;
+            });
     } else if (asset_length !== undefined) {
         return confirm(
             gettext('Are you sure you want to delete these {{length}} assets', {length: asset_length}),
             gettext('Delete Asset?'),
-        ).then((response: boolean) => {
-            el.remove();
-            return response;
-        });
+        )
+            .then((response: boolean) => {
+                el.remove();
+                return response;
+            });
     } else {
         return Promise.reject();
     }

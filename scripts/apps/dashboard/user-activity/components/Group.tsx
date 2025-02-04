@@ -40,7 +40,9 @@ export class GroupComponent extends React.Component<IProps> {
                     >
                         <i className="icon-chevron-down-thin" />
                     </button>
-                    <span className="stage-header__name">{group.label}</span>
+                    <span className="stage-header__name">
+                        {group.label}
+                    </span>
                     <div className="stage-header__line" />
                     <span className="label-total stage-header__number">
                         {loadedItemsCount < data.total ? `${data.itemIds.length} / ${data.total}` : data.total}
@@ -54,7 +56,11 @@ export class GroupComponent extends React.Component<IProps> {
                             }}
                             canEdit={true}
                             select={(item: IArticle) => {
-                                this.services.superdesk.intent('preview', 'item', item);
+                                this.services.superdesk.intent(
+                                    'preview',
+                                    'item',
+                                    item,
+                                );
                             }}
                             edit={(item: IArticle) => {
                                 this.services.authoringWorkspace.edit(item);

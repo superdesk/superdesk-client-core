@@ -1,3 +1,4 @@
+
 describe('superdesk.core.menu', () => {
     beforeEach(window.module('superdesk.core.menu'));
 

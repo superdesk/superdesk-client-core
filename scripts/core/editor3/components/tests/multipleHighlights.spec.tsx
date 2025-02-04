@@ -7,8 +7,8 @@ import {EditorState, ContentState, SelectionState} from 'draft-js';
 import {MultipleHighlights} from '../MultipleHighlights';
 
 const contentState = ContentState.createFromText(
-    // eslint-disable-next-line indent
-    `Not enjoyment, and not sorrow,
+// eslint-disable-next-line indent
+`Not enjoyment, and not sorrow,
 Is our destined end or way;
 But to act, that each tomorrow
 Find us farther than today.`,
@@ -46,6 +46,7 @@ class MultipleHighlightsTester extends React.Component<any, any> {
         super(props);
         this.state = {
             editorState: props.editorState,
+
         };
         this.childRef = null;
     }
@@ -57,7 +58,7 @@ class MultipleHighlightsTester extends React.Component<any, any> {
                 onChange={(_editorState) => this.setState({editorState: _editorState})}
                 initialState={this.props.initialHighlightsState}
             >
-                <ChildComponent ref={(r) => (this.childRef = r)} />
+                <ChildComponent ref={(r) => this.childRef = r} />
             </MultipleHighlights>
         );
     }
@@ -102,18 +103,28 @@ describe('multipleHighlights.component', () => {
     it('should add, remove, and update highlights', () => {
         highlightsManager.addHighlight('COMMENT', highlightData);
 
-        const styleName = getEditorState().getCurrentContent().getFirstBlock().getInlineStyleAt(2).first();
+        const styleName = getEditorState()
+            .getCurrentContent()
+            .getFirstBlock()
+            .getInlineStyleAt(2)
+            .first();
 
-        expect(JSON.stringify(highlightsManager.getHighlightData(styleName))).toBe(
-            JSON.stringify(highlightDataExpectedResponse),
-        );
+        expect(
+            JSON.stringify(highlightsManager.getHighlightData(styleName)),
+        ).toBe(JSON.stringify(highlightDataExpectedResponse));
 
         highlightsManager.updateHighlightData(styleName, highlightDataUpdate);
-        expect(JSON.stringify(highlightsManager.getHighlightData(styleName))).toBe(JSON.stringify(highlightDataUpdate));
+        expect(
+            JSON.stringify(highlightsManager.getHighlightData(styleName)),
+        ).toBe(JSON.stringify(highlightDataUpdate));
 
         highlightsManager.removeHighlight(styleName);
 
-        const styleNameAfterRemoval = getEditorState().getCurrentContent().getFirstBlock().getInlineStyleAt(2).first();
+        const styleNameAfterRemoval = getEditorState()
+            .getCurrentContent()
+            .getFirstBlock()
+            .getInlineStyleAt(2)
+            .first();
 
         expect(styleNameAfterRemoval).toBe(undefined);
         expect(() => {

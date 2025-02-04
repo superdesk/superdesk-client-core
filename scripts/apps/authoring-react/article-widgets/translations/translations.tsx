@@ -18,22 +18,21 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
-                header={
+                header={(
                     <AuthoringWidgetHeading
                         widgetId={TRANSLATIONS_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
-                }
-                body={
+                )}
+                body={(
                     <TranslationsBody
                         initialState={this.props.initialState}
                         item={this.props.article}
-                        wrapperTemplate={({children}) => (
-                            <Spacer v gap="16" justifyContent="start">
-                                {children}
-                            </Spacer>
-                        )}
+                        wrapperTemplate={
+                            ({children}) =>
+                                <Spacer v gap="16" justifyContent="start">{children}</Spacer>
+                        }
                         translationTemplate={({translation, getTranslatedFromLanguage}) => (
                             <Card key={translation._id}>
                                 <div onClick={() => openArticle(translation._id, 'edit')}>
@@ -50,25 +49,31 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
                                         <SpacerBlock v gap="8" />
                                         <Spacer h gap="4" justifyContent="space-between" noWrap>
                                             <div>
-                                                {translation.translated_from == null ? (
-                                                    <Label
-                                                        style="hollow"
-                                                        color="blue--400"
-                                                        text={gettext('Original')}
-                                                    />
-                                                ) : (
-                                                    <div className="flex-row sibling-spacer-4">
-                                                        <span>{gettext('Translated from')}</span>
-                                                        <Label
-                                                            text={getTranslatedFromLanguage()}
-                                                            style="hollow"
-                                                            color="yellow-600"
-                                                        />
-                                                    </div>
-                                                )}
+                                                {
+                                                    translation.translated_from == null
+                                                        ? (
+                                                            <Label
+                                                                style="hollow"
+                                                                color="blue--400"
+                                                                text={gettext('Original')}
+                                                            />
+                                                        )
+                                                        : (
+                                                            <div className="flex-row sibling-spacer-4">
+                                                                <span>{gettext('Translated from')}</span>
+                                                                <Label
+                                                                    text={getTranslatedFromLanguage()}
+                                                                    style="hollow"
+                                                                    color="yellow-600"
+                                                                />
+                                                            </div>
+                                                        )
+                                                }
                                             </div>
                                             <div>
-                                                <State item={translation} />
+                                                <State
+                                                    item={translation}
+                                                />
                                             </div>
                                         </Spacer>
                                     </div>
@@ -76,7 +81,7 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
                             </Card>
                         )}
                     />
-                }
+                )}
             />
         );
     }

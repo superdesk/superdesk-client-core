@@ -40,10 +40,9 @@ export function ReadingTime() {
         // tslint:disable-next-line: max-line-length
         template: '<span class="char-count reading-time">{{readingTimeLabel}}</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
-            const timeToRead =
-                appConfig.authoring == null || appConfig.authoring.timeToRead == null
-                    ? true
-                    : appConfig.authoring.timeToRead;
+            const timeToRead = appConfig.authoring == null || appConfig.authoring.timeToRead == null
+                ? true
+                : appConfig.authoring.timeToRead;
 
             if (!timeToRead) {
                 scope.readingTime = null;

@@ -4,8 +4,7 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-.users {
-    //page styles
+.users {    //page styles
     .users-subnav {
         .multiple-action {
             margin-inline-start: 30px;
@@ -27,8 +26,7 @@
     margin-inline-start: 10px;
 }
 
-.users-table {
-    //main list styles
+.users-table {    //main list styles
 
     border-block-start: 2px solid var(--sd-colour-line--medium);
     .table-header {
@@ -54,9 +52,8 @@
         background: var(--sd-item__main-Bg);
         border-block-start: 1px solid var(--sd-colour-line--medium);
     }
-    .table-header,
-    .table-newest,
-    .table-body {
+    .table-header, .table-newest, .table-body {
+
         > li {
             height: 40px;
             border-block-end: 1px solid var(--sd-colour-line--light);
@@ -81,7 +78,7 @@
                 &.row-wrapper {
                     position: absolute;
                     inset-inline-start: 60px;
-                    inset-inline-end: $user-table-actions-width + 10;
+                    inset-inline-end: $user-table-actions-width+10;
                     inset-block-start: 5px;
                     padding: 0;
                     > div {
@@ -136,10 +133,7 @@
         }
     }
     .table-header {
-        > li > div,
-        .name,
-        .email,
-        .created {
+        > li > div, .name, .email, .created {
             color: var(--color-text) !important;
             font-size: 13px !important;
             font-weight: 500;
@@ -153,9 +147,9 @@
             }
         }
     }
-    .table-body,
-    .table-newest {
+    .table-body , .table-newest {
         > li {
+
             &.selected {
                 background: var(--sd-item__main-Bg--selected);
             }
@@ -193,8 +187,10 @@
                 > div.action .item-functions {
                     display: flex;
                     align-items: center;
+
                 }
             }
+
         }
     }
     .alert {
@@ -208,8 +204,10 @@
                 background: var(--sd-colour-interactive--alpha-20);
             }
         }
+
     }
 }
+
 
 /*
 ====================================================
@@ -247,6 +245,7 @@
 
     .preferences__content {
         padding: 24px 20px;
+
     }
     .profile-info__navigation,
     .preferences__navigation {
@@ -277,9 +276,9 @@
     }
     .action-bar {
         inset-block-start: -48px;
-        &.show {
-            inset-block-start: 0;
-            z-index: 2;
+        &.show { 
+            inset-block-start:0;
+            z-index: 2; 
         }
     }
 
@@ -291,16 +290,14 @@
         flex-direction: column;
         align-items: center;
 
-        h2 {
-            //used as user's full name
+        h2 { //used as user's full name
             text-align: center;
             font-size: 23px;
             line-height: 1;
             margin: 10px 0 4px 0;
             padding: 0 20px;
         }
-        h5 {
-            //used as user's username
+        h5 { //used as user's username
             text-align: center;
             font-size: 18px;
             font-weight: normal;
@@ -366,12 +363,16 @@
         border-radius: 2px;
     }
 
+
+
     .ng-invalid-required {
         .required-info {
             display: inline-block !important;
         }
     }
 } //end of user detail pane
+
+
 
 // USER PROFILE PAGE IN MODAL
 .modal.user-profile-page {
@@ -392,7 +393,7 @@
             background-color: var(--sd-colour__webkit-scrollbar--hover);
             cursor: pointer;
         }
-
+        
         ::-webkit-scrollbar-thumb {
             background: var(--sd-colour__webkit-scrollbar-thumb);
         }
@@ -438,10 +439,11 @@ Profile page styles
     overflow-y: auto;
     overflow-x: hidden;
 
+
     &::-webkit-scrollbar {
-        width: 10px;
-        border-inline-start: 0;
-    }
+            width:10px;
+            border-inline-start:0
+        }
     &::-webkit-scrollbar-thumb {
         border-inline-end: 2px solid $background-main;
         border-inline-start: 0;
@@ -495,7 +497,7 @@ Profile page styles
             position: relative;
             .day {
                 position: relative;
-                inset-block-start: -0.9em;
+                inset-block-start: -.9em;
                 display: inline-block;
                 background-color: $background-main;
             }
@@ -504,7 +506,7 @@ Profile page styles
                 padding-inline-end: 4px;
                 text-transform: lowercase;
                 position: relative;
-                inset-block-start: -0.9em;
+                inset-block-start: -.9em;
                 display: inline-block;
                 background-color: $background-main;
             }
@@ -556,12 +558,14 @@ Profile page styles
     }
 }
 
+
 .user-profile-page {
     overflow: auto;
     // grid test
-    display: grid;
+    display:grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: 1fr;
+
 
     // end test
     .form-content {
@@ -603,9 +607,7 @@ Profile page styles
         .tabcontent-container {
             position: absolute;
             inset-block-start: 38px;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            inset-block-end: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
             overflow: auto;
             .profile-activity-container {
                 inset-inline-start: 0;
@@ -636,7 +638,7 @@ Profile page styles
     display: none;
     z-index: 1001;
     background: var(--sd-item__main-Bg);
-    border: 1px solid var(--sd-colour-line--light);
+    border:1px solid var(--sd-colour-line--light);
     box-shadow: 0 0 3px 0 hsla(0, 0%, 0%, 0.15);
 
     .title {
@@ -657,17 +659,20 @@ Profile page styles
     }
 }
 
+
 // Preferences
 
-.preferences {
+.preferences  {
+
     .dateline_preview {
-        background-color: rgba(0, 0, 0, 0.06);
-        display: inline-flex;
-        align-items: center;
-        min-height: 28px;
-        border-radius: 14px;
-        padding: 0.2rem 1.4rem;
-        margin-block-start: 1rem;
+            background-color: rgba(0,0,0,.06);
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            border-radius: 14px;
+            padding: 0.2rem 1.4rem;
+            margin-block-start: 1rem;
+
     }
     .preferences__actions {
         display: flex;
@@ -692,13 +697,13 @@ Profile page styles
             margin-inline-end: 0.6rem;
             padding-inline-start: 0.6rem;
             width: 0.1rem;
-            border: 1px dotted rgba(0, 0, 0, 0.65);
+            border: 1px dotted rgba(0,0,0,.65);
             border-width: 0 1px 0 0;
         }
     }
 
     .input-term {
-        input[type='text'] {
+        input[type="text"] {
             border: 1px solid var(--sd-colour-line--light);
             border-radius: var(--b-radius--x-small);
             padding: 0 5px;
@@ -744,32 +749,29 @@ Profile page styles
 
 .mini-modal {
     background-color: #fff;
-
+    
     border-radius: 4px;
-    box-shadow:
-        0 2px 10px rgba(0, 0, 0, 0.2),
-        0 6px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 10px rgba(0,0,0,.2),0 6px 16px rgba(0,0,0,.3);
     .title {
         font-size: 15px;
         padding: 12px 20px;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 0 rgba(0,0,0,.1);
     }
     .content {
         padding: 10px 20px;
         font-size: 14px;
     }
     .footer {
-        padding: 10px 20px 20px;
+        padding: 10px 20px 20px;;
     }
     .close {
         position: absolute;
         inset-block-start: 10px;
-        inset-inline-end: 10px;
+        inset-inline-end:10px;
     }
 }
 
-.password-popup {
-    //change password popup
+.password-popup {    //change password popup
     position: fixed;
     min-width: 260px;
     inset-block-start: 150px;
@@ -810,7 +812,7 @@ Profile page styles
         }
         .action-bar {
             inset-block-start: -48px;
-            &.show {
+            &.show { 
                 inset-block-start: 0px;
                 z-index: 1;
             }

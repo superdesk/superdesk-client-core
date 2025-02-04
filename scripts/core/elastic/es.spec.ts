@@ -1,3 +1,4 @@
+
 describe('elastic query builder', () => {
     beforeEach(window.module('superdesk.core.elastic'));
 
@@ -16,7 +17,10 @@ describe('elastic query builder', () => {
     }));
 
     it('generates filtered query when using filter', inject((es) => {
-        var filters = [{term: {type: 'picture'}}, {term: {provider: 'foo'}}];
+        var filters = [
+            {term: {type: 'picture'}},
+            {term: {provider: 'foo'}},
+        ];
 
         var body = es({}, filters);
 

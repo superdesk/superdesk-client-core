@@ -38,9 +38,8 @@ class LinkFunction {
             desk: this._deskMapper.bind(this),
             defaultMapper: this._defaultMapper.bind(this),
         };
-        this.scope.dateFilters = getDateFilters().filter(
-            (dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null,
-        );
+        this.scope.dateFilters = getDateFilters()
+            .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null);
         this.defaultFilterLabels = {
             categories: gettext('Category'),
             genre: gettext('Genre'),
@@ -54,33 +53,32 @@ class LinkFunction {
                 return null;
             }
 
-            return (
-                term.translations?.display_name?.[language] ??
-                term.translations?.display_name?.[language?.replace('_', '-')] ??
-                term.display_name
-            );
+            return term.translations?.display_name?.[language]
+                ?? term.translations?.display_name?.[language?.replace('_', '-')]
+                ?? term.display_name;
         }
 
         // fetch available languages
-        metadata.initialize().then(() => {
-            this.scope.filterLabels = {};
-            metadata?.cvs?.forEach((cv) => {
-                this.scope.filterLabels[cv._id] = getLocaleName(cv, this.session.identity.language);
-            });
-            Object.keys(this.defaultFilterLabels).forEach((key) => {
-                const hasKey = Object.keys(this.scope.filterLabels).includes(key);
+        metadata.initialize()
+            .then(() => {
+                this.scope.filterLabels = {};
+                metadata?.cvs?.forEach((cv) => {
+                    this.scope.filterLabels[cv._id] = getLocaleName(cv, this.session.identity.language);
+                });
+                Object.keys(this.defaultFilterLabels).forEach((key) => {
+                    const hasKey = Object.keys(this.scope.filterLabels).includes(key);
 
-                if (!hasKey || (hasKey && this.scope.filterLabels[key] == null)) {
-                    this.scope.filterLabels[key] = this.defaultFilterLabels[key];
+                    if (!hasKey || (hasKey && this.scope.filterLabels[key] == null)) {
+                        this.scope.filterLabels[key] = this.defaultFilterLabels[key];
+                    }
+                });
+                if (metadata.values.languages) {
+                    scope.languageLabel = {};
+                    metadata.values.languages.forEach((language) => {
+                        scope.languageLabel[language.qcode] = language.name;
+                    });
                 }
             });
-            if (metadata.values.languages) {
-                scope.languageLabel = {};
-                metadata.values.languages.forEach((language) => {
-                    scope.languageLabel[language.qcode] = language.name;
-                });
-            }
-        });
     }
 
     hasPredefinedDateFilter(fieldname, filterValue) {
@@ -112,13 +110,9 @@ class LinkFunction {
     init() {
         this._initAggregations();
 
-        this.scope.$watch(
-            'tags.currentSearch',
-            (currentSearch) => {
-                this.scope.showSaveSearch = !_.isEmpty(currentSearch);
-            },
-            true,
-        );
+        this.scope.$watch('tags.currentSearch', (currentSearch) => {
+            this.scope.showSaveSearch = !_.isEmpty(currentSearch);
+        }, true);
 
         this.scope.$watch('items', () => {
             this.tags.initSelectedFacets().then((currentTags) => {
@@ -130,19 +124,8 @@ class LinkFunction {
 
                 this._initAggregations();
 
-                let aggregationsKeys = [
-                    'type',
-                    'category',
-                    'genre',
-                    'urgency',
-                    'priority',
-                    'source',
-                    'credit',
-                    'desk',
-                    'legal',
-                    'sms',
-                    'language',
-                ];
+                let aggregationsKeys = ['type', 'category', 'genre', 'urgency',
+                    'priority', 'source', 'credit', 'desk', 'legal', 'sms', 'language'];
 
                 _.each(aggregationsKeys, (key) => {
                     if (_.get(this.scope.items._aggregations, key)) {
@@ -224,9 +207,7 @@ class LinkFunction {
 
             if (typeof lookedUpDesk === 'undefined') {
                 var msg = [
-                    'Desk (key: ',
-                    bucketCount.key,
-                    ') not found in ',
+                    'Desk (key: ', bucketCount.key, ') not found in ',
                     'deskLookup, probable storage inconsistency.',
                 ].join('');
 
@@ -346,10 +327,8 @@ class LinkFunction {
             currentKeys.push(key);
             this.$location.search(type, JSON.stringify(currentKeys));
         } else if (type === 'credit') {
-            this.$location.search(
-                'creditqcode',
-                JSON.stringify([{label: key, value: this.scope.aggregations.credit[key].qcode}]),
-            );
+            this.$location.search('creditqcode',
+                JSON.stringify([{label: key, value: this.scope.aggregations.credit[key].qcode}]));
         } else {
             this.$location.search(type, JSON.stringify([key]));
         }

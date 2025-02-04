@@ -4,7 +4,7 @@ UserMentionDirective.$inject = ['userList', 'desks', 'asset', '$q'];
 export function UserMentionDirective(userList, desks, asset, $q) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/mentions.html'),
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             scope.users = [];
             scope.fetching = false;
             scope.prefix = '';
@@ -20,7 +20,7 @@ export function UserMentionDirective(userList, desks, asset, $q) {
             });
 
             // Calculates the next page and calls fetchItems for new items
-            scope.fetchNext = function () {
+            scope.fetchNext = function() {
                 var page = scope.users.length / 10 + 1;
 
                 fetchItems(scope.prefix, page);
@@ -37,9 +37,9 @@ export function UserMentionDirective(userList, desks, asset, $q) {
                     promises.push(getFilteredDesks(scope.prefix, scope.users, page));
 
                     $q.all(promises).then(() => {
-                        scope.users = _.sortBy(scope.users, (item) =>
-                            item.type === 'user' ? item.item.username.toLowerCase() : item.item.name.toLowerCase(),
-                        );
+                        scope.users = _.sortBy(scope.users, (item) => item.type === 'user' ?
+                            item.item.username.toLowerCase()
+                            : item.item.name.toLowerCase());
 
                         scope.fetching = false;
                         fetchedPages.push(page);
@@ -64,9 +64,8 @@ export function UserMentionDirective(userList, desks, asset, $q) {
                     var filteredDesks = desks.desks._items;
 
                     if (scope.prefix) {
-                        filteredDesks = _.filter(desks.desks._items, (item) =>
-                            _.startsWith(item.name.toLowerCase(), prefix.toLowerCase()),
-                        );
+                        filteredDesks = _.filter(desks.desks._items,
+                            (item) => _.startsWith(item.name.toLowerCase(), prefix.toLowerCase()));
                     }
 
                     if (page) {
@@ -80,14 +79,14 @@ export function UserMentionDirective(userList, desks, asset, $q) {
             }
 
             // filter user by given prefix
-            scope.searchUsersAndDesks = function (prefix) {
+            scope.searchUsersAndDesks = function(prefix) {
                 scope.prefix = prefix;
                 scope.users = [];
                 fetchedPages = [];
                 fetchItems(scope.prefix, 1);
             };
 
-            scope.select = function (item) {
+            scope.select = function(item) {
                 return item.type === 'user' ? '@' + item.item.username : '#' + item.item.name.replace(' ', '_');
             };
 

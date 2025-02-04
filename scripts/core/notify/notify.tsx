@@ -25,7 +25,7 @@ interface IMessage {
         button?: {
             label: string;
             onClick(): void;
-        };
+        }
     };
     displayDuration: IDisplayDuration;
 }
@@ -86,25 +86,22 @@ class NotifyComponent extends React.Component<{}, IState> {
             return; // add message, only if it's does not already exist
         }
 
-        this.setState(
-            {
-                messages: this.state.messages.concat({
-                    type: type,
-                    msg: text,
-                    options: options,
-                    displayDuration: displayDuration,
-                }),
-            },
-            () => {
-                if (displayDuration !== 'manual') {
-                    setTimeout(() => {
-                        this.setState({
-                            messages: this.state.messages.filter(({msg}) => msg !== text),
-                        });
-                    }, displayDuration);
-                }
-            },
-        );
+        this.setState({
+            messages: this.state.messages.concat({
+                type: type,
+                msg: text,
+                options: options,
+                displayDuration: displayDuration,
+            }),
+        }, () => {
+            if (displayDuration !== 'manual') {
+                setTimeout(() => {
+                    this.setState({
+                        messages: this.state.messages.filter(({msg}) => msg !== text),
+                    });
+                }, displayDuration);
+            }
+        });
     }
 
     render() {
@@ -114,36 +111,45 @@ class NotifyComponent extends React.Component<{}, IState> {
 
         return (
             <div className="notification-holder" data-test-id="notifications">
-                {this.state.messages.map((msg, i) => (
-                    <div
-                        key={i}
-                        className={`alert alert-${msg.type} space-between`}
-                        onClick={() => this.removeMessage(i)}
-                        data-test-id={`notification--${msg.type}`}
-                    >
-                        <div>{msg.msg}</div>
+                {
+                    this.state.messages.map((msg, i) => (
+                        <div
+                            key={i}
+                            className={`alert alert-${msg.type} space-between`}
+                            onClick={() => this.removeMessage(i)}
+                            data-test-id={`notification--${msg.type}`}
+                        >
+                            <div>{msg.msg}</div>
 
-                        <div>
-                            {msg.options?.button != null && (
-                                <button className="btn btn--hollow btn--small" onClick={msg.options.button.onClick}>
-                                    {msg.options.button.label}
-                                </button>
-                            )}
+                            <div>
+                                {
+                                    msg.options?.button != null && (
+                                        <button
+                                            className="btn btn--hollow btn--small"
+                                            onClick={msg.options.button.onClick}
+                                        >
+                                            {msg.options.button.label}
+                                        </button>
+                                    )
+                                }
 
-                            {msg.displayDuration === 'manual' && (
-                                <button
-                                    className="btn btn--hollow btn--small btn--icon-only"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        this.removeMessage(i);
-                                    }}
-                                >
-                                    <i className="icon-close-small" />
-                                </button>
-                            )}
+                                {
+                                    msg.displayDuration === 'manual' && (
+                                        <button
+                                            className="btn btn--hollow btn--small btn--icon-only"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                this.removeMessage(i);
+                                            }}
+                                        >
+                                            <i className="icon-close-small" />
+                                        </button>
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                }
             </div>
         );
     }
@@ -157,16 +163,15 @@ class NotifyComponent extends React.Component<{}, IState> {
  * @description The notify package allows developers to display various
  * notifications for users.
  */
-export default angular.module('superdesk.core.notify', ['superdesk.core.translate']).service('notify', [
-    function () {
+export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
+    .service('notify', [function() {
         const targetEl = document.createElement('div');
 
         document.body.appendChild(targetEl);
 
         // eslint-disable-next-line
         return ReactDOM.render(<NotifyComponent />, targetEl); // returns instance of NotifyComponent
-    },
-]);
+    }]);
 
 export const notify = {
     info: (text: string, displayDuration?: IDisplayDuration, options?: IMessage['options']) => {

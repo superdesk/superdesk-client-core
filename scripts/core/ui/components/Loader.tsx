@@ -14,6 +14,8 @@ export class Loader extends React.Component<IProps> {
             ? {position: 'relative', width: '100%', height: '100%'}
             : {position: 'relative', width: '60px', height: '30px'};
 
-        return this.props.absolute === true ? loaderElement : <div style={style}>{loaderElement}</div>;
+        return this.props.absolute === true
+            ? loaderElement
+            : <div style={style}>{loaderElement}</div>;
     }
 }

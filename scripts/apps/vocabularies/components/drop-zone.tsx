@@ -51,9 +51,9 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
     }
 
     render() {
-        const className =
-            (this.props.className != null ? this.props.className : 'item-association') +
-            (this.state.hover ? ' dragover' : '');
+        const className = (
+            this.props.className != null ? this.props.className : 'item-association'
+        ) + (this.state.hover ? ' dragover' : '');
 
         return (
             <button
@@ -65,14 +65,16 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                     }
                 }}
             >
-                {this.props.children ? (
-                    this.props.children
-                ) : (
+                {this.props.children ? this.props.children : (
                     <>
                         <i className="big-icon--upload-alt sd-file-upload__icon" />
-                        <span className="item-association__text-label">{gettext(this.props.label)}</span>
+                        <span className="item-association__text-label">
+                            {gettext(this.props.label)}
+                        </span>
                         <div>
-                            <span className="btn btn--hollow btn--primary">{gettext('Select Files')}</span>
+                            <span className="btn btn--hollow btn--primary">
+                                {gettext('Select Files')}
+                            </span>
                         </div>
                     </>
                 )}

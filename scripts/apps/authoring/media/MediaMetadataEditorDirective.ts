@@ -44,7 +44,7 @@ export default function MediaMetadataEditorDirective(metadata, features, session
                 scope.fields
                     .filter((field) => !isEmpty(field.default))
                     .forEach((field) => {
-                        const dest = field.cv ? field.cv.schema_field || field.field : field.field;
+                        const dest = field.cv ? (field.cv.schema_field || field.field) : field.field;
 
                         if (field.extra) {
                             if (!item.extra || !item.extra.hasOwnProperty(dest)) {

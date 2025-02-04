@@ -120,10 +120,8 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         const secondBlock = content.getBlockAfter(content.getFirstBlock().getKey());
 
         expect(content.getPlainText()).toEqual('paragraph1\n¶\nparagraph3');
-        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual([
-            'DELETE_EMPTY_PARAGRAPH_SUGGESTION-1',
-            'DELETE_SUGGESTION-1',
-        ]);
+        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual(
+            ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
     it('should add  ¶ for empty block when delete list with one empty item,', () => {
@@ -145,10 +143,8 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         const secondBlock = content.getBlockAfter(firstBlock.getKey());
 
         expect(content.getPlainText()).toEqual('one\n¶\nthree');
-        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual([
-            'DELETE_EMPTY_PARAGRAPH_SUGGESTION-1',
-            'DELETE_SUGGESTION-1',
-        ]);
+        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual(
+            ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
     it('should add ¶ for first block when delete paragraph with one empty item at beginning', () => {
@@ -169,10 +165,8 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         const firstBlock = content.getFirstBlock();
 
         expect(content.getPlainText()).toEqual('¶\ntwo\nthree');
-        expect(firstBlock.getInlineStyleAt(0).toJS()).toEqual([
-            'DELETE_EMPTY_PARAGRAPH_SUGGESTION-1',
-            'DELETE_SUGGESTION-1',
-        ]);
+        expect(firstBlock.getInlineStyleAt(0).toJS()).toEqual(
+            ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
     it('should add ¶ is added for last block when delete paragraph with one empty item at the end', () => {
@@ -192,10 +186,8 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         const lastBlock = content.getLastBlock();
 
         expect(content.getPlainText()).toEqual('one\ntwo\n¶');
-        expect(lastBlock.getInlineStyleAt(0).toJS()).toEqual([
-            'DELETE_EMPTY_PARAGRAPH_SUGGESTION-1',
-            'DELETE_SUGGESTION-1',
-        ]);
+        expect(lastBlock.getInlineStyleAt(0).toJS()).toEqual(
+            ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-1', 'DELETE_SUGGESTION-1']);
     });
 
     it('should overwrite an already added delete suggestion', () => {
@@ -264,10 +256,8 @@ describe('editor3.reducers.suggestion.DELETE_BLOCKS_SUGGESTION', () => {
         const secondBlock = content.getBlockAfter(firstBlock.getKey());
 
         expect(content.getPlainText()).toEqual('paragraph1\n¶\nparagraph3');
-        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual([
-            'DELETE_EMPTY_PARAGRAPH_SUGGESTION-2',
-            'DELETE_SUGGESTION-2',
-        ]);
+        expect(secondBlock.getInlineStyleAt(0).toJS()).toEqual(
+            ['DELETE_EMPTY_PARAGRAPH_SUGGESTION-2', 'DELETE_SUGGESTION-2']);
     });
 
     it('should overwrite already existing merge suggestion', () => {

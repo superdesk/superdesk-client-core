@@ -7,7 +7,7 @@ export function ResendItem(subscribersService, authoring, api, notify) {
     return {
         templateUrl: 'scripts/apps/archive/views/resend-configuration.html',
         scope: {item: '='},
-        link: function (scope, elem, attr) {
+        link: function(scope, elem, attr) {
             scope.$watch('item', (item) => {
                 scope.selectedSubscribers = {items: []};
 
@@ -31,25 +31,23 @@ export function ResendItem(subscribersService, authoring, api, notify) {
                 return subscriberIds;
             }
 
-            scope.resendItem = function () {
+            scope.resendItem = function() {
                 var data = {subscribers: getSubscriberIds(), version: scope.item._current_version};
 
-                api.save('archive_resend', {}, data, scope.item).then(
-                    () => {
+                api.save('archive_resend', {}, data, scope.item)
+                    .then(() => {
                         notify.success(gettext('Item has been resent.'));
                         scope.cancel();
-                    },
-                    (response) => {
+                    }, (response) => {
                         if (response.data._message) {
                             notify.error(response.data._message);
                         } else {
                             notify.error(gettext('Unknown Error: Cannot resend the item'));
                         }
-                    },
-                );
+                    });
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.item = null;
             };
         },

@@ -4,7 +4,11 @@ import React from 'react';
 
 export class PageContainer extends React.Component<any, any> {
     render() {
-        return <div className="sd-column-box--3">{this.props.children}</div>;
+        return (
+            <div className="sd-column-box--3">
+                {this.props.children}
+            </div>
+        );
     }
 }
 

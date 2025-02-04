@@ -19,7 +19,8 @@ type DatelineFieldType = ICustomFieldType<
     IDatelineUserPreferences
 >;
 
-export function getDatelineField(): DatelineFieldType {
+export function getDatelineField()
+: DatelineFieldType {
     const field: DatelineFieldType = {
         id: DATELINE_FIELD_ID,
         generic: true,

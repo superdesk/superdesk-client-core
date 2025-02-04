@@ -17,10 +17,10 @@ const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
 const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 
 /**
- * Get long representation of given datetime
- *
- * @param {String} d iso format datetime
- */
+* Get long representation of given datetime
+*
+* @param {String} d iso format datetime
+*/
 
 export function serverFormat(d: string | moment.Moment): string {
     return moment(d).utc().format(SERVER_FORMAT);
@@ -85,9 +85,8 @@ function isSameWeek(a, b) {
 }
 
 function isArchiveYear(a, b) {
-    return appConfig.ArchivedDateOnCalendarYear === 1
-        ? a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT)
-        : b.diff(a, 'years') >= 1;
+    return (appConfig.ArchivedDateOnCalendarYear === 1) ?
+        a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
 }
 
 export function isScheduled(__item: IArticle) {
@@ -100,12 +99,12 @@ export function isScheduled(__item: IArticle) {
  * Get date and time format for scheduled datetime
  * Returns time for current day, date and time otherwise
  */
-export function scheduledFormat(__item: IArticle): {short: string; long: string} {
+export function scheduledFormat(__item: IArticle): {short: string, long: string} {
     const browserTimezone = moment.tz.guess();
 
     const item = __item.archive_item ?? __item;
 
-    const datetime: {moment: moment.Moment; str: string} = (() => {
+    const datetime: {moment: moment.Moment, str: string} = (() => {
         if (item?.schedule_settings?.time_zone == null) {
             const momentObj = moment(item.publish_schedule).tz(browserTimezone);
 
@@ -173,10 +172,10 @@ function DateTimeService() {
 DateTimeHelperService.$inject = [];
 function DateTimeHelperService() {
     /*
-     * @param timestring 2016-03-01T04:45:00+0000
-     * @param timezone Europe/London
-     */
-    this.splitDateTime = function (timestring, timezone) {
+    * @param timestring 2016-03-01T04:45:00+0000
+    * @param timezone Europe/London
+    */
+    this.splitDateTime = function(timestring, timezone) {
         var momentTS = moment.tz(timestring, timezone);
 
         return {
@@ -185,19 +184,19 @@ function DateTimeHelperService() {
         };
     };
 
-    this.isValidTime = function (value, format) {
+    this.isValidTime = function(value, format) {
         var timeFormat = format || appConfig.model.timeformat;
 
         return moment(value, timeFormat, true).isValid();
     };
 
-    this.isValidDate = function (value, format) {
+    this.isValidDate = function(value, format) {
         var dateFormat = format || appConfig.model.dateformat;
 
         return moment(value, dateFormat, true).isValid();
     };
 
-    this.mergeDateTime = function (dateStr, timeStr, timezone) {
+    this.mergeDateTime = function(dateStr, timeStr, timezone) {
         var tz = timezone || appConfig.default_timezone;
         var mergeStr = dateStr + ' ' + timeStr;
         var formatter = appConfig.model.dateformat + ' ' + appConfig.model.timeformat;
@@ -207,9 +206,9 @@ function DateTimeHelperService() {
     };
 
     /*
-     * @param timestring 2016-03-01T04:45:00+0000.
-     */
-    this.greaterThanUTC = function (timestring) {
+    * @param timestring 2016-03-01T04:45:00+0000.
+    */
+    this.greaterThanUTC = function(timestring) {
         return moment(timestring, 'YYYY-MM-DDTHH:mm:ssZZ') > moment.utc();
     };
 
@@ -221,7 +220,7 @@ function DateTimeHelperService() {
      * @param {String} datetime
      * @return {String}
      */
-    this.removeTZ = function (datetime) {
+    this.removeTZ = function(datetime) {
         if (datetime) {
             return datetime.replace('+0000', '').replace('+00:00', '');
         }
@@ -235,17 +234,16 @@ function DateTimeHelperService() {
  * @packageName superdesk.core
  * @description Superdesk core date & time module.
  */
-export default angular
-    .module('superdesk.core.datetime', [
-        'superdesk.config',
-        'ngResource',
-        'superdesk.core.datetime.absdate',
-        'superdesk.core.datetime.groupdates',
-        'superdesk.core.datetime.relativeDate',
-        'superdesk.core.datetime.reldatecomplex',
-        'superdesk.core.datetime.reldate',
-        'superdesk.core.translate',
-    ])
+export default angular.module('superdesk.core.datetime', [
+    'superdesk.config',
+    'ngResource',
+    'superdesk.core.datetime.absdate',
+    'superdesk.core.datetime.groupdates',
+    'superdesk.core.datetime.relativeDate',
+    'superdesk.core.datetime.reldatecomplex',
+    'superdesk.core.datetime.reldate',
+    'superdesk.core.translate',
+])
     .directive('sdDatetime', DateTimeDirective)
     .directive('sdShortDate', ShortDateDirective)
 
@@ -274,8 +272,9 @@ export default angular
 
     // format datetime obj to time string
     .filter('time', function timeFilterFactory() {
-        var CONFIG_TIME_FORMAT =
-            appConfig.view == null || appConfig.view.timeformat == null ? 'h:mm' : appConfig.view.timeformat;
+        var CONFIG_TIME_FORMAT = appConfig.view == null || appConfig.view.timeformat == null
+            ? 'h:mm'
+            : appConfig.view.timeformat;
 
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');
@@ -286,48 +285,46 @@ export default angular
 
     .constant('moment', moment)
 
-    .factory('weekdays', [
-        function () {
-            return Object.freeze({
-                MON: gettext('Monday'),
-                TUE: gettext('Tuesday'),
-                WED: gettext('Wednesday'),
-                THU: gettext('Thursday'),
-                FRI: gettext('Friday'),
-                SAT: gettext('Saturday'),
-                SUN: gettext('Sunday'),
-            });
-        },
-    ])
+    .factory('weekdays', [function() {
+        return Object.freeze({
+            MON: gettext('Monday'),
+            TUE: gettext('Tuesday'),
+            WED: gettext('Wednesday'),
+            THU: gettext('Thursday'),
+            FRI: gettext('Friday'),
+            SAT: gettext('Saturday'),
+            SUN: gettext('Sunday'),
+        });
+    }])
 
     /**
      *   A service that automatically fetches the time zone data from the
      *   server upon instantiaton and stores it internally for future use,
      *   avoiding the need to fetch it again every time when needed.
      */
-    .factory('tzdata', [
-        '$resource',
-        function ($resource) {
-            const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
+    .factory('tzdata', ['$resource', function($resource) {
+        const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
-            /**
-             * Returns a sorted list of all time zone names. If time zone data
-             * has not yet been fetched from the server, an empty list is
-             * returned.
-             * To determine whether or not the data has been fetched yet, the
-             * $promise property should be examined.
-             *
-             * @method getTzNames
-             * @return {Array} a list of time zone names
-             */
-            tzResource.prototype.getTzNames = function () {
-                return _.union(_.keys(this.zones), _.keys(this.links)).sort();
-            };
+        /**
+         * Returns a sorted list of all time zone names. If time zone data
+         * has not yet been fetched from the server, an empty list is
+         * returned.
+         * To determine whether or not the data has been fetched yet, the
+         * $promise property should be examined.
+         *
+         * @method getTzNames
+         * @return {Array} a list of time zone names
+         */
+        tzResource.prototype.getTzNames = function() {
+            return _.union(
+                _.keys(this.zones),
+                _.keys(this.links),
+            ).sort();
+        };
 
-            // return an array that will contain the fetched data when
-            // it arrives from the server
-            return tzResource.get();
-        },
-    ])
+        // return an array that will contain the fetched data when
+        // it arrives from the server
+        return tzResource.get();
+    }])
     .service('datetime', DateTimeService)
     .service('datetimeHelper', DateTimeHelperService);

@@ -32,6 +32,7 @@ interface IProps {
     annotationTypes: Array<any>;
     language: string;
     hidePopups(): void;
+
 }
 
 interface IState {
@@ -89,9 +90,9 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.annotationInputTabsFromExtensions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
             (activationResult) =>
-                activationResult.contributions != null &&
-                activationResult.contributions.editor3 != null &&
-                activationResult.contributions.editor3.annotationInputTabs != null
+                activationResult.contributions != null
+                && activationResult.contributions.editor3 != null
+                && activationResult.contributions.editor3.annotationInputTabs != null
                     ? activationResult.contributions.editor3.annotationInputTabs
                     : [],
         );
@@ -104,16 +105,14 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
 
         let text = '';
 
-        if (data.selection != null) {
-            // annotation is being added
+        if (data.selection != null) { // annotation is being added
             const selection: SelectionState = data.selection;
             const blockKey = data.selection.getStartKey();
             const contentState = this.props.editorState.getCurrentContent();
             const block = contentState.getBlockForKey(blockKey);
 
             text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
-        } else {
-            // annotation already exists
+        } else { // annotation already exists
             text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
         }
 
@@ -144,21 +143,24 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                     );
                 });
 
-                this.props.highlightsManager.addHighlight(getHighlightsConfig().ANNOTATION.type, {
-                    data: {
-                        msg,
-                        annotationType,
-                        ...getAuthorInfo(),
+                this.props.highlightsManager.addHighlight(
+                    getHighlightsConfig().ANNOTATION.type,
+                    {
+                        data: {
+                            msg,
+                            annotationType,
+                            ...getAuthorInfo(),
+                        },
                     },
-                });
+                );
             } else {
                 const highlightData = this.props.highlightsManager.getHighlightData(highlightId);
                 const date = new Date();
 
-                this.props.highlightsManager.updateHighlightData(highlightId, {
-                    ...highlightData,
-                    data: {...highlightData.data, msg, annotationType, date},
-                });
+                this.props.highlightsManager.updateHighlightData(
+                    highlightId,
+                    {...highlightData, data: {...highlightData.data, msg, annotationType, date}},
+                );
             }
 
             _hidePopups();
@@ -166,13 +168,10 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     }
 
     onChange(rawDraftContentState: RawDraftContentState, callback?) {
-        this.setState(
-            {
-                body: rawDraftContentState,
-                isEmpty: rawDraftContentState == null || !convertFromRaw(rawDraftContentState).hasText(),
-            },
-            callback,
-        );
+        this.setState({
+            body: rawDraftContentState,
+            isEmpty: rawDraftContentState == null || !convertFromRaw(rawDraftContentState).hasText(),
+        }, callback);
     }
 
     /**
@@ -192,8 +191,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
 
         Promise.all(
             this.annotationInputTabsFromExtensions.map(({selectedByDefault}) =>
-                selectedByDefault(text, this.getAnnotationInputMode()),
-            ),
+                selectedByDefault(text, this.getAnnotationInputMode())),
         ).then((result) => {
             let active;
 
@@ -204,15 +202,12 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 }
             }
 
-            this.setState(
-                {
-                    loaded: true,
-                    activeTabInitial: active,
-                },
-                () => {
-                    this.positionerRef.setReady();
-                },
-            );
+            this.setState({
+                loaded: true,
+                activeTabInitial: active,
+            }, () => {
+                this.positionerRef.setReady();
+            });
         });
     }
 
@@ -250,19 +245,18 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const {annotation} = data;
         const {type, isEmpty} = this.state;
 
-        const annotationTypeSelect =
-            annotationTypes == null ? null : (
-                <div className="sd-line-input sd-line-input--is-select">
-                    <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
-                    <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
-                        {annotationTypes.map((annotationType) => (
-                            <option key={annotationType.qcode} value={annotationType.qcode}>
-                                {annotationType.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            );
+        const annotationTypeSelect = annotationTypes == null ? null : (
+            <div className="sd-line-input sd-line-input--is-select">
+                <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
+                <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
+                    {annotationTypes.map((annotationType) => (
+                        <option key={annotationType.qcode} value={annotationType.qcode}>
+                            {annotationType.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
 
         const annotationInputComponent = (
             <div style={{paddingBlockStart: 20}}>
@@ -279,7 +273,10 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 </div>
                 <div className="button-group button-group--end button-group--comfort sd-flex--justify-end">
                     {typeof annotation === 'object' && (
-                        <button className="btn btn--cancel" onClick={this.deleteAnnotation}>
+                        <button
+                            className="btn btn--cancel"
+                            onClick={this.deleteAnnotation}
+                        >
                             {gettext('Delete')}
                         </button>
                     )}
@@ -304,44 +301,47 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             >
                 <Card padding={10}>
                     <div className="annotation-input" style={{width: 460}}>
-                        {this.annotationInputTabsFromExtensions.length > 0 ? (
-                            <NavTabs
-                                tabs={[
-                                    {
-                                        label: gettext('New annotation'),
-                                        render: () => annotationInputComponent,
-                                    },
-                                    ...this.annotationInputTabsFromExtensions.map((tab) => {
-                                        const Component = tab.component;
+                        {
+                            this.annotationInputTabsFromExtensions.length > 0
+                                ? (
+                                    <NavTabs
+                                        tabs={[
+                                            {
+                                                label: gettext('New annotation'),
+                                                render: () => annotationInputComponent,
+                                            },
+                                            ...this.annotationInputTabsFromExtensions.map((tab) => {
+                                                const Component = tab.component;
 
-                                        return {
-                                            label: tab.label,
-                                            render: () => (
-                                                <Component
-                                                    annotationText={this.getAnnotatedText()}
-                                                    onCancel={_hidePopups}
-                                                    annotationTypeSelect={annotationTypeSelect}
-                                                    annotationInputComponent={annotationInputComponent}
-                                                    mode={this.getAnnotationInputMode()}
-                                                    onApplyAnnotation={(html: string) => {
-                                                        this.onChange(
-                                                            convertToRaw(getContentStateFromHtml(html)),
-                                                            this.onSubmit,
-                                                        );
-                                                    }}
-                                                />
-                                            ),
-                                        };
-                                    }),
-                                ]}
-                                active={this.state.activeTabInitial}
-                                ref={(r) => {
-                                    this.tabsRef = r;
-                                }}
-                            />
-                        ) : (
-                            <div>{annotationInputComponent}</div>
-                        )}
+                                                return {
+                                                    label: tab.label,
+                                                    render: () => (
+                                                        <Component
+                                                            annotationText={this.getAnnotatedText()}
+                                                            onCancel={_hidePopups}
+                                                            annotationTypeSelect={annotationTypeSelect}
+                                                            annotationInputComponent={annotationInputComponent}
+                                                            mode={this.getAnnotationInputMode()}
+                                                            onApplyAnnotation={(html: string) => {
+                                                                this.onChange(
+                                                                    convertToRaw(getContentStateFromHtml(html)),
+                                                                    this.onSubmit,
+                                                                );
+                                                            }}
+                                                        />
+                                                    ),
+
+                                                };
+                                            }),
+                                        ]}
+                                        active={this.state.activeTabInitial}
+                                        ref={(r) => {
+                                            this.tabsRef = r;
+                                        }}
+                                    />
+                                )
+                                : <div>{annotationInputComponent}</div>
+                        }
                     </div>
                 </Card>
             </PositionInline>
@@ -362,9 +362,7 @@ const mapStateToProps = (state) => ({
 });
 
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
-    annotationTypes: ng
-        .get('metadata')
-        .initialize()
+    annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types),
 }))(AnnotationInputBody);
 

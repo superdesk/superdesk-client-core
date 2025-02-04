@@ -10,21 +10,23 @@ AuthoringEmbeddedDirective.$inject = ['superdeskFlags', 'api', 'notify', '$filte
 export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter) {
     return {
         template: authoringReactViewEnabled
-            ? '<div>' +
-              '<sd-authoring-integration-wrapper ' +
-              'data-action="action" ' +
-              'data-item-id="item._id" ' +
-              'data-set-full-width="setFullWidth" ' +
-              'data-full-width="fullWidth">' +
-              '</sd-authoring-react>' +
-              '</div>'
+            ? (
+                '<div>' +
+                    '<sd-authoring-integration-wrapper ' +
+                        'data-action="action" ' +
+                        'data-item-id="item._id" ' +
+                        'data-set-full-width="setFullWidth" ' +
+                        'data-full-width="fullWidth">' +
+                    '</sd-authoring-react>' +
+                '</div>'
+            )
             : undefined,
         templateUrl: authoringReactViewEnabled ? undefined : 'scripts/apps/authoring/views/authoring.html',
         scope: {
             item: '=',
             action: '=',
         },
-        link: function (scope) {
+        link: function(scope) {
             scope.canPrintPreview = canPrintPreview;
             scope.fullWidth = superdeskFlags.flags.hideMonitoring;
             scope.setFullWidth = () => {
@@ -33,9 +35,9 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
             };
 
             // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
-            scope.hideMonitoring = function (state, e) {
-                const fullWidthConfig: IFullWidthPageCapabilityConfiguration =
-                    scope.$parent.$parent.$parent.fullWidthConfig;
+            scope.hideMonitoring = function(state, e) {
+                const fullWidthConfig: IFullWidthPageCapabilityConfiguration
+                    = scope.$parent.$parent.$parent.fullWidthConfig;
 
                 if (fullWidthConfig.enabled) {
                     if (fullWidthConfig.allowed) {
@@ -59,10 +61,8 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
                  *
                  * @param {string} template - template to use (set in backend)
                  */
-                let date = $filter('formatLocalDateTimeString')(
-                    scope.item.versioncreated,
-                    appConfig.view.dateformat + ' ' + appConfig.view.timeformat,
-                );
+                let date = $filter('formatLocalDateTimeString')(scope.item.versioncreated, appConfig.view.dateformat +
+                    ' ' + appConfig.view.timeformat);
 
                 if (template == null) {
                     const lineBreak = '\r\n\r\n';
@@ -71,8 +71,7 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
 
                     scope.item.ednote = gettext(
                         'In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected repeat.',
-                        {slugline, date, lineBreak},
-                    );
+                        {slugline, date, lineBreak});
                 } else {
                     // we use template from backend
                     scope.item.ednote = template
@@ -85,22 +84,18 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
                 // task is required to get the desk name.
                 var fields = _.union(_.keys(helpers.CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task']);
                 var item: any = {
-                    template_name: scope.action,
-                    item: _.pick(scope.item, fields),
+                    template_name: scope.action, item: _.pick(scope.item, fields),
                 };
 
-                api.save('content_templates_apply', {}, item, {}).then(
-                    (result) => {
-                        item = _.pick(result, _.keys(helpers.CONTENT_FIELDS_DEFAULTS));
-                        scope.origItem = angular.extend({}, scope.item);
-                        _.each(item, (value, key) => {
-                            scope.origItem[key] = value;
-                        });
-                    },
-                    (err) => {
-                        notify.error(gettext('Failed to apply kill template to the item.'));
-                    },
-                );
+                api.save('content_templates_apply', {}, item, {}).then((result) => {
+                    item = _.pick(result, _.keys(helpers.CONTENT_FIELDS_DEFAULTS));
+                    scope.origItem = angular.extend({}, scope.item);
+                    _.each(item, (value, key) => {
+                        scope.origItem[key] = value;
+                    });
+                }, (err) => {
+                    notify.error(gettext('Failed to apply kill template to the item.'));
+                });
             } else if (scope.action === 'correct') {
                 const {override_ednote_for_corrections, override_ednote_template} = appConfig;
 

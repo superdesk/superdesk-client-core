@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {IDropdownTreeGroup, IPropsDropdownTree} from 'superdesk-api';
 
@@ -30,10 +31,14 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
 
         if (isGroup(item)) {
             return (
-                <div style={{paddingInlineStart: 20 * level + 'px'}}>
+                <div style={{paddingInlineStart: (20 * level + 'px')}}>
                     {typeof item.render === 'function' ? item.render() : null}
-                    <div style={{paddingInlineStart: 20 * level + 'px'}}>
-                        {item.items.map((_item, i) => this.renderGroupRecursive(_item, level + 1, i))}
+                    <div style={{paddingInlineStart: (20 * level + 'px')}}>
+                        {
+                            item.items.map((_item, i) => (
+                                this.renderGroupRecursive(_item, level + 1, i)
+                            ))
+                        }
                     </div>
                 </div>
             );
@@ -51,46 +56,53 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                 data-test-id={this.props['data-test-id']}
             >
                 {getToggleElement(this.state.open, onClick)}
-                {this.state.open ? (
-                    <div
-                        ref={(node) => {
-                            if (node != null) {
-                                node.focus();
-                            }
-
-                            this.dropdownNode = node;
-                        }}
-                        tabIndex={0}
-                        onBlur={(event) => {
-                            // don't close the dropdown on blur
-                            // if focus went to toggle element or an element inside the dropdown
-                            if (
-                                this.dropdownNode.contains(event.relatedTarget as Element) === false &&
-                                this.dropdownNode.previousElementSibling.isSameNode(event.relatedTarget as Element) ===
-                                    false
-                            ) {
-                                this.closeDropdown();
-                            }
-                        }}
-                        style={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            insetBlockStart: '100%',
-                            insetInlineEnd: 0,
-                        }}
-                    >
+                {
+                    this.state.open ? (
                         <div
-                            className="custom-dropdown__menu"
+                            ref={(node) => {
+                                if (node != null) {
+                                    node.focus();
+                                }
+
+                                this.dropdownNode = node;
+                            }}
+                            tabIndex={0}
+                            onBlur={(event) => {
+                                // don't close the dropdown on blur
+                                // if focus went to toggle element or an element inside the dropdown
+                                if (
+                                    this.dropdownNode.contains(
+                                        event.relatedTarget as Element,
+                                    ) === false
+                                    && this.dropdownNode.previousElementSibling.isSameNode(
+                                        event.relatedTarget as Element,
+                                    ) === false
+                                ) {
+                                    this.closeDropdown();
+                                }
+                            }}
                             style={{
-                                ...(this.props.wrapperStyles || {}),
+                                position: 'absolute',
+                                zIndex: 1,
+                                insetBlockStart: '100%',
+                                insetInlineEnd: 0,
                             }}
                         >
-                            {groups.map((group, i) => (
-                                <div key={i}>{this.renderGroupRecursive(group, 0, 0)}</div>
-                            ))}
+                            <div
+                                className="custom-dropdown__menu"
+                                style={{
+                                    ...(this.props.wrapperStyles || {}),
+                                }}
+                            >
+                                {
+                                    groups.map((group, i) => (
+                                        <div key={i}>{this.renderGroupRecursive(group, 0, 0)}</div>
+                                    ))
+                                }
+                            </div>
                         </div>
-                    </div>
-                ) : null}
+                    ) : null
+                }
             </div>
         );
     }

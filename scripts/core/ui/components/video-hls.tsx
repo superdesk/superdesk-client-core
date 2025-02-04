@@ -22,14 +22,14 @@ export class HLSVideoComponent extends React.PureComponent<IProps> {
             this.hls.loadSource(this.props.streamUrl);
             this.hls.attachMedia(this.videoElement);
         }
-    };
+    }
 
     private destroyHLS = () => {
         if (this.hls) {
             this.hls.stopLoad();
             this.hls.destroy();
         }
-    };
+    }
 
     componentDidMount(): void {
         this.initHLS();
@@ -44,7 +44,7 @@ export class HLSVideoComponent extends React.PureComponent<IProps> {
             <video
                 controls
                 preload="metadata"
-                ref={(el) => (this.videoElement = el)}
+                ref={(el) => this.videoElement = el}
                 poster={this.props.poster}
                 width={this.props.width}
                 height={this.props.height}

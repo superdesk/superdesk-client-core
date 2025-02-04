@@ -119,8 +119,7 @@ export class ContactsService implements IContactsService {
      * @return {promise}
      */
     query(param) {
-        return this.metadata
-            .initialize()
+        return this.metadata.initialize()
             .then(() => this.api('contacts').query(param))
             .then((data) => {
                 get(data, '_items', []).forEach(this.convertForClient);
@@ -130,26 +129,25 @@ export class ContactsService implements IContactsService {
     }
 
     /**
-     * @ngdoc method
-     * @name contacts#queryField
-     * @param {string} name of field in contacts collection
-     * @param {string} search text to query with in given field
-     * @returns {Promise}
-     * @public
-     * @description Requests a list of fields value suggestions from the server e.g.,
-     * in case of organisation field returns organisations suggestions if resolved.
-     */
+      * @ngdoc method
+      * @name contacts#queryField
+      * @param {string} name of field in contacts collection
+      * @param {string} search text to query with in given field
+      * @returns {Promise}
+      * @public
+      * @description Requests a list of fields value suggestions from the server e.g.,
+      * in case of organisation field returns organisations suggestions if resolved.
+      */
     queryField(field, text) {
         switch (field) {
-            case 'organisation':
-                return this.metadata
-                    .initialize()
-                    .then(() => this.api.get(`contacts/organisations?q=${text}`))
-                    .then((data) => {
-                        get(data, '_items', []).forEach(this.convertForClient);
+        case 'organisation':
+            return this.metadata.initialize()
+                .then(() => this.api.get(`contacts/organisations?q=${text}`))
+                .then((data) => {
+                    get(data, '_items', []).forEach(this.convertForClient);
 
-                        return data;
-                    });
+                    return data;
+                });
         }
     }
 
@@ -167,7 +165,8 @@ export class ContactsService implements IContactsService {
     }
 
     save(contact, updates) {
-        return this.api.save('contacts', contact, updates).then(this.convertForClient);
+        return this.api.save('contacts', contact, updates)
+            .then(this.convertForClient);
     }
 
     convertForClient(response: IContact) {

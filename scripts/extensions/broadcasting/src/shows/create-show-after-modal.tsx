@@ -24,26 +24,33 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                 size="small"
                 position="top"
                 onHide={this.props.closeModal}
-                headerTemplate={gettext('Create rundown template')}
+                headerTemplate={
+                    gettext('Create rundown template')
+                }
                 footerTemplate={
-                    <ButtonGroup align="end">
-                        <Button text={gettext('Cancel')} onClick={() => this.props.closeModal()} />
-                        <Button
-                            text={gettext('Yes, create a template')}
-                            onClick={() => {
-                                this.props.closeModal();
+                    (
+                        <ButtonGroup align="end">
+                            <Button
+                                text={gettext('Cancel')}
+                                onClick={() => this.props.closeModal()}
+                            />
+                            <Button
+                                text={gettext('Yes, create a template')}
+                                onClick={() => {
+                                    this.props.closeModal();
 
-                                showModal(({closeModal}) => (
-                                    <ManageRundownTemplates
-                                        dialogTitle={gettext('Create new rundown template')}
-                                        closeModal={closeModal}
-                                        initialShow={{id: show._id, createNewTemplate: true}}
-                                    />
-                                ));
-                            }}
-                            type="primary"
-                        />
-                    </ButtonGroup>
+                                    showModal(({closeModal}) => (
+                                        <ManageRundownTemplates
+                                            dialogTitle={gettext('Create new rundown template')}
+                                            closeModal={closeModal}
+                                            initialShow={{id: show._id, createNewTemplate: true}}
+                                        />
+                                    ));
+                                }}
+                                type="primary"
+                            />
+                        </ButtonGroup>
+                    )
                 }
             >
                 <Center>
@@ -53,9 +60,14 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                 <SpacerBlock v gap="16" />
 
                 <Text align="center" size="medium">
-                    {gettext('The show {{name}} has been successfully created', {
-                        name: () => <strong>{show.title}</strong>,
-                    })}
+                    {
+                        gettext(
+                            'The show {{name}} has been successfully created',
+                            {
+                                name: () => <strong>{show.title}</strong>,
+                            },
+                        )
+                    }
                 </Text>
 
                 <Text align="center" size="medium">

@@ -15,19 +15,21 @@ export const StageSingleValue = getSelectSingleValueAutoComplete({
                 'stages',
                 1,
                 {field: 'name', direction: 'ascending'},
-                searchString.length > 0
-                    ? {
-                          $and: [
-                              {...deskFilter},
-                              {
-                                  name: {
-                                      $regex: searchString,
-                                      $options: 'i',
-                                  },
-                              },
-                          ],
-                      }
-                    : deskFilter,
+                (
+                    searchString.length > 0
+                        ? {
+                            $and: [
+                                {...deskFilter},
+                                {
+                                    name: {
+                                        $regex: searchString,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
+                        }
+                        : deskFilter
+                ),
                 200,
             );
         }

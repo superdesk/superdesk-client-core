@@ -8,11 +8,13 @@ export class UrlsPreview extends React.Component<IProps> {
     render() {
         return (
             <div>
-                {this.props.urls.map(({url, description}) => (
-                    <div key={url}>
-                        {description} (<a href={url}>{url}</a>)
-                    </div>
-                ))}
+                {
+                    this.props.urls.map(({url, description}) => (
+                        <div key={url}>
+                            {description} (<a href={url}>{url}</a>)
+                        </div>
+                    ))
+                }
             </div>
         );
     }

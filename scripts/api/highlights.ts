@@ -34,8 +34,8 @@ function exportHighlight(id: IArticle['_id'], hasUnsavedChanges: boolean): Promi
             .then(() => notify.success('Export successful.'))
             .catch((response) => {
                 if (response.internal_error === 403) {
-                    ui.confirm(gettext('There are items locked or not published. Do you want to continue?')).then(
-                        () => {
+                    ui.confirm(gettext('There are items locked or not published. Do you want to continue?'))
+                        .then(() => {
                             httpRequestJsonLocal({
                                 method: 'POST',
                                 path: '/generate_highlights',
@@ -43,17 +43,15 @@ function exportHighlight(id: IArticle['_id'], hasUnsavedChanges: boolean): Promi
                             }).then(ng.get('authoringWorkspace').edit, () => {
                                 notify.error(gettext('Error creating highlight.'));
                             });
-                        },
-                    );
+                        });
                 } else {
                     notify.error(gettext('Error creating highlight.'));
                 }
             });
     };
 
-    return hasUnsavedChanges
-        ? ui.confirm(gettext('You have unsaved changes, do you want to continue?')).then(() => request())
-        : request();
+    return hasUnsavedChanges ? ui.confirm(gettext('You have unsaved changes, do you want to continue?'))
+        .then(() => request()) : request();
 }
 
 function prepareHighlightForPreview(id: IArticle['_id']): Promise<string> {
@@ -64,13 +62,11 @@ function prepareHighlightForPreview(id: IArticle['_id']): Promise<string> {
             package: id,
             preview: true,
         },
-    })
-        .then((response: any) => {
-            return response.body_html;
-        })
-        .catch((data: any) => {
-            return data.message;
-        });
+    }).then((response: any) => {
+        return response.body_html;
+    }).catch((data: any) => {
+        return data.message;
+    });
 }
 
 function showHighlightExportButton(item: IArticle): boolean {

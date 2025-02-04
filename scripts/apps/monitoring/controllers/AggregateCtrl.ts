@@ -6,8 +6,10 @@ import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup, IContentProfile} fro
 import {getLabelForStage} from 'apps/workspace/content/constants';
 import {getExtensionSections} from '../services/CardsService';
 
-AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage', 'savedSearch', 'content'];
-export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage, savedSearch, content) {
+AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
+    'savedSearch', 'content'];
+export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
+    savedSearch, content) {
     const CONTENT_PROLFILE = gettext('Content profile');
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
@@ -18,8 +20,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.groups = [];
     this.spikeGroups = [];
     this.personalGroups = {
-        personal: {type: 'personal', header: gettext('Personal Items')},
-        sent: {type: 'sent', header: gettext('Sent Items')},
+        'personal': {type: 'personal', header: gettext('Personal Items')},
+        'sent': {type: 'sent', header: gettext('Sent Items')},
     };
     this.defaultPersonalGroup = {};
     this.modalActive = false;
@@ -67,21 +69,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         });
     };
 
-    desks
-        .initialize()
+    desks.initialize()
         .then(() => initializeDesksAndStages())
-        .then(
-            angular.bind(this, function () {
-                return savedSearch.getAllSavedSearches().then(
-                    angular.bind(this, function (searchesList) {
-                        this.searches = searchesList;
-                        each(this.searches, (item) => {
-                            self.searchLookup[item._id] = item;
-                        });
-                    }),
-                );
-            }),
-        )
+        .then(angular.bind(this, function() {
+            return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
+                this.searches = searchesList;
+                each(this.searches, (item) => {
+                    self.searchLookup[item._id] = item;
+                });
+            }));
+        }))
         .then(() => Promise.all([this.readSettings(), getActiveProfiles()]))
         .then(([settings, _]) => {
             initGroups(settings);
@@ -94,7 +91,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      *
      *@param {object} widget
      */
-    this.setWidget = function (widget) {
+    this.setWidget = function(widget) {
         this.widget = widget;
     };
 
@@ -107,7 +104,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * no user preference found then settings read from desk's monitoring settings.
      * @returns {Object} promise - when resolved return the list of settings
      */
-    this.readSettings = function () {
+    this.readSettings = function() {
         if (self.widget) {
             // when reading from monitoring widget
             return widgetMonitoringConfig(self.widget);
@@ -197,11 +194,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
             self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
             each(workspace.widgets, (widget) => {
-                if (
-                    widget.configuration &&
-                    self.widget._id === widget._id &&
-                    self.widget.multiple_id === widget.multiple_id
-                ) {
+                if (widget.configuration && self.widget._id === widget._id
+                    && self.widget.multiple_id === widget.multiple_id) {
                     groups = widget.configuration.groups || groups;
                     self.widget.configuration.label = widget.configuration.label || '';
                 }
@@ -233,9 +227,9 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     function getDefaultGroups(settings): Array<IMonitoringGroup> {
         const desk: IDesk = isNil(settings.desk) ? desks.getCurrentDesk() : settings.desk;
 
-        const deskStages: Array<IStage> = Object.values(self.stageLookup).filter(
-            (stage: IStage) => stage.desk === desk._id,
-        ) as any as Array<IStage>;
+        const deskStages: Array<IStage> =
+            Object.values(self.stageLookup)
+                .filter((stage: IStage) => stage.desk === desk._id) as any as Array<IStage>;
 
         let defaultGroups: Array<IMonitoringGroup> = deskStages.map((stage) => ({
             _id: stage._id,
@@ -262,17 +256,17 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * stages for current desk if monitoring setting is not set
      **/
     function initGroups(settings) {
-        self.groups = (settings.groups.length > 0 ? settings.groups : getDefaultGroups(settings)).filter((card) => {
-            if (card.type === 'stage') {
-                // filter out deleted stages
-                return self.stageLookup[card._id] != null;
-            } else if (card.type === 'search') {
-                // filter out deleted searches
-                return self.searchLookup[card._id] != null;
-            } else {
-                return true;
-            }
-        });
+        self.groups =
+            (settings.groups.length > 0 ? settings.groups : getDefaultGroups(settings))
+                .filter((card) => {
+                    if (card.type === 'stage') { // filter out deleted stages
+                        return self.stageLookup[card._id] != null;
+                    } else if (card.type === 'search') { // filter out deleted searches
+                        return self.searchLookup[card._id] != null;
+                    } else {
+                        return true;
+                    }
+                });
 
         initSpikeGroups(settings.type === 'desk');
         initPersonalGroup();
@@ -340,11 +334,12 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
          */
         initializeDesksAndStages();
 
-        return self.readSettings().then((settings) => {
-            initGroups(settings);
-            setupCards();
-            self.settings = settings;
-        });
+        return self.readSettings()
+            .then((settings) => {
+                initGroups(settings);
+                setupCards();
+                self.settings = settings;
+            });
     }
 
     this.refreshGroups = refresh;
@@ -360,20 +355,19 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * param {string} fileType
      * @return boolean
      */
-    this.hasFileType = function (fileType) {
+    this.hasFileType = function(fileType) {
         if (fileType === 'all') {
             return this.activeFilters.fileType.length === 0;
         }
         return this.activeFilters.fileType.includes(fileType);
     };
 
-    this.getSelectedFileTypes = function (): string {
+    this.getSelectedFileTypes = function(): string {
         return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
     };
 
-    this.getSelectedContentProfiles = function (): string {
-        return this.activeFilters.contentProfile.length === 0
-            ? null
+    this.getSelectedContentProfiles = function(): string {
+        return this.activeFilters.contentProfile.length === 0 ? null
             : JSON.stringify(this.activeFilters.contentProfile);
     };
 
@@ -414,9 +408,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
     this.toggleContentProfileFilter = (profile: IContentProfile) => {
         if (this.isContentProfileFilterActive(profile._id)) {
-            this.activeFilterTags[CONTENT_PROLFILE] = this.activeFilterTags[CONTENT_PROLFILE].filter(
-                ({key}) => key !== profile._id,
-            );
+            this.activeFilterTags[CONTENT_PROLFILE] =
+                this.activeFilterTags[CONTENT_PROLFILE].filter(({key}) => key !== profile._id);
         } else {
             this.activeFilterTags[CONTENT_PROLFILE] = (this.activeFilterTags[CONTENT_PROLFILE] ?? []).concat({
                 key: profile._id,
@@ -446,11 +439,11 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         $scope.$apply();
     };
 
-    this.setFilterType = function (filterType, filterValue, $event?) {
+    this.setFilterType = function(filterType, filterValue, $event?) {
         if (filterType === 'contentProfile') {
             if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
                 this.activeFilters.contentProfile.push(filterValue._id);
-                const tag = {key: filterValue._id, label: gettext(filterValue.label)};
+                const tag = {'key': filterValue._id, 'label': gettext(filterValue.label)};
 
                 if (Array.isArray(this.activeFilterTags[CONTENT_PROLFILE])) {
                     this.activeFilterTags[CONTENT_PROLFILE].push(tag);
@@ -486,9 +479,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             this.activeFilters.contentProfile = [];
             this.activeFilterTags = {};
         } else {
-            this.activeFilters.contentProfile = this.activeFilters.contentProfile.filter(
-                (profile) => profile !== filter,
-            );
+            this.activeFilters.contentProfile = this.activeFilters.contentProfile
+                .filter((profile) => profile !== filter);
             this.activeFilterTags[type] = this.activeFilterTags[type].filter((tags) => tags.key !== filter);
         }
 
@@ -538,14 +530,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         }
     }
 
-    this.preview = function (item) {
+    this.preview = function(item) {
         this.selected = item;
     };
 
     /**
      * For edit monitoring settings add desk groups to the list
      */
-    this.edit = function (currentStep, displayOnlyCurrentStep) {
+    this.edit = function(currentStep, displayOnlyCurrentStep) {
         this.editGroups = {};
 
         this.refreshGroups().then(() => {
@@ -587,7 +579,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         this.displayOnlyCurrentStep = displayOnlyCurrentStep;
     };
 
-    this.searchOnEnter = function ($event, query) {
+    this.searchOnEnter = function($event, query) {
         var ENTER = 13;
 
         if ($event.keyCode === ENTER) {
@@ -599,7 +591,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     /**
      * Set the search set by user on all groups
      */
-    this.search = function (query) {
+    this.search = function(query) {
         this.searchQuery = query;
         each(this.groups, (item) => {
             item.query = query;
@@ -613,21 +605,21 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.state = storage.getItem('agg:state') || {};
     this.state.expanded = this.state.expanded || {};
 
-    this.switchExpandedState = function (key) {
+    this.switchExpandedState = function(key) {
         this.state.expanded[key] = !this.getExpandedState(key);
         storage.setItem('agg:state', this.state);
     };
 
-    this.getExpandedState = function (key) {
+    this.getExpandedState = function(key) {
         return this.state.expanded[key] === undefined ? true : this.state.expanded[key];
     };
 
-    this.setSoloGroup = function (group) {
+    this.setSoloGroup = function(group) {
         this.state.solo = group;
         storage.setItem('agg:state', this.state);
     };
 
-    this.getMaxHeightStyle = function (maxItems) {
+    this.getMaxHeightStyle = function(maxItems) {
         var maxHeight = 32 * (maxItems || defaultMaxItems);
 
         return {'max-height': maxHeight.toString() + 'px'};

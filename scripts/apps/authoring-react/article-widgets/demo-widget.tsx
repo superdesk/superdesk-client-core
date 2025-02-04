@@ -14,21 +14,30 @@ class DemoWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
-                header={<AuthoringWidgetHeading widgetId={DEMO_WIDGET_ID} widgetName={getLabel()} editMode={false} />}
-                body={
+                header={(
+                    <AuthoringWidgetHeading
+                        widgetId={DEMO_WIDGET_ID}
+                        widgetName={getLabel()}
+                        editMode={false}
+                    />
+                )}
+                body={(
                     <div>
                         <Button
                             text={gettext('Alter slugline')}
                             onClick={() => {
-                                sdApi.article.patch(this.props.article, {
-                                    slugline: (this.props.article.slugline ?? '') + '@',
-                                });
+                                sdApi.article.patch(
+                                    this.props.article,
+                                    {slugline: (this.props.article.slugline ?? '') + '@'},
+                                );
                             }}
                             size="small"
                         />
                     </div>
-                }
-                footer={<div>test footer</div>}
+                )}
+                footer={(
+                    <div>test footer</div>
+                )}
             />
         );
     }

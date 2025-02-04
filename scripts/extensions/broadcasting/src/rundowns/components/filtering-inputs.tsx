@@ -1,5 +1,9 @@
 import * as React from 'react';
-import {TimePicker, DurationInput, DatePickerISO} from 'superdesk-ui-framework/react';
+import {
+    TimePicker,
+    DurationInput,
+    DatePickerISO,
+} from 'superdesk-ui-framework/react';
 import * as Form from 'superdesk-ui-framework/react/components/Form';
 import {IRundownFilters} from '../../interfaces';
 import {SelectShow} from './select-show';

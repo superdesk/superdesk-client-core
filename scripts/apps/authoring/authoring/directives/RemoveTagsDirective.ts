@@ -7,7 +7,7 @@ export function RemoveTagsDirective() {
         scope: {
             model: '=ngModel',
         },
-        link: function (scope, elem, attr, ngModel) {
+        link: function(scope, elem, attr, ngModel) {
             scope.$watch('model', () => {
                 if (scope.model) {
                     scope.model = helpers.stripHtmlRaw(scope.model);

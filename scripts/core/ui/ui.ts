@@ -24,7 +24,7 @@ import {IS_WIDGET_PINNED, SIDE_WIDGET_WIDTH} from 'apps/authoring/widgets/widget
 ShadowDirective.$inject = ['$timeout'];
 function ShadowDirective($timeout) {
     return {
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             element.addClass('shadow-list-holder');
 
             function shadowTimeout() {
@@ -58,7 +58,7 @@ function ShadowDirective($timeout) {
  * <div data-html="text | nl2el:'</p><p>'"></div> for specific replace element
  */
 function NewlineToElement() {
-    return function (input, el) {
+    return function(input, el) {
         return input.replace(/(?:\r\n|\r|\n)/g, el || '<br/>');
     };
 }
@@ -74,7 +74,7 @@ function CreateButtonDirective() {
 AutoexpandDirective.$inject = [];
 function AutoexpandDirective() {
     return {
-        link: function (scope, element) {
+        link: function(scope, element) {
             var _minHeight = element.outerHeight();
 
             function resize() {
@@ -107,7 +107,7 @@ DropdownFocus.$inject = ['Keys'];
 function DropdownFocus(Keys) {
     return {
         require: 'dropdown',
-        link: function (scope, elem, attrs, dropdown) {
+        link: function(scope, elem, attrs, dropdown) {
             scope.$watch(dropdown.isOpen, (isOpen) => {
                 var inputField = elem.find('input[type="text"]');
 
@@ -136,7 +136,9 @@ function DropdownFocus(Keys) {
                         });
 
                         inputField.on('keyup', (event) => {
-                            var mainList = elem.find('.main-list').children('ul').find('li > button')[0];
+                            var mainList = elem.find('.main-list')
+                                .children('ul')
+                                .find('li > button')[0];
 
                             if (event.keyCode === Keys.down && mainList) {
                                 mainList.focus();
@@ -144,7 +146,10 @@ function DropdownFocus(Keys) {
                         });
 
                         handlers[Keys.up] = function handleUp() {
-                            var prevElem = elem.find('button:focus').parent('li').prev().children('button'),
+                            var prevElem = elem.find('button:focus')
+                                    .parent('li')
+                                    .prev()
+                                    .children('button'),
                                 categoryButton = elem.find('.levelup button');
 
                             if (prevElem.length > 0) {
@@ -156,7 +161,10 @@ function DropdownFocus(Keys) {
                         };
 
                         handlers[Keys.down] = function handleDown() {
-                            var nextElem = elem.find('button:focus').parent('li').next().children('button'),
+                            var nextElem = elem.find('button:focus')
+                                    .parent('li')
+                                    .next()
+                                    .children('button'),
                                 categoryButton = elem.find('.levelup button');
 
                             /*
@@ -171,7 +179,9 @@ function DropdownFocus(Keys) {
 
                             if (inputField.is(':focus') || categoryButton.is(':focus')) {
                                 if (_.isEmpty(inputField.val())) {
-                                    var mainList = elem.find('.main-list').children('ul').find('li > button');
+                                    var mainList = elem.find('.main-list')
+                                        .children('ul')
+                                        .find('li > button');
 
                                     if (mainList[0] !== undefined) {
                                         mainList[0].focus();
@@ -200,8 +210,7 @@ function DropdownFocus(Keys) {
                             selectedElem.find('.nested-toggle').click();
                         };
                     });
-                } else if (isOpen === false) {
-                    // Exclusively false, prevent executing if it is undefined
+                } else if (isOpen === false) { // Exclusively false, prevent executing if it is undefined
                     elem.off('keydown');
                     inputField.off('keyup');
                 }
@@ -214,7 +223,7 @@ PopupService.$inject = ['$document'];
 function PopupService($document) {
     var service: any = {};
 
-    service.position = function (width, height, target) {
+    service.position = function(width, height, target) {
         // taking care of screen size and responsiveness
         var tolerance = 10;
         var elOffset = target.offset();
@@ -245,7 +254,7 @@ function DatepickerWrapper() {
     return {
         transclude: true,
         templateUrl: 'scripts/core/ui/views/datepicker-wrapper.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
             element.bind('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
@@ -273,9 +282,9 @@ function DatepickerDirective($document) {
             onChange: '&',
         },
         templateUrl: 'scripts/core/ui/views/sd-datepicker.html',
-        link: function (scope, element) {
+        link: function(scope, element) {
             scope.state = {opened: false};
-            scope.openCalendar = function (e) {
+            scope.openCalendar = function(e) {
                 scope.state.opened = !scope.state.opened;
 
                 $document.on('click', handleDatePicker);
@@ -289,15 +298,14 @@ function DatepickerDirective($document) {
             function handleDatePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.state.opened && !isChild) {
-                    // outside Datepicker click
+                if (scope.state.opened && !isChild) { // outside Datepicker click
                     scope.$apply(() => {
                         close();
                     });
                 }
             }
 
-            scope.change = function () {
+            scope.change = function() {
                 if (scope.onChange) {
                     scope.onChange();
                 }
@@ -312,12 +320,9 @@ function DatepickerDirective($document) {
 
 DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
 function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
-    var popupTpl =
-        '<div sd-datepicker-wrapper ng-model="date">' +
-        '<div datepicker format-day="d" starting-day="' +
-        appConfig.startingDay +
-        '" show-weeks="false"></div>' +
-        '</div>';
+    var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
+        '<div datepicker format-day="d" starting-day="' + appConfig.startingDay + '" show-weeks="false"></div>' +
+    '</div>';
 
     return {
         require: 'ngModel',
@@ -326,7 +331,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             dtFormat: '=format',
             shortcuts: '=?',
         },
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
             var VIEW_DATE_FORMAT = appConfig.view.dateformat;
             var MODEL_DATE_FORMAT = scope.dtFormat || appConfig.model.dateformat;
             var ESC = 27;
@@ -352,7 +357,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 return null;
             });
 
-            scope.dateSelection = function (dt) {
+            scope.dateSelection = function(dt) {
                 if (angular.isDefined(dt)) {
                     // if one of predefined dates is selected (today, tomorrow...)
                     scope.date = dt;
@@ -366,18 +371,19 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             };
 
             // select one of predefined dates
-            scope.selectShortcut = function (offset, type) {
-                const day = moment().startOf('day').add(offset, type);
+            scope.selectShortcut = function(offset, type) {
+                const day = moment().startOf('day')
+                    .add(offset, type);
 
                 scope.dateSelection(day);
             };
 
             // select one of predefined dates
-            scope.select = function (offset) {
+            scope.select = function(offset) {
                 scope.selectShortcut(offset, 'days');
             };
 
-            ctrl.$render = function () {
+            ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewdate); // set the view
                 scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.default_timezone); // set datepicker model
             };
@@ -409,7 +415,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
                 }
             });
 
-            scope.keydown = function (evt) {
+            scope.keydown = function(evt) {
                 if (evt.which === ESC) {
                     evt.preventDefault();
                     scope.close();
@@ -422,7 +428,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             element.bind('keydown', scope.keydown);
 
-            scope.close = function () {
+            scope.close = function() {
                 scope.open = false;
                 element[0].focus();
             };
@@ -449,8 +455,8 @@ function TimepickerDirective($document) {
             disabled: '=ngDisabled',
         },
         templateUrl: 'scripts/core/ui/views/sd-timepicker.html',
-        link: function (scope, element) {
-            scope.openTimePicker = function (e) {
+        link: function(scope, element) {
+            scope.openTimePicker = function(e) {
                 scope.opened = !scope.opened;
 
                 $document.on('click', handleTimePicker);
@@ -464,8 +470,7 @@ function TimepickerDirective($document) {
             function handleTimePicker(event) {
                 var isChild = element.find(event.target).length > 0;
 
-                if (scope.opened && !isChild) {
-                    // outside Timepicker click
+                if (scope.opened && !isChild) { // outside Timepicker click
                     scope.$apply(() => {
                         close();
                     });
@@ -481,8 +486,7 @@ function TimepickerDirective($document) {
 
 TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
 function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
-    var popupTpl =
-        '<div sd-timepicker-popup ' +
+    var popupTpl = '<div sd-timepicker-popup ' +
         'data-open="open" data-time="time" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
         '</div>';
 
@@ -491,7 +495,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
             open: '=opened',
         },
         require: 'ngModel',
-        link: function (scope, element, attrs, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
             var MODEL_TIME_FORMAT = appConfig.model.timeformat;
             var VIEW_TIME_FORMAT = appConfig.view.timeformat || MODEL_TIME_FORMAT;
             var ESC = 27;
@@ -522,7 +526,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                 return null;
             });
 
-            scope.timeSelection = function (tt) {
+            scope.timeSelection = function(tt) {
                 if (angular.isDefined(tt)) {
                     // if one of predefined time options is selected
                     scope.time = tt.time;
@@ -532,7 +536,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                 scope.close();
             };
 
-            ctrl.$render = function () {
+            ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewtime); // set the view
                 scope.time = ctrl.$viewValue.tptime; // set timepicker model
             };
@@ -565,7 +569,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
                 }
             });
 
-            scope.keydown = function (evt) {
+            scope.keydown = function(evt) {
                 if (evt.which === ESC) {
                     evt.preventDefault();
                     scope.close();
@@ -578,7 +582,7 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             element.bind('keydown', scope.keydown);
 
-            scope.close = function () {
+            scope.close = function() {
                 scope.open = false;
                 element[0].focus();
             };
@@ -605,7 +609,7 @@ function TimezoneDirective(tzdata, $timeout) {
             style: '@',
             initializeWithDefault: '=',
         },
-        link: function (scope, el) {
+        link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
             scope.tzSearchTerm = ''; // the current time zone search term
             scope.getTimezoneLabel = getTimezoneLabel;
@@ -619,7 +623,7 @@ function TimezoneDirective(tzdata, $timeout) {
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
 
-                if (initializeWithDefault && !scope.timezone && appConfig.default_timezone) {
+                if (initializeWithDefault && (!scope.timezone && appConfig.default_timezone)) {
                     scope.selectTimeZone(appConfig.default_timezone);
                 }
             });
@@ -632,7 +636,7 @@ function TimezoneDirective(tzdata, $timeout) {
              * @method searchTimeZones
              * @param {string} searchTerm
              */
-            scope.searchTimeZones = function (searchTerm) {
+            scope.searchTimeZones = function(searchTerm) {
                 var termLower;
 
                 scope.tzSearchTerm = searchTerm;
@@ -647,7 +651,9 @@ function TimezoneDirective(tzdata, $timeout) {
                     scope.timeZones,
                     (item) =>
                         item.toLowerCase().indexOf(termLower) >= 0 ||
-                        scope.getTimezoneLabel(item).toLowerCase().indexOf(termLower) >= 0,
+                           scope.getTimezoneLabel(item)
+                               .toLowerCase()
+                               .indexOf(termLower) >= 0,
                 );
             };
 
@@ -658,7 +664,7 @@ function TimezoneDirective(tzdata, $timeout) {
              * @method selectTimeZone
              * @param {string} tz - name of the time zone to select
              */
-            scope.selectTimeZone = function (tz) {
+            scope.selectTimeZone = function(tz) {
                 scope.timezone = tz;
                 scope.tzSearchTerm = '';
             };
@@ -669,14 +675,10 @@ function TimezoneDirective(tzdata, $timeout) {
              *
              * @method clearSelectedTimeZone
              */
-            scope.clearSelectedTimeZone = function () {
-                $timeout(
-                    () => {
-                        el.find('input')[0].focus();
-                    },
-                    0,
-                    false,
-                );
+            scope.clearSelectedTimeZone = function() {
+                $timeout(() => {
+                    el.find('input')[0].focus();
+                }, 0, false);
                 delete scope.timezone;
             };
         },
@@ -693,20 +695,16 @@ function TimepickerPopupDirective($timeout) {
             keydown: '&',
             time: '=',
         },
-        link: function (scope, element) {
+        link: function(scope, element) {
             const MODEL_TIME_FORMAT = appConfig.model.timeformat;
             const VIEW_TIME_FORMAT = appConfig.view.timeformat;
 
             const POPUP = '.timepicker-popup';
 
-            const focusEl = function () {
-                $timeout(
-                    () => {
-                        element.find(POPUP).focus();
-                    },
-                    0,
-                    false,
-                );
+            const focusEl = function() {
+                $timeout(() => {
+                    element.find(POPUP).focus();
+                }, 0, false);
             };
 
             scope.$on('timepicker.focus', focusEl);
@@ -729,7 +727,7 @@ function TimepickerPopupDirective($timeout) {
                     local = moment(newVal, MODEL_TIME_FORMAT);
                 } else {
                     local = moment();
-                    local.add(5 - (local.minute() % 5), 'm'); // and some time up to 5m
+                    local.add(5 - local.minute() % 5, 'm'); // and some time up to 5m
                 }
 
                 scope.hour = local.hour();
@@ -737,11 +735,13 @@ function TimepickerPopupDirective($timeout) {
                 scope.second = 0;
             });
 
-            scope.submit = function (offset) {
+            scope.submit = function(offset) {
                 var local, time;
 
                 if (offset) {
-                    local = moment().add(offset, 'minutes').format(MODEL_TIME_FORMAT);
+                    local = moment()
+                        .add(offset, 'minutes')
+                        .format(MODEL_TIME_FORMAT);
                 } else {
                     local = scope.hour + ':' + scope.minute + ':' + scope.second;
                 }
@@ -750,7 +750,7 @@ function TimepickerPopupDirective($timeout) {
                 scope.select({time: time});
             };
 
-            scope.cancel = function () {
+            scope.cancel = function() {
                 scope.select();
             };
         },
@@ -758,7 +758,7 @@ function TimepickerPopupDirective($timeout) {
 }
 
 function LeadingZeroFilter() {
-    return function (input) {
+    return function(input) {
         return input < 10 ? '0' + input : input;
     };
 }
@@ -772,7 +772,7 @@ export function FileiconFilter() {
         officedocument: 'doc',
     };
 
-    return function (mimetype) {
+    return function(mimetype) {
         let match = Object.keys(mapping).find((key) => mimetype.indexOf(key) > -1);
 
         return 'document-' + (match ? mapping[match] : 'default');
@@ -783,7 +783,7 @@ export function FilesizeFilter() {
     const KB = Math.pow(2, 10);
     const MB = KB * KB;
 
-    return function (bytes) {
+    return function(bytes) {
         if (bytes >= MB) {
             return (bytes / MB).toFixed(1) + ' MB';
         } else if (bytes >= KB) {
@@ -802,9 +802,10 @@ function WeekdayPickerDirective(weekdays) {
             model: '=',
             shortWeekdayLabels: '=',
         },
-        link: function (scope) {
-            scope.weekdays =
-                scope.shortWeekdayLabels !== true ? weekdays : mapValues(weekdays, (weekday) => weekday.slice(0, 3));
+        link: function(scope) {
+            scope.weekdays = scope.shortWeekdayLabels !== true
+                ? weekdays
+                : mapValues(weekdays, (weekday) => weekday.slice(0, 3));
 
             scope.weekdayList = Object.keys(weekdays);
 
@@ -816,7 +817,7 @@ function WeekdayPickerDirective(weekdays) {
              * @param {string} day
              * @return {boolean}
              */
-            scope.isDayChecked = function (day) {
+            scope.isDayChecked = function(day) {
                 return scope.model.indexOf(day) !== -1;
             };
 
@@ -825,7 +826,7 @@ function WeekdayPickerDirective(weekdays) {
              *
              * @param {string} day
              */
-            scope.toggleDay = function (day) {
+            scope.toggleDay = function(day) {
                 if (scope.isDayChecked(day)) {
                     scope.model.splice(scope.model.indexOf(day), 1);
                 } else {
@@ -844,14 +845,15 @@ function WeekdayPickerDirective(weekdays) {
 splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
 function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
-        link: function (scope, element) {
+        link: function(scope, element) {
             const MONITORING_MIN_WIDTH = 532;
             const AUTHORING_MIN_WIDTH = 730;
 
             let workspace, authoring, container;
 
             const initializeContainers = () => {
-                workspace = element ? element : angular.element('#workspace-container');
+                workspace = element ? element :
+                    angular.element('#workspace-container');
 
                 authoring = angular.element('#authoring-container');
                 container = element.parent();
@@ -882,7 +884,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                     workspace.removeClass('ui-responsive-small');
                 }
 
-                workspace.next('#authoring-container').width((authoringWidth / container.width()) * 100 + '%');
+                workspace.next('#authoring-container').width(authoringWidth / container.width() * 100 + '%');
 
                 header.width(stage.outerWidth());
             };
@@ -893,8 +895,8 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 var stage = workspace.find('.stage.swimlane');
                 var header = stage.find('.column-header.swimlane');
 
-                superdesk.monitoringWidth = (workspace.outerWidth() / container.width()) * 100 + '%';
-                superdesk.authoringWidth = (authoring.outerWidth() / container.width()) * 100 + '%';
+                superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
+                superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
 
                 superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
 
@@ -916,20 +918,16 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * If custom sizes are defined, preload them
              */
             if (superdesk.monitoringWidth && superdesk.authoringWidth) {
-                $timeout(
-                    () => {
-                        initializeContainers();
+                $timeout(() => {
+                    initializeContainers();
 
-                        workspace.css({width: superdesk.monitoringWidth});
-                        authoring.css({width: superdesk.authoringWidth});
-                    },
-                    0,
-                    false,
-                );
+                    workspace.css({width: superdesk.monitoringWidth});
+                    authoring.css({width: superdesk.authoringWidth});
+                }, 0, false);
             }
 
             const resizeOnDemandHandler = (resizeWith: number) => {
-                if (workspace.outerWidth() + resizeWith < MONITORING_MIN_WIDTH) {
+                if ((workspace.outerWidth() + resizeWith) < MONITORING_MIN_WIDTH) {
                     return;
                 }
 
@@ -937,13 +935,9 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
 
                 resize();
 
-                $timeout(
-                    () => {
-                        afterResize();
-                    },
-                    500,
-                    false,
-                );
+                $timeout(() => {
+                    afterResize();
+                }, 500, false);
             };
 
             addEventListener('resize-monitoring', (e: CustomEvent) => {
@@ -970,22 +964,18 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * switching from settings back to monitoring
              */
             if (!authoring.length) {
-                $timeout(
-                    () => {
-                        authoring.width(superdesk.authoringWidth);
-                    },
-                    0,
-                    false,
-                );
+                $timeout(() => {
+                    authoring.width(superdesk.authoringWidth);
+                }, 0, false);
             }
 
             workspace.resizable({
                 handles: 'e',
                 minWidth: MONITORING_MIN_WIDTH,
-                start: function (e, ui) {
+                start: function(e, ui) {
                     const WIDGET_SIDEBAR_MENU_WIDTH = 48;
                     const totalSize = IS_WIDGET_PINNED
-                        ? AUTHORING_MIN_WIDTH + SIDE_WIDGET_WIDTH + WIDGET_SIDEBAR_MENU_WIDTH
+                        ? (AUTHORING_MIN_WIDTH + SIDE_WIDGET_WIDTH + WIDGET_SIDEBAR_MENU_WIDTH)
                         : AUTHORING_MIN_WIDTH;
 
                     workspace.resizable({maxWidth: container.width() - totalSize});
@@ -1000,13 +990,9 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
 
                         resize();
 
-                        $timeout(
-                            () => {
-                                afterResize();
-                            },
-                            500,
-                            false,
-                        );
+                        $timeout(() => {
+                            afterResize();
+                        }, 500, false);
                     });
                 },
             });
@@ -1030,7 +1016,7 @@ function mediaQuery($window, authoringWorkspace: AuthoringWorkspaceService) {
             maxWidth: '=',
             elementClass: '@',
         },
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             var window = angular.element($window);
             var resize = _.debounce(calcSize, 300);
             var elementClass = scope.elementClass ? scope.elementClass : 'elementState';
@@ -1081,7 +1067,7 @@ function mediaQuery($window, authoringWorkspace: AuthoringWorkspaceService) {
 focusElement.$inject = [];
 function focusElement() {
     return {
-        link: function (scope, elem) {
+        link: function(scope, elem) {
             var dataElement = elem.attr('data-element'),
                 dataAppendElement = elem.attr('data-append-element'),
                 dataClass = elem.attr('data-append-class'),
@@ -1116,9 +1102,9 @@ function validationDirective() {
 
     return {
         restrict: 'A',
-        link: function (scope, elem, attrs, ctrl) {
-            var invalidText =
-                '<span id="required_span" class="sd-invalid-text">' + gettext('This field is required') + '</span>';
+        link: function(scope, elem, attrs, ctrl) {
+            var invalidText = '<span id="required_span" class="sd-invalid-text">' +
+            gettext('This field is required') + '</span>';
 
             scope.$watch(attrs.required, (required) => {
                 if (!required) {
@@ -1137,9 +1123,9 @@ function validationDirective() {
 
                 elem.addClass('sd-validate');
                 if (elem.hasClass('field')) {
-                    elem.find('label').after(
-                        '<span id="required_span" class="sd-required">' + gettext('Required') + '</span>',
-                    );
+                    elem.find('label')
+                        .after('<span id="required_span" class="sd-required">'
+                        + gettext('Required') + '</span>');
                 } else if (elem.find('.authoring-header__input-holder').length) {
                     elem.find('.authoring-header__input-holder').append(invalidText);
                 } else {
@@ -1162,12 +1148,11 @@ function MultipleEmailsValidation() {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function (scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ctrl) {
             // eslint-disable-next-line no-useless-escape
-            var EMAIL_REGEXP =
-                /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+            var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
-            ctrl.$validators.multipleEmails = function (modelValue, viewValue) {
+            ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
                 if (ctrl.$isEmpty(modelValue)) {
                     return true;
                 }
@@ -1214,7 +1199,7 @@ function multiSelectDirective() {
             disabled: '=',
         },
         templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
-        link: function (scope) {
+        link: function(scope) {
             scope.selectedItems = [];
 
             // use listCopy in order not to mutate the original list
@@ -1223,7 +1208,7 @@ function multiSelectDirective() {
             scope.listCopy = _.sortBy(scope.list);
             scope.activeList = false;
 
-            scope.selectItem = function (item) {
+            scope.selectItem = function(item) {
                 scope.listCopy = _.without(scope.listCopy, item);
                 scope.activeList = false;
                 scope.selectedTerm = '';
@@ -1232,7 +1217,7 @@ function multiSelectDirective() {
                 updateItem();
             };
 
-            scope.removeItem = function (item) {
+            scope.removeItem = function(item) {
                 scope.listCopy.push(item);
                 scope.listCopy = _.sortBy(scope.listCopy);
                 scope.selectedItems = _.without(scope.selectedItems, item);
@@ -1251,19 +1236,19 @@ function multiSelectDirective() {
 
             function updateItem() {
                 switch (scope.output) {
-                    case 'string':
-                        scope.item = scope.selectedItems.join(', ');
-                        break;
+                case 'string':
+                    scope.item = scope.selectedItems.join(', ');
+                    break;
 
-                    default:
-                        scope.item = scope.selectedItems;
+                default:
+                    scope.item = scope.selectedItems;
                 }
 
                 scope.change(scope.item);
             }
 
             // Typeahead search
-            scope.searchTerms = function (term) {
+            scope.searchTerms = function(term) {
                 if (!term) {
                     scope.$applyAsync(() => {
                         scope.activeList = false;
@@ -1289,20 +1274,15 @@ export const filesize = FilesizeFilter();
  * @packageName superdesk.core
  * @description A set of provided core UI components.
  */
-export default angular
-    .module('superdesk.core.ui', [
-        'superdesk.config',
-        'superdesk.core.datetime',
-        'superdesk.core.ui.autoheight',
-        'superdesk.apps.spellcheck',
-    ])
-    .run([
-        '$rootScope',
-        '$location',
-        ($rootScope, $location) => {
-            $rootScope.popup = $location.search().popup || false;
-        },
-    ])
+export default angular.module('superdesk.core.ui', [
+    'superdesk.config',
+    'superdesk.core.datetime',
+    'superdesk.core.ui.autoheight',
+    'superdesk.apps.spellcheck',
+])
+    .run(['$rootScope', '$location', ($rootScope, $location) => {
+        $rootScope.popup = $location.search().popup || false;
+    }])
 
     .directive('sdShadow', ShadowDirective)
     .filter('nl2el', NewlineToElement)
@@ -1330,42 +1310,55 @@ export default angular
     .directive('sdMultiSelect', multiSelectDirective)
     .component(
         'sdFormattingOptionsTreeSelect',
-        reactToAngular1(FormattingOptionsTreeSelect, ['value', 'onChange', 'options']),
+        reactToAngular1(
+            FormattingOptionsTreeSelect,
+            ['value', 'onChange', 'options'],
+        ),
     )
 
-    .component('sdSpinner', reactToAngular1(Spinner, ['size']))
-
-    .component('sdIconPicker', reactToAngular1(IconPicker, ['value', 'onChange']))
-
-    .component('sdVideo', reactToAngular1(VideoComponent, ['item']))
-    .component(
-        'sdPlainTextEditor',
-        reactToAngular1(PlainTextEditor, [
-            'value',
-            'onChange',
-            'classes',
-            'onChangeData',
-            'placeholder',
-            'spellcheck',
-            'language',
-            'onFocus',
-        ]),
+    .component('sdSpinner',
+        reactToAngular1(
+            Spinner,
+            ['size'],
+        ),
     )
-    .component(
-        'sdTextAreaInput',
-        reactToAngular1(TextAreaInput, [
-            'field',
-            'value',
-            'label',
-            'onChange',
-            'autoHeight',
-            'autoHeightTimeout',
-            'nativeOnChange',
-            'placeholder',
-            'readOnly',
-            'maxLength',
-            'onFocus',
-            'boxed',
-            'required',
-        ]),
-    );
+
+    .component('sdIconPicker',
+        reactToAngular1(
+            IconPicker,
+            ['value', 'onChange'],
+        ),
+    )
+
+    .component('sdVideo',
+        reactToAngular1(
+            VideoComponent,
+            ['item'],
+        ),
+    )
+    .component('sdPlainTextEditor',
+        reactToAngular1(
+            PlainTextEditor,
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language', 'onFocus'],
+        ))
+    .component('sdTextAreaInput',
+        reactToAngular1(
+            TextAreaInput,
+            [
+                'field',
+                'value',
+                'label',
+                'onChange',
+                'autoHeight',
+                'autoHeightTimeout',
+                'nativeOnChange',
+                'placeholder',
+                'readOnly',
+                'maxLength',
+                'onFocus',
+                'boxed',
+                'required',
+            ],
+        ),
+    )
+;

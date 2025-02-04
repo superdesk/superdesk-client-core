@@ -41,19 +41,27 @@ export class TranslationsWidget extends React.Component<IProps> {
                             </div>
                             <div className="sd-list-item__row">
                                 <div className="sd-list-item--element-grow">
-                                    {translation.translated_from == null ? (
-                                        <span className="label label--primary label--hollow">
-                                            {gettext('Original')}
-                                        </span>
-                                    ) : (
-                                        <div className="flex-row sibling-spacer-4">
-                                            <span>{gettext('Translated from')}</span>
-                                            <span className="label label--hollow">{getTranslatedFromLanguage()}</span>
-                                        </div>
-                                    )}
+                                    {
+                                        translation.translated_from == null
+                                            ? (
+                                                <span className="label label--primary label--hollow">
+                                                    {gettext('Original')}
+                                                </span>
+                                            )
+                                            : (
+                                                <div className="flex-row sibling-spacer-4">
+                                                    <span>{gettext('Translated from')}</span>
+                                                    <span className="label label--hollow">
+                                                        {getTranslatedFromLanguage()}
+                                                    </span>
+                                                </div>
+                                            )
+                                    }
                                 </div>
                                 <div>
-                                    <State item={translation} />
+                                    <State
+                                        item={translation}
+                                    />
                                 </div>
                             </div>
                         </div>

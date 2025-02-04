@@ -12,9 +12,8 @@ export enum IContentProfileType {
     video = 'video',
 }
 
-const allContentProfileTypes: Array<IContentProfileType> = Object.keys(IContentProfileType).map(
-    (key) => IContentProfileType[key],
-);
+const allContentProfileTypes: Array<IContentProfileType> =
+    Object.keys(IContentProfileType).map((key) => IContentProfileType[key]);
 
 interface IScope extends ng.IScope {
     showInfoBubble: boolean;
@@ -38,31 +37,31 @@ interface IScope extends ng.IScope {
 
 function getContentProfileIcon(type: IContentProfileType): string {
     switch (type) {
-        case IContentProfileType.text:
-            return 'icon-text';
-        case IContentProfileType.picture:
-            return 'icon-picture';
-        case IContentProfileType.audio:
-            return 'icon-audio';
-        case IContentProfileType.video:
-            return 'icon-video';
-        default:
-            return 'icon-text';
+    case IContentProfileType.text:
+        return 'icon-text';
+    case IContentProfileType.picture:
+        return 'icon-picture';
+    case IContentProfileType.audio:
+        return 'icon-audio';
+    case IContentProfileType.video:
+        return 'icon-video';
+    default:
+        return 'icon-text';
     }
 }
 
 function getLabelForContentProfileType(type: IContentProfileType): string {
     switch (type) {
-        case IContentProfileType.text:
-            return gettext('Text');
-        case IContentProfileType.picture:
-            return gettext('Picture');
-        case IContentProfileType.audio:
-            return gettext('Audio');
-        case IContentProfileType.video:
-            return gettext('Video');
-        default:
-            return assertNever(type);
+    case IContentProfileType.text:
+        return gettext('Text');
+    case IContentProfileType.picture:
+        return gettext('Picture');
+    case IContentProfileType.audio:
+        return gettext('Audio');
+    case IContentProfileType.video:
+        return gettext('Video');
+    default:
+        return assertNever(type);
     }
 }
 
@@ -137,20 +136,17 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
             const active = self.items.find((p) => p._id === $location.search()._id);
 
             if (active) {
-                content.getTypeMetadata(active._id).then(
-                    (type) => {
-                        $scope.editing = {
-                            form: cloneDeep(type),
-                            original: cloneDeep(type),
-                        };
-                    },
-                    () => {
-                        $scope.editing = {
-                            form: cloneDeep(active),
-                            original: active,
-                        };
-                    },
-                );
+                content.getTypeMetadata(active._id).then((type) => {
+                    $scope.editing = {
+                        form: cloneDeep(type),
+                        original: cloneDeep(type),
+                    };
+                }, () => {
+                    $scope.editing = {
+                        form: cloneDeep(active),
+                        original: active,
+                    };
+                });
             }
         }
     }
@@ -204,14 +200,12 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @private
      */
     function uniqueError(next) {
-        return function (resp) {
-            if (
-                angular.isObject(resp) &&
+        return function(resp) {
+            if (angular.isObject(resp) &&
                 angular.isObject(resp.data) &&
                 angular.isObject(resp.data._issues) &&
                 angular.isObject(resp.data._issues.label) &&
-                resp.data._issues.label.unique
-            ) {
+                resp.data._issues.label.unique) {
                 notify.error(self.duplicateErrorTxt);
                 return $q.reject(resp);
             }
@@ -224,7 +218,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
     /**
      * @description Toggles the visibility of the creation modal.
      */
-    this.toggleCreate = function () {
+    this.toggleCreate = function() {
         $scope.new = {};
         $scope.creating = !$scope.creating;
     };
@@ -233,7 +227,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @description Toggles the visibility of the profile editing modal.
      * @param {Object} p the content profile being edited.
      */
-    this.toggleEdit = function (p) {
+    this.toggleEdit = function(p) {
         $location.search({_id: p ? p._id : null});
         $scope.$applyAsync(editActive);
     };
@@ -241,19 +235,21 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
     /**
      * @description Creates a new content profile.
      */
-    this.save = function () {
+    this.save = function() {
         if ($scope.new?.type == null) {
             notify.error(gettext('"{{x}}" field is required', {x: 'content type'}));
             return;
         }
 
-        var onSuccess = function (resp) {
+        var onSuccess = function(resp) {
             refreshList(true);
             self.toggleCreate();
             return resp;
         };
 
-        content.createProfile($scope.new).then(onSuccess, uniqueError(reportError)).then(this.toggleEdit);
+        content.createProfile($scope.new)
+            .then(onSuccess, uniqueError(reportError))
+            .then(this.toggleEdit);
     };
 
     this.onIconChange = (val) => {
@@ -266,7 +262,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @description Commits the changes made in the editing form for a profile
      * to the server.
      */
-    this.update = function () {
+    this.update = function() {
         var e = $scope.editing;
         var diff = {};
 
@@ -277,8 +273,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
             }
         });
 
-        content
-            .updateProfile(e.original, diff)
+        content.updateProfile(e.original, diff)
             .then(refreshList.bind(this, false), reportError)
             .then(this.toggleEdit.bind(this, null))
             .then(() => {
@@ -289,10 +284,9 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
     /**
      * @description Queries the user for confirmation and deletes the content profile.
      */
-    this.delete = function (item) {
+    this.delete = function(item) {
         modal.confirm('Are you sure you want to delete this profile?').then(() => {
-            content
-                .removeProfile(item)
+            content.removeProfile(item)
                 .then(refreshList.bind(this, false), reportError)
                 .then(this.toggleEdit.bind(this, null));
         });

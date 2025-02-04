@@ -18,7 +18,7 @@ export {ItemUrgency} from './ItemUrgency';
 export {MarkedItemTitle} from './MarkedItemTitle';
 export {Export} from './Export';
 export {AssociatedItemMetadata} from './AssociatedItemMetadata';
-export {MediaUsed} from './MediaUsed';
+export {MediaUsed} from	'./MediaUsed';
 export {PackageItemLabelsDropdown} from './PackageItemLabelsDropdown';
 export {AssignmentIcon} from './AssignmentIcon';
 export {RelatedItemsPreview} from './RelatedItemsPreview';

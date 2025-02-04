@@ -175,37 +175,35 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={
-                        /* remove `any` when @types/react is fixed */
+                    renderMenu={/* remove `any` when @types/react is fixed */
                         (items, value, style: React.CSSProperties | any) => {
-                            const hideOptions =
-                                this.state.justInitialized &&
-                                typeof this.props.autoFocus === 'object' &&
-                                this.props.autoFocus.initializeWithDropdownHidden === true
-                                    ? {display: 'none'}
-                                    : {};
+                        const hideOptions =
+                            this.state.justInitialized
+                            && typeof this.props.autoFocus === 'object'
+                            && this.props.autoFocus.initializeWithDropdownHidden === true
+                                ? {display: 'none'}
+                                : {};
 
-                            return (
-                                <div style={{...style, ...menuStyle, ...hideOptions, maxHeight: this.state.maxHeight}}>
-                                    {this.props.loading === true ? (
-                                        <div style={{padding: 10}}>{gettext('Loading...')}</div>
-                                    ) : items.length < 1 ? (
-                                        <div style={{padding: 10}}>{gettext('No items found.')}</div>
-                                    ) : (
-                                        items
-                                    )}
-                                </div>
-                            );
-                        }
-                    }
+                        return (
+                            <div style={{...style, ...menuStyle, ...hideOptions, maxHeight: this.state.maxHeight}}>
+                                {
+                                    this.props.loading === true
+                                        ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
+                                        : items.length < 1
+                                        ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
+                                        : items
+                                }
+                            </div>
+                        );
+                    }}
                     renderInput={(propsAutocomplete: any) => {
                         let selectedItem = this.props.items[this.props.value];
 
                         // use valueObject when an object for selected `value` is not present in `this.props.items`
                         if (
-                            selectedItem == null &&
-                            this.props.valueObject != null &&
-                            this.props.value === this.props.getItemValue(this.props.valueObject)
+                            selectedItem == null
+                            && this.props.valueObject != null
+                            && this.props.value === this.props.getItemValue(this.props.valueObject)
                         ) {
                             selectedItem = this.props.valueObject;
                         }
@@ -261,15 +259,31 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         }
                                         data-test-id="dropdown-button"
                                     >
-                                        {this.props.value === undefined || selectedItem == null ? (
-                                            <div style={this.props.horizontalSpacing === true ? {} : {}}>
-                                                {this.props.placeholder}
-                                            </div>
-                                        ) : (
-                                            <div style={this.props.horizontalSpacing === true ? {} : {}}>
-                                                {this.props.renderItem(selectedItem)}
-                                            </div>
-                                        )}
+                                        {
+                                            this.props.value === undefined || selectedItem == null
+                                                ? (
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {}
+                                                        }
+                                                    >
+                                                        {this.props.placeholder}
+                                                    </div>
+                                                )
+                                                : (
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {}
+                                                        }
+                                                    >
+                                                        {this.props.renderItem(selectedItem)}
+                                                    </div>
+                                                )
+                                        }
                                         <div
                                             style={{
                                                 ...arrowDownStyles,
@@ -279,20 +293,22 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     </button>
                                 </div>
 
-                                {this.props.disabled || this.props.required || this.props.value == null ? null : (
-                                    <div>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                this.props.onSelect(null);
-                                            }}
-                                            className="icn-btn icn-btn--small sd-line-input__custom-clear"
-                                            style={{marginInlineStart: 20}}
-                                        >
-                                            <i className="icon-remove-sign" />
-                                        </button>
-                                    </div>
-                                )}
+                                {
+                                    this.props.disabled || this.props.required || this.props.value == null ? null : (
+                                        <div>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    this.props.onSelect(null);
+                                                }}
+                                                className="icn-btn icn-btn--small sd-line-input__custom-clear"
+                                                style={{marginInlineStart: 20}}
+                                            >
+                                                <i className="icon-remove-sign" />
+                                            </button>
+                                        </div>
+                                    )
+                                }
                             </div>
                         );
                     }}

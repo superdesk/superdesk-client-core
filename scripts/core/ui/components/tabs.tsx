@@ -28,9 +28,15 @@ export class TabList extends React.PureComponent<IProps> {
                 }}
                 data-test-id={this.props['data-test-id']}
             >
-                {tabs.map(({label}, index) => (
-                    <TabLabel key={index} label={label} indexValue={index} />
-                ))}
+                {
+                    tabs.map(({label}, index) => (
+                        <TabLabel
+                            key={index}
+                            label={label}
+                            indexValue={index}
+                        />
+                    ))
+                }
             </Tabs>
         );
     }

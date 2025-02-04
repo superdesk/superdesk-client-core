@@ -27,8 +27,8 @@ function annotationExistsInKnowledgeBase(
     annotationText: string,
     definitionHtml?: string,
 ): Promise<boolean> {
-    return getAnnotationsInKnowledgeBase(superdesk, annotationText).then(
-        (res: IRestApiResponse<IKnowledgeBaseItem>) => {
+    return getAnnotationsInKnowledgeBase(superdesk, annotationText)
+        .then((res: IRestApiResponse<IKnowledgeBaseItem>) => {
             if (definitionHtml == null) {
                 // just searching for annotationText
                 return res._items.length > 0;
@@ -38,8 +38,7 @@ function annotationExistsInKnowledgeBase(
             const matches = res._items.filter((item) => item.definition_html === definitionHtml);
 
             return matches.length > 0;
-        },
-    );
+        });
 }
 
 function annotationFromLibraryTabSelectedByDefault(
@@ -58,18 +57,24 @@ function annotationFromLibraryTabSelectedByDefault(
     }
 }
 
-function onAnnotationCreate(superdesk: ISuperdesk, language: string, annotationText: string, definitionHtml: string) {
-    annotationExistsInKnowledgeBase(superdesk, annotationText, definitionHtml).then((exists) => {
-        // Don't create another annotation with the same text + definition
-        if (!exists) {
-            superdesk.dataApi.create(RESOURCE, {
-                language: language,
-                name: annotationText,
-                definition_html: definitionHtml,
-                cpnat_type: 'cpnat:abstract',
-            });
-        }
-    });
+function onAnnotationCreate(
+    superdesk: ISuperdesk,
+    language: string,
+    annotationText: string,
+    definitionHtml: string,
+) {
+    annotationExistsInKnowledgeBase(superdesk, annotationText, definitionHtml)
+        .then((exists) => {
+            // Don't create another annotation with the same text + definition
+            if (!exists) {
+                superdesk.dataApi.create(RESOURCE, {
+                    language: language,
+                    name: annotationText,
+                    definition_html: definitionHtml,
+                    cpnat_type: 'cpnat:abstract',
+                });
+            }
+        });
 }
 
 var extension: IExtension = {
@@ -91,15 +96,13 @@ var extension: IExtension = {
                         },
                     ],
                 },
-                pages: superdesk.privileges.hasPrivilege('concept_items')
-                    ? [
-                          {
-                              title: gettext('Annotations Library'),
-                              url: '/annotations-library',
-                              component: getAnnotationsLibraryPage(superdesk),
-                          },
-                      ]
-                    : [],
+                pages: superdesk.privileges.hasPrivilege('concept_items') ? [
+                    {
+                        title: gettext('Annotations Library'),
+                        url: '/annotations-library',
+                        component: getAnnotationsLibraryPage(superdesk),
+                    },
+                ] : [],
             },
         };
 

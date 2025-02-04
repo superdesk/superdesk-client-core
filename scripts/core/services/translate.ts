@@ -8,22 +8,18 @@ import {gettext} from 'core/utils';
  * This module provides localization support.
  * It's using angular-gettext.
  */
-export default angular
-    .module('superdesk.core.translate', ['gettext', 'superdesk.core.auth.session', 'tmh.dynamicLocale', 'ngLocale'])
-    .config([
-        'tmhDynamicLocaleProvider',
-        (tmhDynamicLocaleProvider) => {
-            tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
-        },
-    ])
+export default angular.module('superdesk.core.translate', [
+    'gettext',
+    'superdesk.core.auth.session',
+    'tmh.dynamicLocale',
+    'ngLocale',
+])
+    .config(['tmhDynamicLocaleProvider', (tmhDynamicLocaleProvider) => {
+        tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
+    }])
 
-    .run([
-        'gettextCatalog',
-        '$location',
-        '$rootScope',
-        'SESSION_EVENTS',
-        'tmhDynamicLocale',
-        function (gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
+    .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
+        function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, () => {
                 const {translations} = window;
                 const language = translations['']['language'];
@@ -45,8 +41,7 @@ export default angular
 
             // make it available in templates
             $rootScope.gettext = gettext;
-        },
-    ])
+        }])
 
     /**
      * @ngdoc factory
@@ -64,11 +59,8 @@ export default angular
      * This way "Translate Me" can be found by the string extractor and it will return
      * translated string if appropriet.
      */
-    .factory('gettext', [
-        'gettextCatalog',
-        function (gettextCatalog) {
-            return function (input) {
-                return gettextCatalog.getString(input);
-            };
-        },
-    ]);
+    .factory('gettext', ['gettextCatalog', function(gettextCatalog) {
+        return function(input) {
+            return gettextCatalog.getString(input);
+        };
+    }]);

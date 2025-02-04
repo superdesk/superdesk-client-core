@@ -1,17 +1,11 @@
-<li
-    ng-repeat="user in users track by user._id"
+<li ng-repeat="user in users track by user._id"
     ng-click="select(user)"
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
 >
     <div style="height: auto">
-        <sd-user-avatar
-            data-user="user"
-            data-display-status="true"
-            display-administrator-indicator="true"
-            scroll-container="'.content'"
-        ></sd-user-avatar>
+        <sd-user-avatar data-user="user" data-display-status="true" display-administrator-indicator="true" scroll-container="'.content'"></sd-user-avatar>
     </div>
 
     <div class="row-wrapper" sd-col-width>
@@ -19,9 +13,7 @@
             {{ user.display_name }}
             <span class="disabled-label" ng-if="!user.is_enabled" translate>disabled</span>
             <span class="disabled-label" ng-if="user.is_enabled && !user.is_active" translate>inactive</span>
-            <span class="disabled-label" ng-if="user.is_enabled && user.is_active && user.needs_activation" translate
-                >pending</span
-            >
+            <span class="disabled-label" ng-if="user.is_enabled && user.is_active && user.needs_activation" translate>pending</span>
         </div>
         <div class="username" data-test-id="username">{{ user.username }}</div>
         <div class="role">{{ roles[user.role].name }}</div>
@@ -30,14 +22,13 @@
     </div>
 
     <div class="action" ng-show="user._id !== selected._id">
-        <ul
-            class="item-functions"
+        <ul class="item-functions"
             sd-activity-list
             data-item="user"
             data-type="user"
             data-action="edit"
-            data-done="done"
-        ></ul>
+            data-done="done">
+        </ul>
     </div>
 </li>
 

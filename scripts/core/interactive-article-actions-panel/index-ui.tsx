@@ -58,10 +58,8 @@ interface IState {
     activeTab: IArticleActionInteractive;
 }
 
-export class InteractiveArticleActionsPanel extends React.PureComponent<
-    IPropsInteractiveArticleActionsPanelStateless,
-    IState
-> {
+export class InteractiveArticleActionsPanel
+    extends React.PureComponent<IPropsInteractiveArticleActionsPanelStateless, IState> {
     constructor(props: IPropsInteractiveArticleActionsPanelStateless) {
         super(props);
 
@@ -106,7 +104,7 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
             </PanelHeader>
         );
 
-        function PanelWithHeader({columnCount = 1, children}: {columnCount?: number; children: React.ReactNode}) {
+        function PanelWithHeader({columnCount = 1, children}: {columnCount?: number, children: React.ReactNode}) {
             return (
                 <Panel
                     width={`${singleColumnWidthRem * columnCount}rem`}
@@ -127,7 +125,9 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
 
                 logger.error(new Error(error));
 
-                return <div>{error}</div>;
+                return (
+                    <div>{error}</div>
+                );
             }
 
             const item = items[0]; // only one item is supported in publishing tab
@@ -139,9 +139,15 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
                     item={item}
                     closePublishView={onClose}
                     markupV2={markupV2}
-                    handleUnsavedChanges={() => handleUnsavedChanges([item]).then((res) => res[0])}
+                    handleUnsavedChanges={
+                        () => handleUnsavedChanges([item]).then((res) => res[0])
+                    }
                 >
-                    {({columnCount, content}) => <PanelWithHeader columnCount={columnCount}>{content}</PanelWithHeader>}
+                    {({columnCount, content}) => (
+                        <PanelWithHeader columnCount={columnCount}>
+                            {content}
+                        </PanelWithHeader>
+                    )}
                 </WithPublishTab>
             );
         } else if (activeTab === 'correct') {
@@ -152,7 +158,9 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
 
                 logger.error(new Error(error));
 
-                return <div>{error}</div>;
+                return (
+                    <div>{error}</div>
+                );
             }
 
             const item = items[0]; // only one item is supported in correction tab
@@ -163,7 +171,9 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
                         item={item}
                         closePublishView={onClose}
                         markupV2={markupV2}
-                        handleUnsavedChanges={() => handleUnsavedChanges([item]).then((res) => res[0])}
+                        handleUnsavedChanges={
+                            () => handleUnsavedChanges([item]).then((res) => res[0])
+                        }
                     />
                 </PanelWithHeader>
             );
@@ -192,13 +202,21 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<
         } else if (activeTab === 'duplicate_to') {
             return (
                 <PanelWithHeader>
-                    <DuplicateToTab items={items} closeDuplicateToView={onClose} markupV2={markupV2} />
+                    <DuplicateToTab
+                        items={items}
+                        closeDuplicateToView={onClose}
+                        markupV2={markupV2}
+                    />
                 </PanelWithHeader>
             );
         } else if (activeTab === 'unspike') {
             return (
                 <PanelWithHeader>
-                    <UnspikeTab items={items} closeUnspikeView={onClose} markupV2={markupV2} />
+                    <UnspikeTab
+                        items={items}
+                        closeUnspikeView={onClose}
+                        markupV2={markupV2}
+                    />
                 </PanelWithHeader>
             );
         } else {

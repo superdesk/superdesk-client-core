@@ -4,8 +4,8 @@ import {IUser} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 export function isUserLoggedIn(user: IUser) {
-    return (
-        user?.last_activity_at != null && moment().diff(user.last_activity_at, 'minute') < appConfig.userOnlineMinutes
+    return user?.last_activity_at != null && (
+        moment().diff(user.last_activity_at, 'minute') < appConfig.userOnlineMinutes
     );
 }
 
@@ -92,7 +92,7 @@ export function UsersService(api, $q, notify) {
     /**
      * Checks if the user is logged-in or not
      */
-    usersService.isLoggedIn = function (user) {
+    usersService.isLoggedIn = function(user) {
         return isUserLoggedIn(user);
     };
 

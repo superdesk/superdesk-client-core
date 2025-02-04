@@ -33,7 +33,8 @@ Extension may export other functions to enable other extensions to call them. In
 
 # How are extensions built and executed
 
-- Extensions are built using a CLI tool by running the following command in the root repository `@superdesk/build-tools extensions build {root-client-dir}`. It installs dependencies, compiles, namespaces CSS and includes translations from each extension. When client-core starts, it executes `activate` method of each extension.
+* Extensions are built using a CLI tool by running the following command in the root repository `@superdesk/build-tools extensions build {root-client-dir}`. It installs dependencies, compiles, namespaces CSS and includes translations from each extension. When client-core starts, it executes `activate` method of each extension.
+
 
 # Styling
 
@@ -66,7 +67,9 @@ Ensure that node_modules or any other external code is not a child directory of 
 ```json
 {
     "superdeskExtension": {
-        "translations-extract-paths": ["./src"]
+        "translations-extract-paths": [
+            "./src"
+        ]
     }
 }
 ```

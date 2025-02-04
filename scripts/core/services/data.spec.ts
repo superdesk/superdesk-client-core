@@ -27,7 +27,9 @@ describe('DataService', () => {
         const data = new DataAdapter('users');
         const users = {_items: [{_id: 'foo'}]};
 
-        httpBackend.expectGET('http://localhost/users?max_results=99').respond(200, users);
+        httpBackend
+            .expectGET('http://localhost/users?max_results=99')
+            .respond(200, users);
 
         data.query({max_results: 99}).then((result) => {
             expect(result).toEqual(users);

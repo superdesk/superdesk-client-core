@@ -23,9 +23,11 @@ export class PreviewDropdownTree extends React.PureComponent<IProps> {
 
         return (
             <SpacerInlineFlex h gap="8" gapSecondary="8">
-                {optionsToPreview.map((option, i) => (
-                    <Template key={i} item={option} />
-                ))}
+                {
+                    optionsToPreview.map((option, i) => (
+                        <Template key={i} item={option} />
+                    ))
+                }
             </SpacerInlineFlex>
         );
     }

@@ -1,3 +1,4 @@
+
 describe('ContentFiltersConfigCtrl', () => {
     var ctrl;
 
@@ -10,7 +11,9 @@ describe('ContentFiltersConfigCtrl', () => {
 
     describe('on instantiation', () => {
         it('assigns the correct value to TEMPLATES_DIR variable', () => {
-            expect(ctrl.TEMPLATES_DIR).toEqual('scripts/apps/content-filters/views');
+            expect(ctrl.TEMPLATES_DIR).toEqual(
+                'scripts/apps/content-filters/views',
+            );
         });
 
         it('initializes active tab name to "filters"', () => {

@@ -24,6 +24,9 @@ export class Portal extends React.Component<IProps, any> {
     }
 
     render() {
-        return ReactDOM.createPortal(this.props.children, this.parentElement);
+        return ReactDOM.createPortal(
+            this.props.children,
+            this.parentElement,
+        );
     }
 }

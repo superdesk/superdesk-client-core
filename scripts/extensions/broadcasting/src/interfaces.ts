@@ -58,7 +58,7 @@ export interface IRundownItemBase {
         [key: string]: {
             draftjsState?: [RawDraftContentState];
             annotations?: Array<any>;
-        };
+        }
     };
     subitems?: Array<ISubitem>;
 }

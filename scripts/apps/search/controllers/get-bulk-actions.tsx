@@ -66,26 +66,23 @@ export function getBulkActions(
             });
         }
     } else if (articles.every(({_type}) => _type === 'externalsource')) {
-        actions.push(
-            {
-                label: gettext('Fetch'),
-                icon: 'icon-archive',
-                onTrigger: () => {
-                    multiActions.fetch();
-                    scopeApply?.();
-                },
-                canAutocloseMultiActionBar: false,
+        actions.push({
+            label: gettext('Fetch'),
+            icon: 'icon-archive',
+            onTrigger: () => {
+                multiActions.fetch();
+                scopeApply?.();
             },
-            {
-                label: gettext('Fetch to'),
-                icon: 'icon-fetch-as',
-                onTrigger: () => {
-                    multiActions.fetch(true);
-                    scopeApply?.();
-                },
-                canAutocloseMultiActionBar: false,
+            canAutocloseMultiActionBar: false,
+        }, {
+            label: gettext('Fetch to'),
+            icon: 'icon-fetch-as',
+            onTrigger: () => {
+                multiActions.fetch(true);
+                scopeApply?.();
             },
-        );
+            canAutocloseMultiActionBar: false,
+        });
     } else if (noneLocked && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
         if (privileges.userHasPrivileges({unspike: 1})) {
             actions.push({
@@ -116,10 +113,7 @@ export function getBulkActions(
                 label: gettext('Export'),
                 icon: 'icon-download',
                 onTrigger: () => {
-                    dispatchInternalEvent(
-                        'openExportView',
-                        getSelectedItems().map(({_id}) => _id),
-                    );
+                    dispatchInternalEvent('openExportView', getSelectedItems().map(({_id}) => _id));
                 },
                 canAutocloseMultiActionBar: false,
             });
@@ -131,21 +125,22 @@ export function getBulkActions(
                 icon: 'icon-multiedit',
                 onTrigger: () => {
                     if (authoringReactViewEnabled) {
-                        Promise.all(
-                            getSelectedItems().map((article) => {
-                                if (isLockedInCurrentSession(article)) {
-                                    /**
-                                     * using article doesn't work because it is missing properties
-                                     * (at least slugline)
-                                     */
-                                    return sdApi.article.get(article._id);
-                                } else {
-                                    return sdApi.article.lock(article._id);
-                                }
-                            }),
-                        ).then((articlesLocked) => {
+                        Promise.all(getSelectedItems().map((article) => {
+                            if (isLockedInCurrentSession(article)) {
+                                /**
+                                 * using article doesn't work because it is missing properties
+                                 * (at least slugline)
+                                 */
+                                return sdApi.article.get(article._id);
+                            } else {
+                                return sdApi.article.lock(article._id);
+                            }
+                        })).then((articlesLocked) => {
                             showModal(({closeModal}) => (
-                                <MultiEditModal initiallySelectedArticles={articlesLocked} onClose={closeModal} />
+                                <MultiEditModal
+                                    initiallySelectedArticles={articlesLocked}
+                                    onClose={closeModal}
+                                />
                             ));
                         });
                     } else {
@@ -156,21 +151,26 @@ export function getBulkActions(
                 canAutocloseMultiActionBar: false,
             });
         } else {
-            const modalHeadline = gettext("You can't multi-edit, because these articles can't be edited");
+            const modalHeadline = gettext('You can\'t multi-edit, because these articles can\'t be edited');
 
             actions.push({
                 label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
                 onTrigger: () => {
                     showModal(({closeModal}) => (
-                        <Modal size="medium" visible onHide={closeModal} headerTemplate={modalHeadline}>
-                            {getSelectedItems()
-                                .filter((article) => {
+                        <Modal
+                            size="medium"
+                            visible
+                            onHide={closeModal}
+                            headerTemplate={modalHeadline}
+                        >
+                            {
+                                getSelectedItems().filter((article) => {
                                     return !isEditable(article);
-                                })
-                                .map((item) => (
+                                }).map((item) => (
                                     <div key={item._id}>{getArticleLabel(item)}</div>
-                                ))}
+                                ))
+                            }
                         </Modal>
                     ));
                 },
@@ -179,9 +179,10 @@ export function getBulkActions(
         }
 
         if (
-            articles.every(
-                (article) =>
-                    !isLockedByOtherUser(article) && article.state !== ITEM_STATE.SPIKED && !isPublished(article),
+            articles.every((article) =>
+                !isLockedByOtherUser(article)
+                && article.state !== ITEM_STATE.SPIKED
+                && !isPublished(article),
             )
         ) {
             actions.push({
@@ -300,7 +301,9 @@ export function getBulkActions(
                 unselectAll();
 
                 // fetching to ensure that the latest saved version is being previewed
-                Promise.all(ids.map((id) => dataApi.findOne<IArticle>('archive', id))).then((res: Array<IArticle>) => {
+                Promise.all(
+                    ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
+                ).then((res: Array<IArticle>) => {
                     previewItems(res);
                 });
             },

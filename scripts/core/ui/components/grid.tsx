@@ -13,9 +13,7 @@ export const Grid: React.StatelessComponent<IGridComponentProps> = (props) => {
     return (
         <div className={className}>
             {props.children.map((node, index) => (
-                <div key={index} className="flex-grid__item">
-                    {node}
-                </div>
+                <div key={index} className="flex-grid__item">{node}</div>
             ))}
         </div>
     );

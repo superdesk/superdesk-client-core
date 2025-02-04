@@ -23,19 +23,21 @@ export class Editor3Autocomplete extends React.PureComponent<IProps> {
 
         return (
             <div>
-                {suggestions.length > 0 && (
-                    <PortalWithoutEvents
-                        component={AutocompleteSuggestions}
-                        props={{
-                            referenceNode: this.props.editorNode,
-                            items: suggestions,
-                            onClick: (item) => {
-                                this.props.dispatch(autocomplete(item));
-                            },
-                            className: this.props.className,
-                        }}
-                    />
-                )}
+                {
+                    suggestions.length > 0 && (
+                        <PortalWithoutEvents
+                            component={AutocompleteSuggestions}
+                            props={{
+                                referenceNode: this.props.editorNode,
+                                items: suggestions,
+                                onClick: (item) => {
+                                    this.props.dispatch(autocomplete(item));
+                                },
+                                className: this.props.className,
+                            }}
+                        />
+                    )
+                }
             </div>
         );
     }

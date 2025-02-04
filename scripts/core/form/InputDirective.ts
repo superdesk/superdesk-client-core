@@ -1,3 +1,4 @@
+
 export default function InputDirective() {
     return {
         scope: {

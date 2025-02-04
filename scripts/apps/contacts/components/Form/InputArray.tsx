@@ -46,7 +46,11 @@ export const InputArray: React.StatelessComponent<any> = ({
             ))}
 
             {!readOnly && (
-                <button className="btn btn-small btn--expanded" onClick={add} type="button">
+                <button
+                    className="btn btn-small btn--expanded"
+                    onClick={add}
+                    type="button"
+                >
                     {addButtonText ? addButtonText : <i className="icon-plus-large" />}
                 </button>
             )}

@@ -1,6 +1,11 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType, IRestApiResponse} from 'superdesk-api';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+    IRestApiResponse,
+} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -11,7 +16,7 @@ import Icon from 'core/ui/components/Icon';
 import {DateTime} from 'core/ui/components/DateTime';
 
 interface IState {
-    packages: Array<IArticle> | null | 'no-packages';
+    packages: Array<IArticle> | null |'no-packages';
 }
 
 const getLabel = () => gettext('Packages');
@@ -48,18 +53,16 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
             urlParams: {
                 repo: 'archive,published',
                 source: {
-                    query: {
-                        filtered: {
-                            filter: {
-                                and: [
-                                    {
-                                        terms: {guid: filter},
-                                    },
-                                ],
+                    'query': {
+                        'filtered': {
+                            'filter': {
+                                'and': [{
+                                    'terms': {'guid': filter},
+                                }],
                             },
                         },
                     },
-                    sort: [{versioncreated: 'desc'}],
+                    'sort': [{'versioncreated': 'desc'}],
                 },
             },
         }).then((res) => {
@@ -77,32 +80,40 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
 
         return (
             <AuthoringWidgetLayout
-                header={
-                    <AuthoringWidgetHeading widgetId={PACKAGES_WIDGET_ID} widgetName={getLabel()} editMode={false} />
-                }
+                header={(
+                    <AuthoringWidgetHeading
+                        widgetId={PACKAGES_WIDGET_ID}
+                        widgetName={getLabel()}
+                        editMode={false}
+                    />
+                )}
                 body={
-                    this.state.packages !== 'no-packages' ? (
-                        <BoxedList>
-                            {this.state.packages.map((packageItem) => (
-                                <BoxedListItem key={packageItem._id}>
-                                    <Spacer h gap="16" noWrap>
-                                        <Icon icon="big-icon--package" />
-                                        <Spacer v gap="4">
-                                            <DateTime dateTime={packageItem.versioncreated} />
-                                            <Text>{packageItem.headline || packageItem.slugline}</Text>
-                                        </Spacer>
-                                        <IconButton
-                                            ariaValue={gettext('Open package')}
-                                            icon="pencil"
-                                            onClick={() => openPackage(packageItem)}
-                                        />
-                                    </Spacer>
-                                </BoxedListItem>
-                            ))}
-                        </BoxedList>
-                    ) : (
-                        <Label text={gettext('Article is not linked to any packages')} />
-                    )
+                    this.state.packages !== 'no-packages'
+                        ? (
+                            <BoxedList>
+                                {
+                                    this.state.packages.map((packageItem) => (
+                                        <BoxedListItem key={packageItem._id}>
+                                            <Spacer h gap="16" noWrap>
+                                                <Icon icon="big-icon--package" />
+                                                <Spacer v gap="4">
+                                                    <DateTime dateTime={packageItem.versioncreated} />
+                                                    <Text>
+                                                        {packageItem.headline || packageItem.slugline}
+                                                    </Text>
+                                                </Spacer>
+                                                <IconButton
+                                                    ariaValue={gettext('Open package')}
+                                                    icon="pencil"
+                                                    onClick={() => openPackage(packageItem)}
+                                                />
+                                            </Spacer>
+                                        </BoxedListItem>
+                                    ))
+                                }
+                            </BoxedList>
+                        )
+                        : <Label text={gettext('Article is not linked to any packages')} />
                 }
             />
         );

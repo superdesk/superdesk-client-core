@@ -10,10 +10,13 @@ interface IProps {
 
 export class ModalBody extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('modal__body', {
-            'modal__body--add-min-height': this.props.addMinHeight,
-            'modal__body--no-padding': this.props.noPadding,
-        });
+        const classes = classNames(
+            'modal__body',
+            {
+                'modal__body--add-min-height': this.props.addMinHeight,
+                'modal__body--no-padding': this.props.noPadding,
+            },
+        );
         const style = !this.props.fullHeight ? {} : {height: '100%'};
 
         return (

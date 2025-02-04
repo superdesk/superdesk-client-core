@@ -1,52 +1,23 @@
 <div class="subnav subnav--absolute">
     <header class="search-page-header">
-        <button
-            class="filter-trigger"
-            aria-label="{{ :: 'Toggle filters' | translate }}"
-            title="{{ :: 'Toggle filters' | translate }}"
-            ng-click="flags.facets = !flags.facets"
-            ng-class="{'filter-trigger--active': flags.facets}"
-        >
-            <i class="icon-filter-large"></i>
-        </button>
-        <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap"></div>
+        <button class="filter-trigger" aria-label="{{ :: 'Toggle filters' | translate }}" title="{{ :: 'Toggle filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></button>
+        <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap;"></div>
         <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
         <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
         <div class="view-select">
-            <button
-                title="{{ :: 'Switch to grid view' | translate }}"
-                ng-show="view !== 'photogrid'"
-                ng-click="setview('photogrid')"
-            >
-                <i class="icon-grid-view"></i>
-            </button>
-            <button
-                title="{{ :: 'Switch to list view' | translate }}"
-                ng-show="view !== 'compact'"
-                ng-click="setview('compact')"
-            >
-                <i class="icon-list-view"></i>
-            </button>
+            <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setview('photogrid')"><i class="icon-grid-view"></i></button>
+            <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
         </div>
         <div sd-multi-action-bar></div>
     </header>
 </div>
 
-<section
-    sd-search-container
-    class="search main-section search-page-container"
-    ng-class="{'sidebar-open': flags.facets}"
->
-    <div
-        sd-search-panel
-        class="archive-sidebar"
-        data-items="items"
-        data-repo="search.repo"
-        data-providers="search.providers"
-        data-toggle-repo="search.toggleRepo"
-        data-provider-type="search.providerType"
-        data-context="context"
-        ng-if="flags.facets"
-    ></div>
+<section sd-search-container class="search main-section search-page-container" ng-class="{'sidebar-open': flags.facets}">
+    <div sd-search-panel class="archive-sidebar" data-items="items"
+         data-repo="search.repo"
+         data-providers="search.providers"
+         data-toggle-repo="search.toggleRepo"
+         data-provider-type="search.providerType"
+         data-context="context" ng-if="flags.facets"></div>
     <div sd-search-results class="archive-content"></div>
 </section>

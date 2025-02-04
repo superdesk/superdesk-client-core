@@ -12,7 +12,10 @@ interface IProps {
 
 export class ModalHeader extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('modal__header', {'modal__header--flex': this.props.flex});
+        const classes = classNames(
+            'modal__header',
+            {'modal__header--flex': this.props.flex},
+        );
 
         return (
             <div className={classes}>
@@ -21,7 +24,11 @@ export class ModalHeader extends React.PureComponent<IProps> {
                         <i className="icon-close-small" />
                     </button>
                 )}
-                {this.props.text && <ModalHeading>{this.props.text}</ModalHeading>}
+                {this.props.text && (
+                    <ModalHeading>
+                        {this.props.text}
+                    </ModalHeading>
+                )}
                 {this.props.children}
             </div>
         );

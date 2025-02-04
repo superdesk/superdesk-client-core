@@ -35,10 +35,8 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
     }
 
     fetchItems(openAfterFetching?: boolean) {
-        if (this.state.selectedDestination.type === 'desk') {
-            // personal space not supported
-            sdApi.article
-                .fetchItems(this.props.items, this.state.selectedDestination)
+        if (this.state.selectedDestination.type === 'desk') { // personal space not supported
+            sdApi.article.fetchItems(this.props.items, this.state.selectedDestination)
                 .then((res) => {
                     this.props.closeFetchToView();
 
@@ -57,15 +55,14 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
             if (this.state.selectedDestination.type === 'personal-space') {
                 throw new Error('fetching to personal space is not supported');
             } else if (this.state.selectedDestination.type === 'desk') {
-                const destinationStage = sdApi.desks
-                    .getDeskStages(this.state.selectedDestination.desk)
-                    .get(this.state.selectedDestination.stage);
+                const destinationStage = sdApi.desks.getDeskStages(
+                    this.state.selectedDestination.desk,
+                ).get(this.state.selectedDestination.stage);
 
                 if (destinationStage.is_visible) {
                     return true;
                 } else {
-                    return sdApi.desks
-                        .getCurrentUserDesks()
+                    return sdApi.desks.getCurrentUserDesks()
                         .map(({_id}) => _id)
                         .includes(this.state.selectedDestination.desk);
                 }
@@ -92,20 +89,22 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
 
                 <PanelFooter markupV2={markupV2}>
                     <ButtonGroup orientation="vertical">
-                        {this.props.items.length === 1 && (
-                            <Button
-                                text={gettext('Fetch and open')}
-                                onClick={() => {
-                                    this.fetchItems(true);
-                                }}
-                                size="large"
-                                type="primary"
-                                style="hollow"
-                                expand
-                                data-test-id="fetch-and-open"
-                                disabled={!canFetch}
-                            />
-                        )}
+                        {
+                            this.props.items.length === 1 && (
+                                <Button
+                                    text={gettext('Fetch and open')}
+                                    onClick={() => {
+                                        this.fetchItems(true);
+                                    }}
+                                    size="large"
+                                    type="primary"
+                                    style="hollow"
+                                    expand
+                                    data-test-id="fetch-and-open"
+                                    disabled={!canFetch}
+                                />
+                            )
+                        }
 
                         <Button
                             text={gettext('Fetch')}

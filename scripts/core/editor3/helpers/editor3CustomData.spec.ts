@@ -11,7 +11,9 @@ it('should generate ids for annotations in order they appear in the content', ()
     const contentState = convertFromRaw(inputJson);
     const result = getAnnotationsFromContentState(contentState);
 
-    expect(JSON.stringify(ignoreInternalAnnotationFields(result))).toBe(
+    expect(
+        JSON.stringify(ignoreInternalAnnotationFields(result)),
+    ).toBe(
         JSON.stringify(ignoreInternalAnnotationFields(outputJson)),
     );
 });
@@ -25,9 +27,16 @@ describe('setAllCustomDataForEditor', () => {
             focusOffset: 3,
         }) as SelectionState;
 
-        const editorState1 = EditorState.acceptSelection(EditorState.createWithContent(contentState), selectionState);
+        const editorState1 = EditorState.acceptSelection(
+            EditorState.createWithContent(contentState),
+            selectionState,
+        );
 
-        const contentState2 = Modifier.insertText(editorState1.getCurrentContent(), editorState1.getSelection(), 'zzz');
+        const contentState2 = Modifier.insertText(
+            editorState1.getCurrentContent(),
+            editorState1.getSelection(),
+            'zzz',
+        );
         const editorState2 = EditorState.push(editorState1, contentState2, 'insert-characters');
 
         expect(editorState2.getCurrentContent().getFirstBlock().getText()).toBe('teszzzt');
@@ -38,9 +47,9 @@ describe('setAllCustomDataForEditor', () => {
 
         expect(editorState3.getSelection().getAnchorOffset()).toBe(6);
         expect(editorState3.getSelection().getFocusOffset()).toBe(6);
-        expect(JSON.stringify(editorState3.getCurrentContent().getFirstBlock().getData().toJS())).toBe(
-            '{"testData":"str"}',
-        );
+        expect(
+            JSON.stringify(editorState3.getCurrentContent().getFirstBlock().getData().toJS()),
+        ).toBe('{"testData":"str"}');
 
         const editorState4 = EditorState.undo(editorState3);
 

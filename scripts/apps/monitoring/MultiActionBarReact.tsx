@@ -26,21 +26,22 @@ interface IState {
 }
 
 function getActionsBulkFromExtensions(articles): Promise<Array<IArticleActionBulkExtended>> {
-    const getActionsBulk: Array<IExtensionActivationResult['contributions']['entities']['article']['getActionsBulk']> =
-        flatMap(
-            Object.values(extensions).map(({activationResult}) => activationResult),
-            (activationResult) =>
-                activationResult.contributions != null &&
-                activationResult.contributions.entities != null &&
-                activationResult.contributions.entities.article != null &&
-                activationResult.contributions.entities.article.getActionsBulk != null
-                    ? activationResult.contributions.entities.article.getActionsBulk
-                    : [],
-        );
-
-    return Promise.all(getActionsBulk.map((getPromise) => getPromise(articles))).then((res) =>
-        flatMap(res).map((action) => ({...action, canAutocloseMultiActionBar: true})),
+    const getActionsBulk
+    : Array<IExtensionActivationResult['contributions']['entities']['article']['getActionsBulk']>
+    = flatMap(
+        Object.values(extensions).map(({activationResult}) => activationResult),
+        (activationResult) =>
+            activationResult.contributions != null
+            && activationResult.contributions.entities != null
+            && activationResult.contributions.entities.article != null
+            && activationResult.contributions.entities.article.getActionsBulk != null
+                ? activationResult.contributions.entities.article.getActionsBulk
+                : [],
     );
+
+    return Promise.all(
+        getActionsBulk.map((getPromise) => getPromise(articles)),
+    ).then((res) => flatMap(res).map((action) => ({...action, canAutocloseMultiActionBar: true})));
 }
 
 export class MultiActionBarReact extends React.Component<IProps, IState> {
@@ -89,7 +90,11 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                 <div className="right-stack" data-test-id="multi-actions-dropdown">
                     <DropdownTree
                         getToggleElement={(isOpen, onClick) => (
-                            <button onClick={onClick} className="navbtn" data-test-id="dropdown-toggle">
+                            <button
+                                onClick={onClick}
+                                className="navbtn"
+                                data-test-id="dropdown-toggle"
+                            >
                                 <i className="icon-dots-vertical" />
                             </button>
                         )}
@@ -132,9 +137,9 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
 
             return (
                 <div className="multi-action-bar-inline" data-test-id="multi-actions-inline">
-                    {groupNames.map((group, i) =>
-                        group === 'undefined' ? (
-                            groups[group].map((action, key) => (
+                    {
+                        groupNames.map((group, i) => group === 'undefined'
+                            ? groups[group].map((action, key) => (
                                 <button
                                     onClick={() => {
                                         this.onTrigger(action);
@@ -147,52 +152,53 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                     <Icon className={action.icon} size={22} />
                                 </button>
                             ))
-                        ) : (
-                            <DropdownTree
-                                getToggleElement={(isOpen, onClick) => (
-                                    <button
-                                        onClick={onClick}
-                                        className="navbtn"
-                                        title={groups[group][0].group.label}
-                                        data-test-id="dropdown-toggle"
-                                    >
-                                        <Icon className={groups[group][0].group.icon} size={22} />
-                                    </button>
-                                )}
-                                key={i}
-                                groups={[{render: () => null, items: groups[group]}]}
-                                renderItem={(key, item, closeDropdown) => (
-                                    <button
-                                        key={key}
-                                        style={{
-                                            display: 'block',
-                                            width: '100%',
-                                            padding: 0,
-                                            textAlign: 'start',
-                                            whiteSpace: 'nowrap',
-                                        }}
-                                        onClick={() => {
-                                            closeDropdown();
-                                            this.onTrigger(item);
-                                        }}
-                                        data-test-id={item.label}
-                                    >
-                                        <span
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'flex-start',
-                                                alignItems: 'center',
-                                                padding: '10px',
-                                            }}
+                            : (
+                                <DropdownTree
+                                    getToggleElement={(isOpen, onClick) => (
+                                        <button
+                                            onClick={onClick}
+                                            className="navbtn"
+                                            title={groups[group][0].group.label}
+                                            data-test-id="dropdown-toggle"
                                         >
-                                            <i className={item.icon} style={{marginInlineEnd: 10}} />
-                                            <span>{item.label}</span>
-                                        </span>
-                                    </button>
-                                )}
-                            />
-                        ),
-                    )}
+                                            <Icon className={groups[group][0].group.icon} size={22} />
+                                        </button>
+                                    )}
+                                    key={i}
+                                    groups={[{render: () => null, items: groups[group]}]}
+                                    renderItem={(key, item, closeDropdown) => (
+                                        <button
+                                            key={key}
+                                            style={{
+                                                display: 'block',
+                                                width: '100%',
+                                                padding: 0,
+                                                textAlign: 'start',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                            onClick={() => {
+                                                closeDropdown();
+                                                this.onTrigger(item);
+                                            }}
+                                            data-test-id={item.label}
+                                        >
+                                            <span
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'flex-start',
+                                                    alignItems: 'center',
+                                                    padding: '10px',
+                                                }}
+                                            >
+                                                <i className={item.icon} style={{marginInlineEnd: 10}} />
+                                                <span>{item.label}</span>
+                                            </span>
+                                        </button>
+                                    )}
+                                />
+                            ),
+                        )
+                    }
                 </div>
             );
         }

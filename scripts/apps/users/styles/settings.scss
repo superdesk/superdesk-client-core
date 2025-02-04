@@ -54,7 +54,7 @@ $roles-border: 1px solid $tableBorder;
             line-height: 10px;
             height: 13px;
             letter-spacing: 0.1em;
-            box-sizing: border-box;
+            box-sizing:border-box;
         }
         th {
             font-size: 13px;
@@ -73,7 +73,7 @@ $roles-border: 1px solid $tableBorder;
             min-width: 270px;
         }
 
-        input[type='checkbox'] {
+        input[type="checkbox"] {
             display: inline-block;
             vertical-align: middle;
             margin-inline-end: 5px;
@@ -105,6 +105,7 @@ $roles-border: 1px solid $tableBorder;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
+
         }
     }
     .role-field {

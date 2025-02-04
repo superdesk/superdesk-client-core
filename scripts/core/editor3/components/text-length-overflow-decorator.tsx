@@ -10,14 +10,19 @@ type IResult = {[blockKey: string]: {from: number; to: number}};
 
 class Component extends React.Component<IProps> {
     render() {
-        return <span style={{color: '#ff0000'}}>{this.props.children}</span>;
+        return (
+            <span style={{color: '#ff0000'}}>{this.props.children}</span>
+        );
     }
 }
 
 // max 1 result is cached
 const cache = new Map<ContentState, IResult>();
 
-function getRangesExceedingLimit(contentState: ContentState, limit: number): IResult {
+function getRangesExceedingLimit(
+    contentState: ContentState,
+    limit: number,
+): IResult {
     const cached = cache.get(contentState);
 
     if (cached != null) {

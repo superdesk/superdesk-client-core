@@ -34,9 +34,13 @@ export class SamsApp extends React.Component<IProps, IState> {
         const storeExists = getStore() !== undefined;
         const store = getStoreSingleton();
 
-        (storeExists ? Promise.resolve() : this.initApp(store)).then(() => {
-            this.setState({ready: true});
-        });
+        (storeExists ?
+            Promise.resolve() :
+            this.initApp(store)
+        )
+            .then(() => {
+                this.setState({ready: true});
+            });
     }
 
     componentWillUnmount() {
@@ -44,21 +48,23 @@ export class SamsApp extends React.Component<IProps, IState> {
     }
 
     initApp(store: Store) {
-        return superdeskApi.entities.desk.waitTilReady().then(() => {
-            store.dispatch<any>(setCurrentDeskId(superdeskApi.entities.desk.getActiveDeskId()));
+        return superdeskApi.entities.desk.waitTilReady()
+            .then(() => {
+                store.dispatch<any>(setCurrentDeskId(superdeskApi.entities.desk.getActiveDeskId()));
 
-            return Promise.all([
-                store.dispatch<any>(loadStorageDestinations()),
-                store.dispatch<any>(loadSets()),
-                store.dispatch<any>(loadDesksSamsSettings()),
-            ]).then(() => {
-                if (this.props.onStoreInit != null) {
-                    return this.props.onStoreInit(store);
-                }
+                return Promise.all([
+                    store.dispatch<any>(loadStorageDestinations()),
+                    store.dispatch<any>(loadSets()),
+                    store.dispatch<any>(loadDesksSamsSettings()),
+                ])
+                    .then(() => {
+                        if (this.props.onStoreInit != null) {
+                            return this.props.onStoreInit(store);
+                        }
 
-                return Promise.resolve();
+                        return Promise.resolve();
+                    });
             });
-        });
     }
 
     render() {
@@ -68,6 +74,10 @@ export class SamsApp extends React.Component<IProps, IState> {
             return null;
         }
 
-        return <Provider store={store}>{this.props.children}</Provider>;
+        return (
+            <Provider store={store}>
+                {this.props.children}
+            </Provider>
+        );
     }
 }

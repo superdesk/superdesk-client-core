@@ -17,10 +17,9 @@ export class ModifiedInfo extends React.PureComponent<IProps> {
 
         return (
             <dl>
-                <dt>{gettext('Modified')}</dt>{' '}
-                <dd>
-                    <TimeElem date={entity.versioncreated} />
-                </dd>
+                <dt>{gettext('Modified')}</dt>
+                {' '}
+                <dd><TimeElem date={entity.versioncreated} /></dd>
             </dl>
         );
     }

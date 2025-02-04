@@ -8,10 +8,17 @@ interface IProps {
 
 export class ModalHeading extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames('modal__heading', {
-            'modal__heading--no-grow': this.props.noGrow === true,
-        });
+        const classes = classNames(
+            'modal__heading',
+            {
+                'modal__heading--no-grow': this.props.noGrow === true,
+            },
+        );
 
-        return <h3 className={classes}>{this.props.children}</h3>;
+        return (
+            <h3 className={classes}>
+                {this.props.children}
+            </h3>
+        );
     }
 }

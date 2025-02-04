@@ -3,7 +3,7 @@ import {Button, TreeMenu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IProps {
-    availableFields: Array<{id: string; label: string; fieldType?: string}>;
+    availableFields: Array<{id: string; label: string; fieldType?: string;}>;
     onSelect(value: string): void;
 }
 
@@ -16,17 +16,13 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
                 <TreeMenu
                     getId={(field) => field.id}
                     optionTemplate={({fieldType, label}) => {
-                        return fieldType != null && fieldType !== '' ? (
-                            <>
-                                {label} <span className="sd-text--italic sd-text--light">({fieldType})</span>
-                            </>
-                        ) : (
-                            <>{label}</>
-                        );
+                        return (fieldType != null && fieldType !== '')
+                            ? <>{label} <span className="sd-text--italic sd-text--light">({fieldType})</span></>
+                            : <>{label}</>;
                     }}
                     getLabel={({label}) => label}
-                    getOptions={() =>
-                        availableFields.map((field) => ({
+                    getOptions={() => availableFields
+                        .map((field) => ({
                             value: field,
                             onSelect: () => this.props.onSelect(field.id),
                         }))

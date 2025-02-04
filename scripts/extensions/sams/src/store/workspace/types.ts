@@ -28,8 +28,7 @@ interface IWorkspaceSetSingleDeskSamsSettingsAction {
     };
 }
 
-export type IWorkspaceActionTypes =
-    | IWorkspaceSetFilterPanelStateAction
+export type IWorkspaceActionTypes = IWorkspaceSetFilterPanelStateAction
     | IWorkspaceSetCurrentDeskIdAction
     | IWorkspaceSetDeskSamsSettingsAction
     | IWorkspaceSetSingleDeskSamsSettingsAction;

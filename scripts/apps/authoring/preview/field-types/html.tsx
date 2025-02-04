@@ -6,7 +6,8 @@ interface IProps {
 }
 
 export function adjustHTMLForPreview(html: string): string {
-    const parsed: HTMLElement = new DOMParser().parseFromString(html, 'text/html').body;
+    const parsed: HTMLElement =
+    new DOMParser().parseFromString(html, 'text/html').body;
 
     parsed.querySelectorAll('[data-custom-block-type]').forEach((element) => {
         const customBlockType = element.getAttribute('data-custom-block-type');
@@ -33,6 +34,8 @@ export class HtmlPreview extends React.Component<IProps> {
     render() {
         const html = this.props.value;
 
-        return <div dangerouslySetInnerHTML={{__html: adjustHTMLForPreview(html)}} />;
+        return (
+            <div dangerouslySetInnerHTML={{__html: adjustHTMLForPreview(html)}} />
+        );
     }
 }

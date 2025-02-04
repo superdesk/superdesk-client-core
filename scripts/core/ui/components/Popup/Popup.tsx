@@ -147,9 +147,20 @@ export default class Popup extends React.Component<any, any> {
 
         return (
             <div ref={this.setParentNode}>
-                <Portal ref={this.setPortalNodes} node={popupContainer && popupContainer()}>
-                    <div ref={(node) => (this.dom.child = node)} className={classNames('popup', className)}>
-                        <Menu noPadding={noPadding}>{children}</Menu>
+                <Portal
+                    ref={this.setPortalNodes}
+                    node={popupContainer && popupContainer()}
+                >
+                    <div
+                        ref={(node) => this.dom.child = node}
+                        className={classNames(
+                            'popup',
+                            className,
+                        )}
+                    >
+                        <Menu noPadding={noPadding}>
+                            {children}
+                        </Menu>
                     </div>
                 </Portal>
             </div>
@@ -163,7 +174,10 @@ Popup.propTypes = {
     close: PropTypes.func.isRequired,
     onKeyDown: PropTypes.func,
     workspaceId: PropTypes.string,
-    className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    className: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+    ]),
     noPadding: PropTypes.bool,
     popupContainer: PropTypes.func,
     inheritWidth: PropTypes.bool,

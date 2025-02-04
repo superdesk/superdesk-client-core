@@ -12,10 +12,8 @@ interface IState<T> {
     searchString: string;
 }
 
-export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends SuperdeskReactComponent<
-    IPropsSelectFromRemote<T>,
-    IState<T>
-> {
+export class SelectFromEndpoint<T extends IBaseRestApiResponse>
+    extends SuperdeskReactComponent<IPropsSelectFromRemote<T>, IState<T>> {
     private valueEl: HTMLDivElement;
     private lastPopup: {close: () => void} | null;
     constructor(props: IPropsSelectFromRemote<T>) {
@@ -31,14 +29,12 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
 
     fetchEntity(id: string | null) {
         if (id != null) {
-            this.asyncHelpers
-                .httpRequestJsonLocal<T>({
-                    method: 'GET',
-                    path: `${this.props.endpoint}/${id}`,
-                })
-                .then((val) => {
-                    this.setState({selected: val});
-                });
+            this.asyncHelpers.httpRequestJsonLocal<T>({
+                method: 'GET',
+                path: `${this.props.endpoint}/${id}`,
+            }).then((val) => {
+                this.setState({selected: val});
+            });
         } else {
             this.setState({selected: null});
         }
@@ -63,14 +59,21 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
         const Template = this.props.itemTemplate;
 
         return (
-            <div style={{width: this.props.noGrow === true ? undefined : '100%'}}>
-                {this.props.label != null && (
-                    <div>
-                        <InputLabel text={this.props.label} errorStyle={this.props.validationError != null} />
+            <div
+                style={{width: this.props.noGrow === true ? undefined : '100%'}}
+            >
+                {
+                    this.props.label != null && (
+                        <div>
+                            <InputLabel
+                                text={this.props.label}
+                                errorStyle={this.props.validationError != null}
+                            />
 
-                        <SpacerBlock v gap="4" />
-                    </div>
-                )}
+                            <SpacerBlock v gap="4" />
+                        </div>
+                    )
+                }
 
                 <div
                     ref={(el) => {
@@ -93,6 +96,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
                             'bottom-end',
                             ({closePopup}) => (
                                 <div className="p-dropdown-panel" style={{position: 'static'}}>
+
                                     {/*
 
                                     TODO: Implement filtering;
@@ -120,9 +124,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
                                             // TODO: regex operator needed
                                             // filter: {$and: [{'field': {$eq: 'test'}}]},
                                             sort: this.props.sort.reduce<ISuperdeskQuery['sort']>(
-                                                (acc, [fieldId, direction]) => acc.concat({[fieldId]: direction}),
-                                                [],
-                                            ),
+                                                (acc, [fieldId, direction]) => acc.concat({[fieldId]: direction}), []),
                                         }}
                                         itemTemplate={({entity}) => (
                                             <span
@@ -141,7 +143,13 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
                                                 <Template entity={entity} />
                                             </span>
                                         )}
-                                        noItemsTemplate={() => <div>{gettext('No items yet')}</div>}
+                                        noItemsTemplate={
+                                            () => (
+                                                <div>
+                                                    {gettext('No items yet')}
+                                                </div>
+                                            )
+                                        }
                                     />
                                 </div>
                             ),
@@ -161,28 +169,32 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse> extends Superdes
                 >
                     <Template entity={this.state.selected} />
                     <span className="p-dropdown-trigger">
-                        {this.props.required !== true && this.props.value !== null && (
-                            <IconButton
-                                icon="remove-sign"
-                                ariaValue={gettext('clear')}
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
+                        {
+                            (this.props.required !== true && this.props.value !== null) && (
+                                <IconButton
+                                    icon="remove-sign"
+                                    ariaValue={gettext('clear')}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
 
-                                    this.props.onChange(null);
-                                }}
-                            />
-                        )}
+                                        this.props.onChange(null);
+                                    }}
+                                />
+                            )
+                        }
                         <span className="p-dropdown-trigger-icon pi pi-chevron-down p-clickable " />
                     </span>
                 </div>
 
-                {this.props.validationError != null && (
-                    <div>
-                        <SpacerBlock v gap="4" />
-                        <span className="input-error">{this.props.validationError}</span>
-                    </div>
-                )}
+                {
+                    this.props.validationError != null && (
+                        <div>
+                            <SpacerBlock v gap="4" />
+                            <span className="input-error">{this.props.validationError}</span>
+                        </div>
+                    )
+                }
             </div>
         );
     }

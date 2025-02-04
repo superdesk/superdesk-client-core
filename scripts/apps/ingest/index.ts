@@ -26,17 +26,16 @@ angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.a
  * @packageName superdesk.apps
  * @description Adds functionality to ingest items from external sources.
  */
-angular
-    .module('superdesk.apps.ingest', [
-        'superdesk.apps.search',
-        'superdesk.apps.searchProviders',
-        'superdesk.apps.dashboard',
-        'superdesk.apps.dashboard.widgets.base',
-        'superdesk.apps.dashboard.widgets.ingeststats',
-        'superdesk.apps.ingest.send',
-        'superdesk.config',
-        'superdesk.apps.workspace.menu',
-    ])
+angular.module('superdesk.apps.ingest', [
+    'superdesk.apps.search',
+    'superdesk.apps.searchProviders',
+    'superdesk.apps.dashboard',
+    'superdesk.apps.dashboard.widgets.base',
+    'superdesk.apps.dashboard.widgets.ingeststats',
+    'superdesk.apps.ingest.send',
+    'superdesk.config',
+    'superdesk.apps.workspace.menu',
+])
     .service('ingestSources', svc.IngestProviderService)
     .service('remove', svc.RemoveIngestedService)
     .factory('subjectService', svc.SubjectService)
@@ -67,182 +66,146 @@ angular
     .filter('insert', InsertFilter)
     .filter('scheduleFilter', ScheduleFilter)
 
-    .config([
-        'superdeskProvider',
-        'workspaceMenuProvider',
-        function (superdesk, workspaceMenuProvider) {
-            superdesk
-                .activity('/workspace/ingest', {
-                    label: gettext('Workspace'),
-                    priority: 100,
-                    controller: ctrl.IngestListController,
-                    templateUrl: 'scripts/apps/archive/views/list.html',
-                    category: '/workspace',
-                    topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-                    sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-                    privileges: {ingest: 1},
-                })
+    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
+        superdesk
+            .activity('/workspace/ingest', {
+                label: gettext('Workspace'),
+                priority: 100,
+                controller: ctrl.IngestListController,
+                templateUrl: 'scripts/apps/archive/views/list.html',
+                category: '/workspace',
+                topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
+                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                privileges: {ingest: 1},
+            })
 
-                .activity('/settings/ingest', {
-                    label: gettext('Ingest'),
-                    templateUrl: 'scripts/apps/ingest/views/settings/settings.html',
-                    controller: ctrl.IngestSettingsController,
-                    category: superdesk.MENU_SETTINGS,
-                    settings_menu_group: coreMenuGroups.CONTENT_FLOW,
-                    privileges: {ingest_providers: 1},
-                })
-
-                .activity('/ingest_dashboard', {
-                    label: gettext('Ingest Dashboard'),
-                    templateUrl: 'scripts/apps/ingest/views/dashboard/dashboard.html',
-                    controller: ctrl.IngestDashboardController,
-                    category: superdesk.MENU_MAIN,
-                    priority: 100,
-                    adminTools: true,
-                    privileges: {ingest_providers: 1},
-                })
-
-                .activity('remove_ingested', {
-                    label: gettext('Remove'),
-                    icon: 'trash',
-                    controller: [
-                        'data',
-                        'remove',
-                        function (data, remove) {
-                            remove.remove(data.item);
-                        },
-                    ],
-                    filters: [{action: 'list', type: 'ingest'}],
-                    additionalCondition: [
-                        'remove',
-                        'item',
-                        function (remove, item) {
-                            return remove.canRemove(item);
-                        },
-                    ],
-                    privileges: {fetch: 1},
-                })
-
-                .activity('fetchAs', {
-                    label: gettext('Fetch To'),
-                    icon: 'fetch-as',
-                    controller: [
-                        'data',
-                        function (data) {
-                            dispatchInternalEvent('interactiveArticleActionStart', {
-                                items: [data.item],
-                                tabs: ['fetch_to'],
-                                activeTab: 'fetch_to',
-                            });
-                        },
-                    ],
-                    filters: [{action: 'list', type: 'ingest'}],
-                    privileges: {fetch: 1},
-                })
-
-                .activity('archive', {
-                    label: gettext('Fetch'),
-                    icon: 'archive',
-                    monitor: true,
-                    controller: [
-                        'data',
-                        function (data) {
-                            sdApi.article.fetchItemsToCurrentDesk([data.item]);
-                        },
-                    ],
-                    keyboardShortcut: 'ctrl+enter',
-                    filters: [{action: 'list', type: 'ingest'}],
-                    privileges: {fetch: 1},
-                    key: 'f',
-                    additionalCondition: [
-                        'desks',
-                        function (desks) {
-                            // fetching to 'personal' desk is not allowed
-                            return !_.isNil(desks.getCurrentDeskId());
-                        },
-                    ],
-                })
-
-                .activity('externalsourceTo', {
-                    label: gettext('Fetch To'),
-                    icon: 'fetch-as',
-                    monitor: true,
-                    controller: [
-                        'data',
-                        function (data) {
-                            dispatchInternalEvent('interactiveArticleActionStart', {
-                                items: [data.item],
-                                tabs: ['fetch_to'],
-                                activeTab: 'fetch_to',
-                            });
-                        },
-                    ],
-                    filters: [{action: 'list', type: 'externalsource'}],
-                    privileges: {fetch: 1},
-                    additionalCondition: [
-                        'desks',
-                        'item',
-                        (desks, item) =>
-                            isMediaEditable(item) &&
-                            // fetching to 'personal' desk is not allowed
-                            !_.isNil(desks.getCurrentDeskId()),
-                    ],
-                })
-
-                .activity('externalsource', {
-                    label: gettext('Fetch'),
-                    icon: 'archive',
-                    monitor: true,
-                    controller: ctrl.ExternalSourceController,
-                    filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
-                    privileges: {fetch: 1},
-                    additionalCondition: [
-                        'desks',
-                        'item',
-                        (desks, item) =>
-                            isMediaEditable(item) &&
-                            // fetching to 'personal' desk is not allowed
-                            !_.isNil(desks.getCurrentDeskId()),
-                    ],
-                });
-
-            workspaceMenuProvider.item({
-                href: '/workspace/ingest',
-                icon: 'fetch',
+            .activity('/settings/ingest', {
                 label: gettext('Ingest'),
-                order: 1200,
-                group: 'ingest',
-                if: 'workspaceConfig.ingest && privileges.ingest',
-                shortcut: 'alt+i',
-            });
-        },
-    ])
+                templateUrl: 'scripts/apps/ingest/views/settings/settings.html',
+                controller: ctrl.IngestSettingsController,
+                category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
+                privileges: {ingest_providers: 1},
+            })
 
-    .config([
-        'apiProvider',
-        function (apiProvider) {
-            apiProvider.api('fetch', {
-                type: 'http',
-                backend: {rel: 'fetch'},
-            });
-            apiProvider.api('ingest', {
-                type: 'http',
-                backend: {rel: 'ingest'},
-            });
-            apiProvider.api('ingestProviders', {
-                type: 'http',
-                backend: {rel: 'ingest_providers'},
-            });
-            apiProvider.api('activity', {
-                type: 'http',
-                backend: {rel: 'activity'},
-            });
-        },
-    ])
+            .activity('/ingest_dashboard', {
+                label: gettext('Ingest Dashboard'),
+                templateUrl: 'scripts/apps/ingest/views/dashboard/dashboard.html',
+                controller: ctrl.IngestDashboardController,
+                category: superdesk.MENU_MAIN,
+                priority: 100,
+                adminTools: true,
+                privileges: {ingest_providers: 1},
+            })
 
-    .run([
-        'remove',
-        (remove) => {
-            remove.fetchProviders();
-        },
-    ]);
+            .activity('remove_ingested', {
+                label: gettext('Remove'),
+                icon: 'trash',
+                controller: ['data', 'remove', function(data, remove) {
+                    remove.remove(data.item);
+                }],
+                filters: [{action: 'list', type: 'ingest'}],
+                additionalCondition: ['remove', 'item', function(remove, item) {
+                    return remove.canRemove(item);
+                }],
+                privileges: {fetch: 1},
+            })
+
+            .activity('fetchAs', {
+                label: gettext('Fetch To'),
+                icon: 'fetch-as',
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['fetch_to'],
+                        activeTab: 'fetch_to',
+                    });
+                }],
+                filters: [{action: 'list', type: 'ingest'}],
+                privileges: {fetch: 1},
+            })
+
+            .activity('archive', {
+                label: gettext('Fetch'),
+                icon: 'archive',
+                monitor: true,
+                controller: ['data', function(data) {
+                    sdApi.article.fetchItemsToCurrentDesk([data.item]);
+                }],
+                keyboardShortcut: 'ctrl+enter',
+                filters: [{action: 'list', type: 'ingest'}],
+                privileges: {fetch: 1},
+                key: 'f',
+                additionalCondition: ['desks', function(desks) {
+                    // fetching to 'personal' desk is not allowed
+                    return !_.isNil(desks.getCurrentDeskId());
+                }],
+            })
+
+            .activity('externalsourceTo', {
+                label: gettext('Fetch To'),
+                icon: 'fetch-as',
+                monitor: true,
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['fetch_to'],
+                        activeTab: 'fetch_to',
+                    });
+                }],
+                filters: [{action: 'list', type: 'externalsource'}],
+                privileges: {fetch: 1},
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
+            })
+
+            .activity('externalsource', {
+                label: gettext('Fetch'),
+                icon: 'archive',
+                monitor: true,
+                controller: ctrl.ExternalSourceController,
+                filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
+                privileges: {fetch: 1},
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
+            });
+
+        workspaceMenuProvider.item({
+            href: '/workspace/ingest',
+            icon: 'fetch',
+            label: gettext('Ingest'),
+            order: 1200,
+            group: 'ingest',
+            if: 'workspaceConfig.ingest && privileges.ingest',
+            shortcut: 'alt+i',
+        });
+    }])
+
+    .config(['apiProvider', function(apiProvider) {
+        apiProvider.api('fetch', {
+            type: 'http',
+            backend: {rel: 'fetch'},
+        });
+        apiProvider.api('ingest', {
+            type: 'http',
+            backend: {rel: 'ingest'},
+        });
+        apiProvider.api('ingestProviders', {
+            type: 'http',
+            backend: {rel: 'ingest_providers'},
+        });
+        apiProvider.api('activity', {
+            type: 'http',
+            backend: {rel: 'activity'},
+        });
+    }])
+
+    .run(['remove', (remove) => {
+        remove.fetchProviders();
+    }]);

@@ -31,30 +31,32 @@ import {ArticlesList} from './directives/ArticlesListReact';
  * @description Monitoring support for Superdesk content. Adds a new main tab
  * to the application.
  */
-angular
-    .module('superdesk.apps.monitoring', [
-        'superdesk.core.api',
-        'superdesk.apps.aggregate',
-        'superdesk.apps.search',
-        'superdesk.core.ui',
-        'superdesk.apps.workspace.menu',
-    ])
+angular.module('superdesk.apps.monitoring', [
+    'superdesk.core.api',
+    'superdesk.apps.aggregate',
+    'superdesk.apps.search',
+    'superdesk.core.ui',
+    'superdesk.apps.workspace.menu',
+])
     .controller('Monitoring', MonitoringController)
 
     .service('cards', svc.CardsService)
 
     .directive('sdMonitoringView', directive.MonitoringView)
-    .component(
-        'sdArticlesListReact',
+    .component('sdArticlesListReact',
         reactToAngular1(
             ArticlesList,
-            ['heading', 'query', 'monitoringController', 'getExtraButtons'],
+            [
+                'heading',
+                'query',
+                'monitoringController',
+                'getExtraButtons',
+            ],
             [],
             'height: 100%',
         ),
     )
-    .component(
-        'sdMonitoringFilteringButtons',
+    .component('sdMonitoringFilteringButtons',
         reactToAngular1(
             MonitoringFilteringButtons,
             [
@@ -80,62 +82,37 @@ angular
 
     .filter('splitText', SplitFilter)
 
-    .run([
-        'keyboardManager',
-        function (keyboardManager) {
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'ctrl + alt + j',
-                gettext('Switch between grouped/single stage view'),
-            );
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'ctrl + alt + g',
-                gettext('Switch between grouped/single desk view'),
-            );
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'page down',
-                gettext('Move focus to next stage or group'),
-            );
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'page up',
-                gettext('Move focus to previous stage or group'),
-            );
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'down/right Arrow',
-                gettext('Select next item on focused stage or group'),
-            );
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'up/left Arrow',
-                gettext('Select previous item on focused stage or group'),
-            );
-            keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + alt + e', gettext('Edit an item'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + enter', gettext('Fetch an item'));
-            keyboardManager.register(
-                'Monitoring / List actions',
-                'ctrl + alt + n',
-                gettext('Edit an item in a new Window'),
-            );
-            keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicate an item'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + b', gettext('Create a broadcast'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + shift + #', gettext('Spike item(s)'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + alt + p', gettext('Create Package'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + shift + ^', gettext('Mark for highlight'));
-            keyboardManager.register('Monitoring / List actions', 'ctrl + shift + !', gettext('Mark for desk'));
-        },
-    ]);
+    .run(['keyboardManager', function(keyboardManager) {
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + j',
+            gettext('Switch between grouped/single stage view'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + g',
+            gettext('Switch between grouped/single desk view'));
+        keyboardManager.register('Monitoring / List actions', 'page down',
+            gettext('Move focus to next stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'page up',
+            gettext('Move focus to previous stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'down/right Arrow',
+            gettext('Select next item on focused stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'up/left Arrow',
+            gettext('Select previous item on focused stage or group'));
+        keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + e', gettext('Edit an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + enter', gettext('Fetch an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + n',
+            gettext('Edit an item in a new Window'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicate an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + b', gettext('Create a broadcast'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + #', gettext('Spike item(s)'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + alt + p', gettext('Create Package'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + ^', gettext('Mark for highlight'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + shift + !', gettext('Mark for desk'));
+    }]);
 
-angular
-    .module('superdesk.apps.aggregate', [
-        'superdesk.apps.authoring.widgets',
-        'superdesk.apps.desks',
-        'superdesk.apps.workspace',
-    ])
+angular.module('superdesk.apps.aggregate', [
+    'superdesk.apps.authoring.widgets',
+    'superdesk.apps.desks',
+    'superdesk.apps.workspace',
+])
     .controller('AggregateCtrl', ctrl.AggregateCtrl)
     .directive('sdAggregateSettings', directive.AggregateSettings)
     .directive('sdSortGroups', directive.SortGroups)

@@ -10,6 +10,8 @@ export class DateTime extends React.PureComponent<IPropsDateTime> {
         const dateLong = longFormat(dateTime);
         const tooltip = this.props.tooltip == null ? dateLong : this.props.tooltip(dateLong, dateShort);
 
-        return <time title={tooltip}>{dateShort}</time>;
+        return (
+            <time title={tooltip}>{dateShort}</time>
+        );
     }
 }

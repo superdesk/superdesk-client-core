@@ -18,13 +18,16 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
 
         return (
             <Spacer v gap="16" noWrap>
-                {allFields
-                    .map((field) => {
+                {
+                    allFields.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         return (
                             <div key={field.id} style={{width: '100%', padding: fieldPadding ?? 0}}>
-                                <span className="field-label--base" style={{marginBottom: 20}}>
+                                <span
+                                    className="field-label--base"
+                                    style={{marginBottom: 20}}
+                                >
                                     {field.name}
                                 </span>
 
@@ -37,8 +40,8 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
                                 </div>
                             </div>
                         );
-                    })
-                    .toArray()}
+                    }).toArray()
+                }
             </Spacer>
         );
     }

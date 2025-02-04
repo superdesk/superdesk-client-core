@@ -19,21 +19,38 @@ export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
             .filter(({group}) => group === 'middle')
             .sort((a, b) => a.priority - b.priority);
 
-        const topbarWidgetsEnd = widgets.filter(({group}) => group === 'end').sort((a, b) => a.priority - b.priority);
+        const topbarWidgetsEnd = widgets
+            .filter(({group}) => group === 'end')
+            .sort((a, b) => a.priority - b.priority);
 
-        const toolbarGroups = [topbarWidgetsStart, topbarWidgetsMiddle, topbarWidgetsEnd];
+        const toolbarGroups = [
+            topbarWidgetsStart,
+            topbarWidgetsMiddle,
+            topbarWidgetsEnd,
+        ];
 
         return (
             <div className="authoring-toolbar-1" style={{backgroundColor: this.props.backgroundColor}}>
-                {toolbarGroups.map((items, i) => (
-                    <div key={i}>
-                        {items.map((widget, _i) => {
-                            const Component = widget.component;
+                {
+                    toolbarGroups.map((items, i) => (
+                        <div
+                            key={i}
+                        >
+                            {
+                                items.map((widget, _i) => {
+                                    const Component = widget.component;
 
-                            return <Component key={_i} entity={this.props.entity} />;
-                        })}
-                    </div>
-                ))}
+                                    return (
+                                        <Component
+                                            key={_i}
+                                            entity={this.props.entity}
+                                        />
+                                    );
+                                })
+                            }
+                        </div>
+                    ))
+                }
             </div>
         );
     }

@@ -86,7 +86,7 @@
     &--active {
         background: var(--sd-colour-interactive--active);
         i {
-            color: white;
+            color:white;
         }
     }
 }
@@ -113,7 +113,7 @@
     z-index: 3;
     line-height: 48px;
     padding: 0 16px;
-    animation: dropOut2 0.3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
+    animation: dropOut2 .3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
     background-color: var(--sd-colour-bg__sliding-toolbar);
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     .navbtn {
@@ -134,11 +134,9 @@
         z-index: 3;
         line-height: 0;
         @include border-radius(23px);
-        box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 7px 0 rgba(0,0,0,0.3);
         @include transition(transform 0.5s);
-        i {
-            height: 15px;
-        }
+        i { height: 15px; }
         &.active {
             @include rotate(180deg);
         }
@@ -167,9 +165,7 @@
 
     &.focused {
         background: var(--sd-colour-bg__searchbar);
-        box-shadow:
-            inset 0 0 0 1px var(--sd-colour-interactive--alpha-50),
-            inset 0 0 0 6px var(--sd-colour-interactive--alpha-20);
+        box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 6px var(--sd-colour-interactive--alpha-20);
         background-color: var(--sd-colour-bg__searchbar);
     }
     .search-icon {
@@ -209,12 +205,11 @@
         padding: 0 $nav-height;
         color: $sd-text;
         background: none;
-        &:focus,
-        &:active {
+        &:focus, &:active {
             @include box-shadow(none !important);
         }
         &::-webkit-input-placeholder,
-        &::placeholder {
+        &::placeholder  {
             font-style: italic;
             color: $sd-text-lighter;
         }
@@ -235,22 +230,22 @@
         opacity: 0.4;
         height: 24px;
         width: 24px;
-        padding: 4px;
+        padding:4px;
         cursor: pointer;
         transition: all 300ms ease;
         &:hover {
             opacity: 0.8;
         }
     }
+
 }
+
 
 .search-tags {
     position: relative;
     z-index: 2;
     padding: 0 0 0 20px;
-    box-shadow:
-        0 1px 0 var(--sd-colour-line--light),
-        0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 0 var(--sd-colour-line--light), 0 1px 1px 0 rgba(0,0,0,0.1);
     background-color: var(--sd-colour-panel-bg--000);
     .search-tags__list {
         flex-grow: 1;
@@ -264,7 +259,7 @@
         margin: 2px 1px 2px 0;
         span {
             opacity: 0.75;
-            margin-inline-end: 0.5rem;
+            margin-inline-end: 0.5rem
         }
     }
     .refresh-box {
@@ -276,8 +271,7 @@
         .refresh-box {
             display: block;
             position: absolute;
-            inset-inline-end: 10px;
-            inset-block-start: 8px;
+            inset-inline-end: 10px; inset-block-start: 8px;
         }
     }
 }
@@ -291,10 +285,10 @@
         width: 400px;
         margin-inline-start: -200px;
         @include border-radius(6px);
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0,0,0,0.3);
         @include border-box();
         padding: 12px;
-        @include box-shadow(0 0 20px 0 rgba(0, 0, 0, 0.25));
+        @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
         z-index: 11112000;
         > .content {
             width: 100%;
@@ -321,6 +315,7 @@
 }
 // Item global search dialog
 .advanced-globalsearch {
+
     form {
         @include clearfix();
     }
@@ -406,8 +401,7 @@
         }
         .sd-pagination {
             padding: 0 17px;
-            em.page-info,
-            .btn-group {
+            em.page-info, .btn-group  {
                 width: 100%;
                 text-align: center;
             }
@@ -444,7 +438,9 @@
     }
 }
 
-.workspace .main-section.search-page-container {
+
+.workspace .main-section.search-page-container  {
+
     .preview-layout {
         .search-content {
             display: flex;
@@ -461,7 +457,7 @@
             }
         }
         .search-preview {
-            height: 100%;
+            height:100%;
             transition: all ease-in-out 0.2s;
             width: $sidepreview-width + 160;
             position: relative;
@@ -471,11 +467,12 @@
             .content-item-preview {
                 inset-block-start: 0 !important;
                 position: relative;
-                width: 100% !important;
-                height: 100%;
+                width:100% !important;
+                height:100%;
                 opacity: 1;
                 transition: opacity ease-in-out 0.4s;
                 transition-delay: 0.2s;
+
             }
             @media only screen and (max-width: 1430px) {
                 width: $sidepreview-width - 40;
@@ -489,18 +486,20 @@
                     opacity: 0;
                 }
             }
+
         }
     }
 }
 
-.workspace.authoring .main-section.search-page-container {
+
+.workspace.authoring .main-section.search-page-container  {
     .preview-layout {
         .search-preview--overlay {
             position: absolute;
             inset-block-start: 4.8rem;
             inset-inline-end: 0;
             inset-block-end: 0;
-            width: 0;
+            width:0;
             overflow: visible;
             opacity: 1;
             z-index: 3;
@@ -512,18 +511,13 @@
                 opacity: 1;
                 transition: all ease-in-out 0.2s;
                 overflow-y: visible !important;
-                box-shadow:
-                    inset 3px 0 2px -1px rgba(0, 0, 0, 0.12),
-                    2px 0 8px 0 rgba(0, 0, 0, 0.3),
-                    0 0 2px 0 rgba(0, 0, 0, 0.12);
+                box-shadow: inset 3px 0 2px -1px rgba(0, 0, 0, 0.12), 2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
                 .shift-preview__toggle {
                     display: inline-block;
                 }
                 &.shift {
                     inset-inline-end: 0;
-                    box-shadow:
-                        -2px 0 8px 0 rgba(0, 0, 0, 0.3),
-                        0 0 2px 0 rgba(0, 0, 0, 0.12);
+                    box-shadow: -2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12)
                 }
             }
         }
@@ -546,9 +540,11 @@
             .search-preview--overlay {
                 opacity: 0;
             }
+
         }
     }
 }
+
 
 // used to resize thumbnail of item while dragging it
 #drag-image-holder {

@@ -6,6 +6,8 @@ interface IProps {
 
 export class PlainTextPreview extends React.Component<IProps> {
     render() {
-        return <div>{this.props.value}</div>;
+        return (
+            <div>{this.props.value}</div>
+        );
     }
 }

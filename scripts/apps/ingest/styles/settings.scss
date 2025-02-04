@@ -13,20 +13,20 @@
         line-height: 19px;
         &.blue-text {
             &::-webkit-input-placeholder {
-                font-style: normal !important;
+                font-style:normal !important;
             }
             &:-moz-placeholder {
-                font-style: normal !important;
+                font-style:normal !important;
             }
             &::-moz-placeholder {
-                font-style: normal !important;
+                font-style:normal !important;
             }
             &::-ms-input-placeholder {
-                font-style: normal !important;
+                font-style:normal !important;
             }
         }
         &::-webkit-input-placeholder {
-            font-style: italic;
+            font-style:italic;
         }
     }
     .credentials {
@@ -90,6 +90,7 @@
 // -------------------------------------
 
 .ruleset-modal {
+
     header {
         padding: 10px;
     }
@@ -97,7 +98,8 @@
         flex: 1 1 auto !important;
     }
     .rule-list {
-        > li {
+
+        >li {
             position: relative;
             .order {
                 position: absolute;
@@ -108,8 +110,7 @@
             }
             .actions {
                 position: absolute;
-                inset-inline-end: 0;
-                inset-block-start: 0;
+                inset-inline-end: 0; inset-block-start: 0;
                 button {
                     border: 0;
                     background: none;
@@ -140,7 +141,7 @@
         position: relative;
         //transition: all ease-in-out 0.2s;
         &:after {
-            content: '';
+            content: "";
             width: 6px;
             transition: opacity ease-in-out 0.2s;
             inset-block-start: 4px;
@@ -158,6 +159,7 @@
                 cursor: move;
             }
         }
+
     }
     .ui-sortable-placeholder {
         border: 1px dashed $sd-blue !important;
@@ -166,8 +168,8 @@
         box-shadow: none !important;
         &:after {
             content: none !important;
-        }
-    }
+        } 
+    } 
 }
 
 .selected-field {

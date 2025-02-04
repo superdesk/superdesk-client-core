@@ -8,7 +8,7 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
             item: '=',
             setUserPreferences: '&',
         },
-        link: function (scope) {
+        link: function(scope) {
             function getCount() {
                 var criteria = {
                     source: {
@@ -36,36 +36,34 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                 if (scope.item.content_types.includes('planning')) {
                     resources.push('planning');
                 }
-                resources.map((resource) =>
-                    api.query(resource, criteria).then((result) => {
-                        scope.ingested_count += result._meta.total;
-                    }),
-                );
+                resources.map((resource) => api.query(resource, criteria).then((result) => {
+                    scope.ingested_count += result._meta.total;
+                }));
             }
 
             function updateProvider() {
-                api.ingestProviders.getById(scope.item._id).then(
-                    (result) => {
-                        angular.extend(scope.item, result);
-                        getUser();
-                    },
-                    (error) => {
-                        if (error.status === 404) {
-                            scope.item.dashboard_enabled = false;
-                            scope.setUserPreferences();
-                        }
-                    },
-                );
+                api.ingestProviders.getById(scope.item._id).then((result) => {
+                    angular.extend(scope.item, result);
+                    getUser();
+                }, (error) => {
+                    if (error.status === 404) {
+                        scope.item.dashboard_enabled = false;
+                        scope.setUserPreferences();
+                    }
+                });
             }
 
             function getLogMessages() {
                 var criteria: any = {
                     max_results: 5,
-                    sort: "[('_created',-1)]",
+                    sort: '[(\'_created\',-1)]',
                     embedded: {user: 1},
                 };
 
-                var where: any = [{resource: 'ingest_providers'}, {'data.provider_id': scope.item._id}];
+                var where: any = [
+                    {resource: 'ingest_providers'},
+                    {'data.provider_id': scope.item._id},
+                ];
 
                 if (scope.item.log_messages === 'error') {
                     where.push({name: 'error'});
@@ -110,7 +108,7 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
 
             init();
 
-            scope.isIdle = function () {
+            scope.isIdle = function() {
                 if (scope.item.last_item_update && !scope.item.is_closed) {
                     var idleTime = scope.item.idle_time || appConfig.ingest.DEFAULT_IDLE_TIME;
                     var lastItemUpdate = moment(scope.item.last_item_update);
@@ -127,7 +125,7 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                 return false;
             };
 
-            scope.filterLogMessages = function () {
+            scope.filterLogMessages = function() {
                 scope.setUserPreferences();
                 getLogMessages();
             };

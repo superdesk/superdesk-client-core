@@ -5,12 +5,12 @@ var mediaFields = {};
 const MEDIA_TYPES = ['video', 'picture', 'audio'];
 
 /**
- * @ngdoc method
- * @description Returns true if the given string is a vocabulary media
- *              field identifier, false otherwise.
- * @param {string} fieldId
- * @return {bool}
- */
+    * @ngdoc method
+    * @description Returns true if the given string is a vocabulary media
+    *              field identifier, false otherwise.
+    * @param {string} fieldId
+    * @return {bool}
+    */
 function isMediaField(fieldId, $scope) {
     var parts = mediaIdGenerator.getFieldParts(fieldId);
     var field = _.find($scope.fields, (_field) => _field._id === parts[0]);
@@ -84,11 +84,8 @@ function initMedia($scope) {
     mediaFields = {};
     $scope.mediaFieldVersions = {};
     _.forEach($scope.item.associations, (association, fieldId) => {
-        if (
-            association &&
-            _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1 &&
-            isMediaField(fieldId, $scope)
-        ) {
+        if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
+            && isMediaField(fieldId, $scope)) {
             addMediaField(fieldId);
         }
     });
@@ -124,4 +121,5 @@ function getNewMediaFieldId(fieldId, $scope) {
 
 export const InitializeMedia = {
     initMedia,
+
 };

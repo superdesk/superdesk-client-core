@@ -8,7 +8,14 @@ import classNames from 'classnames';
  * @description SubHeader of a side panel
  */
 export const SubHeader: React.StatelessComponent<any> = ({children, className}) => (
-    <div className={classNames('side-panel__header side-panel__header--border-b', className)}>{children}</div>
+    <div
+        className={classNames(
+            'side-panel__header side-panel__header--border-b',
+            className,
+        )}
+    >
+        {children}
+    </div>
 );
 
 SubHeader.propTypes = {

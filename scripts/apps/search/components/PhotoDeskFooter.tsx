@@ -21,27 +21,33 @@ export const PhotoDeskFooter: React.StatelessComponent<IProps> = (props) => {
 
     return (
         <div className="sd-grid-item__footer">
-            {Array.isArray(fieldsLeft) === true && fieldsLeft.length > 0 ? (
-                <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
-                    <PhotoDeskFields
-                        fieldsConfig={fieldsLeft}
-                        item={item}
-                        labelMode="never-with-custom-renderer"
-                        itemClassName=""
-                    />
-                </div>
-            ) : null}
-            {Array.isArray(fieldsRight) === true && fieldsRight.length > 0 ? (
-                <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-r">
-                    <PhotoDeskFields
-                        fieldsConfig={fieldsRight}
-                        item={item}
-                        labelMode="never-with-custom-renderer"
-                        itemClassName=""
-                    />
-                </div>
-            ) : null}
-            {props.getActionsMenu == null ? null : props.getActionsMenu()}
+            {
+                Array.isArray(fieldsLeft) === true && fieldsLeft.length > 0 ? (
+                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
+                        <PhotoDeskFields
+                            fieldsConfig={fieldsLeft}
+                            item={item}
+                            labelMode="never-with-custom-renderer"
+                            itemClassName=""
+                        />
+                    </div>
+                ) : null
+            }
+            {
+                Array.isArray(fieldsRight) === true && fieldsRight.length > 0 ? (
+                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--multi-r">
+                        <PhotoDeskFields
+                            fieldsConfig={fieldsRight}
+                            item={item}
+                            labelMode="never-with-custom-renderer"
+                            itemClassName=""
+                        />
+                    </div>
+                ) : null
+            }
+            {
+                props.getActionsMenu == null ? null : props.getActionsMenu()
+            }
         </div>
     );
 };

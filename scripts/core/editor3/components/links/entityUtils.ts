@@ -34,7 +34,11 @@ export function mergeSelectedEntityData(editorState, data) {
     const entityKey = getSelectedEntityKey(editorState);
     const contentState = editorState.getCurrentContent();
 
-    return EditorState.push(editorState, contentState.mergeEntityData(entityKey, data), 'change-block-data');
+    return EditorState.push(
+        editorState,
+        contentState.mergeEntityData(entityKey, data),
+        'change-block-data',
+    );
 }
 
 /**
@@ -47,7 +51,11 @@ export function replaceSelectedEntityData(editorState, data) {
     const entityKey = getSelectedEntityKey(editorState);
     const contentState = editorState.getCurrentContent();
 
-    return EditorState.push(editorState, contentState.replaceEntityData(entityKey, data), 'change-block-data');
+    return EditorState.push(
+        editorState,
+        contentState.replaceEntityData(entityKey, data),
+        'change-block-data',
+    );
 }
 
 /**
@@ -79,7 +87,9 @@ export function getSelectedEntityData(editorState) {
  */
 export function getSelectedBlock(editorState) {
     const startKey = editorState.getSelection().getStartKey();
-    const selectedBlock = editorState.getCurrentContent().getBlockForKey(startKey);
+    const selectedBlock = editorState
+        .getCurrentContent()
+        .getBlockForKey(startKey);
 
     return selectedBlock;
 }

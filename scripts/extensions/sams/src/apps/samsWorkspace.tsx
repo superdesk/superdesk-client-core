@@ -74,7 +74,10 @@ interface IProps {
     updateMultipleSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
-    updateAssetSearchParamsAndListItems(params: Partial<IAssetSearchParams>, listAction: LIST_ACTION): void;
+    updateAssetSearchParamsAndListItems(
+        params: Partial<IAssetSearchParams>,
+        listAction: LIST_ACTION,
+    ): void;
     toggleFilterPanel(): void;
     forceUnlockAsset(asset: IAssetItem): void;
     selectedAssets: Array<IAssetItem>;
@@ -102,7 +105,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     setListStyle: (style: ASSET_LIST_STYLE) => dispatch(setAssetListStyle(style)),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) =>
-        dispatch<any>(updateAssetSearchParamsAndListItems(params, listAction)),
+        dispatch<any>(
+            updateAssetSearchParamsAndListItems(
+                params,
+                listAction,
+            ),
+        ),
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
@@ -121,13 +129,14 @@ type IPropsPage = React.ComponentProps<IPage['component']>;
 export class SamsWorkspaceApp extends React.PureComponent<IPropsPage> {
     onStoreInit(store: Store) {
         // Only load Assets if we have Sets configured
-        return !getSets(store.getState()).length
-            ? Promise.resolve()
-            : store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE)).catch(() => {
-                  // Catch errors here so `Promise.all` still returns on fetching error
-                  // This can happen when invalid search params are stored in the URL
-                  return Promise.resolve();
-              });
+        return !getSets(store.getState()).length ?
+            Promise.resolve() :
+            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+                .catch(() => {
+                    // Catch errors here so `Promise.all` still returns on fetching error
+                    // This can happen when invalid search params are stored in the URL
+                    return Promise.resolve();
+                });
     }
 
     render() {
@@ -184,8 +193,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     onScroll(event: React.UIEvent<HTMLDivElement>) {
         const node = event.currentTarget;
 
-        if (
-            node != null &&
+        if (node != null &&
             this.state.nextPageLoading === false &&
             this.props.totalAssets > this.props.assets.length &&
             node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
@@ -199,7 +207,9 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
 
     toggleListStyle() {
         this.props.setListStyle(
-            this.props.listStyle === ASSET_LIST_STYLE.GRID ? ASSET_LIST_STYLE.LIST : ASSET_LIST_STYLE.GRID,
+            this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                ASSET_LIST_STYLE.LIST :
+                ASSET_LIST_STYLE.GRID,
         );
         this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
     }
@@ -209,8 +219,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
             return AssetPreviewPanel;
         } else if (
             this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.CREATE ||
-            this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.EDIT
-        ) {
+            this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.EDIT) {
             return AssetEditorPanel;
         }
 
@@ -220,8 +229,8 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     render() {
         const ContentPanel = this.getContentPanelComponent();
 
-        const actions: Array<IAssetCallback> = [
-            {
+        const actions: Array<IAssetCallback> =
+            [{
                 action: ASSET_ACTIONS.EDIT,
                 onSelect: this.onEditAsset,
             },
@@ -240,8 +249,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
             {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
-            },
-        ];
+            }];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
             actions.push({
@@ -253,9 +261,11 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         return (
             <div className="sd-page">
                 <PageLayout
-                    header={<WorkspaceSubnav />}
+                    header={(
+                        <WorkspaceSubnav />
+                    )}
                     leftPanelOpen={this.props.filterPanelOpen}
-                    leftPanel={
+                    leftPanel={(
                         this.props.filterPanelOpen === false ? (
                             <div />
                         ) : (
@@ -265,24 +275,25 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
                             />
                         )
-                    }
+                    )}
                     rightPanelOpen={ContentPanel != null}
-                    rightPanel={
-                        ContentPanel == null ? (
-                            <div />
-                        ) : (
-                            <PanelContent>
-                                <ContentPanel key={this.props.selectedAssetId} />
-                            </PanelContent>
-                        )
-                    }
+                    rightPanel={ContentPanel == null ? (
+                        <div />
+                    ) : (
+                        <PanelContent>
+                            <ContentPanel key={this.props.selectedAssetId} />
+                        </PanelContent>
+                    )}
                     mainClassName="sd-padding--2"
                     mainProps={{onScroll: this.onScroll}}
-                    main={
+                    main={(
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
-                            selectedItems={this.props.selectedAssetId == null ? [] : [this.props.selectedAssetId]}
+                            selectedItems={this.props.selectedAssetId == null ?
+                                [] :
+                                [this.props.selectedAssetId]
+                            }
                             onItemClicked={this.props.previewAsset}
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
@@ -290,11 +301,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             updateMultipleSelectedAssetIds={this.onUpdateMultipleSelectedAssetIds}
                             actions={actions}
                         />
-                    }
+                    )}
                 />
             </div>
         );
     }
 }
 
-export const SamsWorkspace = connect(mapStateToProps, mapDispatchToProps)(SamsWorkspaceComponent);
+export const SamsWorkspace = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsWorkspaceComponent);

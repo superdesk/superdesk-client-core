@@ -11,10 +11,11 @@ import {MoreTemplates} from './more-templates';
 import {sdApi} from 'api';
 
 type IItemCreationAction =
-    | {kind: 'plain-text'}
+    { kind: 'plain-text'}
     | {kind: 'from-template'; template: ITemplate}
     | {kind: 'create-package'}
-    | {kind: 'upload-media'};
+    | {kind: 'upload-media'}
+;
 
 interface IProps {
     closePopup(): void;
@@ -52,19 +53,20 @@ export class InitialView extends React.PureComponent<IProps, IState> {
     componentDidMount() {
         const currentDesk: IDesk = ng.get('desks').getCurrentDesk();
 
-        Promise.all([ng.get('templates').find(currentDesk.default_content_template), this.loadRecentTemplates()]).then(
-            ([defaultTemplate, recentTemplates]) => {
-                const state: IStateLoaded = {
-                    loading: false,
-                    mode: 'initial',
-                    defaultTemplate: defaultTemplate,
-                    recentTemplates: recentTemplates ?? [],
-                    searchString: '',
-                };
+        Promise.all([
+            ng.get('templates').find(currentDesk.default_content_template),
+            this.loadRecentTemplates(),
+        ]).then(([defaultTemplate, recentTemplates]) => {
+            const state: IStateLoaded = {
+                loading: false,
+                mode: 'initial',
+                defaultTemplate: defaultTemplate,
+                recentTemplates: recentTemplates ?? [],
+                searchString: '',
+            };
 
-                this.setState(state);
-            },
-        );
+            this.setState(state);
+        });
     }
 
     getCurrentDesk(): IDesk {
@@ -72,10 +74,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
     }
 
     loadRecentTemplates(): Promise<Array<ITemplate>> {
-        return ng
-            .get('templates')
-            .getRecentTemplates(this.getCurrentDesk()._id, 5)
-            .then(({_items}) => _items);
+        return ng.get('templates').getRecentTemplates(this.getCurrentDesk()._id, 5).then(({_items}) => _items);
     }
 
     create(action: IItemCreationAction) {
@@ -88,7 +87,8 @@ export class InitialView extends React.PureComponent<IProps, IState> {
             if (action.kind === 'plain-text') {
                 return ng.get('content').createItem('text', initializeAsUpdated);
             } else if (action.kind === 'from-template') {
-                return ng.get('content').createItemFromTemplate(action.template, initializeAsUpdated);
+                return ng.get('content')
+                    .createItemFromTemplate(action.template, initializeAsUpdated);
             } else if (action.kind === 'create-package') {
                 return ng.get('packages').createEmptyPackage(undefined, initializeAsUpdated);
             } else if (action.kind === 'upload-media') {
@@ -141,34 +141,38 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                     />
                                 </div>
 
-                                {recentTemplates.length > 0 && (
-                                    <React.Fragment>
-                                        <div className="content-create-dropdown--spacer" />
+                                {
+                                    recentTemplates.length > 0 && (
+                                        <React.Fragment>
+                                            <div className="content-create-dropdown--spacer" />
 
-                                        <div>
-                                            <div className="form-label content-create-dropdown--section-label">
-                                                {gettext('Recent templates')}
+                                            <div>
+                                                <div className="form-label content-create-dropdown--section-label">
+                                                    {gettext('Recent templates')}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div style={{flexShrink: 1, overflow: 'auto'}}>
-                                            {recentTemplates.map((template, i) => (
-                                                <DropdownOption
-                                                    key={i}
-                                                    label={template.template_name}
-                                                    privateTag={template.is_public !== true}
-                                                    icon={{
-                                                        name: 'plus-sign',
-                                                        color: 'var(--sd-colour-primary)',
-                                                    }}
-                                                    onClick={() => {
-                                                        this.create({kind: 'from-template', template});
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    </React.Fragment>
-                                )}
+                                            <div style={{flexShrink: 1, overflow: 'auto'}}>
+                                                {
+                                                    recentTemplates.map((template, i) => (
+                                                        <DropdownOption
+                                                            key={i}
+                                                            label={template.template_name}
+                                                            privateTag={template.is_public !== true}
+                                                            icon={{
+                                                                name: 'plus-sign',
+                                                                color: 'var(--sd-colour-primary)',
+                                                            }}
+                                                            onClick={() => {
+                                                                this.create({kind: 'from-template', template});
+                                                            }}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                        </React.Fragment>
+                                    )
+                                }
 
                                 <div>
                                     <div className="content-create-dropdown--spacer" />
@@ -189,16 +193,18 @@ export class InitialView extends React.PureComponent<IProps, IState> {
                                 <div className="content-create-dropdown--spacer" />
 
                                 <div>
-                                    {!sdApi.navigation.isPersonalSpace() && (
-                                        <DropdownOption
-                                            label={gettext('Create package')}
-                                            icon={{name: 'package-plus'}}
-                                            onClick={() => {
-                                                this.create({kind: 'create-package'});
-                                            }}
-                                            data-test-id="create-package"
-                                        />
-                                    )}
+                                    {
+                                        !sdApi.navigation.isPersonalSpace() && (
+                                            <DropdownOption
+                                                label={gettext('Create package')}
+                                                icon={{name: 'package-plus'}}
+                                                onClick={() => {
+                                                    this.create({kind: 'create-package'});
+                                                }}
+                                                data-test-id="create-package"
+                                            />
+                                        )
+                                    }
 
                                     <DropdownOption
                                         label={gettext('Upload media')}

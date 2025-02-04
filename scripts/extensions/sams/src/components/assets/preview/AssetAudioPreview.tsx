@@ -8,7 +8,10 @@ export class AssetAudioPreview extends React.PureComponent<IAssetContentPreviewP
     render() {
         return (
             <audio controls={true}>
-                <source src={samsApi.assets.getDownloadUrl(this.props.asset._id)} type={this.props.asset.mimetype} />
+                <source
+                    src={samsApi.assets.getDownloadUrl(this.props.asset._id)}
+                    type={this.props.asset.mimetype}
+                />
             </audio>
         );
     }

@@ -47,14 +47,27 @@ const IconMix: React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize,
             </div>
         );
     } else {
-        iconElement = <Icon className={className} icon={icon} doubleSize={doubleSize} color={color} />;
+        iconElement = (
+            <Icon
+                className={className}
+                icon={icon}
+                doubleSize={doubleSize}
+                color={color}
+            />
+        );
     }
 
-    return tooltip ? (
-        <OverlayTrigger overlay={<Tooltip id="icon_list_item">{tooltip}</Tooltip>}>{iconElement}</OverlayTrigger>
-    ) : (
-        iconElement
-    );
+    return tooltip
+        ? (
+            <OverlayTrigger
+                overlay={
+                    <Tooltip id="icon_list_item">{tooltip}</Tooltip>
+                }
+            >
+                {iconElement}
+            </OverlayTrigger>
+        )
+        : iconElement;
 };
 
 IconMix.propTypes = {

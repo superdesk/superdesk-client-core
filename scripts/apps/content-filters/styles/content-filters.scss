@@ -5,6 +5,7 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
+
 .padded--sides10 {
     padding: 0 10px;
 }
@@ -16,7 +17,7 @@
 }
 .panel-search-result {
     .column-width {
-        width: 50%;
+        width:50%;
     }
 }
 
@@ -29,12 +30,13 @@ div {
     column-rule: 4px outset #ff00ff;
 }
 
+
 .filter-result-modal {
     position: absolute;
     .content {
         .active {
             background-color: #eff7fa !important;
-            border-inline-end: 2px solid rgba(94, 169, 200, 0.75) !important;
+            border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;
@@ -63,7 +65,7 @@ div {
     }
 }
 
-.content-filter-modal {
+.content-filter-modal {    
     .content {
         .field {
             margin-block-end: 10px;

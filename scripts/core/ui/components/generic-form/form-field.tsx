@@ -20,41 +20,41 @@ import {DurationComponent} from './input-types/duration';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
-        case FormFieldType.plainText:
-            return PlainText;
-        case FormFieldType.textEditor3:
-            return TextEditor3;
-        case FormFieldType.number:
-            return NumberComponent;
-        case FormFieldType.duration:
-            return DurationComponent;
-        case FormFieldType.vocabularySingleValue:
-            return VocabularySingleValue;
-        case FormFieldType.checkbox:
-            return CheckboxInput;
-        case FormFieldType.contentFilterSingleValue:
-            return ContentFilterSingleValue;
-        case FormFieldType.deskSingleValue:
-            return DeskSingleValue;
-        case FormFieldType.stageSingleValue:
-            return StageSingleValue;
-        case FormFieldType.macroSingleValue:
-            return getMacroSingleValue();
-        case FormFieldType.yesNo:
-            return YesNo;
-        case FormFieldType.select:
-            return Select;
-        case FormFieldType.selectMultiple:
-            return SelectMultipleValues;
-        default:
-            assertNever(type);
+    case FormFieldType.plainText:
+        return PlainText;
+    case FormFieldType.textEditor3:
+        return TextEditor3;
+    case FormFieldType.number:
+        return NumberComponent;
+    case FormFieldType.duration:
+        return DurationComponent;
+    case FormFieldType.vocabularySingleValue:
+        return VocabularySingleValue;
+    case FormFieldType.checkbox:
+        return CheckboxInput;
+    case FormFieldType.contentFilterSingleValue:
+        return ContentFilterSingleValue;
+    case FormFieldType.deskSingleValue:
+        return DeskSingleValue;
+    case FormFieldType.stageSingleValue:
+        return StageSingleValue;
+    case FormFieldType.macroSingleValue:
+        return getMacroSingleValue();
+    case FormFieldType.yesNo:
+        return YesNo;
+    case FormFieldType.select:
+        return Select;
+    case FormFieldType.selectMultiple:
+        return SelectMultipleValues;
+    default:
+        assertNever(type);
     }
 }
 
 export function getFormFieldPreviewComponent(
     item: {readonly [key: string]: any},
     formFieldConfig: IFormField,
-    options: {showAsPlainText?: boolean} = {},
+    options: { showAsPlainText?: boolean } = {},
 ): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
 

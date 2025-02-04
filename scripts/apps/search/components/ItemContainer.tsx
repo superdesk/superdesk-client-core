@@ -24,7 +24,11 @@ export const ItemContainer: React.StatelessComponent<any> = (props) => {
     return React.createElement(
         'span',
         {className: 'container', title: value ? label + ' ' + value : null},
-        React.createElement('span', {className: 'location-desk-label'}, label),
+        React.createElement(
+            'span',
+            {className: 'location-desk-label'},
+            label,
+        ),
         value,
     );
 };

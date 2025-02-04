@@ -13,7 +13,15 @@ interface IState {
 
 // copied from the PUBLISHED_STATES constant
 // since this is a temporary workaround, I'm not moving the constant to extensions API
-const publishedStates = ['published', 'scheduled', 'corrected', 'killed', 'recalled', 'being_corrected', 'unpublished'];
+const publishedStates = [
+    'published',
+    'scheduled',
+    'corrected',
+    'killed',
+    'recalled',
+    'being_corrected',
+    'unpublished',
+];
 
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge, GroupLabel, TopMenuDropdownButton} = superdesk.components;
@@ -40,17 +48,15 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
             const {user} = this.state;
 
             if (user != null) {
-                superdesk.dataApiByEntity.article
-                    .query({
-                        page: {from: 0, size: 300},
-                        sort: [{_updated: 'desc'}],
-                        filterValues: {marked_for_user: [user._id]},
-                        filterValuesNegative: {state: publishedStates},
-                        aggregations: true,
-                    })
-                    .then((articles) => {
-                        this.setState({articles});
-                    });
+                superdesk.dataApiByEntity.article.query({
+                    page: {from: 0, size: 300},
+                    sort: [{'_updated': 'desc'}],
+                    filterValues: {marked_for_user: [user._id]},
+                    filterValuesNegative: {state: publishedStates},
+                    aggregations: true,
+                }).then((articles) => {
+                    this.setState({articles});
+                });
             }
         }
         componentDidMount() {
@@ -114,9 +120,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                     groups={desksInOrder.map((deskId) => ({
                         render: () => (
                             <GroupLabel>
-                                <Badge type="highlight" marginInlineEnd={6}>
-                                    {itemsByDesk[deskId].length}
-                                </Badge>
+                                <Badge type="highlight" marginInlineEnd={6}>{itemsByDesk[deskId].length}</Badge>
                                 {desks.find(({_id}) => _id === deskId)!.name}
                             </GroupLabel>
                         ),
@@ -135,7 +139,10 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                             data-test-id="toggle-button"
                             tooltip={gettext('Marked for me')}
                         >
-                            <Badge type={hasItemsMarked ? 'highlight' : 'default'} marginInlineEnd={8}>
+                            <Badge
+                                type={hasItemsMarked ? 'highlight' : 'default'}
+                                marginInlineEnd={8}
+                            >
                                 {articles._items.length}
                             </Badge>
                             {gettext('Marked for me')}

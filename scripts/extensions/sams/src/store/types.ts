@@ -5,4 +5,9 @@ import {Action} from 'redux';
 // Types
 import {IApplicationState} from './index';
 
-export type IThunkAction<R> = ThunkAction<Promise<R>, IApplicationState, {}, Action>;
+export type IThunkAction<R> = ThunkAction<
+    Promise<R>,
+    IApplicationState,
+    {},
+    Action
+>;

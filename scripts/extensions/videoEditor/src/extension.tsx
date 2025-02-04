@@ -9,8 +9,8 @@ function getEditVideoAction(superdesk: ISuperdesk) {
     return class EditVideoAction extends React.PureComponent<{article: IArticle}> {
         render() {
             if (
-                this.props.article.type === 'video' &&
-                this.props.article?.renditions?.original?.video_editor_id != null
+                this.props.article.type === 'video'
+                && this.props.article?.renditions?.original?.video_editor_id != null
             ) {
                 return (
                     <button

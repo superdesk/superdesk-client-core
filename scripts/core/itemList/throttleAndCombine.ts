@@ -31,8 +31,17 @@ export function throttleAndCombine<T>(
     };
 }
 
-export function throttleAndCombineArray<T>(fn: IHandler<Array<T>>, wait: number, options?: ThrottleSettings) {
-    return throttleAndCombine(fn, (a, b) => a.concat(b), wait, options);
+export function throttleAndCombineArray<T>(
+    fn: IHandler<Array<T>>,
+    wait: number,
+    options?: ThrottleSettings,
+) {
+    return throttleAndCombine(
+        fn,
+        (a, b) => a.concat(b),
+        wait,
+        options,
+    );
 }
 
 /**
@@ -40,7 +49,11 @@ export function throttleAndCombineArray<T>(fn: IHandler<Array<T>>, wait: number,
  * it stores the sets in memory and after the wait times out
  * it then invokes the handler function with all stored values.
  */
-export function throttleAndCombineSet<T>(fn: IHandler<Set<T>>, wait: number, options?: ThrottleSettings) {
+export function throttleAndCombineSet<T>(
+    fn: IHandler<Set<T>>,
+    wait: number,
+    options?: ThrottleSettings,
+) {
     return throttleAndCombine(
         fn,
         (a, b) => {

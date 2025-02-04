@@ -9,9 +9,11 @@ export class DifferenceRemoteSource extends React.PureComponent<IProps> {
     render() {
         const {value1, value2, config} = this.props;
 
-        const values1 = Array.isArray(value1) ? value1 : [value1];
+        const values1 =
+            (Array.isArray(value1) ? value1 : [value1]);
 
-        const values2 = Array.isArray(value2) ? value2 : [value2];
+        const values2 =
+            (Array.isArray(value2) ? value2 : [value2]);
 
         const template = getValueTemplate(config);
 

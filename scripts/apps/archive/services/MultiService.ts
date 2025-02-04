@@ -21,7 +21,7 @@ export function MultiService($rootScope) {
      * @param {Object} item - story
      * @returns {Boolean}
      */
-    this.isSelected = function (item) {
+    this.isSelected = function(item) {
         return _.size(findItem(item)) > 0;
     };
 
@@ -32,7 +32,7 @@ export function MultiService($rootScope) {
      * @description Toggles the given item selected state
      * @param {Object} item - story
      */
-    this.toggle = function (item) {
+    this.toggle = function(item) {
         items = _.without(items, findItem(item));
         if (item.selected) {
             items = _.union(items, [item]);
@@ -48,7 +48,7 @@ export function MultiService($rootScope) {
      * @description Returns list of selected item identifiers
      * @returns {Array} item ids
      */
-    this.getIds = function () {
+    this.getIds = function() {
         return _.map(items, '_id');
     };
 
@@ -59,7 +59,7 @@ export function MultiService($rootScope) {
      * @description Returns list of selected items
      * @returns {Array} items
      */
-    this.getItems = function () {
+    this.getItems = function() {
         return items;
     };
 
@@ -69,7 +69,7 @@ export function MultiService($rootScope) {
      * @public
      * @description Resets selected items
      */
-    this.reset = function () {
+    this.reset = function() {
         var ids = [];
 
         _.each(items, (item) => {
@@ -88,7 +88,7 @@ export function MultiService($rootScope) {
      * @description Removes the item and updates count on deselection
      * @param {string} item id
      */
-    this.remove = function (itemId) {
+    this.remove = function(itemId) {
         _.remove(items, {_id: itemId});
         this.count = items.length;
     };

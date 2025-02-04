@@ -45,7 +45,9 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
             const value = options.urlParams[key];
 
             if (typeof value !== 'undefined') {
-                const stringified = typeof value === 'string' ? value : JSON.stringify(value);
+                const stringified = typeof value === 'string'
+                    ? value
+                    : JSON.stringify(value);
 
                 _url.searchParams.append(key, stringified);
             }
@@ -63,72 +65,74 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
 }
 
 export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise<void> {
-    return ng.getService('session').then((session) => {
-        return httpRequestBase({
-            ...options,
-            url: appConfig.server.url + options.path,
-            urlParams: options.urlParams,
-            headers: {
-                ...(options.headers || {}),
-                Authorization: session.token,
-            },
-        }).then((res) => {
-            if (res.ok) {
-                return Promise.resolve();
-            } else {
-                // Attempt to convert error response to JSON,
-                // otherwise return body as text as returned from the server
-                return res.text().then((bodyText) => {
-                    try {
-                        return Promise.reject(JSON.parse(bodyText));
-                    } catch (_err) {
-                        return Promise.reject(bodyText);
-                    }
-                });
-            }
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                urlParams: options.urlParams,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return Promise.resolve();
+                } else {
+                    // Attempt to convert error response to JSON,
+                    // otherwise return body as text as returned from the server
+                    return res.text()
+                        .then((bodyText) => {
+                            try {
+                                return Promise.reject(JSON.parse(bodyText));
+                            } catch (_err) {
+                                return Promise.reject(bodyText);
+                            }
+                        });
+                }
+            });
         });
-    });
 }
 
 export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T> {
-    return ng.getService('session').then((session) => {
-        return httpRequestBase({
-            ...options,
-            url: appConfig.server.url + options.path,
-            headers: {
-                ...(options.headers || {}),
-                'Content-Type': 'application/json',
-                Authorization: session.token,
-            },
-        }).then((res) =>
-            res.json().then((json) => {
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Content-Type': 'application/json',
+                    'Authorization': session.token,
+                },
+            }).then((res) => res.json().then((json) => {
                 if (res.ok) {
                     return json;
                 } else {
                     return Promise.reject(json);
                 }
-            }),
-        );
-    });
+            }));
+        });
 }
 
 export function httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response> {
-    return ng.getService('session').then((session) => {
-        return httpRequestBase({
-            ...options,
-            url: appConfig.server.url + options.path,
-            headers: {
-                ...(options.headers || {}),
-                Authorization: session.token,
-            },
-        }).then((res) => {
-            if (res.ok) {
-                return res;
-            } else {
-                return Promise.reject(res);
-            }
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    return Promise.reject(res);
+                }
+            });
         });
-    });
 }
 
 export function uploadFileWithProgress<T>(
@@ -138,36 +142,37 @@ export function uploadFileWithProgress<T>(
     method?: 'POST' | 'PATCH',
     etag?: string,
 ): Promise<T> {
-    return ng.getService('session').then((session) => {
-        return new Promise<T>((resolve, reject) => {
-            // Using `XMLHttpRequest` over `fetch` so we can get `onprogress` reporting
-            const request = new XMLHttpRequest();
-            const url = appConfig.server.url + endpoint;
+    return ng.getService('session')
+        .then((session) => {
+            return new Promise<T>((resolve, reject) => {
+                // Using `XMLHttpRequest` over `fetch` so we can get `onprogress` reporting
+                const request = new XMLHttpRequest();
+                const url = appConfig.server.url + endpoint;
 
-            request.open(method ?? 'POST', url);
-            request.setRequestHeader('Authorization', session.token);
+                request.open(method ?? 'POST', url);
+                request.setRequestHeader('Authorization', session.token);
 
-            if (method === 'PATCH' && etag != null) {
-                request.setRequestHeader('If-Match', etag);
-            }
-
-            request.upload.onprogress = onProgress;
-
-            request.onload = function () {
-                if (this.status >= 200 && this.status < 300) {
-                    resolve(JSON.parse(this.responseText));
-                } else {
-                    reject(JSON.parse(this.responseText));
+                if (method === 'PATCH' && etag != null) {
+                    request.setRequestHeader('If-Match', etag);
                 }
-            };
 
-            request.onerror = function (e: ProgressEvent) {
-                reject(e);
-            };
+                request.upload.onprogress = onProgress;
 
-            request.send(data);
+                request.onload = function() {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(JSON.parse(this.responseText));
+                    } else {
+                        reject(JSON.parse(this.responseText));
+                    }
+                };
+
+                request.onerror = function(e: ProgressEvent) {
+                    reject(e);
+                };
+
+                request.send(data);
+            });
         });
-    });
 }
 
 export function trackArticleActionProgress<T>(
@@ -176,28 +181,23 @@ export function trackArticleActionProgress<T>(
     successMessage: string,
     errorMessage: string,
 ): Promise<T> {
-    dispatchEvent(
-        new CustomEvent('article-action-loading', {
-            detail: {loading: true, itemId},
-        }),
-    );
+    dispatchEvent(new CustomEvent('article-action-loading', {
+        detail: {loading: true, itemId},
+    }));
 
     return getPromise()
         .then((res) => {
             notify.success(successMessage);
 
             return res;
-        })
-        .catch((error) => {
+        }).catch((error) => {
             notify.error(errorMessage);
 
             return error;
         })
         .finally(() => {
-            dispatchEvent(
-                new CustomEvent('article-action-loading', {
-                    detail: {loading: false, itemId},
-                }),
-            );
+            dispatchEvent(new CustomEvent('article-action-loading', {
+                detail: {loading: false, itemId},
+            }));
         });
 }

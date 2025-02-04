@@ -27,10 +27,12 @@ export class ConfigFromVocabulary extends React.PureComponent<IConfigComponentPr
                 <label className="form-label">{gettext('Select a vocabulary')}</label>
 
                 <SelectFilterable
-                    items={sdApi.vocabularies
-                        .getAll()
-                        .toArray()
-                        .filter((vocabulary) => !sdApi.vocabularies.isCustomFieldVocabulary(vocabulary))}
+                    items={
+                        sdApi.vocabularies.getAll().toArray()
+                            .filter(
+                                (vocabulary) => !sdApi.vocabularies.isCustomFieldVocabulary(vocabulary),
+                            )
+                    }
                     value={sdApi.vocabularies.getAll().get(this.props.config.vocabularyId)}
                     onChange={(vocabulary) => {
                         this.props.onChange({

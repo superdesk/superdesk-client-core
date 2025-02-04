@@ -7,23 +7,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         const initialEditorState = EditorState.createEmpty();
         const date = new Date();
 
-        const result = reducer(
-            {
-                editorState: initialEditorState,
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'test',
-                    data: {
-                        date: date,
-                        author: 'author_id',
-                    },
+        const result = reducer({
+            editorState: initialEditorState,
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'test',
+                data: {
+                    date: date,
+                    author: 'author_id',
                 },
             },
-        );
+        });
 
         const {editorState} = result;
         const block = editorState.getCurrentContent().getFirstBlock();
@@ -50,23 +47,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
         }) as SelectionState;
         const date = new Date();
 
-        const result = reducer(
-            {
-                editorState: EditorState.acceptSelection(initialEditorState, selection),
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'test',
-                    data: {
-                        date: date,
-                        author: 'author_id',
-                    },
+        const result = reducer({
+            editorState: EditorState.acceptSelection(initialEditorState, selection),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'test',
+                data: {
+                    date: date,
+                    author: 'author_id',
                 },
             },
-        );
+        });
 
         const {editorState} = result;
         const block = editorState.getCurrentContent().getFirstBlock();
@@ -91,23 +85,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
     it('should extend suggestion when suggest text adjacent to the same user insert suggestion', () => {
         const date = new Date();
 
-        const initialState = reducer(
-            {
-                editorState: EditorState.createEmpty(),
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'initial',
-                    data: {
-                        date: date,
-                        author: 'author_id',
-                    },
+        const initialState = reducer({
+            editorState: EditorState.createEmpty(),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'initial',
+                data: {
+                    date: date,
+                    author: 'author_id',
                 },
             },
-        );
+        });
 
         const {editorState: initialEditorState} = initialState;
         const selection = initialEditorState.getSelection().merge({
@@ -115,23 +106,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
             focusOffset: 2,
         });
 
-        const result = reducer(
-            {
-                editorState: EditorState.acceptSelection(initialEditorState, selection),
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'test',
-                    data: {
-                        date: date,
-                        author: 'author_id',
-                    },
+        const result = reducer({
+            editorState: EditorState.acceptSelection(initialEditorState, selection),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'test',
+                data: {
+                    date: date,
+                    author: 'author_id',
                 },
             },
-        );
+        });
 
         const {editorState} = result;
         const block = editorState.getCurrentContent().getFirstBlock();
@@ -146,23 +134,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
     it('should create new suggestion when insert text adjacent to the different user insert suggestion', () => {
         const date = new Date();
 
-        const initialState = reducer(
-            {
-                editorState: EditorState.createEmpty(),
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'initial',
-                    data: {
-                        date: date,
-                        author: 'author_id',
-                    },
+        const initialState = reducer({
+            editorState: EditorState.createEmpty(),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'initial',
+                data: {
+                    date: date,
+                    author: 'author_id',
                 },
             },
-        );
+        });
 
         const {editorState: initialEditorState} = initialState;
         const selection = initialEditorState.getSelection().merge({
@@ -170,23 +155,20 @@ describe('editor3.reducers.suggestion.CREATE_ADD_SUGGESTION', () => {
             focusOffset: 2,
         });
 
-        const result = reducer(
-            {
-                editorState: EditorState.acceptSelection(initialEditorState, selection),
-                suggestingMode: true,
-                onChangeValue: () => ({}),
-            },
-            {
-                type: 'CREATE_ADD_SUGGESTION',
-                payload: {
-                    text: 'test',
-                    data: {
-                        date: date,
-                        author: 'other_author_id',
-                    },
+        const result = reducer({
+            editorState: EditorState.acceptSelection(initialEditorState, selection),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        }, {
+            type: 'CREATE_ADD_SUGGESTION',
+            payload: {
+                text: 'test',
+                data: {
+                    date: date,
+                    author: 'other_author_id',
                 },
             },
-        );
+        });
 
         const {editorState} = result;
         const block = editorState.getCurrentContent().getFirstBlock();

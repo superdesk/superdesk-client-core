@@ -1,5 +1,4 @@
-export default angular
-    .module('superdesk.core.directives.sort', ['superdesk.core.services.asset'])
+export default angular.module('superdesk.core.directives.sort', ['superdesk.core.services.asset'])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -13,38 +12,34 @@ export default angular
      *
      * @description Inserts sort links based on current sort field and direction.
      */
-    .directive('sdSort', [
-        '$location',
-        'asset',
-        function ($location, asset) {
-            return {
-                scope: {
-                    label: '@',
-                    field: '@',
-                },
-                templateUrl: asset.templateUrl('core/views/sdSort.html'),
-                link: function (scope, element, attrs) {
-                    scope.loc = $location;
-                    scope.sort = scope.loc.search().sort;
+    .directive('sdSort', ['$location', 'asset', function($location, asset) {
+        return {
+            scope: {
+                label: '@',
+                field: '@',
+            },
+            templateUrl: asset.templateUrl('core/views/sdSort.html'),
+            link: function(scope, element, attrs) {
+                scope.loc = $location;
+                scope.sort = scope.loc.search().sort;
 
-                    scope.$watch('(loc.search()).sort', (val) => {
-                        scope.sort = val;
+                scope.$watch('(loc.search()).sort', (val) => {
+                    scope.sort = val;
+                });
+
+                element.click(() => {
+                    scope.$apply(() => {
+                        if (scope.sort && scope.field === scope.sort[0]) {
+                            // switch sort direction
+                            $location.search('sort', [scope.field, scope.sort[1] === 'asc' ? 'desc' : 'asc']);
+                        } else {
+                            // set sort field
+                            $location.search('sort', [scope.field, 'asc']);
+                        }
                     });
+                });
 
-                    element.click(() => {
-                        scope.$apply(() => {
-                            if (scope.sort && scope.field === scope.sort[0]) {
-                                // switch sort direction
-                                $location.search('sort', [scope.field, scope.sort[1] === 'asc' ? 'desc' : 'asc']);
-                            } else {
-                                // set sort field
-                                $location.search('sort', [scope.field, 'asc']);
-                            }
-                        });
-                    });
-
-                    element.addClass('sortable');
-                },
-            };
-        },
-    ]);
+                element.addClass('sortable');
+            },
+        };
+    }]);

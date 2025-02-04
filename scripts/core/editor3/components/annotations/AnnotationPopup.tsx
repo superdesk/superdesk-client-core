@@ -32,8 +32,9 @@ class Annotation extends React.Component<any, any> {
             _showPopup(PopupTypes.Annotation, {annotation, highlightId});
             close();
         };
-        const onDelete = () =>
-            modal.confirm(gettext('The annotation will be deleted. Are you sure?')).then(() => {
+        const onDelete = () => modal
+            .confirm(gettext('The annotation will be deleted. Are you sure?'))
+            .then(() => {
                 highlightsManager.removeHighlight(highlightId);
             });
 
@@ -71,10 +72,7 @@ class Annotation extends React.Component<any, any> {
                                 <span className="label">{gettext('Annotation')}</span>
                             </div>
 
-                            <div>
-                                <b>{gettext('Annotation type')}: </b>
-                                {type}
-                            </div>
+                            <div><b>{gettext('Annotation type')}: </b>{type}</div>
                         </div>
                     </FluidRow>
 
@@ -99,10 +97,11 @@ Annotation.propTypes = {
 };
 
 const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
-    annotationTypes: ng
-        .get('metadata')
-        .initialize()
+    annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types),
 }))(Annotation);
 
-export const AnnotationPopup: any = connect(() => ({}), {showPopup})(AnnotationWithDependenciesLoaded);
+export const AnnotationPopup: any = connect(
+    () => ({}),
+    {showPopup},
+)(AnnotationWithDependenciesLoaded);

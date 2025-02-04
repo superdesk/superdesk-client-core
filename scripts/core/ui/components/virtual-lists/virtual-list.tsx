@@ -27,7 +27,7 @@ function getItemsToLoad<T>(
     let from = viewportIndexStart;
 
     // include items that should be pre-loaded
-    from = Math.max(0, from - visibleItemsCount * pagesToPreload);
+    from = Math.max(0, from - (visibleItemsCount * pagesToPreload));
 
     // exclude items that are already loaded
     for (let i = from; i <= totalItemsCount - 1; i++) {
@@ -43,7 +43,7 @@ function getItemsToLoad<T>(
     let to = viewportIndexEnd;
 
     // include items that should be pre-loaded
-    to = Math.min(totalItemsCount, to + visibleItemsCount * pagesToPreload);
+    to = Math.min(totalItemsCount, to + (visibleItemsCount * pagesToPreload));
 
     // exclude items that are already loaded
     for (let i = to - 1; i >= from; i--) {
@@ -62,11 +62,9 @@ function getItemsToLoad<T>(
 
     // enforce minimum batch size
     if (estimatedItemCountToLoad < minBatchSize) {
-        if (loadedItems.get(from - 1) != null) {
-            // loading next items
+        if (loadedItems.get(from - 1) != null) { // loading next items
             to = Math.min(totalItemsCount, to + (minBatchSize - estimatedItemCountToLoad));
-        } else if (loadedItems.get(to + 1) != null) {
-            // loading previous items
+        } else if (loadedItems.get(to + 1) != null) { // loading previous items
             from = Math.max(0, from - (minBatchSize - estimatedItemCountToLoad));
         }
     }
@@ -129,10 +127,13 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
          */
         currentItems: Map<number, T>,
     ) {
-        let viewportIndexStart = rowVirtualizer.virtualItems.length < 1 ? 0 : rowVirtualizer.virtualItems[0].index;
+        let viewportIndexStart = rowVirtualizer.virtualItems.length < 1
+            ? 0
+            : rowVirtualizer.virtualItems[0].index;
 
-        let viewportIndexEnd =
-            rowVirtualizer.virtualItems.length < 1 ? 0 : viewportIndexStart + rowVirtualizer.virtualItems.length;
+        let viewportIndexEnd = rowVirtualizer.virtualItems.length < 1
+            ? 0
+            : viewportIndexStart + rowVirtualizer.virtualItems.length;
 
         const visibleItemsCount = viewportIndexEnd - viewportIndexStart;
 
@@ -143,7 +144,12 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
             if (rowVirtualizer.virtualItems.length < 1) {
                 return {from: 0, to: minBatchSize};
             } else {
-                return getItemsToLoad(currentItems, totalItemsCount, viewportIndexStart, viewportIndexEnd);
+                return getItemsToLoad(
+                    currentItems,
+                    totalItemsCount,
+                    viewportIndexStart,
+                    viewportIndexEnd,
+                );
             }
         })();
 
@@ -151,13 +157,13 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
             doLoadItems(currentItems, itemsToLoad.from, itemsToLoad.to);
         } else {
             // Avoid memory leaks - only store a fixed number of items in memory
-            const needsToFreeMemory = currentItems.size > visibleItemsCount * (pagesToCache * 2 + 1);
+            const needsToFreeMemory = currentItems.size > visibleItemsCount * ((pagesToCache * 2) + 1);
 
             if (needsToFreeMemory) {
                 let result = Map<number, T>();
 
-                const cacheFrom = Math.max(0, viewportIndexStart - visibleItemsCount * pagesToCache);
-                const cacheTo = Math.min(totalItemsCount, viewportIndexEnd + visibleItemsCount * pagesToCache);
+                const cacheFrom = Math.max(0, viewportIndexStart - (visibleItemsCount * pagesToCache));
+                const cacheTo = Math.min(totalItemsCount, viewportIndexEnd + (visibleItemsCount * pagesToCache));
 
                 for (let j = cacheFrom; j < cacheTo; j++) {
                     result = result.set(j, currentItems.get(j));
@@ -176,8 +182,7 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
             reloadItem: (id) => {
                 const entry = items.findEntry((item) => props.getId(item) === id) as [number, T] | undefined;
 
-                if (entry != null) {
-                    // null when isn't present in cache (thus also not displayed)
+                if (entry != null) { // null when isn't present in cache (thus also not displayed)
                     const index = entry[0];
 
                     // IMPROVE: reloading by index is error-prone. Consider reimplementing to reload by ID.
@@ -204,7 +209,9 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
 
         const NoItemsTemplate = props.noItemsTemplate ?? defaultTemplate;
 
-        return <NoItemsTemplate />;
+        return (
+            <NoItemsTemplate />
+        );
     }
 
     return (
@@ -223,32 +230,38 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
                     position: 'relative',
                 }}
             >
-                {rowVirtualizer.virtualItems.map((virtualRow) => {
-                    const item = items.get(virtualRow.index) as T;
-                    const Template = itemTemplate;
+                {
+                    rowVirtualizer.virtualItems.map((virtualRow) => {
+                        const item = items.get(virtualRow.index) as T;
+                        const Template = itemTemplate;
 
-                    return (
-                        <div
-                            key={virtualRow.index}
-                            ref={(el) => {
-                                virtualRow.measureRef(el);
-                            }}
-                            style={{
-                                position: 'absolute',
-                                insetBlockStart: 0,
-                                insetInlineStart: 0,
-                                width: '100%',
-                                transform: `translateY(${virtualRow.start}px)`,
-                            }}
-                        >
-                            {item == null ? (
-                                <div style={{textAlign: 'center'}}>{gettext('loading...')}</div>
-                            ) : (
-                                <Template item={item} />
-                            )}
-                        </div>
-                    );
-                })}
+                        return (
+                            <div
+                                key={virtualRow.index}
+                                ref={(el) => {
+                                    virtualRow.measureRef(el);
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    insetBlockStart: 0,
+                                    insetInlineStart: 0,
+                                    width: '100%',
+                                    transform: `translateY(${virtualRow.start}px)`,
+                                }}
+                            >
+                                {
+                                    item == null
+                                        ? (
+                                            <div style={{textAlign: 'center'}}>{gettext('loading...')}</div>
+                                        )
+                                        : (
+                                            <Template item={item} />
+                                        )
+                                }
+                            </div>
+                        );
+                    })
+                }
             </div>
         </div>
     );

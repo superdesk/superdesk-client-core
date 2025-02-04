@@ -25,7 +25,7 @@ interface IState {
 
 interface IProps {
     onHide(): void;
-    onThemeChange(response: {default: ITheme; proofreading: ITheme}): void;
+    onThemeChange(response: {default: ITheme, proofreading: ITheme}): void;
 }
 
 export class ProofreadingThemeModal extends React.Component<IProps, IState> {
@@ -41,11 +41,12 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
     componentDidMount(): void {
         const authThemes = ng.get('authThemes');
 
-        Promise.all([authThemes.get('theme'), authThemes.get('proofreadTheme')]).then(
-            ([defaultTheme, proofReadingTheme]) => {
-                this.setState({defaultTheme, proofReadingTheme});
-            },
-        );
+        Promise.all([
+            authThemes.get('theme'),
+            authThemes.get('proofreadTheme'),
+        ]).then(([defaultTheme, proofReadingTheme]) => {
+            this.setState({defaultTheme, proofReadingTheme});
+        });
     }
 
     render() {
@@ -55,25 +56,26 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
 
         const footerTemplate = (
             <ButtonGroup align="end">
-                <Button text={gettext('Cancel')} onClick={() => this.props.onHide()} />
+                <Button
+                    text={gettext('Cancel')}
+                    onClick={() => this.props.onHide()}
+                />
                 <Button
                     text={gettext('Save')}
                     type="primary"
                     onClick={() => {
                         const authThemes = ng.get('authThemes');
 
-                        authThemes
-                            .saveBoth({
-                                default: this.state.defaultTheme,
-                                proofreading: this.state.proofReadingTheme,
-                            })
-                            .then((res) => {
-                                this.props.onThemeChange({
-                                    default: JSON.parse(res.user_preferences[PREFERENCES_KEY].theme),
-                                    proofreading: JSON.parse(res.user_preferences[PREFERENCES_KEY].proofreadTheme),
-                                });
-                                this.props.onHide();
+                        authThemes.saveBoth({
+                            default: this.state.defaultTheme,
+                            proofreading: this.state.proofReadingTheme,
+                        }).then((res) => {
+                            this.props.onThemeChange({
+                                default: JSON.parse(res.user_preferences[PREFERENCES_KEY].theme),
+                                proofreading: JSON.parse(res.user_preferences[PREFERENCES_KEY].proofreadTheme),
                             });
+                            this.props.onHide();
+                        });
                     }}
                 />
             </ButtonGroup>

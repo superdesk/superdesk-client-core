@@ -36,8 +36,8 @@ export class SmoothLoaderForKey extends React.PureComponent<IProps, IState> {
 
     private showSnapshot() {
         if (
-            this.state.loading === false &&
-            this.wrapper != null // will be null when this component unmounts
+            this.state.loading === false
+            && this.wrapper != null // will be null when this component unmounts
         ) {
             this.lastSnapshotHtml = this.wrapper.innerHTML;
             this.setState({loading: true});
@@ -75,7 +75,10 @@ export class SmoothLoaderForKey extends React.PureComponent<IProps, IState> {
                  * Children have to be rendered unconditionally.
                  * A signal to remove the snapshot will come from children, thus they can't be unmounted.
                  */}
-                <MountTracker key={this.props.key_} onWillUnmount={this.showSnapshot}>
+                <MountTracker
+                    key={this.props.key_}
+                    onWillUnmount={this.showSnapshot}
+                >
                     <div style={style}>{children}</div>
                 </MountTracker>
             </div>

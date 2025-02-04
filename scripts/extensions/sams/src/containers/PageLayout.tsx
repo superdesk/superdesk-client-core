@@ -2,7 +2,14 @@
 import * as React from 'react';
 
 // UI
-import {HeaderPanel, LayoutContainer, LeftPanel, MainPanel, Panel, RightPanel} from '../ui';
+import {
+    HeaderPanel,
+    LayoutContainer,
+    LeftPanel,
+    MainPanel,
+    Panel,
+    RightPanel,
+} from '../ui';
 import {IMainPanelProps} from '../ui/MainPanel';
 
 interface IProps {
@@ -20,7 +27,11 @@ export class PageLayout extends React.PureComponent<IProps> {
     render() {
         return (
             <LayoutContainer>
-                {this.props.header && <HeaderPanel>{this.props.header}</HeaderPanel>}
+                {this.props.header && (
+                    <HeaderPanel>
+                        {this.props.header}
+                    </HeaderPanel>
+                )}
                 {this.props.leftPanel && (
                     <LeftPanel open={this.props.leftPanelOpen}>
                         <Panel side="left" background="grey">
@@ -35,7 +46,9 @@ export class PageLayout extends React.PureComponent<IProps> {
                 )}
                 {this.props.rightPanel && (
                     <RightPanel open={this.props.rightPanelOpen}>
-                        <Panel side="right">{this.props.rightPanel}</Panel>
+                        <Panel side="right">
+                            {this.props.rightPanel}
+                        </Panel>
                     </RightPanel>
                 )}
             </LayoutContainer>

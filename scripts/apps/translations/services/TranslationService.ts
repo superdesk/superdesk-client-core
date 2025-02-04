@@ -19,7 +19,11 @@ import {openArticle} from 'core/get-superdesk-api-implementation';
  */
 
 TranslationService.$inject = ['api', '$rootScope', 'search'];
-export function TranslationService(api, $rootScope, search) {
+export function TranslationService(
+    api,
+    $rootScope,
+    search,
+) {
     var service: any = {};
 
     /**
@@ -29,7 +33,7 @@ export function TranslationService(api, $rootScope, search) {
      * @returns {Object} Languages
      * @description Fetch languages from database
      */
-    service.fetch = function () {
+    service.fetch = function() {
         return api.query('languages');
     };
 
@@ -40,7 +44,7 @@ export function TranslationService(api, $rootScope, search) {
      * @description Return list of langugages
      * @return {Object} list of items
      */
-    service.get = function () {
+    service.get = function() {
         return service.languages;
     };
 
@@ -52,14 +56,14 @@ export function TranslationService(api, $rootScope, search) {
      * @param {Object} item item to be translated
      * @param {Object} language translate language
      */
-    service.set = function (item: IArticle, language: ILanguage) {
+    service.set = function(item: IArticle, language: ILanguage) {
         sdApi.article.translate(item, language.language).then((_item) => {
-            const onTranslateAfterMiddlewares: Array<
-                IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']
-            > = flatMap(
-                Object.values(extensions).map(({activationResult}) => activationResult),
-                (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
-            );
+            const onTranslateAfterMiddlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
+                = flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
+                );
 
             if (onTranslateAfterMiddlewares.length > 0) {
                 onTranslateAfterMiddlewares.forEach((fn) => {
@@ -73,15 +77,13 @@ export function TranslationService(api, $rootScope, search) {
         });
     };
 
-    service.translationsEnabled = function () {
-        return (
-            typeof service.languages === 'object' &&
-            Array.isArray(service.languages._items) &&
-            service.languages._items.length > 0
-        );
+    service.translationsEnabled = function() {
+        return typeof service.languages === 'object'
+            && Array.isArray(service.languages._items)
+            && service.languages._items.length > 0;
     };
 
-    service.getTranslations = function (item) {
+    service.getTranslations = function(item) {
         if (item.translation_id == null) {
             return Promise.reject('translation_id is not present');
         }
@@ -104,17 +106,16 @@ export function TranslationService(api, $rootScope, search) {
      * @description Check if item is available for translating
      * @return {boolean}
      */
-    service.checkAvailability = function (item) {
-        return service.translationsEnabled()
-            ? _.find(service.languages._items, (language) => language.source && language.language === item.language)
+    service.checkAvailability = function(item) {
+        return service.translationsEnabled() ?
+            _.find(service.languages._items, (language) => language.source && language.language === item.language)
             : false;
     };
 
     // Fetch languages from database on service initialization
-    service.init = () =>
-        service.fetch().then((languages) => {
-            service.languages = languages;
-        });
+    service.init = () => service.fetch().then((languages) => {
+        service.languages = languages;
+    });
 
     return service;
 }

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import {IEditorComponentProps, IVocabularyItem} from 'superdesk-api';
+import {
+    IEditorComponentProps, IVocabularyItem,
+} from 'superdesk-api';
 import {Alert, IconButton} from 'superdesk-ui-framework/react';
 import {Map} from 'immutable';
 import {ISubitemsValueOperational, ISubitemsFieldConfig, ISubitemsUserPreferences} from '.';
@@ -23,48 +25,55 @@ export class Editor extends React.PureComponent<IProps> {
             vocabulary.getVocabulary(RUNDOWN_SUBITEM_TYPES).items.map((item) => [item.qcode, item]),
         );
 
-        const selectableSubitems = subitemTypes.filter(
-            ({qcode}) => (this.props.value ?? []).find((item) => item.qcode === qcode) == null,
-        );
+        const selectableSubitems = subitemTypes
+            .filter(({qcode}) => (this.props.value ?? []).find((item) => item.qcode === qcode) == null);
 
         const miniToolbar = (
             <IconButton
                 icon="plus-sign"
                 onClick={(event) => {
-                    showPopup(event.target as HTMLElement, 'bottom-end', ({closePopup}) => (
-                        <Card>
-                            {selectableSubitems.size > 0 ? (
-                                <Spacer v gap="4">
-                                    {selectableSubitems
-                                        .map((subitem) => (
-                                            <div key={subitem.qcode}>
-                                                <button
-                                                    style={{padding: 0}}
-                                                    onClick={() => {
-                                                        this.props.onChange(
-                                                            (this.props.value ?? []).concat({
-                                                                qcode: subitem.qcode,
-                                                                technical_info: '',
-                                                                content: '',
-                                                            }),
-                                                        );
+                    showPopup(
+                        event.target as HTMLElement,
+                        'bottom-end',
+                        ({closePopup}) => (
+                            <Card>
+                                {
+                                    selectableSubitems.size > 0
+                                        ? (
+                                            <Spacer v gap="4">
+                                                {
+                                                    selectableSubitems.map((subitem) => (
+                                                        <div key={subitem.qcode}>
+                                                            <button
+                                                                style={{padding: 0}}
+                                                                onClick={() => {
+                                                                    this.props.onChange(
+                                                                        (this.props.value ?? []).concat({
+                                                                            qcode: subitem.qcode,
+                                                                            technical_info: '',
+                                                                            content: '',
+                                                                        }),
+                                                                    );
 
-                                                        closePopup();
-                                                    }}
-                                                >
-                                                    <SubitemLabel subitem={subitem} />
-                                                </button>
-                                            </div>
-                                        ))
-                                        .toArray()}
-                                </Spacer>
-                            ) : (
-                                <Alert size="small" margin="none">
-                                    {gettext('No items available')}
-                                </Alert>
-                            )}
-                        </Card>
-                    ));
+                                                                    closePopup();
+                                                                }}
+                                                            >
+                                                                <SubitemLabel subitem={subitem} />
+                                                            </button>
+                                                        </div>
+                                                    )).toArray()
+                                                }
+                                            </Spacer>
+                                        )
+                                        : (
+                                            <Alert size="small" margin="none">
+                                                {gettext('No items available')}
+                                            </Alert>
+                                        )
+                                }
+                            </Card>
+                        ),
+                    );
                 }}
                 disabled={this.props.readOnly}
                 ariaValue={gettext('Add')}

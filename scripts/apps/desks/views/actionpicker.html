@@ -1,37 +1,35 @@
 <div class="form__row form__row--flex">
     <div class="form__row-item">
-        <div
-            sd-form-select
-            label="{{ :: 'Desk' | translate }}"
-            model="desk"
-            options="desks"
-            option-label="name"
-            option-value="_id"
-            required="required.desk"
-        ></div>
+        <div sd-form-select
+             label="{{ :: 'Desk' | translate }}"
+             model="desk"
+             options="desks"
+             option-label="name"
+             option-value="_id"
+             required="required.desk">
+        </div>
     </div>
 
     <div class="form__row-item">
-        <div
-            sd-form-select
-            label="{{ :: 'Stage' | translate }}"
-            model="stage"
-            options="deskStages[desk]"
-            option-label="name"
-            option-value="_id"
-            required="required.stage"
-        ></div>
+        <div sd-form-select
+             label="{{ :: 'Stage' | translate }}"
+             model="stage"
+             options="deskStages[desk]"
+             option-label="name"
+             option-value="_id"
+             required="required.stage">
+        </div>
     </div>
 
     <div class="form__row-item">
-        <div
-            sd-form-select
-            label="{{ :: 'Macro' | translate }}"
-            model="macro"
-            options="deskMacros"
-            option-label="name"
-            option-value="name"
-            required="required.macro"
-        ></div>
-    </div>
+        <div sd-form-select
+             label="{{ :: 'Macro' | translate }}"
+             model="macro"
+             options="deskMacros"
+             option-label="name"
+             option-value="name"
+             required="required.macro">
+        </div>
+    </div>  
+
 </div>

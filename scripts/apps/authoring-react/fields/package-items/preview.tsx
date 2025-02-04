@@ -13,13 +13,20 @@ export class Preview extends React.PureComponent<IProps> {
 
         return (
             <WithArticles ids={this.props.value.map(({guid}) => guid)}>
-                {(articles) => (
-                    <div>
-                        {articles.map((article, i) => (
-                            <ArticleItemConcise key={i} article={article} />
-                        ))}
-                    </div>
-                )}
+                {
+                    (articles) => (
+                        <div>
+                            {
+                                articles.map((article, i) => (
+                                    <ArticleItemConcise
+                                        key={i}
+                                        article={article}
+                                    />
+                                ))
+                            }
+                        </div>
+                    )
+                }
             </WithArticles>
         );
     }

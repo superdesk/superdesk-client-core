@@ -23,11 +23,19 @@ export const usageterms: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) =>
-        retrieveStoredValueEditor3Generic('usageterms', item, authoringStorage),
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        'usageterms',
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase('usageterms', item, value, config);
+        const result = storeEditor3ValueBase(
+            'usageterms',
+            item,
+            value,
+            config,
+        );
 
         const articleUpdated = {...result.article};
 

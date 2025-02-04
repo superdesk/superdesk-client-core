@@ -10,7 +10,7 @@ time.Datetime {
 }
 
 .no-padding {
-    padding: 0 !important;
+	padding: 0 !important;
 }
 
 .sd-line-input {
@@ -65,7 +65,7 @@ time.Datetime {
 }
 
 .sd-collapse-box {
-    @extend .sd-collapse-box--autoFocus;
+    @extend .sd-collapse-box--autoFocus
 }
 
 .sd-collapse-box__content-wrapper--no-max-height {

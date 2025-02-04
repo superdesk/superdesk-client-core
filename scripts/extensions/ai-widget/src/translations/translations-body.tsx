@@ -43,7 +43,10 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
 
     componentDidMount(): void {
         if (this.props.article.translated_from != null) {
-            superdesk.dataApi.findOne<IArticle>('archive', this.props.article.translated_from).then((article) => {
+            superdesk.dataApi.findOne<IArticle>(
+                'archive',
+                this.props.article.translated_from,
+            ).then((article) => {
                 this.setState({
                     translatedFromLanguage: article.language,
                 });
@@ -58,7 +61,11 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
         if (error) {
             return (
                 <Spacer v alignItems="center" gap="8" justifyContent="center" noWrap>
-                    <Button style="hollow" onClick={generateTranslation} text={gettext('Regenerate')} />
+                    <Button
+                        style="hollow"
+                        onClick={generateTranslation}
+                        text={gettext('Regenerate')}
+                    />
                     <Heading type="h6" align="center">
                         {gettext('There was an error when trying to generate a translation.')}
                     </Heading>
@@ -88,15 +95,21 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                 <Spacer v gap="16" justifyContent="end" noGrow>
                     <Spacer h gap="4" justifyContent="end" alignItems="center" noWrap>
                         <Label
-                            text={
-                                this.props.mode === 'other'
-                                    ? this.state.translatedFromLanguage
-                                    : this.props.article.language
+                            text={this.props.mode === 'other'
+                                ? this.state.translatedFromLanguage
+                                : this.props.article.language
                             }
                             size="small"
                         />
-                        <Icon name="arrow-right" size="small" />
-                        <Label text={this.props.activeLanguageId} size="small" type="primary" />
+                        <Icon
+                            name="arrow-right"
+                            size="small"
+                        />
+                        <Label
+                            text={this.props.activeLanguageId}
+                            size="small"
+                            type="primary"
+                        />
                     </Spacer>
                     <div className="sd-text" dangerouslySetInnerHTML={{__html: translation}} />
                 </Spacer>
@@ -105,9 +118,9 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                         ariaValue={gettext('Copy')}
                         icon="copy"
                         onClick={() => {
-                            const clipboardItem = new ClipboardItem({
-                                'text/html': new Blob([translation], {type: 'text/html'}),
-                            });
+                            const clipboardItem = new ClipboardItem(
+                                {'text/html': new Blob([translation], {type: 'text/html'})},
+                            );
 
                             navigator.clipboard.write([clipboardItem]);
                         }}
@@ -117,13 +130,17 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                             onClick={() => {
                                 const {article: articleApi} = superdesk.entities;
 
-                                articleApi.translate(article, this.props.activeLanguageId).then((translatedItem) =>
+                                articleApi.translate(
+                                    article,
+                                    this.props.activeLanguageId,
+                                ).then((translatedItem) =>
                                     articleApi.get(translatedItem._id).then((fullTranslatedItem) => {
-                                        return articleApi
-                                            .patch(fullTranslatedItem, {body_html: translation, fields_meta: {}})
-                                            .then(() => {
-                                                superdesk.ui.article.edit(fullTranslatedItem._id);
-                                            });
+                                        return articleApi.patch(
+                                            fullTranslatedItem,
+                                            {body_html: translation, fields_meta: {}},
+                                        ).then(() => {
+                                            superdesk.ui.article.edit(fullTranslatedItem._id);
+                                        });
                                     }),
                                 );
                             }}
@@ -144,13 +161,12 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                             {rawContentState: rawState},
                                             article.language,
                                         ),
-                                    ),
-                                );
+                                    ));
                             } else {
-                                superdesk.ui.article.applyFieldChangesToEditor(article._id, {
-                                    key: 'body_html',
-                                    value: translation,
-                                });
+                                superdesk.ui.article.applyFieldChangesToEditor(
+                                    article._id,
+                                    {key: 'body_html', value: translation},
+                                );
                             }
                         }}
                         size="small"

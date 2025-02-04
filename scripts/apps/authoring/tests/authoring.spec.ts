@@ -9,11 +9,9 @@ describe('authoring', () => {
     var USER = 'user:1';
     var ITEM: any = {guid: GUID};
 
-    beforeEach(
-        window.module(($provide) => {
-            $provide.constant('lodash', _);
-        }),
-    );
+    beforeEach(window.module(($provide) => {
+        $provide.constant('lodash', _);
+    }));
 
     beforeEach(window.module('angular-embed'));
     beforeEach(window.module('superdesk.apps.publish'));
@@ -58,8 +56,8 @@ describe('authoring', () => {
         $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
-    it('can open an item', (done) =>
-        inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
+    it('can open an item',
+        (done) => inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
             var _item,
                 lockedItem = angular.extend({_locked: false}, ITEM);
 
@@ -81,18 +79,19 @@ describe('authoring', () => {
             $rootScope.$digest();
         }));
 
-    it('does lock item only once', inject((superdesk, api, session, $injector, $q, $rootScope) => {
-        var lockedItem: any = ITEM;
+    it('does lock item only once',
+        inject((superdesk, api, session, $injector, $q, $rootScope) => {
+            var lockedItem: any = ITEM;
 
-        lockedItem.lock_user = USER;
-        lockedItem.lock_session = session.sessionId;
+            lockedItem.lock_user = USER;
+            lockedItem.lock_session = session.sessionId;
 
-        spyOn(api, 'find').and.returnValue($q.when(lockedItem));
+            spyOn(api, 'find').and.returnValue($q.when(lockedItem));
 
-        $injector.invoke(superdesk.activity('authoring').resolve.item);
-        $rootScope.$digest();
-        expect(ITEM._locked).toBe(true);
-    }));
+            $injector.invoke(superdesk.activity('authoring').resolve.item);
+            $rootScope.$digest();
+            expect(ITEM._locked).toBe(true);
+        }));
 
     it('can use a previously created autosave', inject(() => {
         var $scope = startAuthoring({_autosave: {headline: 'test'}}, 'edit');
@@ -101,27 +100,25 @@ describe('authoring', () => {
         expect($scope.item.headline).toBe('test');
     }));
 
-    it('can save while item is being autosaved', (done) =>
-        inject(($rootScope, $timeout, $q, api) => {
-            var $scope = startAuthoring({headline: 'test', task: 'desk:1', profile: '123'}, 'edit');
+    it('can save while item is being autosaved', (done) => inject(($rootScope, $timeout, $q, api) => {
+        var $scope = startAuthoring({headline: 'test', task: 'desk:1', profile: '123'}, 'edit');
 
-            $scope.item.body_html = 'test';
-            $rootScope.$digest();
-            $timeout.flush(1000);
+        $scope.item.body_html = 'test';
+        $rootScope.$digest();
+        $timeout.flush(1000);
 
-            spyOn(api, 'save').and.returnValue(Promise.resolve({}));
-            $scope.save();
-            $rootScope.$digest();
+        spyOn(api, 'save').and.returnValue(Promise.resolve({}));
+        $scope.save();
+        $rootScope.$digest();
 
-            $timeout.flush(5000);
+        $timeout.flush(5000);
 
-            setTimeout(() => {
-                // save uses async middleware. HTTP request will be started asynchronously
-                expect($scope.item._autosave).toBeNull();
+        setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+            expect($scope.item._autosave).toBeNull();
 
-                done();
-            });
-        }));
+            done();
+        });
+    }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
         startAuthoring({headline: 'test', profile: '123'}, 'edit');
@@ -155,24 +152,23 @@ describe('authoring', () => {
         expect(scope.item.slugline).toBe('');
     }));
 
-    it('can reject publishing on error', (done) =>
-        inject((api, $q, $rootScope, authoring, lock) => {
-            let success = jasmine.createSpy('success');
+    it('can reject publishing on error', (done) => inject((api, $q, $rootScope, authoring, lock) => {
+        let success = jasmine.createSpy('success');
 
-            spyOn(api, 'update').and.returnValue($q.reject('err'));
-            spyOn(lock, 'unlock').and.returnValue();
+        spyOn(api, 'update').and.returnValue($q.reject('err'));
+        spyOn(lock, 'unlock').and.returnValue();
 
-            authoring.publish({}, {}).then(success, (error) => {
-                expect(api.update).toHaveBeenCalled();
-                expect(lock.unlock).not.toHaveBeenCalled();
-                expect(success).not.toHaveBeenCalled();
-                expect(error).toBe('err');
+        authoring.publish({}, {}).then(success, (error) => {
+            expect(api.update).toHaveBeenCalled();
+            expect(lock.unlock).not.toHaveBeenCalled();
+            expect(success).not.toHaveBeenCalled();
+            expect(error).toBe('err');
 
-                done();
-            });
+            done();
+        });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
     /**
      * Start authoring ctrl for given item.
@@ -210,26 +206,26 @@ describe('authoring', () => {
 
         it('can check if an item is editable', inject((authoring, session) => {
             expect(authoring.isEditable({})).toBe(false);
-            expect(authoring.isEditable({lock_user: session.identity._id, lock_session: session.sessionId})).toBe(true);
+            expect(authoring.isEditable({lock_user: session.identity._id, lock_session: session.sessionId}))
+                .toBe(true);
         }));
 
-        it('can close a read-only item', (done) =>
-            inject((authoring, confirm, lock, $rootScope) => {
-                const onClose = jasmine.createSpy('onClose1');
+        it('can close a read-only item', (done) => inject((authoring, confirm, lock, $rootScope) => {
+            const onClose = jasmine.createSpy('onClose1');
 
-                authoring.close({}, {}, true, onClose);
-                $rootScope.$digest();
+            authoring.close({}, {}, true, onClose);
+            $rootScope.$digest();
 
-                setTimeout(() => {
-                    expect(confirm.confirm).not.toHaveBeenCalled();
-                    expect(lock.unlock).not.toHaveBeenCalled();
-                    expect(onClose).toHaveBeenCalled();
-                    done();
-                }, 100);
-            }));
+            setTimeout(() => {
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
+                expect(onClose).toHaveBeenCalled();
+                done();
+            }, 100);
+        }));
 
-        it('can unlock on close editable item without changes made', (done) =>
-            inject((authoring, confirm, lock, $rootScope, session) => {
+        it('can unlock on close editable item without changes made',
+            (done) => inject((authoring, confirm, lock, $rootScope, session) => {
                 const onClose = jasmine.createSpy('onClose2');
 
                 const itemLocked = {
@@ -266,78 +262,58 @@ describe('authoring', () => {
 
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
-            expect(api.update).toHaveBeenCalledWith(
-                'archive_publish',
-                item,
-                {},
-                {publishing_warnings_confirmed: false},
-            );
+            expect(api.update).toHaveBeenCalledWith('archive_publish', item, {},
+                {publishing_warnings_confirmed: false});
         }));
 
-        it('confirms if an item is dirty and saves and publish', inject((
-            authoring,
-            api,
-            confirm,
-            lock,
-            $q,
-            $rootScope,
-        ) => {
-            var edit = Object.create(ITEM);
+        it('confirms if an item is dirty and saves and publish',
+            inject((authoring, api, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            _.extend(edit, {
-                _id: 1,
-                headline: 'test',
-                lock_user: 'user:1',
-                state: 'submitted',
-            });
+                _.extend(edit, {
+                    _id: 1,
+                    headline: 'test',
+                    lock_user: 'user:1',
+                    state: 'submitted',
+                });
 
-            authoring.publishConfirmation(ITEM, edit, true, 'publish');
-            $rootScope.$digest();
+                authoring.publishConfirmation(ITEM, edit, true, 'publish');
+                $rootScope.$digest();
 
-            expect(confirm.confirmPublish).toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
+                expect(confirm.confirmPublish).toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
 
-            spyOn(api, 'update').and.returnValue($q.when(_.extend({}, edit, {})));
+                spyOn(api, 'update').and.returnValue($q.when(_.extend({}, edit, {})));
 
-            authoring.publish(edit);
-            $rootScope.$digest();
+                authoring.publish(edit);
+                $rootScope.$digest();
 
-            expect(api.update).toHaveBeenCalledWith(
-                'archive_publish',
-                edit,
-                {},
-                {publishing_warnings_confirmed: false},
-            );
-        }));
+                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
+                    {publishing_warnings_confirmed: false});
+            }));
 
-        it('confirms if an item is dirty and save work in personal', inject((
-            authoring,
-            api,
-            confirm,
-            lock,
-            $q,
-            $rootScope,
-        ) => {
-            var edit = Object.create(ITEM);
+        it('confirms if an item is dirty and save work in personal',
+            inject((authoring, api, confirm, lock, $q, $rootScope) => {
+                var edit = Object.create(ITEM);
 
-            _.extend(edit, {
-                task: {desk: null, stage: null, user: 1},
-                type: 'text',
-                version: 1,
-            });
+                _.extend(edit, {
+                    task: {desk: null, stage: null, user: 1},
+                    type: 'text',
+                    version: 1,
+                });
 
-            authoring.saveWorkConfirmation(ITEM, edit, true, 'User is disabled');
-            $rootScope.$digest();
+                authoring.saveWorkConfirmation(ITEM, edit, true, 'User is disabled');
+                $rootScope.$digest();
 
-            expect(confirm.confirmSaveWork).toHaveBeenCalled();
+                expect(confirm.confirmSaveWork).toHaveBeenCalled();
 
-            spyOn(api, 'save').and.returnValue($q.when(_.extend({}, edit, {})));
+                spyOn(api, 'save').and.returnValue($q.when(_.extend({}, edit, {})));
 
-            authoring.saveWork(edit);
-            $rootScope.$digest();
+                authoring.saveWork(edit);
+                $rootScope.$digest();
 
-            expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
-        }));
+                expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
+            }));
 
         it('can validate schedule', inject((authoring) => {
             var errors = authoring.validateSchedule('2010-10-10', '08:10:10', '2010-10-10T08:10:10', 'Europe/Prague');
@@ -351,30 +327,31 @@ describe('authoring', () => {
 
         it('can validate schedule for pre utc timezone', inject((authoring, moment) => {
             // utc - 1h and matching server tz format
-            var timestamp = moment.utc().subtract(1, 'hours').format().replace('+00:00', '+0000');
+            var timestamp = moment.utc()
+                .subtract(1, 'hours')
+                .format()
+                .replace('+00:00', '+0000');
 
-            expect(
-                authoring.validateSchedule(
-                    timestamp.slice(0, 10),
-                    timestamp.slice(11, 19),
-                    timestamp,
-                    'America/Toronto', // anything before utc
-                ),
-            ).toBeFalsy();
+            expect(authoring.validateSchedule(
+                timestamp.slice(0, 10),
+                timestamp.slice(11, 19),
+                timestamp,
+                'America/Toronto', // anything before utc
+            )).toBeFalsy();
         }));
 
-        it('updates orig item on save', (done) =>
-            inject((authoring, $rootScope, $httpBackend, $q, urls) => {
+        it('updates orig item on save',
+            (done) => inject((authoring, $rootScope, $httpBackend, $q, urls) => {
                 var item = {headline: 'foo'};
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href, item).respond(200, {_etag: 'new', _current_version: 2});
+                $httpBackend.expectPATCH(orig._links.self.href, item)
+                    .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
 
-                setTimeout(() => {
-                    // save uses async middleware. HTTP request will be started asynchronously
+                setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
                     $httpBackend.flush();
                     expect(orig._etag).toBe('new');
                     expect(orig._current_version).toBe(2);
@@ -402,10 +379,8 @@ describe('authoring', () => {
             let iscope = elem.isolateScope();
 
             scope.item = {guid: 'item1', associations: {'media1--1': {guid: 'foo', type: 'picture'}}};
-            scope.items = [
-                {fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}},
-                {fieldId: 'media1--2', 'media1--2': null},
-            ];
+            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}},
+                {fieldId: 'media1--2', 'media1--2': null}];
             scope.$digest();
             expect(iscope.rel).toBe('media1--2');
 
@@ -426,49 +401,49 @@ describe('Item Crops directive', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
 
-    it('showCrops return true if image renditions are present', inject((
-        $rootScope,
-        $compile,
-        $q,
-        metadata,
-        vocabularies,
-    ) => {
-        var metaInit = $q.defer();
+    it('showCrops return true if image renditions are present',
+        inject(($rootScope, $compile, $q, metadata, vocabularies) => {
+            var metaInit = $q.defer();
 
-        metadata.values = {
-            crop_sizes: [{name: '4-3'}, {name: '16-9'}],
-        };
+            metadata.values = {
+                crop_sizes: [
+                    {name: '4-3'}, {name: '16-9'},
+                ],
+            };
 
-        spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
-        spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
+            spyOn(metadata, 'initialize').and.returnValue(metaInit.promise);
+            spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
 
-        let scope = $rootScope.$new();
+            let scope = $rootScope.$new();
 
-        scope.item = {
-            type: 'picture',
-            renditions: {},
-        };
+            scope.item = {
+                type: 'picture',
+                renditions: {
+                },
+            };
 
-        var elem = $compile('<div sd-item-crops data-item="item"></div>')(scope);
+            var elem = $compile('<div sd-item-crops data-item="item"></div>')(scope);
 
-        metaInit.resolve();
-        scope.$digest();
+            metaInit.resolve();
+            scope.$digest();
 
-        let iScope = elem.isolateScope();
+            let iScope = elem.isolateScope();
 
-        expect(iScope.showCrops()).not.toBe(true);
+            expect(iScope.showCrops()).not.toBe(true);
 
-        scope.item = {
-            type: 'picture',
-            renditions: {
-                '4-3': {},
-            },
-        };
+            scope.item = {
+                type: 'picture',
+                renditions: {
+                    '4-3': {
+                    },
+                },
+            };
 
-        scope.$digest();
+            scope.$digest();
 
-        expect(iScope.showCrops()).toBe(true);
-    }));
+            expect(iScope.showCrops()).toBe(true);
+        }),
+    );
 });
 
 describe('autosave', () => {
@@ -481,53 +456,55 @@ describe('autosave', () => {
         $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
-    it('can fetch an autosave for item locked by user and is editable', inject((autosave, api, $q, $rootScope) => {
-        spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: true, _editable: true, _id: 1});
-        $rootScope.$digest();
-        expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
-    }));
+    it('can fetch an autosave for item locked by user and is editable',
+        inject((autosave, api, $q, $rootScope) => {
+            spyOn(api, 'find').and.returnValue($q.when({}));
+            autosave.open({_locked: true, _editable: true, _id: 1});
+            $rootScope.$digest();
+            expect(api.find).toHaveBeenCalledWith('archive_autosave', 1);
+        }));
 
-    it('will skip autosave fetch when item is locked by user but not editable', inject((
-        autosave,
-        api,
-        $q,
-        $rootScope,
-    ) => {
-        spyOn(api, 'find').and.returnValue($q.when({}));
-        autosave.open({_locked: false, _editable: false, _id: 1});
-        $rootScope.$digest();
-        expect(api.find).not.toHaveBeenCalled();
-    }));
+    it('will skip autosave fetch when item is locked by user but not editable',
+        inject((autosave, api, $q, $rootScope) => {
+            spyOn(api, 'find').and.returnValue($q.when({}));
+            autosave.open({_locked: false, _editable: false, _id: 1});
+            $rootScope.$digest();
+            expect(api.find).not.toHaveBeenCalled();
+        }));
 
-    it('will skip autosave fetch when item is locked by another user', inject((autosave, api, $rootScope) => {
-        spyOn(api, 'find');
-        autosave.open({_locked: true});
-        $rootScope.$digest();
-        expect(api.find).not.toHaveBeenCalled();
-    }));
+    it('will skip autosave fetch when item is locked by another user',
+        inject((autosave, api, $rootScope) => {
+            spyOn(api, 'find');
+            autosave.open({_locked: true});
+            $rootScope.$digest();
+            expect(api.find).not.toHaveBeenCalled();
+        }));
 
-    it('can create an autosave', (done) =>
-        inject((autosave, api, $timeout, $rootScope) => {
-            var orig: any = {_id: 1, _etag: 'x', _locked: true, _editable: true};
-            var item = Object.create(orig);
+    it('can create an autosave', (done) => inject((autosave, api, $timeout, $rootScope) => {
+        var orig: any = {_id: 1, _etag: 'x', _locked: true, _editable: true};
+        var item = Object.create(orig);
 
-            item.headline = 'test';
-            spyOn(api, 'save').and.returnValue(Promise.resolve({_id: 2}));
+        item.headline = 'test';
+        spyOn(api, 'save').and.returnValue(Promise.resolve({_id: 2}));
 
-            autosave.save(item, orig, 0, () => {
+        autosave.save(
+            item,
+            orig,
+            0,
+            () => {
                 expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
                 expect(orig._autosave._id).toBe(2);
                 expect(item.headline).toBe('test');
                 expect(orig.headline).not.toBe('test');
 
                 done();
-            });
+            },
+        );
 
-            expect(api.save).not.toHaveBeenCalled();
-            $rootScope.$digest();
-            $timeout.flush(5000);
-        }));
+        expect(api.save).not.toHaveBeenCalled();
+        $rootScope.$digest();
+        $timeout.flush(5000);
+    }));
 });
 
 describe('lock service', () => {
@@ -625,583 +602,337 @@ describe('authoring actions', () => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
     }));
 
-    it('can perform actions if the item is located on the personal workspace', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'draft',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit', 'export', 'set_label']);
-    }));
-
-    it('can perform actions if the item is located on the desk', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            mark_for_desks: true,
-            unlock: true,
-            publish: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            're_write',
-            'mark_item_for_highlight',
-            'mark_item_for_desks',
-            'package_item',
-            'multi_edit',
-            'publish',
-            'add_to_current',
-            'export',
-            'set_label',
-            'send',
-        ]);
-    }));
-
-    it('cannot perform publish if the item is marked for not publication', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            flags: {marked_for_not_publication: true},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            're_write',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'add_to_current',
-            'export',
-            'set_label',
-            'send',
-        ]);
-    }));
-
-    it('cannot perform publish if the item is highlight package', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            type: 'composite',
-            highlight: 1,
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'package_item',
-            'multi_edit',
-            'add_to_current',
-            'set_label',
-            'send',
-        ]);
-    }));
-
-    it('cannot publish if user does not have publish privileges on the desk', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: false,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            're_write',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'add_to_current',
-            'export',
-            'set_label',
-            'send',
-        ]);
-    }));
-
-    it('can only view the item if the user does not have desk membership', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk3',
-            },
-            _current_version: 2,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            mark_for_desks: false,
-            unlock: true,
-            archive: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, ['view', 're_write', 'export', 'set_label']);
-    }));
-
-    it('can also duplicateTo item which is on desk where is not a member when enabled via config', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'submitted',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk3',
-            },
-            _current_version: 2,
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            mark_for_desks: false,
-            unlock: true,
-            archive: true,
-        };
-
-        appConfig.workflow_allow_duplicate_non_members = true;
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, ['view', 're_write', 'export', 'set_label', 'duplicateTo']);
-    }));
-
-    it('can only view the item if the item is killed', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'killed',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, ['view', 'export', 'set_label']);
-    }));
-
-    it('can only view the item if the item is recalled', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'recalled',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, ['view', 'export', 'set_label']);
-    }));
-
-    it('cannot create an update for a rewritten story ', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            type: 'text',
-            rewritten_by: 1,
-            task: {
-                desk: 'desk1',
-            },
-        };
-
-        var userPrivileges = {
-            archive: true,
-            rewrite: true,
-            unlock: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'view',
-            'package_item',
-            'multi_edit',
-            'add_to_current',
-            'resend',
-            'export',
-            'set_label',
-        ]);
-    }));
-
-    it('can only view or unmark item if the item is spiked', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'spiked',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-        };
-
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-        };
-
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
-
-        allowedActions(itemActions, [
-            'view',
-            'unspike',
-            'export',
-            'mark_item_for_desks',
-            'mark_item_for_highlight',
-            'set_label',
-        ]);
-    }));
-
-    it('Can perform correction or kill or takedown on published item', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            archive_item: {
+    it('can perform actions if the item is located on the personal workspace',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
-                state: 'published',
-                marked_for_not_publication: false,
+                state: 'draft',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['save', 'edit', 'copy', 'spike', 'multi_edit', 'export', 'set_label']);
+        }));
+
+    it('can perform actions if the item is located on the desk',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
                 type: 'text',
                 task: {
                     desk: 'desk1',
                 },
-                _current_version: 10,
-            },
-        };
+                _current_version: 1,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            takedown: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                mark_for_desks: true,
+                unlock: true,
+                publish: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            'duplicateTo',
-            'view',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'correct',
-            'takedown',
-            'kill',
-            're_write',
-            'create_broadcast',
-            'resend',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
+                'mark_item_for_highlight', 'mark_item_for_desks',
+                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label', 'send']);
+        }));
 
-    it('Can perform resend on rewritten item', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item: any = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            archive_item: {
+    it('cannot perform publish if the item is marked for not publication',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
-                state: 'published',
-                marked_for_not_publication: false,
+                state: 'submitted',
+                flags: {marked_for_not_publication: true},
                 type: 'text',
                 task: {
                     desk: 'desk1',
                 },
-                _current_version: 10,
-            },
-        };
+                _current_version: 1,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            'duplicateTo',
-            'view',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'correct',
-            'kill',
-            're_write',
-            'create_broadcast',
-            'resend',
-            'export',
-            'set_label',
-        ]);
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
+                'export', 'set_label', 'send']);
+        }));
 
-        item.archive_item.rewritten_by = 'abc';
-        itemActions = authoring.itemActions(item);
-        allowedActions(itemActions, [
-            'duplicate',
-            'view',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'correct',
-            'kill',
-            'create_broadcast',
-            'resend',
-            'export',
-            'set_label',
-            'duplicateTo',
-        ]);
-    }));
+    it('cannot perform publish if the item is highlight package',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                type: 'composite',
+                highlight: 1,
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+            };
 
-    it('Cannot perform correction or kill or takedown on published item without privileges', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            archive_item: {
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike',
+                'package_item', 'multi_edit', 'add_to_current', 'set_label', 'send']);
+        }));
+
+    it('cannot publish if user does not have publish privileges on the desk',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: false,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
+                'export', 'set_label', 'send']);
+        }));
+
+    it('can only view the item if the user does not have desk membership',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk3',
+                },
+                _current_version: 2,
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                mark_for_desks: false,
+                unlock: true,
+                archive: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 're_write', 'export', 'set_label']);
+        }));
+
+    it('can also duplicateTo item which is on desk where is not a member when enabled via config',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk3',
+                },
+                _current_version: 2,
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                mark_for_desks: false,
+                unlock: true,
+                archive: true,
+            };
+
+            appConfig.workflow_allow_duplicate_non_members = true;
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 're_write', 'export', 'set_label', 'duplicateTo']);
+        }));
+
+    it('can only view the item if the item is killed',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'killed',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 'export', 'set_label']);
+        }));
+
+    it('can only view the item if the item is recalled',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'recalled',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 'export', 'set_label']);
+        }));
+
+    it('cannot create an update for a rewritten story ',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'published',
+                type: 'text',
+                rewritten_by: 1,
+                task: {
+                    desk: 'desk1',
+                },
+            };
+
+            var userPrivileges = {
+                archive: true,
+                rewrite: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 'package_item', 'multi_edit', 'add_to_current',
+                'resend', 'export', 'set_label']);
+        }));
+
+    it('can only view or unmark item if the item is spiked',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'spiked',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions,
+                ['view', 'unspike', 'export', 'mark_item_for_desks', 'mark_item_for_highlight', 'set_label']);
+        }));
+
+    it('Can perform correction or kill or takedown on published item',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1210,59 +941,44 @@ describe('authoring actions', () => {
                     desk: 'desk1',
                 },
                 _current_version: 10,
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    marked_for_not_publication: false,
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: false,
-            kill: false,
-            takedown: false,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                takedown: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            'duplicateTo',
-            'view',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            're_write',
-            'resend',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'takedown', 'kill', 're_write',
+                'create_broadcast', 'resend', 'export', 'set_label']);
+        }));
 
-    it('Can only view if the item is not the current version', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            last_published_version: false,
-            _current_version: 8,
-            archive_item: {
+    it('Can perform resend on rewritten item',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item: any = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1271,45 +987,137 @@ describe('authoring actions', () => {
                     desk: 'desk1',
                 },
                 _current_version: 10,
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    marked_for_not_publication: false,
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, ['view', 'export', 'set_label']);
-    }));
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
+                'create_broadcast', 'resend', 'export', 'set_label']);
 
-    it('Can only view, duplicate and deschedule if the item is scheduled', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'scheduled',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 8,
-            archive_item: {
+            item.archive_item.rewritten_by = 'abc';
+            itemActions = authoring.itemActions(item);
+            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item_for_highlight',
+                'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend', 'export',
+                'set_label', 'duplicateTo']);
+        }));
+
+    it('Cannot perform correction or kill or takedown on published item without privileges',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 10,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: false,
+                kill: false,
+                takedown: false,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 're_write', 'resend',
+                'export', 'set_label']);
+        }));
+
+    it('Can only view if the item is not the current version',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                last_published_version: false,
+                _current_version: 8,
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                },
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+            };
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 'export', 'set_label']);
+        }));
+
+    it('Can only view, duplicate and deschedule if the item is scheduled',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'scheduled',
                 flags: {marked_for_not_publication: false},
@@ -1318,386 +1126,299 @@ describe('authoring actions', () => {
                     desk: 'desk1',
                 },
                 _current_version: 8,
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'scheduled',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 8,
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, ['view', 'duplicate', 'duplicateTo', 'deschedule', 'export', 'set_label']);
-    }));
+            allowedActions(itemActions, ['view', 'duplicate', 'duplicateTo', 'deschedule', 'export', 'set_label']);
+        }));
 
-    it('Cannot send item if the version is zero', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 0,
-        };
+    it('Cannot send item if the version is zero',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 0,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            mark_for_desks: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: false,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                mark_for_desks: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'publish',
-            'export',
-            'mark_item_for_desks',
-            're_write',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export',
+                'mark_item_for_desks', 're_write', 'set_label']);
+        }));
 
-    it('Can edit if the version is zero', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 0,
-        };
+    it('Can edit if the version is zero',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 0,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: false,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'publish',
-            'export',
-            're_write',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export',
+                're_write', 'set_label']);
+        }));
 
-    it('Can send item even if there is no move privileges', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
+    it('Can send item even if there is no move privileges',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: false,
-            move: false,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: false,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            're_write',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'publish',
-            'export',
-            'set_label',
-            'send',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
+                'export', 'set_label', 'send']);
+        }));
 
-    it('Can send item if the version greater then zero', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-        };
+    it('Can send item if the version greater then zero',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: false,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: false,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            're_write',
-            'mark_item_for_highlight',
-            'package_item',
-            'multi_edit',
-            'publish',
-            'send',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
+                'send', 'export', 'set_label']);
+        }));
 
-    it('Can do edit for embargo item.', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-            embargo: Date(),
-        };
+    it('Can do edit for embargo item.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+                embargo: Date(),
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: true,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'publish',
-            'send',
-            'export',
-            'set_label',
-            're_write',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 'set_label', 're_write']);
+        }));
 
-    it('Can do edit for scheduled item.', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 1,
-            publish_schedule: Date(),
-        };
+    it('Can do edit for scheduled item.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 1,
+                publish_schedule: Date(),
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: true,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'save',
-            'edit',
-            'duplicate',
-            'duplicateTo',
-            'spike',
-            'add_to_current',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'publish',
-            'send',
-            'export',
-            're_write',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 're_write',
+                'set_label']);
+        }));
 
-    it('Can do rewrite and package item for scheduled item after passing publish schedule.', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var pastTimestamp = new Date();
+    it('Can do rewrite and package item for scheduled item after passing publish schedule.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var pastTimestamp = new Date();
 
-        pastTimestamp.setHours(pastTimestamp.getHours() - 1);
+            pastTimestamp.setHours(pastTimestamp.getHours() - 1);
 
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 2,
-            publish_schedule: pastTimestamp,
-        };
+            var item = {
+                _id: 'test',
+                state: 'published',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+                _current_version: 2,
+                publish_schedule: pastTimestamp,
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            package_item: true,
-            move: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                package_item: true,
+                move: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'correct',
-            'kill',
-            'duplicate',
-            'duplicateTo',
-            'add_to_current',
-            're_write',
-            'view',
-            'package_item',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'resend',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'duplicateTo', 'add_to_current', 're_write',
+                'view', 'package_item', 'mark_item_for_highlight', 'multi_edit', 'resend', 'export',
+                'set_label']);
+        }));
 
-    it('Create broadcast icon is available for text item.', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            genre: [],
-            archive_item: {
+    it('Create broadcast icon is available for text item.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1707,62 +1428,44 @@ describe('authoring actions', () => {
                 },
                 _current_version: 10,
                 genre: [],
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                    genre: [],
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            're_write',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'correct',
-            'kill',
-            'package_item',
-            'view',
-            'create_broadcast',
-            'add_to_current',
-            'resend',
-            'export',
-            'set_label',
-            'duplicateTo',
-        ]);
-    }));
+            allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend',
+                'export', 'set_label', 'duplicateTo']);
+        }));
 
-    it('Create broadcast icon is available for text item with genre Article.', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            genre: [{name: 'Article', value: 'Article'}],
-            archive_item: {
+    it('Create broadcast icon is available for text item with genre Article.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1772,65 +1475,44 @@ describe('authoring actions', () => {
                 },
                 _current_version: 10,
                 genre: [{name: 'Article', value: 'Article'}],
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                    genre: [{name: 'Article', value: 'Article'}],
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            're_write',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'correct',
-            'kill',
-            'package_item',
-            'view',
-            'create_broadcast',
-            'add_to_current',
-            'resend',
-            'export',
-            'set_label',
-            'duplicateTo',
-        ]);
-    }));
+            allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
+                'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend',
+                'export', 'set_label', 'duplicateTo']);
+        }));
 
-    it('Create broadcast icon is not available for broadcast item', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            genre: [
-                {name: 'Interview', value: 'Interview'},
-                {name: 'Broadcast Script', value: 'Broadcast Script'},
-            ],
-            archive_item: {
+    it('Create broadcast icon is not available for broadcast item',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1843,109 +1525,95 @@ describe('authoring actions', () => {
                     {name: 'Interview', value: 'Interview'},
                     {name: 'Broadcast Script', value: 'Broadcast Script'},
                 ],
-            },
-        };
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                    genre: [
+                        {name: 'Interview', value: 'Interview'},
+                        {name: 'Broadcast Script', value: 'Broadcast Script'},
+                    ],
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            'duplicateTo',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'correct',
-            'kill',
-            'package_item',
-            'view',
-            'add_to_current',
-            'resend',
-            'export',
-            're_write',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'mark_item_for_highlight', 'multi_edit',
+                'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export',
+                're_write', 'set_label']);
+        }));
 
-    it('Export action is available for text item.', inject((privileges, authoring, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-        };
+    it('Export action is available for text item.',
+        inject((privileges, authoring, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
 
-        var userPrivileges = {
-            mark_item: false,
-        };
+            var userPrivileges = {
+                mark_item: false,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            're_write',
-            'save',
-            'edit',
-            'package_item',
-            'multi_edit',
-            'add_to_current',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['re_write', 'save', 'edit', 'package_item',
+                'multi_edit', 'add_to_current', 'export', 'set_label']);
+        }));
 
-    it('Export action is not available for non-text item.', inject((privileges, authoring, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'in_progress',
-            flags: {marked_for_not_publication: false},
-            type: 'composite',
-            task: {
-                desk: 'desk1',
-            },
-        };
+    it('Export action is not available for non-text item.',
+        inject((privileges, authoring, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'in_progress',
+                flags: {marked_for_not_publication: false},
+                type: 'composite',
+                task: {
+                    desk: 'desk1',
+                },
+            };
 
-        var userPrivileges = {
-            mark_item: false,
-        };
+            var userPrivileges = {
+                mark_item: false,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current', 'set_label']);
-    }));
+            allowedActions(itemActions, ['save', 'edit', 'package_item', 'multi_edit', 'add_to_current',
+                'set_label']);
+        }));
 
-    it('rewrite is not allowed if re-written item exists.', inject((privileges, desks, authoring, $q, $rootScope) => {
-        var item = {
-            _id: 'test',
-            state: 'published',
-            flags: {marked_for_not_publication: false},
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-            _current_version: 10,
-            rewritten_by: '123',
-            genre: [{name: 'Interview', value: 'Interview'}],
-            archive_item: {
+    it('rewrite is not allowed if re-written item exists.',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
                 _id: 'test',
                 state: 'published',
                 flags: {marked_for_not_publication: false},
@@ -1955,76 +1623,74 @@ describe('authoring actions', () => {
                 },
                 _current_version: 10,
                 rewritten_by: '123',
-                genre: [{name: 'Interview', value: 'Interview'}],
-            },
-        };
+                genre: [
+                    {name: 'Interview', value: 'Interview'},
+                ],
+                archive_item: {
+                    _id: 'test',
+                    state: 'published',
+                    flags: {marked_for_not_publication: false},
+                    type: 'text',
+                    task: {
+                        desk: 'desk1',
+                    },
+                    _current_version: 10,
+                    rewritten_by: '123',
+                    genre: [
+                        {name: 'Interview', value: 'Interview'},
+                    ],
+                },
+            };
 
-        var userPrivileges = {
-            duplicate: true,
-            mark_item: false,
-            spike: true,
-            unspike: true,
-            mark_for_highlights: true,
-            unlock: true,
-            publish: true,
-            correct: true,
-            kill: true,
-            archive_broadcast: true,
-        };
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                unlock: true,
+                publish: true,
+                correct: true,
+                kill: true,
+                archive_broadcast: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        var itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
 
-        allowedActions(itemActions, [
-            'duplicate',
-            'duplicateTo',
-            'mark_item_for_highlight',
-            'multi_edit',
-            'create_broadcast',
-            'correct',
-            'kill',
-            'package_item',
-            'view',
-            'add_to_current',
-            'resend',
-            'export',
-            'set_label',
-        ]);
-    }));
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'mark_item_for_highlight', 'multi_edit',
+                'create_broadcast', 'correct', 'kill', 'package_item', 'view', 'add_to_current',
+                'resend', 'export', 'set_label']);
+        }));
 
-    it('cannot mark or highlight if the item is not a text item', inject((
-        privileges,
-        desks,
-        authoring,
-        $q,
-        $rootScope,
-    ) => {
-        let item = {
-            _id: 'test',
-            type: 'text',
-            task: {
-                desk: 'desk1',
-            },
-        };
+    it('cannot mark or highlight if the item is not a text item',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            let item = {
+                _id: 'test',
+                type: 'text',
+                task: {
+                    desk: 'desk1',
+                },
+            };
 
-        let userPrivileges = {
-            mark_for_highlights: true,
-            mark_for_desks: true,
-        };
+            let userPrivileges = {
+                mark_for_highlights: true,
+                mark_for_desks: true,
+            };
 
-        privileges.setUserPrivileges(userPrivileges);
-        $rootScope.$digest();
-        let itemActions = authoring.itemActions(item);
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            let itemActions = authoring.itemActions(item);
 
-        expect(itemActions.mark_item_for_desks).toBeTruthy();
-        expect(itemActions.mark_item_for_highlight).toBeTruthy();
+            expect(itemActions.mark_item_for_desks).toBeTruthy();
+            expect(itemActions.mark_item_for_highlight).toBeTruthy();
 
-        item.type = 'picture';
-        itemActions = authoring.itemActions(item);
-        expect(itemActions.mark_item_for_desks).toBeFalsy();
-        expect(itemActions.mark_item_for_highlight).toBeFalsy();
-    }));
+            item.type = 'picture';
+            itemActions = authoring.itemActions(item);
+            expect(itemActions.mark_item_for_desks).toBeFalsy();
+            expect(itemActions.mark_item_for_highlight).toBeFalsy();
+        }));
 });
 
 describe('authoring workspace', () => {
@@ -2196,39 +1862,29 @@ describe('authoring container directive', () => {
             spyOn(preferencesService, 'getSync').and.returnValue(null);
         }));
 
-        it('applies kill template', inject((
-            authoringWorkspace: AuthoringWorkspaceService,
-            $rootScope,
-            api,
-            $compile,
-            $q,
-        ) => {
-            authoringWorkspace.kill(item);
-            $rootScope.$digest();
-            $rootScope.$digest();
-            expect(iscope.authoring.item).toBe(lockedItem);
-            expect(iscope.authoring.action).toBe('kill');
+        it('applies kill template',
+            inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope, api, $compile, $q) => {
+                authoringWorkspace.kill(item);
+                $rootScope.$digest();
+                $rootScope.$digest();
+                expect(iscope.authoring.item).toBe(lockedItem);
+                expect(iscope.authoring.action).toBe('kill');
 
-            spyOn(api, 'save').and.returnValue($q.when({}));
+                spyOn(api, 'save').and.returnValue($q.when({}));
 
-            var elemEmbed = $compile(
-                '<div sd-authoring-embedded data-item="authoring.item"' + ' data-action="authoring.action"></div>',
-            )(iscope);
+                var elemEmbed = $compile('<div sd-authoring-embedded data-item="authoring.item"' +
+                ' data-action="authoring.action"></div>')(iscope);
 
-            iscope.$digest();
-            var iscopeEmbed = elemEmbed.isolateScope();
+                iscope.$digest();
+                var iscopeEmbed = elemEmbed.isolateScope();
 
-            expect(iscopeEmbed.action).toBe('kill');
-            expect(api.save).toHaveBeenCalledWith(
-                'content_templates_apply',
-                {},
-                {
-                    template_name: 'kill',
-                    item: {_id: 'foo'},
-                },
-                {},
-            );
-        }));
+                expect(iscopeEmbed.action).toBe('kill');
+                expect(api.save)
+                    .toHaveBeenCalledWith('content_templates_apply', {}, {
+                        template_name: 'kill',
+                        item: {_id: 'foo'},
+                    }, {});
+            }));
     });
 });
 
@@ -2265,24 +1921,22 @@ describe('authoring themes', () => {
         expect(authThemes.save).toHaveBeenCalledWith('proofreadTheme', darkTheme);
     }));
 
-    it('can get normal theme', (done) =>
-        inject((authThemes, $rootScope) => {
-            authThemes.get('theme').then((theme) => {
-                expect(theme).not.toBe(null);
+    it('can get normal theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('theme').then((theme) => {
+            expect(theme).not.toBe(null);
 
-                done();
-            });
+            done();
+        });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
-    it('can get proofread theme', (done) =>
-        inject((authThemes, $rootScope) => {
-            authThemes.get('proofreadTheme').then((proofreadTheme) => {
-                expect(proofreadTheme).not.toBe(null);
-                done();
-            });
+    it('can get proofread theme', (done) => inject((authThemes, $rootScope) => {
+        authThemes.get('proofreadTheme').then((proofreadTheme) => {
+            expect(proofreadTheme).not.toBe(null);
+            done();
+        });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 });

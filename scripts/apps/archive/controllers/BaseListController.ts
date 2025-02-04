@@ -34,10 +34,11 @@ export class BaseListController {
                 $scope.selected.preview = null;
             }
             if ($location.search().fetch) {
-                this.fetchItem(decodeURIComponent($location.search().fetch)).then((item) => {
-                    $scope.selected.preview = null;
-                    $scope.selected.fetch = item;
-                });
+                this.fetchItem(decodeURIComponent($location.search().fetch))
+                    .then((item) => {
+                        $scope.selected.preview = null;
+                        $scope.selected.fetch = item;
+                    });
             }
             if (!$location.search().fetch) {
                 $scope.selected.fetch = null;

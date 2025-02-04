@@ -22,7 +22,7 @@ class DataStore {
                 filter: {},
                 page: 1,
                 max_results: 200,
-                sort: [{versioncreated: 'asc'}], // sorting isn't relevant
+                sort: [{'versioncreated': 'asc'}], // sorting isn't relevant
             };
 
             new DataProvider<IContentProfile>(
@@ -44,7 +44,7 @@ class DataStore {
 
                     resolveOnce();
                 },
-                {content_types: true},
+                {'content_types': true},
             );
         });
     }

@@ -16,7 +16,7 @@ TranslationDropdown.$inject = ['TranslationService'];
 export function TranslationDropdown(TranslationService) {
     return {
         templateUrl: 'scripts/apps/translations/views/TranslationDropdown.html',
-        link: function (scope) {
+        link: function(scope) {
             scope.languages = _.filter(TranslationService.languages._items, {destination: true});
 
             /*
@@ -24,7 +24,7 @@ export function TranslationDropdown(TranslationService) {
              * @param {Object} Language
              * @return {Boolean}
              */
-            scope.isCurrentLanguage = function (language) {
+            scope.isCurrentLanguage = function(language) {
                 return scope.item && scope.item.language === language.language;
             };
 
@@ -32,7 +32,7 @@ export function TranslationDropdown(TranslationService) {
              * Function for translating item
              * @param {Object} New language
              */
-            scope.translateItem = function (language) {
+            scope.translateItem = function(language) {
                 TranslationService.set(scope.item, language);
             };
         },

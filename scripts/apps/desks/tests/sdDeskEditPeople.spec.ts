@@ -1,10 +1,14 @@
+
 /**
- * Module with tests for the sdDeskeditPeople directive
- *
- * @module sdDeskeditPeople directive tests
- */
+* Module with tests for the sdDeskeditPeople directive
+*
+* @module sdDeskeditPeople directive tests
+*/
 describe('sdDeskeditPeople directive', () => {
-    let scope, $compile, $rootScope, desks;
+    let scope,
+        $compile,
+        $rootScope,
+        desks;
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -29,7 +33,9 @@ describe('sdDeskeditPeople directive', () => {
      * @return {Object} - the root DOM node of the compiled directive element
      */
     function compileDirective(scopeValues) {
-        let html, newScope, $element;
+        let html,
+            newScope,
+            $element;
 
         newScope = $rootScope.$new();
         angular.extend(newScope, scopeValues);
@@ -43,7 +49,8 @@ describe('sdDeskeditPeople directive', () => {
     }
 
     it('cannot add duplicate desks members ', () => {
-        var scopeValues, $element;
+        var scopeValues,
+            $element;
 
         scopeValues = {
             desk: {
@@ -72,7 +79,8 @@ describe('sdDeskeditPeople directive', () => {
     });
 
     it('can remove the desk member ', () => {
-        var scopeValues, $element;
+        var scopeValues,
+            $element;
 
         scopeValues = {
             desk: {
@@ -101,7 +109,8 @@ describe('sdDeskeditPeople directive', () => {
     });
 
     it('save the desk members ', () => {
-        var scopeValues, $element;
+        var scopeValues,
+            $element;
 
         scopeValues = {
             desk: {

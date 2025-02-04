@@ -1,14 +1,23 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {IFormGroup, IPropsGenericFormItemComponent, IFormField} from 'superdesk-api';
+import {
+    IFormGroup,
+    IPropsGenericFormItemComponent,
+    IFormField,
+} from 'superdesk-api';
 
 import {superdesk} from '../superdesk';
 import {IShow} from '../interfaces';
 
 const {gettext} = superdesk.localization;
 const {FormFieldType} = superdesk.forms;
-const {getGenericHttpEntityListPageComponent, ListItem, ListItemColumn, ListItemActionsMenu} = superdesk.components;
+const {
+    getGenericHttpEntityListPageComponent,
+    ListItem,
+    ListItemColumn,
+    ListItemActionsMenu,
+} = superdesk.components;
 const {getFormFieldPreviewComponent} = superdesk.forms;
 const {nameof} = superdesk.helpers;
 
@@ -43,13 +52,19 @@ const plannedDurationField: IFormField = {
 const formConfig: IFormGroup = {
     direction: 'vertical',
     type: 'inline',
-    form: [nameField, shortCode, descriptionField, plannedDurationField],
+    form: [
+        nameField,
+        shortCode,
+        descriptionField,
+        plannedDurationField,
+    ],
 };
 
-const CRUDComponent = getGenericHttpEntityListPageComponent<IShow, never>('shows', formConfig, {
-    field: nameof<IShow>('title'),
-    direction: 'ascending',
-});
+const CRUDComponent = getGenericHttpEntityListPageComponent<IShow, never>(
+    'shows',
+    formConfig,
+    {field: nameof<IShow>('title'), direction: 'ascending'},
+);
 
 export class ManageShows extends React.Component {
     render() {

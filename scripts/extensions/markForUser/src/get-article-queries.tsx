@@ -1,3 +1,4 @@
+
 export function getQueryMarkedForUser(userId: string): object {
     return {
         term: {

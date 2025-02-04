@@ -7,7 +7,11 @@ import {
     IEditor3Config,
 } from 'superdesk-api';
 import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
-import {CAMERA, RUNDOWN_ITEM_TYPES_VOCABULARY_ID, STATUS_VOCABULARY_ID} from '../constants';
+import {
+    CAMERA,
+    RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
+    STATUS_VOCABULARY_ID,
+} from '../constants';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;

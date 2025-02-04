@@ -27,3 +27,4 @@ export const getBooleanField = (): IBooleanField => {
         getEmptyValue: () => null,
     };
 };
+

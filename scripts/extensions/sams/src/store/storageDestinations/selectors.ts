@@ -13,13 +13,16 @@ export const getStorageDestinationsById = createSelector<
     IApplicationState,
     Array<IStorageDestinationItem>,
     Dictionary<string, IStorageDestinationItem>
->([getStorageDestinations], (destinations: Array<IStorageDestinationItem>) => {
-    return destinations.reduce<Dictionary<string, IStorageDestinationItem>>(
-        (items, destination: IStorageDestinationItem) => {
-            items[destination._id] = destination;
+>(
+    [getStorageDestinations],
+    (destinations: Array<IStorageDestinationItem>) => {
+        return destinations.reduce<Dictionary<string, IStorageDestinationItem>>(
+            (items, destination: IStorageDestinationItem) => {
+                items[destination._id] = destination;
 
-            return items;
-        },
-        {},
-    );
-});
+                return items;
+            },
+            {},
+        );
+    },
+);

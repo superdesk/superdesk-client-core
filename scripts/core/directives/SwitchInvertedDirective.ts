@@ -1,10 +1,9 @@
-var render = function (element, value) {
+var render = function(element, value) {
     element.toggleClass('checked', !!value);
     element.attr('checked', !!value);
 };
 
-export default angular
-    .module('superdesk.core.directives.switchInverted', [])
+export default angular.module('superdesk.core.directives.switchInverted', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -24,9 +23,13 @@ export default angular
     .directive('sdSwitchInverted', () => ({
         require: 'ngModel',
         replace: true,
-        template: ['<span class="sd-toggle">', '<span class="inner"></span>', '</span>'].join(''),
-        link: function ($scope, element, attrs, ngModel) {
-            ngModel.$render = function () {
+        template: [
+            '<span class="sd-toggle">',
+            '<span class="inner"></span>',
+            '</span>',
+        ].join(''),
+        link: function($scope, element, attrs, ngModel) {
+            ngModel.$render = function() {
                 render(element, ngModel.$viewValue);
             };
 

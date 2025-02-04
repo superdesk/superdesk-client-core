@@ -14,7 +14,10 @@ export const ContactLocation: React.StatelessComponent<any> = ({item}) => {
     return (
         <div key="contact-location" className="container link">
             {canShow && <i className="icon-map-marker" />}
-            {canShow && <ItemContainer item={item} field="location" />}
+            {
+                canShow &&
+                (<ItemContainer item={item} field="location" />)
+            }
         </div>
     );
 };

@@ -60,26 +60,37 @@ export class ToggleBox extends React.Component<any, any> {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            (prevState.isOpen !== this.state.isOpen && this.props.scrollInView) ||
-            (this.props.forceScroll && this.props.forceScroll !== prevProps.forceScroll)
+        if ((prevState.isOpen !== this.state.isOpen && this.props.scrollInView) ||
+            this.props.forceScroll && this.props.forceScroll !== prevProps.forceScroll
         ) {
             this.scrollInView();
         }
     }
 
     render() {
-        const {style, title, children, hideUsingCSS, invalid, noMargin, paddingBlockStart} = this.props;
+        const {
+            style,
+            title,
+            children,
+            hideUsingCSS,
+            invalid,
+            noMargin,
+            paddingBlockStart,
+        } = this.props;
 
         return (
             <div
-                className={classNames('toggle-box toggle-box--circle', style, {
-                    hidden: !this.state.isOpen,
-                    'toggle-box--invalid': invalid,
-                    'toggle-box--no-margin': noMargin,
-                    'toggle-box--padding-top': paddingBlockStart,
-                })}
-                ref={(node) => (this.dom.node = node)}
+                className={classNames(
+                    'toggle-box toggle-box--circle',
+                    style,
+                    {
+                        hidden: !this.state.isOpen,
+                        'toggle-box--invalid': invalid,
+                        'toggle-box--no-margin': noMargin,
+                        'toggle-box--padding-top': paddingBlockStart,
+                    },
+                )}
+                ref={(node) => this.dom.node = node}
             >
                 <a
                     className="toggle-box__header"
@@ -95,13 +106,18 @@ export class ToggleBox extends React.Component<any, any> {
                     <div className="toggle-box__line" />
                 </a>
                 <div className="toggle-box__content-wraper">
-                    {this.state.isOpen && !hideUsingCSS && <div className="toggle-box__content">{children}</div>}
+                    {this.state.isOpen && !hideUsingCSS && (
+                        <div className="toggle-box__content">
+                            {children}
+                        </div>
+                    )}
 
                     {hideUsingCSS && (
                         <div
-                            className={classNames('toggle-box__content', {
-                                'toggle-box__content--hidden': !this.state.isOpen,
-                            })}
+                            className={classNames(
+                                'toggle-box__content',
+                                {'toggle-box__content--hidden': !this.state.isOpen},
+                            )}
                         >
                             {children}
                         </div>

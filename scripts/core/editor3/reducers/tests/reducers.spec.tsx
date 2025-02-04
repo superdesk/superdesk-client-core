@@ -12,7 +12,7 @@ import {IEditorDragDropPayload} from '../editor3';
  */
 function withSearchTerm(txt, searchTerm) {
     const editorState = EditorState.createWithContent(ContentState.createFromText(txt));
-    const onChangeValue = function () {
+    const onChangeValue = function() {
         // noop
     };
 
@@ -31,16 +31,13 @@ describe('editor3.reducers', () => {
         const editorState = EditorState.createEmpty();
         const onChangeValue = jasmine.createSpy();
 
-        reducer(
-            {
-                onChangeValue: onChangeValue,
-                editorState: EditorState.createEmpty(),
-            },
-            {
-                type: 'EDITOR_CHANGE_STATE',
-                payload: {editorState},
-            },
-        );
+        reducer({
+            onChangeValue: onChangeValue,
+            editorState: EditorState.createEmpty(),
+        }, {
+            type: 'EDITOR_CHANGE_STATE',
+            payload: {editorState},
+        });
 
         expect(onChangeValue).toHaveBeenCalled();
     });
@@ -72,11 +69,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_RENDER highlight', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -89,11 +85,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_RENDER case sensitive', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: true,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: true},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -103,11 +98,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_RENDER special characters', () => {
-        const startState = withSearchTerm('?apple banana ?apple ananas apple prune', {
-            index: 1,
-            pattern: '?Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            '?apple banana ?apple ananas apple prune',
+            {index: 1, pattern: '?Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_RENDER'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -119,11 +113,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_CRITERIA change term', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_CRITERIA',
@@ -139,11 +132,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_CRITERIA change sensitivity', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_CRITERIA',
@@ -154,11 +146,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_NEXT', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -170,11 +161,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_NEXT past last', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 2,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 2, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -186,11 +176,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_NEXT wrong index', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 5,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 5, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -202,12 +191,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_PREV', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: false,
-            diff: {Apple: 'apple'},
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -219,12 +206,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_PREV before first', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 0,
-            pattern: 'Apple',
-            caseSensitive: false,
-            diff: {Apple: 'apple'},
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 0, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -236,12 +221,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_PREV wrong index', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: -5,
-            pattern: 'Apple',
-            caseSensitive: false,
-            diff: {Apple: 'apple'},
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: -5, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
+        );
 
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
@@ -253,11 +236,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_REPLACE', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_REPLACE',
@@ -270,11 +252,10 @@ describe('editor3.reducers', () => {
     });
 
     it('HIGHLIGHTS_FIND_REPLACE_ALL', () => {
-        const startState = withSearchTerm('apple banana apple ananas apple prune', {
-            index: 1,
-            pattern: 'Apple',
-            caseSensitive: false,
-        });
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 1, pattern: 'Apple', caseSensitive: false},
+        );
 
         const state = reducer(startState, {
             type: 'HIGHLIGHTS_REPLACE_ALL',
@@ -287,23 +268,20 @@ describe('editor3.reducers', () => {
     });
 
     it('SPELLCHECKER_REPLACE_WORD', () => {
-        const editorState = EditorState.createWithContent(ContentState.createFromText('abcd efgh'));
-
-        const state = reducer(
-            {
-                editorState: editorState,
-                onChangeValue: () => {
-                    /* no-op */
-                },
-            },
-            {
-                type: 'SPELLCHECKER_REPLACE_WORD',
-                payload: {
-                    word: {text: 'efgh', offset: 5},
-                    newWord: '1234',
-                },
-            },
+        const editorState = EditorState.createWithContent(
+            ContentState.createFromText('abcd efgh'),
         );
+
+        const state = reducer({
+            editorState: editorState,
+            onChangeValue: () => { /* no-op */ },
+        }, {
+            type: 'SPELLCHECKER_REPLACE_WORD',
+            payload: {
+                word: {text: 'efgh', offset: 5},
+                newWord: '1234',
+            },
+        });
 
         const text = state.editorState.getCurrentContent().getPlainText();
 
@@ -357,16 +335,13 @@ describe('editor3.reducers', () => {
         const contentState = ContentState.createFromText('some text');
         const nextContentState = ContentState.createFromText('some other text');
 
-        const nextState = reducer(
-            {
-                editorState: EditorState.createWithContent(contentState),
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_PUSH_STATE',
-                payload: {contentState: nextContentState},
-            },
-        );
+        const nextState = reducer({
+            editorState: EditorState.createWithContent(contentState),
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_PUSH_STATE',
+            payload: {contentState: nextContentState},
+        });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
     });
@@ -377,17 +352,14 @@ describe('editor3.reducers', () => {
 
         editorState = EditorState.moveFocusToEnd(editorState);
 
-        const nextState = reducer(
-            {
-                editorState: editorState,
-                editorFormat: ['tab', 'tab as spaces'],
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_TAB',
-                payload: fakeTabEvent({shift: false}),
-            },
-        );
+        const nextState = reducer({
+            editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: false}),
+        });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo\t');
     });
@@ -398,17 +370,14 @@ describe('editor3.reducers', () => {
 
         editorState = EditorState.moveFocusToEnd(editorState);
 
-        const nextState = reducer(
-            {
-                editorState: editorState,
-                editorFormat: ['tab', 'tab as spaces'],
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_TAB',
-                payload: fakeTabEvent({shift: true}),
-            },
-        );
+        const nextState = reducer({
+            editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo        ');
     });
@@ -419,16 +388,13 @@ describe('editor3.reducers', () => {
 
         editorState = EditorState.moveFocusToEnd(editorState);
 
-        const nextState = reducer(
-            {
-                editorState: editorState,
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_TAB',
-                payload: fakeTabEvent({shift: false}),
-            },
-        );
+        const nextState = reducer({
+            editorState: editorState,
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: false}),
+        });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
     });
@@ -440,34 +406,28 @@ describe('editor3.reducers', () => {
         editorState = RichUtils.toggleBlockType(editorState, 'ordered-list-item');
 
         // indent right
-        let nextState = reducer(
-            {
-                editorState,
-                editorFormat: ['tab', 'tab as spaces'],
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_TAB',
-                payload: fakeTabEvent(),
-            },
-        );
+        let nextState = reducer({
+            editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent(),
+        });
 
         editorState = nextState.editorState as EditorState;
 
         expect(editorState.getCurrentContent().getFirstBlock().getText()).toBe('list item');
 
         // indent left
-        nextState = reducer(
-            {
-                editorState,
-                editorFormat: ['tab', 'tab as spaces'],
-                onChangeValue: jasmine.createSpy('onChangeValue'),
-            },
-            {
-                type: 'EDITOR_TAB',
-                payload: fakeTabEvent({shift: true}),
-            },
-        );
+        nextState = reducer({
+            editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
 
         editorState = nextState.editorState as EditorState;
 

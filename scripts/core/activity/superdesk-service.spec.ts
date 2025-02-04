@@ -5,32 +5,33 @@ describe('Superdesk service', () => {
     var testPane = {testData: 123};
     var testActivity = {
         label: 'test',
-        controller: function () {
+        controller: function() {
             return 'test';
         },
         filters: [intent],
         category: 'superdesk.core.menu.main',
     };
 
-    angular.module('superdesk.core.activity.test', ['superdesk.core.activity']).config((superdeskProvider) => {
-        provider = superdeskProvider;
-        provider.widget('testWidget', testWidget);
-        provider.pane('testPane', testPane);
+    angular.module('superdesk.core.activity.test', ['superdesk.core.activity'])
+        .config((superdeskProvider) => {
+            provider = superdeskProvider;
+            provider.widget('testWidget', testWidget);
+            provider.pane('testPane', testPane);
 
-        provider.activity('testActivity', testActivity);
+            provider.activity('testActivity', testActivity);
 
-        provider.activity('missingFeatureActivity', {
-            category: superdeskProvider.MENU_MAIN,
-            features: {missing: 1},
-            filters: [{action: 'test', type: 'features'}],
+            provider.activity('missingFeatureActivity', {
+                category: superdeskProvider.MENU_MAIN,
+                features: {missing: 1},
+                filters: [{action: 'test', type: 'features'}],
+            });
+
+            provider.activity('missingPrivilegeActivity', {
+                category: superdeskProvider.MENU_MAIN,
+                privileges: {missing: 1},
+                filters: [{action: 'test', type: 'privileges'}],
+            });
         });
-
-        provider.activity('missingPrivilegeActivity', {
-            category: superdeskProvider.MENU_MAIN,
-            privileges: {missing: 1},
-            filters: [{action: 'test', type: 'privileges'}],
-        });
-    });
 
     beforeEach(window.module('superdesk.core.activity'));
     beforeEach(window.module('superdesk.core.activity.test'));
@@ -52,46 +53,48 @@ describe('Superdesk service', () => {
         expect(superdesk.activities.testActivity.label).toBe(testActivity.label);
     }));
 
-    it('can run activities', (done) =>
-        inject(($rootScope, superdesk, activityService) => {
-            activityService.start(superdesk.activities.testActivity).then((result) => {
+    it('can run activities', (done) => inject(($rootScope, superdesk, activityService) => {
+        activityService.start(superdesk.activities.testActivity)
+            .then((result) => {
                 expect(result).toBe('test');
 
                 done();
             });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
-    it('can run activities by intent', (done) =>
-        inject(($rootScope, superdesk) => {
-            superdesk.intent('testAction', 'testType', 'testData').then((successResult) => {
+    it('can run activities by intent', (done) => inject(($rootScope, superdesk) => {
+        superdesk.intent('testAction', 'testType', 'testData')
+            .then((successResult) => {
                 expect(successResult).toBe('test');
 
-                superdesk.intent('testAction2', 'testType2', 'testData2').then(null, (failureResult) => {
-                    expect(failureResult).toBe(undefined);
+                superdesk.intent('testAction2', 'testType2', 'testData2')
+                    .then(null, (failureResult) => {
+                        expect(failureResult).toBe(undefined);
 
-                    done();
-                });
+                        done();
+                    });
             });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
-    it('can run activities by intent provided with an id', (done) =>
-        inject(($rootScope, superdesk) => {
-            superdesk.intent('testAction', 'testType', 'testData', 'testId').then((successResult) => {
+    it('can run activities by intent provided with an id', (done) => inject(($rootScope, superdesk) => {
+        superdesk.intent('testAction', 'testType', 'testData', 'testId')
+            .then((successResult) => {
                 expect(successResult).toBe('test');
 
-                superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2').then(null, (failureResult) => {
-                    expect(failureResult).toBe(undefined);
+                superdesk.intent('testAction2', 'testType2', 'testData2', 'testId2')
+                    .then(null, (failureResult) => {
+                        expect(failureResult).toBe(undefined);
 
-                    done();
-                });
+                        done();
+                    });
             });
 
-            $rootScope.$digest();
-        }));
+        $rootScope.$digest();
+    }));
 
     it('can find activities', inject((superdesk) => {
         var success = superdesk.findActivities(intent);
@@ -118,23 +121,19 @@ describe('Superdesk service', () => {
         expect(list.length).toBe(1);
     }));
 
-    it('can get main menu and filter out based on features/permissions', inject((
-        superdesk,
-        $rootScope,
-        privileges,
-        $q,
-    ) => {
-        privileges.loaded = $q.when();
+    it('can get main menu and filter out based on features/permissions',
+        inject((superdesk, $rootScope, privileges, $q) => {
+            privileges.loaded = $q.when();
 
-        var menu;
+            var menu;
 
-        superdesk.getMenu(superdesk.MENU_MAIN).then((_menu) => {
-            menu = _menu;
-        });
+            superdesk.getMenu(superdesk.MENU_MAIN).then((_menu) => {
+                menu = _menu;
+            });
 
-        $rootScope.$digest();
-        expect(menu.length).toBe(1);
-    }));
+            $rootScope.$digest();
+            expect(menu.length).toBe(1);
+        }));
 
     it('can get link for given activity', inject((activityService) => {
         var routeActivity = {href: '/test/:_id'};

@@ -1,29 +1,24 @@
+
 describe('list directives', () => {
     beforeEach(window.module('superdesk.core.list'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(
-        window.module(($provide) => {
-            $provide.provider('translateFilter', function () {
-                this.$get = function () {
-                    return function (text) {
-                        return text;
-                    };
+    beforeEach(window.module(($provide) => {
+        $provide.provider('translateFilter', function() {
+            this.$get = function() {
+                return function(text) {
+                    return text;
                 };
-            });
-        }),
-    );
+            };
+        });
+    }));
 
     it('renders list', inject(($compile, $rootScope) => {
         var scope = $rootScope.$new(true);
 
-        scope.items = [
-            {href: 1, name: 'foo'},
-            {href: 2, name: 'bar'},
-        ];
+        scope.items = [{href: 1, name: 'foo'}, {href: 2, name: 'bar'}];
 
-        var elem = $compile('<div sd-list-view data-items="items">' + '<div class="item">{{ item.name }}</div></div>')(
-            scope,
-        );
+        var elem = $compile('<div sd-list-view data-items="items">' +
+            '<div class="item">{{ item.name }}</div></div>')(scope);
 
         scope.$digest();
 

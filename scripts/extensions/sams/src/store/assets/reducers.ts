@@ -44,60 +44,63 @@ const initialState: IAssetState = {
     selectedAssetIds: [],
 };
 
-export function assetsReducer(state: IAssetState = initialState, action: IAssetActionTypes): IAssetState {
+export function assetsReducer(
+    state: IAssetState = initialState,
+    action: IAssetActionTypes,
+): IAssetState {
     switch (action.type) {
-        case RECEIVE_ASSETS:
-            return receiveAssets(state, action.payload);
-        case SET_ASSET_SEARCH_PARAMS:
-            return updateSearchParams(state, action.payload);
-        case PUSH_ASSET_SEARCH_PARAMS:
-            return pushSearchParams(state, action.payload);
-        case POP_ASSET_SEARCH_PARAMS:
-            return popSearchParams(state);
-        case MANAGE_ASSETS_PREVIEW:
-            return {
-                ...state,
-                contentPanelState: ASSET_CONTENT_PANEL_STATE.PREVIEW,
-                selectedAssetId: action.payload,
-            };
-        case MANAGE_ASSETS_CLOSE_CONTENT_PANEL:
-            return {
-                ...state,
-                contentPanelState: ASSET_CONTENT_PANEL_STATE.CLOSED,
-                selectedAssetId: undefined,
-            };
-        case UPDATE_SELECTED_ASSET_IDS:
-            return manageAssetsInSelectedAssetsArray(state, action.payload);
-        case UPDATE_MULTIPLE_SELECTED_ASSET_IDS:
-            return manageAssetsInMultipleSelectedAssetsArray(state, action.payload);
-        case MANAGE_MULTIACTIONBAR_CLOSE:
-            return {
-                ...state,
-                selectedAssetIds: [],
-            };
-        case ASSET_SET_LIST_STYLE:
-            return {
-                ...state,
-                listStyle: action.payload,
-            };
-        case MANAGE_ASSETS_EDIT:
-            return {
-                ...state,
-                contentPanelState: ASSET_CONTENT_PANEL_STATE.EDIT,
-                selectedAssetId: action.payload,
-            };
-        case MANAGE_ASSET_UPDATE_IN_STORE:
-            return updateAssetInStore(state, action.payload);
-        default:
-            return state;
+    case RECEIVE_ASSETS:
+        return receiveAssets(state, action.payload);
+    case SET_ASSET_SEARCH_PARAMS:
+        return updateSearchParams(state, action.payload);
+    case PUSH_ASSET_SEARCH_PARAMS:
+        return pushSearchParams(state, action.payload);
+    case POP_ASSET_SEARCH_PARAMS:
+        return popSearchParams(state);
+    case MANAGE_ASSETS_PREVIEW:
+        return {
+            ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.PREVIEW,
+            selectedAssetId: action.payload,
+        };
+    case MANAGE_ASSETS_CLOSE_CONTENT_PANEL:
+        return {
+            ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.CLOSED,
+            selectedAssetId: undefined,
+        };
+    case UPDATE_SELECTED_ASSET_IDS:
+        return manageAssetsInSelectedAssetsArray(state, action.payload);
+    case UPDATE_MULTIPLE_SELECTED_ASSET_IDS:
+        return manageAssetsInMultipleSelectedAssetsArray(state, action.payload);
+    case MANAGE_MULTIACTIONBAR_CLOSE:
+        return {
+            ...state,
+            selectedAssetIds: [],
+        };
+    case ASSET_SET_LIST_STYLE:
+        return {
+            ...state,
+            listStyle: action.payload,
+        };
+    case MANAGE_ASSETS_EDIT:
+        return {
+            ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.EDIT,
+            selectedAssetId: action.payload,
+        };
+    case MANAGE_ASSET_UPDATE_IN_STORE:
+        return updateAssetInStore(state, action.payload);
+    default:
+        return state;
     }
 }
 
 function receiveAssets(
     prevState: IAssetState,
     payload: {
-        response: IRestApiResponse<IAssetItem>;
-        listAction?: LIST_ACTION;
+        response: IRestApiResponse<IAssetItem>,
+        listAction?: LIST_ACTION,
     },
 ): IAssetState {
     const newState = {...prevState};
@@ -116,7 +119,9 @@ function receiveAssets(
     };
 
     if (payload.listAction != null) {
-        const assetIds = payload.response._items.map((asset) => asset._id);
+        const assetIds = payload.response._items.map(
+            (asset) => asset._id,
+        );
 
         if (payload.listAction === LIST_ACTION.APPEND) {
             newState.listItemIds = newState.listItemIds.concat(assetIds);
@@ -216,10 +221,8 @@ function manageAssetsInMultipleSelectedAssetsArray(prevState: IAssetState, paylo
         if (indexOfFirstElement < indexOfLastElement) {
             inBetweenAssetIds = assetsIds.splice(indexOfFirstElement, indexOfLastElement - indexOfFirstElement + 1);
         } else {
-            inBetweenAssetIds = assetsIds
-                .reverse()
-                .splice(assetsIds.length - indexOfFirstElement - 1, indexOfFirstElement - indexOfLastElement + 1)
-                .reverse();
+            inBetweenAssetIds = assetsIds.reverse().splice(
+                assetsIds.length - indexOfFirstElement - 1, indexOfFirstElement - indexOfLastElement + 1).reverse();
         }
 
         inBetweenAssetIds.forEach((assetId) => {

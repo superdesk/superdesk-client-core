@@ -22,36 +22,39 @@ function getError(): Promise<IError | null> {
             title: 'Incompatible extension detected',
             content: (
                 <>
-                    <p>Unsupported extension point is being used: `contributions.authoringHeaderComponents`</p>
+                    <p>
+                        Unsupported extension point is being used: `contributions.authoringHeaderComponents`
+                    </p>
 
-                    <p>You are likely running an outdated version of auto tagging extension.</p>
+                    <p>
+                        You are likely running an outdated version of auto tagging extension.
+                    </p>
 
-                    <p>Update or disable incompatible extensions.</p>
+                    <p>
+                        Update or disable incompatible extensions.
+                    </p>
                 </>
             ),
         });
     }
 
-    return ng
-        .get('vocabularies')
-        .getAllActiveVocabularies()
-        .then((vocabularies) => {
-            const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') == null;
+    return ng.get('vocabularies').getAllActiveVocabularies().then((vocabularies) => {
+        const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') == null;
 
-            if (categoriesMissing) {
-                return {
-                    title: 'Instance configuration is missing!',
-                    content: (
-                        <>
-                            <p>{gettext('Vocabulary with ID "categories" is required.')}</p>
-                            <p>{gettext('Add it via Settings > Metadata')}</p>
-                        </>
-                    ),
-                };
-            } else {
-                return null;
-            }
-        });
+        if (categoriesMissing) {
+            return {
+                title: 'Instance configuration is missing!',
+                content: (
+                    <>
+                        <p>{gettext('Vocabulary with ID "categories" is required.')}</p>
+                        <p>{gettext('Add it via Settings > Metadata')}</p>
+                    </>
+                ),
+            };
+        } else {
+            return null;
+        }
+    });
 }
 
 export function maybeDisplayInvalidInstanceConfigurationMessage() {
@@ -60,7 +63,13 @@ export function maybeDisplayInvalidInstanceConfigurationMessage() {
             showModal(({closeModal}) => (
                 <Modal
                     visible={true}
-                    headerTemplate={<span style={{background: 'red', color: 'white', padding: 4}}>{error.title}</span>}
+                    headerTemplate={(
+                        <span
+                            style={{background: 'red', color: 'white', padding: 4}}
+                        >
+                            {error.title}
+                        </span>
+                    )}
                     onHide={closeModal}
                 >
                     {error.content}

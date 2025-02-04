@@ -32,15 +32,21 @@ export function getPublishingTargetPatch(item: IArticle, publishingTarget: IPubl
         }
     }
 
-    if (nullableArrayChanged(item.target_subscribers, publishingTarget.target_subscribers)) {
+    if (
+        nullableArrayChanged(item.target_subscribers, publishingTarget.target_subscribers)
+    ) {
         patch.target_subscribers = publishingTarget.target_subscribers;
     }
 
-    if (nullableArrayChanged(item.target_regions, publishingTarget.target_regions)) {
+    if (
+        nullableArrayChanged(item.target_regions, publishingTarget.target_regions)
+    ) {
         patch.target_regions = publishingTarget.target_regions;
     }
 
-    if (nullableArrayChanged(item.target_types, publishingTarget.target_types)) {
+    if (
+        nullableArrayChanged(item.target_types, publishingTarget.target_types)
+    ) {
         patch.target_types = publishingTarget.target_types;
     }
 
@@ -95,68 +101,66 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
     }
 
     render() {
-        return (
-            this.state.loading === false && (
-                <ToggleBox variant="simple" title={gettext('Target')} initiallyOpen>
-                    <FormLabel text={gettext('Target subscribers')} />
+        return this.state.loading === false && (
+            <ToggleBox variant="simple" title={gettext('Target')} initiallyOpen>
+                <FormLabel text={gettext('Target subscribers')} />
 
-                    <div style={{paddingBlockStart: 5}}>
-                        <TreeSelect
-                            label=""
-                            inlineLabel
-                            labelHidden
-                            kind="synchronous"
-                            allowMultiple
-                            getId={(item) => item._id}
-                            getLabel={(item) => item.name}
-                            getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
-                            value={this.props.value.target_subscribers}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_subscribers: this.state.subscribers.filter(({_id}) =>
-                                        val.map((sub) => sub._id).includes(_id),
-                                    ),
-                                });
-                            }}
-                        />
-                    </div>
+                <div style={{paddingBlockStart: 5}}>
+                    <TreeSelect
+                        label=""
+                        inlineLabel
+                        labelHidden
+                        kind="synchronous"
+                        allowMultiple
+                        getId={(item) => item._id}
+                        getLabel={(item) => item.name}
+                        getOptions={() => this.state.subscribers.map((x) => ({value: x}))}
+                        value={this.props.value.target_subscribers}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_subscribers: this.state.subscribers
+                                    .filter(({_id}) => val.map((sub) => sub._id).includes(_id)),
+                            });
+                        }}
+                    />
+                </div>
 
-                    <div style={{paddingBlockStart: 20}}>
-                        <FormLabel text={gettext('Target regions')} />
-                    </div>
+                <div style={{paddingBlockStart: 20}}>
+                    <FormLabel text={gettext('Target regions')} />
+                </div>
 
-                    <div style={{paddingBlockStart: 5}}>
-                        <ControlledVocabulariesSelect
-                            vocabularies={this.state.regions}
-                            value={this.props.value.target_regions ?? []}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_regions: val,
-                                });
-                            }}
-                        />
-                    </div>
+                <div style={{paddingBlockStart: 5}}>
+                    <ControlledVocabulariesSelect
+                        vocabularies={this.state.regions}
+                        value={this.props.value.target_regions ?? []}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_regions: val,
+                            });
+                        }}
+                    />
+                </div>
 
-                    <div style={{paddingBlockStart: 20}}>
-                        <FormLabel text={gettext('Target types')} />
-                    </div>
+                <div style={{paddingBlockStart: 20}}>
+                    <FormLabel text={gettext('Target types')} />
+                </div>
 
-                    <div style={{paddingBlockStart: 5}}>
-                        <ControlledVocabulariesSelect
-                            vocabularies={this.state.subscriberTypes}
-                            value={this.props.value.target_types ?? []}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    target_types: val,
-                                });
-                            }}
-                        />
-                    </div>
-                </ToggleBox>
-            )
+                <div style={{paddingBlockStart: 5}}>
+                    <ControlledVocabulariesSelect
+                        vocabularies={this.state.subscriberTypes}
+                        value={this.props.value.target_types ?? []}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                target_types: val,
+                            });
+                        }}
+                    />
+                </div>
+
+            </ToggleBox>
         );
     }
 }

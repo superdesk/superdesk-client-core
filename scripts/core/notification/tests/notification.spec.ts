@@ -1,3 +1,4 @@
+
 describe('Reload Service', () => {
     beforeEach(window.module('superdesk.apps.notification'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -21,12 +22,10 @@ describe('Reload Service', () => {
             session.start({}, USER);
 
             spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
-            spyOn(desks, 'fetchUserDesks').and.returnValue(
-                $q.when([
-                    {_id: '5567ff31102454c7bac47644', name: 'Desk One'},
-                    {_id: '55394997102454b5ea111bd5', name: 'Desk Two'},
-                ]),
-            );
+            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([
+                {_id: '5567ff31102454c7bac47644', name: 'Desk One'},
+                {_id: '55394997102454b5ea111bd5', name: 'Desk Two'},
+            ]));
             spyOn(preferencesService, 'get').and.returnValue($q.when([]));
             spyOn(preferencesService, 'update');
 
@@ -72,12 +71,10 @@ describe('Reload Service', () => {
         var reload = spyOn(reloadService, 'reload');
 
         rootScope.$broadcast('reload', msg);
-        expect(reload).toHaveBeenCalledWith(
-            Object({
-                reload: true,
-                message: 'Stage is created/updated/deleted',
-            }),
-        );
+        expect(reload).toHaveBeenCalledWith(Object({
+            reload: true,
+            message: 'Stage is created/updated/deleted',
+        }));
         expect(reloadService.result.reload).toBe(true);
     }));
 });

@@ -5,7 +5,7 @@ import {samsApi} from '../../apis';
 import {isImageAsset} from '../../utils/assets';
 import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
-interface IProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
+interface IProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
     asset: Partial<IAssetItem>;
     file?: File;
     rendition: {
@@ -66,15 +66,27 @@ export class AssetImageRendition extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {asset, file, rendition, container, ...imageProps} = this.props;
+        const {
+            asset,
+            file,
+            rendition,
+            container,
+            ...imageProps
+        } = this.props;
 
-        const children =
-            this.state.source == null ? (
-                <div className="sd-loader" />
-            ) : (
-                <img alt={this.props.asset.name} {...imageProps} src={this.state.source} onClick={this.handleClick} />
-            );
+        const children = this.state.source == null ? (
+            <div className="sd-loader" />
+        ) : (
+            <img
+                alt={this.props.asset.name}
+                {...imageProps}
+                src={this.state.source}
+                onClick={this.handleClick}
+            />
+        );
 
-        return container == null ? children : container(this.state.source == null, children);
+        return container == null ?
+            children :
+            container(this.state.source == null, children);
     }
 }

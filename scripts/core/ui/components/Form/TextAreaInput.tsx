@@ -39,11 +39,9 @@ export const TextAreaInput: React.StatelessComponent<any> = ({
             onFocus={onFocus}
         />
 
-        {maxLength > 0 && (
-            <div className="sd-line-input__char-count">
-                {get(value, 'length', 0)}/{maxLength}
-            </div>
-        )}
+        {maxLength > 0 &&
+            <div className="sd-line-input__char-count">{get(value, 'length', 0)}/{maxLength}</div>
+        }
     </LineInput>
 );
 

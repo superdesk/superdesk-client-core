@@ -33,7 +33,12 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
     }
 
     componentDidMount(): void {
-        dataApi.query<ILanguage>('languages', 1, {field: 'language', direction: 'ascending'}, {}).then(({_items}) => {
+        dataApi.query<ILanguage>(
+            'languages',
+            1,
+            {field: 'language', direction: 'ascending'},
+            {},
+        ).then(({_items}) => {
             this.setState({
                 languages: _items,
             });
@@ -88,10 +93,14 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
         return (
             <AuthoringWidgetLayout
-                header={
-                    <AuthoringWidgetHeading widgetId={METADATA_WIDGET_ID} widgetName={getLabel()} editMode={false} />
-                }
-                body={
+                header={(
+                    <AuthoringWidgetHeading
+                        widgetId={METADATA_WIDGET_ID}
+                        widgetName={getLabel()}
+                        editMode={false}
+                    />
+                )}
+                body={(
                     <Spacer v gap="16" noWrap>
                         <Spacer h gap="64" justifyContent="space-between" noWrap>
                             <Heading type="h6" align="start">
@@ -158,69 +167,117 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                                 });
                             }}
                         >
-                            {this.state.languages.map((lang) => (
-                                <Option value={lang.language} key={lang._id}>
-                                    {lang.label}
-                                </Option>
-                            ))}
+                            {
+                                this.state.languages.map((lang) =>
+                                    <Option value={lang.language} key={lang._id}>{lang.label}</Option>,
+                                )
+                            }
                         </Select>
 
                         <ContentDivider border type="dotted" margin="x-small" />
 
                         {(pubstatus?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Pubstatus')} value={pubstatus} />
+                            <MetadataItem
+                                label={gettext('Pubstatus')}
+                                value={pubstatus}
+                            />
                         )}
 
                         {(original_source?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Original source')} value={original_source} />
+                            <MetadataItem
+                                label={gettext('Original source')}
+                                value={original_source}
+                            />
                         )}
 
                         {(copyrightholder?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Copyright')} value={copyrightholder} />
+                            <MetadataItem
+                                label={gettext('Copyright')}
+                                value={copyrightholder}
+                            />
                         )}
 
                         {(copyrightnotice?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Copyright notice')} value={copyrightnotice} />
+                            <MetadataItem
+                                label={gettext('Copyright notice')}
+                                value={copyrightnotice}
+                            />
                         )}
 
-                        {(creditline?.length ?? 0) > 0 && <MetadataItem label={gettext('Credit')} value={creditline} />}
+                        {(creditline?.length ?? 0) > 0 && (
+                            <MetadataItem
+                                label={gettext('Credit')}
+                                value={creditline}
+                            />
+                        )}
 
-                        {
-                            <>
-                                <Spacer h gap="64" justifyContent="space-between" noWrap>
-                                    <Heading type="h6">{gettext('State').toUpperCase()}</Heading>
-                                    <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}}>
-                                        <StateComponent item={article} />
-                                        {article.embargo && (
-                                            <Label style="hollow" type="alert" text={gettext('embargo')} />
-                                        )}
-                                        {flags.marked_for_not_publication && (
-                                            <Label text={gettext('Not For Publication')} style="hollow" type="alert" />
-                                        )}
-                                        {flags.marked_for_legal && (
-                                            <Label text={gettext('Legal')} style="hollow" type="alert" />
-                                        )}
-                                        {flags.marked_for_sms && (
-                                            <Label text={gettext('Sms')} style="hollow" type="alert" />
-                                        )}
-                                        {(rewritten_by?.length ?? 0) > 0 && (
-                                            <Label text={gettext('Updated')} style="hollow" type="alert" />
-                                        )}
-                                    </Spacer>
+                        {<>
+                            <Spacer h gap="64" justifyContent="space-between" noWrap>
+                                <Heading type="h6">
+                                    {gettext('State').toUpperCase()}
+                                </Heading>
+                                <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
+                                    <StateComponent item={article} />
+                                    {article.embargo && (
+                                        <Label
+                                            style="hollow"
+                                            type="alert"
+                                            text={gettext('embargo')}
+                                        />
+                                    )}
+                                    {flags.marked_for_not_publication && (
+                                        <Label
+                                            text={gettext('Not For Publication')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_legal && (
+                                        <Label
+                                            text={gettext('Legal')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {flags.marked_for_sms && (
+                                        <Label
+                                            text={gettext('Sms')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
+                                    {(rewritten_by?.length ?? 0) > 0 && (
+                                        <Label
+                                            text={gettext('Updated')}
+                                            style="hollow"
+                                            type="alert"
+                                        />
+                                    )}
                                 </Spacer>
-                                <ContentDivider border type="dotted" margin="x-small" />
-                            </>
-                        }
+                            </Spacer>
+                            <ContentDivider border type="dotted" margin="x-small" />
+                        </>}
 
                         {ingest_provider != null && (
-                            <MetadataItem label={gettext('Ingest Provider')} value={ingest_provider} />
+                            <MetadataItem
+                                label={gettext('Ingest Provider')}
+                                value={ingest_provider}
+                            />
                         )}
 
                         {(ingest_provider_sequence?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Ingest sequence')} value={ingest_provider_sequence} />
+                            <MetadataItem
+                                label={gettext('Ingest sequence')}
+                                value={ingest_provider_sequence}
+                            />
                         )}
 
-                        {expiry && <MetadataItem label={gettext('Expiry')} value={<DateTime dateTime={expiry} />} />}
+                        {expiry && (
+                            <MetadataItem
+                                label={gettext('Expiry')}
+                                value={<DateTime dateTime={expiry} />}
+                            />
+                        )}
 
                         {(slugline?.length ?? 0) > 0 && <MetadataItem label={gettext('Slugline')} value={slugline} />}
 
@@ -244,13 +301,13 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                         {signal && (
                             <MetadataItem
                                 label={gettext('Signal')}
-                                value={
+                                value={(
                                     <div>
-                                        {signal.map(({name, qcode}) => (
+                                        {(signal.map(({name, qcode}) => (
                                             <Fragment key={name}>{name ?? qcode}</Fragment>
-                                        ))}
+                                        )))}
                                     </div>
-                                }
+                                )}
                             />
                         )}
 
@@ -261,9 +318,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             />
                         )}
 
-                        {allVocabularies
-                            .filter((cv) => article[cv.schema_field] != null)
-                            .toArray()
+                        {allVocabularies.filter((cv) => article[cv.schema_field] != null).toArray()
                             .map((vocabulary) => (
                                 <MetadataItem
                                     key={vocabulary._id}
@@ -273,7 +328,8 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                                         article,
                                     )}
                                 />
-                            ))}
+                            ))
+                        }
 
                         {(genre?.length ?? 0) > 0 && hasGenre && (
                             <MetadataItem
@@ -296,7 +352,8 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                                 {gettext('Dateline').toUpperCase()}
                             </Heading>
                             <Spacer h gap="4" justifyContent="space-between" noWrap>
-                                <DateTime dateTime={dateline?.date} /> /<span>{dateline?.located.city}</span>
+                                <DateTime dateTime={dateline?.date} /> /
+                                <span>{dateline?.located.city}</span>
                             </Spacer>
                         </Spacer>
 
@@ -309,7 +366,14 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                         {_current_version && <MetadataItem label={gettext('Version')} value={_current_version} />}
 
                         {firstcreated && (
-                            <MetadataItem label={gettext('Created')} value={<DateTime dateTime={firstcreated} />} />
+                            <MetadataItem
+                                label={gettext('Created')}
+                                value={(
+                                    <DateTime
+                                        dateTime={firstcreated}
+                                    />
+                                )}
+                            />
                         )}
 
                         {versioncreated && (
@@ -322,11 +386,17 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                         <MetadataItem label={gettext('Original Id')} value={original_id} />
 
                         {(originalCreator?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Original creator')} value={originalCreator} />
+                            <MetadataItem
+                                label={gettext('Original creator')}
+                                value={originalCreator}
+                            />
                         )}
 
                         {(versioncreator?.length ?? 0) > 0 && (
-                            <MetadataItem label={gettext('Version creator')} value={versioncreator} />
+                            <MetadataItem
+                                label={gettext('Version creator')}
+                                value={versioncreator}
+                            />
                         )}
 
                         <MetadataItem label={gettext('Guid').toUpperCase()} value={guid} />
@@ -359,7 +429,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                             <AnnotationsPreview article={article} />
                         )}
                     </Spacer>
-                }
+                )}
             />
         );
     }

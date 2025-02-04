@@ -30,9 +30,10 @@ export class WithAttachments extends React.Component<IProps, IState> {
         addEventListener('attachmentUpdated', this.onAttachmentUpdated);
         addEventListener('attachmentRemoved', this.onAttachmentRemoved);
 
-        attachmentsApi.byArticle(this.props.item).then((attachments) => {
-            this.setState({attachments: attachments});
-        });
+        attachmentsApi.byArticle(this.props.item)
+            .then((attachments) => {
+                this.setState({attachments: attachments});
+            });
     }
 
     componentWillUnmount() {
@@ -52,7 +53,9 @@ export class WithAttachments extends React.Component<IProps, IState> {
     onAttachmentUpdated(attachment: IAttachment) {
         this.setState((prevState: IState) => {
             const attachments = [...prevState.attachments];
-            const index = attachments.findIndex((item) => item._id === attachment._id);
+            const index = attachments.findIndex(
+                (item) => item._id === attachment._id,
+            );
 
             attachments[index] = attachment;
 
@@ -63,7 +66,9 @@ export class WithAttachments extends React.Component<IProps, IState> {
     onAttachmentRemoved(attachment: IAttachment) {
         this.setState((prevState: IState) => {
             return {
-                attachments: prevState.attachments.filter((item) => item._id !== attachment._id),
+                attachments: prevState.attachments.filter(
+                    (item) => item._id !== attachment._id,
+                ),
             };
         });
     }

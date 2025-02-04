@@ -1,5 +1,10 @@
 // Used for determining whether to update articles list upon receiving a websocket event.
-export const ARTICLE_RELATED_RESOURCE_NAMES = ['archive', 'archive_spike', 'archive_unspike', 'archive_publish'];
+export const ARTICLE_RELATED_RESOURCE_NAMES = [
+    'archive',
+    'archive_spike',
+    'archive_unspike',
+    'archive_publish',
+];
 
 export const SUPERDESK_MEDIA_TYPES = {
     PICTURE: 'application/superdesk.item.picture',

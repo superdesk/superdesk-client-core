@@ -134,7 +134,7 @@ The structure of this module (as of commit [`5e9d904`](https://github.com/superd
 │   ├── spellchecker.jsx                  // Redux Reducers - Spellchecker (correct, add to dictionary, etc.)
 │   ├── table.jsx                         // Redux Reducers - Tables (add/remove rows/cols, toggle headers, etc)
 │   └── toolbar.jsx                       // Redux Reducers - Toolbar buttons
-├── store
+├── store                                        
 │   └── index.js                          // Redux Store - Creates the Redux store based on various options and settings
 ├── directive.js                          // AngularJS Directive version of Editor
 ├── react.jsx                             // React Component version of Editor

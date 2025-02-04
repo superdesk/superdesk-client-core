@@ -5,7 +5,9 @@ export function getUrlPage(): string {
     const hash = window.location.hash;
     const index = hash.indexOf('?');
 
-    return index < 0 ? hash.slice(1) : hash.slice(1, index);
+    return index < 0 ?
+        hash.slice(1) :
+        hash.slice(1, index);
 }
 
 export function setUrlPage(page: string) {
@@ -26,7 +28,9 @@ function getAllUrlParameters(): URLSearchParams {
 function getUrlParameter<T>(field: string, converter: (value: string) => T, defaultValue?: T) {
     const value = getAllUrlParameters().get(field);
 
-    return value == null ? defaultValue : converter(value);
+    return value == null ?
+        defaultValue :
+        converter(value);
 }
 
 function setUrlParameter(field: string, value?: string | number | boolean) {
@@ -61,7 +65,11 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
     },
     // Numbers
     getNumber: (field, defaultValue) => {
-        return getUrlParameter<number>(field, (value: string) => parseInt(value, 10), defaultValue);
+        return getUrlParameter<number>(
+            field,
+            (value: string) => parseInt(value, 10),
+            defaultValue,
+        );
     },
     setNumber: (field, value) => {
         if (value == null || Number.isNaN(value)) {
@@ -73,7 +81,11 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
 
     // Booleans
     getBoolean: (field, defaultValue) => {
-        return getUrlParameter<boolean>(field, (value: string) => value === true.toString(), defaultValue);
+        return getUrlParameter<boolean>(
+            field,
+            (value: string) => value === true.toString(),
+            defaultValue,
+        );
     },
     setBoolean: (field, value) => {
         setUrlParameter(field, value);
@@ -81,7 +93,11 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
 
     // Dates
     getDate: (field, defaultValue) => {
-        return getUrlParameter<Date>(field, (value: string) => new Date(value), defaultValue);
+        return getUrlParameter<Date>(
+            field,
+            (value: string) => new Date(value),
+            defaultValue,
+        );
     },
     setDate: (field, value) => {
         setUrlParameter(field, value && value.toISOString());
@@ -89,7 +105,11 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
 
     // JSON
     getJson: (field, defaultValue) => {
-        return getUrlParameter(field, (value: string) => JSON.parse(value), defaultValue);
+        return getUrlParameter(
+            field,
+            (value: string) => JSON.parse(value),
+            defaultValue,
+        );
     },
     setJson: (field, value) => {
         setUrlParameter(field, value && JSON.stringify(value));

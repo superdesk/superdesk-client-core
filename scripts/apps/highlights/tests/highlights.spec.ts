@@ -1,3 +1,4 @@
+
 describe('highlights', () => {
     beforeEach(window.module('superdesk.apps.highlights'));
     beforeEach(window.module('superdesk.mocks'));

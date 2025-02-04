@@ -39,8 +39,8 @@ export type IApplicationState = {
  * displaying the error in the console.
  */
 function crashReporter() {
-    return function (next: any) {
-        return function (action: any) {
+    return function(next: any) {
+        return function(action: any) {
             // eslint-disable-next-line no-useless-catch
             try {
                 return next(action);
@@ -54,8 +54,14 @@ function crashReporter() {
 let store: Store | undefined;
 let storeReferenceCount: number = 0;
 
-export function createReduxStore(initialState: {}, reducer: Reducer): Store {
-    const middlewares: Array<Middleware> = [crashReporter, thunkMiddleware];
+export function createReduxStore(
+    initialState: {},
+    reducer: Reducer,
+): Store {
+    const middlewares: Array<Middleware> = [
+        crashReporter,
+        thunkMiddleware,
+    ];
 
     if (process.env.NODE_ENV !== 'production') {
         // activate logs actions for non production instances.
@@ -63,7 +69,11 @@ export function createReduxStore(initialState: {}, reducer: Reducer): Store {
         middlewares.push(createLogger());
     }
     registerWebsocketNotifications();
-    store = createStore(reducer, initialState, compose(applyMiddleware(...middlewares)));
+    store = createStore(
+        reducer,
+        initialState,
+        compose(applyMiddleware(...middlewares)),
+    );
 
     return store;
 }

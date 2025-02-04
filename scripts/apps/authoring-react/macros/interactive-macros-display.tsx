@@ -66,9 +66,8 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
     }
 
     componentDidMount(): void {
-        this.eventListenerToRemoveBeforeUnmounting = addEditorEventListener(
-            'find_and_replace__receive_current_selection_index',
-            (event) => {
+        this.eventListenerToRemoveBeforeUnmounting =
+            addEditorEventListener('find_and_replace__receive_current_selection_index', (event) => {
                 // we only request selection index when we want to do the replacing
                 // the `if` below also checks if the same class instance requested the replacing
                 if (event.detail.editorId === editorId && this.isAwaitingSelectionIndex) {
@@ -79,8 +78,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                     });
                     this.isAwaitingSelectionIndex = false;
                 }
-            },
-        );
+            });
 
         highlightDistinctMatches(this.props.currentMacro.diff);
         this.goToNextMatchingValue();
@@ -104,10 +102,12 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                     />
                     <Spacer h gap="4" justifyContent="start">
                         <Text weight="medium">
-                            {gettext('{{n}} of {{total}} matches', {
-                                n: this.state.currentSelectionIndex,
-                                total: Object.keys(this.props.currentMacro.diff).length,
-                            })}
+                            {gettext(
+                                '{{n}} of {{total}} matches',
+                                {
+                                    n: this.state.currentSelectionIndex,
+                                    total: Object.keys(this.props.currentMacro.diff).length,
+                                })}
                         </Text>
                         <Spacer h gap="4" justifyContent="end" noGrow>
                             <IconButton

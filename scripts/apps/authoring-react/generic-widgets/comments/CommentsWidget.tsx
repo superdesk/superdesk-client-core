@@ -6,7 +6,12 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {Button, EmptyState, Checkbox, BoxedList} from 'superdesk-ui-framework/react';
+import {
+    Button,
+    EmptyState,
+    Checkbox,
+    BoxedList,
+} from 'superdesk-ui-framework/react';
 import {store} from 'core/data';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {Spacer} from 'core/ui/components/Spacer';
@@ -28,15 +33,18 @@ interface IState {
     comments: Array<IComment> | null;
     newCommentMessage: string;
     saveOnEnter: boolean;
-    users: {[key: string]: IUser};
-    mentionInputDataUsers: Array<{id: string; display: string}>;
-    mentionInputDataDesks: Array<{id: string; display: string}>;
+    users: { [key: string]: IUser };
+    mentionInputDataUsers: Array<{ id: string, display: string }>;
+    mentionInputDataDesks: Array<{ id: string, display: string }>;
 }
 
 function renderSuggestion(item: IDeskSuggestion | IUserSuggestion, search, highlightedDisplay) {
     return (
         <React.Fragment>
-            {item.type === 'desk' ? <i className="icon-tasks" /> : <UserAvatar user={item.user} size="small" />}
+            {item.type === 'desk'
+                ? <i className="icon-tasks" />
+                : <UserAvatar user={item.user} size="small" />
+            }
             <span style={{marginInlineStart: '1em'}}>{highlightedDisplay}</span>
         </React.Fragment>
     );
@@ -61,16 +69,19 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             return;
         }
 
-        Promise.all([this.loadDeskSuggestions(), this.loadUsers(), this.loadComments()]).then(
-            ([deskSuggestions, userSuggestionsData, comments]) => {
+        Promise.all([
+            this.loadDeskSuggestions(),
+            this.loadUsers(),
+            this.loadComments(),
+        ])
+            .then(([deskSuggestions, userSuggestionsData, comments]) => {
                 this.setState({
                     mentionInputDataDesks: deskSuggestions,
                     users: userSuggestionsData.users,
                     mentionInputDataUsers: userSuggestionsData.mentionInputDataUsers,
                     comments: comments,
                 });
-            },
-        );
+            });
     }
 
     loadDeskSuggestions = (): Promise<Array<IDeskSuggestion>> => {
@@ -79,14 +90,16 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
                 method: 'GET',
                 path: '/desks',
             }).then((response) => {
-                const deskSuggestions: Array<IDeskSuggestion> = response._items.map((desk) => {
-                    return {id: desk.name.replace(/\s/gm, '_'), display: desk.name, type: 'desk'};
-                });
+                const deskSuggestions: Array<IDeskSuggestion> = response._items.map(
+                    (desk) => {
+                        return {id: desk.name.replace(/\s/gm, '_'), display: desk.name, type: 'desk'};
+                    },
+                );
 
                 resolve(deskSuggestions);
             });
         });
-    };
+    }
 
     loadUsers = (): Promise<IUserSuggestionData> => {
         return new Promise((resolve) => {
@@ -94,27 +107,25 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             const mentionInputDataUsers: Array<IUserSuggestion> = [];
 
             for (const key in users) {
-                mentionInputDataUsers.push({
-                    id: users[key].username,
-                    display: users[key].display_name,
-                    type: 'user',
-                    user: users[key],
-                });
+                mentionInputDataUsers.push(
+                    {id: users[key].username, display: users[key].display_name, type: 'user', user: users[key]},
+                );
             }
 
             resolve({users: users, mentionInputDataUsers: mentionInputDataUsers});
         });
-    };
+    }
 
     loadComments = (): Promise<Array<IComment>> => {
         return this.props.getComments();
-    };
+    }
 
     reload = (): void => {
-        this.loadComments().then((comments) => {
-            this.setState({comments});
-        });
-    };
+        this.loadComments()
+            .then((comments) => {
+                this.setState({comments});
+            });
+    }
 
     save = (): void => {
         if (!this.state.newCommentMessage.length) {
@@ -132,30 +143,37 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             this.setState({newCommentMessage: ''});
             this.reload();
         });
-    };
+    }
 
     handleCommentInputKeyDown = (event): void => {
         if (!this.state.saveOnEnter || event.key !== 'Enter' || event.shiftKey) {
             return;
         }
         this.save();
-    };
+    }
 
     render() {
         const hasComments = this.state.comments?.length > 0;
 
-        const widgetBody: JSX.Element = hasComments ? (
-            <BoxedList>
-                {this.state.comments.map((comment, i) => (
-                    <Comment key={i} comment={comment} users={this.state.users} />
-                ))}
-            </BoxedList>
-        ) : (
-            <EmptyState title={gettext('No comments have been posted')} illustration="3" />
-        );
+        const widgetBody: JSX.Element = hasComments
+            ? (
+                <BoxedList>
+                    {
+                        this.state.comments.map((comment, i) =>
+                            (<Comment key={i} comment={comment} users={this.state.users} />),
+                        )
+                    }
+                </BoxedList>
+            )
+            : (
+                <EmptyState
+                    title={gettext('No comments have been posted')}
+                    illustration="3"
+                />
+            );
 
         const widgetFooter: JSX.Element = (
-            <Spacer v gap="8">
+            <Spacer v gap="8" >
                 <MentionsInput
                     value={this.state.newCommentMessage}
                     onChange={(ev, newValue) => {
@@ -206,13 +224,13 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
 
         return (
             <AuthoringWidgetLayout
-                header={
+                header={(
                     <AuthoringWidgetHeading
                         widgetId={COMMENTS_WIDGET_GENERIC_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
-                }
+                )}
                 body={widgetBody}
                 background="grey"
                 footer={widgetFooter}

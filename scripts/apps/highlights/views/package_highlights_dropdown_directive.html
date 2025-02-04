@@ -1,14 +1,15 @@
 <div id="highlightPackage">
-    <button
-        class="dropdown__toggle sd-sidebar-menu__btn"
-        ng-click="hideMonitoring(currentRoute.href === '/workspace/highlights', $event)"
-        dropdown__toggle
-        aria-label="{{ 'Highlights' | translate }}"
-    >
+    <button class="dropdown__toggle sd-sidebar-menu__btn" ng-click="hideMonitoring(currentRoute.href === '/workspace/highlights', $event)" dropdown__toggle aria-label="{{ 'Highlights' | translate }}">
         <span class="sd-sidebar-menu__main-icon element-with-badge">
             <i class="big-icon--marked-star"></i>
-
-            <span ng-if="badges[item.id] != null" class="badge badge--highlight"> {{badges[item.id]}} </span>
+    
+            <span
+                ng-if="badges[item.id] != null"
+                class="badge badge--highlight"
+                
+            >
+                {{badges[item.id]}}
+            </span>
         </span>
 
         <span class="sd-sidebar-menu__chevron_wrapper">
@@ -19,8 +20,7 @@
         <li><div class="dropdown__menu-label" translate>Choose highlight list</div></li>
         <li ng-if="hasHighlights" ng-repeat="h in highlights track by h._id">
             <button option="{{ :: h.name }}" ng-click="listHighlight(h);" title="{{ :: h.name }}">
-                {{ :: h.label | translate }}
-            </button>
+                {{ :: h.label | translate }}</button>
         </li>
         <li ng-if="!hasHighlights">
             <button ng-disabled="true">{{::'No available highlights'|translate}}</button>

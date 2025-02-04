@@ -24,49 +24,62 @@ export function confirmPublish(items: Array<IArticle>): Promise<void> {
                         onHide={this.props.closeModal}
                         headerTemplate={gettext('Publishing')}
                         footerTemplate={
-                            <ButtonGroup align="end">
-                                <Button text={gettext('Cancel')} type="default" onClick={this.props.closeModal} />
-                                <Button
-                                    text={gettext('Publish')}
-                                    type="primary"
-                                    onClick={() => {
-                                        resolve();
-                                        this.props.closeModal();
-                                    }}
-                                />
-                            </ButtonGroup>
+                            (
+                                <ButtonGroup align="end">
+                                    <Button
+                                        text={gettext('Cancel')}
+                                        type="default"
+                                        onClick={this.props.closeModal}
+                                    />
+                                    <Button
+                                        text={gettext('Publish')}
+                                        type="primary"
+                                        onClick={() => {
+                                            resolve();
+                                            this.props.closeModal();
+                                        }}
+                                    />
+                                </ButtonGroup>
+                            )
                         }
                     >
                         <div>
                             <p>
                                 <strong>
-                                    {gettextPlural(
-                                        items.length,
-                                        'Do you want to publish the article?',
-                                        'Do you want to publish {{number}} articles?',
-                                        {number: items.length},
-                                    )}
+                                    {
+                                        gettextPlural(
+                                            items.length,
+                                            'Do you want to publish the article?',
+                                            'Do you want to publish {{number}} articles?',
+                                            {number: items.length},
+                                        )
+                                    }
                                 </strong>
                             </p>
 
                             <div>
-                                {items.map((item) => {
-                                    return (
-                                        <div key={item._id} className="quick-publish--item">
-                                            <div className="quick-publish--line">
-                                                <div className="field--slugline">{item.slugline}</div>
-                                                <div>{item.headline}</div>
-                                            </div>
+                                {
+                                    items.map((item) => {
+                                        return (
+                                            <div key={item._id} className="quick-publish--item">
+                                                <div className="quick-publish--line">
+                                                    <div className="field--slugline">{item.slugline}</div>
+                                                    <div>{item.headline}</div>
+                                                </div>
 
-                                            {isScheduled(item) ? (
-                                                <span className="quick-publish--scheduled">
-                                                    <strong>{gettext('Scheduled:')}</strong>{' '}
-                                                    {scheduledFormat(item).short}
-                                                </span>
-                                            ) : null}
-                                        </div>
-                                    );
-                                })}
+                                                {
+                                                    isScheduled(item) ? (
+                                                        <span className="quick-publish--scheduled">
+                                                            <strong>{gettext('Scheduled:')}</strong>
+                                                            {' '}
+                                                            {scheduledFormat(item).short}
+                                                        </span>
+                                                    ) : null
+                                                }
+                                            </div>
+                                        );
+                                    })
+                                }
                             </div>
                         </div>
                     </Modal>

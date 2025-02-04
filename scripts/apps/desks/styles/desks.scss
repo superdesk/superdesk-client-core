@@ -5,9 +5,10 @@
 @import '~variables.scss';
 @import '~labels.scss';
 
-$main-desk-color: #ffffff;
+
+$main-desk-color:  #ffffff;
 $main-desk-border: #cacaca;
-$main-desk-padding-side: 60px;
+$main-desk-padding-side : 60px;
 
 $desk-width: 270px;
 
@@ -22,6 +23,7 @@ $desk-width: 270px;
         background: rgb($r, $g, $b);
         color: $white;
     }
+
 }
 
 .todo-status {
@@ -44,6 +46,7 @@ $desk-width: 270px;
     }
 }
 
+
 .master-desk-view {
     overflow: hidden;
     padding-block-end: 0 !important;
@@ -51,11 +54,9 @@ $desk-width: 270px;
 }
 
 .main-desk-container {
+
     position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
-    inset-block-end: 0;
+    inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0;
     display: flex;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -88,6 +89,8 @@ $desk-width: 270px;
         background: #777;
     }
 
+
+
     .desk-container {
         flex: 0 0 20%;
         min-width: 250px;
@@ -97,16 +100,11 @@ $desk-width: 270px;
 
     .desk {
         position: absolute;
-        inset-inline-start: 0;
-        inset-inline-end: 30px;
-        inset-block-start: 0;
-        inset-block-end: 0;
-        overflow: hidden;
+        inset-inline-start: 0; inset-inline-end: 30px; inset-block-start:0; inset-block-end: 0;
+        overflow:hidden;
         &__header {
             position: absolute;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            inset-block-start: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:0;
             height: 25px;
             line-height: 25px;
             border-block-end: 5px solid #4d4d4d;
@@ -121,15 +119,10 @@ $desk-width: 270px;
         }
         &__open {
             margin-inline-start: 10px;
-            i {
-                margin-block-end: 3px;
-                color: $grayLight;
-            }
+            i { margin-block-end: 3px; color: $grayLight; }
             &:hover {
-                i {
-                    color: $grayDark;
-                }
-                cursor: pointer;
+                i { color: $grayDark; }
+                cursor:pointer;
             }
         }
         &__action {
@@ -140,16 +133,13 @@ $desk-width: 270px;
                 background: none;
                 vertical-align: baseline;
             }
-            .dropdown__menu {
-                inset-inline-end: 5px;
-            }
+                        .dropdown__menu {
+                            inset-inline-end: 5px;
+                        }
         }
         &__content {
             position: absolute;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            inset-block-start: 30px;
-            inset-block-end: 0;
+            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:30px; inset-block-end: 0;
             overflow-x: hidden;
             overflow-y: auto;
 
@@ -174,7 +164,7 @@ $desk-width: 270px;
 .inline-content-items {
     min-height: 18px;
     margin-block-end: 6px;
-    @include box-shadow(0 1px 4px 0 rgba(0, 0, 0, 0.2));
+    @include box-shadow(0 1px 4px 0 rgba(0,0,0,.2));
     .item {
         cursor: default;
         background: $white;
@@ -211,8 +201,7 @@ $desk-width: 270px;
             line-height: 30px;
             margin-inline-end: 10px;
         }
-        .urgency-label,
-        .priority-label {
+        .urgency-label, .priority-label {
             vertical-align: middle;
         }
         time {
@@ -227,23 +216,22 @@ $desk-width: 270px;
             font-size: 12px;
             padding-inline-end: 10px;
             .keywords {
-                color: $sd-keyword;
-                font-weight: 500;
-                text-transform: uppercase;
-                margin-inline-end: 5px;
+                  color: $sd-keyword;
+                  font-weight: 500;
+                  text-transform: uppercase;
+                  margin-inline-end: 5px;
             }
         }
-        &:not(:-moz-handler-blocked) {
-            .text {
-                white-space: normal;
-            }
-        }
+                &:not(:-moz-handler-blocked) {
+                    .text {
+                        white-space: normal;
+                    }
+                }
         .action {
             position: absolute;
-            inset-inline-end: 0;
-            inset-block-start: 0;
+            inset-inline-end: 0; inset-block-start: 0;
             display: none;
-            background-color: inherit;
+                        background-color: inherit;
 
             button {
                 background: transparent;
@@ -330,6 +318,7 @@ $desk-width: 270px;
     }
 }
 
+
 // Desk config
 // ---------------------------------------------
 
@@ -342,10 +331,7 @@ $desk-width: 270px;
             flex-direction: column;
             padding: 0;
             background: 0 0;
-            > div,
-            > div > div,
-            > form,
-            > form > fieldset {
+            > div, > div > div, > form, > form > fieldset {
                 display: flex;
                 flex-direction: column;
                 overflow-y: auto;
@@ -357,8 +343,7 @@ $desk-width: 270px;
                 padding: 2rem;
                 background: $sd-background;
             }
-            form.content,
-            .field {
+            form.content, .field {
                 display: block;
             }
             .modal__footer {
@@ -378,8 +363,7 @@ $desk-width: 270px;
             overflow-x: hidden;
             overflow-y: auto;
             &:last-child {
-                inset-inline-start: 50%;
-                inset-inline-end: 0;
+                inset-inline-start: 50%; inset-inline-end: 0;
                 border-inline-start: 1px solid var(--sd-colour-line--light);
             }
         }
@@ -404,40 +388,33 @@ $desk-width: 270px;
             float: none;
             .right {
                 position: absolute;
-                inset-block-start: -18px;
-                inset-inline-end: 0;
+                inset-block-start: -18px; inset-inline-end: 0;
             }
             label {
                 font-size: 13px;
                 color: $sd-text;
             }
         }
-        .stage-type {
-            margin-block-end: 10px;
-        }
-        select {
-            margin-block-end: 10px;
-        }
+        .stage-type { margin-block-end: 10px; }
+        select { margin-block-end: 10px; }
         .pills-list {
             li {
                 cursor: pointer;
-                label {
-                    line-height: 12px;
-                }
+                label { line-height: 12px; }
                 .global-label {
                     font-size: 12px;
                     color: var(--color-text-lighter);
                     margin-block-start: 5px;
                     margin-inline-end: 5px;
                     text-transform: none;
-                    span:nth-child(2) {
-                        margin-inline-start: 0;
+                    span:nth-child(2) { 
+                        margin-inline-start: 0; 
                     }
                 }
                 &.active {
-                    .global-label {
-                        color: $white;
-                        opacity: 0.8;
+                    .global-label { 
+                        color: $white; 
+                        opacity: 0.8; 
                     }
                 }
                 &.editable {
@@ -445,7 +422,7 @@ $desk-width: 270px;
                     .char-count {
                         &.error {
                             @include text-semibold();
-                            color: #d33c30;
+                            color: #D33C30;
                         }
                     }
                 }
@@ -530,21 +507,21 @@ $desk-width: 270px;
         padding: 10px;
         text-align: end;
         width: 100%;
-        animation: dropOut2 0.3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
+        animation: dropOut2 .3s cubic-bezier(.695,.105,.285,1.275) 1;
         box-shadow: var(--sd-shadow__subnav);
     }
 }
 
 .members-list {
     padding-block-start: 1rem;
-}
+} 
 
 /*----------------------------------------
   #Item groups (stages, task statuses etc.)
 ----------------------------------------*/
 
 .item-group {
-    margin-block-start: 5px;
+    margin-block-start:5px;
     margin-block-end: 10px;
     &__content {
         padding: 2px;
@@ -558,17 +535,17 @@ $desk-width: 270px;
         &::-webkit-scrollbar {
             width: 4px;
             height: 4px;
-            border: none;
+            border:none;
         }
         &::-webkit-scrollbar:hover {
             background-color: $sd-background;
         }
         &::-webkit-scrollbar-thumb {
             border: none;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0,0,0,0.1);
         }
         &::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0,0,0,0.25);
         }
     }
 
@@ -606,6 +583,7 @@ $desk-width: 270px;
             color: $done-color;
         }
     }
+
 }
 
 /*---------------------------------------------------------------
@@ -621,12 +599,12 @@ $desk-width: 270px;
     border-inline-end: 2px solid var(--sd-item__main-Bg);
     border-block-end: 1px solid var(--sd-colour-line--light);
     position: relative;
-    display: flex;
+    display:flex;
     padding-inline-end: 8px;
     &--slugline-view {
         min-height: 32px;
-        border-inline-start: none;
-        height: auto;
+        border-inline-start:none;
+        height:auto;
         line-height: 160%;
         padding: 10px;
     }
@@ -644,7 +622,7 @@ $desk-width: 270px;
         opacity: 0.5;
     }
     &--no-border {
-        border-inline-start: none;
+        border-inline-start:none;
     }
     &__type {
         height: 100%;
@@ -667,8 +645,7 @@ $desk-width: 270px;
         justify-content: center;
         flex-shrink: 0;
     }
-    .urgency-label,
-    .priority-label {
+    .urgency-label, .priority-label {
         vertical-align: middle;
         flex-shrink: 0;
     }
@@ -720,10 +697,10 @@ $desk-width: 270px;
             justify-content: center;
         }
         time {
-            display: none;
+            display:none;
         }
     }
-    &.custom-monitoring:hover {
+    &.custom-monitoring:hover  {
         background-color: #f4f4f4;
         cursor: pointer;
     }
@@ -731,12 +708,12 @@ $desk-width: 270px;
 
 .slugline-item {
     @extend .content-item;
-    border-inline-start: none;
-    height: auto;
+    border-inline-start:none;
+    height:auto;
     line-height: 160%;
     padding: 0 8px;
-    margin: 0;
-    display: block;
+    margin:0;
+    display:block;
     border-block-end: 1px var(--sd-colour-line--light);
     &:last-child {
         border-block-end: none;
@@ -771,7 +748,7 @@ $desk-width: 270px;
         color: $sd-text-light;
     }
     time {
-        color: $sd-text-light;
+        color:$sd-text-light;
         font-size: 11px;
     }
 }

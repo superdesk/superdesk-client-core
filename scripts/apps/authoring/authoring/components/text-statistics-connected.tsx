@@ -13,9 +13,16 @@ class TextStatisticsComponent extends React.PureComponent<IProps> {
     render() {
         const text = this.props.editorState.getCurrentContent().getPlainText();
 
-        return <TextStatistics text={text} limit={this.props.limit} language={this.props.language} />;
+        return (
+            <TextStatistics
+                text={text}
+                limit={this.props.limit}
+                language={this.props.language}
+            />
+        );
     }
 }
+
 
 const mapStateToProps = (state) => ({
     editorState: state.editorState,

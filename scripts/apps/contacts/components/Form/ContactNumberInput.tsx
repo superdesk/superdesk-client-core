@@ -6,13 +6,13 @@ import {gettext} from 'core/utils';
 import {IconButton, Input, Option, Select, Spacer, Switch} from 'superdesk-ui-framework/react';
 
 interface IProps {
-    remove: () => void;
-    field: string;
-    value: Record<string, any>;
-    label: string;
-    onChange: (field: string, value: any) => void;
-    readOnly: boolean;
-    usages: Array<{qcode: string}>;
+    remove: () => void,
+    field: string,
+    value: Record<string, any>,
+    label: string,
+    onChange: (field: string, value: any) => void,
+    readOnly: boolean,
+    usages: Array<{ qcode: string }>,
 }
 
 interface IState {
@@ -101,7 +101,13 @@ export class ContactNumberInput extends React.Component<IProps, IState> {
                     value={value.public ?? true}
                     disabled={readOnly || this.state.preventSwitch}
                 />
-                {!readOnly && <IconButton ariaValue={gettext('Remove')} icon="trash" onClick={remove} />}
+                {!readOnly && (
+                    <IconButton
+                        ariaValue={gettext('Remove')}
+                        icon="trash"
+                        onClick={remove}
+                    />
+                )}
             </Spacer>
         );
     }

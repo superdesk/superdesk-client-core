@@ -16,9 +16,8 @@ interface IProps<T extends Partial<IRundownTemplateBase> | IRundown> {
     validationErrors: IValidationResults<T>;
 }
 
-export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown> extends React.PureComponent<
-    IProps<T>
-> {
+export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown>
+    extends React.PureComponent<IProps<T>> {
     render() {
         const fields = this.props.value;
         const {readOnly, validationErrors} = this.props;

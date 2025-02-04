@@ -4,14 +4,13 @@
         <div class="sd-list-item-group">
             <div class="sd-list-item" ng-repeat="desk in routing.routedFrom">
                 <div class="sd-list-item">
-                    <div
-                        class="sd-list-item__border"
-                        ng-class="{
+                    <div class="sd-list-item__border" ng-class="{
                         'sd-list-item__border--locked': !desk.is_closed,
                         'sd-list-item__border--success': desk.is_closed,
-                    }"
-                    ></div>
-                    <div class="sd-list-item__column sd-list-item__column--grow">{{ desk.name }}</div>
+                    }"></div>
+                    <div class="sd-list-item__column sd-list-item__column--grow">
+                        {{ desk.name }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -21,8 +20,7 @@
 
     <div class="sd-line-input sd-line-input--is-select">
         <label class="sd-line-input__label" translate>Route incoming content to</label>
-        <select
-            class="sd-line-input__select"
+        <select class="sd-line-input__select"
             ng-options="d._id as d.name for d in routing.desks"
             ng-model="routing.destination"
             ng-change="routing.updateDestination()"
@@ -30,22 +28,16 @@
         ></select>
     </div>
 
-    <button
-        class="btn btn--large btn--success btn--expanded"
+    <button class="btn btn--large btn--success btn--expanded"
         ng-if="!routing.desk.is_closed"
         ng-disabled="!routing.destination || !routing.canManage"
-        ng-click="routing.toggle()"
-        translate
-    >
+        ng-click="routing.toggle()" translate>
         Start routing
     </button>
-    <button
-        class="btn btn--large btn--alert btn--expanded"
+    <button class="btn btn--large btn--alert btn--expanded"
         ng-if="routing.desk.is_closed"
         ng-disabled="!routing.canManage"
-        ng-click="routing.toggle()"
-        translate
-    >
+        ng-click="routing.toggle()" translate>
         Stop routing
     </button>
 </div>

@@ -25,12 +25,13 @@ export const YearPicker: React.StatelessComponent<any> = ({selectedDate, onChang
                         {row.map((year, index) => (
                             <td key={index} className="text-center">
                                 <Button
-                                    className={
-                                        startingYear + (rowIndex * 5 + index) === selectedDate.year() ? 'active' : null
+                                    className={(startingYear + (rowIndex * 5 + index)) === selectedDate.year() ?
+                                        'active' :
+                                        null
                                     }
                                     onClick={onChange.bind(
                                         this,
-                                        moment(selectedDate).year(startingYear + (rowIndex * 5 + index)),
+                                        (moment(selectedDate).year((startingYear + (rowIndex * 5 + index)))),
                                     )}
                                 >
                                     <span>{year}</span>

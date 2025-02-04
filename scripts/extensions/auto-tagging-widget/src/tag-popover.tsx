@@ -19,16 +19,14 @@ export class TagPopover extends React.PureComponent<IProps> {
                     <h4 className="sd-popover__title">{tag.name}</h4>
                 </div>
                 <div className="sd-popover__content">
-                    {tag.description && <div>{tag.description}</div>}
+                    {tag.description && (
+                        <div>{tag.description}</div>
+                    )}
                     {!!tag.aliases?.length && (
-                        <div>
-                            {gettext('Aliases:')} {tag.aliases?.join(', ')}
-                        </div>
+                        <div>{gettext('Aliases:')}{' '}{tag.aliases?.join(', ')}</div>
                     )}
                     {tag.original_source && (
-                        <div>
-                            {gettext('Source:')} {tag.original_source}
-                        </div>
+                        <div>{gettext('Source:')}{' '}{tag.original_source}</div>
                     )}
                 </div>
             </div>

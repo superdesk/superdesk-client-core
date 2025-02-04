@@ -40,11 +40,15 @@ export class SmoothLoaderOuter extends React.Component<IProps> {
                     this.wrapper = ref;
                 }}
             >
-                {this.props.loading ? (
-                    <div dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}} />
-                ) : (
-                    this.props.children()
-                )}
+                {
+                    this.props.loading
+                        ? (
+                            <div
+                                dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}}
+                            />
+                        )
+                        : this.props.children()
+                }
             </div>
         );
     }

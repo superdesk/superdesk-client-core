@@ -36,13 +36,15 @@ export class ArticleItemConcise extends React.PureComponent<IProps> {
                     </ListItemColumn>
 
                     <ListItemColumn noBorder ellipsisAndGrow title={article.slugline || article.headline}>
-                        {article.slugline == null ? null : (
-                            <ListItemRow>
-                                <ListItemColumn ellipsisAndGrow>
-                                    <Slugline item={article} />
-                                </ListItemColumn>
-                            </ListItemRow>
-                        )}
+                        {
+                            article.slugline == null ? null : (
+                                <ListItemRow>
+                                    <ListItemColumn ellipsisAndGrow>
+                                        <Slugline item={article} />
+                                    </ListItemColumn>
+                                </ListItemRow>
+                            )
+                        }
                         <ListItemRow>
                             <ListItemColumn ellipsisAndGrow>
                                 <Headline item={article} />
@@ -63,23 +65,27 @@ export class ArticleItemConcise extends React.PureComponent<IProps> {
                         </ListItemRow>
                     </ListItemColumn>
 
-                    {this.props.actionsMenu != null && (
-                        <ListItemColumn>
-                            <div>
-                                <Menu items={this.props.actionsMenu}>
-                                    {(toggle) => (
-                                        <IconButton
-                                            icon="dots-vertical"
-                                            ariaValue={gettext('Item actions')}
-                                            onClick={(event) => {
-                                                toggle(event);
-                                            }}
-                                        />
-                                    )}
-                                </Menu>
-                            </div>
-                        </ListItemColumn>
-                    )}
+                    {
+                        this.props.actionsMenu != null && (
+                            <ListItemColumn>
+                                <div>
+                                    <Menu
+                                        items={this.props.actionsMenu}
+                                    >
+                                        {(toggle) => (
+                                            <IconButton
+                                                icon="dots-vertical"
+                                                ariaValue={gettext('Item actions')}
+                                                onClick={(event) => {
+                                                    toggle(event);
+                                                }}
+                                            />
+                                        )}
+                                    </Menu>
+                                </div>
+                            </ListItemColumn>
+                        )
+                    }
                 </ListItem>
             </div>
         );

@@ -64,8 +64,7 @@ export class AutosaveService {
         item: IArticle,
         orig: IArticle,
         timeout: number = AUTOSAVE_TIMEOUT,
-        callback,
-        applyAsync?: () => Promise<void>,
+        callback, applyAsync?: () => Promise<void>,
     ) {
         if (!item._editable || !item._locked) {
             return $q.reject('item not ' + item._editable ? 'locked' : 'editable');
@@ -75,9 +74,9 @@ export class AutosaveService {
 
         const id = item._id;
 
-        this.timeouts[id] = $timeout(
-            () => {
-                authoringApiCommon.saveBefore(item, orig).then((itemLatest: IArticle) => {
+        this.timeouts[id] = $timeout(() => {
+            authoringApiCommon.saveBefore(item, orig)
+                .then((itemLatest: IArticle) => {
                     const diff = helpers.extendItem({_id: id}, itemLatest);
 
                     helpers.filterDefaultValues(diff, orig);
@@ -100,10 +99,7 @@ export class AutosaveService {
 
                     return saveAndRunMiddleware();
                 });
-            },
-            timeout,
-            false,
-        );
+        }, timeout, false);
 
         return this.timeouts[id].catch((e) => {
             if (e !== 'canceled') {

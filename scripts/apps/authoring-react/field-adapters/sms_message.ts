@@ -24,11 +24,19 @@ export const sms_message: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) =>
-        retrieveStoredValueEditor3Generic('sms_message', item, authoringStorage),
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        'sms_message',
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase('sms_message', item, value, config);
+        const result = storeEditor3ValueBase(
+            'sms_message',
+            item,
+            value,
+            config,
+        );
 
         const articleUpdated = {...result.article};
 

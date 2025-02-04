@@ -1,3 +1,4 @@
+
 describe('superdesk.core.list module', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.core.list'));
@@ -6,17 +7,15 @@ describe('superdesk.core.list module', () => {
         var TEMPLATE = '<div sd-pagination items="items"></div>';
 
         beforeEach(window.module('superdesk.templates-cache'));
-        beforeEach(
-            window.module(($provide) => {
-                $provide.provider('translateFilter', function () {
-                    this.$get = function () {
-                        return function (text) {
-                            return text;
-                        };
+        beforeEach(window.module(($provide) => {
+            $provide.provider('translateFilter', function() {
+                this.$get = function() {
+                    return function(text) {
+                        return text;
                     };
-                });
-            }),
-        );
+                };
+            });
+        }));
 
         it('can do the math', inject(($compile, $rootScope) => {
             var $scope = $rootScope.$new();
@@ -76,28 +75,25 @@ describe('superdesk.core.list module', () => {
             expect(scope.to).toBe(48);
         }));
 
-        it('can calculate last of multiple pages when max_results defined', inject((
-            $compile,
-            $rootScope,
-            $location,
-        ) => {
-            var $scope = $rootScope.$new(true);
+        it('can calculate last of multiple pages when max_results defined',
+            inject(($compile, $rootScope, $location) => {
+                var $scope = $rootScope.$new(true);
 
-            $scope.items = {_meta: {total: 55}};
-            $scope.limit = 25;
-            $location.search('page', 2);
-            $location.search('max_results', 50);
+                $scope.items = {_meta: {total: 55}};
+                $scope.limit = 25;
+                $location.search('page', 2);
+                $location.search('max_results', 50);
 
-            var elem = $compile(TEMPLATE)($scope);
+                var elem = $compile(TEMPLATE)($scope);
 
-            $scope.$apply();
+                $scope.$apply();
 
-            var scope = elem.isolateScope();
+                var scope = elem.isolateScope();
 
-            expect(scope.page).toBe(2);
-            expect(scope.lastPage).toBe(2);
-            expect(scope.from).toBe(51);
-            expect(scope.to).toBe(55);
-        }));
+                expect(scope.page).toBe(2);
+                expect(scope.lastPage).toBe(2);
+                expect(scope.from).toBe(51);
+                expect(scope.to).toBe(55);
+            }));
     });
 });

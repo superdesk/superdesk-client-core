@@ -10,12 +10,8 @@ import {Editor} from './editor';
 import {Preview} from './preview';
 import {Difference} from './difference';
 
-export function getEmbedField(): ICustomFieldType<
-    IEmbedValueOperational,
-    IEmbedValueStorage,
-    IEmbedConfig,
-    IEmbedUserPreferences
-> {
+export function getEmbedField()
+: ICustomFieldType<IEmbedValueOperational, IEmbedValueStorage, IEmbedConfig, IEmbedUserPreferences> {
     const field: ReturnType<typeof getEmbedField> = {
         id: 'embed',
         generic: true,

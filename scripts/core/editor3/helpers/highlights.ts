@@ -94,10 +94,9 @@ function getHighlightsState(editorState) {
         return initialHighlightsState;
     }
 
-    const dataFromEditorContainsRequiredKeys =
-        Object.keys(initialHighlightsState).filter(
-            (key) => Object.keys(highlightsDataFromEditor).includes(key) === false,
-        ).length === 0;
+    const dataFromEditorContainsRequiredKeys = Object.keys(initialHighlightsState)
+        .filter((key) => Object.keys(highlightsDataFromEditor).includes(key) === false)
+        .length === 0;
 
     if (dataFromEditorContainsRequiredKeys === false) {
         return initialHighlightsState;
@@ -114,7 +113,7 @@ function getHighlightType(styleName) {
     const delimiterIndex = styleName.lastIndexOf('-');
 
     if (delimiterIndex === -1) {
-        throw new Error("styleName doesn't belong to a highlight");
+        throw new Error('styleName doesn\'t belong to a highlight');
     }
 
     return styleName.slice(0, delimiterIndex);
@@ -227,10 +226,8 @@ export function getHighlightsCount(editorState, highlightType) {
         return highlightsState.lastHighlightIds[highlightType];
     } else {
         // count highlights of all types
-        return Object.keys(highlightsState.lastHighlightIds).reduce(
-            (count, key) => count + highlightsState.lastHighlightIds[key],
-            0,
-        );
+        return Object.keys(highlightsState.lastHighlightIds)
+            .reduce((count, key) => count + highlightsState.lastHighlightIds[key], 0);
     }
 }
 
@@ -250,12 +247,10 @@ export function canAddHighlight(editorState, highlightType) {
 
     function characterHasAHighlightOfTheSameType(character) {
         if (
-            character
-                .getStyle()
-                .some(
-                    (styleName) =>
-                        this.styleNameBelongsToHighlight(styleName) && getHighlightType(styleName) === highlightType,
-                )
+            character.getStyle()
+                .some((styleName) =>
+                    this.styleNameBelongsToHighlight(styleName)
+                    && getHighlightType(styleName) === highlightType)
         ) {
             return true;
         }
@@ -269,13 +264,16 @@ export function canAddHighlight(editorState, highlightType) {
 
     // selection is expanded to include edges
     // so you can't add a highlight right next to another
-    const selection = resizeDraftSelection(1, 1, editorState.getSelection(), editorState, true);
-
-    return (
-        getDraftCharacterListForSelection(editorState, selection).some(
-            characterHasAHighlightOfTheSameType.bind(this),
-        ) === false
+    const selection = resizeDraftSelection(
+        1,
+        1,
+        editorState.getSelection(),
+        editorState,
+        true,
     );
+
+    return getDraftCharacterListForSelection(editorState, selection)
+        .some(characterHasAHighlightOfTheSameType.bind(this)) === false;
 }
 
 /**
@@ -290,13 +288,7 @@ export function canAddHighlight(editorState, highlightType) {
  * @description the highlight style from the new possition specified by offset.
  */
 export function getHighlightStyleAtOffset(
-    editorState,
-    types,
-    selection,
-    offset,
-    fromEnd = false,
-    firstFound = true,
-): string | Array<string> {
+    editorState, types, selection, offset, fromEnd = false, firstFound = true): string | Array<string> {
     const {block, newOffset} = getBlockAndOffset(editorState, selection, offset, fromEnd);
 
     if (block == null) {
@@ -350,7 +342,7 @@ export function getHighlightData(editorState, style) {
     const highlightsState = getHighlightsState(editorState);
 
     if (highlightsState.highlightsData[style] === undefined) {
-        throw new Error("Highlight doesn't exist.");
+        throw new Error('Highlight doesn\'t exist.');
     }
 
     return highlightsState.highlightsData[style];
@@ -492,7 +484,10 @@ export function addHighlight(editorState, type, data, single = false) {
 
     // restore focus lost after clicking a toolbar action or entering highlight data OR pushing editorState
     // so the selection is visible after undo
-    nextEditorState = EditorState.acceptSelection(nextEditorState, initialSelection);
+    nextEditorState = EditorState.acceptSelection(
+        nextEditorState,
+        initialSelection,
+    );
 
     nextEditorState = EditorState.set(nextEditorState, {allowUndo: true});
 
@@ -512,7 +507,7 @@ export function updateHighlightData(editorState, styleName, nextData) {
     const highlightsState = getHighlightsState(editorState);
 
     if (highlightsState.highlightsData[styleName] === undefined) {
-        throw new Error("Highlight doesn't exist.");
+        throw new Error('Highlight doesn\'t exist.');
     }
 
     const newHighlightsState = {
@@ -555,7 +550,11 @@ export function removeHighlight(editorState, styleName) {
         highlightsData: nextHighlightsData,
     };
 
-    let newEditorState = clearInlineStyles(editorState, getDraftSelectionForEntireContent(editorState), [styleName]);
+    let newEditorState = clearInlineStyles(
+        editorState,
+        getDraftSelectionForEntireContent(editorState),
+        [styleName],
+    );
 
     // prevent recording the changes to undo stack so user doesn't have to undo twice
     // for the highlight deletion to be completelly(both inline styles and related data) undone
@@ -627,12 +626,9 @@ export function getCharByOffset(editorState, selection, offset) {
 export function changeEditorSelection(editorState, startOffset, endOffset, force) {
     const selection = editorState.getSelection();
     const {block: startBlock, newOffset: newStartOffset} = getBlockAndOffset(
-        editorState,
-        selection,
-        startOffset,
-        false,
-    );
-    const {block: endBlock, newOffset: newEndOffset} = getBlockAndOffset(editorState, selection, endOffset, true);
+        editorState, selection, startOffset, false);
+    const {block: endBlock, newOffset: newEndOffset} = getBlockAndOffset(
+        editorState, selection, endOffset, true);
 
     if (startBlock == null || endBlock == null) {
         return editorState;
@@ -689,8 +685,9 @@ export const getBlockAndOffset = (
     }
 
     if (limitedToSingleBlock === true) {
-        const offsetWithinBlock =
-            startFromEnd === true ? Math.min(newOffset, block.getLength()) : Math.max(newOffset, 0);
+        const offsetWithinBlock = startFromEnd === true
+            ? Math.min(newOffset, block.getLength())
+            : Math.max(newOffset, 0);
 
         return {block: block, newOffset: offsetWithinBlock};
     }
@@ -730,7 +727,8 @@ function getLeftRangeAndTextForStyle(editorState, style) {
     let newBlock = false;
 
     if (paragraphSuggestionTypes.indexOf(type) !== -1) {
-        startText = block.getText().substring(0, startOffset) + paragraphSeparator;
+        startText = block.getText()
+            .substring(0, startOffset) + paragraphSeparator;
 
         return {startOffset, startBlock, startText};
     }
@@ -742,7 +740,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
         }
 
         found = false;
-        offset = offset == null ? block.getLength() - 1 : offset;
+        offset = (offset == null) ? (block.getLength() - 1) : offset;
         characterMetadataList = block.getCharacterList();
         blockText = block.getText();
 
@@ -793,7 +791,8 @@ function getRightRangeAndTextForStyle(editorState, style) {
     let newBlock = false;
 
     if (paragraphSuggestionTypes.indexOf(type) !== -1) {
-        endText = block.getText().substring(endOffset);
+        endText = block.getText()
+            .substring(endOffset);
 
         if (endText === '') {
             block = content.getBlockAfter(block.getKey());
@@ -893,10 +892,9 @@ export function getRangeAndTextForStyleInRawState(rawEditorState, highlightId) {
             if (style === highlightId) {
                 const textRange = text.substring(offset, offset + length);
 
-                highlightedText =
-                    highlightedText.length > 0
-                        ? (highlightedText = `${highlightedText}${paragraphSeparator}${textRange}`)
-                        : (highlightedText = textRange);
+                highlightedText = highlightedText.length > 0
+                    ? highlightedText = `${highlightedText}${paragraphSeparator}${textRange}`
+                    : highlightedText = textRange;
             }
         }
     }
@@ -915,7 +913,8 @@ export function getRangeAndTextForStyleInRawState(rawEditorState, highlightId) {
  * (one is ADD_SUGGESTION and one is DELETE_SUGGESTION) and they have the same author
  */
 function isPeerHighlight(editorState, style, type, author) {
-    return style != null && getHighlightType(style) !== type && getHighlightAuthor(editorState, style) === author;
+    return style != null && getHighlightType(style) !== type
+        && getHighlightAuthor(editorState, style) === author;
 }
 
 /**
@@ -1065,7 +1064,11 @@ function removeHighlightsStyleMap(editorState) {
 
     delete nextHighlights.highlightsStyleMap;
 
-    return setCustomDataForEditor__deprecated(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, nextHighlights);
+    return setCustomDataForEditor__deprecated(
+        editorState,
+        editor3DataKeys.MULTIPLE_HIGHLIGHTS,
+        nextHighlights,
+    );
 }
 
 export const prepareHighlightsForExport = (editorState) => addCommentsForServer(removeHighlightsStyleMap(editorState));
@@ -1086,21 +1089,16 @@ export function highlightEntity(initialState, type, data, single) {
     const block = content.getBlockForKey(selection.getStartKey());
     const entity = block.getEntityAt(selection.getStartOffset());
 
-    block.findEntityRanges(
-        (characterMeta) => characterMeta.getEntity() === entity,
+    block.findEntityRanges((characterMeta) => characterMeta.getEntity() === entity,
         (start, end) => {
-            editorState = EditorState.acceptSelection(
-                editorState,
-                selection.merge({
-                    isBackward: false,
-                    anchorOffset: start,
-                    focusOffset: end,
-                }),
-            );
+            editorState = EditorState.acceptSelection(editorState, selection.merge({
+                isBackward: false,
+                anchorOffset: start,
+                focusOffset: end,
+            }));
             editorState = addHighlight(editorState, type, data, single);
             editorState = EditorState.push(editorState, editorState.getCurrentContent(), 'change-block-data');
             editorState = EditorState.acceptSelection(editorState, selection);
-        },
-    );
+        });
     return editorState;
 }

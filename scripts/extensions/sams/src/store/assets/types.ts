@@ -79,23 +79,22 @@ interface IUpdateAssetInStore {
     type: typeof MANAGE_ASSET_UPDATE_IN_STORE;
     payload: {
         asset: Partial<IAssetItem>;
-        assetId: string;
+        assetId: string
     };
 }
 
-export type IAssetActionTypes =
-    | IReceiveAssetsAction
-    | ISetAssetSearchParamsAction
-    | IPushAssetSearchParamsAction
-    | IPopAssetSearchParamsAction
-    | IAssetSetListStyleAction
-    | ICloseAssetContentPanelAction
-    | IPreviewAssetAction
-    | IUpdateSelectedAssetIds
-    | ICloseMultiActionBar
-    | IEditAssetAction
-    | IUpdateAssetInStore
-    | IUpdateMultipleSelectedAssetIds;
+export type IAssetActionTypes = IReceiveAssetsAction |
+    ISetAssetSearchParamsAction |
+    IPushAssetSearchParamsAction |
+    IPopAssetSearchParamsAction |
+    IAssetSetListStyleAction |
+    ICloseAssetContentPanelAction |
+    IPreviewAssetAction |
+    IUpdateSelectedAssetIds |
+    ICloseMultiActionBar |
+    IEditAssetAction |
+    IUpdateAssetInStore |
+    IUpdateMultipleSelectedAssetIds;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;

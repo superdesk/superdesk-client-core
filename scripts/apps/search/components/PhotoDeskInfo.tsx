@@ -21,7 +21,8 @@ export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
     const articleDisplayWidgets = flatMap(
         Object.values(extensions).map(({activationResult}) => activationResult),
         (activationResult) =>
-            activationResult.contributions != null && activationResult.contributions.articleGridItemWidgets != null
+            activationResult.contributions != null
+            && activationResult.contributions.articleGridItemWidgets != null
                 ? activationResult.contributions.articleGridItemWidgets
                 : [],
     );
@@ -39,13 +40,17 @@ export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
                 itemClassName="sd-grid-item__content-block"
                 labelMode="never-with-custom-renderer"
             />
-            {articleDisplayWidgets.length < 1 ? null : (
-                <div style={{marginBlockStart: 12, display: 'flex'}} className="sibling-spacer-10">
-                    {articleDisplayWidgets.map((Component, i) => (
-                        <Component key={i} entity={item} />
-                    ))}
-                </div>
-            )}
+            {
+                articleDisplayWidgets.length < 1 ? null : (
+                    <div style={{marginBlockStart: 12, display: 'flex'}} className="sibling-spacer-10">
+                        {
+                            articleDisplayWidgets.map((Component, i) =>
+                                <Component key={i} entity={item} />,
+                            )
+                        }
+                    </div>
+                )
+            }
         </div>
     );
 };
