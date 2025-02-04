@@ -57,7 +57,8 @@ module.exports = Object.assign({}, sharedConfigs, {
         {
             files: ['*.ts', '*.tsx'],
             rules: {
-                'no-unused-vars': 2,
+                'react/prop-types': 0, // interfaces are used in TypeScript files
+                'no-unused-vars': 0,
                 'no-undef': 0,
                 'camelcase': 0,
                 'object-shorthand': 0,
@@ -65,7 +66,6 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'newline-per-chained-call': 0,
                 'quote-props': 0,
                 'arrow-body-style': 0,
-                "indent": ["error", 4, { "SwitchCase": 1 }],
 
                 "comma-dangle": ["error", {
                     "arrays": "always-multiline",
@@ -75,7 +75,11 @@ module.exports = Object.assign({}, sharedConfigs, {
                     "functions": "always-multiline"
                 }],
 
-                "space-before-function-paren": ["error", { "anonymous": "never", "named": "never" }],
+                "space-before-function-paren": ["error", {
+                    "anonymous": "never",
+                    "named": "never",
+                    "asyncArrow": "always"
+                }],
 
 
                 // allow calling hasOwnProperty
