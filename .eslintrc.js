@@ -58,7 +58,6 @@ module.exports = Object.assign({}, sharedConfigs, {
             files: ['*.ts', '*.tsx'],
             rules: {
                 'no-unused-vars': 2,
-                'no-unused-imports': 2,
                 'no-undef': 0,
                 'camelcase': 0,
                 'object-shorthand': 0,
