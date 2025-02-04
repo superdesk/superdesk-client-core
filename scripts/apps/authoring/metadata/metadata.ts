@@ -1164,8 +1164,6 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                     if (_.has(vocabulary, 'selection_type')) {
                         self.single_value[vocabulary._id] = vocabulary.selection_type === getSingleSelection();
                     }
-                    // add empty value for each vocabulary
-                    self.values[vocabulary._id] = [{name: '', qcode: ''}, ...vocabulary.items];
                 });
                 self.cvs = result;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
@@ -1276,15 +1274,14 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
 
             if (features.agenda) {
                 return api.get('/agenda').then((result) => {
-                    self.values.agendas = [
-                        {name: '', qcode: ''},
-                        ..._.get(result, '_items', [])
-                            .filter((item) => item.is_enabled)
-                            .map((item) => ({
-                                name: item.name,
-                                qcode: item._id,
-                            })),
-                    ];
+                    var agendas = [];
+
+                    _.each(result._items, (item) => {
+                        if (item.is_enabled) {
+                            agendas.push({name: item.name, id: item._id, qcode: item.name});
+                        }
+                    });
+                    self.values.agendas = agendas;
                 });
             }
         },
@@ -1293,13 +1290,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
 
             if (features.events_planning_filters) {
                 return api.get('/events_planning_filters').then((result) => {
-                    self.values.eventsPlanningFilters = [
-                        {name: '', qcode: ''},
-                        ..._.get(result, '_items', []).map((item) => ({
-                            name: item.name,
-                            qcode: item._id,
-                        })),
-                    ];
+                    self.values.eventsPlanningFilters = _.get(result, '_items', [])
+                        .map((item) => ({name: item.name, qcode: item._id}));
                 });
             }
         },
