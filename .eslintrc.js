@@ -23,12 +23,12 @@ module.exports = Object.assign({}, sharedConfigs, {
 
         'no-sequences': 2,
 
-        'newline-per-chained-call': ['error', {'ignoreChainWithDepth': 3}],
+        'newline-per-chained-call': ['error', { 'ignoreChainWithDepth': 3 }],
 
         '@typescript-eslint/array-type': [
             'error',
             {
-              'default': 'generic'
+                'default': 'generic'
             }
         ],
 
@@ -57,8 +57,8 @@ module.exports = Object.assign({}, sharedConfigs, {
         {
             files: ['*.ts', '*.tsx'],
             rules: {
-                'react/prop-types': 0, // interfaces are used in TypeScript files
-                'no-unused-vars': 0,
+                'no-unused-vars': 2,
+                'no-unused-imports': 2,
                 'no-undef': 0,
                 'camelcase': 0,
                 'object-shorthand': 0,
@@ -66,6 +66,7 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'newline-per-chained-call': 0,
                 'quote-props': 0,
                 'arrow-body-style': 0,
+                "indent": ["error", 4, { "SwitchCase": 1 }],
 
                 "comma-dangle": ["error", {
                     "arrays": "always-multiline",
@@ -75,11 +76,7 @@ module.exports = Object.assign({}, sharedConfigs, {
                     "functions": "always-multiline"
                 }],
 
-                "space-before-function-paren": ["error", {
-                    "anonymous": "never",
-                    "named": "never",
-                    "asyncArrow": "always"
-                }],
+                "space-before-function-paren": ["error", { "anonymous": "never", "named": "never" }],
 
 
                 // allow calling hasOwnProperty
